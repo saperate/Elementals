@@ -36,8 +36,9 @@ public abstract class KeyInput {
         });
     }
 
+
     public void onPressed(Identifier packetID){
-        ClientPlayerEntity player = MinecraftClient.getInstance().player;
         ClientPlayNetworking.send(packetID, PacketByteBufs.create());
     }
+
 }

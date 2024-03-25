@@ -1,6 +1,7 @@
 package dev.saperate.elementals;
 
 import dev.saperate.elementals.entities.WaterCubeEntityRenderer;
+import dev.saperate.elementals.keys.MouseInput;
 import dev.saperate.elementals.keys.abilities.KeyAbility1;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
@@ -13,6 +14,7 @@ public class ElementalsClient implements ClientModInitializer {
 	public void onInitializeClient() {
 
 		registerS2CPackets();
+		MouseInput.registerMouseClickEvent();
 
 		EntityRendererRegistry.register(WATERCUBE, WaterCubeEntityRenderer::new);
 

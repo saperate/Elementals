@@ -28,4 +28,8 @@ public abstract class Element{
         abilityList.remove(a);
     }
 
+    public boolean contains(Ability ability){
+        return abilityList.contains(ability);
+    }
+
 }
