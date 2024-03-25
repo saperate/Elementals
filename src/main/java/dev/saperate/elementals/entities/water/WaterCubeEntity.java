@@ -33,4 +33,12 @@ public class WaterCubeEntity extends ElementalEntity {
         setOwner(owner);
         setPos(x,y,z);
     }
+
+    @Override
+    public void tick() {
+        super.tick();
+        if(this.getOwner() == null){
+            discard();
+        }
+    }
 }
