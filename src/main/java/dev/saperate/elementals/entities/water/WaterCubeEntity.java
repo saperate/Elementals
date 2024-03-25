@@ -14,6 +14,7 @@ import net.minecraft.network.packet.s2c.play.EntityTrackerUpdateS2CPacket;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.joml.Vector3f;
 
@@ -56,9 +57,14 @@ public class WaterCubeEntity extends ProjectileEntity {
             discard();
             return;
         }
+        this.setVelocity(this.getVelocity().add(0.0, -0.04, 0.0));
+
+
 
         Vector3f target = getEntityLookVector(owner, 3);
-        this.setPos(target.x, target.y - 0.5f, target.z);
+
+        this.addVelocity(target.x - getX(), target.y - getY(), target.z - getZ());
+        this.move(MovementType.SELF, this.getVelocity());
     }
 
     @Override
