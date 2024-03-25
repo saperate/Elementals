@@ -57,13 +57,21 @@ public class WaterCubeEntity extends ProjectileEntity {
             discard();
             return;
         }
+        //gravity
         this.setVelocity(this.getVelocity().add(0.0, -0.04, 0.0));
 
 
+        Vector3f direction = getEntityLookVector(owner, 3)
+                .sub(0,0.5f,0)
+                .sub(getPos().toVector3f());
+        direction.mul(0.1f);
 
-        Vector3f target = getEntityLookVector(owner, 3);
+        if(direction.length() < 0.4f){
+            this.setVelocity(0,0,0);
+        }
 
-        this.addVelocity(target.x - getX(), target.y - getY(), target.z - getZ());
+
+        this.addVelocity(direction.x, direction.y, direction.z);
         this.move(MovementType.SELF, this.getVelocity());
     }
 
