@@ -9,7 +9,6 @@ import static dev.saperate.elementals.entities.water.WaterCubeEntity.WATERCUBE;
 import static dev.saperate.elementals.network.ModMessages.registerS2CPackets;
 
 public class ElementalsClient implements ClientModInitializer {
-
 	@Override
 	public void onInitializeClient() {
 

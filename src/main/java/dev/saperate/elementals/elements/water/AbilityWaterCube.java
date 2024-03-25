@@ -18,10 +18,8 @@ public class AbilityWaterCube extends Ability {
             Block block = player.getEntityWorld().getBlockState(blockHit.getBlockPos()).getBlock();
 
             if(block.equals(Blocks.WATER)){
-                System.out.println("Picked up water!!");
                 WaterCubeEntity cube = new WaterCubeEntity(player.getWorld(),player);
                 player.getWorld().spawnEntity(cube);
-                System.out.println("cube is at: " + cube.getPos());
             }
         }
     }
