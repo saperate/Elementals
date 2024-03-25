@@ -1,0 +1,48 @@
+{
+	"schemaVersion": 1,
+	"id": "elementals",
+	"version": "${version}",
+	"name": "elementals",
+	"description": "This is an example description! Tell everyone what your mod is about!",
+	"authors": [
+		"Me!"
+	],
+	"contact": {
+		"homepage": "https://fabricmc.net/",
+		"sources": "https://github.com/FabricMC/fabric-example-mod"
+	},
+	"license": "CC0-1.0",
+	"icon": "assets/elementals/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"dev.saperate.elementals.Elementals"
+		],
+		"client": [
+			"dev.saperate.elementals.ElementalsClient"
+		],
+		"server" : [
+			"dev.saperate.elementals.server.ElementalsServer"
+		],
+		"fabric-datagen": [
+			"dev.saperate.elementals.ElementalsDataGenerator"
+		]
+	},
+	"mixins": [
+		"elementals.mixins.json",
+		{
+			"config": "elementals.client.mixins.json",
+			"environment": "client"
+		}
+	],
+	"depends": {
+		"fabricloader": ">=0.15.7",
+		"minecraft": "~1.20.4",
+		"java": ">=17",
+		"fabric-api": "*",
+		"fabric-key-binding-api-v1": "*"
+	},
+	"suggests": {
+		"another-mod": "*"
+	}
+}
