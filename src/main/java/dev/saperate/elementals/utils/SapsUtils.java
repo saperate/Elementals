@@ -2,14 +2,24 @@ package dev.saperate.elementals.utils;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.particle.ParticleEffect;
-import net.minecraft.particle.ParticleTypes;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
-import org.joml.Vector3d;
 import org.joml.Vector3f;
 
 public class SapsUtils {
+
+    public static float calculatePitch(Vec3d direction) {
+        double horizontalDistance = Math.sqrt(direction.x * direction.x + direction.z * direction.z);
+        double pitch = Math.atan2(direction.y, horizontalDistance);
+        return (float) Math.toDegrees(pitch);
+    }
+
+    public static float calculateYaw(Vec3d direction) {
+        double yaw = Math.atan2(-direction.x, direction.z);
+        return (float) Math.toDegrees(yaw);
+    }
 
     public static void summonParticles(World world, Entity entity, Random rnd, ParticleEffect type, float velocity, int density) {
         for (int i = 0; i < density; i++) {

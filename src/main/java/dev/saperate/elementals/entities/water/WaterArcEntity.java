@@ -27,6 +27,8 @@ import org.joml.Vector3f;
 import static dev.saperate.elementals.utils.SapsUtils.getEntityLookVector;
 
 public class WaterArcEntity extends ProjectileEntity {
+    private static final TrackedData<Integer> PARENT_ID = DataTracker.registerData(WaterArcEntity.class, TrackedDataHandlerRegistry.INTEGER);
+    private static final TrackedData<Integer> CHILD_ID = DataTracker.registerData(WaterArcEntity.class, TrackedDataHandlerRegistry.INTEGER);
     private static final TrackedData<Integer> OWNER_ID = DataTracker.registerData(WaterArcEntity.class, TrackedDataHandlerRegistry.INTEGER);
     private static final TrackedData<Boolean> IS_CONTROLLED = DataTracker.registerData(WaterArcEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
 
@@ -35,10 +37,9 @@ public class WaterArcEntity extends ProjectileEntity {
             new Identifier("elementals", "water_arc"),
             FabricEntityTypeBuilder.<WaterArcEntity>create(SpawnGroup.MISC, WaterArcEntity::new)
                     .dimensions(EntityDimensions.fixed(0.25f, 0.25f)).build());
-    private static final int MAX_CHAIN_LENGTH = 5;
+    public static final float chainDistance = 0.9f;
+    private static final int MAX_CHAIN_LENGTH = 4;
     public int chainLength = 0;
-    public WaterArcEntity parent;
-    public WaterArcEntity child;
 
 
     public WaterArcEntity(EntityType<WaterArcEntity> type, World world) {
@@ -53,30 +54,33 @@ public class WaterArcEntity extends ProjectileEntity {
         super(WATERARC, world);
         setOwner(owner);
         setPos(x, y, z);
-        setNoGravity(true);
+        setNoGravity(false);
     }
 
     public void createChain(LivingEntity owner) {
         if (chainLength < MAX_CHAIN_LENGTH) {
             WaterArcEntity newArc = new WaterArcEntity(getWorld(), owner, getX(), getY(), getZ());
-            newArc.parent = this;
-            this.child = newArc;
+            newArc.setParent(this);
+            setChild(newArc);
             newArc.setControlled(false);
             getWorld().spawnEntity(newArc);
             chainLength++;
             newArc.chainLength = chainLength;
-            //newArc.createChain(owner);
+            newArc.createChain(owner);
         }
     }
 
     @Override
     protected void initDataTracker() {
+        this.getDataTracker().startTracking(PARENT_ID, 0);
+        this.getDataTracker().startTracking(CHILD_ID, 0);
         this.getDataTracker().startTracking(OWNER_ID, 0);
         this.getDataTracker().startTracking(IS_CONTROLLED, true);
     }
 
     @Override
     public void tick() {
+
         super.tick();
         Entity owner = getOwner();
         if (owner == null) {
@@ -100,9 +104,9 @@ public class WaterArcEntity extends ProjectileEntity {
     private void moveEntity(Entity owner) {
         this.getWorld().getEntitiesByType(TypeFilter.instanceOf(PlayerEntity.class), this.getBoundingBox(), EntityPredicates.canBePushedBy(this)).forEach(this::pushAway);
 
-
+        WaterArcEntity parent = getParent();
         //gravity
-        if (!hasNoGravity()) {
+        if (!hasNoGravity() && parent == null) {
             this.setVelocity(this.getVelocity().add(0.0, -0.04, 0.0));
         }
 
@@ -115,16 +119,16 @@ public class WaterArcEntity extends ProjectileEntity {
 
                 //Constraint so that it stays roughly 2 blocks away from the parent
                 double distance = direction.length();
-                if (distance > 2) {
-                    direction = direction.multiply(distance - 2).multiply(0.1f);
-                } else if (distance < 2 ) {
-                    direction = direction.multiply(-0.1f);
+                if (distance > chainDistance) {
+                    direction = direction.multiply(distance - chainDistance).multiply(0.1f);
+                } else if (distance < chainDistance ) {
+                    direction = direction.multiply(-0.025f);
                 }else{
                     direction = direction.multiply(0);
                 }
 
 
-                double damping = 0.1f + (0.5f - 0.1f) * (1 - Math.min(1, distance / 2));
+                double damping = 0.1f + (0.3f - 0.1f) * (1 - Math.min(1, distance / chainDistance));
                 direction = direction.multiply(damping);
 
                 this.addVelocity(direction.x, direction.y, direction.z);
@@ -187,5 +191,23 @@ public class WaterArcEntity extends ProjectileEntity {
 
     protected void pushAway(Entity entity) {
         entity.pushAwayFrom(this);
+    }
+
+    public WaterArcEntity getParent() {
+        int parentId = this.getDataTracker().get(PARENT_ID);
+        return parentId != 0 ? (WaterArcEntity) this.getWorld().getEntityById(parentId) : null;
+    }
+
+    public void setParent(WaterArcEntity parent) {
+        this.getDataTracker().set(PARENT_ID, parent != null ? parent.getId() : 0);
+    }
+
+    public WaterArcEntity getChild() {
+        int childId = this.getDataTracker().get(CHILD_ID);
+        return childId != 0 ? (WaterArcEntity) this.getWorld().getEntityById(childId) : null;
+    }
+
+    public void setChild(WaterArcEntity child) {
+        this.getDataTracker().set(CHILD_ID, child != null ? child.getId() : 0);
     }
 }

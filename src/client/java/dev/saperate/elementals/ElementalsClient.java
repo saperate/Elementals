@@ -21,7 +21,6 @@ public class ElementalsClient implements ClientModInitializer {
 
 		EntityRendererRegistry.register(WATERCUBE, WaterCubeEntityRenderer::new);
 		EntityRendererRegistry.register(WATERARC, WaterArcEntityRenderer::new);
-
 		new KeyAbility1();
 		new KeyAbility2();
 	}
