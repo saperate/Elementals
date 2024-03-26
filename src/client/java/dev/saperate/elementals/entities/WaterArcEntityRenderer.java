@@ -28,9 +28,8 @@ public class WaterArcEntityRenderer extends EntityRenderer<WaterArcEntity> {
     @Override
     public void render(WaterArcEntity entity, float yaw, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light) {
         matrices.push();
-        matrices.scale(1, 1f, 1);
+        matrices.scale(0.25f, 0.25f, 0.25f);
         matrices.translate(0, 0.5f, 0);
-        matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(entity.getYaw()));
 
 
         RenderSystem.setShader(GameRenderer::getPositionColorProgram);
