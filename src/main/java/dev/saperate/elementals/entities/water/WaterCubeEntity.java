@@ -77,17 +77,20 @@ public class WaterCubeEntity extends ProjectileEntity {
             HitResult hit = ProjectileUtil.getCollision(this, entity -> entity instanceof LivingEntity);
             if (hit.getType() == HitResult.Type.ENTITY){
                 LivingEntity entity = (LivingEntity) ((EntityHitResult) hit).getEntity();
-                entity.damage(this.getDamageSources().playerAttack((PlayerEntity) owner),10);
+                entity.damage(this.getDamageSources().playerAttack((PlayerEntity) owner),2);
+                entity.addVelocity(this.getVelocity().multiply(0.8f));
                 discard();
             }
         }
 
+        this.getWorld().getEntitiesByType(TypeFilter.instanceOf(PlayerEntity.class), this.getBoundingBox(), EntityPredicates.canBePushedBy(this)).forEach(this::pushAway);
+        if(!owner.isSneaking()){
+            moveEntity(owner);
+        }
 
-        moveEntity(owner);
     }
 
     private void moveEntity(Entity owner){
-        this.getWorld().getEntitiesByType(TypeFilter.instanceOf(PlayerEntity.class), this.getBoundingBox(), EntityPredicates.canBePushedBy(this)).forEach(this::pushAway);
 
 
         //gravity
@@ -101,7 +104,6 @@ public class WaterCubeEntity extends ProjectileEntity {
             BlockState blockState = getWorld().getBlockState(blockDown);
 
             if(!blockState.isAir() && getY() - getBlockPos().getY() == 0){
-                System.out.println(blockState);
                 getWorld().setBlockState(getBlockPos(), Blocks.WATER.getDefaultState());
                 discard();
             }
@@ -124,7 +126,10 @@ public class WaterCubeEntity extends ProjectileEntity {
         this.addVelocity(direction.x, direction.y, direction.z);
     }
 
-
+    @Override
+    public void onRemoved() {
+        summonParticles(getWorld(), this,random,ParticleTypes.SPLASH, 10,100);
+    }
 
     @Override
     public void writeCustomDataToNbt(NbtCompound nbt) {

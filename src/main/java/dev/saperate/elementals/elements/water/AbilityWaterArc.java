@@ -44,6 +44,10 @@ public class AbilityWaterArc extends Ability {
 
     @Override
     public void onRightClick() {
-
+        if (entity == null) {
+            return;
+        }
+        entity.setControlled(false);
+        Bender.getBender((PlayerEntity) entity.getOwner()).setCurrAbility(null);
     }
 }

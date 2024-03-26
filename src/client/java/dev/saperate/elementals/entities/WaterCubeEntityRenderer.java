@@ -42,7 +42,7 @@ public class WaterCubeEntityRenderer extends EntityRenderer<WaterCubeEntity> {
     @Override
     public void render(WaterCubeEntity entity, float yaw, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light) {
         matrices.push();
-        matrices.translate(0, 0.5f, 0);
+        matrices.translate(0, 0.9f, 0);
 
         RenderSystem.setShader(GameRenderer::getPositionColorProgram);
         RenderSystem.enableDepthTest();
@@ -61,7 +61,7 @@ public class WaterCubeEntityRenderer extends EntityRenderer<WaterCubeEntity> {
                 0.9f,
                 texture,
                 0.9f,
-                new Matrix4f().rotate(90,1,0,0)
+                new Matrix4f().rotate((float) Math.toRadians(90),1,0,0)
         );
 
         RenderSystem.disableBlend();
