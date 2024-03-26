@@ -1,10 +1,12 @@
 package dev.saperate.elementals;
 
+import dev.saperate.elementals.commands.BendingCommand;
 import dev.saperate.elementals.elements.NoneElement;
 import dev.saperate.elementals.elements.water.WaterElement;
 import net.fabricmc.api.ModInitializer;
 
 
+import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,6 +20,7 @@ public class Elementals implements ModInitializer {
 	public void onInitialize() {
 		registerElements();
 		registerC2SPackets();
+		CommandRegistrationCallback.EVENT.register(BendingCommand::register);
 
 		LOGGER.info("Hello from elementals mod!");
 	}

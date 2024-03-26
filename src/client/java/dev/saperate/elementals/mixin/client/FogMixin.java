@@ -21,6 +21,6 @@ public abstract class FogMixin {
 
 	@Inject(at = @At("HEAD"), method = "getSubmersionType", cancellable = true)
 	private void render(CallbackInfoReturnable<CameraSubmersionType> cir) {
-		cir.setReturnValue(CameraSubmersionType.NONE);
+		//cir.setReturnValue(CameraSubmersionType.NONE);
 	}
 }
