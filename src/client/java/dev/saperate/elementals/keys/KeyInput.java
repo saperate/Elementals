@@ -15,7 +15,7 @@ import java.util.List;
 
 public abstract class KeyInput {
     private static final List<KeyInput> keyInputs = new ArrayList<>();
-    private static KeyBinding keyBinding;
+    private KeyBinding keyBinding;
 
     public KeyInput(){
         keyInputs.add(this);
@@ -31,6 +31,7 @@ public abstract class KeyInput {
 
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             while (keyBinding.wasPressed()) {
+                System.out.println(packetID);
                 onPressed(packetID);
             }
         });

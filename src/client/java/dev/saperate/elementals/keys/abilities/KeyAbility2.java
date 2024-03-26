@@ -4,13 +4,13 @@ import dev.saperate.elementals.keys.KeyInput;
 import dev.saperate.elementals.network.ModMessages;
 import org.lwjgl.glfw.GLFW;
 
-public class KeyAbility1 extends KeyInput {
+public class KeyAbility2 extends KeyInput {
 
-    public KeyAbility1(){
+    public KeyAbility2(){
         registerKeyInput(
-                GLFW.GLFW_KEY_R,
-                ModMessages.ABILITY1_PACKET_ID,
-                "key.elementals.Ability1",
+                GLFW.GLFW_KEY_G,
+                ModMessages.ABILITY2_PACKET_ID,
+                "key.elementals.Ability2",
                 "category.elementals"
         );
     }

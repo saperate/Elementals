@@ -5,11 +5,44 @@ import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.entity.Entity;
 import net.minecraft.util.Identifier;
+import org.joml.Quaterniond;
+import org.joml.Quaternionf;
+import org.joml.Vector3f;
 
 import java.util.function.Function;
 
+import static java.lang.Math.cos;
+import static java.lang.Math.sin;
+
 public abstract class RenderUtils {
+
+    public static void drawSegment(VertexConsumer vertexConsumer, MatrixStack matrices, int light,
+                                   float r, float g, float b, float a, Identifier tex,
+                                   Vector3f begin, Vector3f end) {
+        Function<Identifier, Sprite> func = MinecraftClient.getInstance().getSpriteAtlas(new Identifier("minecraft", "textures/atlas/blocks.png"));
+
+        //func.apply(tex);
+
+        Sprite sprite = func.apply(tex);
+        float uMin = sprite.getMinU(), uMax = sprite.getMaxU();
+        float vMin = sprite.getMinV(), vMax = sprite.getMaxV();
+        float m = 0.5f;
+
+        // Front face
+        drawQuad(vertexConsumer, matrices, light,
+                uMin, uMax, vMin, vMax,
+                r, g, b, a,
+                0, 0, 1,
+                -m, m, m,
+                -m, -m, m,
+                m, -m, m,
+                m, m, m
+        );
+
+    }
+
     public static void drawCube(VertexConsumer vertexConsumer, MatrixStack matrices, int light,
                                 float r, float g, float b, float a, Identifier tex) {
 

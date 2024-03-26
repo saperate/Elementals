@@ -1,49 +1,37 @@
 package dev.saperate.elementals.entities;
 
-import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
-import dev.saperate.elementals.entities.water.WaterCubeEntity;
-import net.minecraft.client.MinecraftClient;
+import dev.saperate.elementals.entities.water.WaterArcEntity;
 import net.minecraft.client.color.world.BiomeColors;
-import net.minecraft.client.model.ModelPart;
-import net.minecraft.client.render.*;
+import net.minecraft.client.render.GameRenderer;
+import net.minecraft.client.render.RenderLayer;
+import net.minecraft.client.render.VertexConsumer;
+import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRenderer;
 import net.minecraft.client.render.entity.EntityRendererFactory;
-import net.minecraft.client.render.entity.model.EntityModelLayer;
-import net.minecraft.client.render.item.ItemRenderer;
-import net.minecraft.client.render.model.json.ModelTransformationMode;
-import net.minecraft.client.texture.Sprite;
-import net.minecraft.client.texture.SpriteAtlasTexture;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
-import net.minecraft.world.BlockRenderView;
-import org.apache.logging.log4j.core.appender.rolling.action.IfAll;
-import org.joml.Matrix3f;
-import org.joml.Matrix4f;
-import org.joml.Vector3f;
-import org.joml.Vector4f;
-import org.lwjgl.opengl.GL11;
-
-import java.util.Iterator;
-import java.util.function.Function;
+import net.minecraft.util.math.RotationAxis;
 
 import static dev.saperate.elementals.entities.utils.RenderUtils.drawCube;
-import static org.lwjgl.opengl.GL11.*;
+import static dev.saperate.elementals.entities.utils.RenderUtils.drawSegment;
 
-public class WaterCubeEntityRenderer extends EntityRenderer<WaterCubeEntity> {
+
+public class WaterArcEntityRenderer extends EntityRenderer<WaterArcEntity> {
     private static final Identifier texture = new Identifier("minecraft", "block/water_still");
 
-    public WaterCubeEntityRenderer(EntityRendererFactory.Context context) {
+    public WaterArcEntityRenderer(EntityRendererFactory.Context context) {
         super(context);
     }
 
     @Override
-    public void render(WaterCubeEntity entity, float yaw, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light) {
+    public void render(WaterArcEntity entity, float yaw, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light) {
         matrices.push();
-        matrices.scale(1, 0.9f, 1);
+        matrices.scale(1, 1f, 1);
         matrices.translate(0, 0.5f, 0);
+        matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(entity.getYaw()));
+
 
         RenderSystem.setShader(GameRenderer::getPositionColorProgram);
         RenderSystem.enableDepthTest();
@@ -61,6 +49,7 @@ public class WaterCubeEntityRenderer extends EntityRenderer<WaterCubeEntity> {
                 (color & 255) / 255.0f,
                 0.9f,
                 texture
+
         );
 
         RenderSystem.disableBlend();
@@ -68,7 +57,7 @@ public class WaterCubeEntityRenderer extends EntityRenderer<WaterCubeEntity> {
     }
 
     @Override
-    public Identifier getTexture(WaterCubeEntity entity) {
+    public Identifier getTexture(WaterArcEntity entity) {
         return texture;
     }
 }
