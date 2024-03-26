@@ -1,5 +1,6 @@
 package dev.saperate.elementals;
 
+import dev.saperate.elementals.elements.NoneElement;
 import dev.saperate.elementals.elements.water.WaterElement;
 import net.fabricmc.api.ModInitializer;
 
@@ -23,6 +24,7 @@ public class Elementals implements ModInitializer {
 
 
 	private void registerElements(){
+		new NoneElement();
 		new WaterElement();
 	}
 }

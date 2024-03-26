@@ -20,9 +20,6 @@ public class Bender {
         this.player = player;
         this.element = element;
         benders.put(player.getUuid(), this);
-        bindAbility(Element.elementList.get(0).getAbility(0),0);
-        bindAbility(Element.elementList.get(0).getAbility(1),1);
-
     }
 
     public void bindAbility(Ability ability, int index){
