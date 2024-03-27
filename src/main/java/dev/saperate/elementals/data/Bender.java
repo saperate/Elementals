@@ -11,7 +11,7 @@ import java.util.*;
 public class Bender {
     public static final Map<UUID,Bender> benders = new HashMap<>();
     public final PlayerEntity player;
-    public Element element;
+    private Element element;
     public Ability[] boundAbility = new Ability[5];
     @Nullable
     public Ability currAbility;
@@ -23,7 +23,7 @@ public class Bender {
     }
 
     public void bindAbility(Ability ability, int index){
-        if(element.contains(ability) && index >= 0 && index < 5){
+        if(element.contains(ability) && index >= 0 && index < 5 && index <= element.abilityList.size()){
             boundAbility[index] = ability;
         }
     }
@@ -40,5 +40,13 @@ public class Bender {
 
     public void setCurrAbility(Ability ability){
         this.currAbility = ability;
+    }
+
+    public void setElement(Element element) {
+        this.element = element;
+    }
+
+    public Element getElement() {
+        return element;
     }
 }
