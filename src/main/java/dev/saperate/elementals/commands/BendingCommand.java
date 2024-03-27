@@ -45,9 +45,17 @@ public class BendingCommand {
             ), false);
             return 1;
         }
+
         bender.setElement(newElement);
-        bender.bindAbility(newElement.getAbility(0),0);
-        bender.bindAbility(newElement.getAbility(1),1);
+
+        //Very temporary stuff, will get removed once I get a GUI working
+        int abilitySize = newElement.abilityList.size();
+        if(abilitySize >= 1){
+            bender.bindAbility(newElement.getAbility(0),0);
+        }
+        if(abilitySize >= 2){
+            bender.bindAbility(newElement.getAbility(1),1);
+        }
 
         context.getSource().sendFeedback((() -> Text.of(
                 bender.player.getNameForScoreboard() + " can now bend: " + bender.getElement().name)

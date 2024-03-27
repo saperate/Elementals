@@ -3,6 +3,7 @@ package dev.saperate.elementals.entities;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import dev.saperate.elementals.entities.water.WaterCubeEntity;
+import net.minecraft.block.Blocks;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.color.world.BiomeColors;
 import net.minecraft.client.model.ModelPart;
@@ -52,6 +53,8 @@ public class WaterCubeEntityRenderer extends EntityRenderer<WaterCubeEntity> {
         VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderLayer.getTranslucentMovingBlock());
 
         int color = BiomeColors.getWaterColor(entity.getWorld(),entity.getBlockPos());
+
+
 
 
         drawCube(vertexConsumer, matrices, light,

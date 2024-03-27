@@ -3,6 +3,7 @@ package dev.saperate.elementals;
 import dev.saperate.elementals.commands.BendingCommand;
 import dev.saperate.elementals.commands.ElementArgumentType;
 import dev.saperate.elementals.elements.NoneElement;
+import dev.saperate.elementals.elements.fire.FireElement;
 import dev.saperate.elementals.elements.water.WaterElement;
 import net.fabricmc.api.ModInitializer;
 
@@ -34,6 +35,7 @@ public class Elementals implements ModInitializer {
 	private void registerElements(){
 		new NoneElement();
 		new WaterElement();
+		new FireElement();
 	}
 
 	private void registerCommands(){

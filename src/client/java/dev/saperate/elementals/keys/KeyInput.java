@@ -31,7 +31,6 @@ public abstract class KeyInput {
 
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             while (keyBinding.wasPressed()) {
-                System.out.println(packetID);
                 onPressed(packetID);
             }
         });

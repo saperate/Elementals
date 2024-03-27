@@ -15,13 +15,22 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class PlayerEntityMixin {
 
 
-	@Inject(at = @At("TAIL"), method = "<init>")
-	private void init(CallbackInfo info) {
-		PlayerEntity player = ((PlayerEntity) (Object) this);
-		if(!player.getWorld().isClient){
-			new Bender(player, Element.elementList.get(0));
-		}
-	}
+    @Inject(at = @At("TAIL"), method = "<init>")
+    private void init(CallbackInfo info) {
+        PlayerEntity player = ((PlayerEntity) (Object) this);
+        if(!player.getWorld().isClient){
+            new Bender(player, Element.elementList.get(0));
+        }
+    }
 
+    @Inject(at = @At("TAIL"), method = "tick")
+    private void tick(CallbackInfo ci) {
+        PlayerEntity player = ((PlayerEntity) (Object) this);
+        Bender bender = Bender.getBender(player);
+
+        if (bender != null && bender.currAbility != null) {
+            bender.currAbility.onTick(bender);
+        }
+    }
 
 }

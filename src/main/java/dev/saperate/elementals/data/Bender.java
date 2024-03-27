@@ -23,14 +23,14 @@ public class Bender {
     }
 
     public void bindAbility(Ability ability, int index){
-        if(element.contains(ability) && index >= 0 && index < 5 && index <= element.abilityList.size()){
+        if(element.contains(ability) && index >= 0 && index < 5){
             boundAbility[index] = ability;
         }
     }
 
     public void bend(int index){
         if(index >= 0 && index < 5 && boundAbility[index] != null && currAbility == null){
-            boundAbility[index].onCall(player);
+            boundAbility[index].onCall(this);
         }
     }
 
@@ -40,6 +40,10 @@ public class Bender {
 
     public void setCurrAbility(Ability ability){
         this.currAbility = ability;
+    }
+
+    public void setCurrAbility(int i){
+        this.currAbility = boundAbility[i];
     }
 
     public void setElement(Element element) {

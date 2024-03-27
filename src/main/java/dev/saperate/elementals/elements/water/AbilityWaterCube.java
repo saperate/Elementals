@@ -18,20 +18,21 @@ public class AbilityWaterCube extends Ability {
     public WaterCubeEntity entity;
 
     @Override
-    public void onCall(PlayerEntity player) {
+    public void onCall(Bender bender) {
+        PlayerEntity player = bender.player;
         Vector3f pos = WaterElement.canBend(player);
 
         if (pos != null) {
             entity = new WaterCubeEntity(player.getWorld(), player, pos.x, pos.y, pos.z);
             player.getWorld().spawnEntity(entity);
 
-            Bender.getBender(player).setCurrAbility(this);
+            bender.setCurrAbility(this);
         }
     }
 
 
     @Override
-    public void onLeftClick() {
+    public void onLeftClick(Bender bender) {
         if (entity == null) {
             return;
         }
@@ -46,16 +47,21 @@ public class AbilityWaterCube extends Ability {
     }
 
     @Override
-    public void onMiddleClick() {
+    public void onMiddleClick(Bender bender) {
 
     }
 
     @Override
-    public void onRightClick() {
+    public void onRightClick(Bender bender) {
         if (entity == null) {
             return;
         }
         entity.setControlled(false);
         Bender.getBender((PlayerEntity) entity.getOwner()).setCurrAbility(null);
+    }
+
+    @Override
+    public void onTick(Bender bender) {
+
     }
 }

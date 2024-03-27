@@ -12,6 +12,7 @@ public class ModMessages {
     public static final Identifier MOUSE_PACKET_ID = new Identifier(MODID,"mouse");
     public static final Identifier ABILITY1_PACKET_ID = new Identifier(MODID,"ability1");
     public static final Identifier ABILITY2_PACKET_ID = new Identifier(MODID,"ability2");
+    public static final Identifier SYNC_CURR_ABILITY_PACKET_ID = new Identifier(MODID,"curr");
 
     public static void registerC2SPackets(){
         ServerPlayNetworking.registerGlobalReceiver(MOUSE_PACKET_ID, MouseC2SPacket::receive);
@@ -19,7 +20,4 @@ public class ModMessages {
         ServerPlayNetworking.registerGlobalReceiver(ABILITY2_PACKET_ID, Ability2C2SPacket::receive);
     }
 
-    public static void registerS2CPackets(){
-
-    }
 }

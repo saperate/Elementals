@@ -175,7 +175,7 @@ public class WaterArcEntity extends ProjectileEntity {
 
     @Override
     public void onRemoved() {
-        summonParticles(getWorld(), this, random, ParticleTypes.SPLASH, 10, 100);
+        summonParticles(this, random,ParticleTypes.SPLASH, 10, 100);
     }
 
     /**

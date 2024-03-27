@@ -11,7 +11,6 @@ public class Ability2C2SPacket {
     public static void receive(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler,
                                PacketByteBuf buf, PacketSender responseSender) {
         // Everything here happens ONLY on the Server!
-        System.out.println("hi");
         Bender.getBender(player).bend(1);
     }
 }
