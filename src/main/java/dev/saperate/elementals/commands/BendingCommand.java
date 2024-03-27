@@ -19,20 +19,39 @@ public class BendingCommand {
     public static void register(CommandDispatcher<ServerCommandSource> dispatcher, CommandRegistryAccess commandRegistryAccess, CommandManager.RegistrationEnvironment registrationEnvironment) {
         dispatcher.register(CommandManager.literal("bending")
                 .then(CommandManager.literal("get").executes(BendingCommand::getSelfElement))
-                //.then(CommandManager.literal("set").then(CommandManager.argument("name", ArgumentTypes.get()).executes(BendingCommand::run)))
+                .then(CommandManager.literal("set").then(CommandManager.argument("name", ElementArgumentType.element()).executes(BendingCommand::setSelfElement)))
         );
     }
 
     public static int getSelfElement(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
         Bender bender = Bender.getBender(context.getSource().getPlayer());
-        Element element = bender.element;
-        if(element.name.equals("None")){
-            context.getSource().sendFeedback((() -> Text.of("You do not have any bending element!")),false);
-        }else{
-            context.getSource().sendFeedback((() -> Text.of("You can bend " + bender.element.name.toLowerCase() + "!")),false);
+        Element element = bender.getElement();
+        if (element.getName().equals("None")) {
+            context.getSource().sendFeedback((() -> Text.of("You do not have any bending element!")), false);
+        } else {
+            context.getSource().sendFeedback((() -> Text.of("You can bend " + bender.getElement().getName().toLowerCase() + "!")), false);
         }
         return 1;
+    }
 
+    public static int setSelfElement(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
+        Bender bender = Bender.getBender(context.getSource().getPlayer());
+        Element element = bender.getElement();
+        Element newElement = ElementArgumentType.getElement(context);
 
+        if(element == newElement){
+            context.getSource().sendFeedback((() -> Text.of(
+                    "You could already bend: " + bender.getElement().name)
+            ), false);
+            return 1;
+        }
+        bender.setElement(newElement);
+        bender.bindAbility(newElement.getAbility(0),0);
+        bender.bindAbility(newElement.getAbility(1),1);
+
+        context.getSource().sendFeedback((() -> Text.of(
+                bender.player.getNameForScoreboard() + " can now bend: " + bender.getElement().name)
+        ), true);
+        return 1;
     }
 }

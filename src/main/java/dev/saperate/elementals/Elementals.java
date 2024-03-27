@@ -1,12 +1,16 @@
 package dev.saperate.elementals;
 
 import dev.saperate.elementals.commands.BendingCommand;
+import dev.saperate.elementals.commands.ElementArgumentType;
 import dev.saperate.elementals.elements.NoneElement;
 import dev.saperate.elementals.elements.water.WaterElement;
 import net.fabricmc.api.ModInitializer;
 
 
+import net.fabricmc.fabric.api.command.v2.ArgumentTypeRegistry;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
+import net.minecraft.command.argument.serialize.ConstantArgumentSerializer;
+import net.minecraft.util.Identifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,6 +23,7 @@ public class Elementals implements ModInitializer {
 	@Override
 	public void onInitialize() {
 		registerElements();
+		registerCommands();
 		registerC2SPackets();
 		CommandRegistrationCallback.EVENT.register(BendingCommand::register);
 
@@ -29,5 +34,13 @@ public class Elementals implements ModInitializer {
 	private void registerElements(){
 		new NoneElement();
 		new WaterElement();
+	}
+
+	private void registerCommands(){
+		ArgumentTypeRegistry.registerArgumentType(
+				new Identifier(MODID,"bending"),
+				ElementArgumentType.class,
+				ConstantArgumentSerializer.of(ElementArgumentType::element)
+		);
 	}
 }

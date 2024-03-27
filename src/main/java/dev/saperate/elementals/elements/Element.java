@@ -32,4 +32,16 @@ public abstract class Element{
         return abilityList.contains(ability);
     }
 
+    public static Element getElementByName(String name){
+        for(Element e : elementList){
+            if(e.name.equalsIgnoreCase(name)){
+                return e;
+            }
+        }
+        return null;
+    }
+
+    public String getName() {
+        return name;
+    }
 }
