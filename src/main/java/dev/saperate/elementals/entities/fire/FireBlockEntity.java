@@ -27,6 +27,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.TypeFilter;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
+import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
@@ -107,7 +108,6 @@ public class FireBlockEntity extends Entity {
 
         List<LivingEntity> hits = getWorld().getEntitiesByClass(LivingEntity.class, getWorld().isClient ? getBoundingBox() : getBoundingBox().offset(getPos()), LivingEntity::isAlive);
 
-
         for (LivingEntity entity : hits) {
             if (!entity.isFireImmune() && entity.getY() - getY() < h) {
                 System.out.println(entity.getY() - getY());
@@ -115,9 +115,7 @@ public class FireBlockEntity extends Entity {
                     System.out.println(entity.getFireTicks());
                     entity.setOnFireFor(8);
                 }
-
-
-                //entity.damage(getDamageSources().inFire(), 1.5f);//1.5f for normal, 2 for blue
+                entity.damage(getDamageSources().inFire(), 1.5f);//1.5f for normal, 2.5f for blue
             }
         }
     }

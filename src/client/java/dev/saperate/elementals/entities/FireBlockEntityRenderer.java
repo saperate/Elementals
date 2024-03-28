@@ -41,7 +41,6 @@ public class FireBlockEntityRenderer extends EntityRenderer<FireBlockEntity> {
 
         VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderLayer.getCutout());
 
-        vertexConsumer.color(1,1,1,0);
 
         //Use soul fire for blue fire
         MinecraftClient.getInstance().getBlockRenderManager().renderBlock(Blocks.FIRE.getDefaultState(), entity.getBlockPos(), entity.getWorld(), matrices, vertexConsumer, false, entity.getEntityWorld().random);
