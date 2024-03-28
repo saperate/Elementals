@@ -27,7 +27,7 @@ public class AbilityFireIgnite extends Ability {
         BlockState blockState = player.getEntityWorld().getBlockState(hit.getBlockPos());
         BlockPos bPos = hit.getBlockPos();
 
-        if (hit.getType() == HitResult.Type.BLOCK) {
+        if (hit.getType() == HitResult.Type.BLOCK && blockState.isSolidBlock(player.getWorld(),bPos)) {
             //placeFire(hit.getBlockPos(), hit.getSide(), player, blockState);
             Entity entity = new FireBlockEntity(player.getWorld(), player, bPos.getX() + 0.5f, bPos.getY() + 1, bPos.getZ() + 0.5f);
             player.getWorld().spawnEntity(entity);

@@ -67,7 +67,7 @@ public class ElementArgumentType implements ArgumentType<Element> {
         return EXAMPLES;
     }
 
-    public static <S> Element getElement(CommandContext<S> context) {
-        return context.getArgument("name", Element.class);
+    public static <S> Element getElement(CommandContext<S> context, String name) {
+        return context.getArgument(name, Element.class);
     }
 }

@@ -21,6 +21,9 @@ public abstract class Element{
     }
 
     public Ability getAbility(int index){
+        if(index == -1){
+            return null;
+        }
         return abilityList.get(index);
     }
 
@@ -38,7 +41,7 @@ public abstract class Element{
                 return e;
             }
         }
-        return null;
+        return elementList.get(0);//none
     }
 
     public String getName() {
