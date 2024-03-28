@@ -32,8 +32,7 @@ public class FireBlockEntityRenderer extends EntityRenderer<FireBlockEntity> {
         matrices.push();
         matrices.translate(-0.5f, 0, -0.5f);
 
-        float diff = ( entity.getFireHeight() - entity.prevFlameSize ) / entity.heightAdjustSpeed;
-        entity.prevFlameSize += diff;
+
         matrices.scale(1, entity.prevFlameSize, 1);
 
         RenderSystem.setShader(GameRenderer::getPositionColorProgram);

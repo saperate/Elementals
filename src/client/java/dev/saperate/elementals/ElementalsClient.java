@@ -1,5 +1,7 @@
 package dev.saperate.elementals;
 
+import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.context.CommandContext;
 import dev.saperate.elementals.entities.FireBlockEntityRenderer;
 import dev.saperate.elementals.entities.WaterArcEntityRenderer;
 import dev.saperate.elementals.entities.WaterCubeEntityRenderer;
@@ -9,8 +11,13 @@ import dev.saperate.elementals.keys.abilities.KeyAbility2;
 import dev.saperate.elementals.packets.SyncBendingElementS2CPacket;
 import dev.saperate.elementals.packets.SyncCurrAbilityS2CPacket;
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
+import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
+import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
+import net.minecraft.command.CommandRegistryAccess;
+import net.minecraft.command.argument.GameProfileArgumentType;
 
 import static dev.saperate.elementals.entities.fire.FireBlockEntity.FIREBLOCK;
 import static dev.saperate.elementals.entities.water.WaterCubeEntity.WATERCUBE;
@@ -19,8 +26,11 @@ import static dev.saperate.elementals.network.ModMessages.SYNC_CURR_ABILITY_PACK
 import static dev.saperate.elementals.network.ModMessages.SYNC_ELEMENT_PACKET_ID;
 
 public class ElementalsClient implements ClientModInitializer {
+
+
 	@Override
 	public void onInitializeClient() {
+
 
 		registerS2CPackets();
 		MouseInput.registerMouseClickEvent();

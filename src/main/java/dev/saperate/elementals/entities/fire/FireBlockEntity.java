@@ -2,6 +2,8 @@ package dev.saperate.elementals.entities.fire;
 
 import com.mojang.datafixers.types.templates.Tag;
 import dev.saperate.elementals.entities.water.WaterCubeEntity;
+import dev.saperate.elementals.network.packets.FireDamageC2SPacket;
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 import net.minecraft.entity.*;
 import net.minecraft.entity.damage.DamageSource;
@@ -13,23 +15,35 @@ import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.entity.projectile.ProjectileUtil;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtElement;
+import net.minecraft.nbt.NbtTypes;
 import net.minecraft.predicate.entity.EntityPredicates;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.tag.TagManagerLoader;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Arm;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.TypeFilter;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
 
-public class FireBlockEntity extends Entity{
+import java.util.List;
+import java.util.function.Predicate;
+
+import static dev.saperate.elementals.network.ModMessages.FIRE_DAMAGE_PACKET_ID;
+import static net.minecraft.entity.projectile.ProjectileUtil.getEntityCollision;
+
+public class FireBlockEntity extends Entity {
     public static final int MAX_FLAME_SIZE = 5;
     private static final TrackedData<Float> HEIGHT = DataTracker.registerData(FireBlockEntity.class, TrackedDataHandlerRegistry.FLOAT);
     public Long creationTime;
     public float prevFlameSize = 0;
-    public int heightAdjustSpeed = 25;//Smaller is faster
+    public int heightAdjustSpeed = 10;//Smaller is faster
+    public float pr =0;
     public static final EntityType<FireBlockEntity> FIREBLOCK = Registry.register(
             Registries.ENTITY_TYPE,
             new Identifier("elementals", "fire_block"),
@@ -56,7 +70,7 @@ public class FireBlockEntity extends Entity{
     @Override
     public boolean damage(DamageSource source, float amount) {
         Entity entity = source.getSource();
-        if(entity instanceof ProjectileEntity){
+        if (entity instanceof ProjectileEntity) {
             entity.discard();
         }
         return super.damage(source, amount);
@@ -75,25 +89,44 @@ public class FireBlockEntity extends Entity{
             discard();
             return;
         }
+        float diff = ( getFireHeight() - prevFlameSize ) / heightAdjustSpeed;
+        prevFlameSize += diff;
         if (prevFlameSize > MAX_FLAME_SIZE - 1) {
             setFireHeight(1.5f); //Upgrade will go : 1.5 -> 2 -> 3 -> 4 -> 5
-            heightAdjustSpeed = 40;
+            heightAdjustSpeed = 5;
         }
 
         float h = getFireHeight();
-        EntityHitResult hit = ProjectileUtil.raycast(this, getPos(), getPos().add(0, h + 0.5f, 0), getBoundingBox(), entity -> entity instanceof Entity, h + 0.5f);
-        if (hit != null) {
-            if (hit.getType() == HitResult.Type.ENTITY) {
-                if (hit.getEntity() instanceof LivingEntity entity) {
-                    entity.damage(this.getDamageSources().inFire(), 1);
-                    entity.setOnFire(true);
+
+
+        //pr is the previous height
+        if(pr != getDataTracker().get(HEIGHT)){
+            System.out.println("Height was changed!!!!!! " + pr + " != " + h);
+            pr = h;
+        }
+
+        List<LivingEntity> hits = getWorld().getEntitiesByClass(LivingEntity.class, getWorld().isClient ? getBoundingBox() : getBoundingBox().offset(getPos()), LivingEntity::isAlive);
+
+
+        for (LivingEntity entity : hits) {
+            if (!entity.isFireImmune() && entity.getY() - getY() < h) {
+                System.out.println(entity.getY() - getY());
+                if (!entity.isFireImmune()) {
+                    System.out.println(entity.getFireTicks());
+                    entity.setOnFireFor(8);
                 }
+
+
+                //entity.damage(getDamageSources().inFire(), 1.5f);//1.5f for normal, 2 for blue
             }
         }
     }
 
-
-
+    @Override
+    public void onDataTrackerUpdate(List<DataTracker.SerializedEntry<?>> dataEntries) {
+        super.onDataTrackerUpdate(dataEntries);
+        System.out.println(dataEntries);
+    }
 
     public float getFireHeight() {
         return this.dataTracker.get(HEIGHT);
@@ -118,5 +151,7 @@ public class FireBlockEntity extends Entity{
     protected void writeCustomDataToNbt(NbtCompound nbt) {
 
     }
+
+
 
 }

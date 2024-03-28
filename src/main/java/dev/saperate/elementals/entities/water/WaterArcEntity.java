@@ -95,9 +95,6 @@ public class WaterArcEntity extends ProjectileEntity {
                 LivingEntity entity = (LivingEntity) ((EntityHitResult) hit).getEntity();
                 entity.damage(this.getDamageSources().playerAttack((PlayerEntity) owner), 4);
                 entity.addVelocity(this.getVelocity().multiply(0.2f));
-                if (parent != null) {
-                    this.getParent().setChild(null);
-                }
                 WaterArcEntity child = getChild();
                 if (child != null) {
                     this.getChild().setParent(null);
