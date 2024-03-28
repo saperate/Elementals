@@ -15,6 +15,7 @@ import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.render.model.BakedModelManager;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.random.Random;
 import org.joml.Matrix4f;
 
@@ -30,9 +31,10 @@ public class FireBlockEntityRenderer extends EntityRenderer<FireBlockEntity> {
     public void render(FireBlockEntity entity, float yaw, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light) {
         matrices.push();
         matrices.translate(-0.5f, 0, -0.5f);
-        matrices.scale(1,entity.getFireHeight(),1);
 
-        System.out.println(entity.getFireHeight());
+        float diff = ( entity.getFireHeight() - entity.prevFlameSize ) / entity.heightAdjustSpeed;
+        entity.prevFlameSize += diff;
+        matrices.scale(1, entity.prevFlameSize, 1);
 
         RenderSystem.setShader(GameRenderer::getPositionColorProgram);
         RenderSystem.enableBlend();
@@ -42,7 +44,8 @@ public class FireBlockEntityRenderer extends EntityRenderer<FireBlockEntity> {
 
         vertexConsumer.color(1,1,1,0);
 
-        MinecraftClient.getInstance().getBlockRenderManager().renderBlock(Blocks.SOUL_FIRE.getDefaultState(), entity.getBlockPos(), entity.getWorld(), matrices, vertexConsumer, false, entity.getEntityWorld().random);
+        //Use soul fire for blue fire
+        MinecraftClient.getInstance().getBlockRenderManager().renderBlock(Blocks.FIRE.getDefaultState(), entity.getBlockPos(), entity.getWorld(), matrices, vertexConsumer, false, entity.getEntityWorld().random);
 
         RenderSystem.disableBlend();
         matrices.pop();
