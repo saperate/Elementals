@@ -10,7 +10,7 @@ import org.joml.Vector3f;
 
 public class AbilityWaterArc implements Ability {
     @Override
-    public void onCall(Bender bender) {
+    public void onCall(Bender bender, long deltaT) {
         PlayerEntity player = bender.player;
         Vector3f pos = WaterElement.canBend(player);
 

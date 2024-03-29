@@ -20,6 +20,7 @@ public class Bender {
     public final PlayerEntity player;
     private Element element;
     public Ability[] boundAbilities = new Ability[3];
+    public Long castTime;
     @Nullable
     public Ability currAbility;
     @Nullable
@@ -51,8 +52,15 @@ public class Bender {
     }
 
     public void bend(int index) {
-        if (index >= 0 && index < 5 && boundAbilities[index] != null && currAbility == null) {
-            boundAbilities[index].onCall(this);
+        if (index >= 0 && index < 5 && boundAbilities[index] != null) {
+            if(castTime != null){
+                boundAbilities[index].onCall(this,System.currentTimeMillis() - castTime);
+                castTime = null;
+            }else{
+                castTime = System.currentTimeMillis();
+                setCurrAbility(boundAbilities[index]);
+            }
+
         }
     }
 

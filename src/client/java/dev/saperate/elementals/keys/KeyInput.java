@@ -16,6 +16,7 @@ import java.util.List;
 public abstract class KeyInput {
     private static final List<KeyInput> keyInputs = new ArrayList<>();
     private KeyBinding keyBinding;
+public boolean lastFrameWasHolding;
 
     public KeyInput(){
         keyInputs.add(this);
@@ -30,14 +31,25 @@ public abstract class KeyInput {
         ));
 
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
-            while (keyBinding.wasPressed()) {
-                onPressed(packetID);
+            if(keyBinding.isPressed() && !lastFrameWasHolding){
+                lastFrameWasHolding = true;
+                //Started holding
+                onStartHolding(packetID);
+            }
+            if(!keyBinding.isPressed() && lastFrameWasHolding){
+                lastFrameWasHolding = false;
+                //Stopped holding
+                onEndHolding(packetID);
             }
         });
     }
 
 
-    public void onPressed(Identifier packetID){
+    public void onStartHolding(Identifier packetID){
+        ClientPlayNetworking.send(packetID, PacketByteBufs.create());
+    }
+
+    public void onEndHolding(Identifier packetID){
         ClientPlayNetworking.send(packetID, PacketByteBufs.create());
     }
 

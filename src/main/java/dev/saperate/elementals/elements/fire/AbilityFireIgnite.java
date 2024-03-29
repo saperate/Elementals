@@ -31,7 +31,7 @@ import static dev.saperate.elementals.utils.SapsUtils.*;
 
 public class AbilityFireIgnite implements Ability {
     @Override
-    public void onCall(Bender bender) {
+    public void onCall(Bender bender, long deltaT) {
         PlayerEntity player = bender.player;
         BlockHitResult hit = (BlockHitResult) player.raycast(5, 0, true);
         BlockState blockState = player.getEntityWorld().getBlockState(hit.getBlockPos());

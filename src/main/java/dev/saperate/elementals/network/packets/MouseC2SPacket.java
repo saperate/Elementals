@@ -18,7 +18,7 @@ public class MouseC2SPacket {
 
 
         Bender bender = Bender.getBender(player);
-        if(bender.currAbility == null){
+        if(bender.currAbility == null || bender.castTime != null){
             return;
         }
         if(left){

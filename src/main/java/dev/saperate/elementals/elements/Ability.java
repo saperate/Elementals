@@ -4,7 +4,7 @@ import dev.saperate.elementals.data.Bender;
 import net.minecraft.entity.player.PlayerEntity;
 
 public interface Ability {
-    void onCall(Bender bender);
+    void onCall(Bender bender, long deltaT);
 
     void onLeftClick(Bender bender);
 
