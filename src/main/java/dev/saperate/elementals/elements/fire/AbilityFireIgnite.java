@@ -1,20 +1,28 @@
 package dev.saperate.elementals.elements.fire;
 
 import dev.saperate.elementals.data.Bender;
+import dev.saperate.elementals.data.PlayerData;
+import dev.saperate.elementals.data.StateDataSaverAndLoader;
 import dev.saperate.elementals.elements.Ability;
 import dev.saperate.elementals.entities.fire.FireBlockEntity;
 import dev.saperate.elementals.entities.water.WaterArcEntity;
 import net.minecraft.block.AbstractFireBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.block.entity.AbstractFurnaceBlockEntity;
+import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.property.IntProperty;
+import net.minecraft.state.property.Properties;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.event.GameEvent;
 import org.joml.Vector3f;
 
 import static dev.saperate.elementals.elements.fire.FireElement.placeFire;
@@ -28,11 +36,33 @@ public class AbilityFireIgnite implements Ability {
         BlockState blockState = player.getEntityWorld().getBlockState(hit.getBlockPos());
         BlockPos bPos = hit.getBlockPos();
 
-        if (hit.getType() == HitResult.Type.BLOCK
-                && AbstractFireBlock.canPlaceAt(player.getWorld(),bPos.up(),hit.getSide())) {
-            //placeFire(hit.getBlockPos(), hit.getSide(), player, blockState);
-            Entity entity = new FireBlockEntity(player.getWorld(), player, bPos.getX() + 0.5f, bPos.getY() + 1, bPos.getZ() + 0.5f);
-            player.getWorld().spawnEntity(entity);
+        if (hit.getType() == HitResult.Type.BLOCK) {
+            System.out.println(blockState.getProperties());
+            if(blockState.getProperties().contains(Properties.LIT)){
+
+                BlockEntity blockEntity = player.getWorld().getBlockEntity(bPos);
+
+                if (blockEntity instanceof AbstractFurnaceBlockEntity furnace){
+                    if(furnace.getStack(1).isEmpty() && !blockState.get(Properties.LIT)){
+                        furnace.setStack(1,new ItemStack(Items.COAL,1));
+                    }
+                    return;
+                }
+
+                player.getWorld().setBlockState(bPos, blockState.with(Properties.LIT, true), 11);
+                player.getWorld().emitGameEvent(player, GameEvent.BLOCK_CHANGE, bPos);
+                return;
+            }
+
+            if(AbstractFireBlock.canPlaceAt(player.getWorld(),bPos.up(),hit.getSide())){
+                if(PlayerData.get(player).canUseUpgrade("flareUp")){//Keep the ability to light up stuff
+                    FireBlockEntity entity = new FireBlockEntity(player.getWorld(), player, bPos.getX() + 0.5f, bPos.getY() + 1, bPos.getZ() + 0.5f);
+                    entity.setIsBlue(PlayerData.get(player).canUseUpgrade("blueFire"));
+                    player.getWorld().spawnEntity(entity);
+                }else{
+                    placeFire(hit.getBlockPos(), hit.getSide(), player, blockState);
+                }
+            }
         }
     }
 

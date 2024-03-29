@@ -1,6 +1,7 @@
 package dev.saperate.elementals.elements.water;
 
 import dev.saperate.elementals.elements.Element;
+import dev.saperate.elementals.elements.Upgrade;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.player.PlayerEntity;
@@ -13,13 +14,21 @@ import org.joml.Vector3f;
 import static dev.saperate.elementals.utils.SapsUtils.getEntityLookVector;
 
 public class WaterElement extends Element {
+
+
     public WaterElement() {
-        super("Water");
+        super("Water",
+                new Upgrade[]{
+                        new Upgrade("waterCube", new Upgrade[]{
+                                new Upgrade("waterHelmet")
+                        }),
+                        new Upgrade("waterArc")
+                });
         addAbility(new AbilityWaterCube());
         addAbility(new AbilityWaterArc());
     }
 
-    public static Vector3f canBend(PlayerEntity player){
+    public static Vector3f canBend(PlayerEntity player) {
         BlockHitResult hit = (BlockHitResult) player.raycast(5, 0, true);
         BlockState blockState = player.getEntityWorld().getBlockState(hit.getBlockPos());
 
@@ -33,4 +42,5 @@ public class WaterElement extends Element {
         }
         return null;
     }
+
 }

@@ -5,6 +5,7 @@ import dev.saperate.elementals.entities.fire.FireBlockEntity;
 import dev.saperate.elementals.entities.water.WaterCubeEntity;
 import net.minecraft.block.AbstractFireBlock;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.color.world.BiomeColors;
@@ -14,6 +15,7 @@ import net.minecraft.client.render.entity.EntityRenderer;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.render.model.BakedModelManager;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.entity.Entity;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.random.Random;
@@ -41,7 +43,10 @@ public class FireBlockEntityRenderer extends EntityRenderer<FireBlockEntity> {
 
         VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderLayer.getCutout());
         //Use soul fire for blue fire
-        MinecraftClient.getInstance().getBlockRenderManager().renderBlock(Blocks.FIRE.getDefaultState(), entity.getBlockPos(), entity.getWorld(), matrices, vertexConsumer, false, entity.getEntityWorld().random);
+
+        BlockState state = entity.isBlue() ? Blocks.SOUL_FIRE.getDefaultState() : Blocks.FIRE.getDefaultState();
+
+        MinecraftClient.getInstance().getBlockRenderManager().renderBlock(state, entity.getBlockPos(), entity.getWorld(), matrices, vertexConsumer, false, entity.getEntityWorld().random);
 
         RenderSystem.disableBlend();
         matrices.pop();

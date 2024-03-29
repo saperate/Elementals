@@ -1,6 +1,7 @@
 package dev.saperate.elementals.elements.fire;
 
 import dev.saperate.elementals.elements.Element;
+import dev.saperate.elementals.elements.Upgrade;
 import net.minecraft.block.AbstractFireBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -15,7 +16,11 @@ import net.minecraft.world.event.GameEvent;
 
 public class FireElement extends Element {
     public FireElement() {
-        super("Fire");
+        super("Fire", new Upgrade[]{
+                new Upgrade("flareUp",new Upgrade[]{
+                        new Upgrade("blueFire")
+                })
+        });
         addAbility(new AbilityFireIgnite());
     }
 
@@ -23,6 +28,8 @@ public class FireElement extends Element {
         BlockPos newPos = pos.offset(side);
 
         player.getWorld().playSound(player, pos, SoundEvents.ITEM_FLINTANDSTEEL_USE, SoundCategory.BLOCKS, 1.0F, player.getWorld().getRandom().nextFloat() * 0.4F + 0.8F);
+
+        System.out.println(state.getProperties());
         if(state.getProperties().contains(Properties.LIT)){
             player.getWorld().setBlockState(pos, state.with(Properties.LIT, true), 11);
             player.getWorld().emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);

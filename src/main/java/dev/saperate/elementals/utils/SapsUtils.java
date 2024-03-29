@@ -12,6 +12,31 @@ import org.joml.Vector3f;
 
 public class SapsUtils {
 
+    public static int extractBits(int num, int start, int length){
+        int mask = (1 << length) - 1;
+        mask <<= start;
+        int result = num & mask;
+        result >>= start;
+        return result;
+    }
+
+    //Doesn't do anything anymore
+    public void parseUpgradeInt(int obj){
+
+        int i = 0;
+        while(true){
+            int len = extractBits(obj,i,3);
+            if(len == 0){
+                break;
+            }
+            i+= 3;
+            byte r = (byte) extractBits(obj,i,len);
+
+
+            i+= len;
+        }
+    }
+
     public static float calculatePitch(Vec3d direction) {
         double horizontalDistance = Math.sqrt(direction.x * direction.x + direction.z * direction.z);
         double pitch = Math.atan2(direction.y, horizontalDistance);

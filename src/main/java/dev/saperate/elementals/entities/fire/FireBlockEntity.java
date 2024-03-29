@@ -21,10 +21,10 @@ import static net.minecraft.entity.projectile.ProjectileUtil.getEntityCollision;
 public class FireBlockEntity extends Entity {
     public static final int MAX_FLAME_SIZE = 5;
     private static final TrackedData<Float> HEIGHT = DataTracker.registerData(FireBlockEntity.class, TrackedDataHandlerRegistry.FLOAT);
+    private static final TrackedData<Boolean> IS_BLUE = DataTracker.registerData(FireBlockEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
     public Long creationTime;
     public float prevFlameSize = 0;
     public int heightAdjustSpeed = 10;//Smaller is faster
-    public float pr =0;
     public static final EntityType<FireBlockEntity> FIREBLOCK = Registry.register(
             Registries.ENTITY_TYPE,
             new Identifier("elementals", "fire_block"),
@@ -61,6 +61,7 @@ public class FireBlockEntity extends Entity {
     @Override
     protected void initDataTracker() {
         this.getDataTracker().startTracking(HEIGHT, 1f);
+        this.getDataTracker().startTracking(IS_BLUE, false);
     }
 
     @Override
@@ -89,7 +90,7 @@ public class FireBlockEntity extends Entity {
                 if (!entity.isFireImmune()) {
                     entity.setOnFireFor(8);
                 }
-                entity.damage(getDamageSources().inFire(), 1.5f);//1.5f for normal, 2.5f for blue
+                entity.damage(getDamageSources().inFire(), isBlue() ? 2.5f : 1.5f);//1.5f for normal, 2.5f for blue
             }
         }
     }
@@ -97,7 +98,6 @@ public class FireBlockEntity extends Entity {
     @Override
     public void onDataTrackerUpdate(List<DataTracker.SerializedEntry<?>> dataEntries) {
         super.onDataTrackerUpdate(dataEntries);
-        System.out.println(dataEntries);
     }
 
 
@@ -108,6 +108,14 @@ public class FireBlockEntity extends Entity {
 
     public void setFireHeight(float h) {
         this.getDataTracker().set(HEIGHT, h);
+    }
+
+    public boolean isBlue() {
+        return this.dataTracker.get(IS_BLUE);
+    }
+
+    public void setIsBlue(boolean val) {
+        this.getDataTracker().set(IS_BLUE, val);
     }
 
 

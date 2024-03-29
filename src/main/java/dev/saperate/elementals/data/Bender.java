@@ -42,6 +42,11 @@ public class Bender {
         }
     }
 
+    public void clearBindings(){
+        boundAbilities = new Ability[5];
+        StateDataSaverAndLoader.getPlayerState(player).boundAbilities = new Ability[5];
+    }
+
     public void bend(int index){
         if(index >= 0 && index < 5 && boundAbilities[index] != null && currAbility == null){
             boundAbilities[index].onCall(this);

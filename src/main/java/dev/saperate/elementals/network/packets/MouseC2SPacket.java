@@ -22,13 +22,19 @@ public class MouseC2SPacket {
             return;
         }
         if(left){
-            bender.currAbility.onLeftClick(bender);
+            server.execute(() -> {
+                bender.currAbility.onLeftClick(bender);
+            });
         }
         if(mid){
-            bender.currAbility.onMiddleClick(bender);
+            server.execute(() -> {
+                bender.currAbility.onMiddleClick(bender);
+            });
         }
         if(right){
-            bender.currAbility.onRightClick(bender);
+            server.execute(() -> {
+                bender.currAbility.onRightClick(bender);
+            });
         }
     }
 

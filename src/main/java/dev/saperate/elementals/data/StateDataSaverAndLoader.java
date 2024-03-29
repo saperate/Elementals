@@ -22,7 +22,7 @@ public class StateDataSaverAndLoader extends PersistentState {
 
     @Override
     public NbtCompound writeNbt(NbtCompound nbt) {
-
+        System.err.println("Saving the stuff");
         NbtCompound playersNbt = new NbtCompound();
         players.forEach(((uuid, playerData) -> {
             NbtCompound playerNbt = new NbtCompound();
@@ -32,6 +32,8 @@ public class StateDataSaverAndLoader extends PersistentState {
             playerNbt.putInt("bind1",playerData.element.abilityList.indexOf(playerData.boundAbilities[0]));
             playerNbt.putInt("bind2",playerData.element.abilityList.indexOf(playerData.boundAbilities[1]));
             playerNbt.putInt("bind3",playerData.element.abilityList.indexOf(playerData.boundAbilities[2]));
+
+            playerNbt.put("upgrades",playerData.element.onSave(playerData));
 
             playersNbt.put(uuid.toString(), playerNbt);
         }));
@@ -56,6 +58,9 @@ public class StateDataSaverAndLoader extends PersistentState {
             playerData.boundAbilities[0] = element.getAbility(nbt.getInt("bind1"));
             playerData.boundAbilities[1] = element.getAbility(nbt.getInt("bind2"));
             playerData.boundAbilities[2] = element.getAbility(nbt.getInt("bind3"));
+
+            playerData.element.onRead(nbt.getCompound("upgrades"),playerData);
+
 
             UUID uuid = UUID.fromString(key);
             state.players.put(uuid, playerData);
