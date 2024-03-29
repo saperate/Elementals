@@ -6,6 +6,7 @@ import dev.saperate.elementals.data.StateDataSaverAndLoader;
 import dev.saperate.elementals.elements.Ability;
 import dev.saperate.elementals.entities.fire.FireBlockEntity;
 import dev.saperate.elementals.entities.water.WaterArcEntity;
+import dev.saperate.elementals.mixin.FurnaceBlockEntityAccessor;
 import net.minecraft.block.AbstractFireBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -43,10 +44,8 @@ public class AbilityFireIgnite implements Ability {
                 BlockEntity blockEntity = player.getWorld().getBlockEntity(bPos);
 
                 if (blockEntity instanceof AbstractFurnaceBlockEntity furnace){
-                    if(furnace.getStack(1).isEmpty() && !blockState.get(Properties.LIT)){
-                        furnace.setStack(1,new ItemStack(Items.COAL,1));
-                    }
-                    return;
+                    ((FurnaceBlockEntityAccessor) furnace).setBurnTime(100);
+                    ((FurnaceBlockEntityAccessor) furnace).setFuelTime(100);
                 }
 
                 player.getWorld().setBlockState(bPos, blockState.with(Properties.LIT, true), 11);
