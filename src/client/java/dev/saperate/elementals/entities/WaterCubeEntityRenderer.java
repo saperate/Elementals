@@ -50,6 +50,7 @@ public class WaterCubeEntityRenderer extends EntityRenderer<WaterCubeEntity> {
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
 
+
         VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderLayer.getTranslucentMovingBlock());
 
         int color = BiomeColors.getWaterColor(entity.getWorld(),entity.getBlockPos());

@@ -57,20 +57,23 @@ public class WaterCubeEntity extends ProjectileEntity {
         super(WATERCUBE, world);
         setOwner(owner);
         setPos(x, y, z);
+        setControlled(true);
     }
 
     @Override
     protected void initDataTracker() {
         this.getDataTracker().startTracking(OWNER_ID, 0);
-        this.getDataTracker().startTracking(IS_CONTROLLED, true);
+        this.getDataTracker().startTracking(IS_CONTROLLED, false);
     }
 
     @Override
     public void tick() {
         super.tick();
         Entity owner = getOwner();
-        if (owner == null) {
-            discard();
+        if(owner == null){
+            this.setVelocity(this.getVelocity().add(0.0, -0.04, 0.0));
+            this.move(MovementType.SELF, this.getVelocity());
+            collidesWithGround();
             return;
         }
         if(!getIsControlled()){
@@ -100,13 +103,7 @@ public class WaterCubeEntity extends ProjectileEntity {
 
             controlEntity(owner);
         }else if(!getWorld().isClient){
-            BlockPos blockDown = getBlockPos().down();
-            BlockState blockState = getWorld().getBlockState(blockDown);
-
-            if(!blockState.isAir() && getY() - getBlockPos().getY() == 0){
-                getWorld().setBlockState(getBlockPos(), Blocks.WATER.getDefaultState());
-                discard();
-            }
+            collidesWithGround();
         }
 
         this.move(MovementType.SELF, this.getVelocity());
@@ -124,6 +121,16 @@ public class WaterCubeEntity extends ProjectileEntity {
 
 
         this.addVelocity(direction.x, direction.y, direction.z);
+    }
+
+    public void collidesWithGround(){
+        BlockPos blockDown = getBlockPos().down();
+        BlockState blockState = getWorld().getBlockState(blockDown);
+
+        if(!blockState.isAir() && getY() - getBlockPos().getY() == 0){
+            getWorld().setBlockState(getBlockPos(), Blocks.WATER.getDefaultState());
+            discard();
+        }
     }
 
     @Override

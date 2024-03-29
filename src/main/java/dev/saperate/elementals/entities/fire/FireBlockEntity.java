@@ -5,6 +5,8 @@ import dev.saperate.elementals.entities.water.WaterCubeEntity;
 import dev.saperate.elementals.network.packets.FireDamageC2SPacket;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.entity.*;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.data.DataTracker;
@@ -96,23 +98,17 @@ public class FireBlockEntity extends Entity {
             setFireHeight(1.5f); //Upgrade will go : 1.5 -> 2 -> 3 -> 4 -> 5
             heightAdjustSpeed = 5;
         }
-
         float h = getFireHeight();
 
-
-        //pr is the previous height
-        if(pr != getDataTracker().get(HEIGHT)){
-            System.out.println("Height was changed!!!!!! " + pr + " != " + h);
-            pr = h;
+        if(getWorld().getBlockState(getBlockPos()).getBlock().equals(Blocks.WATER)){
+            this.discard();
         }
 
         List<LivingEntity> hits = getWorld().getEntitiesByClass(LivingEntity.class, getWorld().isClient ? getBoundingBox() : getBoundingBox().offset(getPos()), LivingEntity::isAlive);
 
         for (LivingEntity entity : hits) {
             if (!entity.isFireImmune() && entity.getY() - getY() < h) {
-                System.out.println(entity.getY() - getY());
                 if (!entity.isFireImmune()) {
-                    System.out.println(entity.getFireTicks());
                     entity.setOnFireFor(8);
                 }
                 entity.damage(getDamageSources().inFire(), 1.5f);//1.5f for normal, 2.5f for blue
@@ -125,6 +121,8 @@ public class FireBlockEntity extends Entity {
         super.onDataTrackerUpdate(dataEntries);
         System.out.println(dataEntries);
     }
+
+
 
     public float getFireHeight() {
         return this.dataTracker.get(HEIGHT);
