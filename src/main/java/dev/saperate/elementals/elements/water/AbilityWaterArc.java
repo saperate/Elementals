@@ -3,19 +3,20 @@ package dev.saperate.elementals.elements.water;
 import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.elements.Ability;
 import dev.saperate.elementals.entities.water.WaterArcEntity;
+import dev.saperate.elementals.entities.water.WaterCubeEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import org.joml.Vector3f;
 
 public class AbilityWaterArc implements Ability {
-    public WaterArcEntity entity;
     @Override
     public void onCall(Bender bender) {
         PlayerEntity player = bender.player;
         Vector3f pos = WaterElement.canBend(player);
 
         if (pos != null) {
-            entity = new WaterArcEntity(player.getWorld(), player, pos.x, pos.y, pos.z);
+            WaterArcEntity entity = new WaterArcEntity(player.getWorld(), player, pos.x, pos.y, pos.z);
+            bender.controlledEntity = entity;
             entity.createChain(player);
             player.getWorld().spawnEntity(entity);
 
@@ -25,6 +26,7 @@ public class AbilityWaterArc implements Ability {
 
     @Override
     public void onLeftClick(Bender bender) {
+        WaterArcEntity entity = (WaterArcEntity) bender.controlledEntity;
         if (entity == null) {
             return;
         }
@@ -45,6 +47,7 @@ public class AbilityWaterArc implements Ability {
 
     @Override
     public void onRightClick(Bender bender) {
+        WaterArcEntity entity = (WaterArcEntity) bender.controlledEntity;
         if (entity == null) {
             return;
         }

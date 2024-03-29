@@ -5,6 +5,7 @@ import dev.saperate.elementals.elements.Element;
 import dev.saperate.elementals.elements.water.WaterElement;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -15,64 +16,66 @@ import java.util.*;
 import static dev.saperate.elementals.network.ModMessages.SYNC_ELEMENT_PACKET_ID;
 
 public class Bender {
-    public static final Map<UUID,Bender> benders = new HashMap<>();
+    public static final Map<UUID, Bender> benders = new HashMap<>();
     public final PlayerEntity player;
     private Element element;
     public Ability[] boundAbilities = new Ability[3];
     @Nullable
     public Ability currAbility;
+    @Nullable
+    public Entity controlledEntity;
 
     public Bender(PlayerEntity player, Element element) {
         this.player = player;
-        if(element == null){
+        if (element == null) {
             this.element = Element.elementList.get(0);
-        }else{
+        } else {
             this.element = element;
         }
 
         benders.put(player.getUuid(), this);
     }
 
-    public void bindAbility(Ability ability, int index){
-        if(element.contains(ability) && index >= 0 && index < 3){
+    public void bindAbility(Ability ability, int index) {
+        if (element.contains(ability) && index >= 0 && index < 3) {
             boundAbilities[index] = ability;
-            if(!player.getWorld().isClient){
+            if (!player.getWorld().isClient) {
                 StateDataSaverAndLoader.getServerState(player.getServer()).players.get(player.getUuid()).boundAbilities = boundAbilities;
             }
         }
     }
 
-    public void clearBindings(){
+    public void clearBindings() {
         boundAbilities = new Ability[5];
         StateDataSaverAndLoader.getPlayerState(player).boundAbilities = new Ability[5];
     }
 
-    public void bend(int index){
-        if(index >= 0 && index < 5 && boundAbilities[index] != null && currAbility == null){
+    public void bend(int index) {
+        if (index >= 0 && index < 5 && boundAbilities[index] != null && currAbility == null) {
             boundAbilities[index].onCall(this);
         }
     }
 
-    public static Bender getBender(PlayerEntity player){
+    public static Bender getBender(PlayerEntity player) {
         return benders.get(player.getUuid());
     }
 
-    public void setCurrAbility(Ability ability){
+    public void setCurrAbility(Ability ability) {
         this.currAbility = ability;
     }
 
-    public void setCurrAbility(int i){
+    public void setCurrAbility(int i) {
         setCurrAbility(boundAbilities[i]);
     }
 
     public void setElement(Element element, boolean sync) {
-        if(element == null){
+        if (element == null) {
             this.element = Element.elementList.get(0);
-        }else{
+        } else {
             this.element = element;
         }
 
-        if(sync && !player.getWorld().isClient && player.getServer() != null){
+        if (sync && !player.getWorld().isClient && player.getServer() != null) {
             StateDataSaverAndLoader.getServerState(player.getServer()).players.get(player.getUuid()).element = element;
             syncBending(this);
         }
@@ -82,9 +85,9 @@ public class Bender {
         return element;
     }
 
-    public static void syncBending(Bender bender){
+    public static void syncBending(Bender bender) {
         PacketByteBuf buf = PacketByteBufs.create();
         buf.writeString(bender.getElement().name);
-        ServerPlayNetworking.send((ServerPlayerEntity) bender.player,SYNC_ELEMENT_PACKET_ID,buf);
+        ServerPlayNetworking.send((ServerPlayerEntity) bender.player, SYNC_ELEMENT_PACKET_ID, buf);
     }
 }

@@ -15,7 +15,6 @@ import org.joml.Vector3f;
 import static dev.saperate.elementals.utils.SapsUtils.getEntityLookVector;
 
 public class AbilityWaterCube implements Ability {
-    public WaterCubeEntity entity;
 
     @Override
     public void onCall(Bender bender) {
@@ -23,7 +22,8 @@ public class AbilityWaterCube implements Ability {
         Vector3f pos = WaterElement.canBend(player);
 
         if (pos != null) {
-            entity = new WaterCubeEntity(player.getWorld(), player, pos.x, pos.y, pos.z);
+            WaterCubeEntity entity = new WaterCubeEntity(player.getWorld(), player, pos.x, pos.y, pos.z);
+            bender.controlledEntity = entity;
             player.getWorld().spawnEntity(entity);
 
             bender.setCurrAbility(this);
@@ -33,6 +33,7 @@ public class AbilityWaterCube implements Ability {
 
     @Override
     public void onLeftClick(Bender bender) {
+        WaterCubeEntity entity = (WaterCubeEntity) bender.controlledEntity;
         if (entity == null) {
             return;
         }
@@ -53,6 +54,7 @@ public class AbilityWaterCube implements Ability {
 
     @Override
     public void onRightClick(Bender bender) {
+        WaterCubeEntity entity = (WaterCubeEntity) bender.controlledEntity;
         if (entity == null) {
             return;
         }
