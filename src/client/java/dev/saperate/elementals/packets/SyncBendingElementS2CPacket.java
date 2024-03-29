@@ -20,7 +20,7 @@ public class SyncBendingElementS2CPacket {
             return;
         }
         String e = buf.readString();
-        Bender.getBender(client.player).setElement(Element.getElementByName(e));
+        Bender.getBender(client.player).setElement(Element.getElementByName(e),false);
 
     }
 }

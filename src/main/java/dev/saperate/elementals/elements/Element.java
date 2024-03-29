@@ -36,13 +36,22 @@ public abstract class Element{
     }
 
     public static Element getElementByName(String name){
+        Element e  = getElementByNameNull(name);
+        if(e == null){
+            e = elementList.get(0);
+        }
+        return e;
+    }
+
+    public static Element getElementByNameNull(String name){
         for(Element e : elementList){
             if(e.name.equalsIgnoreCase(name)){
                 return e;
             }
         }
-        return elementList.get(0);//none
+        return null;
     }
+
 
     public String getName() {
         return name;

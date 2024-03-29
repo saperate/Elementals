@@ -34,7 +34,7 @@ public class ElementArgumentType implements ArgumentType<Element> {
         String name = reader.getString().substring(argBeginning).split(" ")[0];
         reader.readString();
 
-        Element e = Element.getElementByName(name);
+        Element e = Element.getElementByNameNull(name);
 
         if (e == null) {
             throw INVALID_ELEMENT.createWithContext(reader, name);

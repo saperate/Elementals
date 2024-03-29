@@ -7,7 +7,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import org.joml.Vector3f;
 
-public class AbilityWaterArc extends Ability {
+public class AbilityWaterArc implements Ability {
     public WaterArcEntity entity;
     @Override
     public void onCall(Bender bender) {

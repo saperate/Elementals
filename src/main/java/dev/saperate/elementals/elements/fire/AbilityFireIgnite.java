@@ -20,7 +20,7 @@ import org.joml.Vector3f;
 import static dev.saperate.elementals.elements.fire.FireElement.placeFire;
 import static dev.saperate.elementals.utils.SapsUtils.*;
 
-public class AbilityFireIgnite extends Ability {
+public class AbilityFireIgnite implements Ability {
     @Override
     public void onCall(Bender bender) {
         PlayerEntity player = bender.player;

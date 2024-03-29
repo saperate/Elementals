@@ -1,43 +1,21 @@
 package dev.saperate.elementals.entities.fire;
 
-import com.mojang.datafixers.types.templates.Tag;
-import dev.saperate.elementals.entities.water.WaterCubeEntity;
-import dev.saperate.elementals.network.packets.FireDamageC2SPacket;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
-import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.*;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ProjectileEntity;
-import net.minecraft.entity.projectile.ProjectileUtil;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
-import net.minecraft.nbt.NbtTypes;
-import net.minecraft.predicate.entity.EntityPredicates;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
-import net.minecraft.registry.tag.TagManagerLoader;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.Arm;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.TypeFilter;
-import net.minecraft.util.hit.EntityHitResult;
-import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.Box;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
 
 import java.util.List;
-import java.util.function.Predicate;
 
-import static dev.saperate.elementals.network.ModMessages.FIRE_DAMAGE_PACKET_ID;
 import static net.minecraft.entity.projectile.ProjectileUtil.getEntityCollision;
 
 public class FireBlockEntity extends Entity {

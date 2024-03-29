@@ -60,23 +60,15 @@ public class Bender {
         setCurrAbility(boundAbilities[i]);
     }
 
-    public void setElement(Element element) {
+    public void setElement(Element element, boolean sync) {
         if(element == null){
             this.element = Element.elementList.get(0);
         }else{
             this.element = element;
         }
 
-        if(!player.getWorld().isClient){
+        if(sync && !player.getWorld().isClient && player.getServer() != null){
             StateDataSaverAndLoader.getServerState(player.getServer()).players.get(player.getUuid()).element = element;
-            //TODO remove this
-            int abilitySize = this.element.abilityList.size();
-            if(abilitySize >= 1){
-                bindAbility(this.element.getAbility(0),0);
-            }
-            if(abilitySize >= 2){
-                bindAbility(this.element.getAbility(1),1);
-            }
             syncBending(this);
         }
     }

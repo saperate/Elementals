@@ -14,7 +14,7 @@ import org.joml.Vector3f;
 
 import static dev.saperate.elementals.utils.SapsUtils.getEntityLookVector;
 
-public class AbilityWaterCube extends Ability {
+public class AbilityWaterCube implements Ability {
     public WaterCubeEntity entity;
 
     @Override

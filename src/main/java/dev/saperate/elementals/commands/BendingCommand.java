@@ -6,6 +6,9 @@ import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import dev.saperate.elementals.data.Bender;
+import dev.saperate.elementals.data.PlayerData;
+import dev.saperate.elementals.data.StateDataSaverAndLoader;
+import dev.saperate.elementals.elements.Ability;
 import dev.saperate.elementals.elements.Element;
 import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.command.argument.ArgumentTypes;
@@ -58,7 +61,9 @@ public class BendingCommand {
             return 1;
         }
 
-        bender.setElement(newElement);
+        bender.setElement(newElement,true);
+
+        StateDataSaverAndLoader.getPlayerState(bender.player).boundAbilities = new Ability[5];
 
         //Very temporary stuff, will get removed once I get a GUI working
         int abilitySize = newElement.abilityList.size();
