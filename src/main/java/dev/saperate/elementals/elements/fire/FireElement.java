@@ -19,12 +19,17 @@ public class FireElement extends Element {
         super("Fire", new Upgrade[]{
                 new Upgrade("flareUp",new Upgrade[]{
                         new Upgrade("blueFire"),
-                        new Upgrade("fireWall")
+                        new Upgrade("fireWall", new Upgrade[]{
+                                new Upgrade("widerWall"),
+                                new Upgrade("tallerWall")
+                        }, true),
+                        new Upgrade("fireSpikes")
                 }, true)
         });
         addAbility(new AbilityFire1(),true);
         addAbility(new AbilityFireIgnite(), false);
         addAbility(new AbilityFireWall(), false);
+        addAbility(new AbilityFireSpikes(), false);
     }
 
     public static void placeFire(BlockPos pos, Direction side, PlayerEntity player, BlockState state){

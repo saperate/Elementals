@@ -33,9 +33,13 @@ public class AbilityFireIgnite implements Ability {
     @Override
     public void onCall(Bender bender, long deltaT) {
         PlayerEntity player = bender.player;
+        PlayerData playerData = PlayerData.get(player);
         BlockHitResult hit = (BlockHitResult) player.raycast(5, 0, true);
         BlockState blockState = player.getEntityWorld().getBlockState(hit.getBlockPos());
         BlockPos bPos = hit.getBlockPos();
+
+        boolean hasFlareUp = PlayerData.get(player).canUseUpgrade("flareUp");
+
 
         if (hit.getType() == HitResult.Type.BLOCK) {
             if(blockState.getProperties().contains(Properties.LIT)){
@@ -43,8 +47,9 @@ public class AbilityFireIgnite implements Ability {
                 BlockEntity blockEntity = player.getWorld().getBlockEntity(bPos);
 
                 if (blockEntity instanceof AbstractFurnaceBlockEntity furnace){
-                    ((FurnaceBlockEntityAccessor) furnace).setBurnTime(100);
-                    ((FurnaceBlockEntityAccessor) furnace).setFuelTime(100);
+                    //TODO make flare up last longer
+                    ((FurnaceBlockEntityAccessor) furnace).setBurnTime(hasFlareUp ? 200 : 100);
+                    ((FurnaceBlockEntityAccessor) furnace).setFuelTime(hasFlareUp ? 200 : 100);
                 }
 
                 player.getWorld().setBlockState(bPos, blockState.with(Properties.LIT, true), 11);
@@ -53,7 +58,7 @@ public class AbilityFireIgnite implements Ability {
             }
 
             if(AbstractFireBlock.canPlaceAt(player.getWorld(),bPos.up(),hit.getSide())){
-                if(PlayerData.get(player).canUseUpgrade("flareUp")){
+                if(hasFlareUp){
                     FireBlockEntity entity = new FireBlockEntity(player.getWorld(), player, bPos.getX() + 0.5f, bPos.getY() + 1, bPos.getZ() + 0.5f);
                     entity.setIsBlue(PlayerData.get(player).canUseUpgrade("blueFire"));
                     player.getWorld().spawnEntity(entity);

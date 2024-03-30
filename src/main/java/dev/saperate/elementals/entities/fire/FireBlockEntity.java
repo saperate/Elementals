@@ -20,9 +20,10 @@ import static net.minecraft.entity.projectile.ProjectileUtil.getEntityCollision;
 
 public class FireBlockEntity extends Entity {
     public static final int MAX_FLAME_SIZE = 5;
+    private static final TrackedData<Float> FINAL_HEIGHT = DataTracker.registerData(FireBlockEntity.class, TrackedDataHandlerRegistry.FLOAT);
     private static final TrackedData<Float> HEIGHT = DataTracker.registerData(FireBlockEntity.class, TrackedDataHandlerRegistry.FLOAT);
     private static final TrackedData<Boolean> IS_BLUE = DataTracker.registerData(FireBlockEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
-    public Long creationTime;
+    public int lifeTime = 0;
     public float prevFlameSize = 0;
     public int heightAdjustSpeed = 10;//Smaller is faster
     public static final EntityType<FireBlockEntity> FIREBLOCK = Registry.register(
@@ -43,7 +44,7 @@ public class FireBlockEntity extends Entity {
     public FireBlockEntity(World world, LivingEntity owner, double x, double y, double z) {
         super(FIREBLOCK, world);
         setPos(x, y, z);
-        creationTime = System.currentTimeMillis();
+        lifeTime = 200;
         setFireHeight(MAX_FLAME_SIZE);
     }
 
@@ -61,25 +62,29 @@ public class FireBlockEntity extends Entity {
     @Override
     protected void initDataTracker() {
         this.getDataTracker().startTracking(HEIGHT, 1f);
+        this.getDataTracker().startTracking(FINAL_HEIGHT, 1.5f);
         this.getDataTracker().startTracking(IS_BLUE, false);
     }
 
     @Override
     public void tick() {
         super.tick();
-        if (creationTime == null && !getWorld().isClient) {
+        lifeTime--;
+        if (lifeTime <= 0 && !getWorld().isClient) {
             discard();
             return;
         }
-        float diff = ( getFireHeight() - prevFlameSize ) / heightAdjustSpeed;
+        float diff = (getFireHeight() - prevFlameSize) / heightAdjustSpeed;
         prevFlameSize += diff;
         if (prevFlameSize > MAX_FLAME_SIZE - 1) {
-            setFireHeight(1.5f); //Upgrade will go : 1.5 -> 2 -> 3 -> 4 -> 5
+            setFireHeight(getFinalFireHeight());
+            System.out.println(getFinalFireHeight());
             heightAdjustSpeed = 5;
         }
         float h = getFireHeight();
 
-        if(getWorld().getBlockState(getBlockPos()).getBlock().equals(Blocks.WATER)){
+        if (getWorld().getBlockState(getBlockPos()).getBlock().equals(Blocks.WATER)
+                || getWorld().getBlockState(getBlockPos().down()).isAir()) {
             this.discard();
         }
 
@@ -99,7 +104,6 @@ public class FireBlockEntity extends Entity {
     public void onDataTrackerUpdate(List<DataTracker.SerializedEntry<?>> dataEntries) {
         super.onDataTrackerUpdate(dataEntries);
     }
-
 
 
     public float getFireHeight() {
@@ -126,14 +130,25 @@ public class FireBlockEntity extends Entity {
 
     @Override
     protected void readCustomDataFromNbt(NbtCompound nbt) {
-
+        nbt.putInt("lifeTime", lifeTime);
     }
 
     @Override
     protected void writeCustomDataToNbt(NbtCompound nbt) {
-
+        if(nbt.contains("lifeTime")){
+            lifeTime = nbt.getInt("lifeTime");
+        }
     }
 
+    public int getLifeTime() {
+        return lifeTime;
+    }
 
+    public float getFinalFireHeight() {
+        return this.dataTracker.get(FINAL_HEIGHT);
+    }
 
+    public void setFinalFireHeight(float h) {
+        this.getDataTracker().set(FINAL_HEIGHT, h);
+    }
 }

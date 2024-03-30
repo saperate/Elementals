@@ -5,13 +5,11 @@ import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.elements.Ability;
 import dev.saperate.elementals.entities.fire.FireBlockEntity;
 import net.minecraft.block.AbstractFireBlock;
-import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 
-public class AbilityFireWall implements Ability {
+public class AbilityFireSpikes implements Ability {
     @Override
     public void onCall(Bender bender, long deltaT) {
         PlayerEntity player = bender.player;
@@ -21,15 +19,11 @@ public class AbilityFireWall implements Ability {
 
 
         placeFire(bender,bPos,hit, plrData);
-        double dx = -Math.sin(Math.toRadians(player.getYaw() - 90));//Side to side
-        double dz = Math.cos(Math.toRadians(player.getYaw() - 90));
+        int dx = (int) Math.round(-Math.sin(Math.toRadians(player.getYaw())));
+        int dz = (int) Math.round(Math.cos(Math.toRadians(player.getYaw())));
 
-        for (int i = 1; i <= (plrData.canUseUpgrade("widerWall") ? 8 : 4); i++) {
-            int dxScaled = (int) Math.round(dx * i);
-            int dzScaled = (int) Math.round(dz * i);
-
-            placeFire(bender,bPos.add(dxScaled, 0, dzScaled), hit, plrData);
-            placeFire(bender,bPos.add(-dxScaled, 0, -dzScaled), hit, plrData);
+        for (int i = 1; i <= 8; i++) {
+            placeFire(bender,bPos.add(dx * i , 0, dz * i ), hit, plrData);
         }
     }
 
@@ -38,7 +32,7 @@ public class AbilityFireWall implements Ability {
 
         if( AbstractFireBlock.canPlaceAt(player.getWorld(),bPos.up(),hit.getSide())) {
             FireBlockEntity entity = new FireBlockEntity(player.getWorld(), player, bPos.getX() + 0.5f, bPos.getY() + 1, bPos.getZ() + 0.5f);
-            entity.setFinalFireHeight(plrData.canUseUpgrade("tallerWall") ? 2.5f : 1.5f );
+            entity.setFinalFireHeight(1.5f);
             player.getWorld().spawnEntity(entity);
         }
     }
