@@ -8,13 +8,23 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 public final class Upgrade {
+    public Upgrade parent;
     public Upgrade[] children = new Upgrade[0];
     public String name;
+    public boolean exclusive = false;
 
+
+    public Upgrade(String name, Upgrade[] children, boolean exclusive) {
+        this(name,children);
+        this.exclusive = exclusive;
+    }
 
     public Upgrade(String name, Upgrade[] children) {
         this.name = name;
         this.children = children;
+        for (Upgrade child : children){
+            child.setParent(this);
+        }
     }
 
     public Upgrade(String name){
@@ -57,6 +67,18 @@ public final class Upgrade {
         return upgrades.toArray(Upgrade[]::new);
     }
 
+    public boolean canBuy(PlayerData plrData){
+        if(parent == null || !parent.exclusive){
+            return true;
+        }
+        for (Upgrade child : parent.children){
+            if(plrData.boughtUpgrades.contains(child)){
+                return false;
+            }
+        }
+        return true;
+    }
+
 
     public Upgrade getUpgradeByNameRecursive(Upgrade currentUpgrade, String upgradeName) {
         if (currentUpgrade.name.equals(upgradeName)) {
@@ -71,5 +93,9 @@ public final class Upgrade {
         }
 
         return null;
+    }
+
+    public void setParent(Upgrade parent){
+        this.parent = parent;
     }
 }

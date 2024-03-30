@@ -18,10 +18,13 @@ public class FireElement extends Element {
     public FireElement() {
         super("Fire", new Upgrade[]{
                 new Upgrade("flareUp",new Upgrade[]{
-                        new Upgrade("blueFire")
-                })
+                        new Upgrade("blueFire"),
+                        new Upgrade("fireWall")
+                }, true)
         });
-        addAbility(new AbilityFireIgnite());
+        addAbility(new AbilityFire1(),true);
+        addAbility(new AbilityFireIgnite(), false);
+        addAbility(new AbilityFireWall(), false);
     }
 
     public static void placeFire(BlockPos pos, Direction side, PlayerEntity player, BlockState state){
@@ -36,5 +39,9 @@ public class FireElement extends Element {
         }else{
             player.getWorld().setBlockState(newPos, AbstractFireBlock.getState(player.getWorld(),newPos));
         }
+    }
+
+    public static Element get(){
+        return elementList.get(2);
     }
 }

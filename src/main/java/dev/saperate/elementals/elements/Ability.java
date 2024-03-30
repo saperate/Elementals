@@ -14,4 +14,5 @@ public interface Ability {
 
     void onTick(Bender bender);
 
+
 }

@@ -59,4 +59,5 @@ public class AbilityWaterArc implements Ability {
     public void onTick(Bender bender) {
 
     }
+
 }

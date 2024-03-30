@@ -38,7 +38,6 @@ public class AbilityFireIgnite implements Ability {
         BlockPos bPos = hit.getBlockPos();
 
         if (hit.getType() == HitResult.Type.BLOCK) {
-            System.out.println(blockState.getProperties());
             if(blockState.getProperties().contains(Properties.LIT)){
 
                 BlockEntity blockEntity = player.getWorld().getBlockEntity(bPos);
@@ -54,7 +53,7 @@ public class AbilityFireIgnite implements Ability {
             }
 
             if(AbstractFireBlock.canPlaceAt(player.getWorld(),bPos.up(),hit.getSide())){
-                if(PlayerData.get(player).canUseUpgrade("flareUp")){//Keep the ability to light up stuff
+                if(PlayerData.get(player).canUseUpgrade("flareUp")){
                     FireBlockEntity entity = new FireBlockEntity(player.getWorld(), player, bPos.getX() + 0.5f, bPos.getY() + 1, bPos.getZ() + 0.5f);
                     entity.setIsBlue(PlayerData.get(player).canUseUpgrade("blueFire"));
                     player.getWorld().spawnEntity(entity);
@@ -84,4 +83,6 @@ public class AbilityFireIgnite implements Ability {
     public void onTick(Bender bender) {
 
     }
+
+
 }

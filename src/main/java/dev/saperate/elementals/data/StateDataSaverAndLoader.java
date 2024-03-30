@@ -55,9 +55,9 @@ public class StateDataSaverAndLoader extends PersistentState {
 
             playerData.element = element;
 
-            playerData.boundAbilities[0] = element.getAbility(nbt.getInt("bind1"));
-            playerData.boundAbilities[1] = element.getAbility(nbt.getInt("bind2"));
-            playerData.boundAbilities[2] = element.getAbility(nbt.getInt("bind3"));
+            playerData.boundAbilities[0] = element.getBindableAbility(nbt.getInt("bind1"));
+            playerData.boundAbilities[1] = element.getBindableAbility(nbt.getInt("bind2"));
+            playerData.boundAbilities[2] = element.getBindableAbility(nbt.getInt("bind3"));
 
             playerData.element.onRead(nbt.getCompound("upgrades"),playerData);
 

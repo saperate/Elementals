@@ -65,13 +65,13 @@ public class BendingCommand {
         bender.setElement(newElement, true);
 
 
-        //Very temporary stuff, will get removed once I get a GUI working
+        //TODO Very temporary stuff, will get removed once I get a GUI working
         int abilitySize = newElement.abilityList.size();
         if (abilitySize >= 1) {
-            bender.bindAbility(newElement.getAbility(0), 0);
+            bender.bindAbility(newElement.getBindableAbility(0), 0);
         }
         if (abilitySize >= 2) {
-            bender.bindAbility(newElement.getAbility(1), 1);
+            bender.bindAbility(newElement.getBindableAbility(1), 1);
         }
 
         context.getSource().sendFeedback((() -> Text.of(
@@ -88,7 +88,7 @@ public class BendingCommand {
         int bindIndex = IntegerArgumentType.getInteger(context, "Bind Index");
 
         if (abilityIndex <= element.abilityList.size()) {
-            bender.bindAbility(element.getAbility(abilityIndex - 1), bindIndex - 1);
+            bender.bindAbility(element.getBindableAbility(abilityIndex - 1), bindIndex - 1);
             context.getSource().sendFeedback((() -> Text.of(
                     "Ability now bound to: " + bindIndex)
             ), false);
@@ -104,15 +104,18 @@ public class BendingCommand {
     private static int listUpgrades(CommandContext<ServerCommandSource> context) {
         Bender bender = Bender.getBender(context.getSource().getPlayer());
         Element element = bender.getElement();
+        PlayerData plrData = StateDataSaverAndLoader.getPlayerState(bender.player);
 
         context.getSource().sendFeedback((() -> Text.of(
                 "Possible upgrades:")
         ), false);
         for (Upgrade upgrade : element.upgrades) {
-            for (Upgrade u : upgrade.nextUpgrades(StateDataSaverAndLoader.getPlayerState(bender.player))) {
-                context.getSource().sendFeedback((() -> Text.of(
-                       "-" + u.name)
-                ), false);
+            for (Upgrade u : upgrade.nextUpgrades(plrData)) {
+                if(u.canBuy(plrData)){
+                    context.getSource().sendFeedback((() -> Text.of(
+                            "-" + u.name)
+                    ), false);
+                }
             }
         }
 
@@ -130,7 +133,7 @@ public class BendingCommand {
 
         for (Upgrade upgrade : element.upgrades) {
             for (Upgrade u : upgrade.nextUpgrades(plrData)) {
-                if (u.name.equals(name)) {
+                if (u.name.equals(name) && u.canBuy(plrData)) {
                     plrData.boughtUpgrades.add(u);
                     plrData.activeUpgrades.add(u);
                     StateDataSaverAndLoader.getServerState(bender.player.getServer()).markDirty();

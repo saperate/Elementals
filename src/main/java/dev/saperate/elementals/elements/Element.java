@@ -4,15 +4,14 @@ import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.utils.SapsUtils;
 import net.minecraft.nbt.NbtCompound;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 import static dev.saperate.elementals.utils.SapsUtils.extractBits;
 
 public abstract class Element{
     public static final List<Element> elementList = new ArrayList<>();
     public final List<Ability> abilityList = new ArrayList<>();
+    public final List<Ability> bindableAbilities = new ArrayList<>();
     public Upgrade[] upgrades;
     public final String name;
 
@@ -26,16 +25,23 @@ public abstract class Element{
         this(name,new Upgrade[0]);
     }
 
-    public void addAbility(Ability a){
+    public void addAbility(Ability a, boolean bindable){
         if(!abilityList.contains(a)){
             abilityList.add(a);
+            if(bindable){
+                bindableAbilities.add(a);
+            }
         }
     }
 
-    public Ability getAbility(int index){
+    public Ability getBindableAbility(int index){
         if(index == -1){
             return null;
         }
+        return abilityList.get(index);
+    }
+
+    public Ability getAbility(int index){
         return abilityList.get(index);
     }
 
@@ -82,6 +88,4 @@ public abstract class Element{
             upgrade.onRead(nbt,plrData);
         }
     }
-
-
 }

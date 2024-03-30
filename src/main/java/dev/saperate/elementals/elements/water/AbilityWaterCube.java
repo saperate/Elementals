@@ -67,4 +67,5 @@ public class AbilityWaterCube implements Ability {
     public void onTick(Bender bender) {
 
     }
+
 }
