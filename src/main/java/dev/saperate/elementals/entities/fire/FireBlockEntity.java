@@ -78,7 +78,6 @@ public class FireBlockEntity extends Entity {
         prevFlameSize += diff;
         if (prevFlameSize > MAX_FLAME_SIZE - 1) {
             setFireHeight(getFinalFireHeight());
-            System.out.println(getFinalFireHeight());
             heightAdjustSpeed = 5;
         }
         float h = getFireHeight();

@@ -66,7 +66,10 @@ public class WaterArcEntityRenderer extends EntityRenderer<WaterArcEntity> {
                 (color & 255) / 255.0f,
                 0.9f,
                 texture,
-                d,mat
+                d,mat,
+                false,
+                true,
+                true
         );
 
         RenderSystem.disableBlend();

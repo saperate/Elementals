@@ -34,7 +34,7 @@ import static dev.saperate.elementals.entities.utils.RenderUtils.drawCube;
 import static org.lwjgl.opengl.GL11.*;
 
 public class WaterCubeEntityRenderer extends EntityRenderer<WaterCubeEntity> {
-    private static final Identifier texture = new Identifier("minecraft", "block/water_still");
+    private static final Identifier texture = new Identifier("minecraft", "block/water_flow");
 
     public WaterCubeEntityRenderer(EntityRendererFactory.Context context) {
         super(context);
@@ -65,8 +65,13 @@ public class WaterCubeEntityRenderer extends EntityRenderer<WaterCubeEntity> {
                 0.9f,
                 texture,
                 0.9f,
-                new Matrix4f().rotate((float) Math.toRadians(90),1,0,0)
+                new Matrix4f().rotate((float) Math.toRadians(90),1,0,0),
+                false,
+                true,
+                true
         );
+
+
 
         RenderSystem.disableBlend();
         matrices.pop();

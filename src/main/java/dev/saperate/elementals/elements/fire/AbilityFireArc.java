@@ -29,7 +29,7 @@ public class AbilityFireArc implements Ability {
 
     @Override
     public void onLeftClick(Bender bender) {
-        WaterArcEntity entity = (WaterArcEntity) bender.controlledEntity;
+        FireArcEntity entity = (FireArcEntity) bender.controlledEntity;
         if (entity == null) {
             return;
         }
@@ -50,7 +50,7 @@ public class AbilityFireArc implements Ability {
 
     @Override
     public void onRightClick(Bender bender) {
-        WaterArcEntity entity = (WaterArcEntity) bender.controlledEntity;
+        FireArcEntity entity = (FireArcEntity) bender.controlledEntity;
         if (entity == null) {
             return;
         }

@@ -85,9 +85,7 @@ public class FireArcEntity extends ProjectileEntity {
         super.tick();
         Entity owner = getOwner();
         if(owner == null){
-            this.setVelocity(this.getVelocity().add(0.0, -0.04, 0.0));
-            this.move(MovementType.SELF, this.getVelocity());
-            collidesWithGround();
+            discard();
             return;
         }
         FireArcEntity parent = getParent();
@@ -172,15 +170,6 @@ public class FireArcEntity extends ProjectileEntity {
         this.addVelocity(direction.x, direction.y, direction.z);
     }
 
-    public void collidesWithGround(){
-        BlockPos blockDown = getBlockPos().down();
-        BlockState blockState = getWorld().getBlockState(blockDown);
-
-        if(!blockState.isAir() && getY() - getBlockPos().getY() == 0){
-            getWorld().setBlockState(getBlockPos(), Blocks.WATER.getDefaultState());
-            discard();
-        }
-    }
 
     @Override
     public void onRemoved() {

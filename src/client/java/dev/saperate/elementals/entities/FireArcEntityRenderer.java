@@ -17,11 +17,12 @@ import net.minecraft.util.math.Vec3d;
 import org.joml.Matrix4f;
 
 import static dev.saperate.elementals.entities.utils.RenderUtils.drawCube;
+import static dev.saperate.elementals.entities.utils.RenderUtils.drawInvertedCube;
 
 
 public class FireArcEntityRenderer extends EntityRenderer<FireArcEntity> {
     private static final Identifier texture = new Identifier("minecraft", "block/fire_0");
-    private static final Identifier texture2 = new Identifier("minecraft", "block/water_still");
+    private static final Identifier texture2 = new Identifier("minecraft", "block/magma"); //magma
 
     public FireArcEntityRenderer(EntityRendererFactory.Context context) {
         super(context);
@@ -30,7 +31,7 @@ public class FireArcEntityRenderer extends EntityRenderer<FireArcEntity> {
     @Override
     public void render(FireArcEntity entity, float yaw, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light) {
         FireArcEntity child = entity.getChild();
-        if(child  == null){
+        if (child == null) {
             return;
         }
 
@@ -49,29 +50,40 @@ public class FireArcEntityRenderer extends EntityRenderer<FireArcEntity> {
         int color = 0xFFFFFF;
 
 
-
-
         Vec3d dir = child.getPos().subtract(entity.getPos());
         float d = (float) dir.length() * 4;
         dir = dir.normalize();
 
 
         Matrix4f mat = new Matrix4f();
-        matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees((float) Math.toDegrees(Math.atan2(dir.x,dir.z))));
+        matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees((float) Math.toDegrees(Math.atan2(dir.x, dir.z))));
         matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees((float) Math.toDegrees(Math.asin(-dir.y))));
 
 
-        drawCube(vertexConsumer,matrices,light,
+        drawCube(vertexConsumer, matrices, light,
                 (color >> 16 & 255) / 255.0f,
                 (color >> 8 & 255) / 255.0f,
                 (color & 255) / 255.0f,
                 1,
                 texture,
-                d,mat
+                d, mat,
+                false,
+                false,
+                false
         );
 
-
-
+        matrices.scale(0.8f, 0.8f, 0.8f);
+        drawCube(vertexConsumer, matrices, light,
+                (color >> 16 & 255) / 255.0f,
+                (color >> 8 & 255) / 255.0f,
+                (color & 255) / 255.0f,
+                0.5f,
+                texture2,
+                d * 1.25f, mat,
+                false,
+                true,
+                true
+        );
 
 
         RenderSystem.disableBlend();

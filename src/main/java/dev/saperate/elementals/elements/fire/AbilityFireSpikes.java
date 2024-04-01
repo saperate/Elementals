@@ -32,7 +32,7 @@ public class AbilityFireSpikes implements Ability {
 
             for (int j = -i; j <= i; j++) {
                 if(rnd.nextBetween(0,4) == 4) {
-                    placeFire(bender, bPos.add(dz * j + (i * dx), 0, dx * j + (i * dz)), hit, plrData);
+                    placeFire(bender, bPos.add(dz * j + (i * dx), 0,  - (dx * j - (i * dz))), hit, plrData);
                 }
             }
 
