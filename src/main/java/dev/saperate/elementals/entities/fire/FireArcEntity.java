@@ -1,4 +1,4 @@
-package dev.saperate.elementals.entities.water;
+package dev.saperate.elementals.entities.fire;
 
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 import net.minecraft.block.BlockState;
@@ -22,38 +22,37 @@ import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import org.joml.Vector3d;
 import org.joml.Vector3f;
 
 import static dev.saperate.elementals.utils.SapsUtils.getEntityLookVector;
 import static dev.saperate.elementals.utils.SapsUtils.summonParticles;
 
-public class WaterArcEntity extends ProjectileEntity {
-    private static final TrackedData<Integer> PARENT_ID = DataTracker.registerData(WaterArcEntity.class, TrackedDataHandlerRegistry.INTEGER);
-    private static final TrackedData<Integer> CHILD_ID = DataTracker.registerData(WaterArcEntity.class, TrackedDataHandlerRegistry.INTEGER);
-    private static final TrackedData<Integer> OWNER_ID = DataTracker.registerData(WaterArcEntity.class, TrackedDataHandlerRegistry.INTEGER);
-    private static final TrackedData<Boolean> IS_CONTROLLED = DataTracker.registerData(WaterArcEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
+public class FireArcEntity extends ProjectileEntity {
+    private static final TrackedData<Integer> PARENT_ID = DataTracker.registerData(FireArcEntity.class, TrackedDataHandlerRegistry.INTEGER);
+    private static final TrackedData<Integer> CHILD_ID = DataTracker.registerData(FireArcEntity.class, TrackedDataHandlerRegistry.INTEGER);
+    private static final TrackedData<Integer> OWNER_ID = DataTracker.registerData(FireArcEntity.class, TrackedDataHandlerRegistry.INTEGER);
+    private static final TrackedData<Boolean> IS_CONTROLLED = DataTracker.registerData(FireArcEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
 
-    public static final EntityType<WaterArcEntity> WATERARC = Registry.register(
+    public static final EntityType<FireArcEntity> FIREARC = Registry.register(
             Registries.ENTITY_TYPE,
-            new Identifier("elementals", "water_arc"),
-            FabricEntityTypeBuilder.<WaterArcEntity>create(SpawnGroup.MISC, WaterArcEntity::new)
+            new Identifier("elementals", "fire_arc"),
+            FabricEntityTypeBuilder.<FireArcEntity>create(SpawnGroup.MISC, FireArcEntity::new)
                     .dimensions(EntityDimensions.fixed(0.25f, 0.25f)).build());
     public static final float chainDistance = 0.9f;
     private static final int MAX_CHAIN_LENGTH = 4;
     public int chainLength = 0;
 
 
-    public WaterArcEntity(EntityType<WaterArcEntity> type, World world) {
+    public FireArcEntity(EntityType<FireArcEntity> type, World world) {
         super(type, world);
     }
 
-    public WaterArcEntity(World world, LivingEntity owner) {
+    public FireArcEntity(World world, LivingEntity owner) {
         this(world, owner, owner.getX(), owner.getY(), owner.getZ());
     }
 
-    public WaterArcEntity(World world, LivingEntity owner, double x, double y, double z) {
-        super(WATERARC, world);
+    public FireArcEntity(World world, LivingEntity owner, double x, double y, double z) {
+        super(FIREARC, world);
         setOwner(owner);
         setPos(x, y, z);
         setNoGravity(false);
@@ -62,7 +61,7 @@ public class WaterArcEntity extends ProjectileEntity {
 
     public void createChain(LivingEntity owner) {
         if (chainLength < MAX_CHAIN_LENGTH) {
-            WaterArcEntity newArc = new WaterArcEntity(getWorld(), owner, getX(), getY(), getZ());
+            FireArcEntity newArc = new FireArcEntity(getWorld(), owner, getX(), getY(), getZ());
             newArc.setParent(this);
             setChild(newArc);
             newArc.setControlled(false);
@@ -88,16 +87,17 @@ public class WaterArcEntity extends ProjectileEntity {
         if(owner == null){
             this.setVelocity(this.getVelocity().add(0.0, -0.04, 0.0));
             this.move(MovementType.SELF, this.getVelocity());
+            collidesWithGround();
             return;
         }
-        WaterArcEntity parent = getParent();
+        FireArcEntity parent = getParent();
         if (!getIsControlled() && parent == null) {
             HitResult hit = ProjectileUtil.getCollision(this, entity -> entity instanceof LivingEntity);
             if (hit.getType() == HitResult.Type.ENTITY) {
                 LivingEntity entity = (LivingEntity) ((EntityHitResult) hit).getEntity();
                 entity.damage(this.getDamageSources().playerAttack((PlayerEntity) owner), 4);
                 entity.addVelocity(this.getVelocity().multiply(0.2f));
-                WaterArcEntity child = getChild();
+                FireArcEntity child = getChild();
                 if (child != null) {
                     this.getChild().setParent(null);
                 }
@@ -172,7 +172,15 @@ public class WaterArcEntity extends ProjectileEntity {
         this.addVelocity(direction.x, direction.y, direction.z);
     }
 
+    public void collidesWithGround(){
+        BlockPos blockDown = getBlockPos().down();
+        BlockState blockState = getWorld().getBlockState(blockDown);
 
+        if(!blockState.isAir() && getY() - getBlockPos().getY() == 0){
+            getWorld().setBlockState(getBlockPos(), Blocks.WATER.getDefaultState());
+            discard();
+        }
+    }
 
     @Override
     public void onRemoved() {
@@ -189,8 +197,8 @@ public class WaterArcEntity extends ProjectileEntity {
         getHead().remove();
     }
 
-    public WaterArcEntity getHead() {
-        WaterArcEntity parent = getParent();
+    public FireArcEntity getHead() {
+        FireArcEntity parent = getParent();
         if (parent == null) {
             return this;
         }
@@ -201,14 +209,14 @@ public class WaterArcEntity extends ProjectileEntity {
      * remove a specific link from the chain. it also kills its children
      */
     public void remove() {
-        WaterArcEntity child = getChild();
+        FireArcEntity child = getChild();
         if (child == null) {
             getParent().setChild(null);
             this.discard();
             return;
         }
         child.remove();
-        WaterArcEntity parent = getParent();
+        FireArcEntity parent = getParent();
         if (parent != null) {
             getParent().setChild(null);
         }
@@ -251,21 +259,21 @@ public class WaterArcEntity extends ProjectileEntity {
         entity.pushAwayFrom(this);
     }
 
-    public WaterArcEntity getParent() {
+    public FireArcEntity getParent() {
         int parentId = this.getDataTracker().get(PARENT_ID);
-        return parentId != 0 ? (WaterArcEntity) this.getWorld().getEntityById(parentId) : null;
+        return parentId != 0 ? (FireArcEntity) this.getWorld().getEntityById(parentId) : null;
     }
 
-    public void setParent(WaterArcEntity parent) {
+    public void setParent(FireArcEntity parent) {
         this.getDataTracker().set(PARENT_ID, parent != null ? parent.getId() : 0);
     }
 
-    public WaterArcEntity getChild() {
+    public FireArcEntity getChild() {
         int childId = this.getDataTracker().get(CHILD_ID);
-        return childId != 0 ? (WaterArcEntity) this.getWorld().getEntityById(childId) : null;
+        return childId != 0 ? (FireArcEntity) this.getWorld().getEntityById(childId) : null;
     }
 
-    public void setChild(WaterArcEntity child) {
+    public void setChild(FireArcEntity child) {
         this.getDataTracker().set(CHILD_ID, child != null ? child.getId() : 0);
     }
 }

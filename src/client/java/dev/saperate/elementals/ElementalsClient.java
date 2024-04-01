@@ -2,6 +2,7 @@ package dev.saperate.elementals;
 
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
+import dev.saperate.elementals.entities.FireArcEntityRenderer;
 import dev.saperate.elementals.entities.FireBlockEntityRenderer;
 import dev.saperate.elementals.entities.WaterArcEntityRenderer;
 import dev.saperate.elementals.entities.WaterCubeEntityRenderer;
@@ -19,6 +20,7 @@ import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.command.argument.GameProfileArgumentType;
 
+import static dev.saperate.elementals.entities.fire.FireArcEntity.FIREARC;
 import static dev.saperate.elementals.entities.fire.FireBlockEntity.FIREBLOCK;
 import static dev.saperate.elementals.entities.water.WaterCubeEntity.WATERCUBE;
 import static dev.saperate.elementals.entities.water.WaterArcEntity.WATERARC;
@@ -38,6 +40,7 @@ public class ElementalsClient implements ClientModInitializer {
 		EntityRendererRegistry.register(WATERCUBE, WaterCubeEntityRenderer::new);
 		EntityRendererRegistry.register(WATERARC, WaterArcEntityRenderer::new);
 		EntityRendererRegistry.register(FIREBLOCK, FireBlockEntityRenderer::new);
+		EntityRendererRegistry.register(FIREARC, FireArcEntityRenderer::new);
 		new KeyAbility1();
 		new KeyAbility2();
 	}

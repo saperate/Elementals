@@ -30,6 +30,8 @@ public class FireElement extends Element {
         addAbility(new AbilityFireIgnite(), false);
         addAbility(new AbilityFireWall(), false);
         addAbility(new AbilityFireSpikes(), false);
+        addAbility(new AbilityFire2(),true);
+        addAbility(new AbilityFireArc(),false);
     }
 
     public static void placeFire(BlockPos pos, Direction side, PlayerEntity player, BlockState state){

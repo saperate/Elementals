@@ -30,7 +30,6 @@ public abstract class RenderUtils {
 
         Function<Identifier, Sprite> func = MinecraftClient.getInstance().getSpriteAtlas(new Identifier("minecraft", "textures/atlas/blocks.png"));
 
-        //func.apply(tex);
 
         Sprite sprite = func.apply(tex);
         float uMin = sprite.getMinU(), uMax = sprite.getMaxU();
