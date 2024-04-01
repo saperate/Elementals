@@ -108,6 +108,10 @@ public class WaterArcEntity extends ProjectileEntity {
                 BlockState blockState = getWorld().getBlockState(blockDown);
 
                 if (!blockState.isAir() && getY() - getBlockPos().getY() == 0) {
+                    WaterArcEntity child = getChild();
+                    if (child != null) {
+                        this.getChild().setParent(null);
+                    }
                     discard();
                 }
             }
@@ -160,7 +164,6 @@ public class WaterArcEntity extends ProjectileEntity {
 
     private void controlEntity(Entity owner) {
         Vector3f direction = getEntityLookVector(owner, 3)
-                .sub(0, 0.5f, 0)
                 .sub(getPos().toVector3f());
         direction.mul(0.1f);
 

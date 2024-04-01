@@ -33,10 +33,13 @@ public class BendingCommand {
                                         .executes(BendingCommand::bindAbility))))
                 .then(CommandManager.literal("upgrade")
                         .then(CommandManager.literal("list").executes(BendingCommand::listUpgrades))
-                        .then(CommandManager.literal("buy").then(CommandManager.argument("name", StringArgumentType.string()).executes(BendingCommand::buyUpgrade))))
+                        .then(CommandManager.literal("buy").then(CommandManager.argument("name", StringArgumentType.string()).executes(BendingCommand::buyUpgrade)))
+                        .then(CommandManager.literal("clear").executes(BendingCommand::clearUpgrades))
+                )
 
         );
     }
+
 
 
     public static int getSelfElement(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
@@ -146,8 +149,23 @@ public class BendingCommand {
         }
 
 
+        context.getSource().sendFeedback((() -> Text.of(
+                "Failed to buy upgrade: \"" + name + "\".")
+        ), false);
         return -1;
     }
 
+    private static int clearUpgrades(CommandContext<ServerCommandSource> context) {
+        Bender bender = Bender.getBender(context.getSource().getPlayer());
+        PlayerData plrData = StateDataSaverAndLoader.getPlayerState(bender.player);
+
+        plrData.boughtUpgrades.clear();
+        plrData.activeUpgrades.clear();
+
+        context.getSource().sendFeedback((() -> Text.of(
+                "You no longer have any upgrades!")
+        ), false);
+        return 1;
+    }
 
 }

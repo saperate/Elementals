@@ -91,9 +91,7 @@ public class FireBlockEntity extends Entity {
 
         for (LivingEntity entity : hits) {
             if (!entity.isFireImmune() && entity.getY() - getY() < h) {
-                if (!entity.isFireImmune()) {
-                    entity.setOnFireFor(8);
-                }
+                entity.setOnFireFor(8);
                 entity.damage(getDamageSources().inFire(), isBlue() ? 2.5f : 1.5f);//1.5f for normal, 2.5f for blue
             }
         }
@@ -134,7 +132,7 @@ public class FireBlockEntity extends Entity {
 
     @Override
     protected void writeCustomDataToNbt(NbtCompound nbt) {
-        if(nbt.contains("lifeTime")){
+        if (nbt.contains("lifeTime")) {
             lifeTime = nbt.getInt("lifeTime");
         }
     }

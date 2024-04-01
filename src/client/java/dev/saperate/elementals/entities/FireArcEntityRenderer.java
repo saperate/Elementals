@@ -16,13 +16,16 @@ import net.minecraft.util.math.RotationAxis;
 import net.minecraft.util.math.Vec3d;
 import org.joml.Matrix4f;
 
+import static dev.saperate.elementals.Elementals.MODID;
 import static dev.saperate.elementals.entities.utils.RenderUtils.drawCube;
 import static dev.saperate.elementals.entities.utils.RenderUtils.drawInvertedCube;
 
 
 public class FireArcEntityRenderer extends EntityRenderer<FireArcEntity> {
-    private static final Identifier texture = new Identifier("minecraft", "block/fire_0");
-    private static final Identifier texture2 = new Identifier("minecraft", "block/magma"); //magma
+    private static final Identifier fireTex = new Identifier("minecraft", "block/fire_0");//"block/fire_0");
+    private static final Identifier blueFireTex = new Identifier("minecraft", "block/soul_fire_0");//"block/fire_0");
+    private static final Identifier fireCoreTex = new Identifier("minecraft", "block/shroomlight");
+    private static final Identifier blueFireCoreTex = new Identifier("elementals", "block/bluefire_core");
 
     public FireArcEntityRenderer(EntityRendererFactory.Context context) {
         super(context);
@@ -60,12 +63,12 @@ public class FireArcEntityRenderer extends EntityRenderer<FireArcEntity> {
         matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees((float) Math.toDegrees(Math.asin(-dir.y))));
 
 
-        drawCube(vertexConsumer, matrices, light,
+        drawCube(vertexConsumer, matrices, 255,
                 (color >> 16 & 255) / 255.0f,
                 (color >> 8 & 255) / 255.0f,
                 (color & 255) / 255.0f,
                 1,
-                texture,
+                entity.isBlue() ? blueFireTex : fireTex,
                 d, mat,
                 false,
                 false,
@@ -73,12 +76,14 @@ public class FireArcEntityRenderer extends EntityRenderer<FireArcEntity> {
         );
 
         matrices.scale(0.8f, 0.8f, 0.8f);
-        drawCube(vertexConsumer, matrices, light,
-                (color >> 16 & 255) / 255.0f,
-                (color >> 8 & 255) / 255.0f,
-                (color & 255) / 255.0f,
+
+        int color2 = entity.isBlue() ? 0xffffff : 0xfff600;
+        drawCube(vertexConsumer, matrices, 255,
+                (color2 >> 16 & 255) / 255.0f,
+                (color2 >> 8 & 255) / 255.0f,
+                (color2 & 255) / 255.0f,
                 0.5f,
-                texture2,
+                 entity.isBlue() ? blueFireCoreTex : fireCoreTex,
                 d * 1.25f, mat,
                 false,
                 true,
@@ -92,6 +97,6 @@ public class FireArcEntityRenderer extends EntityRenderer<FireArcEntity> {
 
     @Override
     public Identifier getTexture(FireArcEntity entity) {
-        return texture;
+        return null;
     }
 }

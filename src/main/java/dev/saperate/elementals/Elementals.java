@@ -1,5 +1,6 @@
 package dev.saperate.elementals;
 
+import dev.saperate.elementals.blocks.SoulFireCore;
 import dev.saperate.elementals.commands.BendingCommand;
 import dev.saperate.elementals.commands.ElementArgumentType;
 import dev.saperate.elementals.elements.NoneElement;
@@ -24,6 +25,7 @@ public class Elementals implements ModInitializer {
 	@Override
 	public void onInitialize() {
 
+		SoulFireCore.registerBlock();
 
 		registerElements();
 		registerCommands();
@@ -46,7 +48,6 @@ public class Elementals implements ModInitializer {
 				ElementArgumentType.class,
 				ConstantArgumentSerializer.of(ElementArgumentType::element)
 		);
-
-
 	}
+
 }

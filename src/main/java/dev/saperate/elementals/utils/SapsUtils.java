@@ -54,7 +54,7 @@ public class SapsUtils {
                     entity.getX() + rnd.nextDouble(),
                     entity.getY() + rnd.nextDouble(),
                     entity.getZ() + rnd.nextDouble(),
-                    rnd.nextGaussian(), velocity, rnd.nextFloat());
+                    rnd.nextBetween(-1,1) * velocity, rnd.nextBetween(-1,1) * velocity,rnd.nextBetween(-1,1) * velocity);
         }
     }
 

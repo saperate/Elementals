@@ -1,6 +1,7 @@
 package dev.saperate.elementals.elements.fire;
 
 import dev.saperate.elementals.data.Bender;
+import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.elements.Ability;
 import dev.saperate.elementals.elements.water.WaterElement;
 import dev.saperate.elementals.entities.fire.FireArcEntity;
@@ -20,6 +21,7 @@ public class AbilityFireArc implements Ability {
 
         FireArcEntity entity = new FireArcEntity(player.getWorld(), player, pos.x, pos.y, pos.z);
         bender.controlledEntity = entity;
+        entity.setIsBlue(PlayerData.get(player).canUseUpgrade("blueFire"));
         entity.createChain(player);
         player.getWorld().spawnEntity(entity);
 
