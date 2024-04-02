@@ -35,10 +35,10 @@ public abstract class Element{
     }
 
     public Ability getBindableAbility(int index){
-        if(index == -1){
+        if(index == -1 || index >= bindableAbilities.size()){
             return null;
         }
-        return abilityList.get(index);
+        return bindableAbilities.get(index);
     }
 
     public Ability getAbility(int index){
