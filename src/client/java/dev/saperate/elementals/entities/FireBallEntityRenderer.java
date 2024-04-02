@@ -45,11 +45,12 @@ public class FireBallEntityRenderer extends EntityRenderer<FireBallEntity> {
         MinecraftClient.getInstance().getBlockRenderManager().renderBlock(state, entity.getBlockPos(), entity.getWorld(), matrices, vertexConsumer, false, entity.getEntityWorld().random);
 
         Matrix4f mat = new Matrix4f();
-        //mat.scale(0.5f,0.5f,0.5f);
 
-        matrices.translate(0.5,0.5,0);
-        matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees((float) Math.toDegrees(0)));
-        matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees((float) Math.toDegrees(0)));
+
+        double rot = Math.sin((double) System.currentTimeMillis() / 100000) * 360;
+        matrices.translate(0.5f,0.5f,0.5f); //Matrix stack
+        mat.rotate(RotationAxis.POSITIVE_Y.rotationDegrees((float) Math.toDegrees(rot)));
+        mat.rotate(RotationAxis.POSITIVE_X.rotationDegrees((float) Math.toDegrees(rot)));
 
 
 
@@ -69,7 +70,6 @@ public class FireBallEntityRenderer extends EntityRenderer<FireBallEntity> {
         RenderSystem.disableBlend();
         matrices.pop();
     }
-
 
 
     @Override
