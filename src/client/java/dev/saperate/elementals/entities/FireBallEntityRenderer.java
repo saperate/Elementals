@@ -48,11 +48,11 @@ public class FireBallEntityRenderer extends EntityRenderer<FireBallEntity> {
 
 
         double rot = Math.sin((double) System.currentTimeMillis() / 100000) * 360;
-        matrices.translate(0.5f,0.5f,0.5f); //Matrix stack
-        mat.translate(-0.5f,0,.5f);
+        matrices.translate(0.5f,0.5f,0);
+        mat.translate(0,0,.5f);
         mat.rotate(RotationAxis.POSITIVE_Y.rotationDegrees((float) Math.toDegrees(rot)));
         mat.rotate(RotationAxis.POSITIVE_X.rotationDegrees((float) Math.toDegrees(rot)));
-        mat.translate(0.5f,0,-.5f);
+        mat.translate(0,0,-.5f);
 
 
 
