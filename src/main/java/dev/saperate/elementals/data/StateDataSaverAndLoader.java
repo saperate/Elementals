@@ -29,9 +29,9 @@ public class StateDataSaverAndLoader extends PersistentState {
 
             playerNbt.putString("element", playerData.element.getName());
 
-            playerNbt.putInt("bind1",playerData.element.abilityList.indexOf(playerData.boundAbilities[0]));
-            playerNbt.putInt("bind2",playerData.element.abilityList.indexOf(playerData.boundAbilities[1]));
-            playerNbt.putInt("bind3",playerData.element.abilityList.indexOf(playerData.boundAbilities[2]));
+            playerNbt.putInt("bind1",playerData.element.bindableAbilities.indexOf(playerData.boundAbilities[0]));
+            playerNbt.putInt("bind2",playerData.element.bindableAbilities.indexOf(playerData.boundAbilities[1]));
+            playerNbt.putInt("bind3",playerData.element.bindableAbilities.indexOf(playerData.boundAbilities[2]));
 
             playerNbt.put("upgrades",playerData.element.onSave(playerData));
 
