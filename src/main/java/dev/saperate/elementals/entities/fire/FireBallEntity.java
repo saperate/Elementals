@@ -1,6 +1,7 @@
 package dev.saperate.elementals.entities.fire;
 
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
+import net.minecraft.block.AbstractFireBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.*;
@@ -64,6 +65,11 @@ public class FireBallEntity extends ProjectileEntity {
 
     @Override
     public void tick() {
+        if (random.nextBetween(0, 20) == 6) {
+            summonParticles(this, random,
+                    isBlue() ? ParticleTypes.SOUL_FIRE_FLAME : ParticleTypes.FLAME,
+                    0, 1);
+        }
         super.tick();
         Entity owner = getOwner();
         if(owner == null){
@@ -124,14 +130,16 @@ public class FireBallEntity extends ProjectileEntity {
         BlockState blockState = getWorld().getBlockState(blockDown);
 
         if(!blockState.isAir() && getY() - getBlockPos().getY() == 0){
-
+            getWorld().setBlockState(getBlockPos(), AbstractFireBlock.getState(getWorld(),getBlockPos()));
             discard();
         }
     }
 
     @Override
     public void onRemoved() {
-
+        summonParticles(this, random,
+                isBlue() ? ParticleTypes.SOUL_FIRE_FLAME : ParticleTypes.FLAME,
+                0.1f, 10);
     }
 
     @Override

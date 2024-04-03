@@ -47,14 +47,14 @@ public class FireBallEntityRenderer extends EntityRenderer<FireBallEntity> {
         Matrix4f mat = new Matrix4f();
 
 
-        double rot = Math.sin((double) System.currentTimeMillis() / 100000) * 360;
-        matrices.translate(0.5f,0.5f,0);
+        double rot = Math.abs(Math.sin((double) System.currentTimeMillis() / 100000)) * 360;
+        matrices.translate(0.5f,.5f,0);
         mat.translate(0,0,.5f);
         mat.rotate(RotationAxis.POSITIVE_Y.rotationDegrees((float) Math.toDegrees(rot)));
         mat.rotate(RotationAxis.POSITIVE_X.rotationDegrees((float) Math.toDegrees(rot)));
         mat.translate(0,0,-.5f);
 
-
+        matrices.scale(.9f,.9f,.9f);
 
         int color2 = entity.isBlue() ? 0xffffff : 0xfff600;
         drawCube(vertexConsumer, matrices, 255,

@@ -89,7 +89,7 @@ public class FireArcEntity extends ProjectileEntity {
 
     @Override
     public void tick() {
-        if (random.nextBetween(0, 10) == 6) {
+        if (random.nextBetween(0, 20) == 6) {
             summonParticles(this, random,
                     isBlue() ? ParticleTypes.SOUL_FIRE_FLAME : ParticleTypes.FLAME,
                     0, 1);
