@@ -2,6 +2,7 @@ package dev.saperate.elementals.elements.water;
 
 import dev.saperate.elementals.elements.Element;
 import dev.saperate.elementals.elements.Upgrade;
+import dev.saperate.elementals.elements.fire.AbilityFire1;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.player.PlayerEntity;
@@ -24,7 +25,9 @@ public class WaterElement extends Element {
                         }),
                         new Upgrade("waterArc")
                 });
+        addAbility(new AbilityWater1(),true);
         addAbility(new AbilityWaterCube(), false);
+        addAbility(new AbilityWater2(),true);
         addAbility(new AbilityWaterArc(), false);
     }
 

@@ -1,5 +1,7 @@
 package dev.saperate.elementals.entities.fire;
 
+import dev.saperate.elementals.data.FireExplosion;
+import dev.saperate.elementals.utils.SapsUtils;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 import net.minecraft.block.AbstractFireBlock;
 import net.minecraft.block.BlockState;
@@ -16,12 +18,15 @@ import net.minecraft.particle.ParticleTypes;
 import net.minecraft.predicate.entity.EntityPredicates;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.TypeFilter;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraft.world.explosion.Explosion;
 import org.joml.Vector3f;
 
 import static dev.saperate.elementals.utils.SapsUtils.getEntityLookVector;
@@ -70,77 +75,98 @@ public class FireBallEntity extends ProjectileEntity {
                     isBlue() ? ParticleTypes.SOUL_FIRE_FLAME : ParticleTypes.FLAME,
                     0, 1);
         }
-        super.tick();
+
         Entity owner = getOwner();
-        if(owner == null){
+        if (owner == null) {
             this.setVelocity(this.getVelocity().add(0.0, -0.04, 0.0));
             this.move(MovementType.SELF, this.getVelocity());
             collidesWithGround();
             return;
         }
-        if(!getIsControlled()){
+        if (!getIsControlled()) {
             HitResult hit = ProjectileUtil.getCollision(this, entity -> entity instanceof LivingEntity);
-            if (hit.getType() == HitResult.Type.ENTITY){
+            if (hit.getType() == HitResult.Type.ENTITY) {
                 LivingEntity entity = (LivingEntity) ((EntityHitResult) hit).getEntity();
-                entity.damage(this.getDamageSources().playerAttack((PlayerEntity) owner),2);
+                entity.damage(this.getDamageSources().playerAttack((PlayerEntity) owner), 2);
                 entity.addVelocity(this.getVelocity().multiply(0.8f));
+                discard();
+                return;
+            }
+            if (getVelocity().length() < 0.1) {
                 discard();
             }
         }
 
         this.getWorld().getEntitiesByType(TypeFilter.instanceOf(PlayerEntity.class), this.getBoundingBox(), EntityPredicates.canBePushedBy(this)).forEach(this::pushAway);
-        if(!owner.isSneaking()){
+        if (!owner.isSneaking()) {
             moveEntity(owner);
         }
 
     }
 
-    private void moveEntity(Entity owner){
+    private void moveEntity(Entity owner) {
 
 
         //gravity
         this.setVelocity(this.getVelocity().add(0.0, -0.04, 0.0));
 
-        if(getIsControlled()){
-
+        if (getIsControlled()) {
             controlEntity(owner);
-        }else if(!getWorld().isClient){
-            collidesWithGround();
+        } else {
+            onCollision();
         }
 
         this.move(MovementType.SELF, this.getVelocity());
     }
 
-    private void controlEntity(Entity owner){
+    private void controlEntity(Entity owner) {
         Vector3f direction = getEntityLookVector(owner, 3)
-                .sub(0,0.5f,0)
+                .sub(0, 0.5f, 0)
                 .sub(getPos().toVector3f());
         direction.mul(0.05f);
 
-        if(direction.length() < 0.4f){
-            this.setVelocity(0,0,0);
+        if (direction.length() < 0.4f) {
+            this.setVelocity(0, 0, 0);
         }
 
 
         this.addVelocity(direction.x, direction.y, direction.z);
     }
 
-    public void collidesWithGround(){
-        BlockPos blockDown = getBlockPos().down();
-        BlockState blockState = getWorld().getBlockState(blockDown);
-
-        if(!blockState.isAir() && getY() - getBlockPos().getY() == 0){
-            getWorld().setBlockState(getBlockPos(), AbstractFireBlock.getState(getWorld(),getBlockPos()));
-            discard();
+    public void onCollision() {
+        if(getWorld().isClient){
+            this.getWorld().playSound(getX(),getY(),getZ(), SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.BLOCKS, 4.0f, (1.0f + (this.getWorld().random.nextFloat() - this.getWorld().random.nextFloat()) * 0.2f) * 0.7f, false);
+            return;
         }
+
+        getWorld().setBlockState(getBlockPos(), AbstractFireBlock.getState(getWorld(), getBlockPos()));
+        FireExplosion explosion = new FireExplosion(getWorld(), getOwner(), getX(), getY(), getZ(), 2.5f, true, Explosion.DestructionType.KEEP, 6);
+        explosion.collectBlocksAndDamageEntities();
+        explosion.affectWorld(true);
+        discard();
+
+    }
+
+    @Override
+    protected void onCollision(HitResult hitResult) {
+        System.out.println("collided");
+        super.onCollision(hitResult);
+    }
+
+    @Override
+    protected void onBlockCollision(BlockState state) {
+
+        if (!state.isAir()) {
+            System.out.println("collided 2");
+        }
+        super.onBlockCollision(state);
     }
 
     @Override
     public void onRemoved() {
         summonParticles(this, random,
                 isBlue() ? ParticleTypes.SOUL_FIRE_FLAME : ParticleTypes.FLAME,
-                0.5f, 20);
-        getWorld().createExplosion(this,getX(),getY(),getZ(),2.5f,true, World.ExplosionSourceType.NONE);
+                0.25f, 25);
     }
 
     @Override
@@ -158,11 +184,11 @@ public class FireBallEntity extends ProjectileEntity {
         this.getDataTracker().set(OWNER_ID, ownerId);
     }
 
-    public void setControlled(boolean val){
-        this.getDataTracker().set(IS_CONTROLLED,val);
+    public void setControlled(boolean val) {
+        this.getDataTracker().set(IS_CONTROLLED, val);
     }
 
-    public boolean getIsControlled(){
+    public boolean getIsControlled() {
         return this.getDataTracker().get(IS_CONTROLLED);
     }
 
@@ -178,6 +204,7 @@ public class FireBallEntity extends ProjectileEntity {
     protected void pushAway(Entity entity) {
         entity.pushAwayFrom(this);
     }
+
     public boolean isBlue() {
         return this.dataTracker.get(IS_BLUE);
     }

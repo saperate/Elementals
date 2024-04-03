@@ -48,8 +48,8 @@ public class AbilityFireIgnite implements Ability {
 
                 if (blockEntity instanceof AbstractFurnaceBlockEntity furnace){
                     //TODO make flare up last longer
-                    ((FurnaceBlockEntityAccessor) furnace).setBurnTime(hasFlareUp ? 200 : 100);
-                    ((FurnaceBlockEntityAccessor) furnace).setFuelTime(hasFlareUp ? 200 : 100);
+                    ((FurnaceBlockEntityAccessor) furnace).setBurnTime(hasFlareUp ? 225 : 100);
+                    ((FurnaceBlockEntityAccessor) furnace).setFuelTime(hasFlareUp ? 225 : 100);
                 }
 
                 player.getWorld().setBlockState(bPos, blockState.with(Properties.LIT, true), 11);
@@ -66,6 +66,7 @@ public class AbilityFireIgnite implements Ability {
                     placeFire(hit.getBlockPos(), hit.getSide(), player, blockState);
                 }
             }
+
         }
     }
 

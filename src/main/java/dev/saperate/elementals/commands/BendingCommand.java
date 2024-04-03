@@ -41,7 +41,6 @@ public class BendingCommand {
     }
 
 
-
     public static int getSelfElement(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
         Bender bender = Bender.getBender(context.getSource().getPlayer());
         Element element = bender.getElement();
@@ -55,6 +54,7 @@ public class BendingCommand {
 
     public static int setSelfElement(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
         Bender bender = Bender.getBender(context.getSource().getPlayer());
+        PlayerData plrData = StateDataSaverAndLoader.getPlayerState(bender.player);
         Element element = bender.getElement();
         Element newElement = ElementArgumentType.getElement(context, "element");
 
@@ -67,9 +67,12 @@ public class BendingCommand {
 
         bender.setElement(newElement, true);
 
+        bender.boundAbilities = new Ability[3];
+        plrData.boundAbilities = new Ability[3];
+
 
         //TODO Very temporary stuff, will get removed once I get a GUI working
-        int abilitySize = newElement.abilityList.size();
+        int abilitySize = newElement.bindableAbilities.size();
         if (abilitySize >= 1) {
             bender.bindAbility(newElement.getBindableAbility(0), 0);
         }
@@ -114,7 +117,7 @@ public class BendingCommand {
         ), false);
         for (Upgrade upgrade : element.upgrades) {
             for (Upgrade u : upgrade.nextUpgrades(plrData)) {
-                if(u.canBuy(plrData)){
+                if (u.canBuy(plrData)) {
                     context.getSource().sendFeedback((() -> Text.of(
                             "-" + u.name)
                     ), false);

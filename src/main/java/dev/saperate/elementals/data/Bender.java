@@ -53,15 +53,16 @@ public class Bender {
     }
 
     public void bend(int index) {
-        if (index >= 0 && index < 5 && boundAbilities[index] != null) {
-            if(castTime != null){
-                boundAbilities[index].onCall(this,System.currentTimeMillis() - castTime);
-                castTime = null;
-            }else{
+        if (index >= 0 && index < 5 && boundAbilities[index] != null ) {
+            if (castTime == null && currAbility == null) {
                 castTime = System.currentTimeMillis();
                 setCurrAbility(boundAbilities[index]);
+                return;
             }
-
+            if(currAbility != null && castTime != null){
+                currAbility.onCall(this, System.currentTimeMillis() - castTime);
+                castTime = null;
+            }
         }
     }
 

@@ -1,22 +1,16 @@
-package dev.saperate.elementals.elements.fire;
+package dev.saperate.elementals.elements.water;
 
 import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.elements.Ability;
+import dev.saperate.elementals.elements.fire.FireElement;
 
-public class AbilityFire2 implements Ability {
+public class AbilityWater1 implements Ability {
     @Override
     public void onCall(Bender bender, long deltaT) {
         PlayerData playerData = PlayerData.get(bender.player);
-        if (!(bender.currAbility instanceof AbilityFire2)) {
-            return;
-        }
 
 
-        if(deltaT > 1000){
-            FireElement.get().abilityList.get(6).onCall(bender,deltaT);
-            return;
-        }
 
         if (bender.player.isSneaking()) {
             if(playerData.canUseUpgrade("")){
@@ -26,7 +20,7 @@ public class AbilityFire2 implements Ability {
             }
         }
 
-        FireElement.get().abilityList.get(5).onCall(bender,deltaT);
+        WaterElement.get().abilityList.get(1).onCall(bender,deltaT);
     }
 
     @Override

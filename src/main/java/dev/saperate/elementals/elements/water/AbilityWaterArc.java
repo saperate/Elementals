@@ -21,6 +21,8 @@ public class AbilityWaterArc implements Ability {
             player.getWorld().spawnEntity(entity);
 
             bender.setCurrAbility(this);
+        }else{
+            bender.setCurrAbility(null);
         }
     }
 

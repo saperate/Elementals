@@ -1,22 +1,13 @@
 package dev.saperate.elementals;
 
-import com.mojang.brigadier.CommandDispatcher;
-import com.mojang.brigadier.context.CommandContext;
 import dev.saperate.elementals.entities.*;
-import dev.saperate.elementals.keys.MouseInput;
 import dev.saperate.elementals.keys.abilities.KeyAbility1;
 import dev.saperate.elementals.keys.abilities.KeyAbility2;
 import dev.saperate.elementals.packets.SyncBendingElementS2CPacket;
 import dev.saperate.elementals.packets.SyncCurrAbilityS2CPacket;
 import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
-import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
-import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
-import net.minecraft.command.CommandRegistryAccess;
-import net.minecraft.command.argument.GameProfileArgumentType;
-import net.minecraft.entity.EntityType;
 
 import static dev.saperate.elementals.entities.fire.FireArcEntity.FIREARC;
 import static dev.saperate.elementals.entities.fire.FireBallEntity.FIREBALL;
@@ -34,7 +25,6 @@ public class ElementalsClient implements ClientModInitializer {
 
 
 		registerS2CPackets();
-		MouseInput.registerMouseClickEvent();
 
 		EntityRendererRegistry.register(WATERCUBE, WaterCubeEntityRenderer::new);
 		EntityRendererRegistry.register(WATERARC, WaterArcEntityRenderer::new);

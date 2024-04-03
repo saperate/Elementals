@@ -25,11 +25,13 @@ public class MouseC2SPacket {
             server.execute(() -> {
                 bender.currAbility.onLeftClick(bender);
             });
+            return;
         }
         if(mid){
             server.execute(() -> {
                 bender.currAbility.onMiddleClick(bender);
             });
+            return;
         }
         if(right){
             server.execute(() -> {

@@ -204,6 +204,10 @@ public class FireArcEntity extends ProjectileEntity {
     public void remove() {
         FireArcEntity child = getChild();
         if (child == null) {
+            if(getParent() == null){
+                this.discard();
+                return;
+            }
             getParent().setChild(null);
             this.discard();
             return;

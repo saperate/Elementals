@@ -41,15 +41,15 @@ public class FireBallEntityRenderer extends EntityRenderer<FireBallEntity> {
         //Use soul fire for blue fire
 
         BlockState state = entity.isBlue() ? Blocks.SOUL_FIRE.getDefaultState() : Blocks.FIRE.getDefaultState();
-        double rot1 = Math.abs(Math.sin((double) System.currentTimeMillis() / 100000)) * -360;
-        matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees((float) Math.toDegrees(rot1)));
+        double rot1 = (double) -System.currentTimeMillis();
+        matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees((float) rot1));
         matrices.translate(-0.5f, 0, -0.5f);
         MinecraftClient.getInstance().getBlockRenderManager().renderBlock(state, entity.getBlockPos(), entity.getWorld(), matrices, vertexConsumer, false, entity.getEntityWorld().random);
 
         Matrix4f mat = new Matrix4f();
 
 
-        double rot = Math.abs(Math.sin((double) System.currentTimeMillis() / 100000)) * 360;
+        double rot = (double) System.currentTimeMillis();
         matrices.translate(0.5f,.5f,0);
         mat.translate(0,0,.5f);
         mat.rotate(RotationAxis.POSITIVE_Y.rotationDegrees((float) Math.toDegrees(rot * 2)));
