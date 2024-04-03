@@ -39,7 +39,7 @@ public class AbilityFireBall implements Ability {
         if (owner == null) {
             return;
         }
-        entity.setVelocity(owner, owner.getPitch(), owner.getYaw(), 0, 1, 0);
+        entity.setVelocity(owner, owner.getPitch(), owner.getYaw(), 0, 0.75f, 0);
         Bender.getBender((PlayerEntity) entity.getOwner()).setCurrAbility(null);
     }
 

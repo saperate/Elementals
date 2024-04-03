@@ -115,7 +115,7 @@ public class FireBallEntity extends ProjectileEntity {
         Vector3f direction = getEntityLookVector(owner, 3)
                 .sub(0,0.5f,0)
                 .sub(getPos().toVector3f());
-        direction.mul(0.1f);
+        direction.mul(0.05f);
 
         if(direction.length() < 0.4f){
             this.setVelocity(0,0,0);
