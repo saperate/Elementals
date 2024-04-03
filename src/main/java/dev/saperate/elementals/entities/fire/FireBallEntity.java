@@ -139,7 +139,8 @@ public class FireBallEntity extends ProjectileEntity {
     public void onRemoved() {
         summonParticles(this, random,
                 isBlue() ? ParticleTypes.SOUL_FIRE_FLAME : ParticleTypes.FLAME,
-                0.1f, 10);
+                0.5f, 20);
+        getWorld().createExplosion(this,getX(),getY(),getZ(),2.5f,true, World.ExplosionSourceType.NONE);
     }
 
     @Override
