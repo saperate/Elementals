@@ -38,7 +38,6 @@ public abstract class MouseMixin {
                 packet.writeBoolean(right);
 
                 ClientPlayNetworking.send(MOUSE_PACKET_ID, packet);
-                System.out.println("hallo");
             }
 
         }

@@ -80,20 +80,16 @@ public class FireBallEntity extends ProjectileEntity {
         if (owner == null) {
             this.setVelocity(this.getVelocity().add(0.0, -0.04, 0.0));
             this.move(MovementType.SELF, this.getVelocity());
-            collidesWithGround();
+            if(SapsUtils.checkBlockCollision(this) != null){
+                onCollision();
+            }
             return;
         }
         if (!getIsControlled()) {
             HitResult hit = ProjectileUtil.getCollision(this, entity -> entity instanceof LivingEntity);
             if (hit.getType() == HitResult.Type.ENTITY) {
-                LivingEntity entity = (LivingEntity) ((EntityHitResult) hit).getEntity();
-                entity.damage(this.getDamageSources().playerAttack((PlayerEntity) owner), 2);
-                entity.addVelocity(this.getVelocity().multiply(0.8f));
-                discard();
+                onCollision();
                 return;
-            }
-            if (getVelocity().length() < 0.1) {
-                discard();
             }
         }
 
@@ -112,8 +108,11 @@ public class FireBallEntity extends ProjectileEntity {
 
         if (getIsControlled()) {
             controlEntity(owner);
-        } else {
-            onCollision();
+        } else if(SapsUtils.checkBlockCollision(this) != null){
+            if(SapsUtils.checkBlockCollision(this) != null){
+                onCollision();
+                return;
+            }
         }
 
         this.move(MovementType.SELF, this.getVelocity());
@@ -123,7 +122,7 @@ public class FireBallEntity extends ProjectileEntity {
         Vector3f direction = getEntityLookVector(owner, 3)
                 .sub(0, 0.5f, 0)
                 .sub(getPos().toVector3f());
-        direction.mul(0.05f);
+        direction.mul(0.1f);
 
         if (direction.length() < 0.4f) {
             this.setVelocity(0, 0, 0);
@@ -134,39 +133,20 @@ public class FireBallEntity extends ProjectileEntity {
     }
 
     public void onCollision() {
-        if(getWorld().isClient){
-            this.getWorld().playSound(getX(),getY(),getZ(), SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.BLOCKS, 4.0f, (1.0f + (this.getWorld().random.nextFloat() - this.getWorld().random.nextFloat()) * 0.2f) * 0.7f, false);
-            return;
-        }
-
         getWorld().setBlockState(getBlockPos(), AbstractFireBlock.getState(getWorld(), getBlockPos()));
         FireExplosion explosion = new FireExplosion(getWorld(), getOwner(), getX(), getY(), getZ(), 2.5f, true, Explosion.DestructionType.KEEP, 6);
         explosion.collectBlocksAndDamageEntities();
         explosion.affectWorld(true);
         discard();
-
     }
 
-    @Override
-    protected void onCollision(HitResult hitResult) {
-        System.out.println("collided");
-        super.onCollision(hitResult);
-    }
-
-    @Override
-    protected void onBlockCollision(BlockState state) {
-
-        if (!state.isAir()) {
-            System.out.println("collided 2");
-        }
-        super.onBlockCollision(state);
-    }
 
     @Override
     public void onRemoved() {
         summonParticles(this, random,
                 isBlue() ? ParticleTypes.SOUL_FIRE_FLAME : ParticleTypes.FLAME,
                 0.25f, 25);
+        this.getWorld().playSound(getX(),getY(),getZ(), SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.BLOCKS, 4.0f, (1.0f + (this.getWorld().random.nextFloat() - this.getWorld().random.nextFloat()) * 0.2f) * 0.7f, false);
     }
 
     @Override

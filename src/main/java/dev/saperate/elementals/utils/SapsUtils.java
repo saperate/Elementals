@@ -29,7 +29,7 @@ public class SapsUtils {
 
 
     public static BlockState checkBlockCollision(Entity entity) {
-        Box box = entity.getBoundingBox();
+        Box box = entity.getBoundingBox().expand(0.25);
         BlockPos blockPos = BlockPos.ofFloored(box.minX + 1.0E-7, box.minY + 1.0E-7, box.minZ + 1.0E-7);
         BlockPos blockPos2 = BlockPos.ofFloored(box.maxX - 1.0E-7, box.maxY - 1.0E-7, box.maxZ - 1.0E-7);
 
@@ -40,6 +40,9 @@ public class SapsUtils {
                 for (int k = blockPos.getZ(); k <= blockPos2.getZ(); ++k) {
                     mutable.set(i, j, k);
                     BlockState blockState = entity.getWorld().getBlockState(mutable);
+                    if(blockState.isAir()){
+                        continue;
+                    }
 
                     try {
                         blockState.onEntityCollision(entity.getWorld(), mutable, entity);

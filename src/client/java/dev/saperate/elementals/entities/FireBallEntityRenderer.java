@@ -20,6 +20,7 @@ import org.joml.Matrix4f;
 import static dev.saperate.elementals.entities.utils.RenderUtils.drawCube;
 
 public class FireBallEntityRenderer extends EntityRenderer<FireBallEntity> {
+    public static long firstTime = -1;
 
     private static final Identifier fireCoreTex = new Identifier("minecraft", "block/shroomlight");
     private static final Identifier blueFireCoreTex = new Identifier("elementals", "block/bluefire_core");
@@ -30,6 +31,11 @@ public class FireBallEntityRenderer extends EntityRenderer<FireBallEntity> {
 
     @Override
     public void render(FireBallEntity entity, float yaw, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light) {
+        if(firstTime == -1){
+            firstTime = System.currentTimeMillis();
+        }
+        float rot = (float) (System.currentTimeMillis() - firstTime) / 1000;
+
         matrices.push();
 
 
@@ -41,15 +47,16 @@ public class FireBallEntityRenderer extends EntityRenderer<FireBallEntity> {
         //Use soul fire for blue fire
 
         BlockState state = entity.isBlue() ? Blocks.SOUL_FIRE.getDefaultState() : Blocks.FIRE.getDefaultState();
-        double rot1 = (double) -System.currentTimeMillis();
-        matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees((float) rot1));
+
+
+        matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees((float) Math.toDegrees(-rot)));
         matrices.translate(-0.5f, 0, -0.5f);
         MinecraftClient.getInstance().getBlockRenderManager().renderBlock(state, entity.getBlockPos(), entity.getWorld(), matrices, vertexConsumer, false, entity.getEntityWorld().random);
 
         Matrix4f mat = new Matrix4f();
 
 
-        double rot = (double) System.currentTimeMillis();
+
         matrices.translate(0.5f,.5f,0);
         mat.translate(0,0,.5f);
         mat.rotate(RotationAxis.POSITIVE_Y.rotationDegrees((float) Math.toDegrees(rot * 2)));
