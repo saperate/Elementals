@@ -12,6 +12,7 @@ import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import static dev.saperate.elementals.entities.fire.FireArcEntity.FIREARC;
 import static dev.saperate.elementals.entities.fire.FireBallEntity.FIREBALL;
 import static dev.saperate.elementals.entities.fire.FireBlockEntity.FIREBLOCK;
+import static dev.saperate.elementals.entities.fire.FireShieldEntity.FIRESHIELD;
 import static dev.saperate.elementals.entities.water.WaterCubeEntity.WATERCUBE;
 import static dev.saperate.elementals.entities.water.WaterArcEntity.WATERARC;
 import static dev.saperate.elementals.network.ModMessages.SYNC_CURR_ABILITY_PACKET_ID;
@@ -31,6 +32,7 @@ public class ElementalsClient implements ClientModInitializer {
 		EntityRendererRegistry.register(FIREBLOCK, FireBlockEntityRenderer::new);
 		EntityRendererRegistry.register(FIREARC, FireArcEntityRenderer::new);
 		EntityRendererRegistry.register(FIREBALL, FireBallEntityRenderer::new);
+		EntityRendererRegistry.register(FIRESHIELD, FireShieldEntityRenderer::new);
 		new KeyAbility1();
 		new KeyAbility2();
 	}

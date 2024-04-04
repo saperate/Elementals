@@ -110,13 +110,10 @@ public abstract class RenderUtils {
                                         float r, float g, float b, float a, Identifier tex, float height, Matrix4f rot,
                                         boolean renderTop, boolean renderBottom) {
 
-        if(true){
-            throw  new RuntimeException("You forgot to make inverted cube dumbass");
-        }
+
 
         Function<Identifier, Sprite> func = MinecraftClient.getInstance().getSpriteAtlas(new Identifier("minecraft", "textures/atlas/blocks.png"));
 
-        System.out.println(tex);
         Sprite sprite = func.apply(tex);
         float uMin = sprite.getMinU(), uMax = sprite.getMaxU();
         float vMin = sprite.getMinV(), vMax = sprite.getMaxV();
@@ -135,9 +132,9 @@ public abstract class RenderUtils {
             // Top face
             drawQuad(vertexConsumer, matrices, light,
                     uMin, uMax, vMin, vMax,
-                    0, g, b, a,
+                    r, g, b, a,
                     0, 0, 1,
-                    v5, v6, v7, v8
+                    v6, v5, v8, v7
             );
         }
 
@@ -147,7 +144,7 @@ public abstract class RenderUtils {
                     uMin, uMax, vMin, vMax,
                     r, g, b, a,
                     0, 0, 1,
-                    v1, v2, v3, v4
+                    v2, v1, v4, v3
             );
         }
 
@@ -156,7 +153,7 @@ public abstract class RenderUtils {
                 uMin, uMax, vMin, vMax,
                 r, g, b, a,
                 -1, 0, 0,
-                v5, v2, v1, v6
+                v6, v1, v2, v5
         );
 
 
@@ -165,24 +162,24 @@ public abstract class RenderUtils {
                 uMin, uMax, vMin, vMax,
                 r, g, b, a,
                 -1, 0, 0,
-                v7, v4, v3, v8
+                v8, v3, v4, v7
         );
 
-        // front face
+        // Front face
         drawQuad(vertexConsumer, matrices, light,
                 uMin, uMax, vMin, vMax,
                 r, g, b, a,
                 0, 1, 0,
-                v6, v1, v4, v7
+                v7, v4, v1, v6
         );
 
 
-        // Bottom face
+        // Back face
         drawQuad(vertexConsumer, matrices, light,
                 uMin, uMax, vMin, vMax,
                 r, g, b, a,
                 -1, 0, 0,
-                v8, v3, v2, v5
+                v5, v2, v3, v8
         );
     }
 

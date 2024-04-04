@@ -26,7 +26,14 @@ public class FireElement extends Element {
                                 new Upgrade("tallerWall")
                         }, true),
                         new Upgrade("fireSpikes")
-                }, true)
+                }, true),
+                new Upgrade("fireArc", new Upgrade[]{
+                        new Upgrade("fireBall"),
+                        new Upgrade("hotterArcs", new Upgrade[]{
+                                new Upgrade("flameThrower"),
+                                new Upgrade("fireShield")
+                        }, true)
+                })
         });
         addAbility(new AbilityFire1(),true);
         addAbility(new AbilityFireIgnite(), false);
@@ -35,6 +42,7 @@ public class FireElement extends Element {
         addAbility(new AbilityFire2(),true);
         addAbility(new AbilityFireArc(),false);
         addAbility(new AbilityFireBall(),false);
+        addAbility(new AbilityFireShield(),false);
     }
 
     public static void placeFire(BlockPos pos, Direction side, Entity entity, BlockState state){
