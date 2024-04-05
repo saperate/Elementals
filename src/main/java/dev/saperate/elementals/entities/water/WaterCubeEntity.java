@@ -30,6 +30,8 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.joml.Vector3f;
 
+import java.util.List;
+
 import static dev.saperate.elementals.utils.SapsUtils.getEntityLookVector;
 import static dev.saperate.elementals.utils.SapsUtils.summonParticles;
 
@@ -76,6 +78,16 @@ public class WaterCubeEntity extends ProjectileEntity {
             collidesWithGround();
             return;
         }
+
+        List<ProjectileEntity> projectiles = getWorld().getEntitiesByClass(ProjectileEntity.class,
+                getWorld().isClient ? getBoundingBox().expand(.25f) : getBoundingBox().offset(getPos()).expand(.25f),
+                ProjectileEntity::isAlive);
+
+        for (ProjectileEntity e : projectiles){
+            e.discard();
+        }
+
+
         if(!getIsControlled()){
             HitResult hit = ProjectileUtil.getCollision(this, entity -> entity instanceof LivingEntity);
             if (hit.getType() == HitResult.Type.ENTITY){

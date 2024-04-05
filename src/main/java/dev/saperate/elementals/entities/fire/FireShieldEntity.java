@@ -11,10 +11,13 @@ import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
 
 import java.util.List;
+import java.util.Properties;
 
 public class FireShieldEntity extends Entity {
     public static final int MAX_FLAME_SIZE = 3;
@@ -50,11 +53,8 @@ public class FireShieldEntity extends Entity {
     @Override
     public boolean damage(DamageSource source, float amount) {
         Entity entity = source.getSource();
-        if (entity instanceof ProjectileEntity) {
-            entity.discard();
-        }
-        return super.damage(source, amount);
 
+        return false;
     }
 
     @Override
@@ -85,22 +85,32 @@ public class FireShieldEntity extends Entity {
             this.discard();
         }
 
-        List<LivingEntity> hits = getWorld().getEntitiesByClass(LivingEntity.class, getWorld().isClient ? getBoundingBox() : getBoundingBox().offset(getPos()), LivingEntity::isAlive);
+        List<ProjectileEntity> projectiles = getWorld().getEntitiesByClass(ProjectileEntity.class,
+                getWorld().isClient ? getBoundingBox().expand(1.5f) : getBoundingBox().expand(1.5f).offset(getPos()),
+                ProjectileEntity::isAlive);
+
+        for (ProjectileEntity e : projectiles){
+            e.discard();
+        }
+
+        List<LivingEntity> hits = getWorld().getEntitiesByClass(LivingEntity.class,
+                getWorld().isClient ? getBoundingBox().expand(1) : getBoundingBox().expand(1).offset(getPos()),
+                LivingEntity::isAlive);
 
         for (LivingEntity entity : hits) {
-            if (!entity.isFireImmune() && entity.getY() - getY() < h) {
-                if(true){
-                    return;
-                }
+            if (!entity.isFireImmune() && entity.getY() - getY() < h + 1
+                    && Math.abs(entity.getPos().subtract(getPos()).length()) > 2) {
                 entity.setOnFireFor(8);
                 entity.damage(getDamageSources().inFire(), isBlue() ? 2.5f : 1.5f);//1.5f for normal, 2.5f for blue
             }
         }
     }
 
+
+
     @Override
-    public void onDataTrackerUpdate(List<DataTracker.SerializedEntry<?>> dataEntries) {
-        super.onDataTrackerUpdate(dataEntries);
+    public boolean isCollidable() {
+        return true;
     }
 
 

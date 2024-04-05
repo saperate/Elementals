@@ -87,6 +87,14 @@ public class FireBlockEntity extends Entity {
             this.discard();
         }
 
+        List<ProjectileEntity> projectiles = getWorld().getEntitiesByClass(ProjectileEntity.class,
+                getWorld().isClient ? getBoundingBox().expand(.5f) : getBoundingBox().offset(getPos()).expand(.5f),
+                ProjectileEntity::isAlive);
+
+        for (ProjectileEntity e : projectiles){
+            e.discard();
+        }
+
         List<LivingEntity> hits = getWorld().getEntitiesByClass(LivingEntity.class, getWorld().isClient ? getBoundingBox() : getBoundingBox().offset(getPos()), LivingEntity::isAlive);
 
         for (LivingEntity entity : hits) {

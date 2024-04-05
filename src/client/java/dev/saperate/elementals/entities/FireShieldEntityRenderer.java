@@ -97,7 +97,7 @@ public class FireShieldEntityRenderer extends EntityRenderer<FireShieldEntity> {
                 (color2 >> 16 & 255) / 255.0f,
                 (color2 >> 8 & 255) / 255.0f,
                 (color2 & 255) / 255.0f,
-                0.5f,
+                0.65f,
                 entity.isBlue() ? blueFireCoreTex : fireCoreTex,
                 1, mat,
                 true,
