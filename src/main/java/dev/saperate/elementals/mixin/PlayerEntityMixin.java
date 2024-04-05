@@ -22,11 +22,13 @@ public class PlayerEntityMixin {
     private void init(CallbackInfo info) {
         PlayerEntity player = ((PlayerEntity) (Object) this);
         World world = player.getWorld();
+        Bender bender = new Bender(player, null);
         if(!world.isClient){
             PlayerData playerState = StateDataSaverAndLoader.getPlayerState(player);
-            Bender bender = new Bender(player, playerState.element);
+            bender.setElement(playerState.element,true);
             bender.boundAbilities = playerState.boundAbilities;
         }
+
     }
 
     @Inject(at = @At("TAIL"), method = "tick")

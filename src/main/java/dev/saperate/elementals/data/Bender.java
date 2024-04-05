@@ -16,7 +16,7 @@ import java.util.*;
 import static dev.saperate.elementals.network.ModMessages.SYNC_ELEMENT_PACKET_ID;
 
 public class Bender {
-    public static final Map<UUID, Bender> benders = new HashMap<>();
+    public static Map<UUID, Bender> benders = new HashMap<>();
     public final PlayerEntity player;
     private Element element;
     public Ability[] boundAbilities = new Ability[3];
