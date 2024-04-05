@@ -53,6 +53,9 @@ public class BendingCommand {
     }
 
     public static int setSelfElement(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
+        if(context.getSource().getPlayer().getWorld().isClient){
+            return 1;
+        }
         Bender bender = Bender.getBender(context.getSource().getPlayer());
         PlayerData plrData = StateDataSaverAndLoader.getPlayerState(bender.player);
         Element element = bender.getElement();

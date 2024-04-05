@@ -1,6 +1,7 @@
 package dev.saperate.elementals.packets;
 
 import dev.saperate.elementals.data.Bender;
+import dev.saperate.elementals.data.ClientBender;
 import dev.saperate.elementals.elements.Element;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
@@ -19,8 +20,12 @@ public class SyncBendingElementS2CPacket {
         if(client.player == null){
             return;
         }
-        String e = buf.readString();
-        Bender.getBender(client.player).setElement(Element.getElementByName(e),false);
+        ClientBender bender = ClientBender.get();
+        if(bender.player == null){
+            bender.player = client.player;
+        }
 
+        String e = buf.readString();
+        bender.element = Element.getElementByName(e);
     }
 }

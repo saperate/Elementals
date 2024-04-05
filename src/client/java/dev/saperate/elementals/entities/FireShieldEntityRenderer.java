@@ -57,9 +57,26 @@ public class FireShieldEntityRenderer extends EntityRenderer<FireShieldEntity> {
                 1,
                 entity.isBlue() ? blueFireTex : fireTex,
                 1, new Matrix4f()
-                        .translate(0, entity.prevFlameSize + 2, 0)
-                        .scale(4.7f, entity.prevFlameSize + 2, 4.7f)
+                        .translate(0, entity.prevFlameSize, 0)
+                        .scale(4.7f, entity.prevFlameSize, 4.7f)
                         .rotate(RotationAxis.POSITIVE_Y.rotationDegrees((float) Math.toDegrees(-rot)))
+                        .rotate((float) Math.toRadians(90),1,0,0)
+                ,
+                true,
+                false,
+                false
+        );
+
+        drawCube(vertexConsumer, matrices, 255,
+                (0xFFFFFF >> 16 & 255) / 255.0f,
+                (0xFFFFFF >> 8 & 255) / 255.0f,
+                (0xFFFFFF & 255) / 255.0f,
+                1,
+                entity.isBlue() ? blueFireTex : fireTex,
+                1, new Matrix4f()
+                        .translate(0, entity.prevFlameSize, 0)
+                        .scale(4.7f, entity.prevFlameSize, 4.7f)
+                        .rotate(RotationAxis.POSITIVE_Y.rotationDegrees((float) Math.toDegrees(rot)))
                         .rotate((float) Math.toRadians(90),1,0,0)
                 ,
                 true,
@@ -80,7 +97,7 @@ public class FireShieldEntityRenderer extends EntityRenderer<FireShieldEntity> {
                 (color2 >> 16 & 255) / 255.0f,
                 (color2 >> 8 & 255) / 255.0f,
                 (color2 & 255) / 255.0f,
-                0.8f,
+                0.5f,
                 entity.isBlue() ? blueFireCoreTex : fireCoreTex,
                 1, mat,
                 true,

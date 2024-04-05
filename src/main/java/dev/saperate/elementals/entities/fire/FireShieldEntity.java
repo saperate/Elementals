@@ -17,7 +17,7 @@ import net.minecraft.world.World;
 import java.util.List;
 
 public class FireShieldEntity extends Entity {
-    public static final int MAX_FLAME_SIZE = 4;
+    public static final int MAX_FLAME_SIZE = 3;
     private static final TrackedData<Float> FINAL_HEIGHT = DataTracker.registerData(FireShieldEntity.class, TrackedDataHandlerRegistry.FLOAT);
     private static final TrackedData<Float> HEIGHT = DataTracker.registerData(FireShieldEntity.class, TrackedDataHandlerRegistry.FLOAT);
     private static final TrackedData<Boolean> IS_BLUE = DataTracker.registerData(FireShieldEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
@@ -60,7 +60,7 @@ public class FireShieldEntity extends Entity {
     @Override
     protected void initDataTracker() {
         this.getDataTracker().startTracking(HEIGHT, 0.1f);
-        this.getDataTracker().startTracking(FINAL_HEIGHT, 4f);
+        this.getDataTracker().startTracking(FINAL_HEIGHT, 3f);
         this.getDataTracker().startTracking(IS_BLUE, false);
     }
 

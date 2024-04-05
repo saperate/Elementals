@@ -1,6 +1,8 @@
 package dev.saperate.elementals.packets;
 
 import dev.saperate.elementals.data.Bender;
+import dev.saperate.elementals.data.ClientBender;
+import dev.saperate.elementals.elements.Element;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -22,11 +24,15 @@ public class SyncCurrAbilityS2CPacket {
             return;
         }
         int i = buf.readInt();
-        if(i == -1){
-            Bender.getBender(client.player).setCurrAbility(null);
+        ClientBender bender = ClientBender.get();
+        if(bender.element == null){
             return;
         }
-        Bender.getBender(client.player).setCurrAbility(i);
+        if(i == -1){
+            bender.currAbility = null;
+            return;
+        }
+        bender.currAbility = bender.element.getAbility(i);
 
     }
 

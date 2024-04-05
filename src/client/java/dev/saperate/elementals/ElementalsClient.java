@@ -23,8 +23,6 @@ public class ElementalsClient implements ClientModInitializer {
 
 	@Override
 	public void onInitializeClient() {
-
-
 		registerS2CPackets();
 
 		EntityRendererRegistry.register(WATERCUBE, WaterCubeEntityRenderer::new);
