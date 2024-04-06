@@ -22,7 +22,6 @@ public class AbilityFire2 implements Ability {
             } else if (playerData.canUseUpgrade("")) {//flameThrower
                 return;
             }
-            return;
         }
 
         FireElement.get().abilityList.get(5).onCall(bender,deltaT);
