@@ -4,6 +4,7 @@ import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.render.Camera;
 import net.minecraft.client.render.CameraSubmersionType;
 import net.minecraft.client.render.entity.PlayerEntityRenderer;
+import net.minecraft.entity.EntityPose;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -18,6 +19,7 @@ public abstract class PlayerEntityRendererMixin {
 	@Inject(at = @At("TAIL"), method = "setModelPose")
 	private void render(AbstractClientPlayerEntity player, CallbackInfo ci) {
 		//Quick dirty bug fix, it doesn't
-		((PlayerEntityRenderer)(Object) this).getModel().sneaking = player.isInSneakingPose() || player.isSneaking();
+		PlayerEntityRenderer plrRenderer = ((PlayerEntityRenderer)(Object) this);
+		plrRenderer.getModel().sneaking = player.isInSneakingPose() || player.isSneaking();
 	}
 }

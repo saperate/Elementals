@@ -84,7 +84,9 @@ public class WaterCubeEntity extends ProjectileEntity {
                 ProjectileEntity::isAlive);
 
         for (ProjectileEntity e : projectiles){
-            e.discard();
+            if(! (e instanceof WaterCubeEntity)){
+                e.discard();
+            }
         }
 
 

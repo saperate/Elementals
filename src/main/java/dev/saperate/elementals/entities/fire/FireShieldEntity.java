@@ -52,10 +52,6 @@ public class FireShieldEntity extends Entity {
         setOwner(owner);
     }
 
-
-
-
-
     @Override
     protected void initDataTracker() {
         this.getDataTracker().startTracking(HEIGHT, 0.1f);
@@ -67,7 +63,9 @@ public class FireShieldEntity extends Entity {
     @Override
     public void tick() {
         super.tick();
+
         Entity owner = getOwner();
+
         if(owner == null){
             discard();
             return;
@@ -108,6 +106,8 @@ public class FireShieldEntity extends Entity {
                 entity.damage(getDamageSources().inFire(), isBlue() ? 2.5f : 1.5f);//1.5f for normal, 2.5f for blue
             }
         }
+
+
     }
 
 

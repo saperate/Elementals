@@ -93,7 +93,7 @@ public class FireShieldEntityRenderer extends EntityRenderer<FireShieldEntity> {
         matrices.translate(0,0.5f,-0.5f);
 
         int color2 = entity.isBlue() ? 0xffffff : 0xfff600;
-        drawCube(vertexConsumers.getBuffer(RenderLayer.getTranslucent()), matrices, 255,
+        drawCube(vertexConsumers.getBuffer(RenderLayer.getTranslucentMovingBlock()), matrices, 255,
                 (color2 >> 16 & 255) / 255.0f,
                 (color2 >> 8 & 255) / 255.0f,
                 (color2 & 255) / 255.0f,
@@ -107,6 +107,8 @@ public class FireShieldEntityRenderer extends EntityRenderer<FireShieldEntity> {
 
         RenderSystem.disableBlend();
         matrices.pop();
+
+
     }
 
 

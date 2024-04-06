@@ -9,12 +9,6 @@ public class AbilityFire2 implements Ability {
     public void onCall(Bender bender, long deltaT) {
         PlayerData playerData = PlayerData.get(bender.player);
 
-        if(true){
-            FireElement.get().abilityList.get(7).onCall(bender,deltaT);
-            return;
-        }
-
-
         if(deltaT > 1000){
             FireElement.get().abilityList.get(6).onCall(bender,deltaT);
             return;
