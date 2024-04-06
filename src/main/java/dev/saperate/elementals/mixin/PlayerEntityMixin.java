@@ -31,7 +31,7 @@ public class PlayerEntityMixin {
         PlayerEntity player = ((PlayerEntity) (Object) this);
         Bender bender = Bender.getBender(player);
 
-        if (bender != null && bender.currAbility != null) {
+        if (bender != null && bender.currAbility != null && !player.getWorld().isClient) {
             bender.currAbility.onTick(bender);
         }
     }

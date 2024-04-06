@@ -9,12 +9,15 @@ import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.particle.BlockStateParticleEffect;
+import net.minecraft.particle.ParticleTypes;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
+import net.minecraft.world.event.GameEvent;
 
 import java.util.List;
 import java.util.Properties;
@@ -24,7 +27,7 @@ public class FireShieldEntity extends Entity {
     private static final TrackedData<Float> FINAL_HEIGHT = DataTracker.registerData(FireShieldEntity.class, TrackedDataHandlerRegistry.FLOAT);
     private static final TrackedData<Float> HEIGHT = DataTracker.registerData(FireShieldEntity.class, TrackedDataHandlerRegistry.FLOAT);
     private static final TrackedData<Boolean> IS_BLUE = DataTracker.registerData(FireShieldEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
-    public int lifeTime = 0;
+    private static final TrackedData<Integer> OWNER_ID = DataTracker.registerData(FireShieldEntity.class, TrackedDataHandlerRegistry.INTEGER);
     public float prevFlameSize = 0;
     public int heightAdjustSpeed = 10;//Smaller is faster
     public static final EntityType<FireShieldEntity> FIRESHIELD = Registry.register(
@@ -45,33 +48,34 @@ public class FireShieldEntity extends Entity {
     public FireShieldEntity(World world, LivingEntity owner, double x, double y, double z) {
         super(FIRESHIELD, world);
         setPos(x, y, z);
-        lifeTime = 200;
         setFireHeight(MAX_FLAME_SIZE);
+        setOwner(owner);
     }
 
 
-    @Override
-    public boolean damage(DamageSource source, float amount) {
-        Entity entity = source.getSource();
 
-        return false;
-    }
+
 
     @Override
     protected void initDataTracker() {
         this.getDataTracker().startTracking(HEIGHT, 0.1f);
         this.getDataTracker().startTracking(FINAL_HEIGHT, 3f);
         this.getDataTracker().startTracking(IS_BLUE, false);
+        this.getDataTracker().startTracking(OWNER_ID, 0);
     }
 
     @Override
     public void tick() {
         super.tick();
-        lifeTime--;
-        if (lifeTime <= 0 && !getWorld().isClient) {
+        Entity owner = getOwner();
+        if(owner == null){
             discard();
             return;
         }
+
+        setPos(owner.getX(),owner.getY(),owner.getZ());
+
+
         float diff = (getFireHeight() - prevFlameSize) / heightAdjustSpeed;
         prevFlameSize += diff;
         if (prevFlameSize > MAX_FLAME_SIZE - 1) {
@@ -107,7 +111,6 @@ public class FireShieldEntity extends Entity {
     }
 
 
-
     @Override
     public boolean isCollidable() {
         return true;
@@ -138,19 +141,15 @@ public class FireShieldEntity extends Entity {
 
     @Override
     protected void readCustomDataFromNbt(NbtCompound nbt) {
-        nbt.putInt("lifeTime", lifeTime);
+
     }
 
     @Override
     protected void writeCustomDataToNbt(NbtCompound nbt) {
-        if (nbt.contains("lifeTime")) {
-            lifeTime = nbt.getInt("lifeTime");
-        }
+
     }
 
-    public int getLifeTime() {
-        return lifeTime;
-    }
+
 
     public float getFinalFireHeight() {
         return this.dataTracker.get(FINAL_HEIGHT);
@@ -158,5 +157,14 @@ public class FireShieldEntity extends Entity {
 
     public void setFinalFireHeight(float h) {
         this.getDataTracker().set(FINAL_HEIGHT, h);
+    }
+
+    public LivingEntity getOwner() {
+        Entity owner = this.getWorld().getEntityById(this.getDataTracker().get(OWNER_ID));
+        return (owner instanceof LivingEntity) ? (LivingEntity) owner : null;
+    }
+
+    public void setOwner(LivingEntity owner) {
+        this.getDataTracker().set(OWNER_ID, owner.getId());
     }
 }

@@ -8,7 +8,9 @@ public class AbilityFire2 implements Ability {
     @Override
     public void onCall(Bender bender, long deltaT) {
         PlayerData playerData = PlayerData.get(bender.player);
-        if (!(bender.currAbility instanceof AbilityFire2)) {
+
+        if(true){
+            FireElement.get().abilityList.get(7).onCall(bender,deltaT);
             return;
         }
 
@@ -19,9 +21,9 @@ public class AbilityFire2 implements Ability {
         }
 
         if (bender.player.isSneaking()) {
-            FireElement.get().abilityList.get(7).onCall(bender,deltaT);
-            bender.setCurrAbility(null);
-            if(playerData.canUseUpgrade("")){//fireShield
+
+            if(playerData.canUseUpgrade("fireShield")){
+                FireElement.get().abilityList.get(7).onCall(bender,deltaT);
                 return;
             } else if (playerData.canUseUpgrade("")) {//flameThrower
                 return;

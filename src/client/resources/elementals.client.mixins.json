@@ -5,7 +5,8 @@
   "client": [
     "FogMixin",
     "MouseMixin",
-    "OverlayMixin"
+    "OverlayMixin",
+    "PlayerEntityRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1
