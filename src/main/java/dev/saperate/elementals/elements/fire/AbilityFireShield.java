@@ -51,7 +51,6 @@ public class AbilityFireShield implements Ability {
         if(!bender.player.isSneaking()){
             bender.setCurrAbility(null);
             FireShieldEntity entity = (FireShieldEntity) bender.controlledEntity;
-
             if (entity == null) {
                 return;
             }
