@@ -16,7 +16,7 @@ public class AbilityWaterArc implements Ability {
 
         if (pos != null) {
             WaterArcEntity entity = new WaterArcEntity(player.getWorld(), player, pos.x, pos.y, pos.z);
-            bender.controlledEntity = entity;
+            bender.abilityData = entity;
             entity.createChain(player);
             player.getWorld().spawnEntity(entity);
 
@@ -27,8 +27,8 @@ public class AbilityWaterArc implements Ability {
     }
 
     @Override
-    public void onLeftClick(Bender bender) {
-        WaterArcEntity entity = (WaterArcEntity) bender.controlledEntity;
+    public void onLeftClick(Bender bender, boolean started) {
+        WaterArcEntity entity = (WaterArcEntity) bender.abilityData;
         if (entity == null) {
             return;
         }
@@ -43,13 +43,13 @@ public class AbilityWaterArc implements Ability {
     }
 
     @Override
-    public void onMiddleClick(Bender bender) {
+    public void onMiddleClick(Bender bender, boolean started) {
 
     }
 
     @Override
-    public void onRightClick(Bender bender) {
-        WaterArcEntity entity = (WaterArcEntity) bender.controlledEntity;
+    public void onRightClick(Bender bender, boolean started) {
+        WaterArcEntity entity = (WaterArcEntity) bender.abilityData;
         if (entity == null) {
             return;
         }

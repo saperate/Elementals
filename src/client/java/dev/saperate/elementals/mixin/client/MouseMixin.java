@@ -18,28 +18,27 @@ import static dev.saperate.elementals.network.ModMessages.MOUSE_PACKET_ID;
 
 @Mixin(Mouse.class)
 public abstract class MouseMixin {
-    @Shadow @Final private MinecraftClient client;
+    @Shadow
+    @Final
+    private MinecraftClient client;
 
     @Inject(at = @At("HEAD"), method = "onMouseButton")
     private void onMouseButton(long window, int button, int action, int mods, CallbackInfo ci) {
-        if (this.client.currentScreen == null){
-            boolean left = false, mid = false, right = false;
+        if (this.client.currentScreen == null) {
+            int left = -1, mid = -1, right = -1;
             if (button == 0) {
-                left = action == 1;
+                left = action;
             } else if (button == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
-                mid = action == 1;
+                mid = action;
             } else if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
-                right = action == 1;
+                right = action;
             }
-            if(left || mid || right){
-                PacketByteBuf packet = PacketByteBufs.create();
-                packet.writeBoolean(left);
-                packet.writeBoolean(mid);
-                packet.writeBoolean(right);
+            PacketByteBuf packet = PacketByteBufs.create();
+            packet.writeInt(left);
+            packet.writeInt(mid);
+            packet.writeInt(right);
 
-                ClientPlayNetworking.send(MOUSE_PACKET_ID, packet);
-            }
-
+            ClientPlayNetworking.send(MOUSE_PACKET_ID, packet);
         }
     }
 }

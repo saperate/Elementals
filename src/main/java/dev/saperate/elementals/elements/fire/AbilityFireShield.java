@@ -22,7 +22,7 @@ public class AbilityFireShield implements Ability {
         PlayerEntity player = bender.player;
 
         FireShieldEntity entity = new FireShieldEntity(player.getWorld(), player, player.getX(), player.getY(), player.getZ());
-        bender.controlledEntity = entity;
+        bender.abilityData = entity;
         entity.setIsBlue(PlayerData.get(player).canUseUpgrade("blueFire"));
         player.getWorld().spawnEntity(entity);
 
@@ -31,17 +31,17 @@ public class AbilityFireShield implements Ability {
     }
 
     @Override
-    public void onLeftClick(Bender bender) {
+    public void onLeftClick(Bender bender, boolean started) {
 
     }
 
     @Override
-    public void onMiddleClick(Bender bender) {
+    public void onMiddleClick(Bender bender, boolean started) {
 
     }
 
     @Override
-    public void onRightClick(Bender bender) {
+    public void onRightClick(Bender bender, boolean started) {
 
     }
 
@@ -50,7 +50,7 @@ public class AbilityFireShield implements Ability {
         bender.player.addStatusEffect(new StatusEffectInstance(STATIONARY_EFFECT,1,1,false,false,false));
         if(!bender.player.isSneaking()){
             bender.setCurrAbility(null);
-            FireShieldEntity entity = (FireShieldEntity) bender.controlledEntity;
+            FireShieldEntity entity = (FireShieldEntity) bender.abilityData;
             if (entity == null) {
                 return;
             }

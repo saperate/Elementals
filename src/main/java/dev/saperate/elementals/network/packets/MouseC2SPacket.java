@@ -12,30 +12,28 @@ public class MouseC2SPacket {
     public static void receive(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler,
                                PacketByteBuf buf, PacketSender responseSender) {
         // Everything here happens ONLY on the Server!
-        boolean left = buf.readBoolean();
-        boolean mid = buf.readBoolean();
-        boolean right = buf.readBoolean();
+        int left = buf.readInt();
+        int mid = buf.readInt();
+        int right = buf.readInt();
 
 
         Bender bender = Bender.getBender(player);
         if(bender.currAbility == null || bender.castTime != null){
             return;
         }
-        if(left){
+        if(left != -1){
             server.execute(() -> {
-                bender.currAbility.onLeftClick(bender);
+                bender.currAbility.onLeftClick(bender, left == 1);
             });
-            return;
         }
-        if(mid){
+        if(mid != -1){
             server.execute(() -> {
-                bender.currAbility.onMiddleClick(bender);
+                bender.currAbility.onMiddleClick(bender, mid == 1);
             });
-            return;
         }
-        if(right){
+        if(right != -1){
             server.execute(() -> {
-                bender.currAbility.onRightClick(bender);
+                bender.currAbility.onRightClick(bender, right == 1);
             });
         }
     }

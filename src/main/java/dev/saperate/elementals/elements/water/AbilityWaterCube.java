@@ -24,7 +24,7 @@ public class AbilityWaterCube implements Ability {
 
         if (pos != null) {
             WaterCubeEntity entity = new WaterCubeEntity(player.getWorld(), player, pos.x, pos.y, pos.z);
-            bender.controlledEntity = entity;
+            bender.abilityData = entity;
             player.getWorld().spawnEntity(entity);
 
             bender.setCurrAbility(this);
@@ -35,8 +35,8 @@ public class AbilityWaterCube implements Ability {
 
 
     @Override
-    public void onLeftClick(Bender bender) {
-        WaterCubeEntity entity = (WaterCubeEntity) bender.controlledEntity;
+    public void onLeftClick(Bender bender, boolean started) {
+        WaterCubeEntity entity = (WaterCubeEntity) bender.abilityData;
         if (entity == null) {
             return;
         }
@@ -51,13 +51,13 @@ public class AbilityWaterCube implements Ability {
     }
 
     @Override
-    public void onMiddleClick(Bender bender) {
+    public void onMiddleClick(Bender bender, boolean started) {
 
     }
 
     @Override
-    public void onRightClick(Bender bender) {
-        WaterCubeEntity entity = (WaterCubeEntity) bender.controlledEntity;
+    public void onRightClick(Bender bender, boolean started) {
+        WaterCubeEntity entity = (WaterCubeEntity) bender.abilityData;
         if (entity == null) {
             return;
         }

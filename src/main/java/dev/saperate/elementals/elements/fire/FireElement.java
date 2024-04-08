@@ -28,7 +28,7 @@ public class FireElement extends Element {
                         new Upgrade("fireSpikes")
                 }, true),
                 new Upgrade("fireArc", new Upgrade[]{
-                        new Upgrade("fireBall"),
+                        new Upgrade("fireball"),
                         new Upgrade("hotterArcs", new Upgrade[]{
                                 new Upgrade("flameThrower"),
                                 new Upgrade("fireShield")
@@ -43,6 +43,7 @@ public class FireElement extends Element {
         addAbility(new AbilityFireArc(),false);
         addAbility(new AbilityFireBall(),false);
         addAbility(new AbilityFireShield(),false);
+        addAbility(new AbilityFlameThrower(),false);
     }
 
     public static void placeFire(BlockPos pos, Direction side, Entity entity, BlockState state){

@@ -20,7 +20,7 @@ public class AbilityFireArc implements Ability {
         Vector3f pos = getEntityLookVector(player, 3);
 
         FireArcEntity entity = new FireArcEntity(player.getWorld(), player, pos.x, pos.y, pos.z);
-        bender.controlledEntity = entity;
+        bender.abilityData = entity;
         entity.setIsBlue(PlayerData.get(player).canUseUpgrade("blueFire"));
         entity.createChain(player);
         player.getWorld().spawnEntity(entity);
@@ -30,8 +30,8 @@ public class AbilityFireArc implements Ability {
     }
 
     @Override
-    public void onLeftClick(Bender bender) {
-        FireArcEntity entity = (FireArcEntity) bender.controlledEntity;
+    public void onLeftClick(Bender bender, boolean started) {
+        FireArcEntity entity = (FireArcEntity) bender.abilityData;
         if (entity == null) {
             return;
         }
@@ -46,13 +46,13 @@ public class AbilityFireArc implements Ability {
     }
 
     @Override
-    public void onMiddleClick(Bender bender) {
+    public void onMiddleClick(Bender bender, boolean started) {
 
     }
 
     @Override
-    public void onRightClick(Bender bender) {
-        FireArcEntity entity = (FireArcEntity) bender.controlledEntity;
+    public void onRightClick(Bender bender, boolean started) {
+        FireArcEntity entity = (FireArcEntity) bender.abilityData;
         if (entity == null) {
             return;
         }

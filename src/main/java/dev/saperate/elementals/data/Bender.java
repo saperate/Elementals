@@ -24,7 +24,7 @@ public class Bender {
     @Nullable
     public Ability currAbility;
     @Nullable
-    public Entity controlledEntity;
+    public Object abilityData;
 
     public Bender(PlayerEntity player, Element element) {
         this.player = player;

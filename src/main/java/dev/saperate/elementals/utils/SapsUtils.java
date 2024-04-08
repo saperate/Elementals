@@ -133,14 +133,21 @@ public class SapsUtils {
     }
 
     public static void serverSummonParticles(ServerWorld world, ParticleEffect type, Entity entity, Random rnd,
-                                             double vX, double vY, double vZ, double speed, int count) {
-        world.spawnParticles(type,
-                entity.getX() + rnd.nextDouble(),
-                entity.getY() + rnd.nextDouble(),
-                entity.getZ() + rnd.nextDouble(),
-                count,
-                vX, vY, vZ, speed
-        );
+                                             double vX, double vY, double vZ, double speed, int count,
+                                             float offsetX, float offsetY, float offsetZ, float vAmplitude) {
+        for (int i = 0; i < count; i++) {
+            world.spawnParticles(type,
+                    entity.getX() + rnd.nextDouble() - 0.5f + offsetX,
+                    entity.getY() + rnd.nextDouble() + 0.5f + offsetY,
+                    entity.getZ() + rnd.nextDouble() - 0.5f + offsetZ,
+                    0,
+                    vX + rnd.nextDouble() * vAmplitude,
+                    vY + rnd.nextDouble() * vAmplitude,
+                    vZ + rnd.nextDouble() * vAmplitude,
+                    speed
+            );
+        }
+
 
     }
 

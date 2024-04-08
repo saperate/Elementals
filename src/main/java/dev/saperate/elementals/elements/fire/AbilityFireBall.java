@@ -19,7 +19,7 @@ public class AbilityFireBall implements Ability {
         Vector3f pos = getEntityLookVector(player, 3);
 
         FireBallEntity entity = new FireBallEntity(player.getWorld(), player, pos.x, pos.y, pos.z);
-        bender.controlledEntity = entity;
+        bender.abilityData = entity;
         entity.setIsBlue(PlayerData.get(player).canUseUpgrade("blueFire"));
         player.getWorld().spawnEntity(entity);
 
@@ -28,8 +28,8 @@ public class AbilityFireBall implements Ability {
     }
 
     @Override
-    public void onLeftClick(Bender bender) {
-        FireBallEntity entity = (FireBallEntity) bender.controlledEntity;
+    public void onLeftClick(Bender bender, boolean started) {
+        FireBallEntity entity = (FireBallEntity) bender.abilityData;
         if (entity == null) {
             return;
         }
@@ -44,13 +44,13 @@ public class AbilityFireBall implements Ability {
     }
 
     @Override
-    public void onMiddleClick(Bender bender) {
+    public void onMiddleClick(Bender bender, boolean started) {
 
     }
 
     @Override
-    public void onRightClick(Bender bender) {
-        FireBallEntity entity = (FireBallEntity) bender.controlledEntity;
+    public void onRightClick(Bender bender, boolean started) {
+        FireBallEntity entity = (FireBallEntity) bender.abilityData;
         if (entity == null) {
             return;
         }
