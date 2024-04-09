@@ -18,7 +18,7 @@ import java.util.List;
 import static dev.saperate.elementals.utils.SapsUtils.*;
 
 public class AbilityFlameThrower implements Ability {
-    public static final Box boundingBox = new Box(new Vec3d(-3,-3,-3), new Vec3d(3,3,3));
+    public static final Box boundingBox = new Box(new Vec3d(-1,-1,-1), new Vec3d(1,1,1));
     @Override
     public void onCall(Bender bender, long deltaT) {
         bender.abilityData = true;
@@ -65,25 +65,29 @@ public class AbilityFlameThrower implements Ability {
             serverSummonParticles((ServerWorld) player.getWorld(),
                     PlayerData.get(player).canUseUpgrade("blueFire") ?
                             ParticleTypes.SOUL_FIRE_FLAME : ParticleTypes.FLAME,player,player.getRandom(),
-                    pos.x - 1, pos.y - 1.1f, pos.z - 1,
-                    0.1f,8,
+                    pos.x - 1, pos.y - 1.6f, pos.z - 1,
+                    0.1f,6,
                     0,0,0, 2);
 
             List<Entity> hits = player.getWorld().getEntitiesByClass(Entity.class,
-                     boundingBox.offset(player.getPos()),
+                     boundingBox.expand(15).offset(player.getPos()),
                     Entity::isAlive);
 
             for (Entity e : hits){
                 if(e.equals(player)){
                     return;
                 }
-                Vector3f dir = player.getPos().subtract(e.getPos()).toVector3f().normalize();
-                float dot = pos.normalize().dot(dir);
+                Vector3f dir = player.getPos().subtract(e.getPos()).toVector3f();
+                System.out.println(dir.length());
+                if(dir.length() > 6){
+                    return;
+                }
+                dir = dir.normalize();
+                float dot = -pos.normalize().dot(dir);
                 System.out.println(dot);
 
-                double angle = 180 - Math.toDegrees(Math.acos(dot));
 
-                if(angle <= 45){
+                if(dot >= 0.67){
                     if (!e.isFireImmune()) {
                         e.setOnFireFor(8);
                         e.damage(e.getDamageSources().inFire(), PlayerData.get(player).canUseUpgrade("blueFire") ? 1.5f : 1.25f);
