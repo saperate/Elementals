@@ -32,6 +32,7 @@ public class PlayerEntityMixin {
     private void tick(CallbackInfo ci) {
         PlayerEntity player = ((PlayerEntity) (Object) this);
         Bender bender = Bender.getBender(player);
+        System.out.println(player.getPos());
 
         if (bender != null && bender.currAbility != null && !player.getWorld().isClient) {
             bender.currAbility.onTick(bender);

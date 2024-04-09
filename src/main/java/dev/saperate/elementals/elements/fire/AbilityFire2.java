@@ -9,10 +9,6 @@ public class AbilityFire2 implements Ability {
     public void onCall(Bender bender, long deltaT) {
         PlayerData playerData = PlayerData.get(bender.player);
 
-        if(true){
-            FireElement.get().abilityList.get(8).onCall(bender,deltaT);
-            return;
-        }
 
         if(deltaT > 1000 && playerData.canUseUpgrade("fireball")){
             FireElement.get().abilityList.get(6).onCall(bender,deltaT);
@@ -23,7 +19,8 @@ public class AbilityFire2 implements Ability {
             if(playerData.canUseUpgrade("fireShield")){
                 FireElement.get().abilityList.get(7).onCall(bender,deltaT);
                 return;
-            } else if (playerData.canUseUpgrade("")) {//flameThrower
+            } else if (playerData.canUseUpgrade("flameThrower")) {
+                FireElement.get().abilityList.get(8).onCall(bender,deltaT);
                 return;
             }
         }

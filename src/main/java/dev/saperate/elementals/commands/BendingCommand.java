@@ -82,6 +82,10 @@ public class BendingCommand {
         if (abilitySize >= 2) {
             bender.bindAbility(newElement.getBindableAbility(1), 1);
         }
+        if (abilitySize >= 3) {
+            bender.bindAbility(newElement.getBindableAbility(2), 2);
+        }
+
 
         context.getSource().sendFeedback((() -> Text.of(
                 bender.player.getNameForScoreboard() + " can now bend: " + bender.getElement().name)

@@ -38,7 +38,7 @@ public class Bender {
     }
 
     public void bindAbility(Ability ability, int index) {
-        if (element.contains(ability) && index >= 0 && index < 3) {
+        if (element.contains(ability) && index >= 0 && index <= 3) {
             boundAbilities[index] = ability;
             if (!player.getWorld().isClient) {
                 StateDataSaverAndLoader.getServerState(player.getServer()).players.get(player.getUuid()).boundAbilities = boundAbilities;
@@ -71,6 +71,10 @@ public class Bender {
     }
 
     public void setCurrAbility(Ability ability) {
+        if(ability == null){
+            castTime = null;
+            abilityData = null;
+        }
         this.currAbility = ability;
     }
 

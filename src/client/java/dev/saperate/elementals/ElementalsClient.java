@@ -3,6 +3,7 @@ package dev.saperate.elementals;
 import dev.saperate.elementals.entities.*;
 import dev.saperate.elementals.keys.abilities.KeyAbility1;
 import dev.saperate.elementals.keys.abilities.KeyAbility2;
+import dev.saperate.elementals.keys.abilities.KeyAbility3;
 import dev.saperate.elementals.packets.SyncBendingElementS2CPacket;
 import dev.saperate.elementals.packets.SyncCurrAbilityS2CPacket;
 import net.fabricmc.api.ClientModInitializer;
@@ -33,6 +34,7 @@ public class ElementalsClient implements ClientModInitializer {
 		EntityRendererRegistry.register(FIRESHIELD, FireShieldEntityRenderer::new);
 		new KeyAbility1();
 		new KeyAbility2();
+		new KeyAbility3();
 	}
 
 	public void registerS2CPackets(){

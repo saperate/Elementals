@@ -28,7 +28,7 @@ public abstract class EntityMixin {
     private void setPos(CallbackInfo ci) {
         Entity entity = ((Entity)(Object) this);
         if(entity instanceof LivingEntity living){
-            if(living.getPos().equals(new Vec3d(0,0,0))){
+            if(living.getPos().equals(new Vec3d(0,0,0))){//Really hacky way to check if we haven't been initialised yet.
                 return;
             }
             if(living.hasStatusEffect(STATIONARY_EFFECT)){

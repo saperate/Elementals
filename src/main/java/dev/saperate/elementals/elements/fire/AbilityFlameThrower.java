@@ -70,24 +70,24 @@ public class AbilityFlameThrower implements Ability {
                     0,0,0, 2);
 
             List<Entity> hits = player.getWorld().getEntitiesByClass(Entity.class,
-                     boundingBox.expand(15).offset(player.getPos()),
+                     boundingBox.expand(6).offset(player.getPos()),
                     Entity::isAlive);
 
             for (Entity e : hits){
                 if(e.equals(player)){
-                    return;
+                    continue;
                 }
                 Vector3f dir = player.getPos().subtract(e.getPos()).toVector3f();
                 System.out.println(dir.length());
                 if(dir.length() > 6){
-                    return;
+                    continue;
                 }
                 dir = dir.normalize();
                 float dot = -pos.normalize().dot(dir);
                 System.out.println(dot);
 
 
-                if(dot >= 0.67){
+                if(dot >= 72){
                     if (!e.isFireImmune()) {
                         e.setOnFireFor(8);
                         e.damage(e.getDamageSources().inFire(), PlayerData.get(player).canUseUpgrade("blueFire") ? 1.5f : 1.25f);
