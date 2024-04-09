@@ -66,7 +66,7 @@ public class AbilityFlameThrower implements Ability {
                     PlayerData.get(player).canUseUpgrade("blueFire") ?
                             ParticleTypes.SOUL_FIRE_FLAME : ParticleTypes.FLAME,player,player.getRandom(),
                     pos.x - 1, pos.y - 1.6f, pos.z - 1,
-                    0.1f,6,
+                    0.1f,8,
                     0,0,0, 2);
 
             List<Entity> hits = player.getWorld().getEntitiesByClass(Entity.class,
