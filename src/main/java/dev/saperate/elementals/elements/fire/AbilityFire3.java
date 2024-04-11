@@ -21,7 +21,11 @@ import static dev.saperate.elementals.utils.SapsUtils.serverSummonParticles;
 public class AbilityFire3 implements Ability {
     @Override
     public void onCall(Bender bender, long deltaT) {
-        bender.setCurrAbility(this);
+        if (PlayerData.get(bender.player).canUseUpgrade("fireAgility")) {
+            bender.setCurrAbility(this);
+            return;
+        }
+        bender.setCurrAbility(null);
     }
 
     @Override
@@ -36,30 +40,63 @@ public class AbilityFire3 implements Ability {
 
     @Override
     public void onRightClick(Bender bender, boolean started) {
+        if (bender.abilityData == null) {
+            bender.abilityData = false;
+            PlayerEntity player = bender.player;
 
+            Vector3f velocity = getEntityLookVector(player, 1)
+                    .sub(player.getEyePos().toVector3f())
+                    .normalize(1.75f);
+
+            player.setVelocity(velocity.x,
+                    velocity.y > 0 ? Math.min(velocity.y,1) : Math.max(velocity.y,-1),
+                    velocity.z);
+            player.velocityModified = true;
+            player.move(MovementType.PLAYER, player.getVelocity());
+        }
     }
 
     @Override
     public void onTick(Bender bender) {
         PlayerEntity player = bender.player;
+        int count = 1;
 
-        if(bender.abilityData == null || (bender.abilityData.equals(true) && player.isSprinting())){
-            if(player.isSprinting()){
-                Vector3f velocity = getEntityLookVector(player,4).sub(player.getPos().toVector3f()).normalize(2);
-                player.setVelocity(velocity.x,velocity.y,velocity.z);
-                player.velocityModified = true;
-                player.move(MovementType.PLAYER,player.getVelocity());
-                bender.abilityData = true;
+        if ((bender.abilityData == null || bender.abilityData.equals(true)) && player.isSprinting()) {
+            player.startFallFlying();
+            Vector3f velocity = getEntityLookVector(player, 2)
+                    .sub(player.getEyePos().toVector3f())
+                    .normalize(0.65f);
+            player.setVelocity(velocity.x, velocity.y, velocity.z);
+            player.velocityModified = true;
+            player.move(MovementType.PLAYER, player.getVelocity());
+            bender.abilityData = true;
+
+
+            serverSummonParticles((ServerWorld) player.getWorld(),
+                    PlayerData.get(player).canUseUpgrade("blueFire") ?
+                            ParticleTypes.SOUL_FIRE_FLAME : ParticleTypes.FLAME, player, player.getRandom(),
+                    0, 0.1f, 0,
+                    0.1f, 8,
+                    0, -1.5f, 0, 0);
+            return;
+        } else if (bender.abilityData != null) {
+            if (bender.abilityData.equals(true)) {
+                bender.setCurrAbility(null);
+            } else if (bender.abilityData.equals(false)) {
+                bender.abilityData = player.isOnGround();
+                count = 8;
+                if(player.isSneaking()){
+                    bender.setCurrAbility(null);
+                }
             }
-        } else {
-            bender.setCurrAbility(null);
+
         }
 
         serverSummonParticles((ServerWorld) player.getWorld(),
                 PlayerData.get(player).canUseUpgrade("blueFire") ?
                         ParticleTypes.SOUL_FIRE_FLAME : ParticleTypes.FLAME, player, player.getRandom(),
                 0, 0.1f, 0,
-                0.1f, 1,
+                0.1f, count,
                 0, 0, 0, 0);
     }
 
