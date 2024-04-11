@@ -86,7 +86,8 @@ public class AbilityFire3 implements Ability {
                 bender.abilityData = player.isOnGround();
                 count = 8;
                 if(player.isSneaking()){
-                    bender.setCurrAbility(null);
+                    //bomb jump upgrade will enable it to be canceled
+                    //bender.setCurrAbility(null);
                 }
             }
 
