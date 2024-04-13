@@ -50,8 +50,10 @@ public class Elementals implements ModInitializer {
 		ServerPlayConnectionEvents.JOIN.register(Elementals::onPlayReady);
 
 		LOGGER.info("Hello from elementals mod!");
-		LOGGER.error("DO NOT RELEASE, USE AT YOUR OWN RISK AS IT CAN CONTAIN BUGS AND CAN DESTROY YOUR WORLD \n" +
-				"\tIf this message is in a public release, contact saperate as it shouldn't be there.");
+		LOGGER.error("/!\\ IMPORTANT /!\\\n" +
+				"\tDO NOT RELEASE, USE AT YOUR OWN RISK AS IT CAN CONTAIN BUGS AND CAN DESTROY YOUR WORLD \n" +
+				"\tIf this message is in a public release, contact saperate as it shouldn't be there.\n" +
+				"\t-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
 
 		Registry.register(Registries.BANNER_PATTERN, "air", AIR_PATTERN);
 	}
