@@ -70,7 +70,7 @@ public class AbilityFlameThrower implements Ability {
                     0,0,0, 2);
 
             List<Entity> hits = player.getWorld().getEntitiesByClass(Entity.class,
-                     boundingBox.expand(6).offset(player.getPos()),
+                     boundingBox.expand(12).offset(player.getPos()),
                     Entity::isAlive);
 
             for (Entity e : hits){
@@ -84,10 +84,9 @@ public class AbilityFlameThrower implements Ability {
                 }
                 dir = dir.normalize();
                 float dot = -pos.normalize().dot(dir);
-                System.out.println(dot);
 
 
-                if(dot >= 72){
+                if(Math.cos(dot) <= 0.75){
                     if (!e.isFireImmune()) {
                         e.setOnFireFor(8);
                         e.damage(e.getDamageSources().inFire(), PlayerData.get(player).canUseUpgrade("blueFire") ? 1.5f : 1.25f);

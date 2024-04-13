@@ -61,7 +61,8 @@ public class AbilityFire3 implements Ability {
         PlayerEntity player = bender.player;
         int count = 1;
 
-        if ((bender.abilityData == null || bender.abilityData.equals(true)) && player.isSprinting()) {
+        if ((bender.abilityData == null || bender.abilityData.equals(true)) && player.isSprinting()
+        && PlayerData.get(player).canUseUpgrade("jet")) {
             player.startFallFlying();
             Vector3f velocity = getEntityLookVector(player, 2)
                     .sub(player.getEyePos().toVector3f())

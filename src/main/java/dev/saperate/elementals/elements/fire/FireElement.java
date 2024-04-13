@@ -35,7 +35,7 @@ public class FireElement extends Element {
                         }, true)
                 }),
                 new Upgrade("fireAgility", new Upgrade[]{
-                        new Upgrade("jetDodge")
+                        new Upgrade("jet")
                 })
         });
         addAbility(new AbilityFire1(),true);
