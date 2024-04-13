@@ -10,14 +10,14 @@ public class AbilityFire1 implements Ability {
     public void onCall(Bender bender, long deltaT) {
         PlayerData playerData = PlayerData.get(bender.player);
 
-
-
         if (bender.player.isSneaking()) {
             if(playerData.canUseUpgrade("fireWall")){
                 FireElement.get().abilityList.get(2).onCall(bender,deltaT);
+                bender.setCurrAbility(null);
                 return;
             } else if (playerData.canUseUpgrade("fireSpikes")) {
                 FireElement.get().abilityList.get(3).onCall(bender,deltaT);
+                bender.setCurrAbility(null);
                 return;
             }
         }

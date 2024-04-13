@@ -10,6 +10,7 @@ import dev.saperate.elementals.effects.StationaryStatusEffect;
 import dev.saperate.elementals.elements.NoneElement;
 import dev.saperate.elementals.elements.fire.FireElement;
 import dev.saperate.elementals.elements.water.WaterElement;
+import dev.saperate.elementals.misc.AirBannerPattern;
 import net.fabricmc.api.ModInitializer;
 
 
@@ -28,6 +29,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import static dev.saperate.elementals.effects.StationaryStatusEffect.STATIONARY_EFFECT;
+import static dev.saperate.elementals.misc.AirBannerPattern.AIR_PATTERN;
 import static dev.saperate.elementals.network.ModMessages.registerC2SPackets;
 
 public class Elementals implements ModInitializer {
@@ -48,6 +50,8 @@ public class Elementals implements ModInitializer {
 		ServerPlayConnectionEvents.JOIN.register(Elementals::onPlayReady);
 
 		LOGGER.info("Hello from elementals mod!");
+
+		Registry.register(Registries.BANNER_PATTERN, "air", AIR_PATTERN);
 	}
 
 
