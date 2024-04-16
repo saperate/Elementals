@@ -29,6 +29,7 @@ public class WaterElement extends Element {
         addAbility(new AbilityWaterCube(), false);
         addAbility(new AbilityWater2(),true);
         addAbility(new AbilityWaterArc(), false);
+        addAbility(new AbilityWaterHelmet(),false);
     }
 
     public static Vector3f canBend(PlayerEntity player) {

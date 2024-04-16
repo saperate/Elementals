@@ -10,17 +10,20 @@ public class AbilityWater1 implements Ability {
     public void onCall(Bender bender, long deltaT) {
         PlayerData playerData = PlayerData.get(bender.player);
 
-
+        if (true) {
+            WaterElement.get().abilityList.get(4).onCall(bender, deltaT);
+            return;
+        }
 
         if (bender.player.isSneaking()) {
-            if(playerData.canUseUpgrade("")){
+            if (playerData.canUseUpgrade("")) {
                 return;
             } else if (playerData.canUseUpgrade("")) {
                 return;
             }
         }
 
-        WaterElement.get().abilityList.get(1).onCall(bender,deltaT);
+        WaterElement.get().abilityList.get(1).onCall(bender, deltaT);
     }
 
     @Override

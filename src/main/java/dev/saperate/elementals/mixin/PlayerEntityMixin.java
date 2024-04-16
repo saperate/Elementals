@@ -26,7 +26,9 @@ public class PlayerEntityMixin {
     private void init(CallbackInfo info) {
         PlayerEntity player = ((PlayerEntity) (Object) this);
         if(!player.getWorld().isClient){
-            new Bender(player, null);
+            if(Bender.getBender(player) == null){
+                new Bender(player, null);
+            }
         }
     }
 
