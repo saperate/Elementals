@@ -90,5 +90,8 @@ public class AbilityFireIgnite implements Ability {
 
     }
 
-
+    @Override
+    public void onRemove(Bender bender) {
+        bender.setCurrAbility(null);
+    }
 }

@@ -85,7 +85,7 @@ public class WaterArcEntity extends ProjectileEntity {
     public void tick() {
         super.tick();
         Entity owner = getOwner();
-        if(owner == null){
+        if (owner == null) {
             this.setVelocity(this.getVelocity().add(0.0, -0.04, 0.0));
             this.move(MovementType.SELF, this.getVelocity());
             return;
@@ -136,24 +136,28 @@ public class WaterArcEntity extends ProjectileEntity {
             } else {
                 if (parent != null) {
                     Vec3d direction = parent.getPos().subtract(getPos());
-
-                    //Constraint so that it stays roughly 2 blocks away from the parent
                     double distance = direction.length();
-                    if (distance > chainDistance) {
-                        direction = direction.multiply(distance - chainDistance).multiply(0.1f);
-                    } else if (distance < chainDistance) {
-                        direction = direction.multiply(-0.025f);
+                    if (distance > 2) {
+                        direction = direction.normalize().multiply(distance - chainDistance).add(getPos());
+                        setPos(direction.x, direction.y, direction.z);
                     } else {
-                        direction = direction.multiply(0);
+                        //Constraint so that it stays roughly N blocks away from the parent
+                        if (distance > chainDistance) {
+                            direction = direction.multiply(distance - chainDistance).multiply(0.1f);
+                        } else if (distance < chainDistance) {
+                            direction = direction.multiply(-0.025f);
+                        } else {
+                            direction = direction.multiply(0);
+                        }
+
+
+                        double damping = 0.1f + (0.3f - 0.1f) * (1 - Math.min(1, distance / chainDistance));
+                        direction = direction.multiply(damping);
+
+                        this.addVelocity(direction.x, direction.y, direction.z);
+
+                        this.addVelocity(getVelocity().multiply(-0.1f));
                     }
-
-
-                    double damping = 0.1f + (0.3f - 0.1f) * (1 - Math.min(1, distance / chainDistance));
-                    direction = direction.multiply(damping);
-
-                    this.addVelocity(direction.x, direction.y, direction.z);
-
-                    this.addVelocity(getVelocity().multiply(-0.1f));
                 }
             }
         }
@@ -165,7 +169,7 @@ public class WaterArcEntity extends ProjectileEntity {
     private void controlEntity(Entity owner) {
         Vector3f direction = getEntityLookVector(owner, 3)
                 .sub(getPos().toVector3f());
-        direction.mul(0.1f);
+        direction.mul(0.15f);
 
         if (direction.length() < 0.4f) {
             this.setVelocity(0, 0, 0);
@@ -176,10 +180,9 @@ public class WaterArcEntity extends ProjectileEntity {
     }
 
 
-
     @Override
     public void onRemoved() {
-        summonParticles(this, random,ParticleTypes.SPLASH, 10, 100);
+        summonParticles(this, random, ParticleTypes.SPLASH, 10, 100);
     }
 
     /**

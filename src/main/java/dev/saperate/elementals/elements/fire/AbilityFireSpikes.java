@@ -68,4 +68,8 @@ public class AbilityFireSpikes implements Ability {
     public void onTick(Bender bender) {
 
     }
+    @Override
+    public void onRemove(Bender bender) {
+        bender.setCurrAbility(null);
+    }
 }

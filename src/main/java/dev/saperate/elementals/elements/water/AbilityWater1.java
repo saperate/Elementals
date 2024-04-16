@@ -43,4 +43,9 @@ public class AbilityWater1 implements Ability {
 
     }
 
+    @Override
+    public void onRemove(Bender bender) {
+
+    }
+
 }

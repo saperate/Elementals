@@ -17,7 +17,7 @@ import static dev.saperate.elementals.network.ModMessages.SYNC_ELEMENT_PACKET_ID
 
 public class Bender {
     public static Map<UUID, Bender> benders = new HashMap<>();
-    public final PlayerEntity player;
+    public PlayerEntity player;
     private Element element;
     public Ability[] boundAbilities = new Ability[3];
     public Long castTime;

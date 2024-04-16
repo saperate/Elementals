@@ -52,4 +52,9 @@ public class AbilityFire2 implements Ability {
 
     }
 
+    @Override
+    public void onRemove(Bender bender) {
+
+    }
+
 }

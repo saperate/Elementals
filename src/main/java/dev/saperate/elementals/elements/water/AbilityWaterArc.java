@@ -21,7 +21,7 @@ public class AbilityWaterArc implements Ability {
             player.getWorld().spawnEntity(entity);
 
             bender.setCurrAbility(this);
-        }else{
+        } else {
             bender.setCurrAbility(null);
         }
     }
@@ -29,17 +29,12 @@ public class AbilityWaterArc implements Ability {
     @Override
     public void onLeftClick(Bender bender, boolean started) {
         WaterArcEntity entity = (WaterArcEntity) bender.abilityData;
-        if (entity == null) {
-            return;
+        if(entity == null){
+            throw new RuntimeException("Elementals: Tried to launch entity while having none!");
         }
-        entity.setControlled(false);
+        onRemove(bender);
 
-        Entity owner = entity.getOwner();
-        if (owner == null) {
-            return;
-        }
-        entity.setVelocity(owner, owner.getPitch(), owner.getYaw(), 0, 1, 0);
-        Bender.getBender((PlayerEntity) entity.getOwner()).setCurrAbility(null);
+        entity.setVelocity(bender.player, bender.player.getPitch(), bender.player.getYaw(), 0, 1, 0);
     }
 
     @Override
@@ -49,17 +44,22 @@ public class AbilityWaterArc implements Ability {
 
     @Override
     public void onRightClick(Bender bender, boolean started) {
+        onRemove(bender);
+    }
+
+    @Override
+    public void onTick(Bender bender) {
+
+    }
+
+    @Override
+    public void onRemove(Bender bender) {
         WaterArcEntity entity = (WaterArcEntity) bender.abilityData;
         if (entity == null) {
             return;
         }
         entity.setControlled(false);
         Bender.getBender((PlayerEntity) entity.getOwner()).setCurrAbility(null);
-    }
-
-    @Override
-    public void onTick(Bender bender) {
-
     }
 
 }

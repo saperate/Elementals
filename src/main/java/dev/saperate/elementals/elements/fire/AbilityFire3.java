@@ -102,4 +102,9 @@ public class AbilityFire3 implements Ability {
                 0, 0, 0, 0);
     }
 
+    @Override
+    public void onRemove(Bender bender) {
+
+    }
+
 }

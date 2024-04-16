@@ -5,6 +5,7 @@ import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.elements.Ability;
 import dev.saperate.elementals.entities.fire.FireArcEntity;
 import dev.saperate.elementals.entities.fire.FireBallEntity;
+import dev.saperate.elementals.entities.water.WaterCubeEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import org.joml.Vector3f;
@@ -30,17 +31,12 @@ public class AbilityFireBall implements Ability {
     @Override
     public void onLeftClick(Bender bender, boolean started) {
         FireBallEntity entity = (FireBallEntity) bender.abilityData;
-        if (entity == null) {
-            return;
+        if(entity == null){
+            throw new RuntimeException("Elementals: Tried to launch entity while having none!");
         }
-        entity.setControlled(false);
+        onRemove(bender);
 
-        Entity owner = entity.getOwner();
-        if (owner == null) {
-            return;
-        }
-        entity.setVelocity(owner, owner.getPitch(), owner.getYaw(), 0, 0.75f, 0);
-        Bender.getBender((PlayerEntity) entity.getOwner()).setCurrAbility(null);
+        entity.setVelocity(bender.player, bender.player.getPitch(), bender.player.getYaw(), 0, 0.75f, 0);
     }
 
     @Override
@@ -54,7 +50,7 @@ public class AbilityFireBall implements Ability {
         if (entity == null) {
             return;
         }
-        entity.setControlled(false);
+        entity.discard();
         Bender.getBender((PlayerEntity) entity.getOwner()).setCurrAbility(null);
     }
 
@@ -63,4 +59,13 @@ public class AbilityFireBall implements Ability {
 
     }
 
+    @Override
+    public void onRemove(Bender bender) {
+        FireBallEntity entity = (FireBallEntity) bender.abilityData;
+        if (entity == null) {
+            return;
+        }
+        entity.setControlled(false);
+        Bender.getBender((PlayerEntity) entity.getOwner()).setCurrAbility(null);
+    }
 }

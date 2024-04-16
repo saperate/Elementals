@@ -45,4 +45,9 @@ public class AbilityFire1 implements Ability {
 
     }
 
+    @Override
+    public void onRemove(Bender bender) {
+
+    }
+
 }

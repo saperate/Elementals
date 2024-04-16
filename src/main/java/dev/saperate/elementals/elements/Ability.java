@@ -14,5 +14,6 @@ public interface Ability {
 
     void onTick(Bender bender);
 
+    void onRemove(Bender bender);
 
 }

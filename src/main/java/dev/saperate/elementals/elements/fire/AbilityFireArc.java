@@ -5,6 +5,7 @@ import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.elements.Ability;
 import dev.saperate.elementals.elements.water.WaterElement;
 import dev.saperate.elementals.entities.fire.FireArcEntity;
+import dev.saperate.elementals.entities.fire.FireBallEntity;
 import dev.saperate.elementals.entities.water.WaterArcEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -32,17 +33,12 @@ public class AbilityFireArc implements Ability {
     @Override
     public void onLeftClick(Bender bender, boolean started) {
         FireArcEntity entity = (FireArcEntity) bender.abilityData;
-        if (entity == null) {
-            return;
+        if(entity == null){
+            throw new RuntimeException("Elementals: Tried to launch entity while having none!");
         }
-        entity.setControlled(false);
+        onRemove(bender);
 
-        Entity owner = entity.getOwner();
-        if (owner == null) {
-            return;
-        }
-        entity.setVelocity(owner, owner.getPitch(), owner.getYaw(), 0, 1, 0);
-        Bender.getBender((PlayerEntity) entity.getOwner()).setCurrAbility(null);
+        entity.setVelocity(bender.player, bender.player.getPitch(), bender.player.getYaw(), 0, 1, 0);
     }
 
     @Override
@@ -56,13 +52,23 @@ public class AbilityFireArc implements Ability {
         if (entity == null) {
             return;
         }
-        entity.setControlled(false);
+        entity.discard();
         Bender.getBender((PlayerEntity) entity.getOwner()).setCurrAbility(null);
     }
 
     @Override
     public void onTick(Bender bender) {
 
+    }
+
+    @Override
+    public void onRemove(Bender bender) {
+        FireArcEntity entity = (FireArcEntity) bender.abilityData;
+        if (entity == null) {
+            return;
+        }
+        entity.setControlled(false);
+        Bender.getBender((PlayerEntity) entity.getOwner()).setCurrAbility(null);
     }
 
 }

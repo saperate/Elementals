@@ -40,7 +40,7 @@ public class AbilityFlameThrower implements Ability {
         if (started) {
             bender.abilityData = false;
         } else {
-            bender.setCurrAbility(null);
+            onRemove(bender);
         }
     }
 
@@ -94,5 +94,10 @@ public class AbilityFlameThrower implements Ability {
                 }
             }
         }
+    }
+
+    @Override
+    public void onRemove(Bender bender) {
+        bender.setCurrAbility(null);
     }
 }

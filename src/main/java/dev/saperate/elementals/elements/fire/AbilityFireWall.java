@@ -62,4 +62,8 @@ public class AbilityFireWall implements Ability {
     public void onTick(Bender bender) {
 
     }
+    @Override
+    public void onRemove(Bender bender) {
+        bender.setCurrAbility(null);
+    }
 }

@@ -49,13 +49,18 @@ public class AbilityFireShield implements Ability {
     public void onTick(Bender bender) {
         bender.player.addStatusEffect(new StatusEffectInstance(STATIONARY_EFFECT,1,1,false,false,false));
         if(!bender.player.isSneaking()){
-            bender.setCurrAbility(null);
-            FireShieldEntity entity = (FireShieldEntity) bender.abilityData;
-            if (entity == null) {
-                return;
-            }
-            entity.discard();
+            onRemove(bender);
         }
+    }
+
+    @Override
+    public void onRemove(Bender bender) {
+        bender.setCurrAbility(null);
+        FireShieldEntity entity = (FireShieldEntity) bender.abilityData;
+        if (entity == null) {
+            return;
+        }
+        entity.discard();
     }
 
 }

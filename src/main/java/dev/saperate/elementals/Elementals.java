@@ -16,6 +16,7 @@ import net.fabricmc.api.ModInitializer;
 
 import net.fabricmc.fabric.api.command.v2.ArgumentTypeRegistry;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
+import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.minecraft.command.argument.serialize.ConstantArgumentSerializer;
@@ -33,53 +34,64 @@ import static dev.saperate.elementals.misc.AirBannerPattern.AIR_PATTERN;
 import static dev.saperate.elementals.network.ModMessages.registerC2SPackets;
 
 public class Elementals implements ModInitializer {
-	public static final String MODID = "elementals";
+    public static final String MODID = "elementals";
     public static final Logger LOGGER = LoggerFactory.getLogger(MODID);
 
-	@Override
-	public void onInitialize() {
+    @Override
+    public void onInitialize() {
 
-		SoulFireCore.registerBlock();
-		Registry.register(Registries.STATUS_EFFECT,new Identifier(MODID,"stationary"), STATIONARY_EFFECT);
+        SoulFireCore.registerBlock();
+        Registry.register(Registries.STATUS_EFFECT, new Identifier(MODID, "stationary"), STATIONARY_EFFECT);
 
-		registerElements();
-		registerCommands();
-		registerC2SPackets();
-		CommandRegistrationCallback.EVENT.register(BendingCommand::register);
+        registerElements();
+        registerCommands();
+        registerC2SPackets();
+        CommandRegistrationCallback.EVENT.register(BendingCommand::register);
 
-		ServerPlayConnectionEvents.JOIN.register(Elementals::onPlayReady);
-
-		LOGGER.info("Hello from elementals mod!");
-		LOGGER.error("/!\\ IMPORTANT /!\\\n" +
-				"\tDO NOT RELEASE, USE AT YOUR OWN RISK AS IT CAN CONTAIN BUGS AND CAN DESTROY YOUR WORLD \n" +
-				"\tIf this message is in a public release, contact saperate as it shouldn't be there.\n" +
-				"\t-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
-
-		Registry.register(Registries.BANNER_PATTERN, "air", AIR_PATTERN);
-	}
+        ServerPlayConnectionEvents.JOIN.register(Elementals::onPlayReady);
+        ServerPlayerEvents.AFTER_RESPAWN.register(Elementals::onPlayerRespawn);
 
 
-	private void registerElements(){
-		new NoneElement();
-		new WaterElement();
-		new FireElement();
-	}
+        LOGGER.info("Hello from elementals mod!");
+        LOGGER.error("/!\\ IMPORTANT /!\\\n" +
+                "\tDO NOT RELEASE, USE AT YOUR OWN RISK AS IT CAN CONTAIN BUGS AND CAN DESTROY YOUR WORLD \n" +
+                "\tIf this message is in a public release, contact saperate as it shouldn't be there.\n" +
+                "\t-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
 
-	private void registerCommands(){
-		ArgumentTypeRegistry.registerArgumentType(
-				new Identifier(MODID,"bending"),
-				ElementArgumentType.class,
-				ConstantArgumentSerializer.of(ElementArgumentType::element)
-		);
-	}
+        Registry.register(Registries.BANNER_PATTERN, "air", AIR_PATTERN);
+    }
 
-	public static void onPlayReady(ServerPlayNetworkHandler handler, PacketSender sender, MinecraftServer server){
-		ServerPlayerEntity player = handler.player;
-		Bender bender = Bender.getBender(player);
 
-		PlayerData playerState = StateDataSaverAndLoader.getPlayerState(player);
-		bender.setElement(playerState.element,true);
-		bender.boundAbilities = playerState.boundAbilities;
-	}
+    private void registerElements() {
+        new NoneElement();
+        new WaterElement();
+        new FireElement();
+    }
 
+    private void registerCommands() {
+        ArgumentTypeRegistry.registerArgumentType(
+                new Identifier(MODID, "bending"),
+                ElementArgumentType.class,
+                ConstantArgumentSerializer.of(ElementArgumentType::element)
+        );
+    }
+
+    public static void onPlayReady(ServerPlayNetworkHandler handler, PacketSender sender, MinecraftServer server) {
+        ServerPlayerEntity player = handler.player;
+        Bender bender = Bender.getBender(player);
+
+        PlayerData playerState = StateDataSaverAndLoader.getPlayerState(player);
+        bender.setElement(playerState.element, true);
+        bender.boundAbilities = playerState.boundAbilities;
+    }
+
+    private static void onPlayerRespawn(ServerPlayerEntity oldPlayer, ServerPlayerEntity newPlayer, boolean b) {
+        Bender bender = Bender.getBender(oldPlayer);
+        if (bender.currAbility != null) {
+            bender.currAbility.onRemove(bender);
+            bender.setCurrAbility(null);
+            bender.abilityData = null;
+        }
+        bender.player = newPlayer;
+    }
 }
