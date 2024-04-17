@@ -59,22 +59,22 @@ public class WaterHelmetEntity extends Entity {
         super.tick();
         aliveTicks++;
         System.out.println(aliveTicks);
+
         LivingEntity owner = getOwner();
-        if(owner == null || aliveTicks > maxLifeTime || !owner.isSubmergedInWater()){
+        if(owner == null || aliveTicks > maxLifeTime){
             discard();
             return;
         }
 
+        if(!owner.isSubmergedInWater()){
+            aliveTicks += 50;
+        }
 
         owner.addStatusEffect(new StatusEffectInstance(StatusEffects.WATER_BREATHING,10,1,false,false,false));
         setPos(owner.getX(),owner.getEyeY() - 0.5f,owner.getZ()); // if you change any part of this check the renderer because it also modifies to entity pos
     }
 
 
-    @Override
-    public boolean canHit() {
-        return true;
-    }
 
     @Override
     protected void readCustomDataFromNbt(NbtCompound nbt) {

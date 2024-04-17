@@ -1,13 +1,11 @@
 package dev.saperate.elementals.entities;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import dev.saperate.elementals.entities.utils.renderlayers.WaterHelmetRenderLayer;
 import dev.saperate.elementals.entities.water.WaterCubeEntity;
 import dev.saperate.elementals.entities.water.WaterHelmetEntity;
 import net.minecraft.client.color.world.BiomeColors;
-import net.minecraft.client.render.GameRenderer;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.VertexConsumer;
-import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.render.*;
 import net.minecraft.client.render.entity.EntityRenderer;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;
@@ -16,6 +14,7 @@ import net.minecraft.util.Identifier;
 import org.joml.Matrix4f;
 
 import static dev.saperate.elementals.entities.utils.RenderUtils.drawCube;
+import static dev.saperate.elementals.entities.utils.RenderUtils.drawInvertedCube;
 
 public class WaterHelmetEntityRenderer extends EntityRenderer<WaterHelmetEntity> {
     private static final Identifier texture = new Identifier("minecraft", "block/water_flow");
@@ -32,18 +31,11 @@ public class WaterHelmetEntityRenderer extends EntityRenderer<WaterHelmetEntity>
         matrices.push();
         matrices.translate(0, 0.9f, 0);
 
-        RenderSystem.setShader(GameRenderer::getPositionColorProgram);
-        RenderSystem.enableDepthTest();
-        RenderSystem.enableBlend();
-        RenderSystem.defaultBlendFunc();
 
 
         VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderLayer.getTranslucentMovingBlock());
 
         int color = BiomeColors.getWaterColor(entity.getWorld(),entity.getBlockPos());
-
-
-
 
         drawCube(vertexConsumer, matrices, light,
                 (color >> 16 & 255) / 255.0f,
@@ -60,7 +52,6 @@ public class WaterHelmetEntityRenderer extends EntityRenderer<WaterHelmetEntity>
 
 
 
-        RenderSystem.disableBlend();
         matrices.pop();
     }
 
@@ -68,4 +59,6 @@ public class WaterHelmetEntityRenderer extends EntityRenderer<WaterHelmetEntity>
     public Identifier getTexture(WaterHelmetEntity entity) {
         return texture;
     }
+
+
 }

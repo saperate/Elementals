@@ -21,7 +21,7 @@ public class AbilityWaterCube implements Ability {
     public void onCall(Bender bender, long deltaT) {
         System.out.println(deltaT);
         PlayerEntity player = bender.player;
-        Vector3f pos = WaterElement.canBend(player);
+        Vector3f pos = WaterElement.canBend(player,true);
 
         if (pos != null) {
             WaterCubeEntity entity = new WaterCubeEntity(player.getWorld(), player, pos.x, pos.y, pos.z);

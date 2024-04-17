@@ -32,15 +32,18 @@ public class WaterElement extends Element {
         addAbility(new AbilityWaterHelmet(),false);
     }
 
-    public static Vector3f canBend(PlayerEntity player) {
+    public static Vector3f canBend(PlayerEntity player, boolean consumeWater) {
         BlockHitResult hit = (BlockHitResult) player.raycast(5, 0, true);
         BlockState blockState = player.getEntityWorld().getBlockState(hit.getBlockPos());
+
 
         if (hit.getType() == HitResult.Type.BLOCK && blockState.getBlock().equals(Blocks.WATER)) {
             if (blockState.get(IntProperty.of("level", 0, 15)).equals(0)) {
 
                 Vector3f pos = getEntityLookVector(player, 3);
-                player.getWorld().setBlockState(hit.getBlockPos(), Blocks.AIR.getDefaultState());
+                if(consumeWater){
+                    player.getWorld().setBlockState(hit.getBlockPos(), Blocks.AIR.getDefaultState());
+                }
                 return pos;
             }
         }

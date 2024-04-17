@@ -4,13 +4,15 @@ import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.elements.Ability;
 import dev.saperate.elementals.elements.fire.FireElement;
+import net.minecraft.entity.effect.StatusEffect;
+import net.minecraft.entity.effect.StatusEffects;
 
 public class AbilityWater1 implements Ability {
     @Override
     public void onCall(Bender bender, long deltaT) {
         PlayerData playerData = PlayerData.get(bender.player);
 
-        if (true) {
+        if (true && bender.player.isSubmergedInWater() && !bender.player.hasStatusEffect(StatusEffects.WATER_BREATHING)) {
             WaterElement.get().abilityList.get(4).onCall(bender, deltaT);
             return;
         }

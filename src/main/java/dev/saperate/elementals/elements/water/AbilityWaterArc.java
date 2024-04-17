@@ -12,7 +12,7 @@ public class AbilityWaterArc implements Ability {
     @Override
     public void onCall(Bender bender, long deltaT) {
         PlayerEntity player = bender.player;
-        Vector3f pos = WaterElement.canBend(player);
+        Vector3f pos = WaterElement.canBend(player,true);
 
         if (pos != null) {
             WaterArcEntity entity = new WaterArcEntity(player.getWorld(), player, pos.x, pos.y, pos.z);
