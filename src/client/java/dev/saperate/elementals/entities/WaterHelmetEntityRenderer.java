@@ -30,7 +30,7 @@ public class WaterHelmetEntityRenderer extends EntityRenderer<WaterHelmetEntity>
         entity.setPos(owner.getX(),owner.getEyeY() - 0.5f,owner.getZ());
 
         matrices.push();
-        matrices.translate(0, 0.9f, 0);
+        matrices.translate(0, 0.8f, 0);
 
         RenderSystem.setShader(GameRenderer::getPositionColorProgram);
         RenderSystem.enableDepthTest();
@@ -51,9 +51,9 @@ public class WaterHelmetEntityRenderer extends EntityRenderer<WaterHelmetEntity>
                 (color & 255) / 255.0f,
                 0.9f,
                 texture,
-                0.9f,
-                new Matrix4f().rotate((float) Math.toRadians(90),1,0,0),
-                true,
+                1,
+                new Matrix4f().rotate((float) Math.toRadians(90),1,0,0).scale(0.6f),
+                false,
                 true,
                 true
         );
