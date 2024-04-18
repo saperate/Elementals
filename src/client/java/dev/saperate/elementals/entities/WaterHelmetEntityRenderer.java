@@ -11,6 +11,7 @@ import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.RotationAxis;
 import org.joml.Matrix4f;
 
 import static dev.saperate.elementals.entities.utils.RenderUtils.drawCube;
@@ -29,13 +30,21 @@ public class WaterHelmetEntityRenderer extends EntityRenderer<WaterHelmetEntity>
         entity.setPos(owner.getX(),owner.getEyeY() - 0.5f,owner.getZ());
 
         matrices.push();
-        matrices.translate(0, 0.9f, 0);
+        matrices.translate(0, 0.8f, 0);
 
 
 
         VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderLayer.getTranslucentMovingBlock());
 
         int color = BiomeColors.getWaterColor(entity.getWorld(),entity.getBlockPos());
+
+        Matrix4f mat = new Matrix4f();
+        mat.translate(0,-0.30f,0.325f);
+        mat.rotate(RotationAxis.POSITIVE_Y.rotationDegrees(-owner.getYaw()));
+        mat.rotate(RotationAxis.POSITIVE_X.rotationDegrees(owner.getPitch()));
+        mat.translate(0,0.325f,-0.325f);
+        matrices.translate(0,-0.30f,-0.325f);
+        mat.scale(0.65f);
 
         drawCube(vertexConsumer, matrices, light,
                 (color >> 16 & 255) / 255.0f,
@@ -44,7 +53,7 @@ public class WaterHelmetEntityRenderer extends EntityRenderer<WaterHelmetEntity>
                 0.9f,
                 texture,
                 1,
-                new Matrix4f().rotate((float) Math.toRadians(90),1,0,0).scale(0.65f),
+                mat,
                 false,
                 true,
                 true

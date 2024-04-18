@@ -13,12 +13,14 @@ import net.minecraft.world.entity.EntityChangeListener;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.gen.Accessor;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.Map;
 
+import static dev.saperate.elementals.effects.DenseStatusEffect.DENSE_EFFECT;
 import static dev.saperate.elementals.effects.StationaryStatusEffect.STATIONARY_EFFECT;
 
 @Mixin(Entity.class)
@@ -40,6 +42,7 @@ public abstract class EntityMixin {
     @Shadow private Vec3d velocity;
 
 
+
     @Inject(at = @At("HEAD"), method = "setVelocity(Lnet/minecraft/util/math/Vec3d;)V", cancellable = true)
     private void setVelocity(Vec3d vel, CallbackInfo ci) {
         Entity entity = ((Entity)(Object) this);
@@ -48,7 +51,7 @@ public abstract class EntityMixin {
                 return;
             }
             if(living.hasStatusEffect(STATIONARY_EFFECT)){
-                velocity = new Vec3d(0, -0.4f, 0);
+                velocity = new Vec3d(0, -vel.y, 0);//Apply gravity
                 ci.cancel();
             }
         }

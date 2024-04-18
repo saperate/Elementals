@@ -20,8 +20,8 @@ public class WaterElement extends Element {
     public WaterElement() {
         super("Water",
                 new Upgrade[]{
-                        new Upgrade("waterCube", new Upgrade[]{
-                                new Upgrade("waterHelmet")
+                        new Upgrade("waterHelmet", new Upgrade[]{
+
                         }),
                         new Upgrade("waterArc")
                 });
@@ -30,6 +30,7 @@ public class WaterElement extends Element {
         addAbility(new AbilityWater2(),true);
         addAbility(new AbilityWaterArc(), false);
         addAbility(new AbilityWaterHelmet(),false);
+        addAbility(new AbilityWaterShield(),false);
     }
 
     public static Vector3f canBend(PlayerEntity player, boolean consumeWater) {

@@ -14,11 +14,10 @@ public class WaterHelmetRenderLayer extends RenderLayer {
         MultiPhaseParameters multiPhaseParameters = MultiPhaseParameters.builder()
                 .program(ENTITY_TRANSLUCENT_PROGRAM)
                 .texture(MIPMAP_BLOCK_ATLAS_TEXTURE)
-                .cull(DISABLE_CULLING)
+                .transparency(TRANSLUCENT_TRANSPARENCY)
                 .lightmap(ENABLE_LIGHTMAP)
-                .overlay(ENABLE_OVERLAY_COLOR)
                 .writeMaskState(COLOR_MASK)
-                .build( affectsOutline);
+                .build(affectsOutline);
 
         return RenderLayer.of("entity_waterhelmet", VertexFormats.POSITION_COLOR_TEXTURE_OVERLAY_LIGHT_NORMAL,
                 VertexFormat.DrawMode.QUADS, 786432, false, true, multiPhaseParameters);
