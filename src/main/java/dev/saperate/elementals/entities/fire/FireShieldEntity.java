@@ -16,6 +16,7 @@ import net.minecraft.registry.Registry;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraft.world.event.GameEvent;
 
@@ -100,10 +101,15 @@ public class FireShieldEntity extends Entity {
                 LivingEntity::isAlive);
 
         for (LivingEntity entity : hits) {
-            if (!entity.isFireImmune() && entity.getY() - getY() < h + 1
+            if (entity.getY() - getY() < h + 1
                     && Math.abs(entity.getPos().subtract(getPos()).length()) > 2) {
-                entity.setOnFireFor(8);
-                entity.damage(getDamageSources().inFire(), isBlue() ? 2.5f : 1.5f);//1.5f for normal, 2.5f for blue
+                if(!entity.isFireImmune()){
+                    entity.setOnFireFor(8);
+                    entity.damage(getDamageSources().inFire(), isBlue() ? 2.5f : 1.5f);//1.5f for normal, 2.5f for blue
+                }
+
+                Vec3d direction = entity.getPos().add(0,1.5f,0).subtract(getPos()).multiply(0.1f);
+                entity.setVelocity(getVelocity().add(direction));
             }
         }
 

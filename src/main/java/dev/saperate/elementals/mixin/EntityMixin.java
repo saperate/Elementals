@@ -17,6 +17,7 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.Map;
 
@@ -51,9 +52,11 @@ public abstract class EntityMixin {
                 return;
             }
             if(living.hasStatusEffect(STATIONARY_EFFECT)){
-                velocity = new Vec3d(0, -vel.y, 0);//Apply gravity
+                velocity = new Vec3d(0, -0.4f, 0);//Apply gravity
                 ci.cancel();
             }
         }
     }
+
+
 }

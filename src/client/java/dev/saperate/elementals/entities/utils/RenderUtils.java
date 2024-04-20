@@ -67,6 +67,7 @@ public abstract class RenderUtils {
             );
         }
 
+        if(true){
         // Right face
         drawQuad(vertexConsumer, matrices, light,
                 uMin, uMax, vMin, vMax,
@@ -82,7 +83,7 @@ public abstract class RenderUtils {
                 r, g, b, a,
                 -1, 0, 0,
                 v7, v4, v3, v8
-        );
+        );}
 
         // front face
         drawQuad(vertexConsumer, matrices, light,
@@ -148,23 +149,23 @@ public abstract class RenderUtils {
             );
         }
 
-        // Right face
-        drawQuad(vertexConsumer, matrices, light,
-                uMin, uMax, vMin, vMax,
-                r, g, b, a,
-                -1, 0, 0,
-                v6, v1, v2, v5
-        );
+        if(true) {
+            // Right face
+            drawQuad(vertexConsumer, matrices, light,
+                    uMin, uMax, vMin, vMax,
+                    r, g, b, a,
+                    -1, 0, 0,
+                    v6, v1, v2, v5
+            );
 
-
-        // Left face
-        drawQuad(vertexConsumer, matrices, light,
-                uMin, uMax, vMin, vMax,
-                r, g, b, a,
-                -1, 0, 0,
-                v8, v3, v4, v7
-        );
-
+            // Left face
+            drawQuad(vertexConsumer, matrices, light,
+                    uMin, uMax, vMin, vMax,
+                    r, g, b, a,
+                    -1, 0, 0,
+                    v8, v3, v4, v7
+            );
+        }
         // Front face
         drawQuad(vertexConsumer, matrices, light,
                 uMin, uMax, vMin, vMax,

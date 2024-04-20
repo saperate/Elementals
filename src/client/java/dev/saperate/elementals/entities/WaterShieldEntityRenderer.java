@@ -32,7 +32,7 @@ public class WaterShieldEntityRenderer extends EntityRenderer<WaterShieldEntity>
         if(firstTime == -1){
             firstTime = System.currentTimeMillis();
         }
-        float rot = (float) (System.currentTimeMillis() - firstTime) / 1000;
+        float rot = (float) (System.currentTimeMillis() - firstTime) / 500;
         int color = BiomeColors.getWaterColor(entity.getWorld(),entity.getBlockPos());
 
         matrices.push();
@@ -41,7 +41,7 @@ public class WaterShieldEntityRenderer extends EntityRenderer<WaterShieldEntity>
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
 
-        VertexConsumer vertexConsumer = vertexConsumers.getBuffer(WaterHelmetRenderLayer.getRenderLayer());
+        VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderLayer.getTranslucentMovingBlock());
 
 
 //        drawCube(vertexConsumer, matrices, 255,
@@ -73,7 +73,7 @@ public class WaterShieldEntityRenderer extends EntityRenderer<WaterShieldEntity>
                 (color >> 16 & 255) / 255.0f,
                 (color >> 8 & 255) / 255.0f,
                 (color & 255) / 255.0f,
-                0.65f,
+                1,
                 texture,
                 1, mat,
                 true,
@@ -83,16 +83,18 @@ public class WaterShieldEntityRenderer extends EntityRenderer<WaterShieldEntity>
 
 
         Matrix4f mat2 = new Matrix4f();
+        mat.scale(2f);
         mat2.translate(0,0,0.5f);
         mat2.rotate(RotationAxis.POSITIVE_Y.rotationDegrees((float) Math.toDegrees(-(rot + 2) * 2)));
         mat2.rotate(RotationAxis.POSITIVE_X.rotationDegrees((float) Math.toDegrees(-(rot + 2))));
         mat2.translate(0,0,-0.5f);
 
+
         drawCube(vertexConsumer, matrices, 255,
                 (color >> 16 & 255) / 255.0f,
                 (color >> 8 & 255) / 255.0f,
                 (color & 255) / 255.0f,
-                0.65f,
+                1,
                 texture,
                 1, mat2,
                 true,

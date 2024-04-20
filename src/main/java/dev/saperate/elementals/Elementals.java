@@ -1,6 +1,7 @@
 package dev.saperate.elementals;
 
 import dev.saperate.elementals.blocks.SoulFireCore;
+import dev.saperate.elementals.blocks.WaterRapid;
 import dev.saperate.elementals.commands.BendingCommand;
 import dev.saperate.elementals.commands.ElementArgumentType;
 import dev.saperate.elementals.data.Bender;
@@ -10,6 +11,7 @@ import dev.saperate.elementals.effects.StationaryStatusEffect;
 import dev.saperate.elementals.elements.NoneElement;
 import dev.saperate.elementals.elements.fire.FireElement;
 import dev.saperate.elementals.elements.water.WaterElement;
+import dev.saperate.elementals.entities.water.WaterShieldEntity;
 import dev.saperate.elementals.misc.AirBannerPattern;
 import net.fabricmc.api.ModInitializer;
 
@@ -19,7 +21,12 @@ import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
+import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
+import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 import net.minecraft.command.argument.serialize.ConstantArgumentSerializer;
+import net.minecraft.entity.EntityDimensions;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.SpawnGroup;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.server.MinecraftServer;
@@ -31,6 +38,7 @@ import org.slf4j.LoggerFactory;
 
 import static dev.saperate.elementals.effects.DenseStatusEffect.DENSE_EFFECT;
 import static dev.saperate.elementals.effects.StationaryStatusEffect.STATIONARY_EFFECT;
+import static dev.saperate.elementals.entities.water.WaterShieldEntity.WATERSHIELD;
 import static dev.saperate.elementals.misc.AirBannerPattern.AIR_PATTERN;
 import static dev.saperate.elementals.network.ModMessages.registerC2SPackets;
 
@@ -38,10 +46,12 @@ public class Elementals implements ModInitializer {
     public static final String MODID = "elementals";
     public static final Logger LOGGER = LoggerFactory.getLogger(MODID);
 
+
     @Override
     public void onInitialize() {
 
         SoulFireCore.registerBlock();
+        WaterRapid.registerBlock();
         Registry.register(Registries.STATUS_EFFECT, new Identifier(MODID, "stationary"), STATIONARY_EFFECT);
         Registry.register(Registries.STATUS_EFFECT, new Identifier(MODID, "dense"), DENSE_EFFECT);
 

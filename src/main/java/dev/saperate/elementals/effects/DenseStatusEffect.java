@@ -25,13 +25,13 @@ public class DenseStatusEffect extends StatusEffect {
     public void applyUpdateEffect(LivingEntity entity, int amplifier) {
         double currV = entity.getVelocity().y;
 
-        if (((ElementalsLivingEntityAccessor) entity).isJumping()) {
-            currV += 0.035f;
+        if (((ElementalsLivingEntityAccessor) entity).isJumping() && entity.isOnGround() && entity.isSubmergedInWater()) {
+            currV += 1.5f * amplifier;
         } else {
-            currV -= 0.07f;
+            currV -= 0.07f * amplifier;
         }
         entity.setSwimming(false);
-        entity.setMovementSpeed(2);
+
 
         entity.setVelocity(new Vec3d(entity.getVelocity().x, currV, entity.getVelocity().z));
     }

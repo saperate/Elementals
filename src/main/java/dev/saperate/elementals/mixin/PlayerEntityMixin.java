@@ -5,6 +5,7 @@ import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.data.StateDataSaverAndLoader;
 import dev.saperate.elementals.elements.Element;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.command.CommandManager;
@@ -19,8 +20,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Debug(export = true)
 @Mixin(PlayerEntity.class)
-public class PlayerEntityMixin {
+public abstract class PlayerEntityMixin {
 
+
+    @Shadow public abstract void remove(Entity.RemovalReason reason);
 
     @Inject(at = @At("TAIL"), method = "<init>")
     private void init(CallbackInfo info) {
@@ -36,6 +39,9 @@ public class PlayerEntityMixin {
     private void tick(CallbackInfo ci) {
         PlayerEntity player = ((PlayerEntity) (Object) this);
         Bender bender = Bender.getBender(player);
+        if(bender == null){
+            return;
+        }
         if(bender.castTime != null){
             return;
         }

@@ -40,10 +40,14 @@ public class ElementalsClient implements ClientModInitializer {
 		new KeyAbility1();
 		new KeyAbility2();
 		new KeyAbility3();
+
+
 	}
 
 	public void registerS2CPackets(){
 		ClientPlayNetworking.registerGlobalReceiver(SYNC_CURR_ABILITY_PACKET_ID, SyncCurrAbilityS2CPacket::receive);
 		ClientPlayNetworking.registerGlobalReceiver(SYNC_ELEMENT_PACKET_ID, SyncBendingElementS2CPacket::receive);
 	}
+
+
 }

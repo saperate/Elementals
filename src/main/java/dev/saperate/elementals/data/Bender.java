@@ -13,6 +13,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
+import static dev.saperate.elementals.network.ModMessages.SYNC_CURR_ABILITY_PACKET_ID;
 import static dev.saperate.elementals.network.ModMessages.SYNC_ELEMENT_PACKET_ID;
 
 public class Bender {
@@ -75,13 +76,16 @@ public class Bender {
             castTime = null;
         }
         this.currAbility = ability;
+        syncAbility(this);
     }
 
     public void setCurrAbility(int i) {
         setCurrAbility(boundAbilities[i]);
+        syncAbility(this);
     }
 
     public void setElement(Element element, boolean sync) {
+        System.out.println(sync + "kys");
         if (element == null) {
             this.element = Element.elementList.get(0);
         } else {
@@ -102,5 +106,11 @@ public class Bender {
         PacketByteBuf buf = PacketByteBufs.create();
         buf.writeString(bender.getElement().name);
         ServerPlayNetworking.send((ServerPlayerEntity) bender.player, SYNC_ELEMENT_PACKET_ID, buf);
+    }
+
+    public static void syncAbility(Bender bender) {
+        PacketByteBuf buf = PacketByteBufs.create();
+        buf.writeInt(bender.currAbility != null ? bender.getElement().abilityList.indexOf(bender.currAbility) : -1);
+        ServerPlayNetworking.send((ServerPlayerEntity) bender.player, SYNC_CURR_ABILITY_PACKET_ID, buf);
     }
 }

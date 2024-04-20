@@ -33,7 +33,6 @@ public class SyncCurrAbilityS2CPacket {
             return;
         }
         bender.currAbility = bender.element.getAbility(i);
-
     }
 
     public static void send(Bender bender, int i){
