@@ -37,6 +37,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import static dev.saperate.elementals.effects.DenseStatusEffect.DENSE_EFFECT;
+import static dev.saperate.elementals.effects.DrowningStatusEffect.DROWNING_EFFECT;
 import static dev.saperate.elementals.effects.StationaryStatusEffect.STATIONARY_EFFECT;
 import static dev.saperate.elementals.entities.water.WaterShieldEntity.WATERSHIELD;
 import static dev.saperate.elementals.misc.AirBannerPattern.AIR_PATTERN;
@@ -52,8 +53,10 @@ public class Elementals implements ModInitializer {
 
         SoulFireCore.registerBlock();
         WaterRapid.registerBlock();
+
         Registry.register(Registries.STATUS_EFFECT, new Identifier(MODID, "stationary"), STATIONARY_EFFECT);
         Registry.register(Registries.STATUS_EFFECT, new Identifier(MODID, "dense"), DENSE_EFFECT);
+        Registry.register(Registries.STATUS_EFFECT, new Identifier(MODID, "drowning"), DROWNING_EFFECT);
 
         registerElements();
         registerCommands();
@@ -100,7 +103,6 @@ public class Elementals implements ModInitializer {
     private static void onPlayerRespawn(ServerPlayerEntity oldPlayer, ServerPlayerEntity newPlayer, boolean b) {
         Bender bender = Bender.getBender(oldPlayer);
 
-        System.out.println(newPlayer.getWorld().isClient);
         if (bender.currAbility != null) {
             bender.currAbility.onRemove(bender);
             bender.setCurrAbility(null);

@@ -13,13 +13,17 @@ public class AbilityWater1 implements Ability {
         PlayerData playerData = PlayerData.get(bender.player);
 
 
-        if (bender.player.isSneaking() || true) {
-            if (true) {
+
+        if (bender.player.isSneaking()) {
+            if (playerData.canUseUpgrade("waterShield")) {
                 WaterElement.get().abilityList.get(5).onCall(bender, deltaT);
                 return;
             } else if (playerData.canUseUpgrade("waterHelmet") && bender.player.isSubmergedInWater()
                     && !bender.player.hasStatusEffect(StatusEffects.WATER_BREATHING)) {
                 WaterElement.get().abilityList.get(4).onCall(bender, deltaT);
+                return;
+            }else if(true){
+                WaterElement.get().abilityList.get(6).onCall(bender, deltaT);
                 return;
             }
         }

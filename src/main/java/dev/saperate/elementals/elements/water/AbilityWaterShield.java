@@ -41,7 +41,7 @@ public class AbilityWaterShield implements Ability {
     @Override
     public void onTick(Bender bender) {
         bender.player.addStatusEffect(new StatusEffectInstance(STATIONARY_EFFECT,1,1,false,false,false));
-        if(bender.player.isSneaking()){
+        if(!bender.player.isSneaking()){
             onRemove(bender);
         }
     }

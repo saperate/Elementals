@@ -17,6 +17,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import static dev.saperate.elementals.effects.DrowningStatusEffect.DROWNING_EFFECT;
+
 @Mixin(InGameOverlayRenderer.class)
 public class OverlayMixin {
     @Shadow
@@ -25,9 +27,12 @@ public class OverlayMixin {
     @Inject(at = @At("HEAD"), method = "renderOverlays", cancellable = true)
     private static void renderWaterOverlay(MinecraftClient client, MatrixStack matrices, CallbackInfo ci) {
         ClientBender bender = ClientBender.get();
-		if(bender != null && bender.currAbility instanceof AbilityWaterShield){
-			renderUnderwaterOverlay(client, matrices);
-		}
+        if (bender != null &&
+                (bender.currAbility instanceof AbilityWaterShield
+                || (bender.player != null && bender.player.hasStatusEffect(DROWNING_EFFECT))
+                )) {
+            renderUnderwaterOverlay(client, matrices);
+        }
     }
 
     private static void renderUnderwaterOverlay(MinecraftClient client, MatrixStack matrices) {

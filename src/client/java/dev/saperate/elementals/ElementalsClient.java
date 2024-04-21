@@ -7,6 +7,7 @@ import dev.saperate.elementals.keys.abilities.KeyAbility3;
 import dev.saperate.elementals.packets.SyncBendingElementS2CPacket;
 import dev.saperate.elementals.packets.SyncCurrAbilityS2CPacket;
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 
@@ -40,6 +41,7 @@ public class ElementalsClient implements ClientModInitializer {
 		new KeyAbility1();
 		new KeyAbility2();
 		new KeyAbility3();
+
 
 
 	}

@@ -4,6 +4,9 @@ import com.google.common.collect.Sets;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.projectile.ProjectileUtil;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.particle.ParticleEffect;
 import net.minecraft.particle.ParticleTypes;
@@ -11,6 +14,7 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.crash.CrashException;
 import net.minecraft.util.crash.CrashReport;
 import net.minecraft.util.crash.CrashReportSection;
+import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
@@ -168,5 +172,13 @@ public class SapsUtils {
         float z = (float) (Math.cos(rPitch) * Math.sin(rYaw));
 
         return new Vector3f(x, y, z).mul(distance).add(e.getEyePos().toVector3f());
+    }
+
+    public static HitResult raycastEntity(PlayerEntity player, double maxDistance) {
+            Vec3d cameraPos = player.getCameraPosVec(1.0f);
+            Vec3d rot = player.getRotationVec(1.0f);
+            Vec3d rayCastContext = cameraPos.add(rot.x * maxDistance, rot.y * maxDistance, rot.z * maxDistance);
+            Box box = player.getBoundingBox().stretch(rot.multiply(maxDistance)).expand(1d, 1d, 1d);
+            return ProjectileUtil.raycast(player, player.getEyePos(), rayCastContext, box, (entity -> entity instanceof LivingEntity && !entity.isSpectator() && entity.canHit()), maxDistance * maxDistance);
     }
 }

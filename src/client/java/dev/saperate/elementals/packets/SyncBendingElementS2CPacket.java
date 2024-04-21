@@ -17,13 +17,8 @@ import static dev.saperate.elementals.network.ModMessages.SYNC_ELEMENT_PACKET_ID
 public class SyncBendingElementS2CPacket {
     public static void receive(MinecraftClient client, ClientPlayNetworkHandler handler,
                                PacketByteBuf buf, PacketSender responseSender) {
-        if(client.player == null){
-            return;
-        }
+
         ClientBender bender = ClientBender.get();
-        if(bender.player == null){
-            bender.player = client.player;
-        }
 
         String e = buf.readString();
         bender.element = Element.getElementByName(e);
