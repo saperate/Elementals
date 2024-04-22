@@ -23,6 +23,9 @@ public class DrowningStatusEffect extends StatusEffect {
 
     @Override
     public void applyUpdateEffect(LivingEntity entity, int amplifier) {
+        if(entity.isSubmergedInWater()){
+            return;
+        }
         entity.setAir(getNextAirUnderwater(entity.getAir(),entity));
         if(entity.getAir() <= -40) {
             entity.setAir(-20);

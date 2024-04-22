@@ -35,6 +35,9 @@ public class WaterHelmetEntityRenderer extends EntityRenderer<WaterHelmetEntity>
         Vec3d eyePos = owner.getEyePos();
         entity.setPos(eyePos.x,eyePos.y - 0.5f, eyePos.z);
 
+        if(!entity.isOwnerBiped()){
+            return;
+        }
 
         matrices.push();
         matrices.translate(0, 0.8f, 0);
@@ -47,7 +50,7 @@ public class WaterHelmetEntityRenderer extends EntityRenderer<WaterHelmetEntity>
 
         Matrix4f mat = new Matrix4f();
         mat.translate(0,-0.30f,0.325f);
-        mat.rotate(RotationAxis.POSITIVE_Y.rotationDegrees(-owner.getYaw()));
+        mat.rotate(RotationAxis.POSITIVE_Y.rotationDegrees(-owner.getHeadYaw()));
         mat.rotate(RotationAxis.POSITIVE_X.rotationDegrees(owner.getPitch()));
         mat.translate(0,0.325f,-0.325f);
         matrices.translate(0,-0.30f,-0.325f);

@@ -129,12 +129,14 @@ public class SapsUtils {
     public static void summonParticles(Entity entity, Random rnd, ParticleEffect type, float velocity, int density) {
         for (int i = 0; i < density; i++) {
             entity.getWorld().addParticle(type,
-                    entity.getX() + rnd.nextDouble(),
+                    entity.getX() - 0.5f + rnd.nextDouble(),
                     entity.getY() + rnd.nextDouble(),
-                    entity.getZ() + rnd.nextDouble(),
+                    entity.getZ() - 0.5f + rnd.nextDouble(),
                     rnd.nextBetween(-1, 1) * velocity, rnd.nextBetween(-1, 1) * velocity, rnd.nextBetween(-1, 1) * velocity);
         }
     }
+
+
 
     public static void serverSummonParticles(ServerWorld world, ParticleEffect type, Entity entity, Random rnd,
                                              double vX, double vY, double vZ, double speed, int count,

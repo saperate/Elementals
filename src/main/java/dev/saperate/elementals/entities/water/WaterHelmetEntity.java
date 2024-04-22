@@ -9,8 +9,11 @@ import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.particle.ParticleEffect;
+import net.minecraft.particle.ParticleTypes;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.sound.SoundCategory;
@@ -27,8 +30,10 @@ import java.util.List;
 import static dev.saperate.elementals.effects.DrowningStatusEffect.DROWNING_EFFECT;
 import static dev.saperate.elementals.effects.StationaryStatusEffect.STATIONARY_EFFECT;
 import static dev.saperate.elementals.utils.SapsUtils.getEntityLookVector;
+import static dev.saperate.elementals.utils.SapsUtils.summonParticles;
 
 public class WaterHelmetEntity extends Entity {
+    public boolean isOwnerBiped = false;
     private static final TrackedData<Integer> CASTER_ID = DataTracker.registerData(WaterHelmetEntity.class, TrackedDataHandlerRegistry.INTEGER);
     private static final TrackedData<Integer> OWNER_ID = DataTracker.registerData(WaterHelmetEntity.class, TrackedDataHandlerRegistry.INTEGER);
     private static final TrackedData<Boolean> DROWN = DataTracker.registerData(WaterHelmetEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
@@ -71,18 +76,28 @@ public class WaterHelmetEntity extends Entity {
     @Override
     public void tick() {
         super.tick();
-        aliveTicks++;
+        boolean drown = getDrown();
+        if(!drown){
+            aliveTicks++;
+        }
+
 
         LivingEntity owner = getOwner();
-        if (owner == null || aliveTicks > maxLifeTime) {
+        if (owner == null || aliveTicks > maxLifeTime || owner.isOnFire()) {
             discard();
             return;
         }
-
-        boolean drown = getDrown();
         if (!owner.isSubmergedInWater() && !drown) {
             aliveTicks += 50;
         }
+
+        isOwnerBiped = owner.getWidth() / owner.getHeight() < 0.4 || owner instanceof PlayerEntity;
+
+        if(!isOwnerBiped && getWorld().isClient){
+            summonParticles(owner,this.random, ParticleTypes.SPLASH,0,10);
+        }
+
+
 
         Vec3d eyePos = owner.getEyePos();
         setPos(eyePos.x, eyePos.y - 0.5f, eyePos.z); // if you change any part of this check the renderer because it also modifies to entity pos
@@ -151,4 +166,7 @@ public class WaterHelmetEntity extends Entity {
         this.getDataTracker().set(DROWN, drown);
     }
 
+    public boolean isOwnerBiped() {
+        return isOwnerBiped;
+    }
 }

@@ -60,9 +60,14 @@ public class AbilitySuffocate implements Ability {
 
     @Override
     public void onTick(Bender bender) {
+        if(bender.abilityData == null || ((WaterHelmetEntity)bender.abilityData).getOwner() == null){
+            onRemove(bender);
+            return;
+        }
+
         double distance = ((WaterHelmetEntity)bender.abilityData)
                 .getOwner().getPos().subtract(bender.player.getPos()).length();
-        System.out.println(distance);
+
 
         bender.player.addStatusEffect(new StatusEffectInstance(STATIONARY_EFFECT, 1, 1, false, false, false));
         if (!bender.player.isSneaking()
