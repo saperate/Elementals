@@ -60,7 +60,7 @@ public class AbilityFlameThrower implements Ability {
                     0.1f,1,
                     0,0,0, 0);
         }else{
-            Vector3f pos = getEntityLookVector(player,3).sub(player.getPos().toVector3f()).normalize(3);
+            Vector3f pos = getEntityLookVector(player,3).subtract(player.getPos()).normalize().multiply(3).toVector3f();
 
             serverSummonParticles((ServerWorld) player.getWorld(),
                     PlayerData.get(player).canUseUpgrade("blueFire") ?

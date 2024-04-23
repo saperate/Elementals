@@ -16,18 +16,21 @@ import net.minecraft.util.math.Vec3d;
 import org.joml.Vector3f;
 
 import static dev.saperate.elementals.effects.StationaryStatusEffect.STATIONARY_EFFECT;
-import static dev.saperate.elementals.utils.SapsUtils.getEntityLookVector;
-import static dev.saperate.elementals.utils.SapsUtils.raycastEntity;
+import static dev.saperate.elementals.utils.SapsUtils.*;
 
 public class AbilitySuffocate implements Ability {
     @Override
     public void onCall(Bender bender, long deltaT) {
         PlayerEntity player = bender.player;
 
-        EntityHitResult hit = (EntityHitResult) raycastEntity(player,12);
+        HitResult hit = raycastFull(player,12,false);
+        if(hit == null || !hit.getType().equals(HitResult.Type.ENTITY)){
+            bender.setCurrAbility(null);
+            return;
+        }
 
-        if (hit != null
-                && hit.getEntity() instanceof LivingEntity victim) {
+        EntityHitResult eHit = (EntityHitResult) hit;
+        if (eHit.getEntity() instanceof LivingEntity victim) {
 
             WaterHelmetEntity entity = new WaterHelmetEntity(player.getWorld(), victim, player.getX(), player.getY(), player.getZ());
             entity.setDrown(true);

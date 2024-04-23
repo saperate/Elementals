@@ -17,7 +17,7 @@ public class AbilityFireBall implements Ability {
     public void onCall(Bender bender, long deltaT) {
         PlayerEntity player = bender.player;
 
-        Vector3f pos = getEntityLookVector(player, 3);
+        Vector3f pos = getEntityLookVector(player, 3).toVector3f();
 
         FireBallEntity entity = new FireBallEntity(player.getWorld(), player, pos.x, pos.y, pos.z);
         bender.abilityData = entity;

@@ -45,8 +45,8 @@ public class AbilityFire3 implements Ability {
             PlayerEntity player = bender.player;
 
             Vector3f velocity = getEntityLookVector(player, 1)
-                    .sub(player.getEyePos().toVector3f())
-                    .normalize(1.75f);
+                    .subtract(player.getEyePos())
+                    .normalize().multiply(1.75f).toVector3f();
 
             player.setVelocity(velocity.x,
                     velocity.y > 0 ? Math.min(velocity.y,1) : Math.max(velocity.y,-1),
@@ -65,8 +65,8 @@ public class AbilityFire3 implements Ability {
         && PlayerData.get(player).canUseUpgrade("jet")) {
             player.startFallFlying();
             Vector3f velocity = getEntityLookVector(player, 2)
-                    .sub(player.getEyePos().toVector3f())
-                    .normalize(0.65f);
+                    .subtract(player.getEyePos())
+                    .normalize().multiply(0.65f).toVector3f();
             player.setVelocity(velocity.x, velocity.y, velocity.z);
             player.velocityModified = true;
             player.move(MovementType.PLAYER, player.getVelocity());

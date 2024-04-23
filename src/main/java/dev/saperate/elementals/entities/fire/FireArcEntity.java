@@ -161,7 +161,7 @@ public class FireArcEntity extends ProjectileEntity {
 
     private void controlEntity(Entity owner) {
         Vector3f direction = getEntityLookVector(owner, 3)
-                .sub(getPos().toVector3f());
+                .subtract(getPos()).toVector3f();
         direction.mul(0.2f);
 
         if (direction.length() < 0.4f) {

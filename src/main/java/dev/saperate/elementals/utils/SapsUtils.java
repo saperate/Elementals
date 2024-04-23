@@ -14,6 +14,8 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.crash.CrashException;
 import net.minecraft.util.crash.CrashReport;
 import net.minecraft.util.crash.CrashReportSection;
+import net.minecraft.util.hit.BlockHitResult;
+import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
@@ -165,7 +167,7 @@ public class SapsUtils {
         );
     }
 
-    public static Vector3f getEntityLookVector(Entity e, float distance) {
+    public static Vec3d getEntityLookVector(Entity e, float distance) {
         double rYaw = Math.toRadians(e.getYaw() + 90);
         double rPitch = Math.toRadians(-e.getPitch());
 
@@ -173,14 +175,42 @@ public class SapsUtils {
         float y = (float) Math.sin(rPitch);
         float z = (float) (Math.cos(rPitch) * Math.sin(rYaw));
 
-        return new Vector3f(x, y, z).mul(distance).add(e.getEyePos().toVector3f());
+        return new Vec3d(x, y, z).multiply(distance).add(e.getEyePos());
     }
 
-    public static HitResult raycastEntity(PlayerEntity player, double maxDistance) {
-            Vec3d cameraPos = player.getCameraPosVec(1.0f);
-            Vec3d rot = player.getRotationVec(1.0f);
+    public static HitResult raycastEntity(Entity origin, double maxDistance) {
+            Vec3d cameraPos = origin.getCameraPosVec(1.0f);
+            Vec3d rot = origin.getRotationVec(1.0f);
             Vec3d rayCastContext = cameraPos.add(rot.x * maxDistance, rot.y * maxDistance, rot.z * maxDistance);
-            Box box = player.getBoundingBox().stretch(rot.multiply(maxDistance)).expand(1d, 1d, 1d);
-            return ProjectileUtil.raycast(player, player.getEyePos(), rayCastContext, box, (entity -> entity instanceof LivingEntity && !entity.isSpectator() && entity.canHit()), maxDistance * maxDistance);
+            Box box = origin.getBoundingBox().stretch(rot.multiply(maxDistance)).expand(1d, 1d, 1d);
+            return ProjectileUtil.raycast(origin, origin.getEyePos(), rayCastContext, box, (entity -> entity instanceof LivingEntity && !entity.isSpectator() && entity.canHit()), maxDistance * maxDistance);
     }
+
+    //TODO maybe use a discard block list so that if we hit that and we got both and entity hit and a block hit we only keep the entity hit
+    public static HitResult raycastFull(Entity origin, double maxDistance, boolean includeFluids) {
+        EntityHitResult eHit = (EntityHitResult) raycastEntity(origin, maxDistance);
+        BlockHitResult bHit = (BlockHitResult) origin.raycast(maxDistance, 1.0f, includeFluids);
+
+        if(eHit == null){
+            return bHit;
+        } else if (bHit == null) {
+            return eHit;
+        }
+
+        if(eHit.squaredDistanceTo(origin) < bHit.squaredDistanceTo(origin)){
+            return eHit;
+        }else {
+            return bHit;
+        }
+    }
+
+    public static Entity entityFromHitResult(HitResult result){
+        if(result.getType().equals(HitResult.Type.ENTITY)){
+            return ((EntityHitResult) result).getEntity();
+        }else {
+            return null;
+        }
+    }
+
+
 }

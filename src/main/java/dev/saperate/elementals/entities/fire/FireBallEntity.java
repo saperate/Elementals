@@ -120,8 +120,8 @@ public class FireBallEntity extends ProjectileEntity {
 
     private void controlEntity(Entity owner) {
         Vector3f direction = getEntityLookVector(owner, 3)
-                .sub(0, 0.5f, 0)
-                .sub(getPos().toVector3f());
+                .subtract(0, 0.5f, 0)
+                .subtract(getPos()).toVector3f();
         direction.mul(0.1f);
 
         if (direction.length() < 0.4f) {
