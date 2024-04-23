@@ -53,7 +53,7 @@ public class AbilityWaterCube implements Ability {
 
     @Override
     public void onRightClick(Bender bender, boolean started) {
-
+        onRemove(bender);
     }
 
     @Override

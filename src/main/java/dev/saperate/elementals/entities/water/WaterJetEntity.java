@@ -77,7 +77,7 @@ public class WaterJetEntity extends ProjectileEntity {
                 summonParticles(this, random, ParticleTypes.SPLASH, 10, 20);
                 summonParticles(this, random, ParticleTypes.CLOUD, 0, 1);
             }
-            HitResult hit = raycastFull(owner, 10, true);
+            HitResult hit = raycastFull(owner, 10, true); //TODO add upgrades for better range
             if (hit instanceof BlockHitResult bHit) {
                 BlockState bState = getWorld().getBlockState(bHit.getBlockPos());
                 Block bBlock = bState.getBlock();
@@ -86,7 +86,7 @@ public class WaterJetEntity extends ProjectileEntity {
                 }
             } else if (hit instanceof EntityHitResult eHit) {
                 Entity victim = eHit.getEntity();
-                Vec3d direction = getOwner().getEyePos().subtract(victim.getPos()).normalize().multiply(-0.5f);
+                Vec3d direction = getOwner().getEyePos().subtract(victim.getPos()).normalize().multiply(-0.075f);
                 victim.addVelocity(direction);
 
                 victim.damage(getDamageSources().inFire(), 1);

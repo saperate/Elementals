@@ -9,16 +9,25 @@ import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.util.math.Vec3d;
 import org.joml.Vector3f;
 
 import static dev.saperate.elementals.effects.StationaryStatusEffect.STATIONARY_EFFECT;
+import static dev.saperate.elementals.utils.SapsUtils.getEntityLookVector;
 import static dev.saperate.elementals.utils.SapsUtils.serverSummonParticles;
 
 public class AbilityWaterJet implements Ability {
     @Override
     public void onCall(Bender bender, long deltaT) {
-        bender.abilityData = null;
-        bender.setCurrAbility(this);
+        PlayerEntity player = bender.player;
+        Vector3f pos = WaterElement.canBend(player, true);
+
+        if (pos != null) {
+            bender.abilityData = null;
+            bender.setCurrAbility(this);
+        }else{
+            bender.setCurrAbility(null);
+        }
     }
 
     @Override
@@ -33,39 +42,33 @@ public class AbilityWaterJet implements Ability {
 
     @Override
     public void onRightClick(Bender bender, boolean started) {
-        if(started){
+        if (started) {
             PlayerEntity player = bender.player;
-            Vector3f pos = WaterElement.canBend(player,true);
+            Vec3d pos = getEntityLookVector(player, .5f);
 
-            if (pos != null) {
-                WaterJetEntity parent = new WaterJetEntity(player.getWorld(), player, pos.x, pos.y, pos.z);
-                bender.abilityData = parent;
-                player.getWorld().spawnEntity(parent);
+            WaterJetEntity parent = new WaterJetEntity(player.getWorld(), player, pos.x, pos.y, pos.z);
+            bender.abilityData = parent;
+            player.getWorld().spawnEntity(parent);
 
-                WaterJetEntity child = new WaterJetEntity(player.getWorld(), player, pos.x, pos.y, pos.z);
-                parent.setChild(child);
-                player.getWorld().spawnEntity(child);
-
-                bender.setCurrAbility(this);
-            } else {
-                bender.setCurrAbility(null);
-            }
-        }else {
+            WaterJetEntity child = new WaterJetEntity(player.getWorld(), player, pos.x, pos.y, pos.z);
+            parent.setChild(child);
+            player.getWorld().spawnEntity(child);
+        } else {
             onRemove(bender);
         }
     }
 
     @Override
     public void onTick(Bender bender) {
-        if(bender.abilityData == null){
+        if (bender.abilityData == null) {
             PlayerEntity player = bender.player;
             serverSummonParticles((ServerWorld) player.getWorld(),
                     ParticleTypes.SPLASH, player, player.getRandom(),
                     0, 0.1f, 0,
                     0.1f, 1,
                     0, 0, 0, 0);
-        }else{
-            bender.player.addStatusEffect(new StatusEffectInstance(STATIONARY_EFFECT,1,1,false,false,false));
+        } else {
+            bender.player.addStatusEffect(new StatusEffectInstance(STATIONARY_EFFECT, 1, 1, false, false, false));
         }
     }
 
