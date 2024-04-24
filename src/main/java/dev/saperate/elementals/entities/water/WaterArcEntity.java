@@ -169,7 +169,7 @@ public class WaterArcEntity extends ProjectileEntity {
     private void controlEntity(Entity owner) {
         Vector3f direction = getEntityLookVector(owner, 3)
                 .subtract(getPos()).toVector3f();
-        direction.mul(0.15f);
+        direction.mul(0.125f);
 
         if (direction.length() < 0.4f) {
             this.setVelocity(0, 0, 0);
