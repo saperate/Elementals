@@ -1,7 +1,8 @@
-package dev.saperate.elementals.entities;
+package dev.saperate.elementals.entities.water;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import dev.saperate.elementals.entities.water.WaterArcEntity;
+import dev.saperate.elementals.entities.water.WaterArmEntity;
 import net.minecraft.client.color.world.BiomeColors;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.render.RenderLayer;
@@ -10,7 +11,6 @@ import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRenderer;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.RotationAxis;
 import net.minecraft.util.math.Vec3d;
@@ -19,22 +19,22 @@ import org.joml.Matrix4f;
 import static dev.saperate.elementals.entities.utils.RenderUtils.drawCube;
 
 
-public class WaterArcEntityRenderer extends EntityRenderer<WaterArcEntity> {
+public class WaterArmEntityRenderer extends EntityRenderer<WaterArmEntity> {
     private static final Identifier texture = new Identifier("minecraft", "block/water_still");
 
-    public WaterArcEntityRenderer(EntityRendererFactory.Context context) {
+    public WaterArmEntityRenderer(EntityRendererFactory.Context context) {
         super(context);
     }
 
     @Override
-    public void render(WaterArcEntity entity, float yaw, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light) {
-        WaterArcEntity child = entity.getChild();
+    public void render(WaterArmEntity entity, float yaw, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light) {
+        WaterArmEntity child = entity.getChild();
         if(child  == null){
             return;
         }
 
         matrices.push();
-        matrices.scale(0.25f, 0.25f, 0.25f);
+        matrices.scale(0.4f, 0.4f, 0.4f);
         //matrices.translate(0, 0.5f, 0);
 
 
@@ -51,7 +51,7 @@ public class WaterArcEntityRenderer extends EntityRenderer<WaterArcEntity> {
 
 
         Vec3d dir = child.getPos().subtract(entity.getPos());
-        float d = (float) dir.length() * 4;
+        float d = (float) dir.length() * 2.5f;
         dir = dir.normalize();
 
 
@@ -77,7 +77,7 @@ public class WaterArcEntityRenderer extends EntityRenderer<WaterArcEntity> {
     }
 
     @Override
-    public Identifier getTexture(WaterArcEntity entity) {
+    public Identifier getTexture(WaterArmEntity entity) {
         return texture;
     }
 }

@@ -53,6 +53,7 @@ public class WaterShieldEntity extends Entity {
         setOwner(owner);
     }
 
+
     @Override
     protected void initDataTracker() {
         this.getDataTracker().startTracking(OWNER_ID, 0);

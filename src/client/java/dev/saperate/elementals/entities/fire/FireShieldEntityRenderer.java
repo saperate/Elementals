@@ -1,4 +1,4 @@
-package dev.saperate.elementals.entities;
+package dev.saperate.elementals.entities.fire;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import dev.saperate.elementals.entities.fire.FireBlockEntity;

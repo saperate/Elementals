@@ -77,7 +77,7 @@ public class WaterJetEntity extends ProjectileEntity {
                 summonParticles(this, random, ParticleTypes.SPLASH, 10, 20);
                 summonParticles(this, random, ParticleTypes.CLOUD, 0, 1);
             }
-            HitResult hit = raycastFull(owner, 10, true); //TODO add upgrades for better range
+            HitResult hit = raycastFull(owner, 10, true);
             if (hit instanceof BlockHitResult bHit) {
                 BlockState bState = getWorld().getBlockState(bHit.getBlockPos());
                 Block bBlock = bState.getBlock();

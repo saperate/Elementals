@@ -41,6 +41,8 @@ public class WaterElement extends Element {
         addAbility(new AbilityWaterShield(),false);
         addAbility(new AbilitySuffocate(),false);
         addAbility(new AbilityWaterJet(),false);
+        addAbility(new AbilityWaterArms(), false);
+        addAbility(new AbilityWaterBlade(), false);
     }
 
     public static Vector3f canBend(PlayerEntity player, boolean consumeWater) {

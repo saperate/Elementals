@@ -85,7 +85,6 @@ public class Bender {
     }
 
     public void setElement(Element element, boolean sync) {
-        System.out.println(sync + "kys");
         if (element == null) {
             this.element = Element.elementList.get(0);
         } else {

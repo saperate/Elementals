@@ -27,19 +27,20 @@ import net.minecraft.world.explosion.Explosion;
 import net.minecraft.world.explosion.ExplosionBehavior;
 import org.joml.Vector3f;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Optional;
+import java.util.*;
+import java.util.function.Predicate;
 
 public class SapsUtils {
 
 
-    public static BlockState checkBlockCollision(Entity entity) {
+    public static BlockPos checkBlockCollision(Entity entity) {
         Box box = entity.getBoundingBox().expand(0.25);
         BlockPos blockPos = BlockPos.ofFloored(box.minX + 1.0E-7, box.minY + 1.0E-7, box.minZ + 1.0E-7);
         BlockPos blockPos2 = BlockPos.ofFloored(box.maxX - 1.0E-7, box.maxY - 1.0E-7, box.maxZ - 1.0E-7);
 
         BlockPos.Mutable mutable = new BlockPos.Mutable();
+
+        List<BlockPos> possibleHits = new ArrayList<>();
 
         for (int i = blockPos.getX(); i <= blockPos2.getX(); ++i) {
             for (int j = blockPos.getY(); j <= blockPos2.getY(); ++j) {
@@ -52,7 +53,7 @@ public class SapsUtils {
 
                     try {
                         blockState.onEntityCollision(entity.getWorld(), mutable, entity);
-                        return blockState;
+                        possibleHits.add(new BlockPos(mutable));
                     } catch (Throwable var12) {
                         CrashReport crashReport = CrashReport.create(var12, "Colliding entity with block");
                         CrashReportSection crashReportSection = crashReport.addElement("Block being collided with");
@@ -63,7 +64,24 @@ public class SapsUtils {
             }
         }
 
-        return null;
+
+        //Get the closest hit from all possible hits
+        BlockPos bestHit = possibleHits.isEmpty() ? null : possibleHits.get(0);
+        double bestDistance = possibleHits.isEmpty() ? -1 : entity.squaredDistanceTo(bestHit.toCenterPos());
+        for( BlockPos hit : possibleHits){
+            double dist = entity.squaredDistanceTo(bestHit.toCenterPos());
+
+            if(dist < bestDistance){
+                bestHit = hit;
+                bestDistance = dist;
+            }
+        }
+
+        return bestHit;
+    }
+
+    public static BlockState checkBlockCollisionBlockState(Entity entity) {
+        return entity.getWorld().getBlockState(checkBlockCollision(entity));
     }
 
     /**
@@ -129,15 +147,19 @@ public class SapsUtils {
     }
 
     public static void summonParticles(Entity entity, Random rnd, ParticleEffect type, float velocity, int density) {
+        summonParticles(entity,rnd,type,velocity,density,1);
+    }
+
+
+    public static void summonParticles(Entity entity, Random rnd, ParticleEffect type, float velocity, int density, float rndYForce) {
         for (int i = 0; i < density; i++) {
             entity.getWorld().addParticle(type,
                     entity.getX() - 0.5f + rnd.nextDouble(),
-                    entity.getY() + rnd.nextDouble(),
+                    entity.getY() + rnd.nextDouble() * rndYForce,
                     entity.getZ() - 0.5f + rnd.nextDouble(),
                     rnd.nextBetween(-1, 1) * velocity, rnd.nextBetween(-1, 1) * velocity, rnd.nextBetween(-1, 1) * velocity);
         }
     }
-
 
 
     public static void serverSummonParticles(ServerWorld world, ParticleEffect type, Entity entity, Random rnd,
@@ -178,17 +200,21 @@ public class SapsUtils {
         return new Vec3d(x, y, z).multiply(distance).add(e.getEyePos());
     }
 
-    public static HitResult raycastEntity(Entity origin, double maxDistance) {
+    public static HitResult raycastEntity(Entity origin, double maxDistance, Predicate<Entity> predicate) {
             Vec3d cameraPos = origin.getCameraPosVec(1.0f);
             Vec3d rot = origin.getRotationVec(1.0f);
             Vec3d rayCastContext = cameraPos.add(rot.x * maxDistance, rot.y * maxDistance, rot.z * maxDistance);
             Box box = origin.getBoundingBox().stretch(rot.multiply(maxDistance)).expand(1d, 1d, 1d);
-            return ProjectileUtil.raycast(origin, origin.getEyePos(), rayCastContext, box, (entity -> entity instanceof LivingEntity && !entity.isSpectator() && entity.canHit()), maxDistance * maxDistance);
+            return ProjectileUtil.raycast(origin, origin.getEyePos(), rayCastContext, box, predicate.and(entity -> entity instanceof LivingEntity && !entity.isSpectator() && entity.canHit()), maxDistance * maxDistance);
     }
 
     //TODO maybe use a discard block list so that if we hit that and we got both and entity hit and a block hit we only keep the entity hit
     public static HitResult raycastFull(Entity origin, double maxDistance, boolean includeFluids) {
-        EntityHitResult eHit = (EntityHitResult) raycastEntity(origin, maxDistance);
+       return raycastFull(origin,maxDistance,includeFluids, Entity::isAlive);
+    }
+
+    public static HitResult raycastFull(Entity origin, double maxDistance, boolean includeFluids, Predicate<Entity> entityPredicate) {
+        EntityHitResult eHit = (EntityHitResult) raycastEntity(origin, maxDistance, entityPredicate);
         BlockHitResult bHit = (BlockHitResult) origin.raycast(maxDistance, 1.0f, includeFluids);
 
         if(eHit == null){
