@@ -34,6 +34,10 @@ public class WaterElement extends Element {
                                 new Upgrade("buythis", new Upgrade[]{
                                         new Upgrade("waterBlade")
                                 }, true)
+                        }),
+                        new Upgrade("waterAgility", new Upgrade[]{
+                                new Upgrade("waterTower"),
+                                new Upgrade("surf")
                         })
                 });
         addAbility(new AbilityWater1(), true);
@@ -47,6 +51,9 @@ public class WaterElement extends Element {
         addAbility(new AbilityWaterArms());
         addAbility(new AbilityWaterBlade());
         addAbility(new AbilityWaterBullet());
+        addAbility(new AbilityWaterCannon());
+        addAbility(new AbilityWater3(), true);
+        addAbility(new AbilityWaterSurf());
     }
 
     public static Vector3f canBend(PlayerEntity player, boolean consumeWater) {

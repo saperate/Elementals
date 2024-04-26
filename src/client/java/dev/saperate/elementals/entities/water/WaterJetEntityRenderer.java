@@ -44,8 +44,9 @@ public class WaterJetEntityRenderer extends EntityRenderer<WaterJetEntity> {
         }
         entity.setPosition(getEntityLookVector(owner, 0.5f));
 
+        float streamSize = entity.getStreamSize();
         matrices.push();
-        matrices.scale(0.25f, 0.25f, 0.25f);
+        matrices.scale(0.25f * streamSize, 0.25f * streamSize, 0.25f * streamSize);
         //matrices.translate(0, 0.5f, 0);
 
 
@@ -60,7 +61,7 @@ public class WaterJetEntityRenderer extends EntityRenderer<WaterJetEntity> {
 
 
         Vec3d dir = child.getPos().subtract(entity.getPos());
-        float d = (float) dir.length() * 4;
+        float d = (float) dir.length() * 4/streamSize;
         dir = dir.normalize();
 
 

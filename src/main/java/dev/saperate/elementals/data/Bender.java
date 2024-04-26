@@ -58,6 +58,7 @@ public class Bender {
             if (castTime == null && currAbility == null) {
                 castTime = System.currentTimeMillis();
                 setCurrAbility(boundAbilities[index]);
+                abilityData = null;
                 return;
             }
             if (currAbility != null && castTime != null) {

@@ -29,7 +29,8 @@ import org.joml.Vector3f;
 import static dev.saperate.elementals.utils.SapsUtils.*;
 
 public class WaterJetEntity extends ProjectileEntity {
-
+    private static final TrackedData<Float> STREAM_SIZE = DataTracker.registerData(WaterJetEntity.class, TrackedDataHandlerRegistry.FLOAT);
+    private static final TrackedData<Float> RANGE = DataTracker.registerData(WaterJetEntity.class, TrackedDataHandlerRegistry.FLOAT);
     private static final TrackedData<Integer> OWNER_ID = DataTracker.registerData(WaterJetEntity.class, TrackedDataHandlerRegistry.INTEGER);
     private static final TrackedData<Integer> CHILD_ID = DataTracker.registerData(WaterJetEntity.class, TrackedDataHandlerRegistry.INTEGER);
     public static final EntityType<WaterJetEntity> WATERJET = Registry.register(
@@ -57,6 +58,8 @@ public class WaterJetEntity extends ProjectileEntity {
 
     @Override
     protected void initDataTracker() {
+        this.getDataTracker().startTracking(STREAM_SIZE, 1f);
+        this.getDataTracker().startTracking(RANGE, 10f);
         this.getDataTracker().startTracking(CHILD_ID, 0);
         this.getDataTracker().startTracking(OWNER_ID, 0);
     }
@@ -77,7 +80,7 @@ public class WaterJetEntity extends ProjectileEntity {
                 summonParticles(this, random, ParticleTypes.SPLASH, 10, 20);
                 summonParticles(this, random, ParticleTypes.CLOUD, 0, 1);
             }
-            HitResult hit = raycastFull(owner, 10, true);
+            HitResult hit = raycastFull(owner, getRange(), true);
             if (hit instanceof BlockHitResult bHit) {
                 BlockState bState = getWorld().getBlockState(bHit.getBlockPos());
                 Block bBlock = bState.getBlock();
@@ -89,7 +92,7 @@ public class WaterJetEntity extends ProjectileEntity {
                 Vec3d direction = getOwner().getEyePos().subtract(victim.getPos()).normalize().multiply(-0.075f);
                 victim.addVelocity(direction);
 
-                victim.damage(getDamageSources().inFire(), 1);
+                victim.damage(getDamageSources().inFire(), 1 * getStreamSize());
 
             }
             setPosition(hit.getPos());
@@ -97,23 +100,6 @@ public class WaterJetEntity extends ProjectileEntity {
 
         this.move(MovementType.SELF, this.getVelocity());
     }
-
-
-    private void controlEntity(Entity owner) {
-        Vector3f direction = getEntityLookVector(owner, .5f)
-                .subtract(getPos()).toVector3f();
-        direction.mul(0.15f);
-
-        if (direction.length() < 0.4f) {
-            this.setVelocity(0, 0, 0);
-        }
-
-
-        this.addVelocity(direction.x, direction.y, direction.z);
-    }
-
-
-
 
     @Override
     public void writeCustomDataToNbt(NbtCompound nbt) {
@@ -148,6 +134,24 @@ public class WaterJetEntity extends ProjectileEntity {
     public void setChild(WaterJetEntity child) {
         this.getDataTracker().set(CHILD_ID, child.getId());
     }
+
+    public float getStreamSize() {
+        return getDataTracker().get(STREAM_SIZE);
+    }
+
+    public void setStreamSize(float val) {
+        this.getDataTracker().set(STREAM_SIZE, val);
+    }
+
+    public float getRange() {
+        return getDataTracker().get(RANGE);
+    }
+
+    public void setRange(float val) {
+        this.getDataTracker().set(RANGE, val);
+    }
+
+
 
     protected void pushAway(Entity entity) {
         entity.pushAwayFrom(this);
