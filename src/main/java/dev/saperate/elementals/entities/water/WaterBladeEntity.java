@@ -89,7 +89,7 @@ public class WaterBladeEntity extends ProjectileEntity {
             startMiningAge = age;
         }
 
-        if (blockHit != null) {
+        if (blockHit != null && blockHit.getY() == getBlockY()) {
             if (getIsControlled()) {
                 float progress = calcBlockBreakingDelta(getWorld().getBlockState(blockHit),getWorld(),blockHit)
                         * (age - startMiningAge + 1);
