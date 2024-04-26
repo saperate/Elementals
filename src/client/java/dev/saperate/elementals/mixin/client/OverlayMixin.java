@@ -42,7 +42,7 @@ public class OverlayMixin {
         BlockPos blockPos = BlockPos.ofFloored((double) client.player.getX(), (double) client.player.getEyeY(), (double) client.player.getZ());
         float f = LightmapTextureManager.getBrightness(client.player.getWorld().getDimension(), client.player.getWorld().getLightLevel(blockPos));
         RenderSystem.enableBlend();
-        RenderSystem.setShaderColor(f, f, f * 4, 0.7f);
+        RenderSystem.setShaderColor(f, f, f * 4, 0.6f);
 
         float m = -client.player.getYaw() / 64.0f;
         float n = client.player.getPitch() / 64.0f;

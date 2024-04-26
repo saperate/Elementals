@@ -30,7 +30,10 @@ public class WaterElement extends Element {
                         },true),
 
                         new Upgrade("waterArc", new Upgrade[]{
-                                new Upgrade("waterJet")
+                                new Upgrade("waterJet"),
+                                new Upgrade("buythis", new Upgrade[]{
+                                        new Upgrade("waterBlade")
+                                }, true)
                         })
                 });
         addAbility(new AbilityWater1(),true);

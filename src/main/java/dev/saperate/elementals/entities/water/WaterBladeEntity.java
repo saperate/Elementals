@@ -2,8 +2,10 @@ package dev.saperate.elementals.entities.water;
 
 import dev.saperate.elementals.utils.SapsUtils;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
+import net.minecraft.block.OperatorBlock;
+import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.*;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
@@ -11,20 +13,20 @@ import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.entity.projectile.ProjectileUtil;
+import net.minecraft.item.ItemStack;
+import net.minecraft.loot.LootTable;
+import net.minecraft.loot.LootTables;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.particle.ParticleTypes;
-import net.minecraft.predicate.entity.EntityPredicates;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.TypeFilter;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import org.joml.Vector3f;
-
-import java.util.List;
 
 import static dev.saperate.elementals.utils.SapsUtils.getEntityLookVector;
 import static dev.saperate.elementals.utils.SapsUtils.summonParticles;
@@ -37,6 +39,9 @@ public class WaterBladeEntity extends ProjectileEntity {
             new Identifier("elementals", "water_blade"),
             FabricEntityTypeBuilder.<WaterBladeEntity>create(SpawnGroup.MISC, WaterBladeEntity::new)
                     .dimensions(EntityDimensions.fixed(0.6f, 0.125f)).build());
+
+    private BlockPos currMiningPos = null;
+    private int startMiningAge = -1;
 
 
     public WaterBladeEntity(EntityType<WaterBladeEntity> type, World world) {
@@ -68,7 +73,7 @@ public class WaterBladeEntity extends ProjectileEntity {
 
         BlockPos blockHit = SapsUtils.checkBlockCollision(this);
 
-        Entity owner = getOwner();
+        PlayerEntity owner = getOwner();
         if (owner == null) {
             this.setVelocity(this.getVelocity().add(0.0, -0.02, 0.0));
             this.move(MovementType.SELF, this.getVelocity());
@@ -78,14 +83,26 @@ public class WaterBladeEntity extends ProjectileEntity {
             return;
         }
 
+        if(currMiningPos == null || !currMiningPos.equals(blockHit)){
+            getWorld().setBlockBreakingInfo(getId(), currMiningPos,(0));
+            currMiningPos = blockHit;
+            startMiningAge = age;
+        }
 
         if (blockHit != null) {
             if (getIsControlled()) {
+                float progress = calcBlockBreakingDelta(getWorld().getBlockState(blockHit),getWorld(),blockHit)
+                        * (age - startMiningAge + 1);
+                getWorld().setBlockBreakingInfo(getId(), blockHit, (int) (progress * 10));
+
+                if(progress >= 1){
+                    getWorld().breakBlock(blockHit,true);
+                }
+
                 if (age % 5 == 0) {
                     summonParticles(this, random,
                             ParticleTypes.CLOUD,
                             0, 1, 0);
-                    getWorld().setBlockBreakingInfo(getId(), blockHit, 5);
                 }
             } else {
                 collidesWithGround();
@@ -96,7 +113,7 @@ public class WaterBladeEntity extends ProjectileEntity {
         HitResult hit = ProjectileUtil.getCollision(this, entity -> entity instanceof LivingEntity);
         if (hit.getType() == HitResult.Type.ENTITY) {
             LivingEntity entity = (LivingEntity) ((EntityHitResult) hit).getEntity();
-            entity.damage(this.getDamageSources().playerAttack((PlayerEntity) owner), 2);
+            entity.damage(this.getDamageSources().playerAttack(owner), 2);
             if (!getIsControlled()) {
                 entity.addVelocity(this.getVelocity().multiply(0.8f));
                 discard();
@@ -104,6 +121,15 @@ public class WaterBladeEntity extends ProjectileEntity {
         }
 
         moveEntity(owner);
+    }
+
+    public float calcBlockBreakingDelta(BlockState state, BlockView world, BlockPos pos) {
+        float f = state.getHardness(world, pos);
+        if (f == -1.0f) {
+            return 0.0f;
+        }
+        int i = false ? 30 : 100; //has upgrade or not
+        return 1 / f / (float)i;
     }
 
 
@@ -171,9 +197,9 @@ public class WaterBladeEntity extends ProjectileEntity {
         return this.getDataTracker().get(IS_CONTROLLED);
     }
 
-    public LivingEntity getOwner() {
+    public PlayerEntity getOwner() {
         Entity owner = this.getWorld().getEntityById(this.getDataTracker().get(OWNER_ID));
-        return (owner instanceof LivingEntity) ? (LivingEntity) owner : null;
+        return (owner instanceof LivingEntity) ? (PlayerEntity) owner : null;
     }
 
     public void setOwner(LivingEntity owner) {
@@ -182,5 +208,24 @@ public class WaterBladeEntity extends ProjectileEntity {
 
     protected void pushAway(Entity entity) {
         entity.pushAwayFrom(this);
+    }
+
+
+    public boolean tryBreakBlock(BlockPos pos) {
+        BlockState blockState = getWorld().getBlockState(pos);
+
+        BlockEntity blockEntity = getWorld().getBlockEntity(pos);
+        Block block = blockState.getBlock();
+        if (block instanceof OperatorBlock) {
+            getWorld().updateListeners(pos, blockState, blockState, Block.NOTIFY_ALL);
+            return false;
+        }
+        BlockState blockState2 = block.onBreak(getWorld(), pos, blockState, getOwner());
+        boolean bl = getWorld().removeBlock(pos, false);
+        if (bl) {
+            block.onBroken(getWorld(), pos, blockState2);
+        }
+
+        return true;
     }
 }

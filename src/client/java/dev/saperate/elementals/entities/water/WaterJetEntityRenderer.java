@@ -70,6 +70,8 @@ public class WaterJetEntityRenderer extends EntityRenderer<WaterJetEntity> {
 
         if (false) {//can use upgrade for more dmg
             matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees((float) Math.toDegrees(rot * 4)));
+        }else{
+            matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees((float) Math.toDegrees(rot)));
         }
 
         drawCube(vertexConsumer, matrices, light,

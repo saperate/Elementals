@@ -71,6 +71,7 @@ public class Elementals implements ModInitializer {
         LOGGER.error("/!\\ IMPORTANT /!\\\n" +
                 "\tDO NOT RELEASE, USE AT YOUR OWN RISK AS IT CAN CONTAIN BUGS AND CAN DESTROY YOUR WORLD \n" +
                 "\tIf this message is in a public release, contact saperate as it shouldn't be there.\n" +
+                "\t4/25/2024" +
                 "\t-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
 
         Registry.register(Registries.BANNER_PATTERN, "air", AIR_PATTERN);
