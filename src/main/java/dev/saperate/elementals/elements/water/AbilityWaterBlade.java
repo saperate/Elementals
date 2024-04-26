@@ -30,7 +30,8 @@ public class AbilityWaterBlade implements Ability {
     public void onLeftClick(Bender bender, boolean started) {
         WaterBladeEntity entity = (WaterBladeEntity) bender.abilityData;
         if(entity == null){
-            throw new RuntimeException("Elementals: Tried to launch entity while having none!");
+            onRemove(bender);
+            return;
         }
         onRemove(bender);
 
@@ -44,7 +45,6 @@ public class AbilityWaterBlade implements Ability {
 
     @Override
     public void onRightClick(Bender bender, boolean started) {
-        onRemove(bender);
     }
 
     @Override

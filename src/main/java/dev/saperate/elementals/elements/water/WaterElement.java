@@ -27,7 +27,7 @@ public class WaterElement extends Element {
                                 new Upgrade("suffocate", new Upgrade[]{
                                         new Upgrade("waterShield")
                                 })
-                        },true),
+                        }, true),
 
                         new Upgrade("waterArc", new Upgrade[]{
                                 new Upgrade("waterJet"),
@@ -36,20 +36,22 @@ public class WaterElement extends Element {
                                 }, true)
                         })
                 });
-        addAbility(new AbilityWater1(),true);
-        addAbility(new AbilityWaterCube(), false);
-        addAbility(new AbilityWater2(),true);
-        addAbility(new AbilityWaterArc(), false);
-        addAbility(new AbilityWaterHelmet(),false);
-        addAbility(new AbilityWaterShield(),false);
-        addAbility(new AbilitySuffocate(),false);
-        addAbility(new AbilityWaterJet(),false);
-        addAbility(new AbilityWaterArms(), false);
-        addAbility(new AbilityWaterBlade(), false);
+        addAbility(new AbilityWater1(), true);
+        addAbility(new AbilityWaterCube());
+        addAbility(new AbilityWater2(), true);
+        addAbility(new AbilityWaterArc());
+        addAbility(new AbilityWaterHelmet());
+        addAbility(new AbilityWaterShield());
+        addAbility(new AbilitySuffocate());
+        addAbility(new AbilityWaterJet());
+        addAbility(new AbilityWaterArms());
+        addAbility(new AbilityWaterBlade());
+        addAbility(new AbilityWaterBullet());
     }
 
     public static Vector3f canBend(PlayerEntity player, boolean consumeWater) {
-        BlockHitResult hit = (BlockHitResult) player.raycast(5, 0, true);
+        BlockHitResult hit = (BlockHitResult) player.raycast(5, 1, true);
+
         BlockState blockState = player.getEntityWorld().getBlockState(hit.getBlockPos());
 
 
@@ -65,7 +67,7 @@ public class WaterElement extends Element {
         return null;
     }
 
-    public static Element get(){
+    public static Element get() {
         return elementList.get(1);
     }
 }

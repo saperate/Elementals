@@ -39,14 +39,14 @@ public class FireElement extends Element {
                 })
         });
         addAbility(new AbilityFire1(),true);
-        addAbility(new AbilityFireIgnite(), false);
-        addAbility(new AbilityFireWall(), false);
-        addAbility(new AbilityFireSpikes(), false);
-        addAbility(new AbilityFire2(),true);
-        addAbility(new AbilityFireArc(),false);
-        addAbility(new AbilityFireBall(),false);
-        addAbility(new AbilityFireShield(),false);
-        addAbility(new AbilityFlameThrower(),false);
+        addAbility(new AbilityFireIgnite());
+        addAbility(new AbilityFireWall());
+        addAbility(new AbilityFireSpikes());
+        addAbility(new AbilityFire2(), true);
+        addAbility(new AbilityFireArc());
+        addAbility(new AbilityFireBall());
+        addAbility(new AbilityFireShield());
+        addAbility(new AbilityFlameThrower());
         addAbility(new AbilityFire3(), true);
     }
 

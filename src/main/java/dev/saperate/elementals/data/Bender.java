@@ -85,6 +85,8 @@ public class Bender {
     }
 
     public void setElement(Element element, boolean sync) {
+        castTime = null;
+        currAbility = null;
         if (element == null) {
             this.element = Element.elementList.get(0);
         } else {

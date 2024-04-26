@@ -34,6 +34,10 @@ public abstract class Element{
         }
     }
 
+    public void addAbility(Ability a){
+        addAbility(a,false);
+    }
+
     public Ability getBindableAbility(int index){
         if(index == -1 || index >= bindableAbilities.size()){
             return null;

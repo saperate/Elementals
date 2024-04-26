@@ -30,6 +30,8 @@ public abstract class PlayerEntityMixin {
         if(!player.getWorld().isClient){
             if(Bender.getBender(player) == null){
                 new Bender(player, null);
+            }else{
+                Bender.getBender(player).player = player;
             }
         }
     }

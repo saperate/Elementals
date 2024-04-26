@@ -48,6 +48,7 @@ public class StateDataSaverAndLoader extends PersistentState {
 
         NbtCompound playersNbt = tag.getCompound("players");
         playersNbt.getKeys().forEach(key -> {
+
             PlayerData playerData = new PlayerData();
             NbtCompound nbt = playersNbt.getCompound(key);
 

@@ -4,11 +4,15 @@ import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.elements.Ability;
 import dev.saperate.elementals.entities.fire.FireShieldEntity;
+import dev.saperate.elementals.entities.water.WaterBulletEntity;
 import dev.saperate.elementals.entities.water.WaterShieldEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.math.Vec3d;
 
 import static dev.saperate.elementals.effects.StationaryStatusEffect.STATIONARY_EFFECT;
+import static dev.saperate.elementals.utils.SapsUtils.extractBits;
+import static dev.saperate.elementals.utils.SapsUtils.getEntityLookVector;
 
 public class AbilityWaterShield implements Ability {
     @Override
@@ -25,6 +29,7 @@ public class AbilityWaterShield implements Ability {
 
     @Override
     public void onLeftClick(Bender bender, boolean started) {
+
 
     }
 

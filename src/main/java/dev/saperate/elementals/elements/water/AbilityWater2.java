@@ -10,7 +10,6 @@ public class AbilityWater2 implements Ability {
     public void onCall(Bender bender, long deltaT) {
         PlayerData playerData = PlayerData.get(bender.player);
 
-
         if (deltaT >= 1000 && playerData.canUseUpgrade("waterJet")) {
             WaterElement.get().abilityList.get(7).onCall(bender, deltaT);
             return;
@@ -20,7 +19,8 @@ public class AbilityWater2 implements Ability {
             if (playerData.canUseUpgrade("waterBlade")) {
                 WaterElement.get().abilityList.get(9).onCall(bender, deltaT);
                 return;
-            } else if (playerData.canUseUpgrade("")) {
+            } else if (playerData.canUseUpgrade("waterCannon")) {
+                WaterElement.get().abilityList.get(10).onCall(bender, deltaT);
                 return;
             }
         }

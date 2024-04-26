@@ -90,6 +90,7 @@ public class WaterShieldEntity extends Entity {
                 ProjectileEntity::isAlive);
 
         for (ProjectileEntity e : projectiles){
+            System.out.println("removbing entity ");
             Vec3d direction = e.getPos().add(0,1.7f,0).subtract(getPos()).multiply(0.1f);
             e.setVelocity(getVelocity().add(direction));
         }

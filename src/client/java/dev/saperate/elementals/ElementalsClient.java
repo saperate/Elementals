@@ -25,6 +25,7 @@ import static dev.saperate.elementals.entities.fire.FireBlockEntity.FIREBLOCK;
 import static dev.saperate.elementals.entities.fire.FireShieldEntity.FIRESHIELD;
 import static dev.saperate.elementals.entities.water.WaterArmEntity.WATERARM;
 import static dev.saperate.elementals.entities.water.WaterBladeEntity.WATERBLADE;
+import static dev.saperate.elementals.entities.water.WaterBulletEntity.WATERBULLET;
 import static dev.saperate.elementals.entities.water.WaterCubeEntity.WATERCUBE;
 import static dev.saperate.elementals.entities.water.WaterArcEntity.WATERARC;
 import static dev.saperate.elementals.entities.water.WaterHelmetEntity.WATERHELMET;
@@ -48,6 +49,7 @@ public class ElementalsClient implements ClientModInitializer {
 		EntityRendererRegistry.register(WATERJET, WaterJetEntityRenderer::new);
 		EntityRendererRegistry.register(WATERARM, WaterArmEntityRenderer::new);
 		EntityRendererRegistry.register(WATERBLADE, WaterBladeEntityRenderer::new);
+		EntityRendererRegistry.register(WATERBULLET, WaterBulletEntityRenderer::new);
 
 		EntityRendererRegistry.register(FIREBLOCK, FireBlockEntityRenderer::new);
 		EntityRendererRegistry.register(FIREARC, FireArcEntityRenderer::new);
