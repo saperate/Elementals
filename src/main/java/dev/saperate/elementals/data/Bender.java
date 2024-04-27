@@ -20,7 +20,7 @@ public class Bender {
     public static Map<UUID, Bender> benders = new HashMap<>();
     public PlayerEntity player;
     private Element element;
-    public Ability[] boundAbilities = new Ability[3];
+    public Ability[] boundAbilities = new Ability[4];
     public Long castTime;
     @Nullable
     public Ability currAbility;
@@ -39,7 +39,7 @@ public class Bender {
     }
 
     public void bindAbility(Ability ability, int index) {
-        if (element.contains(ability) && index >= 0 && index <= 3) {
+        if (element.contains(ability) && index >= 0 && index <= 4) {
             boundAbilities[index] = ability;
             if (!player.getWorld().isClient) {
                 StateDataSaverAndLoader.getServerState(player.getServer()).players.get(player.getUuid()).boundAbilities = boundAbilities;

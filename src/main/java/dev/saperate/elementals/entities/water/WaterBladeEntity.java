@@ -91,8 +91,10 @@ public class WaterBladeEntity extends ProjectileEntity {
             startMiningAge = age;
         }
 
-        if (blockHit != null && blockHit.getY() == getBlockY()) {
-            if (getIsControlled()) {
+        if (blockHit != null) {
+            if (!getIsControlled()) {
+                collidesWithGround();
+            } else if(blockHit.getY() == getBlockY()){
                 float progress = calcBlockBreakingDelta(getWorld().getBlockState(blockHit),getWorld(),blockHit)
                         * (age - startMiningAge + 1);
                 getWorld().setBlockBreakingInfo(getId(), blockHit, (int) (progress * 10));
@@ -106,8 +108,6 @@ public class WaterBladeEntity extends ProjectileEntity {
                             ParticleTypes.CLOUD,
                             0, 1, 0);
                 }
-            } else {
-                collidesWithGround();
             }
         }
 

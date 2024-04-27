@@ -9,6 +9,7 @@ import dev.saperate.elementals.entities.water.*;
 import dev.saperate.elementals.keys.abilities.KeyAbility1;
 import dev.saperate.elementals.keys.abilities.KeyAbility2;
 import dev.saperate.elementals.keys.abilities.KeyAbility3;
+import dev.saperate.elementals.keys.abilities.KeyAbility4;
 import dev.saperate.elementals.packets.SyncBendingElementS2CPacket;
 import dev.saperate.elementals.packets.SyncCurrAbilityS2CPacket;
 import net.fabricmc.api.ClientModInitializer;
@@ -28,6 +29,7 @@ import static dev.saperate.elementals.entities.water.WaterBladeEntity.WATERBLADE
 import static dev.saperate.elementals.entities.water.WaterBulletEntity.WATERBULLET;
 import static dev.saperate.elementals.entities.water.WaterCubeEntity.WATERCUBE;
 import static dev.saperate.elementals.entities.water.WaterArcEntity.WATERARC;
+import static dev.saperate.elementals.entities.water.WaterHealingEntity.WATERHEALING;
 import static dev.saperate.elementals.entities.water.WaterHelmetEntity.WATERHELMET;
 import static dev.saperate.elementals.entities.water.WaterJetEntity.WATERJET;
 import static dev.saperate.elementals.entities.water.WaterShieldEntity.WATERSHIELD;
@@ -50,14 +52,17 @@ public class ElementalsClient implements ClientModInitializer {
 		EntityRendererRegistry.register(WATERARM, WaterArmEntityRenderer::new);
 		EntityRendererRegistry.register(WATERBLADE, WaterBladeEntityRenderer::new);
 		EntityRendererRegistry.register(WATERBULLET, WaterBulletEntityRenderer::new);
+		EntityRendererRegistry.register(WATERHEALING, WaterHealingEntityRenderer::new);
 
 		EntityRendererRegistry.register(FIREBLOCK, FireBlockEntityRenderer::new);
 		EntityRendererRegistry.register(FIREARC, FireArcEntityRenderer::new);
 		EntityRendererRegistry.register(FIREBALL, FireBallEntityRenderer::new);
 		EntityRendererRegistry.register(FIRESHIELD, FireShieldEntityRenderer::new);
+
 		new KeyAbility1();
 		new KeyAbility2();
 		new KeyAbility3();
+		new KeyAbility4();
 
 
 		EntityModelLayerRegistry.registerModelLayer(MODEL_WATER_BLADE_LAYER, WaterBladeModel::getTexturedModelData);

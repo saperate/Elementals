@@ -74,7 +74,7 @@ public class WaterJetEntity extends ProjectileEntity {
         }
 
         if (getChild() != null) {
-            setPosition(getEntityLookVector(owner, 0.5f));
+            setPosition(getEntityLookVector(owner, 0.5f).subtract(0,0.5f,0));
         } else {
             if(getWorld().isClient){
                 summonParticles(this, random, ParticleTypes.SPLASH, 10, 20);

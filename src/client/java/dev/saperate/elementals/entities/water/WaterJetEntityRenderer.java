@@ -42,7 +42,7 @@ public class WaterJetEntityRenderer extends EntityRenderer<WaterJetEntity> {
         if (child == null || owner == null) {
             return;
         }
-        entity.setPosition(getEntityLookVector(owner, 0.5f));
+        entity.setPosition(getEntityLookVector(owner, 0.5f).subtract(0,0.5f,0));
 
         float streamSize = entity.getStreamSize();
         matrices.push();

@@ -49,11 +49,16 @@ public class AbilityWater3 implements Ability {
                 0, 0.1f, 0,
                 0.1f, 4,
                 0, -0.5f, 0, 0);
+
+        if(player.isSneaking() && bender.abilityData.equals(-1)){
+            onRemove(bender);
+        }
+
         //TODO add a system that if is not touching water search inventory for water containers
-        if (!bender.player.isOnGround() && bender.abilityData.equals(-1) && player.isTouchingWaterOrRain()) {
-            if (bender.player.isSneaking()) {
+        if (!bender.player.isOnGround() && bender.abilityData.equals(-1)){
+            if (bender.player.isSneaking()) {//TODO check if there is water below by raycasting
                 //water tower move
-            } else {
+            } else if(player.isTouchingWaterOrRain()){
                 bender.abilityData = 1;
 
                 Vector3f velocity = getEntityLookVector(player, 1)

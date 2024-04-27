@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PlayerData {
-    public Ability[] boundAbilities = new Ability[3];
+    public Ability[] boundAbilities = new Ability[4];
     public Element element = Element.elementList.get(0);
     public List<Upgrade> boughtUpgrades = new ArrayList<>();
     public List<Upgrade> activeUpgrades = new ArrayList<>();

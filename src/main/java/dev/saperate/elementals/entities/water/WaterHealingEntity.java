@@ -25,36 +25,33 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import org.joml.Vector3f;
 
+import java.util.List;
+
 import static dev.saperate.elementals.utils.SapsUtils.getEntityLookVector;
 import static dev.saperate.elementals.utils.SapsUtils.summonParticles;
 
-public class WaterBulletEntity extends ProjectileEntity {
-    private static final TrackedData<Integer> OWNER_ID = DataTracker.registerData(WaterBulletEntity.class, TrackedDataHandlerRegistry.INTEGER);
-    private static final TrackedData<Boolean> IS_CONTROLLED = DataTracker.registerData(WaterBulletEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
-    private static final TrackedData<Integer> ARRAY_ID = DataTracker.registerData(WaterBulletEntity.class, TrackedDataHandlerRegistry.INTEGER);
-    private static final TrackedData<Integer> ARRAY_SIZE = DataTracker.registerData(WaterBulletEntity.class, TrackedDataHandlerRegistry.INTEGER);
-    public static final EntityType<WaterBulletEntity> WATERBULLET = Registry.register(
+public class WaterHealingEntity extends ProjectileEntity {
+    private static final TrackedData<Integer> OWNER_ID = DataTracker.registerData(WaterHealingEntity.class, TrackedDataHandlerRegistry.INTEGER);
+    private static final TrackedData<Boolean> IS_CONTROLLED = DataTracker.registerData(WaterHealingEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
+    public static final EntityType<WaterHealingEntity> WATERHEALING = Registry.register(
             Registries.ENTITY_TYPE,
-            new Identifier("elementals", "water_bullet"),
-            FabricEntityTypeBuilder.<WaterBulletEntity>create(SpawnGroup.MISC, WaterBulletEntity::new)
-                    .dimensions(EntityDimensions.fixed(0.25f, 0.25f)).build());
-
-    public Vector3f lastCenterPos;
+            new Identifier("elementals", "water_healing"),
+            FabricEntityTypeBuilder.<WaterHealingEntity>create(SpawnGroup.MISC, WaterHealingEntity::new)
+                    .dimensions(EntityDimensions.fixed(0.5f, 0.5f)).build());
 
 
-
-    public WaterBulletEntity(EntityType<WaterBulletEntity> type, World world) {
+    public WaterHealingEntity(EntityType<WaterHealingEntity> type, World world) {
         super(type, world);
     }
 
-    public WaterBulletEntity(World world, LivingEntity owner) {
-        super(WATERBULLET, world);
+    public WaterHealingEntity(World world, LivingEntity owner) {
+        super(WATERHEALING, world);
         setOwner(owner);
         setPos(owner.getX(), owner.getY(), owner.getZ());
     }
 
-    public WaterBulletEntity(World world, LivingEntity owner, double x, double y, double z) {
-        super(WATERBULLET, world);
+    public WaterHealingEntity(World world, LivingEntity owner, double x, double y, double z) {
+        super(WATERHEALING, world);
         setOwner(owner);
         setPos(x, y, z);
         setControlled(true);
@@ -64,8 +61,6 @@ public class WaterBulletEntity extends ProjectileEntity {
     protected void initDataTracker() {
         this.getDataTracker().startTracking(OWNER_ID, 0);
         this.getDataTracker().startTracking(IS_CONTROLLED, false);
-        this.getDataTracker().startTracking(ARRAY_ID, 0);
-        this.getDataTracker().startTracking(ARRAY_SIZE, 1);
     }
 
     @Override
@@ -76,7 +71,7 @@ public class WaterBulletEntity extends ProjectileEntity {
 
         PlayerEntity owner = getOwner();
         if (owner == null) {
-            this.setVelocity(this.getVelocity().add(0.0, -0.02, 0.0));
+            this.setVelocity(this.getVelocity().add(0.0, -0.03, 0.0));
             this.move(MovementType.SELF, this.getVelocity());
             if (blockHit != null) {
                 collidesWithGround();
@@ -84,26 +79,38 @@ public class WaterBulletEntity extends ProjectileEntity {
             return;
         }
 
-
-        if (blockHit != null && !getIsControlled()){
+        if (blockHit != null && !getIsControlled()) {
             collidesWithGround();
-            return;
         }
 
-
+        List<LivingEntity> hits = getWorld().getEntitiesByClass(LivingEntity.class,
+                getBoundingBox().expand(0.25f),
+                LivingEntity::isAlive);
         HitResult hit = ProjectileUtil.getCollision(this, entity -> entity instanceof LivingEntity);
+
         if (hit.getType() == HitResult.Type.ENTITY) {
             LivingEntity entity = (LivingEntity) ((EntityHitResult) hit).getEntity();
-            entity.damage(this.getDamageSources().playerAttack(owner), 2);
-            if (!getIsControlled()) {
-                entity.addVelocity(this.getVelocity().multiply(0.8f));
-                discard();
-            }
+            onHitEntity(entity);
         }
+
+        for (LivingEntity e : hits) {
+            onHitEntity(e);
+        }
+
 
         moveEntity(owner);
     }
 
+    private void onHitEntity(LivingEntity entity) {
+        if (age % 20 == 0) {
+            entity.setHealth(entity.getHealth() + 2);
+        }
+
+        if (!getIsControlled()) {
+            entity.addVelocity(this.getVelocity().multiply(0.8f));
+            discard();
+        }
+    }
 
     private void moveEntity(Entity owner) {
 
@@ -120,27 +127,13 @@ public class WaterBulletEntity extends ProjectileEntity {
     }
 
     private void controlEntity(Entity owner) {
-        Vector3f direction;
-        if(!owner.isSneaking() || lastCenterPos == null) {
-            direction = getEntityLookVector(owner, 3)
-                    .subtract(getPos()).toVector3f();
-            lastCenterPos = direction;
-        }else{
-            direction = lastCenterPos;
+        float distance = 3;
+        if (owner.isSneaking()) {
+            distance = 6;
         }
-
-        double angle =  ((2 * Math.PI) / getArraySize()) * getArrayId()  + Math.toRadians(age * 2);
-        double yaw = Math.toRadians(owner.getYaw() + 90);
-        double pitch = Math.toRadians(owner.getPitch());
-
-        double dx = -Math.sin(yaw);
-        double dy = Math.cos(pitch);
-        double dz = Math.cos(yaw);
-
-
-
-        direction = direction.add((float) (Math.cos(angle) * dx), (float) (Math.sin(angle) * dy), (float) (Math.cos(angle) * dz));
-
+        Vector3f direction = getEntityLookVector(owner, distance)
+                .subtract(0, 0.25f, 0)
+                .subtract(getPos()).toVector3f();
         direction.mul(0.25f);
 
         if (direction.length() < 0.6f) {
@@ -158,7 +151,7 @@ public class WaterBulletEntity extends ProjectileEntity {
 
     @Override
     public void onRemoved() {
-        summonParticles(this, random, ParticleTypes.SPLASH, 10, 100);
+        summonParticles(this, random, ParticleTypes.SPLASH, 5, 100);
     }
 
     @Override
@@ -191,25 +184,6 @@ public class WaterBulletEntity extends ProjectileEntity {
 
     public void setOwner(LivingEntity owner) {
         this.getDataTracker().set(OWNER_ID, owner.getId());
-    }
-
-    public void setArrayId(int val) {
-        this.getDataTracker().set(ARRAY_ID, val);
-    }
-
-    public int getArrayId() {
-        return this.getDataTracker().get(ARRAY_ID);
-    }
-
-    /**
-     * @param val The amount of entities in the same batch + 1
-     */
-    public void setArraySize(int val) {
-        this.getDataTracker().set(ARRAY_SIZE, val);
-    }
-
-    public int getArraySize() {
-        return this.getDataTracker().get(ARRAY_SIZE);
     }
 
 }

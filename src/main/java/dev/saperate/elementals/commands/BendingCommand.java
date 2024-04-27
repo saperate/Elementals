@@ -29,7 +29,7 @@ public class BendingCommand {
                 .then(CommandManager.literal("set").then(CommandManager.argument("element", ElementArgumentType.element()).executes(BendingCommand::setSelfElement)))
                 .then(CommandManager.literal("bind")
                         .then(CommandManager.argument("Ability Index", IntegerArgumentType.integer(1))
-                                .then(CommandManager.argument("Bind Index", IntegerArgumentType.integer(1, 3))
+                                .then(CommandManager.argument("Bind Index", IntegerArgumentType.integer(1, 4))
                                         .executes(BendingCommand::bindAbility))))
                 .then(CommandManager.literal("upgrade")
                         .then(CommandManager.literal("list").executes(BendingCommand::listUpgrades))
@@ -70,8 +70,8 @@ public class BendingCommand {
 
         bender.setElement(newElement, true);
 
-        bender.boundAbilities = new Ability[3];
-        plrData.boundAbilities = new Ability[3];
+        bender.boundAbilities = new Ability[4];
+        plrData.boundAbilities = new Ability[4];
 
 
         //TODO Very temporary stuff, will get removed once I get a GUI working
@@ -84,6 +84,9 @@ public class BendingCommand {
         }
         if (abilitySize >= 3) {
             bender.bindAbility(newElement.getBindableAbility(2), 2);
+        }
+        if (abilitySize >= 4) {
+            bender.bindAbility(newElement.getBindableAbility(3), 3);
         }
 
 
@@ -100,7 +103,7 @@ public class BendingCommand {
         int abilityIndex = IntegerArgumentType.getInteger(context, "Ability Index");
         int bindIndex = IntegerArgumentType.getInteger(context, "Bind Index");
 
-        if (abilityIndex <= element.abilityList.size()) {
+        if (abilityIndex <= element.bindableAbilities.size()) {
             bender.bindAbility(element.getBindableAbility(abilityIndex - 1), bindIndex - 1);
             context.getSource().sendFeedback((() -> Text.of(
                     "Ability now bound to: " + bindIndex)
