@@ -27,17 +27,12 @@ public class AbilityWaterTower implements Ability {
     public void onCall(Bender bender, long deltaT) {
         PlayerEntity player = bender.player;
 
+        WaterTowerEntity entity = new WaterTowerEntity(player.getWorld(), player);
+        bender.abilityData = entity;
+        entity.setMaxTowerHeight(10);
 
-        if (true) {//If below us is water or we are touching water
-            WaterTowerEntity entity = new WaterTowerEntity(player.getWorld(), player);
-            bender.abilityData = entity;
-            entity.setMaxTowerHeight(10);
-
-            player.getWorld().spawnEntity(entity);
-            bender.setCurrAbility(this);
-        } else {
-            bender.setCurrAbility(null);
-        }
+        player.getWorld().spawnEntity(entity);
+        bender.setCurrAbility(this);
     }
 
     @Override
