@@ -3,14 +3,23 @@ package dev.saperate.elementals.elements.water;
 import dev.saperate.elementals.elements.Element;
 import dev.saperate.elementals.elements.Upgrade;
 import dev.saperate.elementals.elements.fire.AbilityFire1;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.state.property.IntProperty;
+import net.minecraft.state.property.Properties;
+import net.minecraft.state.property.Property;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import org.joml.Vector3f;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Objects;
 
 import static dev.saperate.elementals.utils.SapsUtils.getEntityLookVector;
 
@@ -66,7 +75,7 @@ public class WaterElement extends Element {
         BlockState blockState = player.getEntityWorld().getBlockState(hit.getBlockPos());
 
 
-        if (hit.getType() == HitResult.Type.BLOCK && blockState.getBlock().equals(Blocks.WATER)) {
+        if (hit.getType() == HitResult.Type.BLOCK && isBlockBendable(hit.getBlockPos(),player.getWorld(),true)) {
             if (blockState.get(IntProperty.of("level", 0, 15)).equals(0)) {
                 Vector3f pos = getEntityLookVector(player, 3).toVector3f();
                 if(consumeWater){
@@ -76,6 +85,26 @@ public class WaterElement extends Element {
             }
         }
         return null;
+    }
+
+    public static boolean isBlockBendable(BlockPos pos, World world, boolean requireFullBlock){
+        BlockState bState = world.getBlockState(pos);
+        Block block = bState.getBlock();
+
+
+        if(block.equals(Blocks.WATER)
+                || block.equals(Blocks.ICE)
+                || block.equals(Blocks.PACKED_ICE)
+                || block.equals(Blocks.BLUE_ICE)
+                || block.equals(Blocks.POWDER_SNOW)
+                || block.equals(Blocks.WATER_CAULDRON)
+                || block.equals(Blocks.POWDER_SNOW_CAULDRON)
+                || block.equals(Blocks.SNOW)
+                || block.equals(Blocks.SNOW_BLOCK)){
+            return true;
+        }
+
+        return  (bState.contains(Properties.WATERLOGGED) && bState.get(Properties.WATERLOGGED) && !requireFullBlock);
     }
 
     public static Element get() {

@@ -21,6 +21,7 @@ import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 
 import java.util.List;
@@ -29,12 +30,15 @@ import static dev.saperate.elementals.utils.SapsUtils.getEntityLookVector;
 import static dev.saperate.elementals.utils.SapsUtils.summonParticles;
 
 public class WaterTowerEntity extends ProjectileEntity {
+    public static final int heightLimit = 10;
+    private static final TrackedData<Float> TOWER_HEIGHT = DataTracker.registerData(WaterTowerEntity.class, TrackedDataHandlerRegistry.FLOAT);
+    private static final TrackedData<Float> MAX_TOWER_HEIGHT = DataTracker.registerData(WaterTowerEntity.class, TrackedDataHandlerRegistry.FLOAT);
     private static final TrackedData<Integer> OWNER_ID = DataTracker.registerData(WaterTowerEntity.class, TrackedDataHandlerRegistry.INTEGER);
     public static final EntityType<WaterTowerEntity> WATERTOWER = Registry.register(
             Registries.ENTITY_TYPE,
             new Identifier("elementals", "water_tower"),
             FabricEntityTypeBuilder.<WaterTowerEntity>create(SpawnGroup.MISC, WaterTowerEntity::new)
-                    .dimensions(EntityDimensions.fixed(1, 1)).build());
+                    .dimensions(EntityDimensions.fixed(1, heightLimit)).build());
 
 
     public WaterTowerEntity(EntityType<WaterTowerEntity> type, World world) {
@@ -51,73 +55,73 @@ public class WaterTowerEntity extends ProjectileEntity {
         super(WATERTOWER, world);
         setOwner(owner);
         setPos(x, y, z);
-        setControlled(true);
     }
 
     @Override
     protected void initDataTracker() {
         this.getDataTracker().startTracking(OWNER_ID, 0);
+        this.getDataTracker().startTracking(TOWER_HEIGHT, 1f);
+        this.getDataTracker().startTracking(MAX_TOWER_HEIGHT, 1f);
     }
 
     @Override
     public void tick() {
         super.tick();
-        Entity owner = getOwner();
-        if (owner == null) {
-            this.setVelocity(this.getVelocity().add(0.0, -0.04, 0.0));
-            this.move(MovementType.SELF, this.getVelocity());
-            collidesWithGround();
+        PlayerEntity owner = getOwner();
+        if (owner == null && !getWorld().isClient) {
+            discard();
             return;
         }
 
+        updatePosition(owner);
 
-        moveEntity(owner);
+        summonParticles(owner, random, ParticleTypes.SPLASH, 0, 2, 0);
+        summonParticles(owner, random, ParticleTypes.BUBBLE, 0, 2, 0);
+
+        owner.getAbilities().allowFlying = true;
+        owner.getAbilities().flying = true;
+        owner.getAbilities().setFlySpeed(0.02f);
+
+
+
+        this.getWorld().getEntitiesByType(TypeFilter.instanceOf(PlayerEntity.class), this.getBoundingBox(), EntityPredicates.canBePushedBy(this)).forEach(this::pushAway);
     }
 
-    private void moveEntity(Entity owner) {
-
-
-        //gravity
-        this.setVelocity(this.getVelocity().add(0.0, -0.04, 0.0));
-
-        if (getIsControlled()) {
-
-            controlEntity(owner);
-        } else if (!getWorld().isClient) {
-            collidesWithGround();
+    public void updatePosition(@Nullable Entity owner){
+        if(owner == null){
+            return;
         }
-
-        this.move(MovementType.SELF, this.getVelocity());
-    }
-
-    private void controlEntity(Entity owner) {
-        Vector3f direction = getEntityLookVector(owner, 3)
-                .subtract(0, 0.5f, 0)
-                .subtract(getPos()).toVector3f();
-        direction.mul(0.1f);
-
-        if (direction.length() < 0.4f) {
-            this.setVelocity(0, 0, 0);
-        }
-
-
-        this.addVelocity(direction.x, direction.y, direction.z);
-    }
-
-    public void collidesWithGround() {
-        BlockPos blockDown = getBlockPos().down();
-        BlockState blockState = getWorld().getBlockState(blockDown);
-
-        if (!blockState.isAir() && getY() - getBlockPos().getY() == 0) {
-            getWorld().setBlockState(getBlockPos(), Blocks.WATER.getDefaultState());
-            discard();
+        setTowerHeight((float) Math.max(0, owner.getY() - getY()));
+        setPosition(owner.getPos().multiply(1,0,1).add(0,getY(),0));
+        if(owner.getY() >= getY() + getMaxTowerHeight() - 0.5f){
+            owner.setPosition(owner.getPos().multiply(1,0,1).add(0, getY() + getMaxTowerHeight() - 0.5f, 0));
         }
     }
 
     @Override
-    public void onRemoved() {
-        summonParticles(this, random, ParticleTypes.SPLASH, 10, 100);
+    public void remove(RemovalReason reason) {
+        super.remove(reason);
+        resetOwner();
     }
+
+    @Override
+    public void onRemoved() {
+        super.onRemoved();
+        resetOwner();
+    }
+
+    public void resetOwner(){
+        //TODO add values that store what it was before so that we dont mess things up
+        PlayerEntity owner = getOwner();
+        if (owner == null) {
+            return;
+        }
+        owner.getAbilities().allowFlying = false;
+        owner.getAbilities().flying = false;
+        owner.getAbilities().setFlySpeed(0.05f);
+    }
+
+
 
     @Override
     public void writeCustomDataToNbt(NbtCompound nbt) {
@@ -134,22 +138,33 @@ public class WaterTowerEntity extends ProjectileEntity {
         this.getDataTracker().set(OWNER_ID, ownerId);
     }
 
-    public void setControlled(boolean val) {
-        this.getDataTracker().set(IS_CONTROLLED, val);
-    }
 
-    public boolean getIsControlled() {
-        return this.getDataTracker().get(IS_CONTROLLED);
-    }
 
-    public LivingEntity getOwner() {
+    public PlayerEntity getOwner() {
         Entity owner = this.getWorld().getEntityById(this.getDataTracker().get(OWNER_ID));
-        return (owner instanceof LivingEntity) ? (LivingEntity) owner : null;
+        return (owner instanceof PlayerEntity) ? (PlayerEntity) owner : null;
     }
 
     public void setOwner(LivingEntity owner) {
         this.getDataTracker().set(OWNER_ID, owner.getId());
     }
+
+    public void setTowerHeight(float val){
+        this.getDataTracker().set(TOWER_HEIGHT,val);
+    }
+
+    public float getTowerHeight(){
+        return this.getDataTracker().get(TOWER_HEIGHT);
+    }
+
+    public void setMaxTowerHeight(float val){
+        this.getDataTracker().set(MAX_TOWER_HEIGHT,val);
+    }
+
+    public float getMaxTowerHeight(){
+        return this.getDataTracker().get(MAX_TOWER_HEIGHT);
+    }
+
 
     protected void pushAway(Entity entity) {
         entity.pushAwayFrom(this);

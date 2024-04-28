@@ -21,6 +21,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.random.Random;
+import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
 import net.minecraft.world.event.GameEvent;
 import net.minecraft.world.explosion.Explosion;
@@ -47,7 +48,7 @@ public class SapsUtils {
                 for (int k = blockPos.getZ(); k <= blockPos2.getZ(); ++k) {
                     mutable.set(i, j, k);
                     BlockState blockState = entity.getWorld().getBlockState(mutable);
-                    if(blockState.isAir()){
+                    if (blockState.isAir()) {
                         continue;
                     }
 
@@ -68,10 +69,10 @@ public class SapsUtils {
         //Get the closest hit from all possible hits
         BlockPos bestHit = possibleHits.isEmpty() ? null : possibleHits.get(0);
         double bestDistance = possibleHits.isEmpty() ? -1 : entity.squaredDistanceTo(bestHit.toCenterPos());
-        for( BlockPos hit : possibleHits){
+        for (BlockPos hit : possibleHits) {
             double dist = entity.squaredDistanceTo(bestHit.toCenterPos());
 
-            if(dist < bestDistance){
+            if (dist < bestDistance) {
                 bestHit = hit;
                 bestDistance = dist;
             }
@@ -85,7 +86,7 @@ public class SapsUtils {
     }
 
     /**
-     * Hacky way to get which blocks can be
+     * Hacky way to get which blocks can be affected
      */
     public static void getAffectedBlocks(World world, Entity entity, double x, double y, double z, float power) {
         ObjectArrayList<BlockPos> affectedBlocks = new ObjectArrayList<>();
@@ -147,7 +148,7 @@ public class SapsUtils {
     }
 
     public static void summonParticles(Entity entity, Random rnd, ParticleEffect type, float velocity, int density) {
-        summonParticles(entity,rnd,type,velocity,density,1);
+        summonParticles(entity, rnd, type, velocity, density, 1);
     }
 
 
@@ -201,39 +202,46 @@ public class SapsUtils {
     }
 
     public static HitResult raycastEntity(Entity origin, double maxDistance, Predicate<Entity> predicate) {
-            Vec3d cameraPos = origin.getCameraPosVec(1.0f);
-            Vec3d rot = origin.getRotationVec(1.0f);
-            Vec3d rayCastContext = cameraPos.add(rot.x * maxDistance, rot.y * maxDistance, rot.z * maxDistance);
-            Box box = origin.getBoundingBox().stretch(rot.multiply(maxDistance)).expand(1d, 1d, 1d);
-            return ProjectileUtil.raycast(origin, origin.getEyePos(), rayCastContext, box, predicate.and(entity -> entity instanceof LivingEntity && !entity.isSpectator() && entity.canHit()), maxDistance * maxDistance);
+        Vec3d cameraPos = origin.getCameraPosVec(1.0f);
+        Vec3d rot = origin.getRotationVec(1.0f);
+        Vec3d context = cameraPos.add(rot.x * maxDistance, rot.y * maxDistance, rot.z * maxDistance);
+        Box box = origin.getBoundingBox().stretch(rot.multiply(maxDistance)).expand(1d, 1d, 1d);
+        return ProjectileUtil.raycast(origin, origin.getEyePos(), context, box, predicate.and(entity -> entity instanceof LivingEntity && !entity.isSpectator() && entity.canHit()), maxDistance * maxDistance);
+    }
+
+    public static BlockHitResult raycastBlockCustomRotation(Entity origin, float maxDistance, boolean includeFluids, Vec3d rotation) {
+        Vec3d cameraPos = origin.getCameraPosVec(1);
+        Vec3d context = cameraPos.add(rotation.x * maxDistance, rotation.y * maxDistance, rotation.z * maxDistance);
+        return origin.getWorld().raycast(new RaycastContext(cameraPos, context, RaycastContext.ShapeType.OUTLINE, includeFluids ? RaycastContext.FluidHandling.ANY : RaycastContext.FluidHandling.NONE, origin));
+
     }
 
     //TODO maybe use a discard block list so that if we hit that and we got both and entity hit and a block hit we only keep the entity hit
     public static HitResult raycastFull(Entity origin, double maxDistance, boolean includeFluids) {
-       return raycastFull(origin,maxDistance,includeFluids, Entity::isAlive);
+        return raycastFull(origin, maxDistance, includeFluids, Entity::isAlive);
     }
 
     public static HitResult raycastFull(Entity origin, double maxDistance, boolean includeFluids, Predicate<Entity> entityPredicate) {
         EntityHitResult eHit = (EntityHitResult) raycastEntity(origin, maxDistance, entityPredicate);
         BlockHitResult bHit = (BlockHitResult) origin.raycast(maxDistance, 1.0f, includeFluids);
 
-        if(eHit == null){
+        if (eHit == null) {
             return bHit;
         } else if (bHit == null) {
             return eHit;
         }
 
-        if(eHit.squaredDistanceTo(origin) < bHit.squaredDistanceTo(origin)){
+        if (eHit.squaredDistanceTo(origin) < bHit.squaredDistanceTo(origin)) {
             return eHit;
-        }else {
+        } else {
             return bHit;
         }
     }
 
-    public static Entity entityFromHitResult(HitResult result){
-        if(result.getType().equals(HitResult.Type.ENTITY)){
+    public static Entity entityFromHitResult(HitResult result) {
+        if (result.getType().equals(HitResult.Type.ENTITY)) {
             return ((EntityHitResult) result).getEntity();
-        }else {
+        } else {
             return null;
         }
     }

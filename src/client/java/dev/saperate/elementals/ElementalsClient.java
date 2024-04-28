@@ -33,6 +33,7 @@ import static dev.saperate.elementals.entities.water.WaterHealingEntity.WATERHEA
 import static dev.saperate.elementals.entities.water.WaterHelmetEntity.WATERHELMET;
 import static dev.saperate.elementals.entities.water.WaterJetEntity.WATERJET;
 import static dev.saperate.elementals.entities.water.WaterShieldEntity.WATERSHIELD;
+import static dev.saperate.elementals.entities.water.WaterTowerEntity.WATERTOWER;
 import static dev.saperate.elementals.network.ModMessages.SYNC_CURR_ABILITY_PACKET_ID;
 import static dev.saperate.elementals.network.ModMessages.SYNC_ELEMENT_PACKET_ID;
 
@@ -53,6 +54,7 @@ public class ElementalsClient implements ClientModInitializer {
 		EntityRendererRegistry.register(WATERBLADE, WaterBladeEntityRenderer::new);
 		EntityRendererRegistry.register(WATERBULLET, WaterBulletEntityRenderer::new);
 		EntityRendererRegistry.register(WATERHEALING, WaterHealingEntityRenderer::new);
+		EntityRendererRegistry.register(WATERTOWER, WaterTowerEntityRenderer::new);
 
 		EntityRendererRegistry.register(FIREBLOCK, FireBlockEntityRenderer::new);
 		EntityRendererRegistry.register(FIREARC, FireArcEntityRenderer::new);

@@ -17,6 +17,11 @@ public class AbilityWater3 implements Ability {
     public void onCall(Bender bender, long deltaT) {
         PlayerData playerData = PlayerData.get(bender.player);
 
+        if(true){
+            WaterElement.get().abilityList.get(16).onCall(bender, deltaT);
+            return;
+        }
+
         if (bender.player.isSprinting() && playerData.canUseUpgrade("surf")) {
             WaterElement.get().abilityList.get(13).onCall(bender, deltaT);
             return;
@@ -57,7 +62,7 @@ public class AbilityWater3 implements Ability {
         //TODO add a system that if is not touching water search inventory for water containers
         if (!bender.player.isOnGround() && bender.abilityData.equals(-1)){
             if (bender.player.isSneaking()) {//TODO check if there is water below by raycasting
-                //water tower move
+
             } else if(player.isTouchingWaterOrRain()){
                 bender.abilityData = 1;
 

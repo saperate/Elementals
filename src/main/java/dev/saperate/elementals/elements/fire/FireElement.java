@@ -55,7 +55,6 @@ public class FireElement extends Element {
 
         entity.getWorld().playSound(entity, pos, SoundEvents.ITEM_FLINTANDSTEEL_USE, SoundCategory.BLOCKS, 1.0F, entity.getWorld().getRandom().nextFloat() * 0.4F + 0.8F);
 
-        System.out.println(state.getProperties());
         if(state.getProperties().contains(Properties.LIT)){
             entity.getWorld().setBlockState(pos, state.with(Properties.LIT, true), 11);
             entity.getWorld().emitGameEvent(entity, GameEvent.BLOCK_CHANGE, pos);
