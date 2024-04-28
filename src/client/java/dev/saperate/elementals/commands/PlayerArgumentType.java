@@ -34,7 +34,6 @@ public class PlayerArgumentType implements ArgumentType<PlayerEntity> {
 
         List<AbstractClientPlayerEntity> players = MinecraftClient.getInstance().world.getPlayers();
         for (PlayerEntity plr : players){
-            System.out.println(plr.getName().getString());
             if(plr.getName().getString().equals(name)){
                 return plr;
             }

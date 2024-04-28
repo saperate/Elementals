@@ -78,7 +78,6 @@ public class AbilityFlameThrower implements Ability {
                     continue;
                 }
                 Vector3f dir = player.getPos().subtract(e.getPos()).toVector3f();
-                System.out.println(dir.length());
                 if(dir.length() > 6){
                     continue;
                 }
