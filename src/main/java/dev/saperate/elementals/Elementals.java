@@ -9,6 +9,7 @@ import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.data.StateDataSaverAndLoader;
 import dev.saperate.elementals.effects.StationaryStatusEffect;
 import dev.saperate.elementals.elements.NoneElement;
+import dev.saperate.elementals.elements.earth.EarthElement;
 import dev.saperate.elementals.elements.fire.FireElement;
 import dev.saperate.elementals.elements.water.WaterElement;
 import dev.saperate.elementals.entities.water.WaterShieldEntity;
@@ -82,6 +83,7 @@ public class Elementals implements ModInitializer {
         new NoneElement();
         new WaterElement();
         new FireElement();
+        new EarthElement();
     }
 
     private void registerCommands() {
