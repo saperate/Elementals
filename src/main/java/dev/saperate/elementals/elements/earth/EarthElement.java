@@ -19,6 +19,7 @@ public class EarthElement extends Element {
         super("Earth", new Upgrade[]{
 
         });
+        addAbility(new AbilityEarth1(), true);
     }
 
     public static Element get(){
