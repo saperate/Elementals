@@ -158,12 +158,6 @@ public class EarthBlockEntity extends ProjectileEntity {
                         getBlockZ()
                 ),
                 getBlockState());
-
-        System.out.println("placing block at: " + new BlockPos(
-                getBlockX(),
-                (int) Math.round(getY()),
-                getBlockY()
-        ));
         discard();
     }
 

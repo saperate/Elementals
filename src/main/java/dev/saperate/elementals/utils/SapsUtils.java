@@ -53,11 +53,8 @@ public class SapsUtils {
                 for (int k = blockPos.getZ(); k <= blockPos2.getZ(); ++k) {
                     mutable.set(i, j, k);
                     BlockState blockState = entity.getWorld().getBlockState(mutable);
-                    System.out.println(blockState.getBlock());
-                    System.out.println(blockState.getBlock() instanceof FluidBlock);
                     if (blockState.isAir()
                             || (!includeFluids && blockState.getBlock() instanceof FluidBlock)) {
-                        System.out.println("Skipping");
                         continue;
                     }
 
