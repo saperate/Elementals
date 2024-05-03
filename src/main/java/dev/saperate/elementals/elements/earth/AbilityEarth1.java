@@ -6,7 +6,7 @@ import dev.saperate.elementals.elements.Ability;
 public class AbilityEarth1 implements Ability {
     @Override
     public void onCall(Bender bender, long deltaT) {
-        
+        EarthElement.get().abilityList.get(1).onCall(bender,deltaT);
     }
 
     @Override

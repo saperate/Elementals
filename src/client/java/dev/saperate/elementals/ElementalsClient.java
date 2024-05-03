@@ -1,5 +1,6 @@
 package dev.saperate.elementals;
 
+import dev.saperate.elementals.entities.earth.EarthBlockEntityRenderer;
 import dev.saperate.elementals.entities.fire.FireArcEntityRenderer;
 import dev.saperate.elementals.entities.fire.FireBallEntityRenderer;
 import dev.saperate.elementals.entities.fire.FireBlockEntityRenderer;
@@ -20,6 +21,7 @@ import net.minecraft.client.render.entity.model.EntityModelLayer;
 import net.minecraft.util.Identifier;
 
 import static dev.saperate.elementals.Elementals.MODID;
+import static dev.saperate.elementals.entities.earth.EarthBlockEntity.EARTHBLOCK;
 import static dev.saperate.elementals.entities.fire.FireArcEntity.FIREARC;
 import static dev.saperate.elementals.entities.fire.FireBallEntity.FIREBALL;
 import static dev.saperate.elementals.entities.fire.FireBlockEntity.FIREBLOCK;
@@ -60,6 +62,8 @@ public class ElementalsClient implements ClientModInitializer {
 		EntityRendererRegistry.register(FIREARC, FireArcEntityRenderer::new);
 		EntityRendererRegistry.register(FIREBALL, FireBallEntityRenderer::new);
 		EntityRendererRegistry.register(FIRESHIELD, FireShieldEntityRenderer::new);
+
+		EntityRendererRegistry.register(EARTHBLOCK, EarthBlockEntityRenderer::new);
 
 		new KeyAbility1();
 		new KeyAbility2();

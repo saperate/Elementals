@@ -71,7 +71,7 @@ public class WaterBladeEntity extends ProjectileEntity {
     public void tick() {
         super.tick();
 
-        BlockPos blockHit = SapsUtils.checkBlockCollision(this);
+        BlockPos blockHit = SapsUtils.checkBlockCollision(this,0.1f);
 
         PlayerEntity owner = getOwner();
         if (owner == null) {

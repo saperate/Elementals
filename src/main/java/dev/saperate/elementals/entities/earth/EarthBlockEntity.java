@@ -1,11 +1,10 @@
-package dev.saperate.elementals.entities.fire;
+package dev.saperate.elementals.entities.earth;
 
-import dev.saperate.elementals.data.FireExplosion;
 import dev.saperate.elementals.utils.SapsUtils;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
-import net.minecraft.block.AbstractFireBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.block.FluidBlock;
 import net.minecraft.entity.*;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
@@ -18,44 +17,42 @@ import net.minecraft.particle.ParticleTypes;
 import net.minecraft.predicate.entity.EntityPredicates;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.TypeFilter;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraft.world.explosion.Explosion;
 import org.joml.Vector3f;
+
+import java.util.List;
 
 import static dev.saperate.elementals.utils.SapsUtils.getEntityLookVector;
 import static dev.saperate.elementals.utils.SapsUtils.summonParticles;
 
-public class FireBallEntity extends ProjectileEntity {
-    private static final TrackedData<Integer> OWNER_ID = DataTracker.registerData(FireBallEntity.class, TrackedDataHandlerRegistry.INTEGER);
-    private static final TrackedData<Boolean> IS_CONTROLLED = DataTracker.registerData(FireBallEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
-    private static final TrackedData<Boolean> IS_BLUE = DataTracker.registerData(FireBallEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
-
-    public static final EntityType<FireBallEntity> FIREBALL = Registry.register(
+public class EarthBlockEntity extends ProjectileEntity {
+    private static final TrackedData<Integer> OWNER_ID = DataTracker.registerData(EarthBlockEntity.class, TrackedDataHandlerRegistry.INTEGER);
+    private static final TrackedData<Boolean> IS_CONTROLLED = DataTracker.registerData(EarthBlockEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
+    private static final TrackedData<BlockState> BLOCK_STATE = DataTracker.registerData(EarthBlockEntity.class, TrackedDataHandlerRegistry.BLOCK_STATE);
+    public static final EntityType<EarthBlockEntity> EARTHBLOCK = Registry.register(
             Registries.ENTITY_TYPE,
-            new Identifier("elementals", "fire_ball"),
-            FabricEntityTypeBuilder.<FireBallEntity>create(SpawnGroup.MISC, FireBallEntity::new)
+            new Identifier("elementals", "earth_block"),
+            FabricEntityTypeBuilder.<EarthBlockEntity>create(SpawnGroup.MISC, EarthBlockEntity::new)
                     .dimensions(EntityDimensions.fixed(1, 1)).build());
 
 
-    public FireBallEntity(EntityType<FireBallEntity> type, World world) {
+    public EarthBlockEntity(EntityType<EarthBlockEntity> type, World world) {
         super(type, world);
     }
 
-    public FireBallEntity(World world, LivingEntity owner) {
-        super(FIREBALL, world);
+    public EarthBlockEntity(World world, LivingEntity owner) {
+        super(EARTHBLOCK, world);
         setOwner(owner);
         setPos(owner.getX(), owner.getY(), owner.getZ());
     }
 
-    public FireBallEntity(World world, LivingEntity owner, double x, double y, double z) {
-        super(FIREBALL, world);
+    public EarthBlockEntity(World world, LivingEntity owner, double x, double y, double z) {
+        super(EARTHBLOCK, world);
         setOwner(owner);
         setPos(x, y, z);
         setControlled(true);
@@ -65,31 +62,41 @@ public class FireBallEntity extends ProjectileEntity {
     protected void initDataTracker() {
         this.getDataTracker().startTracking(OWNER_ID, 0);
         this.getDataTracker().startTracking(IS_CONTROLLED, false);
-        this.getDataTracker().startTracking(IS_BLUE, false);
+        this.getDataTracker().startTracking(BLOCK_STATE, Blocks.AIR.getDefaultState());
     }
 
     @Override
     public void tick() {
-        if (random.nextBetween(0, 20) == 6) {
-            summonParticles(this, random,
-                    isBlue() ? ParticleTypes.SOUL_FIRE_FLAME : ParticleTypes.FLAME,
-                    0, 1);
-        }
-
+        super.tick();
         Entity owner = getOwner();
         if (owner == null) {
             this.setVelocity(this.getVelocity().add(0.0, -0.04, 0.0));
             this.move(MovementType.SELF, this.getVelocity());
-            if(SapsUtils.checkBlockCollision(this,0.1f) != null){
-                onCollision();
+            if (SapsUtils.checkBlockCollision(this, 0.05f,false) != null) {
+                collidesWithGround();
             }
+
             return;
         }
+
+        List<ProjectileEntity> projectiles = getWorld().getEntitiesByClass(ProjectileEntity.class,
+                getWorld().isClient ? getBoundingBox().expand(.25f) : getBoundingBox().offset(getPos()).expand(.25f),
+                ProjectileEntity::isAlive);
+
+        for (ProjectileEntity e : projectiles) {
+            if (!(e instanceof EarthBlockEntity)) {
+                e.discard();
+            }
+        }
+
+
         if (!getIsControlled()) {
             HitResult hit = ProjectileUtil.getCollision(this, entity -> entity instanceof LivingEntity);
             if (hit.getType() == HitResult.Type.ENTITY) {
-                onCollision();
-                return;
+                LivingEntity entity = (LivingEntity) ((EntityHitResult) hit).getEntity();
+                entity.damage(this.getDamageSources().playerAttack((PlayerEntity) owner), 2);
+                entity.addVelocity(this.getVelocity().multiply(0.8f));
+                discard();
             }
         }
 
@@ -108,9 +115,12 @@ public class FireBallEntity extends ProjectileEntity {
 
         if (getIsControlled()) {
             controlEntity(owner);
-        } else if(SapsUtils.checkBlockCollision(this,0.25f) != null){
-                onCollision();
-                return;
+        } else if (!getWorld().isClient && SapsUtils.checkBlockCollision(this, 0.05f,false) != null) {
+            if(getVelocity().lengthSquared() > 0.3){
+                setVelocity(getVelocity().add(getVelocity().multiply(-0.1f)));
+            }else {
+                collidesWithGround();
+            }
         }
 
         this.move(MovementType.SELF, this.getVelocity());
@@ -130,21 +140,31 @@ public class FireBallEntity extends ProjectileEntity {
         this.addVelocity(direction.x, direction.y, direction.z);
     }
 
-    public void onCollision() {
-        getWorld().setBlockState(getBlockPos(), AbstractFireBlock.getState(getWorld(), getBlockPos()));
-        FireExplosion explosion = new FireExplosion(getWorld(), getOwner(), getX(), getY(), getZ(), 2.5f, true, Explosion.DestructionType.KEEP, 6);
-        explosion.collectBlocksAndDamageEntities();
-        explosion.affectWorld(true);
-        discard();
+    @Override
+    public boolean isCollidable() {
+        return true;
     }
 
-
     @Override
-    public void onRemoved() {
-        summonParticles(this, random,
-                isBlue() ? ParticleTypes.SOUL_FIRE_FLAME : ParticleTypes.FLAME,
-                0.25f, 25);
-        this.getWorld().playSound(getX(),getY(),getZ(), SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.BLOCKS, 4.0f, (1.0f + (this.getWorld().random.nextFloat() - this.getWorld().random.nextFloat()) * 0.2f) * 0.7f, false);
+    public boolean canHit() {
+        return true;
+    }
+
+    public void collidesWithGround() {
+        getWorld().setBlockState(
+                new BlockPos(
+                        getBlockX(),
+                        (int) Math.round(getY()),
+                        getBlockZ()
+                ),
+                getBlockState());
+
+        System.out.println("placing block at: " + new BlockPos(
+                getBlockX(),
+                (int) Math.round(getY()),
+                getBlockY()
+        ));
+        discard();
     }
 
     @Override
@@ -179,15 +199,15 @@ public class FireBallEntity extends ProjectileEntity {
         this.getDataTracker().set(OWNER_ID, owner.getId());
     }
 
+    public BlockState getBlockState() {
+        return this.getDataTracker().get(BLOCK_STATE);
+    }
+
+    public void setBlockState(BlockState state) {
+        this.getDataTracker().set(BLOCK_STATE, state);
+    }
+
     protected void pushAway(Entity entity) {
         entity.pushAwayFrom(this);
-    }
-
-    public boolean isBlue() {
-        return this.dataTracker.get(IS_BLUE);
-    }
-
-    public void setIsBlue(boolean val) {
-        this.getDataTracker().set(IS_BLUE, val);
     }
 }

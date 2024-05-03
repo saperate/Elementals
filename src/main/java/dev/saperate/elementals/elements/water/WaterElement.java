@@ -76,12 +76,11 @@ public class WaterElement extends Element {
 
 
         if (hit.getType() == HitResult.Type.BLOCK && isBlockBendable(hit.getBlockPos(),player.getWorld(),true)) {
-            if (blockState.get(IntProperty.of("level", 0, 15)).equals(0)) {
-                Vector3f pos = getEntityLookVector(player, 3).toVector3f();
+            if (blockState.get(IntProperty.of("level", 0, 15)).equals(0)) {//TODO maybe make this less strict
                 if(consumeWater){
                     player.getWorld().setBlockState(hit.getBlockPos(), Blocks.AIR.getDefaultState());
                 }
-                return pos;
+               return hit.getPos().toVector3f();
             }
         }
         return null;

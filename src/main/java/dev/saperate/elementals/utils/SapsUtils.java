@@ -3,6 +3,7 @@ package dev.saperate.elementals.utils;
 import com.google.common.collect.Sets;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.FluidBlock;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -33,9 +34,13 @@ import java.util.function.Predicate;
 
 public class SapsUtils {
 
+    public static BlockPos checkBlockCollision(Entity entity, float sensitivity) {
+        return checkBlockCollision(entity, sensitivity, true);
+    }
 
-    public static BlockPos checkBlockCollision(Entity entity) {
-        Box box = entity.getBoundingBox().expand(0.25);
+
+    public static BlockPos checkBlockCollision(Entity entity, float sensitivity, boolean includeFluids) {
+        Box box = entity.getBoundingBox().expand(sensitivity);
         BlockPos blockPos = BlockPos.ofFloored(box.minX + 1.0E-7, box.minY + 1.0E-7, box.minZ + 1.0E-7);
         BlockPos blockPos2 = BlockPos.ofFloored(box.maxX - 1.0E-7, box.maxY - 1.0E-7, box.maxZ - 1.0E-7);
 
@@ -48,7 +53,11 @@ public class SapsUtils {
                 for (int k = blockPos.getZ(); k <= blockPos2.getZ(); ++k) {
                     mutable.set(i, j, k);
                     BlockState blockState = entity.getWorld().getBlockState(mutable);
-                    if (blockState.isAir()) {
+                    System.out.println(blockState.getBlock());
+                    System.out.println(blockState.getBlock() instanceof FluidBlock);
+                    if (blockState.isAir()
+                            || (!includeFluids && blockState.getBlock() instanceof FluidBlock)) {
+                        System.out.println("Skipping");
                         continue;
                     }
 
@@ -70,7 +79,7 @@ public class SapsUtils {
         BlockPos bestHit = possibleHits.isEmpty() ? null : possibleHits.get(0);
         double bestDistance = possibleHits.isEmpty() ? -1 : entity.squaredDistanceTo(bestHit.toCenterPos());
         for (BlockPos hit : possibleHits) {
-            double dist = entity.squaredDistanceTo(bestHit.toCenterPos());
+            double dist = entity.squaredDistanceTo(hit.toCenterPos());
 
             if (dist < bestDistance) {
                 bestHit = hit;
@@ -81,8 +90,8 @@ public class SapsUtils {
         return bestHit;
     }
 
-    public static BlockState checkBlockCollisionBlockState(Entity entity) {
-        return entity.getWorld().getBlockState(checkBlockCollision(entity));
+    public static BlockState checkBlockCollisionBlockState(Entity entity, float sensitivity) {
+        return entity.getWorld().getBlockState(checkBlockCollision(entity, sensitivity));
     }
 
     /**
