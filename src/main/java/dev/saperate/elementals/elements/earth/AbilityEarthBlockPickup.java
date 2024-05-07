@@ -49,7 +49,20 @@ public class AbilityEarthBlockPickup implements Ability {
 
     @Override
     public void onRightClick(Bender bender, boolean started) {
+        PlayerEntity player = bender.player;
 
+        EarthBlockEntity blockEntity = (EarthBlockEntity) bender.abilityData;
+        onRemove(bender);
+        if (blockEntity == null) {
+            return;
+        }
+        blockEntity.discard();
+        EarthBlockEntity shrapnel = new EarthBlockEntity(player.getWorld(), player, blockEntity.getX(),blockEntity.getY(),blockEntity.getZ());
+        shrapnel.setBlockState(blockEntity.getBlockState());
+        shrapnel.setVelocity(bender.player, bender.player.getPitch(), bender.player.getYaw(), 0, 1, 0);
+        shrapnel.setControlled(false);
+
+        player.getWorld().spawnEntity(shrapnel);
     }
 
     @Override
