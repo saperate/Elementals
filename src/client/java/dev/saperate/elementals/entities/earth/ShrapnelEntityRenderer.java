@@ -2,7 +2,6 @@ package dev.saperate.elementals.entities.earth;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import dev.saperate.elementals.entities.models.earth.ShrapnelModel;
-import dev.saperate.elementals.entities.models.water.WaterBladeModel;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.*;
@@ -11,16 +10,15 @@ import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 
-public class ShrapnelEntityRenderer extends EntityRenderer<ShrapnelEntity> {
-
+public class ShrapnelEntityRenderer extends EntityRenderer<EarthShrapnelEntity> {
+    private static final Identifier texture = new Identifier("minecraft", "textures/block/dirt.png");
     public ShrapnelEntityRenderer(EntityRendererFactory.Context context) {
         super(context);
     }
 
     @Override
-    public void render(ShrapnelEntity entity, float yaw, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light) {
+    public void render(EarthShrapnelEntity entity, float yaw, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light) {
         matrices.push();
-        matrices.translate(-0.5f, 0, -0.5f);
 
 
         RenderSystem.setShader(GameRenderer::getPositionColorProgram);
@@ -29,7 +27,9 @@ public class ShrapnelEntityRenderer extends EntityRenderer<ShrapnelEntity> {
 
         BlockState state = entity.getBlockState();
 
-        VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderLayers.getMovingBlockLayer(state));
+        String s = MinecraftClient.getInstance().getBlockRenderManager().getModel(state).toString();
+        System.out.println(s);
+        VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderLayer.getItemEntityTranslucentCull(getTexture(entity)));
 
         ShrapnelModel.getTexturedModelData().createModel().render(
                 matrices,vertexConsumer,light,0,
@@ -45,7 +45,7 @@ public class ShrapnelEntityRenderer extends EntityRenderer<ShrapnelEntity> {
 
 
     @Override
-    public Identifier getTexture(ShrapnelEntity entity) {
-        return null;
+    public Identifier getTexture(EarthShrapnelEntity entity) {
+        return texture;
     }
 }

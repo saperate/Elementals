@@ -1,13 +1,13 @@
 package dev.saperate.elementals.elements.earth;
 
 import dev.saperate.elementals.data.Bender;
+import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.elements.Ability;
 import dev.saperate.elementals.entities.earth.EarthBlockEntity;
-import dev.saperate.elementals.entities.water.WaterCubeEntity;
+import dev.saperate.elementals.entities.earth.EarthShrapnelEntity;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.Vec3d;
-import org.joml.Vector3f;
 
 public class AbilityEarthBlockPickup implements Ability {
     @Override
@@ -56,8 +56,10 @@ public class AbilityEarthBlockPickup implements Ability {
         if (blockEntity == null) {
             return;
         }
-        blockEntity.discard();
-        EarthBlockEntity shrapnel = new EarthBlockEntity(player.getWorld(), player, blockEntity.getX(),blockEntity.getY(),blockEntity.getZ());
+        if(!PlayerData.get(player).canUseUpgrade("shrapnel")){
+            return;
+        }
+        EarthShrapnelEntity shrapnel = new EarthShrapnelEntity(player.getWorld(), player, blockEntity.getX(),blockEntity.getY(),blockEntity.getZ());
         shrapnel.setBlockState(blockEntity.getBlockState());
         shrapnel.setVelocity(bender.player, bender.player.getPitch(), bender.player.getYaw(), 0, 1, 0);
         shrapnel.setControlled(false);

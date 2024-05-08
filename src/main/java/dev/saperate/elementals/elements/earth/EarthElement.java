@@ -27,7 +27,10 @@ import static dev.saperate.elementals.utils.SapsUtils.getEntityLookVector;
 public class EarthElement extends Element {
     public EarthElement() {
         super("Earth", new Upgrade[]{
-
+                new Upgrade("shrapnel", new Upgrade[]{
+                        new Upgrade("earthWall"),
+                        new Upgrade("chunkPickup")
+                },true)
         });
         addAbility(new AbilityEarth1(), true);
         addAbility(new AbilityEarthBlockPickup());

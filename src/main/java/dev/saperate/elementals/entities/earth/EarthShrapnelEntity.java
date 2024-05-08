@@ -27,28 +27,28 @@ import java.util.List;
 
 import static dev.saperate.elementals.utils.SapsUtils.getEntityLookVector;
 
-public class ShrapnelEntity extends ProjectileEntity {
-    private static final TrackedData<Integer> OWNER_ID = DataTracker.registerData(ShrapnelEntity.class, TrackedDataHandlerRegistry.INTEGER);
-    private static final TrackedData<Boolean> IS_CONTROLLED = DataTracker.registerData(ShrapnelEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
-    private static final TrackedData<BlockState> BLOCK_STATE = DataTracker.registerData(ShrapnelEntity.class, TrackedDataHandlerRegistry.BLOCK_STATE);
-    public static final EntityType<ShrapnelEntity> EARTHSHRAPNEL = Registry.register(
+public class EarthShrapnelEntity extends ProjectileEntity {
+    private static final TrackedData<Integer> OWNER_ID = DataTracker.registerData(EarthShrapnelEntity.class, TrackedDataHandlerRegistry.INTEGER);
+    private static final TrackedData<Boolean> IS_CONTROLLED = DataTracker.registerData(EarthShrapnelEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
+    private static final TrackedData<BlockState> BLOCK_STATE = DataTracker.registerData(EarthShrapnelEntity.class, TrackedDataHandlerRegistry.BLOCK_STATE);
+    public static final EntityType<EarthShrapnelEntity> EARTHSHRAPNEL = Registry.register(
             Registries.ENTITY_TYPE,
             new Identifier("elementals", "earth_shrapnel"),
-            FabricEntityTypeBuilder.<ShrapnelEntity>create(SpawnGroup.MISC, ShrapnelEntity::new)
+            FabricEntityTypeBuilder.<EarthShrapnelEntity>create(SpawnGroup.MISC, EarthShrapnelEntity::new)
                     .dimensions(EntityDimensions.fixed(1, 1)).build());
 
 
-    public ShrapnelEntity(EntityType<ShrapnelEntity> type, World world) {
+    public EarthShrapnelEntity(EntityType<EarthShrapnelEntity> type, World world) {
         super(type, world);
     }
 
-    public ShrapnelEntity(World world, LivingEntity owner) {
+    public EarthShrapnelEntity(World world, LivingEntity owner) {
         super(EARTHSHRAPNEL, world);
         setOwner(owner);
         setPos(owner.getX(), owner.getY(), owner.getZ());
     }
 
-    public ShrapnelEntity(World world, LivingEntity owner, double x, double y, double z) {
+    public EarthShrapnelEntity(World world, LivingEntity owner, double x, double y, double z) {
         super(EARTHSHRAPNEL, world);
         setOwner(owner);
         setPos(x, y, z);
@@ -69,7 +69,7 @@ public class ShrapnelEntity extends ProjectileEntity {
         if (owner == null) {
             this.setVelocity(this.getVelocity().add(0.0, -0.04, 0.0));
             this.move(MovementType.SELF, this.getVelocity());
-            if (SapsUtils.checkBlockCollision(this, 0.05f,false) != null) {
+            if (SapsUtils.checkBlockCollision(this, 0.05f, false) != null) {
                 collidesWithGround();
             }
 
@@ -81,7 +81,7 @@ public class ShrapnelEntity extends ProjectileEntity {
                 ProjectileEntity::isAlive);
 
         for (ProjectileEntity e : projectiles) {
-            if (!(e instanceof ShrapnelEntity)) {
+            if (!(e instanceof EarthShrapnelEntity)) {
                 e.discard();
             }
         }
@@ -97,7 +97,6 @@ public class ShrapnelEntity extends ProjectileEntity {
             }
         }
 
-        this.getWorld().getEntitiesByType(TypeFilter.instanceOf(PlayerEntity.class), this.getBoundingBox(), EntityPredicates.canBePushedBy(this)).forEach(this::pushAway);
         if (!owner.isSneaking()) {
             moveEntity(owner);
         }
@@ -112,10 +111,10 @@ public class ShrapnelEntity extends ProjectileEntity {
 
         if (getIsControlled()) {
             controlEntity(owner);
-        } else if (!getWorld().isClient && SapsUtils.checkBlockCollision(this, 0.05f,false) != null) {
-            if(getVelocity().lengthSquared() > 0.3){
+        } else if (!getWorld().isClient && SapsUtils.checkBlockCollision(this, 0.05f, false) != null) {
+            if (getVelocity().lengthSquared() > 0.3) {
                 setVelocity(getVelocity().add(getVelocity().multiply(-0.1f)));
-            }else {
+            } else {
                 collidesWithGround();
             }
         }
@@ -137,10 +136,6 @@ public class ShrapnelEntity extends ProjectileEntity {
         this.addVelocity(direction.x, direction.y, direction.z);
     }
 
-    @Override
-    public boolean isCollidable() {
-        return true;
-    }
 
     @Override
     public boolean canHit() {
@@ -148,13 +143,6 @@ public class ShrapnelEntity extends ProjectileEntity {
     }
 
     public void collidesWithGround() {
-        getWorld().setBlockState(
-                new BlockPos(
-                        getBlockX(),
-                        (int) Math.round(getY()),
-                        getBlockZ()
-                ),
-                getBlockState());
         discard();
     }
 

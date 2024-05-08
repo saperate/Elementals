@@ -23,7 +23,7 @@ import net.minecraft.util.Identifier;
 
 import static dev.saperate.elementals.Elementals.MODID;
 import static dev.saperate.elementals.entities.earth.EarthBlockEntity.EARTHBLOCK;
-import static dev.saperate.elementals.entities.earth.ShrapnelEntity.EARTHSHRAPNEL;
+import static dev.saperate.elementals.entities.earth.EarthShrapnelEntity.EARTHSHRAPNEL;
 import static dev.saperate.elementals.entities.fire.FireArcEntity.FIREARC;
 import static dev.saperate.elementals.entities.fire.FireBallEntity.FIREBALL;
 import static dev.saperate.elementals.entities.fire.FireBlockEntity.FIREBLOCK;
