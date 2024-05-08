@@ -22,6 +22,7 @@ import net.minecraft.util.TypeFilter;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.joml.Vector3f;
 
@@ -33,7 +34,10 @@ import static dev.saperate.elementals.utils.SapsUtils.summonParticles;
 public class EarthBlockEntity extends ProjectileEntity {
     private static final TrackedData<Integer> OWNER_ID = DataTracker.registerData(EarthBlockEntity.class, TrackedDataHandlerRegistry.INTEGER);
     private static final TrackedData<Boolean> IS_CONTROLLED = DataTracker.registerData(EarthBlockEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
+    private static final TrackedData<Boolean> IS_SHRAPNEL = DataTracker.registerData(EarthBlockEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
     private static final TrackedData<BlockState> BLOCK_STATE = DataTracker.registerData(EarthBlockEntity.class, TrackedDataHandlerRegistry.BLOCK_STATE);
+    private static final TrackedData<Vector3f> TARGET_POSITION = DataTracker.registerData(EarthBlockEntity.class, TrackedDataHandlerRegistry.VECTOR3F);
+
     public static final EntityType<EarthBlockEntity> EARTHBLOCK = Registry.register(
             Registries.ENTITY_TYPE,
             new Identifier("elementals", "earth_block"),
@@ -62,7 +66,9 @@ public class EarthBlockEntity extends ProjectileEntity {
     protected void initDataTracker() {
         this.getDataTracker().startTracking(OWNER_ID, 0);
         this.getDataTracker().startTracking(IS_CONTROLLED, false);
+        this.getDataTracker().startTracking(IS_SHRAPNEL, false);
         this.getDataTracker().startTracking(BLOCK_STATE, Blocks.AIR.getDefaultState());
+        this.getDataTracker().startTracking(TARGET_POSITION, new Vector3f(0, -50, 0));
     }
 
     @Override
@@ -72,7 +78,7 @@ public class EarthBlockEntity extends ProjectileEntity {
         if (owner == null) {
             this.setVelocity(this.getVelocity().add(0.0, -0.04, 0.0));
             this.move(MovementType.SELF, this.getVelocity());
-            if (SapsUtils.checkBlockCollision(this, 0.05f,false) != null) {
+            if (SapsUtils.checkBlockCollision(this, 0.05f, false) != null) {
                 collidesWithGround();
             }
 
@@ -115,10 +121,10 @@ public class EarthBlockEntity extends ProjectileEntity {
 
         if (getIsControlled()) {
             controlEntity(owner);
-        } else if (!getWorld().isClient && SapsUtils.checkBlockCollision(this, 0.05f,false) != null) {
-            if(getVelocity().lengthSquared() > 0.3){
-                setVelocity(getVelocity().add(getVelocity().multiply(-0.1f)));
-            }else {
+        } else if (!getWorld().isClient && SapsUtils.checkBlockCollision(this, 0.05f, false) != null) {
+            if (getVelocity().lengthSquared() > 0.3) {
+                setVelocity(getVelocity().add(getVelocity().multiply(IsShrapnel() ? -0.5f : -0.1f)));
+            } else {
                 collidesWithGround();
             }
         }
@@ -127,7 +133,8 @@ public class EarthBlockEntity extends ProjectileEntity {
     }
 
     private void controlEntity(Entity owner) {
-        Vector3f direction = getEntityLookVector(owner, 3)
+        Vector3f target = getTargetPosition();
+        Vector3f direction = (target.y == -50 ? getEntityLookVector(owner, 3) : new Vec3d(target.x,target.y,target.z))
                 .subtract(0, 0.5f, 0)
                 .subtract(getPos()).toVector3f();
         direction.mul(0.1f);
@@ -142,7 +149,7 @@ public class EarthBlockEntity extends ProjectileEntity {
 
     @Override
     public boolean isCollidable() {
-        return true;
+        return !IsShrapnel();
     }
 
     @Override
@@ -151,13 +158,15 @@ public class EarthBlockEntity extends ProjectileEntity {
     }
 
     public void collidesWithGround() {
-        getWorld().setBlockState(
-                new BlockPos(
-                        getBlockX(),
-                        (int) Math.round(getY()),
-                        getBlockZ()
-                ),
-                getBlockState());
+        if (!IsShrapnel()) {
+            getWorld().setBlockState(
+                    new BlockPos(
+                            getBlockX(),
+                            (int) Math.round(getY()),
+                            getBlockZ()
+                    ),
+                    getBlockState());
+        }
         discard();
     }
 
@@ -199,6 +208,22 @@ public class EarthBlockEntity extends ProjectileEntity {
 
     public void setBlockState(BlockState state) {
         this.getDataTracker().set(BLOCK_STATE, state);
+    }
+
+    public void setIsShrapnel(boolean val) {
+        this.getDataTracker().set(IS_SHRAPNEL, val);
+    }
+
+    public boolean IsShrapnel() {
+        return this.getDataTracker().get(IS_SHRAPNEL);
+    }
+
+    public Vector3f getTargetPosition() {
+        return this.getDataTracker().get(TARGET_POSITION);
+    }
+
+    public void setTargetPosition(Vector3f pos) {
+        this.getDataTracker().set(TARGET_POSITION, pos);
     }
 
     protected void pushAway(Entity entity) {

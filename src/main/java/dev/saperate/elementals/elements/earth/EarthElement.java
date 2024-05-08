@@ -34,6 +34,7 @@ public class EarthElement extends Element {
         });
         addAbility(new AbilityEarth1(), true);
         addAbility(new AbilityEarthBlockPickup());
+        addAbility(new AbilityEarthWall());
     }
 
     public static Element get() {
@@ -63,6 +64,13 @@ public class EarthElement extends Element {
     public static boolean isBlockBendable(BlockPos pos, World world) {
         //TODO eventually make this into a config file
         BlockState bState = world.getBlockState(pos);
+
+
+        return isBlockBendable(bState);
+    }
+
+    public static boolean isBlockBendable(BlockState bState) {
+        //TODO eventually make this into a config file
         Block block = bState.getBlock();
 
 
