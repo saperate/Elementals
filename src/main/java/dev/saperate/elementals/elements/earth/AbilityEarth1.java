@@ -12,6 +12,7 @@ public class AbilityEarth1 implements Ability {
         if (bender.player.isSneaking()) {
             if (playerData.canUseUpgrade("earthWall")) {
                 EarthElement.get().abilityList.get(2).onCall(bender,deltaT);
+                return;
             }
         }
 

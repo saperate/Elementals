@@ -5,6 +5,7 @@ import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.elements.Ability;
 import dev.saperate.elementals.entities.earth.EarthBlockEntity;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
@@ -17,14 +18,14 @@ public class AbilityEarthWall implements Ability {
         PlayerEntity player = bender.player;
         PlayerData plrData = PlayerData.get(player);
 
-        Object[] vars = EarthElement.canBend(player, true);
+        Object[] vars = EarthElement.canBend(player, false);
         if (vars == null) {
             bender.setCurrAbility(null);
             return;
         }
 
         LinkedList<EarthBlockEntity> entities = new LinkedList<>();
-        Vec3d pos = (Vec3d) vars[0];
+        BlockPos pos = (BlockPos) vars[2];
 
         double dx = -Math.sin(Math.toRadians(player.getYaw() - 90));
         double dz = Math.cos(Math.toRadians(player.getYaw() - 90));
@@ -33,32 +34,32 @@ public class AbilityEarthWall implements Ability {
             int dxScaled = (int) Math.round(dx * i);
             int dzScaled = (int) Math.round(dz * i);
 
-            placePillar(pos.add(dxScaled,0,dzScaled),2, entities, bender);
-            placePillar(pos.add(-dxScaled,0,-dzScaled),2, entities, bender);
+            placePillar(pos.add(dxScaled,0,dzScaled),3, entities, bender);
+            placePillar(pos.add(-dxScaled,0,-dzScaled),3, entities, bender);
         }
-        placePillar(pos,2, entities, bender);
+        placePillar(pos,3, entities, bender);
         bender.setCurrAbility(this);
     }
 
-    public static void placePillar(Vec3d startPos, int height, LinkedList<EarthBlockEntity> entities, Bender bender){
+    public static void placePillar(BlockPos startPos, int height, LinkedList<EarthBlockEntity> entities, Bender bender){
         PlayerEntity player = bender.player;
 
         for (int y = 0; y < height; y++) {
-            BlockState state = player.getWorld().getBlockState(new BlockPos(
-                    (int) startPos.x,
-                    (int) (startPos.y - y),
-                    (int) startPos.x)
-            );
+            BlockPos bPos = new BlockPos(
+                    startPos.getX(),
+                    (startPos.getY() - y),
+                    startPos.getZ());
+            BlockState state = player.getWorld().getBlockState(bPos);
 
-            System.out.println(state);
             if(!EarthElement.isBlockBendable(state)){
                 return;
             }
+            player.getWorld().setBlockState(bPos, Blocks.AIR.getDefaultState());
 
-            EarthBlockEntity entity = new EarthBlockEntity(player.getWorld(), player, startPos.x, startPos.y - y, startPos.z);
+            EarthBlockEntity entity = new EarthBlockEntity(player.getWorld(), player, startPos.getX(), startPos.getY() - y, startPos.getZ());
             bender.abilityData = entity;
             entity.setBlockState(state);
-            entity.setTargetPosition(startPos.toVector3f().add(0,height - y,0));
+            entity.setTargetPosition(startPos.add(0,height - y,0).toCenterPos().toVector3f());
 
             player.getWorld().spawnEntity(entity);
         }

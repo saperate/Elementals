@@ -42,7 +42,7 @@ public class EarthBlockEntity extends ProjectileEntity {
             Registries.ENTITY_TYPE,
             new Identifier("elementals", "earth_block"),
             FabricEntityTypeBuilder.<EarthBlockEntity>create(SpawnGroup.MISC, EarthBlockEntity::new)
-                    .dimensions(EntityDimensions.fixed(1, 1)).build());
+                    .dimensions(EntityDimensions.fixed(.9f, .9f)).build());
 
 
     public EarthBlockEntity(EntityType<EarthBlockEntity> type, World world) {
@@ -134,11 +134,15 @@ public class EarthBlockEntity extends ProjectileEntity {
 
     private void controlEntity(Entity owner) {
         Vector3f target = getTargetPosition();
+        if(target.y == 64.5){
+            System.out.println("j");
+        }
         Vector3f direction = (target.y == -50 ? getEntityLookVector(owner, 3) : new Vec3d(target.x,target.y,target.z))
                 .subtract(0, 0.5f, 0)
                 .subtract(getPos()).toVector3f();
         direction.mul(0.1f);
 
+        System.out.println(direction.length() + " ; " + target.y);
         if (direction.length() < 0.4f) {
             this.setVelocity(0, 0, 0);
         }
@@ -168,6 +172,12 @@ public class EarthBlockEntity extends ProjectileEntity {
                     getBlockState());
         }
         discard();
+    }
+
+    @Override
+    public void onRemoved() {
+        super.onRemoved();
+        //TODO make this drop the block's item or place the block
     }
 
     @Override

@@ -6,10 +6,7 @@ import dev.saperate.elementals.entities.models.earth.ShrapnelModel;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.GameRenderer;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.VertexConsumer;
-import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.render.*;
 import net.minecraft.client.render.entity.EntityRenderer;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;
@@ -34,9 +31,8 @@ public class EarthBlockEntityRenderer extends EntityRenderer<EarthBlockEntity> {
         RenderSystem.defaultBlendFunc();
 
         if(!entity.IsShrapnel()){
-            VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderLayer.getCutout());
-
             BlockState state = entity.getBlockState();
+            VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderLayers.getMovingBlockLayer(state));
             MinecraftClient.getInstance().getBlockRenderManager().renderBlock(state, entity.getBlockPos(), entity.getWorld(), matrices, vertexConsumer, false, entity.getEntityWorld().random);
 
         }else{

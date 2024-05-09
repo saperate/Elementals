@@ -43,8 +43,9 @@ public class EarthElement extends Element {
 
     /**
      * Calculates if the block can be bent, if it can, we return an array of Object which contains in this order:
-     * <br>1 - Vec3d -> the position where we checked
-     * <br>2 - BlockState -> the block state before we consumed it
+     * <br>0 - Vec3d -> the position where the hit intercepted
+     * <br>1 - BlockState -> the block state before we consumed it
+     * <br>2 - BlockPos -> the block pos where the raycast hit
      * @return Array of calculated items
      */
     public static Object[] canBend(PlayerEntity player, boolean consumeBlock) {
@@ -56,7 +57,7 @@ public class EarthElement extends Element {
             if (consumeBlock) {
                 player.getWorld().setBlockState(hit.getBlockPos(), Blocks.AIR.getDefaultState());
             }
-            return new Object[]{hit.getPos(),blockState};
+            return new Object[]{hit.getPos(),blockState, hit.getBlockPos()};
         }
         return null;
     }
