@@ -167,7 +167,6 @@ public class WaterBladeEntity extends ProjectileEntity {
     }
 
     public void collidesWithGround() {
-        //getWorld().setBlockState(getBlockPos(), Blocks.WATER.getDefaultState());
         discard();
     }
 

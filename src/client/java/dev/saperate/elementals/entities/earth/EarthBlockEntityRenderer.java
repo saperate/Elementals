@@ -30,7 +30,7 @@ public class EarthBlockEntityRenderer extends EntityRenderer<EarthBlockEntity> {
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
 
-        if(!entity.IsShrapnel()){
+        if(!entity.isShrapnel()){
             BlockState state = entity.getBlockState();
             VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderLayers.getMovingBlockLayer(state));
             MinecraftClient.getInstance().getBlockRenderManager().renderBlock(state, entity.getBlockPos(), entity.getWorld(), matrices, vertexConsumer, false, entity.getEntityWorld().random);

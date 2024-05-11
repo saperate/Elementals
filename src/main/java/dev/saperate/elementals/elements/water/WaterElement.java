@@ -2,26 +2,17 @@ package dev.saperate.elementals.elements.water;
 
 import dev.saperate.elementals.elements.Element;
 import dev.saperate.elementals.elements.Upgrade;
-import dev.saperate.elementals.elements.fire.AbilityFire1;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.state.property.IntProperty;
 import net.minecraft.state.property.Properties;
-import net.minecraft.state.property.Property;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.joml.Vector3f;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
-
-import static dev.saperate.elementals.utils.SapsUtils.getEntityLookVector;
 
 public class WaterElement extends Element {
 
@@ -55,7 +46,7 @@ public class WaterElement extends Element {
         addAbility(new AbilityWaterArc());
         addAbility(new AbilityWaterHelmet());
         addAbility(new AbilityWaterShield());
-        addAbility(new AbilitySuffocate());
+        addAbility(new AbilityWaterSuffocate());
         addAbility(new AbilityWaterJet());
         addAbility(new AbilityWaterArms());
         addAbility(new AbilityWaterBlade());

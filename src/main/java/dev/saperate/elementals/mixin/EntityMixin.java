@@ -26,37 +26,26 @@ import static dev.saperate.elementals.effects.StationaryStatusEffect.STATIONARY_
 
 @Mixin(Entity.class)
 public abstract class EntityMixin {
-
-    @Shadow private Vec3d pos;
-
-    @Shadow private EntityChangeListener changeListener;
-
-    @Shadow private BlockPos blockPos;
-
-    @Shadow @Nullable private BlockState blockStateAtPos;
-
-    @Shadow private ChunkPos chunkPos;
-
-
     @Shadow public abstract void setVelocity(double x, double y, double z);
 
     @Shadow private Vec3d velocity;
 
 
-
+/*
     @Inject(at = @At("HEAD"), method = "setVelocity(Lnet/minecraft/util/math/Vec3d;)V", cancellable = true)
     private void setVelocity(Vec3d vel, CallbackInfo ci) {
-        Entity entity = ((Entity)(Object) this);
-        if(entity instanceof LivingEntity living){
-            if(living.getPos().equals(new Vec3d(0,0,0))){//Really hacky way to check if we haven't been initialised yet. Surely this will never be an issue
+        Entity entity = ((Entity) (Object) this);
+
+        if (entity instanceof LivingEntity living) {
+            if (living.getPos().equals(new Vec3d(0, 0, 0))) {//Really hacky way to check if we haven't been initialised yet. Surely this will never be an issue
                 return;
             }
-            if(living.hasStatusEffect(STATIONARY_EFFECT)){
-                velocity = new Vec3d(0, -0.4f, 0);//Apply gravity
+            if (living.hasStatusEffect(STATIONARY_EFFECT)) {
+                velocity = new Vec3d(0, 0, 0);
                 ci.cancel();
             }
         }
     }
 
-
+*/
 }

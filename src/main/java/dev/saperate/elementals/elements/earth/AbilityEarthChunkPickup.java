@@ -8,11 +8,12 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
+import org.joml.Vector3f;
 
 import java.util.LinkedList;
 
-public class AbilityEarthWall implements Ability {
+public class AbilityEarthChunkPickup implements Ability {
+    //TODO make an ability that makes it so you can throw the chunk one block at a time
     @Override
     public void onCall(Bender bender, long deltaT) {
         PlayerEntity player = bender.player;
@@ -27,48 +28,49 @@ public class AbilityEarthWall implements Ability {
         LinkedList<EarthBlockEntity> entities = new LinkedList<>();
         BlockPos pos = (BlockPos) vars[2];
 
-        double dx = -Math.sin(Math.toRadians(player.getYaw() - 90));
-        double dz = Math.cos(Math.toRadians(player.getYaw() - 90));
+        int size = (plrData.canUseUpgrade("biggerChunk") ? 2 : 1);//TODO make this toggleable when you bought the upgrade
 
-        for (int i = 1; i <= (plrData.canUseUpgrade("widerWall") ? 4 : 2); i++) {
-            int dxScaled = (int) Math.round(dx * i);
-            int dzScaled = (int) Math.round(dz * i);
+        for (int y = 0; y < size + size; y++) {
+            for (int x = -size; x < size; x++) {
+                for (int z = -size; z < size; z++) {
+                    BlockPos bPos = pos.add(x,-y,z);
+                    BlockState state = player.getWorld().getBlockState(bPos);
+                    if(EarthElement.isBlockBendable(state)){
+                        player.getWorld().setBlockState(bPos, Blocks.AIR.getDefaultState());
 
-            placePillar(pos.add(dxScaled,0,dzScaled),3, entities, bender);
-            placePillar(pos.add(-dxScaled,0,-dzScaled),3, entities, bender);
+                        EarthBlockEntity entity = new EarthBlockEntity(player.getWorld(), player, bPos.getX() + 0.5f, bPos.getY(), bPos.getZ() + 0.5f);
+                        entity.setBlockState(state);
+                        entity.setTargetPosition(new Vector3f(x,y - (size / 2),z));
+                        entity.setUseOffset(true);
+
+                        player.getWorld().spawnEntity(entity);
+                        entities.add(entity);
+                    }
+                }
+            }
         }
-        placePillar(pos,3, entities, bender);
+
         bender.setCurrAbility(this);
         bender.abilityData = entities;
     }
 
-    public static void placePillar(BlockPos startPos, int height, LinkedList<EarthBlockEntity> entities, Bender bender){
-        PlayerEntity player = bender.player;
-
-        for (int y = 0; y < height; y++) {
-            BlockPos bPos = new BlockPos(
-                    startPos.getX(),
-                    (startPos.getY() - y),
-                    startPos.getZ());
-            BlockState state = player.getWorld().getBlockState(bPos);
-
-            if(!EarthElement.isBlockBendable(state)){
-                return;
-            }
-            player.getWorld().setBlockState(bPos, Blocks.AIR.getDefaultState());
-
-            EarthBlockEntity entity = new EarthBlockEntity(player.getWorld(), player, startPos.getX() + 0.5f, startPos.getY() - y, startPos.getZ() + 0.5f);
-            entity.setBlockState(state);
-            entity.setTargetPosition(startPos.add(0,height - y,0).toCenterPos().toVector3f().add(0,0.05f,0));
-
-            player.getWorld().spawnEntity(entity);
-            entities.add(entity);
-        }
-    }
 
     @Override
     public void onLeftClick(Bender bender, boolean started) {
+        if (started) {
+            return;
+        }
+        LinkedList<EarthBlockEntity> entities = (LinkedList<EarthBlockEntity>) bender.abilityData;
+        onRemove(bender);
+        if(entities == null){
+            return;
+        }
 
+        for (EarthBlockEntity entity : entities){
+            entity.setVelocity(bender.player, bender.player.getPitch(), bender.player.getYaw(), 0, 1, 0);
+            entity.setControlled(false);
+            entity.setCollidable(false);
+        }
     }
 
     @Override

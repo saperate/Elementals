@@ -22,7 +22,7 @@ public class AbilityWaterCannon implements Ability {
         Vector3f pos = WaterElement.canBend(player, true);
 
         if (pos != null) {
-            bender.abilityData = new Object[]{60,null}; //0 is a placeholder, an entity will be there
+            bender.abilityData = new Object[]{60,null}; //null is a placeholder, an entity will be there
             bender.setCurrAbility(this);
         } else {
             bender.setCurrAbility(null);
@@ -92,13 +92,12 @@ public class AbilityWaterCannon implements Ability {
         bender.setCurrAbility(null);
 
         WaterJetEntity entity = (WaterJetEntity) ((Object[])bender.abilityData)[1];
+        bender.abilityData = null;
         if (entity == null) {
-            bender.abilityData = null;
             return;
         }
         entity.discard();
         entity.getChild().discard();
-        bender.abilityData = null;
     }
 
 }

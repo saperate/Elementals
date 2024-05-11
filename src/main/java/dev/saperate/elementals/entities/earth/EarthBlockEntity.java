@@ -37,6 +37,9 @@ public class EarthBlockEntity extends ProjectileEntity {
     private static final TrackedData<Boolean> IS_SHRAPNEL = DataTracker.registerData(EarthBlockEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
     private static final TrackedData<BlockState> BLOCK_STATE = DataTracker.registerData(EarthBlockEntity.class, TrackedDataHandlerRegistry.BLOCK_STATE);
     private static final TrackedData<Vector3f> TARGET_POSITION = DataTracker.registerData(EarthBlockEntity.class, TrackedDataHandlerRegistry.VECTOR3F);
+    private static final TrackedData<Boolean> USES_OFFSET = DataTracker.registerData(EarthBlockEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
+    private static final TrackedData<Boolean> IS_COLLIDABLE = DataTracker.registerData(EarthBlockEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
+    private boolean drops = true;
 
     public static final EntityType<EarthBlockEntity> EARTHBLOCK = Registry.register(
             Registries.ENTITY_TYPE,
@@ -69,6 +72,8 @@ public class EarthBlockEntity extends ProjectileEntity {
         this.getDataTracker().startTracking(IS_SHRAPNEL, false);
         this.getDataTracker().startTracking(BLOCK_STATE, Blocks.AIR.getDefaultState());
         this.getDataTracker().startTracking(TARGET_POSITION, new Vector3f(0, -50, 0));
+        this.getDataTracker().startTracking(USES_OFFSET, false);
+        this.getDataTracker().startTracking(IS_COLLIDABLE, true);
     }
 
     @Override
@@ -123,7 +128,7 @@ public class EarthBlockEntity extends ProjectileEntity {
             controlEntity(owner);
         } else if (!getWorld().isClient && SapsUtils.checkBlockCollision(this, 0.05f, false) != null) {
             if (getVelocity().lengthSquared() > 0.3) {
-                setVelocity(getVelocity().add(getVelocity().multiply(IsShrapnel() ? -0.5f : -0.1f)));
+                setVelocity(getVelocity().add(getVelocity().multiply(isShrapnel() ? -0.5f : -0.1f)));
             } else {
                 collidesWithGround();
             }
@@ -134,17 +139,21 @@ public class EarthBlockEntity extends ProjectileEntity {
 
     private void controlEntity(Entity owner) {
         Vector3f target = getTargetPosition();
-        if(target.y == 64.5){
-            System.out.println("j");
-        }
-        Vector3f direction = (target.y == -50 ? getEntityLookVector(owner, 3) : new Vec3d(target.x,target.y,target.z))
-                .subtract(0, 0.5f, 0)
-                .subtract(getPos()).toVector3f();
-        direction.mul(0.1f);
+        Vector3f direction = (target.y == -50 || usesOffset() ?
+                getEntityLookVector(owner, 3) : new Vec3d(target.x, target.y, target.z))
+                .toVector3f();
 
-        System.out.println(direction.length() + " ; " + target.y);
+        if (usesOffset()) {
+            direction.add(target);
+        }
+        direction = direction.sub(0, 0.5f, 0)
+                .sub(getPos().toVector3f())
+                .mul(0.1f);
+
         if (direction.length() < 0.4f) {
             this.setVelocity(0, 0, 0);
+        }else if(getVelocity().length() > 1){
+            this.setVelocity(0,0,0);
         }
 
 
@@ -153,7 +162,7 @@ public class EarthBlockEntity extends ProjectileEntity {
 
     @Override
     public boolean isCollidable() {
-        return !IsShrapnel();
+        return !isShrapnel() && isEntityCollidable();
     }
 
     @Override
@@ -162,7 +171,7 @@ public class EarthBlockEntity extends ProjectileEntity {
     }
 
     public void collidesWithGround() {
-        if (!IsShrapnel()) {
+        if (!isShrapnel() && drops) {
             getWorld().setBlockState(
                     new BlockPos(
                             getBlockX(),
@@ -224,7 +233,7 @@ public class EarthBlockEntity extends ProjectileEntity {
         this.getDataTracker().set(IS_SHRAPNEL, val);
     }
 
-    public boolean IsShrapnel() {
+    public boolean isShrapnel() {
         return this.getDataTracker().get(IS_SHRAPNEL);
     }
 
@@ -234,6 +243,30 @@ public class EarthBlockEntity extends ProjectileEntity {
 
     public void setTargetPosition(Vector3f pos) {
         this.getDataTracker().set(TARGET_POSITION, pos);
+    }
+
+    public void setUseOffset(boolean val) {
+        this.getDataTracker().set(USES_OFFSET, val);
+    }
+
+    public boolean usesOffset() {
+        return this.getDataTracker().get(USES_OFFSET);
+    }
+
+    public void setCollidable(boolean val) {
+        this.getDataTracker().set(IS_COLLIDABLE, val);
+    }
+
+    public boolean isEntityCollidable() {
+        return this.getDataTracker().get(IS_COLLIDABLE);
+    }
+
+    public void setDrops(boolean val){
+        drops = val;
+    }
+
+    public boolean getDrops() {
+        return drops;
     }
 
     protected void pushAway(Entity entity) {

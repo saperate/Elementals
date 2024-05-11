@@ -9,6 +9,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.state.property.IntProperty;
@@ -21,6 +22,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.event.GameEvent;
 import org.joml.Vector3f;
 
+import static dev.saperate.elementals.misc.ElementalsCustomTags.EARTH_BENDABLE_BLOCKS;
 import static dev.saperate.elementals.utils.SapsUtils.getEntityLookVector;
 
 
@@ -35,6 +37,10 @@ public class EarthElement extends Element {
         addAbility(new AbilityEarth1(), true);
         addAbility(new AbilityEarthBlockPickup());
         addAbility(new AbilityEarthWall());
+        addAbility(new AbilityEarthChunkPickup());
+        addAbility(new AbilityEarth2(), true);
+        addAbility(new AbilityEarthMine());
+        addAbility(new AbilityEarthTrap());
     }
 
     public static Element get() {
@@ -63,27 +69,12 @@ public class EarthElement extends Element {
     }
 
     public static boolean isBlockBendable(BlockPos pos, World world) {
-        //TODO eventually make this into a config file
         BlockState bState = world.getBlockState(pos);
-
-
-        return isBlockBendable(bState);
+        return bState.isIn(EARTH_BENDABLE_BLOCKS);
     }
 
     public static boolean isBlockBendable(BlockState bState) {
-        //TODO eventually make this into a config file
-        Block block = bState.getBlock();
-
-
-        return (block.equals(Blocks.DIRT)
-                || block.equals(Blocks.GRASS_BLOCK)
-                || block.equals(Blocks.SAND)
-                || block.equals(Blocks.COARSE_DIRT)
-                || block.equals(Blocks.ROOTED_DIRT)
-                || block.equals(Blocks.COBBLESTONE)
-                || block.equals(Blocks.STONE)
-                || block.equals(Blocks.DIORITE)
-                || block.equals(Blocks.MUD)
-        );
+        System.out.println(bState);
+        return bState.isIn(EARTH_BENDABLE_BLOCKS);
     }
 }

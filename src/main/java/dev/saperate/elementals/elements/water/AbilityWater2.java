@@ -19,7 +19,7 @@ public class AbilityWater2 implements Ability {
             WaterElement.get().abilityList.get(7).onCall(bender, deltaT);
             return;
         }
-
+//TODO fix this
         if (bender.player.isSneaking()) {
             if (playerData.canUseUpgrade("waterBlade")) {
                 WaterElement.get().abilityList.get(9).onCall(bender, deltaT);

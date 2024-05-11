@@ -3,23 +3,28 @@ package dev.saperate.elementals.elements.earth;
 import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.elements.Ability;
+import dev.saperate.elementals.entities.earth.EarthBlockEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.math.BlockPos;
 
-public class AbilityEarth1 implements Ability {
+import java.util.LinkedList;
+
+public class AbilityEarthMine implements Ability {
     @Override
     public void onCall(Bender bender, long deltaT) {
-        PlayerData playerData = PlayerData.get(bender.player);
+        PlayerEntity player = bender.player;
 
-        if (bender.player.isSneaking()) {
-            if (playerData.canUseUpgrade("earthWall")) {
-                EarthElement.get().abilityList.get(2).onCall(bender,deltaT);
-                return;
-            } else if (playerData.canUseUpgrade("chunkPickup")) {
-                EarthElement.get().abilityList.get(3).onCall(bender,deltaT);
-                return;
-            }
+        //TODO make it so it consumes more chi if the block is harder to break
+
+        Object[] vars = EarthElement.canBend(player, false);
+        if (vars == null) {
+            bender.setCurrAbility(null);
+            return;
         }
 
-        EarthElement.get().abilityList.get(1).onCall(bender,deltaT);
+        BlockPos pos = (BlockPos) vars[2];
+        player.getWorld().breakBlock(pos,true);
+        bender.setCurrAbility(null);
     }
 
     @Override
