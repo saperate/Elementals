@@ -59,7 +59,7 @@ public class AbilityEarthBlockPickup implements Ability {
             return;
         }
         blockEntity.setVelocity(bender.player, bender.player.getPitch(), bender.player.getYaw(), 0, 1, 0);
-        blockEntity.setIsShrapnel(true);
+        blockEntity.setModelShapeId(1);
     }
 
     @Override

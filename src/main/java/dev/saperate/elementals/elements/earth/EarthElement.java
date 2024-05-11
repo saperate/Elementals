@@ -1,5 +1,6 @@
 package dev.saperate.elementals.elements.earth;
 
+import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.elements.Element;
 import dev.saperate.elementals.elements.Upgrade;
 import dev.saperate.elementals.elements.fire.*;
@@ -8,6 +9,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.sound.SoundCategory;
@@ -22,6 +24,10 @@ import net.minecraft.world.World;
 import net.minecraft.world.event.GameEvent;
 import org.joml.Vector3f;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import static dev.saperate.elementals.entities.earth.EarthBlockEntity.EARTHBLOCK;
 import static dev.saperate.elementals.misc.ElementalsCustomTags.EARTH_BENDABLE_BLOCKS;
 import static dev.saperate.elementals.utils.SapsUtils.getEntityLookVector;
 
@@ -41,6 +47,8 @@ public class EarthElement extends Element {
         addAbility(new AbilityEarth2(), true);
         addAbility(new AbilityEarthMine());
         addAbility(new AbilityEarthTrap());
+        addAbility(new AbilityEarthRavine());
+        addAbility(new AbilityEarthSpikes());
     }
 
     public static Element get() {
@@ -76,5 +84,56 @@ public class EarthElement extends Element {
     public static boolean isBlockBendable(BlockState bState) {
         System.out.println(bState);
         return bState.isIn(EARTH_BENDABLE_BLOCKS);
+    }
+
+    /**
+     * Makes a hole given a starting position and depth. It will not mine blocks that are not bendable nor does it drop them
+     * Can optionally damage entities standing on top of the block being broken
+     * @param pos  the starting y cord along with the x and z
+     * @param depth  How far down will the hole go
+     * @param bender  The bender that cast the ability
+     * @param damagedEntities  Entities that were already damaged, set to null to deal no damage
+     */
+    public static void makeHole(BlockPos pos, int depth, Bender bender, ArrayList<LivingEntity> damagedEntities) {
+        for (int y = 0; y < depth; y++) {
+            BlockPos bPos = pos.down(y);
+            if(EarthElement.isBlockBendable(bPos, bender.player.getWorld())){
+                bender.player.getWorld().breakBlock(bPos,false);
+            }
+        }
+
+        if(damagedEntities != null){
+            damageEntityAboveBlock(bender.player,pos,damagedEntities,1);
+        }
+    }
+    /**
+     * Damages entities above a certain block. This is made for full blocks, stairs and slabs might not work
+     *
+     * @param player The caster of the move as to not damage them
+     * @param pos The position of the block where we want to damage entities above
+     * @param amount The amount of damage dealt
+     */
+    public static void damageEntityAboveBlock(PlayerEntity player, BlockPos pos, float amount){
+        damageEntityAboveBlock(player,pos,new ArrayList<>(), amount);
+    }
+
+    /**
+     * Damages entities above a certain block. This is made for full blocks, stairs and slabs might not work
+     *
+     * @param player The caster of the move as to not damage them
+     * @param pos The position of the block where we want to damage entities above
+     * @param damagedEntities (Optional) List of already damaged entities to prevent double hits
+     * @param amount The amount of damage dealt
+     */
+    public static void damageEntityAboveBlock(PlayerEntity player, BlockPos pos, ArrayList<LivingEntity> damagedEntities, float amount){
+        List<LivingEntity> hits = player.getWorld().getEntitiesByClass(LivingEntity.class,
+                EARTHBLOCK.createSimpleBoundingBox(pos.getX() + 0.5f,pos.getY() + 1,pos.getZ() + 0.5f), LivingEntity::isOnGround);
+        for (LivingEntity entity : hits){
+            if(entity == player){
+                continue;
+            }
+            damagedEntities.add(entity);
+            entity.damage(player.getDamageSources().playerAttack(player), 1);
+        }
     }
 }

@@ -16,11 +16,11 @@ public class AbilityEarth2 implements Ability {
                 return;
             }
 
-            if (playerData.canUseUpgrade("mine")) {
-                EarthElement.get().abilityList.get(2).onCall(bender,deltaT);
+            if (playerData.canUseUpgrade("earthRavine") && false) {
+                EarthElement.get().abilityList.get(7).onCall(bender,deltaT);
                 return;
-            } else if (playerData.canUseUpgrade("chunkPickup")) {
-                EarthElement.get().abilityList.get(3).onCall(bender,deltaT);
+            } else if (playerData.canUseUpgrade("earthSpikes")) {
+                EarthElement.get().abilityList.get(8).onCall(bender,deltaT);
                 return;
             }
         }

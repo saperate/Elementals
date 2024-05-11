@@ -30,6 +30,7 @@ public class AbilityEarthTrap implements Ability {
             EarthBlockEntity block = new EarthBlockEntity(player.getWorld(), player, victim.getX(), victim.getY(), victim.getZ());
             bender.abilityData = block;
             block.setBlockState(state);
+            block.setModelShapeId(2);
             player.getWorld().spawnEntity(block);
 
 

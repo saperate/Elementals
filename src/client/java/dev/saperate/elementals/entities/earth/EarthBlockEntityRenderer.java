@@ -3,6 +3,7 @@ package dev.saperate.elementals.entities.earth;
 import com.mojang.blaze3d.systems.RenderSystem;
 import dev.saperate.elementals.entities.fire.FireBlockEntity;
 import dev.saperate.elementals.entities.models.earth.ShrapnelModel;
+import dev.saperate.elementals.entities.models.earth.SpikeModel;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.MinecraftClient;
@@ -30,26 +31,44 @@ public class EarthBlockEntityRenderer extends EntityRenderer<EarthBlockEntity> {
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
 
-        if(!entity.isShrapnel()){
-            BlockState state = entity.getBlockState();
-            VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderLayers.getMovingBlockLayer(state));
-            MinecraftClient.getInstance().getBlockRenderManager().renderBlock(state, entity.getBlockPos(), entity.getWorld(), matrices, vertexConsumer, false, entity.getEntityWorld().random);
+        switch (entity.getModelShapeId()){
+            case 1 -> {
+                matrices.translate(0.5f, -1, 0.5f);
+                VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderLayer.getItemEntityTranslucentCull(getTexture(entity)));
 
-        }else{
-            matrices.translate(0.5f, -1, 0.5f);
-            VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderLayer.getItemEntityTranslucentCull(getTexture(entity)));
+                Vec3d dir = entity.getVelocity();
+                matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees((float) Math.toDegrees(Math.atan2(dir.x, dir.z))));
+                matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees((float) Math.toDegrees(Math.asin(-dir.y))));
 
-            Vec3d dir = entity.getVelocity();
-            matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees((float) Math.toDegrees(Math.atan2(dir.x,dir.z))));
-            matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees((float) Math.toDegrees(Math.asin(-dir.y))));
+                ShrapnelModel.getTexturedModelData().createModel().render(
+                        matrices, vertexConsumer, light, 0,
+                        1,
+                        1,
+                        1,
+                        1
+                );
+            }
+            case 2 -> {
+                VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderLayer.getItemEntityTranslucentCull(getTexture(entity)));
 
-            ShrapnelModel.getTexturedModelData().createModel().render(
-                    matrices,vertexConsumer,light,0,
-                    1,
-                    1,
-                    1,
-                    1
-            );
+                matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180));
+                matrices.scale(2,2,2);
+                matrices.translate(0.25f, -1.5f, -0.25f);
+
+                SpikeModel.getTexturedModelData().createModel().render(
+                        matrices, vertexConsumer, light, 0,
+                        1,
+                        1,
+                        1,
+                        1
+                );
+            }
+            default -> {
+                BlockState state = entity.getBlockState();
+                VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderLayers.getMovingBlockLayer(state));
+                MinecraftClient.getInstance().getBlockRenderManager().renderBlock(state, entity.getBlockPos(), entity.getWorld(), matrices, vertexConsumer, false, entity.getEntityWorld().random);
+            }
+
         }
 
 
