@@ -11,12 +11,12 @@ public class AbilityEarth2 implements Ability {
 
 
         if (bender.player.isSneaking()) {
-            if(deltaT >= 1000){
+            if(deltaT >= 1000 && playerData.canUseUpgrade("earthTrap")){
                 EarthElement.get().abilityList.get(6).onCall(bender,deltaT);
                 return;
             }
 
-            if (playerData.canUseUpgrade("earthRavine") && false) {
+            if (playerData.canUseUpgrade("earthRavine")) {
                 EarthElement.get().abilityList.get(7).onCall(bender,deltaT);
                 return;
             } else if (playerData.canUseUpgrade("earthSpikes")) {

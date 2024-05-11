@@ -21,7 +21,7 @@ public class PlayerData {
                 return true;
             }
         }
-        return true;//TODO change that bacj
+        return false;
     }
 
     public static PlayerData get(LivingEntity player) {

@@ -38,7 +38,13 @@ public class EarthElement extends Element {
                 new Upgrade("shrapnel", new Upgrade[]{
                         new Upgrade("earthWall"),
                         new Upgrade("chunkPickup")
-                },true)
+                },true),
+                new Upgrade("mine", new Upgrade[]{
+                        new Upgrade("earthTrap", new Upgrade[]{
+                                new Upgrade("earthRavine"),
+                                new Upgrade("earthSpikes")
+                        },true)
+                })
         });
         addAbility(new AbilityEarth1(), true);
         addAbility(new AbilityEarthBlockPickup());
