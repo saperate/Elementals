@@ -12,11 +12,15 @@ import net.minecraft.client.render.entity.EntityRenderer;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RotationAxis;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.random.Random;
+import net.minecraft.world.BlockRenderView;
 
 public class EarthBlockEntityRenderer extends EntityRenderer<EarthBlockEntity> {
     private static final Identifier texture = new Identifier("minecraft", "textures/block/dirt.png");
+
     public EarthBlockEntityRenderer(EntityRendererFactory.Context context) {
         super(context);
     }
@@ -31,7 +35,7 @@ public class EarthBlockEntityRenderer extends EntityRenderer<EarthBlockEntity> {
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
 
-        switch (entity.getModelShapeId()){
+        switch (entity.getModelShapeId()) {
             case 1 -> {
                 matrices.translate(0.5f, -1, 0.5f);
                 VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderLayer.getItemEntityTranslucentCull(getTexture(entity)));
@@ -52,7 +56,7 @@ public class EarthBlockEntityRenderer extends EntityRenderer<EarthBlockEntity> {
                 VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderLayer.getItemEntityTranslucentCull(getTexture(entity)));
 
                 matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180));
-                matrices.scale(2,2,2);
+                matrices.scale(2, 2, 2);
                 matrices.translate(0.25f, -1.5f, -0.25f);
 
                 SpikeModel.getTexturedModelData().createModel().render(
@@ -69,14 +73,13 @@ public class EarthBlockEntityRenderer extends EntityRenderer<EarthBlockEntity> {
                 MinecraftClient.getInstance().getBlockRenderManager().renderBlock(state, entity.getBlockPos(), entity.getWorld(), matrices, vertexConsumer, false, entity.getEntityWorld().random);
             }
 
-        }
 
+        }
 
 
         RenderSystem.disableBlend();
         matrices.pop();
     }
-
 
 
     @Override

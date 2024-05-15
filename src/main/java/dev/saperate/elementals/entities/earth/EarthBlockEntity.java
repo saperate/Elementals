@@ -39,7 +39,9 @@ public class EarthBlockEntity extends ProjectileEntity {
     private static final TrackedData<Vector3f> TARGET_POSITION = DataTracker.registerData(EarthBlockEntity.class, TrackedDataHandlerRegistry.VECTOR3F);
     private static final TrackedData<Boolean> USES_OFFSET = DataTracker.registerData(EarthBlockEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
     private static final TrackedData<Boolean> IS_COLLIDABLE = DataTracker.registerData(EarthBlockEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
-    private boolean drops = true, damageOnTouch = false, shiftToFreeze = true;
+    private static final TrackedData<Float> MOVEMENT_SPEED = DataTracker.registerData(EarthBlockEntity.class, TrackedDataHandlerRegistry.FLOAT);
+
+    private boolean drops = true, damageOnTouch = false, shiftToFreeze = true, dropOnLifeTime = false;
     private int lifeTime = -1;
 
     public static final EntityType<EarthBlockEntity> EARTHBLOCK = Registry.register(
@@ -75,15 +77,20 @@ public class EarthBlockEntity extends ProjectileEntity {
         this.getDataTracker().startTracking(TARGET_POSITION, new Vector3f(0, -50, 0));
         this.getDataTracker().startTracking(USES_OFFSET, false);
         this.getDataTracker().startTracking(IS_COLLIDABLE, true);
+        this.getDataTracker().startTracking(MOVEMENT_SPEED, 0.1f);
     }
 
     @Override
     public void tick() {
         super.tick();
         Entity owner = getOwner();
-        if(lifeTime != -1){
-            if(lifeTime <= 0){
-                discard();
+        if (lifeTime != -1) {
+            if (lifeTime <= 0) {
+                if (dropOnLifeTime) {
+                    setControlled(false);
+                } else {
+                    discard();
+                }
             }
             lifeTime--;
         }
@@ -108,14 +115,15 @@ public class EarthBlockEntity extends ProjectileEntity {
             }
         }
 
-        if(damageOnTouch){
+        if (damageOnTouch) {
             List<LivingEntity> entities = getWorld().getEntitiesByClass(LivingEntity.class,
                     getBoundingBox().expand(0.25f),
                     LivingEntity::isAlive);
 
-            for (LivingEntity e : entities){
+            for (LivingEntity e : entities) {
                 e.damage(this.getDamageSources().playerAttack((PlayerEntity) owner), 2);
-                e.addVelocity(e.getVelocity().add(0,0.01f,0));
+                e.setVelocity(this.getVelocity().multiply(1.2f));
+                e.move(MovementType.SELF,e.getVelocity());
             }
         }
 
@@ -124,7 +132,8 @@ public class EarthBlockEntity extends ProjectileEntity {
             if (hit.getType() == HitResult.Type.ENTITY) {
                 LivingEntity entity = (LivingEntity) ((EntityHitResult) hit).getEntity();
                 entity.damage(this.getDamageSources().playerAttack((PlayerEntity) owner), 2);
-                entity.addVelocity(this.getVelocity().multiply(0.8f));
+                entity.setVelocity(this.getVelocity().multiply(1.2f));
+                entity.move(MovementType.SELF,entity.getVelocity());
                 discard();
             }
         }
@@ -166,12 +175,12 @@ public class EarthBlockEntity extends ProjectileEntity {
         }
         direction = direction.sub(0, 0.5f, 0)
                 .sub(getPos().toVector3f())
-                .mul(0.1f);
+                .mul(getMovementSpeed());
 
         if (direction.length() < 0.4f) {
             this.setVelocity(0, 0, 0);
-        }else if(getVelocity().length() > 1){
-            this.setVelocity(0,0,0);
+        } else if (getVelocity().length() > 1) {
+            this.setVelocity(0, 0, 0);
         }
 
 
@@ -279,7 +288,7 @@ public class EarthBlockEntity extends ProjectileEntity {
         return this.getDataTracker().get(IS_COLLIDABLE);
     }
 
-    public void setDrops(boolean val){
+    public void setDrops(boolean val) {
         drops = val;
     }
 
@@ -309,6 +318,22 @@ public class EarthBlockEntity extends ProjectileEntity {
 
     public void setShiftToFreeze(boolean shiftToFreeze) {
         this.shiftToFreeze = shiftToFreeze;
+    }
+
+    public float getMovementSpeed() {
+        return getDataTracker().get(MOVEMENT_SPEED);
+    }
+
+    public void setMovementSpeed(float speed) {
+        getDataTracker().set(MOVEMENT_SPEED, speed);
+    }
+
+    public boolean dropsOnEndOfLife() {
+        return dropOnLifeTime;
+    }
+
+    public void setDropOnEndOfLife(boolean val) {
+        this.dropOnLifeTime = val;
     }
 
     protected void pushAway(Entity entity) {

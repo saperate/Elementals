@@ -60,6 +60,7 @@ public class AbilityEarthWall implements Ability {
             EarthBlockEntity entity = new EarthBlockEntity(player.getWorld(), player, startPos.getX() + 0.5f, startPos.getY() - y, startPos.getZ() + 0.5f);
             entity.setBlockState(state);
             entity.setTargetPosition(startPos.add(0,height - y,0).toCenterPos().toVector3f().add(0,0.05f,0));
+            entity.setMovementSpeed(0.2f);
 
             player.getWorld().spawnEntity(entity);
             entities.add(entity);

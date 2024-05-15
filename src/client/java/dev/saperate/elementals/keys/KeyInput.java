@@ -16,13 +16,13 @@ import java.util.List;
 public abstract class KeyInput {
     private static final List<KeyInput> keyInputs = new ArrayList<>();
     private KeyBinding keyBinding;
-public boolean lastFrameWasHolding;
+    public boolean lastFrameWasHolding;
 
-    public KeyInput(){
+    public KeyInput() {
         keyInputs.add(this);
     }
 
-    public void registerKeyInput(int GLFWKey, Identifier packetID, String translationKey, String category){
+    public void registerKeyInput(int GLFWKey, Identifier packetID, String translationKey, String category) {
         keyBinding = KeyBindingHelper.registerKeyBinding(new KeyBinding(
                 translationKey,
                 InputUtil.Type.KEYSYM,
@@ -31,12 +31,12 @@ public boolean lastFrameWasHolding;
         ));
 
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
-            if(keyBinding.isPressed() && !lastFrameWasHolding){
+            if (keyBinding.isPressed() && !lastFrameWasHolding) {
                 lastFrameWasHolding = true;
                 //Started holding
                 onStartHolding(packetID);
             }
-            if(!keyBinding.isPressed() && lastFrameWasHolding){
+            if (!keyBinding.isPressed() && lastFrameWasHolding) {
                 lastFrameWasHolding = false;
                 //Stopped holding
                 onEndHolding(packetID);
@@ -45,11 +45,11 @@ public boolean lastFrameWasHolding;
     }
 
 
-    public void onStartHolding(Identifier packetID){
+    public void onStartHolding(Identifier packetID) {
         ClientPlayNetworking.send(packetID, PacketByteBufs.create());
     }
 
-    public void onEndHolding(Identifier packetID){
+    public void onEndHolding(Identifier packetID) {
         ClientPlayNetworking.send(packetID, PacketByteBufs.create());
     }
 

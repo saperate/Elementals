@@ -22,7 +22,6 @@ public class StateDataSaverAndLoader extends PersistentState {
 
     @Override
     public NbtCompound writeNbt(NbtCompound nbt) {
-        System.err.println("Saving the stuff");
         NbtCompound playersNbt = new NbtCompound();
         players.forEach(((uuid, playerData) -> {
             NbtCompound playerNbt = new NbtCompound();

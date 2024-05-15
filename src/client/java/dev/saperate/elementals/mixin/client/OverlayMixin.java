@@ -13,6 +13,7 @@ import net.minecraft.util.math.BlockPos;
 import org.joml.Matrix4f;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -24,17 +25,17 @@ public class OverlayMixin {
     @Shadow
     private static Identifier UNDERWATER_TEXTURE;
 
-    @Inject(at = @At("HEAD"), method = "renderOverlays", cancellable = true)
+    @Inject(at = @At("HEAD"), method = "renderOverlays")
     private static void renderWaterOverlay(MinecraftClient client, MatrixStack matrices, CallbackInfo ci) {
         ClientBender bender = ClientBender.get();
         if (bender != null &&
                 (bender.currAbility instanceof AbilityWaterShield
-                || (bender.player != null && bender.player.hasStatusEffect(DROWNING_EFFECT))
-                )) {
+                || (bender.player != null && bender.player.hasStatusEffect(DROWNING_EFFECT)))) {
             renderUnderwaterOverlay(client, matrices);
         }
     }
 
+    @Unique
     private static void renderUnderwaterOverlay(MinecraftClient client, MatrixStack matrices) {
         RenderSystem.setShader(GameRenderer::getPositionTexProgram);
         RenderSystem.setShaderTexture(0, UNDERWATER_TEXTURE);

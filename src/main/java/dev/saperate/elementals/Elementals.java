@@ -13,6 +13,7 @@ import dev.saperate.elementals.elements.earth.EarthElement;
 import dev.saperate.elementals.elements.fire.FireElement;
 import dev.saperate.elementals.elements.water.WaterElement;
 import dev.saperate.elementals.entities.water.WaterShieldEntity;
+import dev.saperate.elementals.items.ElementalItems;
 import dev.saperate.elementals.misc.AirBannerPattern;
 import net.fabricmc.api.ModInitializer;
 
@@ -41,6 +42,7 @@ import org.slf4j.LoggerFactory;
 
 import static dev.saperate.elementals.effects.DenseStatusEffect.DENSE_EFFECT;
 import static dev.saperate.elementals.effects.DrowningStatusEffect.DROWNING_EFFECT;
+import static dev.saperate.elementals.effects.SeismicSenseStatusEffect.SEISMIC_SENSE_EFFECT;
 import static dev.saperate.elementals.effects.StationaryStatusEffect.STATIONARY_EFFECT;
 import static dev.saperate.elementals.entities.water.WaterShieldEntity.WATERSHIELD;
 import static dev.saperate.elementals.misc.AirBannerPattern.AIR_PATTERN;
@@ -53,6 +55,7 @@ public class Elementals implements ModInitializer {
 
     @Override
     public void onInitialize() {
+        ElementalItems.registerModItems();
 
         SoulFireCore.registerBlock();
         WaterRapid.registerBlock();
@@ -60,6 +63,7 @@ public class Elementals implements ModInitializer {
         Registry.register(Registries.STATUS_EFFECT, new Identifier(MODID, "stationary"), STATIONARY_EFFECT.addAttributeModifier(EntityAttributes.GENERIC_MOVEMENT_SPEED, "7107DE5E-7CE8-4030-940E-514C1F160890", 0, EntityAttributeModifier.Operation.MULTIPLY_TOTAL));
         Registry.register(Registries.STATUS_EFFECT, new Identifier(MODID, "dense"), DENSE_EFFECT);
         Registry.register(Registries.STATUS_EFFECT, new Identifier(MODID, "drowning"), DROWNING_EFFECT);
+        Registry.register(Registries.STATUS_EFFECT, new Identifier(MODID, "seismic_sense"), SEISMIC_SENSE_EFFECT);
 
         registerElements();
         registerCommands();

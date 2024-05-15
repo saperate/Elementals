@@ -4,32 +4,20 @@ import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.elements.Ability;
 
-public class AbilityEarth2 implements Ability {
+public class AbilityEarth3 implements Ability {
     @Override
     public void onCall(Bender bender, long deltaT) {
         PlayerData playerData = PlayerData.get(bender.player);
+        Object[] vars = EarthElement.canBend(bender.player, false);
 
-
-        if (bender.player.isSneaking()) {
-            if(deltaT >= 1000 && playerData.canUseUpgrade("earthTrap")){
-                EarthElement.get().abilityList.get(6).onCall(bender,deltaT);
-                return;
-            }
-
-            if (playerData.canUseUpgrade("earthRavine")) {
-                EarthElement.get().abilityList.get(7).onCall(bender,deltaT);
-                return;
-            } else if (playerData.canUseUpgrade("earthSpikes")) {
-                EarthElement.get().abilityList.get(8).onCall(bender,deltaT);
-                return;
-            }
-        }
-
-        if(playerData.canUseUpgrade("mine")){
-            EarthElement.get().abilityList.get(5).onCall(bender,deltaT);
+        if (vars != null) {
+            EarthElement.get().abilityList.get(10).onCall(bender,deltaT);
+        } else if (bender.player.isOnGround() && playerData.canUseUpgrade("earthTower")) {
+            EarthElement.get().abilityList.get(11).onCall(bender,deltaT);
             return;
         }
         bender.setCurrAbility(null);
+
     }
 
     @Override

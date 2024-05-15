@@ -3,33 +3,20 @@ package dev.saperate.elementals.elements.earth;
 import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.elements.Element;
 import dev.saperate.elementals.elements.Upgrade;
-import dev.saperate.elementals.elements.fire.*;
-import net.minecraft.block.AbstractFireBlock;
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.registry.tag.BlockTags;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.state.property.IntProperty;
-import net.minecraft.state.property.Properties;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
-import net.minecraft.world.event.GameEvent;
-import org.joml.Vector3f;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static dev.saperate.elementals.entities.earth.EarthBlockEntity.EARTHBLOCK;
 import static dev.saperate.elementals.misc.ElementalsCustomTags.EARTH_BENDABLE_BLOCKS;
-import static dev.saperate.elementals.utils.SapsUtils.getEntityLookVector;
 
 
 public class EarthElement extends Element {
@@ -55,6 +42,10 @@ public class EarthElement extends Element {
         addAbility(new AbilityEarthTrap());
         addAbility(new AbilityEarthRavine());
         addAbility(new AbilityEarthSpikes());
+        addAbility(new AbilityEarth3(), true);
+        addAbility(new AbilityEarthPillar());
+        addAbility(new AbilityEarthJump());
+        addAbility(new AbilityEarth4(), true);
     }
 
     public static Element get() {
@@ -66,6 +57,7 @@ public class EarthElement extends Element {
      * <br>0 - Vec3d -> the position where the hit intercepted
      * <br>1 - BlockState -> the block state before we consumed it
      * <br>2 - BlockPos -> the block pos where the raycast hit
+     * <br>3 - Direction -> the direction of the face where the raycast hit
      * @return Array of calculated items
      */
     public static Object[] canBend(PlayerEntity player, boolean consumeBlock) {
@@ -77,7 +69,7 @@ public class EarthElement extends Element {
             if (consumeBlock) {
                 player.getWorld().setBlockState(hit.getBlockPos(), Blocks.AIR.getDefaultState());
             }
-            return new Object[]{hit.getPos(),blockState, hit.getBlockPos()};
+            return new Object[]{hit.getPos(),blockState, hit.getBlockPos(), hit.getSide()};
         }
         return null;
     }
@@ -88,7 +80,6 @@ public class EarthElement extends Element {
     }
 
     public static boolean isBlockBendable(BlockState bState) {
-        System.out.println(bState);
         return bState.isIn(EARTH_BENDABLE_BLOCKS);
     }
 

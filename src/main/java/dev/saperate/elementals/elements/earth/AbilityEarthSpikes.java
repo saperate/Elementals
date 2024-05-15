@@ -46,7 +46,6 @@ public class AbilityEarthSpikes implements Ability {
             }
         }
         bender.setCurrAbility(null);
-        System.out.println(a);
     }
 
     public void placeSpike(BlockPos pos, Bender bender, ArrayList<LivingEntity> damagedEntities){
@@ -61,6 +60,7 @@ public class AbilityEarthSpikes implements Ability {
         block.setBlockState(bender.player.getWorld().getBlockState(pos));
         block.setDrops(false);
         block.setLifeTime(60);
+        block.setMovementSpeed(0.3f);
         block.setDamageOnTouch(true);
         block.setShiftToFreeze(false);
         block.setTargetPosition(pos.toCenterPos().toVector3f().add(0,1,0));
