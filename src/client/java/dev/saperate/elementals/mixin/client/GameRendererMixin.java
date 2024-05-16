@@ -52,4 +52,13 @@ public abstract class GameRendererMixin {
         return renderer.getPostProcessor() != null
                 && renderer.getPostProcessor().getName().equals(name);
     }
+
+    @Inject(at = @At("HEAD"), method = "togglePostProcessorEnabled", cancellable = true)
+    private void render(CallbackInfo ci) {
+        //naughty method, trying to remove the vision debuff (f4)
+        if(customPostProcessorEnabled(MinecraftClient.getInstance().gameRenderer,MODID + ":shaders/post/seismicsense.json")){
+            ci.cancel();
+        }
+
+    }
 }

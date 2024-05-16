@@ -1,9 +1,18 @@
 package dev.saperate.elementals.items;
 
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Multimap;
 import net.minecraft.client.item.BundleTooltipData;
 import net.minecraft.client.item.TooltipData;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EquipmentSlot;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.attribute.EntityAttribute;
+import net.minecraft.entity.attribute.EntityAttributeModifier;
+import net.minecraft.entity.attribute.EntityAttributes;
+import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.*;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
@@ -11,8 +20,12 @@ import net.minecraft.nbt.NbtList;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.world.World;
 
+import java.util.HashMap;
 import java.util.Optional;
 import java.util.stream.Stream;
+
+import static dev.saperate.elementals.effects.DenseStatusEffect.DENSE_EFFECT;
+import static dev.saperate.elementals.effects.SeismicSenseStatusEffect.SEISMIC_SENSE_EFFECT;
 
 public class EarthArmorItem extends DyeableArmorItem {
     private static final String ITEMS_KEY = "Items";
@@ -26,11 +39,51 @@ public class EarthArmorItem extends DyeableArmorItem {
     @Override
     public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
         super.inventoryTick(stack, world, entity, slot, selected);
+        if(slot != 0){
+            return;
+        }
+        if(entity instanceof LivingEntity living){
+            if(entity instanceof PlayerEntity player){
+                player.addStatusEffect(new StatusEffectInstance(SEISMIC_SENSE_EFFECT,60, 0, false, false, false));
+                player.addStatusEffect(new StatusEffectInstance(DENSE_EFFECT,60,10, false, false, false));
+            }
+            //TODO figure out how to add armor points
+        }
     }
+
+
+    public static int getAdditionalProtection(ItemStack stack){
+        NbtCompound nbtCompound = stack.getOrCreateNbt();
+        return nbtCompound.getInt("additional_protection");
+    }
+
+    public static float getAdditionalToughness(ItemStack stack){
+        NbtCompound nbtCompound = stack.getOrCreateNbt();
+        return nbtCompound.getFloat("additional_toughness");
+    }
+
+    public static void setAdditionalProtection(ItemStack stack, int val){
+        NbtCompound nbtCompound = stack.getOrCreateNbt();
+        nbtCompound.putInt("additional_protection", val);
+    }
+
+    public static void setAdditionalToughness(ItemStack stack, float val){
+        NbtCompound nbtCompound = stack.getOrCreateNbt();
+        nbtCompound.putFloat("additional_toughness", val);
+    }
+
 
     public ItemStack getItemStack(ItemStack prevArmor) {
         ItemStack item = getDefaultStack();
         item.addEnchantment(Enchantments.BINDING_CURSE, 1);
+        item.addHideFlag(ItemStack.TooltipSection.ENCHANTMENTS);
+        item.addHideFlag(ItemStack.TooltipSection.DYE);
+
+        if(prevArmor.getItem() instanceof ArmorItem armorItem){
+            setAdditionalProtection(item, armorItem.getProtection());
+            setAdditionalToughness(item, armorItem.getToughness());
+        }
+
         addToBundle(item,prevArmor);
         return item;
     }
@@ -104,4 +157,5 @@ public class EarthArmorItem extends DyeableArmorItem {
     public boolean hasGlint(ItemStack stack) {
         return false;
     }
+
 }

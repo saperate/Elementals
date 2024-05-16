@@ -20,14 +20,16 @@ import static dev.saperate.elementals.utils.ClientUtils.safeHasStatusEffect;
 public abstract class GlowMixin {
 
 
-    @Shadow public abstract void remove(Entity.RemovalReason reason);
+    @Shadow
+    public abstract void remove(Entity.RemovalReason reason);
 
     @Inject(at = @At("HEAD"), method = "isGlowing", cancellable = true)
     private void render(CallbackInfoReturnable<Boolean> cir) {
         PlayerEntity player = MinecraftClient.getInstance().player;
         LivingEntity e = ((LivingEntity) (Object) this);
 
-        if (safeHasStatusEffect(SEISMIC_SENSE_EFFECT,player) && e.getWorld().isClient && e.isOnGround()
+        if (safeHasStatusEffect(SEISMIC_SENSE_EFFECT, player) && e.getWorld().isClient && e.isOnGround()
+                && player.isOnGround()
                 && !player.equals(e)
                 && e.getPos().subtract(player.getPos()).length() <= 15) {
             cir.setReturnValue(true);

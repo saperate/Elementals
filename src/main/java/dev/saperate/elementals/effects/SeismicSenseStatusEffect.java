@@ -39,6 +39,7 @@ public class SeismicSenseStatusEffect extends StatusEffect {
     @Override
     public void applyUpdateEffect(LivingEntity entity, int amplifier) {
         entity.addStatusEffect(new StatusEffectInstance(StatusEffects.BLINDNESS,21,0,false,false,false));
+        entity.addStatusEffect(new StatusEffectInstance(StatusEffects.NIGHT_VISION,21,0,false,false,false));
     }
 
 }

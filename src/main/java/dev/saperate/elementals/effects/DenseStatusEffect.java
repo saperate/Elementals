@@ -2,6 +2,7 @@ package dev.saperate.elementals.effects;
 
 import dev.saperate.elementals.mixin.ElementalsLivingEntityAccessor;
 import dev.saperate.elementals.mixin.FurnaceBlockEntityAccessor;
+import net.minecraft.block.Blocks;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectCategory;
@@ -23,9 +24,15 @@ public class DenseStatusEffect extends StatusEffect {
 
     @Override
     public void applyUpdateEffect(LivingEntity entity, int amplifier) {
+        if(amplifier >= 10){
+            entity.slowMovement(Blocks.COBWEB.getDefaultState(), new Vec3d(0.8f,3.1f,0.8f));
+            return;
+        }
+
+
         double currV = entity.getVelocity().y;
 
-        if (((ElementalsLivingEntityAccessor) entity).isJumping() && entity.isOnGround() && entity.isSubmergedInWater()) {
+        if (((ElementalsLivingEntityAccessor) entity).isJumping() && entity.isOnGround() && entity.isTouchingWater()) {
             currV += 1.5f * amplifier;
         } else {
             currV -= 0.07f * amplifier;

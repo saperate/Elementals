@@ -121,9 +121,11 @@ public class EarthBlockEntity extends ProjectileEntity {
                     LivingEntity::isAlive);
 
             for (LivingEntity e : entities) {
-                e.damage(this.getDamageSources().playerAttack((PlayerEntity) owner), 2);
-                e.setVelocity(this.getVelocity().multiply(1.2f));
-                e.move(MovementType.SELF,e.getVelocity());
+                if(!e.equals(owner)){
+                    e.damage(this.getDamageSources().playerAttack((PlayerEntity) owner), 2);
+                    e.setVelocity(this.getVelocity().multiply(1.2f));
+                    e.move(MovementType.SELF,e.getVelocity());
+                }
             }
         }
 

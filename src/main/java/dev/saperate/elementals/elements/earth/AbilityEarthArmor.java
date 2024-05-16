@@ -66,7 +66,6 @@ public class AbilityEarthArmor implements Ability {
         if (!stack.isEmpty() && stack.getItem() instanceof EarthArmorItem a) {
             ItemStack item = EarthArmorItem.getBundledStacks(stack).findFirst().orElse(ItemStack.EMPTY);
             inv.set(slot.getEntitySlotId(), item);
-            System.out.println(a.getProtection());
         }
     }
 
