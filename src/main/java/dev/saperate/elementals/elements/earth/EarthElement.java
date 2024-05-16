@@ -46,6 +46,7 @@ public class EarthElement extends Element {
         addAbility(new AbilityEarthPillar());
         addAbility(new AbilityEarthJump());
         addAbility(new AbilityEarth4(), true);
+        addAbility(new AbilityEarthArmor());
     }
 
     public static Element get() {

@@ -125,7 +125,7 @@ public class SapsUtils {
         return result;
     }
 
-    //Doesn't do anything anymore
+    //I dont have any use for this, but i spent time on it so it is staying
     public void parseUpgradeInt(int obj) {
 
         int i = 0;

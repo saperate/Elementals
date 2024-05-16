@@ -25,7 +25,7 @@
 			"dev.saperate.elementals.server.ElementalsServer"
 		],
 		"fabric-datagen": [
-			"dev.saperate.elementals.ElementalsDataGenerator"
+
 		]
 	},
 	"mixins": [

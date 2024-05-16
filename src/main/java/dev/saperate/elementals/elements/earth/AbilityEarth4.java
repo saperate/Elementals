@@ -10,6 +10,12 @@ import static dev.saperate.elementals.effects.SeismicSenseStatusEffect.SEISMIC_S
 public class AbilityEarth4 implements Ability {
     @Override
     public void onCall(Bender bender, long deltaT) {
+
+        if(deltaT > 1000){
+            EarthElement.get().abilityList.get(13).onCall(bender,deltaT);
+            return;
+        }
+
         if(bender.player.hasStatusEffect(SEISMIC_SENSE_EFFECT)){
             bender.player.removeStatusEffect(SEISMIC_SENSE_EFFECT);
         }else {
