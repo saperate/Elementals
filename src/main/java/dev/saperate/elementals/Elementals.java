@@ -7,14 +7,12 @@ import dev.saperate.elementals.commands.ElementArgumentType;
 import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.data.StateDataSaverAndLoader;
-import dev.saperate.elementals.effects.StationaryStatusEffect;
 import dev.saperate.elementals.elements.NoneElement;
 import dev.saperate.elementals.elements.earth.EarthElement;
 import dev.saperate.elementals.elements.fire.FireElement;
 import dev.saperate.elementals.elements.water.WaterElement;
-import dev.saperate.elementals.entities.water.WaterShieldEntity;
+import dev.saperate.elementals.entities.ElementalEntities;
 import dev.saperate.elementals.items.ElementalItems;
-import dev.saperate.elementals.misc.AirBannerPattern;
 import net.fabricmc.api.ModInitializer;
 
 
@@ -23,12 +21,7 @@ import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
-import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
-import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 import net.minecraft.command.argument.serialize.ConstantArgumentSerializer;
-import net.minecraft.entity.EntityDimensions;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.SpawnGroup;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.registry.Registries;
@@ -44,7 +37,6 @@ import static dev.saperate.elementals.effects.DenseStatusEffect.DENSE_EFFECT;
 import static dev.saperate.elementals.effects.DrowningStatusEffect.DROWNING_EFFECT;
 import static dev.saperate.elementals.effects.SeismicSenseStatusEffect.SEISMIC_SENSE_EFFECT;
 import static dev.saperate.elementals.effects.StationaryStatusEffect.STATIONARY_EFFECT;
-import static dev.saperate.elementals.entities.water.WaterShieldEntity.WATERSHIELD;
 import static dev.saperate.elementals.misc.AirBannerPattern.AIR_PATTERN;
 import static dev.saperate.elementals.network.ModMessages.registerC2SPackets;
 
@@ -55,7 +47,9 @@ public class Elementals implements ModInitializer {
 
     @Override
     public void onInitialize() {
-        ElementalItems.registerModItems();
+        LOGGER.info("Starting registration of the cool stuff...");
+        ElementalItems.register();
+        ElementalEntities.register();
 
         SoulFireCore.registerBlock();
         WaterRapid.registerBlock();
@@ -68,20 +62,21 @@ public class Elementals implements ModInitializer {
         registerElements();
         registerCommands();
         registerC2SPackets();
-        CommandRegistrationCallback.EVENT.register(BendingCommand::register);
 
+        CommandRegistrationCallback.EVENT.register(BendingCommand::register);
         ServerPlayConnectionEvents.JOIN.register(Elementals::onPlayReady);
         ServerPlayerEvents.AFTER_RESPAWN.register(Elementals::onPlayerRespawn);
 
+        Registry.register(Registries.BANNER_PATTERN, "air", AIR_PATTERN);
+        LOGGER.info("Everything successfully registered, have fun!");
 
-        LOGGER.info("Hello from elementals mod!");
+
+        //TODO remove before release
         LOGGER.error("/!\\ IMPORTANT /!\\\n" +
                 "\tDO NOT RELEASE, USE AT YOUR OWN RISK AS IT CAN CONTAIN BUGS AND CAN DESTROY YOUR WORLD \n" +
                 "\tIf this message is in a public release, contact saperate as it shouldn't be there.\n" +
                 "\t05/11/2024\n" +
                 "\t-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
-
-        Registry.register(Registries.BANNER_PATTERN, "air", AIR_PATTERN);
     }
 
 

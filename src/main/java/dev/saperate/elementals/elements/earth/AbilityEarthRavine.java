@@ -18,7 +18,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static dev.saperate.elementals.elements.earth.EarthElement.makeHole;
-import static dev.saperate.elementals.entities.earth.EarthBlockEntity.EARTHBLOCK;
 
 public class AbilityEarthRavine implements Ability {
     @Override

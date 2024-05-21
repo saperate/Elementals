@@ -30,7 +30,7 @@ public class ElementalItems {
         return Registry.register(Registries.ITEM, new Identifier(MODID,name), item);
     }
 
-    public static void registerModItems() {
+    public static void register() {
         EARTH_ARMOR_SET.add(EARTH_HELMET);
         EARTH_ARMOR_SET.add(EARTH_CHESTPLATE);
         EARTH_ARMOR_SET.add(EARTH_LEGGINGS);

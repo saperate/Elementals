@@ -14,7 +14,6 @@ import net.minecraft.util.math.random.Random;
 import java.util.ArrayList;
 import java.util.List;
 
-import static dev.saperate.elementals.entities.earth.EarthBlockEntity.EARTHBLOCK;
 
 public class AbilityEarthSpikes implements Ability {
     @Override

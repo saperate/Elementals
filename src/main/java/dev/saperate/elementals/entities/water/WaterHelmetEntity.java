@@ -1,8 +1,5 @@
 package dev.saperate.elementals.entities.water;
 
-import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
-import net.minecraft.block.Blocks;
-import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.*;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
@@ -10,26 +7,13 @@ import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.particle.ParticleEffect;
 import net.minecraft.particle.ParticleTypes;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
-import org.joml.Vector3f;
-import org.joml.Vector3fc;
-
-import java.util.List;
 
 import static dev.saperate.elementals.effects.DrowningStatusEffect.DROWNING_EFFECT;
-import static dev.saperate.elementals.effects.StationaryStatusEffect.STATIONARY_EFFECT;
-import static dev.saperate.elementals.utils.SapsUtils.getEntityLookVector;
+import static dev.saperate.elementals.entities.ElementalEntities.WATERHELMET;
 import static dev.saperate.elementals.utils.SapsUtils.summonParticles;
 
 public class WaterHelmetEntity extends Entity {
@@ -37,14 +21,8 @@ public class WaterHelmetEntity extends Entity {
     private static final TrackedData<Integer> CASTER_ID = DataTracker.registerData(WaterHelmetEntity.class, TrackedDataHandlerRegistry.INTEGER);
     private static final TrackedData<Integer> OWNER_ID = DataTracker.registerData(WaterHelmetEntity.class, TrackedDataHandlerRegistry.INTEGER);
     private static final TrackedData<Boolean> DROWN = DataTracker.registerData(WaterHelmetEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
-
     public int aliveTicks = 0, maxLifeTime = 1000;
 
-    public static final EntityType<WaterHelmetEntity> WATERHELMET = Registry.register(
-            Registries.ENTITY_TYPE,
-            new Identifier("elementals", "water_helmet"),
-            FabricEntityTypeBuilder.<WaterHelmetEntity>create(SpawnGroup.MISC, WaterHelmetEntity::new)
-                    .dimensions(EntityDimensions.changing(1, 1)).build());
 
 
     public WaterHelmetEntity(EntityType<WaterHelmetEntity> type, World world) {

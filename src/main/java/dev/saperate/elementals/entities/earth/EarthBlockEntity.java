@@ -1,10 +1,8 @@
 package dev.saperate.elementals.entities.earth;
 
 import dev.saperate.elementals.utils.SapsUtils;
-import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
-import net.minecraft.block.FluidBlock;
 import net.minecraft.entity.*;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
@@ -13,11 +11,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.entity.projectile.ProjectileUtil;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.particle.ParticleTypes;
 import net.minecraft.predicate.entity.EntityPredicates;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.TypeFilter;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
@@ -28,6 +22,7 @@ import org.joml.Vector3f;
 
 import java.util.List;
 
+import static dev.saperate.elementals.entities.ElementalEntities.EARTHBLOCK;
 import static dev.saperate.elementals.utils.SapsUtils.getEntityLookVector;
 import static dev.saperate.elementals.utils.SapsUtils.summonParticles;
 
@@ -44,11 +39,6 @@ public class EarthBlockEntity extends ProjectileEntity {
     private boolean drops = true, damageOnTouch = false, shiftToFreeze = true, dropOnLifeTime = false;
     private int lifeTime = -1;
 
-    public static final EntityType<EarthBlockEntity> EARTHBLOCK = Registry.register(
-            Registries.ENTITY_TYPE,
-            new Identifier("elementals", "earth_block"),
-            FabricEntityTypeBuilder.<EarthBlockEntity>create(SpawnGroup.MISC, EarthBlockEntity::new)
-                    .dimensions(EntityDimensions.fixed(.9f, .9f)).build());
 
 
     public EarthBlockEntity(EntityType<EarthBlockEntity> type, World world) {

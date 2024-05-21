@@ -1,43 +1,26 @@
 package dev.saperate.elementals.entities.water;
 
 import dev.saperate.elementals.data.Bender;
-import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 import net.minecraft.entity.*;
-import net.minecraft.entity.attribute.DefaultAttributeContainer;
-import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.damage.DamageType;
-import net.minecraft.entity.damage.DamageTypes;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
-import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ProjectileEntity;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.particle.ParticleTypes;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
-import net.minecraft.util.Arm;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
-import java.util.Collections;
 import java.util.List;
 
+import static dev.saperate.elementals.entities.ElementalEntities.WATERSHIELD;
 import static dev.saperate.elementals.utils.SapsUtils.summonParticles;
 
 
 public class WaterShieldEntity extends Entity {
     private static final TrackedData<Integer> OWNER_ID = DataTracker.registerData(WaterShieldEntity.class, TrackedDataHandlerRegistry.INTEGER);
 
-    public static final EntityType<WaterShieldEntity> WATERSHIELD = Registry.register(
-            Registries.ENTITY_TYPE,
-            new Identifier("elementals", "water_shield"),
-            FabricEntityTypeBuilder.<WaterShieldEntity>create(SpawnGroup.MISC, WaterShieldEntity::new)
-                    .dimensions(EntityDimensions.changing(3, 3)).build());
 
     public WaterShieldEntity(EntityType<WaterShieldEntity> type, World world) {
         super(type, world);

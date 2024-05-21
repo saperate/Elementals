@@ -21,21 +21,7 @@ import net.minecraft.client.render.entity.model.EntityModelLayer;
 import net.minecraft.util.Identifier;
 
 import static dev.saperate.elementals.Elementals.MODID;
-import static dev.saperate.elementals.entities.earth.EarthBlockEntity.EARTHBLOCK;
-import static dev.saperate.elementals.entities.fire.FireArcEntity.FIREARC;
-import static dev.saperate.elementals.entities.fire.FireBallEntity.FIREBALL;
-import static dev.saperate.elementals.entities.fire.FireBlockEntity.FIREBLOCK;
-import static dev.saperate.elementals.entities.fire.FireShieldEntity.FIRESHIELD;
-import static dev.saperate.elementals.entities.water.WaterArmEntity.WATERARM;
-import static dev.saperate.elementals.entities.water.WaterBladeEntity.WATERBLADE;
-import static dev.saperate.elementals.entities.water.WaterBulletEntity.WATERBULLET;
-import static dev.saperate.elementals.entities.water.WaterCubeEntity.WATERCUBE;
-import static dev.saperate.elementals.entities.water.WaterArcEntity.WATERARC;
-import static dev.saperate.elementals.entities.water.WaterHealingEntity.WATERHEALING;
-import static dev.saperate.elementals.entities.water.WaterHelmetEntity.WATERHELMET;
-import static dev.saperate.elementals.entities.water.WaterJetEntity.WATERJET;
-import static dev.saperate.elementals.entities.water.WaterShieldEntity.WATERSHIELD;
-import static dev.saperate.elementals.entities.water.WaterTowerEntity.WATERTOWER;
+import static dev.saperate.elementals.entities.ElementalEntities.*;
 import static dev.saperate.elementals.network.ModMessages.SYNC_CURR_ABILITY_PACKET_ID;
 import static dev.saperate.elementals.network.ModMessages.SYNC_ELEMENT_PACKET_ID;
 

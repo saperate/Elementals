@@ -1,27 +1,18 @@
 package dev.saperate.elementals.entities.fire;
 
-import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.*;
-import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.particle.BlockStateParticleEffect;
-import net.minecraft.particle.ParticleTypes;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import net.minecraft.world.event.GameEvent;
 
 import java.util.List;
-import java.util.Properties;
+
+import static dev.saperate.elementals.entities.ElementalEntities.FIRESHIELD;
 
 public class FireShieldEntity extends Entity {
     public static final int MAX_FLAME_SIZE = 3;
@@ -31,12 +22,6 @@ public class FireShieldEntity extends Entity {
     private static final TrackedData<Integer> OWNER_ID = DataTracker.registerData(FireShieldEntity.class, TrackedDataHandlerRegistry.INTEGER);
     public float prevFlameSize = 0;
     public int heightAdjustSpeed = 10;//Smaller is faster
-    public static final EntityType<FireShieldEntity> FIRESHIELD = Registry.register(
-            Registries.ENTITY_TYPE,
-            new Identifier("elementals", "fire_shield"),
-            FabricEntityTypeBuilder.<FireShieldEntity>create(SpawnGroup.MISC, FireShieldEntity::new)
-                    .dimensions(EntityDimensions.changing(3.5f, MAX_FLAME_SIZE)).build());
-
 
     public FireShieldEntity(EntityType<FireShieldEntity> type, World world) {
         super(type, world);

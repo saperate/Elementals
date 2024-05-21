@@ -1,32 +1,19 @@
 package dev.saperate.elementals.entities.water;
 
-import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.entity.*;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ProjectileEntity;
-import net.minecraft.entity.projectile.ProjectileUtil;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.predicate.entity.EntityPredicates;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.TypeFilter;
-import net.minecraft.util.hit.EntityHitResult;
-import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
-import org.joml.Vector3f;
 
-import java.util.List;
-
-import static dev.saperate.elementals.utils.SapsUtils.getEntityLookVector;
+import static dev.saperate.elementals.entities.ElementalEntities.WATERTOWER;
 import static dev.saperate.elementals.utils.SapsUtils.summonParticles;
 
 public class WaterTowerEntity extends ProjectileEntity {
@@ -34,11 +21,6 @@ public class WaterTowerEntity extends ProjectileEntity {
     private static final TrackedData<Float> TOWER_HEIGHT = DataTracker.registerData(WaterTowerEntity.class, TrackedDataHandlerRegistry.FLOAT);
     private static final TrackedData<Float> MAX_TOWER_HEIGHT = DataTracker.registerData(WaterTowerEntity.class, TrackedDataHandlerRegistry.FLOAT);
     private static final TrackedData<Integer> OWNER_ID = DataTracker.registerData(WaterTowerEntity.class, TrackedDataHandlerRegistry.INTEGER);
-    public static final EntityType<WaterTowerEntity> WATERTOWER = Registry.register(
-            Registries.ENTITY_TYPE,
-            new Identifier("elementals", "water_tower"),
-            FabricEntityTypeBuilder.<WaterTowerEntity>create(SpawnGroup.MISC, WaterTowerEntity::new)
-                    .dimensions(EntityDimensions.fixed(1, heightLimit)).build());
 
 
     public WaterTowerEntity(EntityType<WaterTowerEntity> type, World world) {

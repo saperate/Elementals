@@ -1,6 +1,5 @@
 package dev.saperate.elementals.entities.fire;
 
-import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.*;
 import net.minecraft.entity.damage.DamageSource;
@@ -9,13 +8,11 @@ import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
-import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
 
 import java.util.List;
 
+import static dev.saperate.elementals.entities.ElementalEntities.FIREBLOCK;
 import static net.minecraft.entity.projectile.ProjectileUtil.getEntityCollision;
 
 public class FireBlockEntity extends Entity {
@@ -26,11 +23,6 @@ public class FireBlockEntity extends Entity {
     public int lifeTime = 0;
     public float prevFlameSize = 0;
     public int heightAdjustSpeed = 10;//Smaller is faster
-    public static final EntityType<FireBlockEntity> FIREBLOCK = Registry.register(
-            Registries.ENTITY_TYPE,
-            new Identifier("elementals", "fire_block"),
-            FabricEntityTypeBuilder.<FireBlockEntity>create(SpawnGroup.MISC, FireBlockEntity::new)
-                    .dimensions(EntityDimensions.changing(1, MAX_FLAME_SIZE)).build());
 
 
     public FireBlockEntity(EntityType<FireBlockEntity> type, World world) {

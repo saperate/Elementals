@@ -1,6 +1,5 @@
 package dev.saperate.elementals.entities.water;
 
-import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.*;
 import net.minecraft.entity.data.DataTracker;
@@ -11,11 +10,6 @@ import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.entity.projectile.ProjectileUtil;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.particle.ParticleTypes;
-import net.minecraft.predicate.entity.EntityPredicates;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.TypeFilter;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
@@ -23,6 +17,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.joml.Vector3f;
 
+import static dev.saperate.elementals.entities.ElementalEntities.WATERARM;
 import static dev.saperate.elementals.utils.SapsUtils.*;
 
 public class WaterArmEntity extends ProjectileEntity {
@@ -31,11 +26,6 @@ public class WaterArmEntity extends ProjectileEntity {
     private static final TrackedData<Integer> OWNER_ID = DataTracker.registerData(WaterArmEntity.class, TrackedDataHandlerRegistry.INTEGER);
     private static final TrackedData<Boolean> IS_CONTROLLED = DataTracker.registerData(WaterArmEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
 
-    public static final EntityType<WaterArmEntity> WATERARM = Registry.register(
-            Registries.ENTITY_TYPE,
-            new Identifier("elementals", "water_arm"),
-            FabricEntityTypeBuilder.<WaterArmEntity>create(SpawnGroup.MISC, WaterArmEntity::new)
-                    .dimensions(EntityDimensions.fixed(0.25f, 0.25f)).build());
     public static final float chainDistance = 1;
     private static final int MAX_CHAIN_LENGTH = 4;
     public int chainLength = 0;
