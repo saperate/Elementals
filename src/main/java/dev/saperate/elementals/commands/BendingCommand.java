@@ -36,6 +36,9 @@ public class BendingCommand {
                         .then(CommandManager.literal("buy").then(CommandManager.argument("name", StringArgumentType.string()).executes(BendingCommand::buyUpgrade)))
                         .then(CommandManager.literal("clear").executes(BendingCommand::clearUpgrades))
                 )
+                .then(CommandManager.literal("status")
+                        .executes(BendingCommand::status)
+                )
 
         );
     }
@@ -177,6 +180,17 @@ public class BendingCommand {
 
         context.getSource().sendFeedback((() -> Text.of(
                 "You no longer have any upgrades!")
+        ), false);
+        return 1;
+    }
+
+
+    private static int status(CommandContext<ServerCommandSource> context){
+        Bender bender = Bender.getBender(context.getSource().getPlayer());
+
+        System.out.println(bender.toString());
+        context.getSource().sendFeedback((() -> Text.of(
+                bender.toString())
         ), false);
         return 1;
     }

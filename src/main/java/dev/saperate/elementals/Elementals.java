@@ -8,6 +8,7 @@ import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.data.StateDataSaverAndLoader;
 import dev.saperate.elementals.elements.NoneElement;
+import dev.saperate.elementals.elements.air.AirElement;
 import dev.saperate.elementals.elements.earth.EarthElement;
 import dev.saperate.elementals.elements.fire.FireElement;
 import dev.saperate.elementals.elements.water.WaterElement;
@@ -85,6 +86,7 @@ public class Elementals implements ModInitializer {
         new WaterElement();
         new FireElement();
         new EarthElement();
+        new AirElement();
     }
 
     private void registerCommands() {

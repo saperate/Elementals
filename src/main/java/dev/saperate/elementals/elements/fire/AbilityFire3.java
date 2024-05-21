@@ -60,7 +60,6 @@ public class AbilityFire3 implements Ability {
     public void onTick(Bender bender) {
         PlayerEntity player = bender.player;
         int count = 1;
-
         if ((bender.abilityData == null || bender.abilityData.equals(true)) && player.isSprinting()
         && PlayerData.get(player).canUseUpgrade("jet")) {
             player.startFallFlying();
@@ -71,6 +70,7 @@ public class AbilityFire3 implements Ability {
             player.velocityModified = true;
             player.move(MovementType.PLAYER, player.getVelocity());
             bender.abilityData = true;
+            player.fallDistance = 0;
 
 
             serverSummonParticles((ServerWorld) player.getWorld(),

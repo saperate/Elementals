@@ -115,4 +115,39 @@ public class Bender {
         buf.writeInt(bender.currAbility != null ? bender.getElement().abilityList.indexOf(bender.currAbility) : -1);
         ServerPlayNetworking.send((ServerPlayerEntity) bender.player, SYNC_CURR_ABILITY_PACKET_ID, buf);
     }
+
+    /**
+     * This collects necessary information and outputs it in a stylised manner, the brakets
+     * are not yet closed which makes it easy to add more information if necessary, when you are done
+     * modifying the builder, simply append "\n}" and it will look good
+     * @return A stylised string builder of the information present
+     */
+    public StringBuilder getStatus(){
+        return getStatus(new StringBuilder());
+    }
+
+    /**
+     * This collects necessary information and outputs it in a stylised manner, the brakets
+     * are not yet closed which makes it easy to add more information if necessary, when you are done
+     * modifying the builder, simply append "\n}" and it will look good
+     * @return A stylised string builder of the information present
+     */
+    public StringBuilder getStatus(StringBuilder builder){
+        builder.append(player.getGameProfile().getName()).append(" = {");
+        builder.append("\n    Element = ").append(getElement().name);
+        builder.append("\n    Current ability = ").append(Ability.getName(currAbility));
+        builder.append("\n    Cast time = ").append(castTime);
+
+        for (int i = 0; i < boundAbilities.length; i++) {
+            builder.append("\n    bind ").append(i).append(" = ").append(Ability.getName(boundAbilities[i]));
+        }
+
+        return builder;
+    }
+
+
+    @Override
+    public String toString() {
+        return getStatus().append("\n}").toString();
+    }
 }

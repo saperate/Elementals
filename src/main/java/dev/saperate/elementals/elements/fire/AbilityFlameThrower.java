@@ -62,11 +62,14 @@ public class AbilityFlameThrower implements Ability {
         }else{
             Vector3f pos = getEntityLookVector(player,3).subtract(player.getPos()).normalize().multiply(3).toVector3f();
 
+
             serverSummonParticles((ServerWorld) player.getWorld(),
                     PlayerData.get(player).canUseUpgrade("blueFire") ?
                             ParticleTypes.SOUL_FIRE_FLAME : ParticleTypes.FLAME,player,player.getRandom(),
-                    pos.x - 1, pos.y - 1.6f, pos.z - 1,
-                    0.1f,8,
+                    pos.x - 1,
+                    pos.y - 1.6f,
+                    pos.z - 1,
+                    0.05f + player.getMovementSpeed(), 8,
                     0,0,0, 2);
 
             List<Entity> hits = player.getWorld().getEntitiesByClass(Entity.class,

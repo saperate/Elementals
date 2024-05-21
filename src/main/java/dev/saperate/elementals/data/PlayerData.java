@@ -27,4 +27,5 @@ public class PlayerData {
     public static PlayerData get(LivingEntity player) {
         return StateDataSaverAndLoader.getPlayerState(player);
     }
+
 }
