@@ -12,8 +12,8 @@ public class AbilityAir1 implements Ability {
         PlayerData playerData = PlayerData.get(bender.player);
 
         if (bender.player.isSneaking()) {
-            if(playerData.canUseUpgrade("fireWall")){
-
+            if(playerData.canUseUpgrade("airShield")){
+                AirElement.get().abilityList.get(2).onCall(bender,deltaT);
                 return;
             } else if (playerData.canUseUpgrade("fireSpikes")) {
 

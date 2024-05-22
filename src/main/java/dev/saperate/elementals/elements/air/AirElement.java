@@ -21,6 +21,7 @@ public class AirElement extends Element {
         });
         addAbility(new AbilityAir1(), true);
         addAbility(new AbilityAirGust());
+        addAbility(new AbilityAirShield());
     }
 
     public static Element get(){
