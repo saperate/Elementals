@@ -32,7 +32,7 @@ public class FireExplosion extends Explosion {
     private static final ExplosionBehavior DEFAULT_BEHAVIOR = new ExplosionBehavior();
     private World world;
     private double x, y, z;
-    private float power, maxDamage;
+    private float power, maxDamage, velocityMultiplier = 1;
     private ExplosionBehavior behavior;
     private DamageSource damageSource;
 
@@ -48,9 +48,12 @@ public class FireExplosion extends Explosion {
         this.behavior = chooseBehavior(entity);
         this.maxDamage = maxDamage;
     }
+    public FireExplosion(World world, @Nullable Entity entity, double x, double y, double z, float power, boolean createFire, DestructionType destructionType, float maxDamage, float velocityMultiplier) {
+        this(world,entity,x,y,z,power,createFire,destructionType,maxDamage);
+        this.velocityMultiplier = velocityMultiplier;
+    }
 
-
-    @Override
+        @Override
     public void collectBlocksAndDamageEntities() {
         int l;
         int k;
@@ -100,7 +103,7 @@ public class FireExplosion extends Explosion {
         int s = MathHelper.floor(this.y + (double) q + 1.0);
         int t = MathHelper.floor(this.z - (double) q - 1.0);
         int u = MathHelper.floor(this.z + (double) q + 1.0);
-        List<Entity> list = this.world.getOtherEntities(this.getEntity(), new Box(k, r, t, l, s, u));
+        List<Entity> list = this.world.getOtherEntities(null, new Box(k, r, t, l, s, u));
         Vec3d vec3d = new Vec3d(this.x, this.y, this.z);
         for (Entity entity : list) {
             PlayerEntity playerEntity;
@@ -115,7 +118,7 @@ public class FireExplosion extends Explosion {
             w /= z;
             x /= z;
             y /= z;
-            if (behavior.shouldDamage(this, entity)) {
+            if (behavior.shouldDamage(this, entity) && !entity.equals(getEntity())) {
                 entity.damage(this.damageSource, Math.min(this.behavior.calculateDamage(this, entity), maxDamage));
             }
             double aa = (1.0 - v) * (double) Explosion.getExposure(vec3d, entity);
@@ -125,10 +128,11 @@ public class FireExplosion extends Explosion {
             } else {
                 ab = aa;
             }
-            Vec3d vec3d2 = new Vec3d(w *= ab, x *= ab, y *= ab);
+            Vec3d vec3d2 = new Vec3d(w *= ab, x *= ab, y *= ab).multiply(velocityMultiplier);
             entity.setVelocity(entity.getVelocity().add(vec3d2));
             if (!(entity instanceof PlayerEntity) || (playerEntity = (PlayerEntity) entity).isSpectator() || playerEntity.isCreative() && playerEntity.getAbilities().flying)
                 continue;
+            playerEntity.velocityModified = true;
             getAffectedPlayers().put(playerEntity, vec3d2);
         }
 

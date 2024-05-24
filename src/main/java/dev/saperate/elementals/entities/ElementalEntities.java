@@ -2,6 +2,7 @@ package dev.saperate.elementals.entities;
 
 
 
+import dev.saperate.elementals.entities.air.AirBallEntity;
 import dev.saperate.elementals.entities.air.AirShieldEntity;
 import dev.saperate.elementals.entities.air.AirStreamEntity;
 import dev.saperate.elementals.entities.air.AirTornadoEntity;
@@ -119,6 +120,11 @@ public class ElementalEntities {
             new Identifier("elementals", "air_stream"),
             FabricEntityTypeBuilder.<AirStreamEntity>create(SpawnGroup.MISC, AirStreamEntity::new)
                     .dimensions(EntityDimensions.changing(0.25f, 0.25f)).build());
+    public static final EntityType<AirBallEntity> AIRBALL = Registry.register(
+            Registries.ENTITY_TYPE,
+            new Identifier("elementals", "air_ball"),
+            FabricEntityTypeBuilder.<AirBallEntity>create(SpawnGroup.MISC, AirBallEntity::new)
+                    .dimensions(EntityDimensions.fixed(1, 1)).build());
     public static void register() {
 
     }

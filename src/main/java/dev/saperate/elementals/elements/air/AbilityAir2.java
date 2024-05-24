@@ -10,12 +10,12 @@ public class AbilityAir2 implements Ability {
     public void onCall(Bender bender, long deltaT) {
         PlayerData playerData = PlayerData.get(bender.player);
 
-        if(true){
-            AirElement.get().abilityList.get(5).onCall(bender,deltaT);
+        if (true) {
+            AirElement.get().abilityList.get(6).onCall(bender, deltaT);
             return;
         }
         if (bender.player.isSneaking()) {
-            if(playerData.canUseUpgrade("airShield")){
+            if (playerData.canUseUpgrade("airShield")) {
 
                 return;
             } else if (playerData.canUseUpgrade("airTornado")) {
@@ -24,7 +24,7 @@ public class AbilityAir2 implements Ability {
             }
         }
 
-
+        AirElement.get().abilityList.get(5).onCall(bender, deltaT);
     }
 
     @Override

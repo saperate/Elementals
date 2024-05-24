@@ -34,7 +34,6 @@ import java.util.function.Predicate;
 
 /**
  * A collection of methods that makes some redundant stuff easier to use
- * @Author saperate
  */
 public class SapsUtils {
 
@@ -73,6 +72,13 @@ public class SapsUtils {
         Box box = entity.getBoundingBox().expand(sensitivity);
         BlockPos blockPos = BlockPos.ofFloored(box.minX + 1.0E-7, box.minY + 1.0E-7, box.minZ + 1.0E-7);
         BlockPos blockPos2 = BlockPos.ofFloored(box.maxX - 1.0E-7, box.maxY - 1.0E-7, box.maxZ - 1.0E-7);
+
+        //There is a weird but where if you didn't move the entity yet, the bounding box doesnt add position
+        //So this is here to fix that
+        if(!isAboutEquals(box.minX,entity.getX(),box.maxX - box.minX)){
+            blockPos = blockPos.add(entity.getBlockPos());
+            blockPos2 = blockPos2.add(entity.getBlockPos());
+        }
 
         BlockPos.Mutable mutable = new BlockPos.Mutable();
 
@@ -289,5 +295,8 @@ public class SapsUtils {
         }
     }
 
+    public static Boolean isAboutEquals(double a, double b, double errorMargin){
+        return Math.abs(a-b) <= errorMargin;
+    }
 
 }
