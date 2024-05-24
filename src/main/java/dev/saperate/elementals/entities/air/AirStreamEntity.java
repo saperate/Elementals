@@ -1,8 +1,12 @@
-package dev.saperate.elementals.entities.fire;
+package dev.saperate.elementals.entities.air;
 
+import dev.saperate.elementals.utils.SapsUtils;
 import net.minecraft.block.AbstractFireBlock;
 import net.minecraft.block.BlockState;
-import net.minecraft.entity.*;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.MovementType;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
@@ -20,32 +24,32 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.joml.Vector3f;
 
+import static dev.saperate.elementals.entities.ElementalEntities.AIRSTREAM;
 import static dev.saperate.elementals.entities.ElementalEntities.FIREARC;
 import static dev.saperate.elementals.utils.SapsUtils.getEntityLookVector;
 import static dev.saperate.elementals.utils.SapsUtils.summonParticles;
 
-public class FireArcEntity extends ProjectileEntity {
-    private static final TrackedData<Integer> PARENT_ID = DataTracker.registerData(FireArcEntity.class, TrackedDataHandlerRegistry.INTEGER);
-    private static final TrackedData<Integer> CHILD_ID = DataTracker.registerData(FireArcEntity.class, TrackedDataHandlerRegistry.INTEGER);
-    private static final TrackedData<Integer> OWNER_ID = DataTracker.registerData(FireArcEntity.class, TrackedDataHandlerRegistry.INTEGER);
-    private static final TrackedData<Boolean> IS_CONTROLLED = DataTracker.registerData(FireArcEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
-    private static final TrackedData<Boolean> IS_BLUE = DataTracker.registerData(FireArcEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
-
-    public static final float chainDistance = 0.75f;
-    private static final int MAX_CHAIN_LENGTH = 3;
+//TODO merge with fire arc to reduce the # of entities
+public class AirStreamEntity extends ProjectileEntity {
+    private static final TrackedData<Integer> PARENT_ID = DataTracker.registerData(AirStreamEntity.class, TrackedDataHandlerRegistry.INTEGER);
+    private static final TrackedData<Integer> CHILD_ID = DataTracker.registerData(AirStreamEntity.class, TrackedDataHandlerRegistry.INTEGER);
+    private static final TrackedData<Integer> OWNER_ID = DataTracker.registerData(AirStreamEntity.class, TrackedDataHandlerRegistry.INTEGER);
+    private static final TrackedData<Boolean> IS_CONTROLLED = DataTracker.registerData(AirStreamEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
+    public static final float chainDistance = 0.65f;
+    private static final int MAX_CHAIN_LENGTH = 6;
     public int chainLength = 0;
 
 
-    public FireArcEntity(EntityType<FireArcEntity> type, World world) {
+    public AirStreamEntity(EntityType<AirStreamEntity> type, World world) {
         super(type, world);
     }
 
-    public FireArcEntity(World world, LivingEntity owner) {
+    public AirStreamEntity(World world, LivingEntity owner) {
         this(world, owner, owner.getX(), owner.getY(), owner.getZ());
     }
 
-    public FireArcEntity(World world, LivingEntity owner, double x, double y, double z) {
-        super(FIREARC, world);
+    public AirStreamEntity(World world, LivingEntity owner, double x, double y, double z) {
+        super(AIRSTREAM, world);
         setOwner(owner);
         setPos(x, y, z);
         setNoGravity(false);
@@ -54,11 +58,10 @@ public class FireArcEntity extends ProjectileEntity {
 
     public void createChain(LivingEntity owner) {
         if (chainLength < MAX_CHAIN_LENGTH) {
-            FireArcEntity newArc = new FireArcEntity(getWorld(), owner, getX(), getY(), getZ());
+            AirStreamEntity newArc = new AirStreamEntity(getWorld(), owner, getX(), getY(), getZ());
             newArc.setParent(this);
             setChild(newArc);
             newArc.setControlled(false);
-            newArc.setIsBlue(isBlue());
             getWorld().spawnEntity(newArc);
             chainLength++;
             newArc.chainLength = chainLength;
@@ -72,42 +75,34 @@ public class FireArcEntity extends ProjectileEntity {
         this.getDataTracker().startTracking(CHILD_ID, 0);
         this.getDataTracker().startTracking(OWNER_ID, 0);
         this.getDataTracker().startTracking(IS_CONTROLLED, false);
-        this.getDataTracker().startTracking(IS_BLUE, false);
     }
 
     @Override
     public void tick() {
-        if (random.nextBetween(0, 20) == 6) {
+        if (random.nextBetween(0, 40) == 6) {
             summonParticles(this, random,
-                    isBlue() ? ParticleTypes.SOUL_FIRE_FLAME : ParticleTypes.FLAME,
+                    ParticleTypes.WHITE_SMOKE,
                     0, 1);
         }
 
         super.tick();
-        Entity owner = getOwner();
+        PlayerEntity owner = getOwner();
         if (owner == null) {
             discard();
             return;
         }
-        FireArcEntity parent = getParent();
+        AirStreamEntity parent = getParent();
         if (!getIsControlled() && parent == null) {
             HitResult hit = ProjectileUtil.getCollision(this, entity -> entity instanceof LivingEntity);
             if (hit.getType() == HitResult.Type.ENTITY) {
                 LivingEntity entity = (LivingEntity) ((EntityHitResult) hit).getEntity();
-                entity.addVelocity(this.getVelocity().multiply(0.2f));
-                if (!entity.isFireImmune()) {
-                    entity.setOnFireFor(8);
-                }
-                entity.damage(getDamageSources().inFire(), isBlue() ? 3.5f : 2.5f);
+                entity.damage(getDamageSources().playerAttack(owner),2.5f);
+                entity.addVelocity(this.getVelocity().multiply(1f));
+                entity.move(MovementType.SELF, entity.getVelocity());
                 remove();
             }
             if (!getWorld().isClient) {
-                BlockPos blockDown = getBlockPos().down();
-                BlockState blockState = getWorld().getBlockState(blockDown);
-
-                //TODO add the better collision system
-                if ((!blockState.isAir() && getY() - getBlockPos().getY() == 0)) {
-                    getWorld().setBlockState(getBlockPos(), AbstractFireBlock.getState(getWorld(),getBlockPos()));
+                if (SapsUtils.checkBlockCollision(this,0.1f) != null) {
                     remove();
                     return;
                 }
@@ -165,7 +160,7 @@ public class FireArcEntity extends ProjectileEntity {
     @Override
     public void onRemoved() {
         summonParticles(this, random,
-                isBlue() ? ParticleTypes.SOUL_FIRE_FLAME : ParticleTypes.FLAME,
+                ParticleTypes.WHITE_SMOKE,
                 0.1f, 10);
     }
 
@@ -179,8 +174,8 @@ public class FireArcEntity extends ProjectileEntity {
         getHead().remove();
     }
 
-    public FireArcEntity getHead() {
-        FireArcEntity parent = getParent();
+    public AirStreamEntity getHead() {
+        AirStreamEntity parent = getParent();
         if (parent == null) {
             return this;
         }
@@ -191,7 +186,7 @@ public class FireArcEntity extends ProjectileEntity {
      * remove a specific link from the chain. it also kills its children
      */
     public void remove() {
-        FireArcEntity child = getChild();
+        AirStreamEntity child = getChild();
         if (child == null) {
             if(getParent() == null){
                 this.discard();
@@ -202,7 +197,7 @@ public class FireArcEntity extends ProjectileEntity {
             return;
         }
         child.remove();
-        FireArcEntity parent = getParent();
+        AirStreamEntity parent = getParent();
         if (parent != null) {
             getParent().setChild(null);
         }
@@ -232,9 +227,9 @@ public class FireArcEntity extends ProjectileEntity {
         return this.getDataTracker().get(IS_CONTROLLED);
     }
 
-    public LivingEntity getOwner() {
+    public PlayerEntity getOwner() {
         Entity owner = this.getWorld().getEntityById(this.getDataTracker().get(OWNER_ID));
-        return (owner instanceof LivingEntity) ? (LivingEntity) owner : null;
+        return (owner instanceof PlayerEntity) ? (PlayerEntity) owner : null;
     }
 
     public void setOwner(LivingEntity owner) {
@@ -245,29 +240,22 @@ public class FireArcEntity extends ProjectileEntity {
         entity.pushAwayFrom(this);
     }
 
-    public FireArcEntity getParent() {
+    public AirStreamEntity getParent() {
         int parentId = this.getDataTracker().get(PARENT_ID);
-        return parentId != 0 ? (FireArcEntity) this.getWorld().getEntityById(parentId) : null;
+        return parentId != 0 ? (AirStreamEntity) this.getWorld().getEntityById(parentId) : null;
     }
 
-    public void setParent(FireArcEntity parent) {
+    public void setParent(AirStreamEntity parent) {
         this.getDataTracker().set(PARENT_ID, parent != null ? parent.getId() : 0);
     }
 
-    public FireArcEntity getChild() {
+    public AirStreamEntity getChild() {
         int childId = this.getDataTracker().get(CHILD_ID);
-        return childId != 0 ? (FireArcEntity) this.getWorld().getEntityById(childId) : null;
+        return childId != 0 ? (AirStreamEntity) this.getWorld().getEntityById(childId) : null;
     }
 
-    public void setChild(FireArcEntity child) {
+    public void setChild(AirStreamEntity child) {
         this.getDataTracker().set(CHILD_ID, child != null ? child.getId() : 0);
     }
 
-    public boolean isBlue() {
-        return this.dataTracker.get(IS_BLUE);
-    }
-
-    public void setIsBlue(boolean val) {
-        this.getDataTracker().set(IS_BLUE, val);
-    }
 }

@@ -1,6 +1,7 @@
 package dev.saperate.elementals;
 
 import dev.saperate.elementals.entities.air.AirShieldEntityRenderer;
+import dev.saperate.elementals.entities.air.AirStreamEntityRenderer;
 import dev.saperate.elementals.entities.air.AirTornadoEntityRenderer;
 import dev.saperate.elementals.entities.earth.EarthBlockEntityRenderer;
 import dev.saperate.elementals.entities.fire.FireArcEntityRenderer;
@@ -34,27 +35,7 @@ public class ElementalsClient implements ClientModInitializer {
 	@Override
 	public void onInitializeClient() {
 		registerS2CPackets();
-
-		EntityRendererRegistry.register(WATERCUBE, WaterCubeEntityRenderer::new);
-		EntityRendererRegistry.register(WATERHELMET, WaterHelmetEntityRenderer::new);
-		EntityRendererRegistry.register(WATERSHIELD, WaterShieldEntityRenderer::new);
-		EntityRendererRegistry.register(WATERARC, WaterArcEntityRenderer::new);
-		EntityRendererRegistry.register(WATERJET, WaterJetEntityRenderer::new);
-		EntityRendererRegistry.register(WATERARM, WaterArmEntityRenderer::new);
-		EntityRendererRegistry.register(WATERBLADE, WaterBladeEntityRenderer::new);
-		EntityRendererRegistry.register(WATERBULLET, WaterBulletEntityRenderer::new);
-		EntityRendererRegistry.register(WATERHEALING, WaterHealingEntityRenderer::new);
-		EntityRendererRegistry.register(WATERTOWER, WaterTowerEntityRenderer::new);
-
-		EntityRendererRegistry.register(FIREBLOCK, FireBlockEntityRenderer::new);
-		EntityRendererRegistry.register(FIREARC, FireArcEntityRenderer::new);
-		EntityRendererRegistry.register(FIREBALL, FireBallEntityRenderer::new);
-		EntityRendererRegistry.register(FIRESHIELD, FireShieldEntityRenderer::new);
-
-		EntityRendererRegistry.register(EARTHBLOCK, EarthBlockEntityRenderer::new);
-
-		EntityRendererRegistry.register(AIRSHIELD, AirShieldEntityRenderer::new);
-		EntityRendererRegistry.register(AIRTORNADO, AirTornadoEntityRenderer::new);
+		registerEntityRenderers();
 
 		new KeyAbility1();
 		new KeyAbility2();
@@ -69,6 +50,34 @@ public class ElementalsClient implements ClientModInitializer {
 	public void registerS2CPackets(){
 		ClientPlayNetworking.registerGlobalReceiver(SYNC_CURR_ABILITY_PACKET_ID, SyncCurrAbilityS2CPacket::receive);
 		ClientPlayNetworking.registerGlobalReceiver(SYNC_ELEMENT_PACKET_ID, SyncBendingElementS2CPacket::receive);
+	}
+
+	public void registerEntityRenderers(){
+		//WATER
+		EntityRendererRegistry.register(WATERCUBE, WaterCubeEntityRenderer::new);
+		EntityRendererRegistry.register(WATERHELMET, WaterHelmetEntityRenderer::new);
+		EntityRendererRegistry.register(WATERSHIELD, WaterShieldEntityRenderer::new);
+		EntityRendererRegistry.register(WATERARC, WaterArcEntityRenderer::new);
+		EntityRendererRegistry.register(WATERJET, WaterJetEntityRenderer::new);
+		EntityRendererRegistry.register(WATERARM, WaterArmEntityRenderer::new);
+		EntityRendererRegistry.register(WATERBLADE, WaterBladeEntityRenderer::new);
+		EntityRendererRegistry.register(WATERBULLET, WaterBulletEntityRenderer::new);
+		EntityRendererRegistry.register(WATERHEALING, WaterHealingEntityRenderer::new);
+		EntityRendererRegistry.register(WATERTOWER, WaterTowerEntityRenderer::new);
+
+		//FIRE
+		EntityRendererRegistry.register(FIREBLOCK, FireBlockEntityRenderer::new);
+		EntityRendererRegistry.register(FIREARC, FireArcEntityRenderer::new);
+		EntityRendererRegistry.register(FIREBALL, FireBallEntityRenderer::new);
+		EntityRendererRegistry.register(FIRESHIELD, FireShieldEntityRenderer::new);
+
+		//EARTH
+		EntityRendererRegistry.register(EARTHBLOCK, EarthBlockEntityRenderer::new);
+
+		//AIR
+		EntityRendererRegistry.register(AIRSHIELD, AirShieldEntityRenderer::new);
+		EntityRendererRegistry.register(AIRTORNADO, AirTornadoEntityRenderer::new);
+		EntityRendererRegistry.register(AIRSTREAM, AirStreamEntityRenderer::new);
 	}
 
 

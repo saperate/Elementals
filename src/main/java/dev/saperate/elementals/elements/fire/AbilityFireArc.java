@@ -34,6 +34,7 @@ public class AbilityFireArc implements Ability {
     public void onLeftClick(Bender bender, boolean started) {
         FireArcEntity entity = (FireArcEntity) bender.abilityData;
         if(entity == null){
+            //TODO remove this useless runtime exception everywhere i use it
             throw new RuntimeException("Elementals: Tried to launch entity while having none!");
         }
         onRemove(bender);
@@ -50,7 +51,7 @@ public class AbilityFireArc implements Ability {
     public void onRightClick(Bender bender, boolean started) {
         FireArcEntity entity = (FireArcEntity) bender.abilityData;
         if (entity == null) {
-            return;
+            return;//TODO fix this everywhere i do it
         }
         entity.discard();
         Bender.getBender((PlayerEntity) entity.getOwner()).setCurrAbility(null);
@@ -68,6 +69,7 @@ public class AbilityFireArc implements Ability {
             return;
         }
         entity.setControlled(false);
+        //TODO check each time i do this stupid ass cast and remove it
         Bender.getBender((PlayerEntity) entity.getOwner()).setCurrAbility(null);
     }
 

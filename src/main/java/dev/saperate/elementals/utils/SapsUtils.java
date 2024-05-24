@@ -32,13 +32,43 @@ import org.joml.Vector3f;
 import java.util.*;
 import java.util.function.Predicate;
 
+/**
+ * A collection of methods that makes some redundant stuff easier to use
+ * @Author saperate
+ */
 public class SapsUtils {
 
+    /**
+     * This checks if an entity collides with blocks. it uses a float to see how close we need to be for it
+     * to count as a collision. Lower is not necessarily better since there is a chance that if you set it
+     * too low it will miss the target.
+     * <br><br>Recommended sensitivity is 0.1f.
+     * <br><b>This includes fluids in the collision check</b>
+     * @param entity The entity that we are checking collisions for
+     * @param sensitivity How close does it have to be to a block to collide
+     * @return The block position of the hit
+     * @see Entity
+     * @see BlockPos
+     * @see World
+     */
     public static BlockPos checkBlockCollision(Entity entity, float sensitivity) {
+        //TODO Verify that the moves that use this have to collide with fluids
         return checkBlockCollision(entity, sensitivity, true);
     }
 
-
+    /**
+     * This checks if an entity collides with blocks. it uses a float to see how close we need to be for it
+     * to count as a collision. Lower is not necessarily better since there is a chance that if you set it
+     * too low it will miss the target.
+     * <br><br>Recommended sensitivity is 0.1f.
+     * @param entity The entity that we are checking collisions for
+     * @param sensitivity How close does it have to be to a block to collide
+     * @param includeFluids Whether fluids count in the collision check
+     * @return The block position of the hit
+     * @see Entity
+     * @see BlockPos
+     * @see World
+     */
     public static BlockPos checkBlockCollision(Entity entity, float sensitivity, boolean includeFluids) {
         Box box = entity.getBoundingBox().expand(sensitivity);
         BlockPos blockPos = BlockPos.ofFloored(box.minX + 1.0E-7, box.minY + 1.0E-7, box.minZ + 1.0E-7);
@@ -87,12 +117,9 @@ public class SapsUtils {
         return bestHit;
     }
 
-    public static BlockState checkBlockCollisionBlockState(Entity entity, float sensitivity) {
-        return entity.getWorld().getBlockState(checkBlockCollision(entity, sensitivity));
-    }
 
     /**
-     * Hacky way to get which blocks can be affected
+     * Hacky way to get which blocks can be affected by an explosion
      */
     public static void getAffectedBlocks(World world, Entity entity, double x, double y, double z, float power) {
         ObjectArrayList<BlockPos> affectedBlocks = new ObjectArrayList<>();
@@ -117,6 +144,15 @@ public class SapsUtils {
     }
 
 
+    /**
+     * searches for an int inside another using some bitwise operation. Allows us to store
+     * multiple value inside a single integer with the drawback that they can not be as big as
+     * before, and they take a bit longer to interpret.
+     * @param num The int where we will extract the bits
+     * @param start The index where will start extracting
+     * @param length The number of bits we are searching for
+     * @return An int containing all the bits we were looking for, placed at the start of the new int
+     */
     public static int extractBits(int num, int start, int length) {
         int mask = (1 << length) - 1;
         mask <<= start;

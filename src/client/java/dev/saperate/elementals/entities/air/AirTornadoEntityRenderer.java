@@ -41,7 +41,7 @@ public class AirTornadoEntityRenderer extends EntityRenderer<AirTornadoEntity> {
         RenderSystem.defaultBlendFunc();
 
 
-        VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderLayer.getTranslucent());
+        VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderLayer.getTranslucentMovingBlock());
 
         int tornadoSize = 4;
         for (int i = 0; i < tornadoSize; i++) {
