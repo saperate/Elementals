@@ -35,7 +35,7 @@ public class WaterHelmetEntityRenderer extends EntityRenderer<WaterHelmetEntity>
     @Override
     public void render(WaterHelmetEntity entity, float yaw, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light) {
         Entity owner = entity.getOwner();
-        Vec3d eyePos = owner.getEyePos();
+        Vec3d eyePos = owner.getCameraPosVec(tickDelta);
         entity.setPos(eyePos.x,eyePos.y - 0.5f, eyePos.z);
 
         if(!entity.isOwnerBiped()){
@@ -72,6 +72,7 @@ public class WaterHelmetEntityRenderer extends EntityRenderer<WaterHelmetEntity>
                     true
             );
         }else{
+            //TODO make a 90* rotation so it looks better
             drawCube(vertexConsumer, matrices, light,
                     1,
                     1,

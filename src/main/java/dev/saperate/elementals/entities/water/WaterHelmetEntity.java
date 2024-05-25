@@ -80,7 +80,7 @@ public class WaterHelmetEntity extends Entity {
         isOwnerBiped = owner.getWidth() / owner.getHeight() < 0.4 || owner instanceof PlayerEntity;
 
         if(!isOwnerBiped && getWorld().isClient){
-            summonParticles(owner,this.random, ParticleTypes.SPLASH,0,10);
+            summonParticles(owner,this.random, getModelId() == 0 ? ParticleTypes.SPLASH : ParticleTypes.WHITE_SMOKE,0,10);
         }
 
 

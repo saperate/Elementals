@@ -27,6 +27,7 @@ public class AirElement extends Element {
         addAbility(new AbilityAirStream());
         addAbility(new AbilityAirBall());
         addAbility(new AbilityAirBullets());
+        addAbility(new AbilityAirSuffocate());
     }
 
     public static Element get(){
