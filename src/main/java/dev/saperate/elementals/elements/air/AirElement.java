@@ -28,6 +28,9 @@ public class AirElement extends Element {
         addAbility(new AbilityAirBall());
         addAbility(new AbilityAirBullets());
         addAbility(new AbilityAirSuffocate());
+        addAbility(new AbilityAir3(), true);
+        addAbility(new AbilityAirScooter());
+        addAbility(new AbilityAirJump());
     }
 
     public static Element get(){

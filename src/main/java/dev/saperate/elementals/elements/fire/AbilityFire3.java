@@ -53,6 +53,7 @@ public class AbilityFire3 implements Ability {
                     velocity.z);
             player.velocityModified = true;
             player.move(MovementType.PLAYER, player.getVelocity());
+            player.fallDistance = 0;
         }
     }
 

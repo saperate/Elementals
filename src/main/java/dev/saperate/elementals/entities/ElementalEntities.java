@@ -127,6 +127,11 @@ public class ElementalEntities {
             new Identifier("elementals", "air_bullet"),
             FabricEntityTypeBuilder.<AirBulletEntity>create(SpawnGroup.MISC, AirBulletEntity::new)
                     .dimensions(EntityDimensions.fixed(0.25f, 0.25f)).build());
+    public static final EntityType<AirScooterEntity> AIRSCOOTER = Registry.register(
+            Registries.ENTITY_TYPE,
+            new Identifier("elementals", "air_scooter"),
+            FabricEntityTypeBuilder.<AirScooterEntity>create(SpawnGroup.MISC, AirScooterEntity::new)
+                    .dimensions(EntityDimensions.fixed(1, 1)).build());
     public static void register() {
 
     }

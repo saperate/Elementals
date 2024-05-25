@@ -78,6 +78,7 @@ public class ElementalsClient implements ClientModInitializer {
 		EntityRendererRegistry.register(AIRSTREAM, AirStreamEntityRenderer::new);
 		EntityRendererRegistry.register(AIRBALL, AirBallEntityRenderer::new);
 		EntityRendererRegistry.register(AIRBULLET, AirBulletEntityRenderer::new);
+		EntityRendererRegistry.register(AIRSCOOTER, AirScooterEntityRenderer::new);
 	}
 
 
