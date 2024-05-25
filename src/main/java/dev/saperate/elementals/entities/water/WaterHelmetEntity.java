@@ -16,11 +16,17 @@ import static dev.saperate.elementals.effects.DrowningStatusEffect.DROWNING_EFFE
 import static dev.saperate.elementals.entities.ElementalEntities.WATERHELMET;
 import static dev.saperate.elementals.utils.SapsUtils.summonParticles;
 
+/**
+ * <b>IMPORTANT NOTICE</b> this entity also handles air bending's suffocate. To modify the air suffocate model,
+ * go to the water helmet renderer
+ * @see WaterHelmetEntityRenderer
+ */
 public class WaterHelmetEntity extends Entity {
     public boolean isOwnerBiped = false;
     private static final TrackedData<Integer> CASTER_ID = DataTracker.registerData(WaterHelmetEntity.class, TrackedDataHandlerRegistry.INTEGER);
     private static final TrackedData<Integer> OWNER_ID = DataTracker.registerData(WaterHelmetEntity.class, TrackedDataHandlerRegistry.INTEGER);
     private static final TrackedData<Boolean> DROWN = DataTracker.registerData(WaterHelmetEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
+    private static final TrackedData<Integer> MODEL_ID = DataTracker.registerData(WaterHelmetEntity.class, TrackedDataHandlerRegistry.INTEGER);
     public int aliveTicks = 0, maxLifeTime = 1000;
 
 
@@ -49,6 +55,8 @@ public class WaterHelmetEntity extends Entity {
         this.getDataTracker().startTracking(CASTER_ID, 0);
         this.getDataTracker().startTracking(OWNER_ID, 0);
         this.getDataTracker().startTracking(DROWN, false);
+        this.getDataTracker().startTracking(MODEL_ID, 0);
+
     }
 
     @Override
@@ -142,6 +150,14 @@ public class WaterHelmetEntity extends Entity {
 
     public void setDrown(boolean drown) {
         this.getDataTracker().set(DROWN, drown);
+    }
+
+    public int getModelId() {
+        return this.getDataTracker().get(MODEL_ID);
+    }
+
+    public void setModelId(int id) {
+        this.getDataTracker().set(MODEL_ID, id);
     }
 
     public boolean isOwnerBiped() {

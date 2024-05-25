@@ -25,6 +25,9 @@ import static dev.saperate.elementals.entities.utils.RenderUtils.drawInvertedCub
 public class WaterHelmetEntityRenderer extends EntityRenderer<WaterHelmetEntity> {
     private static final Identifier texture = new Identifier("minecraft", "block/water_flow");
 
+    private static final Identifier airTexture = new Identifier("elementals", "block/air_block");
+    private static final Identifier airTopTexture = new Identifier("elementals", "block/air_block_top");
+
     public WaterHelmetEntityRenderer(EntityRendererFactory.Context context) {
         super(context);
     }
@@ -46,8 +49,6 @@ public class WaterHelmetEntityRenderer extends EntityRenderer<WaterHelmetEntity>
 
         VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderLayer.getTranslucentMovingBlock());
 
-        int color = BiomeColors.getWaterColor(entity.getWorld(),entity.getBlockPos());
-
         Matrix4f mat = new Matrix4f();
         mat.translate(0,-0.30f,0.325f);
         mat.rotate(RotationAxis.POSITIVE_Y.rotationDegrees(-owner.getHeadYaw()));
@@ -56,18 +57,36 @@ public class WaterHelmetEntityRenderer extends EntityRenderer<WaterHelmetEntity>
         matrices.translate(0,-0.30f,-0.325f);
         mat.scale(0.65f);
 
-        drawCube(vertexConsumer, matrices, light,
-                (color >> 16 & 255) / 255.0f,
-                (color >> 8 & 255) / 255.0f,
-                (color & 255) / 255.0f,
-                0.9f,
-                texture,
-                1,
-                mat,
-                false,
-                true,
-                true
-        );
+        if(entity.getModelId() == 0){
+            int color = BiomeColors.getWaterColor(entity.getWorld(),entity.getBlockPos());
+            drawCube(vertexConsumer, matrices, light,
+                    (color >> 16 & 255) / 255.0f,
+                    (color >> 8 & 255) / 255.0f,
+                    (color & 255) / 255.0f,
+                    0.9f,
+                    texture,
+                    1,
+                    mat,
+                    false,
+                    true,
+                    true
+            );
+        }else{
+            drawCube(vertexConsumer, matrices, light,
+                    1,
+                    1,
+                    1,
+                    1,
+                    airTexture,
+                    airTopTexture,
+                    1,
+                    mat,
+                    false,
+                    true,
+                    true
+            );
+        }
+
 
 
 

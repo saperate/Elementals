@@ -1,7 +1,10 @@
-package dev.saperate.elementals.entities.water;
+package dev.saperate.elementals.entities.air;
 
 import dev.saperate.elementals.utils.SapsUtils;
-import net.minecraft.entity.*;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.MovementType;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
@@ -14,35 +17,35 @@ import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import org.joml.Matrix3f;
-import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
+import static dev.saperate.elementals.entities.ElementalEntities.AIRBULLET;
 import static dev.saperate.elementals.entities.ElementalEntities.WATERBULLET;
 import static dev.saperate.elementals.utils.SapsUtils.getEntityLookVector;
 import static dev.saperate.elementals.utils.SapsUtils.summonParticles;
 
-public class WaterBulletEntity extends ProjectileEntity {
-    private static final TrackedData<Integer> OWNER_ID = DataTracker.registerData(WaterBulletEntity.class, TrackedDataHandlerRegistry.INTEGER);
-    private static final TrackedData<Boolean> IS_CONTROLLED = DataTracker.registerData(WaterBulletEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
-    private static final TrackedData<Integer> ARRAY_ID = DataTracker.registerData(WaterBulletEntity.class, TrackedDataHandlerRegistry.INTEGER);
-    private static final TrackedData<Integer> ARRAY_SIZE = DataTracker.registerData(WaterBulletEntity.class, TrackedDataHandlerRegistry.INTEGER);
+//TODO merge
+public class AirBulletEntity extends ProjectileEntity {
+    private static final TrackedData<Integer> OWNER_ID = DataTracker.registerData(AirBulletEntity.class, TrackedDataHandlerRegistry.INTEGER);
+    private static final TrackedData<Boolean> IS_CONTROLLED = DataTracker.registerData(AirBulletEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
+    private static final TrackedData<Integer> ARRAY_ID = DataTracker.registerData(AirBulletEntity.class, TrackedDataHandlerRegistry.INTEGER);
+    private static final TrackedData<Integer> ARRAY_SIZE = DataTracker.registerData(AirBulletEntity.class, TrackedDataHandlerRegistry.INTEGER);
 
     public Vector3f lastCenterPos;
 
 
-    public WaterBulletEntity(EntityType<WaterBulletEntity> type, World world) {
+    public AirBulletEntity(EntityType<AirBulletEntity> type, World world) {
         super(type, world);
     }
 
-    public WaterBulletEntity(World world, LivingEntity owner) {
-        super(WATERBULLET, world);
+    public AirBulletEntity(World world, LivingEntity owner) {
+        super(AIRBULLET, world);
         setOwner(owner);
         setPos(owner.getX(), owner.getY(), owner.getZ());
     }
 
-    public WaterBulletEntity(World world, LivingEntity owner, double x, double y, double z) {
-        super(WATERBULLET, world);
+    public AirBulletEntity(World world, LivingEntity owner, double x, double y, double z) {
+        super(AIRBULLET, world);
         setOwner(owner);
         setPos(x, y, z);
         setControlled(true);
@@ -82,9 +85,9 @@ public class WaterBulletEntity extends ProjectileEntity {
         HitResult hit = ProjectileUtil.getCollision(this, entity -> entity instanceof LivingEntity);
         if (hit.getType() == HitResult.Type.ENTITY) {
             LivingEntity entity = (LivingEntity) ((EntityHitResult) hit).getEntity();
-            entity.damage(this.getDamageSources().playerAttack(owner), 2);
+            entity.damage(this.getDamageSources().playerAttack(owner), 1);
             if (!getIsControlled()) {
-                entity.addVelocity(this.getVelocity().multiply(0.8f));
+                entity.addVelocity(this.getVelocity().multiply(1.2f));
                 discard();
             }
         }
@@ -141,7 +144,7 @@ public class WaterBulletEntity extends ProjectileEntity {
 
     @Override
     public void onRemoved() {
-        summonParticles(this, random, ParticleTypes.SPLASH, 10, 100);
+        summonParticles(this, random, ParticleTypes.WHITE_SMOKE, 0.01f, 10);
     }
 
     @Override

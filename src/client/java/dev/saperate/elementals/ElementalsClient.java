@@ -1,9 +1,6 @@
 package dev.saperate.elementals;
 
-import dev.saperate.elementals.entities.air.AirBallEntityRenderer;
-import dev.saperate.elementals.entities.air.AirShieldEntityRenderer;
-import dev.saperate.elementals.entities.air.AirStreamEntityRenderer;
-import dev.saperate.elementals.entities.air.AirTornadoEntityRenderer;
+import dev.saperate.elementals.entities.air.*;
 import dev.saperate.elementals.entities.earth.EarthBlockEntityRenderer;
 import dev.saperate.elementals.entities.fire.FireArcEntityRenderer;
 import dev.saperate.elementals.entities.fire.FireBallEntityRenderer;
@@ -80,6 +77,7 @@ public class ElementalsClient implements ClientModInitializer {
 		EntityRendererRegistry.register(AIRTORNADO, AirTornadoEntityRenderer::new);
 		EntityRendererRegistry.register(AIRSTREAM, AirStreamEntityRenderer::new);
 		EntityRendererRegistry.register(AIRBALL, AirBallEntityRenderer::new);
+		EntityRendererRegistry.register(AIRBULLET, AirBulletEntityRenderer::new);
 	}
 
 

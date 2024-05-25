@@ -14,7 +14,7 @@ public class AbilityAirBall implements Ability {
     public void onCall(Bender bender, long deltaT) {
         PlayerEntity player = bender.player;
 
-        //TODO remove 15 from every stuff like this to fix the velocity bug
+        //TODO remove 0.15 from every stuff like this to fix the velocity bug
         Vector3f pos = getEntityLookVector(player, 2.85f).toVector3f();
 
         AirBallEntity entity = new AirBallEntity(player.getWorld(), player, pos.x, pos.y, pos.z);

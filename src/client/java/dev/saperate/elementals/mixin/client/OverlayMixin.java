@@ -28,22 +28,33 @@ public class OverlayMixin {
     @Inject(at = @At("HEAD"), method = "renderOverlays")
     private static void renderWaterOverlay(MinecraftClient client, MatrixStack matrices, CallbackInfo ci) {
         ClientBender bender = ClientBender.get();
-        if (bender != null &&
-                (bender.currAbility instanceof AbilityWaterShield
-                || (bender.player != null && bender.player.hasStatusEffect(DROWNING_EFFECT)))) {
-            renderUnderwaterOverlay(client, matrices);
+        if (bender != null && bender.player != null) {
+            if (bender.currAbility instanceof AbilityWaterShield) {
+                renderUnderwaterOverlay(client, matrices);
+            } else if (bender.player.hasStatusEffect(DROWNING_EFFECT)) {
+                int colorId = bender.player.getStatusEffect(DROWNING_EFFECT).getAmplifier();
+                if(colorId == 100){
+                    return;
+                }
+                renderUnderwaterOverlay(client,matrices);
+            }
         }
     }
 
     @Unique
     private static void renderUnderwaterOverlay(MinecraftClient client, MatrixStack matrices) {
+        renderUnderwaterOverlay(client, matrices,4);
+    }
+
+    @Unique
+    private static void renderUnderwaterOverlay(MinecraftClient client, MatrixStack matrices, int blueMultiplier) {
         RenderSystem.setShader(GameRenderer::getPositionTexProgram);
         RenderSystem.setShaderTexture(0, UNDERWATER_TEXTURE);
         BufferBuilder bufferBuilder = Tessellator.getInstance().getBuffer();
         BlockPos blockPos = BlockPos.ofFloored((double) client.player.getX(), (double) client.player.getEyeY(), (double) client.player.getZ());
         float f = LightmapTextureManager.getBrightness(client.player.getWorld().getDimension(), client.player.getWorld().getLightLevel(blockPos));
         RenderSystem.enableBlend();
-        RenderSystem.setShaderColor(f, f, f * 4, 0.5f);
+        RenderSystem.setShaderColor(f, f, f * blueMultiplier, 0.5f);
 
         float m = -client.player.getYaw() / 64.0f;
         float n = client.player.getPitch() / 64.0f;
@@ -57,5 +68,4 @@ public class OverlayMixin {
         RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         RenderSystem.disableBlend();
     }
-
 }
