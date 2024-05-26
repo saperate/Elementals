@@ -5,6 +5,7 @@ import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.data.StateDataSaverAndLoader;
 import dev.saperate.elementals.elements.Element;
+import dev.saperate.elementals.utils.SapsUtils;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.MinecraftServer;
@@ -17,6 +18,9 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+
+import static dev.saperate.elementals.effects.SpiritProjectionStatusEffect.SPIRIT_PROJECTION_EFFECT;
+import static dev.saperate.elementals.utils.SapsUtils.safeHasStatusEffect;
 
 @Mixin(PlayerEntity.class)
 public abstract class PlayerEntityMixin {
@@ -39,6 +43,9 @@ public abstract class PlayerEntityMixin {
     @Inject(at = @At("TAIL"), method = "tick")
     private void tick(CallbackInfo ci) {
         PlayerEntity player = ((PlayerEntity) (Object) this);
+        if(safeHasStatusEffect(SPIRIT_PROJECTION_EFFECT,player)){
+            player.noClip = false;
+        }
         Bender bender = Bender.getBender(player);
         if(bender == null){
             return;

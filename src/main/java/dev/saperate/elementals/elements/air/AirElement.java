@@ -31,6 +31,7 @@ public class AirElement extends Element {
         addAbility(new AbilityAir3(), true);
         addAbility(new AbilityAirScooter());
         addAbility(new AbilityAirJump());
+        addAbility(new AbilityAir4(),true);
     }
 
     public static Element get(){

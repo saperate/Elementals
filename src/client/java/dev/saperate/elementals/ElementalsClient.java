@@ -1,11 +1,13 @@
 package dev.saperate.elementals;
 
 import dev.saperate.elementals.entities.air.*;
+import dev.saperate.elementals.entities.common.DecoyPlayerEntityRenderer;
 import dev.saperate.elementals.entities.earth.EarthBlockEntityRenderer;
 import dev.saperate.elementals.entities.fire.FireArcEntityRenderer;
 import dev.saperate.elementals.entities.fire.FireBallEntityRenderer;
 import dev.saperate.elementals.entities.fire.FireBlockEntityRenderer;
 import dev.saperate.elementals.entities.fire.FireShieldEntityRenderer;
+import dev.saperate.elementals.entities.models.common.DecoyPlayerModel;
 import dev.saperate.elementals.entities.models.water.WaterBladeModel;
 import dev.saperate.elementals.entities.water.*;
 import dev.saperate.elementals.keys.abilities.KeyAbility1;
@@ -19,6 +21,7 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.minecraft.client.render.entity.model.EntityModelLayer;
+import net.minecraft.client.render.entity.model.PlayerEntityModel;
 import net.minecraft.util.Identifier;
 
 import static dev.saperate.elementals.Elementals.MODID;
@@ -27,7 +30,7 @@ import static dev.saperate.elementals.network.ModMessages.SYNC_CURR_ABILITY_PACK
 import static dev.saperate.elementals.network.ModMessages.SYNC_ELEMENT_PACKET_ID;
 
 public class ElementalsClient implements ClientModInitializer {
-
+	public static final EntityModelLayer MODEL_DECOY_PLAYER = new EntityModelLayer(new Identifier(MODID, "decoy_player"),"main");
 	public static final EntityModelLayer MODEL_WATER_BLADE_LAYER = (new EntityModelLayer(new Identifier(MODID, "water_blade"),"bb_main"));
 
 	@Override
@@ -42,6 +45,8 @@ public class ElementalsClient implements ClientModInitializer {
 
 
 		EntityModelLayerRegistry.registerModelLayer(MODEL_WATER_BLADE_LAYER, WaterBladeModel::getTexturedModelData);
+		EntityModelLayerRegistry.registerModelLayer(MODEL_DECOY_PLAYER, DecoyPlayerModel::getTexturedModelData);
+
 
 	}
 
@@ -79,6 +84,9 @@ public class ElementalsClient implements ClientModInitializer {
 		EntityRendererRegistry.register(AIRBALL, AirBallEntityRenderer::new);
 		EntityRendererRegistry.register(AIRBULLET, AirBulletEntityRenderer::new);
 		EntityRendererRegistry.register(AIRSCOOTER, AirScooterEntityRenderer::new);
+
+		//COMMON
+		EntityRendererRegistry.register(DECOYPLAYER, (context) -> new DecoyPlayerEntityRenderer(context,1));
 	}
 
 

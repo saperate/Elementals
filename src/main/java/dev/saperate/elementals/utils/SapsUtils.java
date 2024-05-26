@@ -6,6 +6,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.FluidBlock;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ProjectileUtil;
 import net.minecraft.fluid.FluidState;
@@ -299,4 +300,23 @@ public class SapsUtils {
         return Math.abs(a-b) <= errorMargin;
     }
 
+    /**
+     * This method checks safely if an entity has a status effect.
+     * It will return true if the entity has the effect <b>AND</b>
+     * if the entity is not null
+     * @param effect The effect we want to check
+     * @param entity The entity that we check
+     * @return true if the entity has the status effect
+     */
+    public static boolean safeHasStatusEffect(StatusEffect effect, LivingEntity entity){
+        boolean hasEffect = false;
+        try{
+            if(entity != null){
+                hasEffect = entity.hasStatusEffect(effect);
+            }else {
+                return false;
+            }
+        }catch (Exception ignored){}
+        return hasEffect;
+    }
 }

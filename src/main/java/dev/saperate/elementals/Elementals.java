@@ -60,7 +60,6 @@ public class Elementals implements ModInitializer {
         Registry.register(Registries.STATUS_EFFECT, new Identifier(MODID, "dense"), DENSE_EFFECT);
         Registry.register(Registries.STATUS_EFFECT, new Identifier(MODID, "drowning"), DROWNING_EFFECT);
         Registry.register(Registries.STATUS_EFFECT, new Identifier(MODID, "seismic_sense"), SEISMIC_SENSE_EFFECT);
-        Registry.register(Registries.STATUS_EFFECT, new Identifier(MODID, "seismic_sense"), SEISMIC_SENSE_EFFECT);
         Registry.register(Registries.STATUS_EFFECT, new Identifier(MODID, "spirit_projection"), SPIRIT_PROJECTION_EFFECT);
 
         registerElements();

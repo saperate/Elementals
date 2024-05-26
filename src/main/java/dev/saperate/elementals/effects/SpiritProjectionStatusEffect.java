@@ -24,7 +24,7 @@ public class SpiritProjectionStatusEffect extends StatusEffect {
 
     @Override
     public void applyUpdateEffect(LivingEntity entity, int amplifier) {
-        entity.addStatusEffect(new StatusEffectInstance(STATIONARY_EFFECT,1,0,false,false,false));
+
     }
 
 }

@@ -2,6 +2,7 @@ package dev.saperate.elementals.entities;
 
 
 
+import dev.saperate.elementals.entities.common.DecoyPlayerEntity;
 import dev.saperate.elementals.entities.air.*;
 import dev.saperate.elementals.entities.earth.EarthBlockEntity;
 import dev.saperate.elementals.entities.fire.FireArcEntity;
@@ -9,6 +10,7 @@ import dev.saperate.elementals.entities.fire.FireBallEntity;
 import dev.saperate.elementals.entities.fire.FireBlockEntity;
 import dev.saperate.elementals.entities.fire.FireShieldEntity;
 import dev.saperate.elementals.entities.water.*;
+import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityType;
@@ -132,7 +134,14 @@ public class ElementalEntities {
             new Identifier("elementals", "air_scooter"),
             FabricEntityTypeBuilder.<AirScooterEntity>create(SpawnGroup.MISC, AirScooterEntity::new)
                     .dimensions(EntityDimensions.fixed(1, 1)).build());
-    public static void register() {
 
+    //Common
+    public static final EntityType<DecoyPlayerEntity> DECOYPLAYER = Registry.register(
+            Registries.ENTITY_TYPE,
+            new Identifier("elementals", "decoy_player"),
+            FabricEntityTypeBuilder.<DecoyPlayerEntity>create(SpawnGroup.MISC, DecoyPlayerEntity::new)
+                    .dimensions(EntityDimensions.fixed(1, 1)).build());
+    public static void register() {
+        FabricDefaultAttributeRegistry.register(DECOYPLAYER, DecoyPlayerEntity.createLivingAttributes());
     }
 }
