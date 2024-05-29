@@ -1,8 +1,6 @@
 package dev.saperate.elementals.entities.air;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import dev.saperate.elementals.entities.water.WaterBulletEntity;
-import net.minecraft.client.color.world.BiomeColors;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;

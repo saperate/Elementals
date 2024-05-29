@@ -1,6 +1,7 @@
 package dev.saperate.elementals.entities.air;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import dev.saperate.elementals.entities.utils.RenderUtils;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
@@ -49,7 +50,7 @@ public class AirScooterEntityRenderer extends EntityRenderer<AirScooterEntity> {
         mat.rotate(RotationAxis.POSITIVE_Y.rotationDegrees((float) Math.toDegrees(rot)));
         mat.rotate(RotationAxis.POSITIVE_Z.rotationDegrees((float) Math.toDegrees(rot)));
         mat.translate(0,0,-.5f);
-        drawCube(vertexConsumer, matrices, 255,
+        RenderUtils.drawCube(vertexConsumer, matrices, 255,
                 1,
                 1,
                 1,
@@ -71,7 +72,7 @@ public class AirScooterEntityRenderer extends EntityRenderer<AirScooterEntity> {
         matrices.scale(.9f,.9f,.9f);
 
 
-        drawCube(vertexConsumer, matrices, 255,
+        RenderUtils.drawCube(vertexConsumer, matrices, 255,
                 1,
                 1,
                 1,

@@ -1,7 +1,6 @@
 package dev.saperate.elementals.entities.air;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import dev.saperate.elementals.entities.fire.FireArcEntity;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;

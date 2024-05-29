@@ -140,8 +140,8 @@ public class ElementalEntities {
             Registries.ENTITY_TYPE,
             new Identifier("elementals", "decoy_player"),
             FabricEntityTypeBuilder.<DecoyPlayerEntity>create(SpawnGroup.MISC, DecoyPlayerEntity::new)
-                    .dimensions(EntityDimensions.fixed(1, 1)).build());
+                    .dimensions(EntityDimensions.fixed(0.6f, 2)).build());
     public static void register() {
-        FabricDefaultAttributeRegistry.register(DECOYPLAYER, DecoyPlayerEntity.createLivingAttributes());
+        FabricDefaultAttributeRegistry.register(DECOYPLAYER, DecoyPlayerEntity.createMobAttributes());
     }
 }

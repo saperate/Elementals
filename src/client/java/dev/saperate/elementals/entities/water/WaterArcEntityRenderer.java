@@ -1,7 +1,6 @@
 package dev.saperate.elementals.entities.water;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import dev.saperate.elementals.entities.water.WaterArcEntity;
 import net.minecraft.client.color.world.BiomeColors;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.render.RenderLayer;
@@ -10,7 +9,6 @@ import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRenderer;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.RotationAxis;
 import net.minecraft.util.math.Vec3d;

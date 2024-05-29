@@ -1,9 +1,6 @@
 package dev.saperate.elementals.entities.fire;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import dev.saperate.elementals.entities.fire.FireArcEntity;
-import dev.saperate.elementals.entities.water.WaterArcEntity;
-import net.minecraft.client.color.world.BiomeColors;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
@@ -16,9 +13,7 @@ import net.minecraft.util.math.RotationAxis;
 import net.minecraft.util.math.Vec3d;
 import org.joml.Matrix4f;
 
-import static dev.saperate.elementals.Elementals.MODID;
 import static dev.saperate.elementals.entities.utils.RenderUtils.drawCube;
-import static dev.saperate.elementals.entities.utils.RenderUtils.drawInvertedCube;
 
 
 public class FireArcEntityRenderer extends EntityRenderer<FireArcEntity> {

@@ -1,11 +1,6 @@
 package dev.saperate.elementals.entities.fire;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import dev.saperate.elementals.entities.fire.FireBlockEntity;
-import dev.saperate.elementals.entities.fire.FireShieldEntity;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;

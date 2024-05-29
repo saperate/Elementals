@@ -1,8 +1,6 @@
 package dev.saperate.elementals.entities.water;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import dev.saperate.elementals.entities.water.WaterArcEntity;
-import dev.saperate.elementals.entities.water.WaterArmEntity;
 import net.minecraft.client.color.world.BiomeColors;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.render.RenderLayer;

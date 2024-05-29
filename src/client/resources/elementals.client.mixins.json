@@ -5,7 +5,8 @@
   "client": [
     "MouseMixin",
     "OverlayMixin",
-    "PlayerEntityRendererMixin"
+    "PlayerEntityRendererMixin",
+    "SpectatorMenuCommandMixin"
   ],
   "injectors": {
     "defaultRequire": 1

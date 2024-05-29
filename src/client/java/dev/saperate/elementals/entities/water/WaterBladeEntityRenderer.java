@@ -10,7 +10,6 @@ import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRenderer;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.render.entity.feature.FeatureRendererContext;
-import net.minecraft.client.render.entity.model.EntityModelLayer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.RotationAxis;
@@ -18,7 +17,7 @@ import net.minecraft.util.math.RotationAxis;
 import static dev.saperate.elementals.Elementals.MODID;
 import static dev.saperate.elementals.ElementalsClient.MODEL_WATER_BLADE_LAYER;
 
-public class WaterBladeEntityRenderer extends EntityRenderer<WaterBladeEntity> implements FeatureRendererContext<WaterBladeEntity,WaterBladeModel> {
+public class WaterBladeEntityRenderer extends EntityRenderer<WaterBladeEntity> implements FeatureRendererContext<WaterBladeEntity, WaterBladeModel> {
     private static final Identifier texture = new Identifier(MODID, "textures/entity/water.png");
     private final WaterBladeModel model;
     public static long firstTime = -1;

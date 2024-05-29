@@ -1,22 +1,17 @@
 package dev.saperate.elementals.entities.earth;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import dev.saperate.elementals.entities.fire.FireBlockEntity;
 import dev.saperate.elementals.entities.models.earth.ShrapnelModel;
 import dev.saperate.elementals.entities.models.earth.SpikeModel;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.*;
 import net.minecraft.client.render.entity.EntityRenderer;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RotationAxis;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.math.random.Random;
-import net.minecraft.world.BlockRenderView;
 
 public class EarthBlockEntityRenderer extends EntityRenderer<EarthBlockEntity> {
     private static final Identifier texture = new Identifier("minecraft", "textures/block/dirt.png");

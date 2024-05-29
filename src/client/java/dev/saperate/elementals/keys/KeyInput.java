@@ -33,12 +33,10 @@ public abstract class KeyInput {
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             if (keyBinding.isPressed() && !lastFrameWasHolding) {
                 lastFrameWasHolding = true;
-                //Started holding
                 onStartHolding(packetID);
             }
             if (!keyBinding.isPressed() && lastFrameWasHolding) {
                 lastFrameWasHolding = false;
-                //Stopped holding
                 onEndHolding(packetID);
             }
         });

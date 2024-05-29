@@ -1,9 +1,7 @@
 package dev.saperate.elementals.entities.water;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import dev.saperate.elementals.entities.fire.FireShieldEntity;
-import dev.saperate.elementals.entities.utils.renderlayers.WaterHelmetRenderLayer;
-import dev.saperate.elementals.entities.water.WaterShieldEntity;
+import dev.saperate.elementals.entities.utils.RenderUtils;
 import net.minecraft.client.color.world.BiomeColors;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.render.RenderLayer;
@@ -69,7 +67,7 @@ public class WaterShieldEntityRenderer extends EntityRenderer<WaterShieldEntity>
         matrices.scale(2,2,2);
         matrices.translate(0,0.65f,-0.5f);
 
-        drawCube(vertexConsumer, matrices, 255,
+        RenderUtils.drawCube(vertexConsumer, matrices, 255,
                 (color >> 16 & 255) / 255.0f,
                 (color >> 8 & 255) / 255.0f,
                 (color & 255) / 255.0f,
@@ -90,7 +88,7 @@ public class WaterShieldEntityRenderer extends EntityRenderer<WaterShieldEntity>
         mat2.translate(0,0,-0.5f);
 
 
-        drawCube(vertexConsumer, matrices, 255,
+        RenderUtils.drawCube(vertexConsumer, matrices, 255,
                 (color >> 16 & 255) / 255.0f,
                 (color >> 8 & 255) / 255.0f,
                 (color & 255) / 255.0f,
