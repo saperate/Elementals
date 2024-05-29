@@ -1,14 +1,18 @@
 package dev.saperate.elementals.elements.air;
 
 import dev.saperate.elementals.data.Bender;
+import dev.saperate.elementals.effects.SpiritProjectionStatusEffect;
 import dev.saperate.elementals.elements.Ability;
 import dev.saperate.elementals.entities.common.DecoyPlayerEntity;
+import dev.saperate.elementals.utils.SapsUtils;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.passive.PigEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.util.hit.EntityHitResult;
+import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.GameMode;
 
@@ -35,21 +39,39 @@ public class AbilityAir4 implements Ability {
 
         decoy.setVelocity(plr.getVelocity());
         decoy.fallDistance = plr.fallDistance;
+        decoy.setHealth(plr.getHealth());
+        decoy.setFireTicks(plr.getFireTicks());
+        decoy.setOnFire(plr.isOnFire());
+
+        for (StatusEffectInstance effect : plr.getStatusEffects()) {
+            decoy.addStatusEffect(effect);
+        }
 
         plr.getWorld().spawnEntity(decoy);
 
-        decoy.setOwner(plr);
 
         bender.abilityData = new Object[]{plr.interactionManager.getGameMode(), decoy};
-        plr.changeGameMode(GameMode.SPECTATOR);
 
-        bender.player.addStatusEffect(new StatusEffectInstance(SPIRIT_PROJECTION_EFFECT, -1, 0, false, false, false));
+        bender.player.addStatusEffect(
+                new StatusEffectInstance(SPIRIT_PROJECTION_EFFECT,
+                        -1,
+                        SpiritProjectionStatusEffect.convertGameModeToAmplifier(plr.interactionManager.getGameMode()),
+                        false, false, false)
+        );
+
+        plr.changeGameMode(GameMode.SPECTATOR);
         bender.setCurrAbility(this);
     }
 
     @Override
     public void onLeftClick(Bender bender, boolean started) {
-
+        HitResult hit = SapsUtils.raycastFull(bender.player, 5, false);
+        if (hit instanceof EntityHitResult eHit) {
+            assert bender.abilityData != null;
+            if (eHit.getEntity().equals(((Object[]) bender.abilityData)[1])) {
+                onRemove(bender);
+            }
+        }
     }
 
     @Override
@@ -64,9 +86,7 @@ public class AbilityAir4 implements Ability {
 
     @Override
     public void onTick(Bender bender) {
-        if (bender.player.isSneaking()) {
-            onRemove(bender);
-        }
+
     }
 
     @Override
@@ -82,7 +102,15 @@ public class AbilityAir4 implements Ability {
 
         DecoyPlayerEntity decoy = (DecoyPlayerEntity) data[1];
         if (decoy != null) {
-            bender.player.teleport(decoy.getX(),decoy.getY(),decoy.getZ());
+            bender.player.teleport(decoy.getX(), decoy.getY(), decoy.getZ());
+            bender.player.setHealth(decoy.getHealth());
+            bender.player.setAir(decoy.getAir());
+            bender.player.setFireTicks(decoy.getFireTicks());
+            bender.player.setOnFire(decoy.isOnFire());
+            for (StatusEffectInstance effect : decoy.getStatusEffects()) {
+                bender.player.addStatusEffect(effect);
+            }
+
             decoy.discard();
         }
 

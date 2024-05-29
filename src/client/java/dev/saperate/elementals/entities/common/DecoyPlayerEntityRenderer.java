@@ -23,8 +23,8 @@ import static dev.saperate.elementals.ElementalsClient.MODEL_DECOY_PLAYER;
 import static dev.saperate.elementals.network.ModMessages.SYNC_ELEMENT_PACKET_ID;
 
 public class DecoyPlayerEntityRenderer extends LivingEntityRenderer<DecoyPlayerEntity, PlayerEntityModel<DecoyPlayerEntity>> {
-    public DecoyPlayerEntityRenderer(EntityRendererFactory.Context ctx) {
-        super(ctx, new DecoyPlayerModel(ctx.getPart(MODEL_DECOY_PLAYER),false), 0.5f);
+    public DecoyPlayerEntityRenderer(EntityRendererFactory.Context ctx, boolean slimArms) {
+        super(ctx, new DecoyPlayerModel(ctx.getPart( EntityModelLayers.PLAYER),slimArms), 0.5f);
         this.addFeature(new ArmorFeatureRenderer<>(this,
                 new ArmorEntityModel<>(ctx.getPart(EntityModelLayers.PLAYER_INNER_ARMOR)),
                 new ArmorEntityModel<>(ctx.getPart(EntityModelLayers.PLAYER_OUTER_ARMOR)),
@@ -38,6 +38,7 @@ public class DecoyPlayerEntityRenderer extends LivingEntityRenderer<DecoyPlayerE
 
     @Override
     public void render(DecoyPlayerEntity decoy, float f, float g, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i) {
+
         super.render(decoy, f, g, matrixStack, vertexConsumerProvider, i);
     }
 

@@ -1,6 +1,8 @@
 package dev.saperate.elementals;
 
+import com.google.common.collect.ImmutableMap;
 import dev.saperate.elementals.entities.air.*;
+import dev.saperate.elementals.entities.common.DecoyPlayerEntity;
 import dev.saperate.elementals.entities.water.*;
 import dev.saperate.elementals.entities.common.DecoyPlayerEntityRenderer;
 import dev.saperate.elementals.entities.earth.EarthBlockEntityRenderer;
@@ -20,8 +22,16 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
+import net.minecraft.client.network.AbstractClientPlayerEntity;
+import net.minecraft.client.render.entity.EntityRenderer;
+import net.minecraft.client.render.entity.EntityRendererFactory;
+import net.minecraft.client.render.entity.PlayerEntityRenderer;
 import net.minecraft.client.render.entity.model.EntityModelLayer;
+import net.minecraft.client.util.SkinTextures;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Identifier;
+
+import java.util.Map;
 
 import static dev.saperate.elementals.Elementals.MODID;
 import static dev.saperate.elementals.entities.ElementalEntities.*;
@@ -84,9 +94,11 @@ public class ElementalsClient implements ClientModInitializer {
 		EntityRendererRegistry.register(AIRSCOOTER, AirScooterEntityRenderer::new);
 
 		//COMMON
-		EntityRendererRegistry.register(DECOYPLAYER, (context) -> new DecoyPlayerEntityRenderer(context));
-
+		EntityRendererRegistry.register(DECOYPLAYER, (context) -> new DecoyPlayerEntityRenderer(context, false));
 	}
+
+
+
 
 
 }

@@ -1,6 +1,7 @@
 package dev.saperate.elementals.entities.common;
 
 import com.google.common.collect.Lists;
+import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.entities.air.AirBallEntity;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.LookAroundGoal;
@@ -49,6 +50,7 @@ public class DecoyPlayerEntity extends PathAwareEntity {
         super(DECOYPLAYER, world);
         setOwner(owner);
         setPos(owner.getX(), owner.getY(), owner.getZ());
+        System.out.println(getMaxHealth());
     }
 
     @Override
@@ -64,7 +66,7 @@ public class DecoyPlayerEntity extends PathAwareEntity {
         super.tick();
         this.updateCapeAngles();
         if (getOwner() == null) {
-            if(!getWorld().isClient){
+            if (!getWorld().isClient) {
                 discard();
             }
             return;
@@ -115,12 +117,12 @@ public class DecoyPlayerEntity extends PathAwareEntity {
         }
     }
 
-    public void preventOwnerFromGoingFar(int max){
+    public void preventOwnerFromGoingFar(int max) {
         Vec3d direction = getPos().subtract(getOwner().getPos());
         double distance = direction.length();
         if (distance > max) {
-            if(distance > max * 10 && !getWorld().isClient){
-                getOwner().teleport(getX(),getY(), getZ());
+            if (distance > max * 10 && !getWorld().isClient) {
+                getOwner().teleport(getX(), getY(), getZ());
             }
 
 
@@ -138,7 +140,11 @@ public class DecoyPlayerEntity extends PathAwareEntity {
 
     @Override
     public boolean damage(DamageSource source, float amount) {
-        System.out.println(amount);
+        if (!getWorld().isClient && getHealth() - amount <= 0) {
+            PlayerEntity owner = getOwner();
+            Bender.getBender(owner).currAbility.onRemove(Bender.getBender(owner));
+            owner.damage(source,amount);
+        }
         return super.damage(source, amount);
     }
 
@@ -171,7 +177,7 @@ public class DecoyPlayerEntity extends PathAwareEntity {
      */
     public PlayerEntity getOwner() {
         UUID uuid = getOwnerUUID();
-        if(uuid == null){
+        if (uuid == null) {
             return null;
         }
         return getWorld().getPlayerByUuid(uuid);
