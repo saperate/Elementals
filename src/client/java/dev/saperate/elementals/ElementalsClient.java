@@ -96,9 +96,4 @@ public class ElementalsClient implements ClientModInitializer {
 		//COMMON
 		EntityRendererRegistry.register(DECOYPLAYER, (context) -> new DecoyPlayerEntityRenderer(context, false));
 	}
-
-
-
-
-
 }
