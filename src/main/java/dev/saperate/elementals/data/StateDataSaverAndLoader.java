@@ -33,7 +33,7 @@ public class StateDataSaverAndLoader extends PersistentState {
             playerNbt.putInt("bind3",playerData.element.bindableAbilities.indexOf(playerData.boundAbilities[2]));
             playerNbt.putInt("bind4",playerData.element.bindableAbilities.indexOf(playerData.boundAbilities[3]));
 
-            playerNbt.put("upgrades",playerData.element.onSave(playerData));
+            playerNbt.put("upgrades",playerData.element.onSave(playerData.upgrades));
 
             playersNbt.put(uuid.toString(), playerNbt);
         }));
@@ -61,7 +61,7 @@ public class StateDataSaverAndLoader extends PersistentState {
             playerData.boundAbilities[2] = element.getBindableAbility(nbt.getInt("bind3"));
             playerData.boundAbilities[3] = element.getBindableAbility(nbt.getInt("bind4"));
 
-            playerData.element.onRead(nbt.getCompound("upgrades"),playerData);
+            playerData.element.onRead(nbt.getCompound("upgrades"),playerData.upgrades);
 
 
             UUID uuid = UUID.fromString(key);

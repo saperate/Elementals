@@ -80,17 +80,17 @@ public abstract class Element{
         return name;
     }
 
-    public NbtCompound onSave(PlayerData plrData){
+    public NbtCompound onSave(HashMap<Upgrade,Boolean> plrUpgrades){
         NbtCompound nbt = new NbtCompound();
         for(Upgrade upgrade : upgrades){
-            upgrade.onSave(nbt,plrData);
+            upgrade.onSave(nbt,plrUpgrades);
         }
         return nbt;
     }
 
-    public void onRead(NbtCompound nbt, PlayerData plrData){
+    public void onRead(NbtCompound nbt, HashMap<Upgrade,Boolean> plrUpgrades){
         for(Upgrade upgrade : upgrades){
-            upgrade.onRead(nbt,plrData);
+            upgrade.onRead(nbt,plrUpgrades);
         }
     }
 }

@@ -129,8 +129,8 @@ public class BendingCommand {
                 "Possible upgrades:")
         ), false);
         for (Upgrade upgrade : element.upgrades) {
-            for (Upgrade u : upgrade.nextUpgrades(plrData)) {
-                if (u.canBuy(plrData)) {
+            for (Upgrade u : upgrade.nextUpgrades(plrData.upgrades)) {
+                if (u.canBuy(plrData.upgrades)) {
                     context.getSource().sendFeedback((() -> Text.of(
                             "-" + u.name)
                     ), false);
@@ -151,10 +151,9 @@ public class BendingCommand {
         String name = StringArgumentType.getString(context, "name");
 
         for (Upgrade upgrade : element.upgrades) {
-            for (Upgrade u : upgrade.nextUpgrades(plrData)) {
-                if (u.name.equals(name) && u.canBuy(plrData)) {
-                    plrData.boughtUpgrades.add(u);
-                    plrData.activeUpgrades.add(u);
+            for (Upgrade u : upgrade.nextUpgrades(plrData.upgrades)) {
+                if (u.name.equals(name) && u.canBuy(plrData.upgrades)) {
+                    plrData.upgrades.put(u,true);
                     StateDataSaverAndLoader.getServerState(bender.player.getServer()).markDirty();
                     context.getSource().sendFeedback((() -> Text.of(
                             "Upgrade  \"" + u.name + "\" was bought successfully!")
@@ -175,8 +174,7 @@ public class BendingCommand {
         Bender bender = Bender.getBender(context.getSource().getPlayer());
         PlayerData plrData = StateDataSaverAndLoader.getPlayerState(bender.player);
 
-        plrData.boughtUpgrades.clear();
-        plrData.activeUpgrades.clear();
+        plrData.upgrades.clear();
 
         context.getSource().sendFeedback((() -> Text.of(
                 "You no longer have any upgrades!")

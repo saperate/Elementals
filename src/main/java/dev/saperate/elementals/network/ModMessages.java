@@ -14,13 +14,15 @@ public class ModMessages {
     public static final Identifier ABILITY4_PACKET_ID = new Identifier(MODID,"ability4");
     public static final Identifier SYNC_CURR_ABILITY_PACKET_ID = new Identifier(MODID,"curr_ability");
     public static final Identifier SYNC_ELEMENT_PACKET_ID = new Identifier(MODID,"element");
-
+    public static final Identifier SYNC_UPGRADE_LIST_PACKET_ID = new Identifier(MODID,"sync_upgrades");
+    public static final Identifier GET_UPGRADE_LIST_PACKET_ID = new Identifier(MODID,"get_upgrades");
     public static void registerC2SPackets(){
         ServerPlayNetworking.registerGlobalReceiver(MOUSE_PACKET_ID, MouseC2SPacket::receive);
         ServerPlayNetworking.registerGlobalReceiver(ABILITY1_PACKET_ID, Ability1C2SPacket::receive);
         ServerPlayNetworking.registerGlobalReceiver(ABILITY2_PACKET_ID, Ability2C2SPacket::receive);
         ServerPlayNetworking.registerGlobalReceiver(ABILITY3_PACKET_ID, Ability3C2SPacket::receive);
         ServerPlayNetworking.registerGlobalReceiver(ABILITY4_PACKET_ID, Ability4C2SPacket::receive);
+        ServerPlayNetworking.registerGlobalReceiver(GET_UPGRADE_LIST_PACKET_ID, GetUpgradeListC2SPacket::receive);
     }
 
 }

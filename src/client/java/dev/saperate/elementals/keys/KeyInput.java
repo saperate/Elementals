@@ -1,5 +1,6 @@
 package dev.saperate.elementals.keys;
 
+import dev.saperate.elementals.packets.SyncUpgradeListS2CPacket;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
