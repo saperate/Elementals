@@ -1,9 +1,11 @@
 package dev.saperate.elementals.keys.gui;
 
 import dev.saperate.elementals.keys.KeyInput;
+import gui.UpgradeTreeScreen;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.screen.TitleScreen;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.screen.ShulkerBoxScreenHandler;
@@ -28,11 +30,7 @@ public class GuiKey extends KeyInput {
             }
             if (!keyBinding.isPressed() && lastFrameWasHolding) {
                 lastFrameWasHolding = false;
-                MinecraftClient.getInstance().player.openHandledScreen(
-                        new SimpleNamedScreenHandlerFactory((syncId, playerInventory, playerEntity) -> {
-                            return new ShulkerBoxScreenHandler(syncId, playerInventory);
-                        }, Text.of("Soldier Inventory")));
-
+                MinecraftClient.getInstance().setScreen(new UpgradeTreeScreen(null));
             }
         });
     }
