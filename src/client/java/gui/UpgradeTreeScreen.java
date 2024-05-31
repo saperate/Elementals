@@ -58,21 +58,21 @@ public class UpgradeTreeScreen extends SpruceScreen {
                 return;
             }
             Upgrade child = bender.element.root.children[i];
-            drawTree(child, context, oX, oY + spacing);
+            drawTree(child, context, oX + child.mod, oY + spacing);
         }
     }
 
     public void drawTree(Upgrade parent, DrawContext context, int oX, int oY) {
         context.fill(oX, oY, oX + tileSize, oY + tileSize, 0xFFFFFFFF);
-
         if(parent.children.length == 0){
             return;
         }
-        int mod = (parent.children.length-1)* spacing/2;
 
         for (int i = 0; i < parent.children.length; i++) {
             Upgrade child = parent.children[i];
-            drawTree(child, context, oX + (child.localX * spacing) - mod, oY + spacing);
+
+
+            drawTree(child, context, oX + Math.round((child.localX + child.mod )* spacing), oY + spacing);
         }
     }
 

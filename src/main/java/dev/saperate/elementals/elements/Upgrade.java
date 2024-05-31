@@ -7,13 +7,21 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 
 public final class Upgrade {
     public Upgrade parent;
     public Upgrade[] children = new Upgrade[0];
     public String name;
-    public int localX;
+    public float localX;
+    public int mod = 0;
     public boolean exclusive = false;
+
+    public Upgrade(String name, Upgrade[] children, boolean exclusive, int mod) {
+        this(name, children);
+        this.exclusive = exclusive;
+        this.mod = mod;
+    }
 
     public Upgrade(String name, Upgrade[] children, boolean exclusive) {
         this(name, children);
@@ -41,7 +49,6 @@ public final class Upgrade {
                 c.onSave(nbtCompound, plrUpgrades);
             }
         }
-
     }
 
     public void onRead(@NotNull NbtCompound nbtCompound, HashMap<Upgrade,Boolean> plrUpgrades) {
@@ -94,14 +101,15 @@ public final class Upgrade {
     }
 
     /**
-     * This method calculates where on a tree graph our upgrade should be placed.
+     * This method calculates where on a tree graph our upgrade should be placed on the X axis.
+     * It does not take into account conflicts between branches.
      * @see <a href="https://rachel53461.wordpress.com/2014/04/20/algorithm-for-drawing-trees/">Rachel Lim's Blog post</a>
      */
     public void calculateXPos(){
-        int mod = 0;//(children.length-1)/2;
+        float middle = (children.length-1)/2.0f;
         for (int i = 0; i < children.length; i++) {
             Upgrade child = children[i];
-            child.localX = i - mod;
+            child.localX = i - middle;
             child.calculateXPos();
         }
     }

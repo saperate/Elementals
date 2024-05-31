@@ -25,7 +25,10 @@ public class FireElement extends Element {
                                 new Upgrade("widerWall"),
                                 new Upgrade("tallerWall")
                         }, true),
-                        new Upgrade("fireSpikes")
+                        new Upgrade("fireSpikes", new Upgrade[]{
+                                new Upgrade("test"),
+                                new Upgrade("hello")
+                        },false,1)
                 }, true),
                 new Upgrade("fireArc", new Upgrade[]{
                         new Upgrade("fireball"),
