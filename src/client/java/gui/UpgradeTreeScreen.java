@@ -26,7 +26,7 @@ import java.awt.*;
 public class UpgradeTreeScreen extends SpruceScreen {
     private ClientBender bender;
     private final Screen parent;
-    private int tileSize = 32;
+    private int tileSize = 32, pathSize = 2;
     private int spacing = tileSize * 2;
     private double originX = 0, originY = 0;
 
@@ -58,23 +58,10 @@ public class UpgradeTreeScreen extends SpruceScreen {
                 return;
             }
             Upgrade child = bender.element.root.children[i];
-            drawTree(child, context, oX + child.mod, oY + spacing);
+            drawTree(child, context, oX + child.mod, oY + spacing, -1);
         }
     }
 
-    public void drawTree(Upgrade parent, DrawContext context, int oX, int oY) {
-        context.fill(oX, oY, oX + tileSize, oY + tileSize, 0xFFFFFFFF);
-        if(parent.children.length == 0){
-            return;
-        }
-
-        for (int i = 0; i < parent.children.length; i++) {
-            Upgrade child = parent.children[i];
-
-
-            drawTree(child, context, oX + Math.round((child.localX + child.mod )* spacing), oY + spacing);
-        }
-    }
 
     @Override
     public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
@@ -86,5 +73,49 @@ public class UpgradeTreeScreen extends SpruceScreen {
     @Override
     public void renderTitle(DrawContext graphics, int mouseX, int mouseY, float delta) {
         graphics.drawCenteredTextWithShadow(this.textRenderer, bender.element.name, this.width / 2, 8, 0xFFFFFFFF);
+    }
+
+
+    //BEWARE: beyond this point is shitty code that might be hard to understand, read at your own peril traveller
+    public void drawTree(Upgrade parent, DrawContext context, int oX, int oY, int mult) {
+        context.fill(oX, oY, oX + tileSize, oY + tileSize, 0xFFFFFFFF);
+        if(parent.children.length == 0){
+            return;
+        }
+        context.fill(
+                oX + tileSize / 2 - pathSize, oY + tileSize,
+                oX + tileSize /2 + pathSize, oY +tileSize + tileSize /2,
+                0xFF454545
+        );
+
+        int firstChildPosX = 0;
+        int lastChildPosX = 0;
+
+        for (int i = 0; i < parent.children.length; i++) {
+            Upgrade child = parent.children[i];
+
+            int pX = oX + Math.round(child.getPositionX() * spacing);
+            if(i == 0){
+                firstChildPosX = pX;
+            }
+            if (i == parent.children.length - 1) {
+                lastChildPosX = pX;
+            }
+
+            context.fill(
+                    pX + tileSize /2 - pathSize, oY+ spacing,
+                    pX + tileSize - tileSize/2 + pathSize, oY + spacing - tileSize/2 - pathSize/2,
+                    0xFF454545
+            );
+
+            drawTree(child, context, pX, oY + spacing, mult);
+        }
+
+        context.fill(
+                firstChildPosX + tileSize/2 - pathSize, oY + spacing - tileSize /2 - pathSize,
+                lastChildPosX + tileSize - tileSize/2 + pathSize, oY + spacing - tileSize /2 + pathSize,
+                0xFF454545
+        );
+
     }
 }

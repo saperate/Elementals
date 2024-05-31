@@ -114,6 +114,10 @@ public final class Upgrade {
         }
     }
 
+    public float getPositionX(){
+        return localX + mod;
+    }
+
     public void setParent(Upgrade parent) {
         this.parent = parent;
     }
