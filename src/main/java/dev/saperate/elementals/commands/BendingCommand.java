@@ -128,7 +128,7 @@ public class BendingCommand {
         context.getSource().sendFeedback((() -> Text.of(
                 "Possible upgrades:")
         ), false);
-        for (Upgrade upgrade : element.upgrades) {
+        for (Upgrade upgrade : element.root.children) {
             for (Upgrade u : upgrade.nextUpgrades(plrData.upgrades)) {
                 if (u.canBuy(plrData.upgrades)) {
                     context.getSource().sendFeedback((() -> Text.of(
@@ -150,7 +150,7 @@ public class BendingCommand {
 
         String name = StringArgumentType.getString(context, "name");
 
-        for (Upgrade upgrade : element.upgrades) {
+        for (Upgrade upgrade : element.root.children) {
             for (Upgrade u : upgrade.nextUpgrades(plrData.upgrades)) {
                 if (u.name.equals(name) && u.canBuy(plrData.upgrades)) {
                     plrData.upgrades.put(u,true);

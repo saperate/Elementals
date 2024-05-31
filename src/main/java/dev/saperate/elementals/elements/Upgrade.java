@@ -12,6 +12,7 @@ public final class Upgrade {
     public Upgrade parent;
     public Upgrade[] children = new Upgrade[0];
     public String name;
+    public int localX;
     public boolean exclusive = false;
 
     public Upgrade(String name, Upgrade[] children, boolean exclusive) {
@@ -92,6 +93,19 @@ public final class Upgrade {
         return null;
     }
 
+    /**
+     * This method calculates where on a tree graph our upgrade should be placed.
+     * @see <a href="https://rachel53461.wordpress.com/2014/04/20/algorithm-for-drawing-trees/">Rachel Lim's Blog post</a>
+     */
+    public void calculateXPos(){
+        int mod = 0;//(children.length-1)/2;
+        for (int i = 0; i < children.length; i++) {
+            Upgrade child = children[i];
+            child.localX = i - mod;
+            child.calculateXPos();
+        }
+    }
+
     public void setParent(Upgrade parent) {
         this.parent = parent;
     }
@@ -99,5 +113,10 @@ public final class Upgrade {
     @Override
     public int hashCode() {
         return name.hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return name;
     }
 }

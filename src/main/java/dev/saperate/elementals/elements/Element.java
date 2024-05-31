@@ -13,13 +13,17 @@ public abstract class Element{
     public static final List<Element> elementList = new ArrayList<>();
     public final List<Ability> abilityList = new ArrayList<>();
     public final List<Ability> bindableAbilities = new ArrayList<>();
-    public Upgrade[] upgrades;
     public final String name;
+    public Upgrade root;
+
 
     public Element(String name, Upgrade[] upgrades){
+        if (upgrades.length > 4){
+            throw new RuntimeException("Element " + name + " had more than 4 abilities in its upgrade path!");
+        }
         this.name = name;
         elementList.add(this);
-        this.upgrades = upgrades;
+        this.root = new Upgrade(name,upgrades);
     }
 
     public Element(String name){
@@ -82,15 +86,11 @@ public abstract class Element{
 
     public NbtCompound onSave(HashMap<Upgrade,Boolean> plrUpgrades){
         NbtCompound nbt = new NbtCompound();
-        for(Upgrade upgrade : upgrades){
-            upgrade.onSave(nbt,plrUpgrades);
-        }
+        root.onSave(nbt,plrUpgrades);
         return nbt;
     }
 
     public void onRead(NbtCompound nbt, HashMap<Upgrade,Boolean> plrUpgrades){
-        for(Upgrade upgrade : upgrades){
-            upgrade.onRead(nbt,plrUpgrades);
-        }
+        root.onRead(nbt,plrUpgrades);
     }
 }
