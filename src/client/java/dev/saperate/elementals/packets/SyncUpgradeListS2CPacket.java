@@ -25,6 +25,7 @@ public class SyncUpgradeListS2CPacket {
         if(bender.element == null){
             return;
         }
+        bender.upgrades.clear();
         NbtCompound data = buf.readNbt();
         bender.element.onRead(data,bender.upgrades);
     }

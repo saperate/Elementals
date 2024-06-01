@@ -18,8 +18,20 @@ public class PlayerData {
 
     public boolean canUseUpgrade(String upgradeName) {
         Upgrade key = new Upgrade(upgradeName);
-        if (upgrades.containsKey(key)) {
-            return upgrades.get(key);
+        return upgrades.getOrDefault(key,false);
+    }
+
+    public boolean canBuyUpgrade(String upgradeName) {
+        return canBuyUpgrade(upgrades,element,upgradeName);
+    }
+
+    public static boolean canBuyUpgrade(HashMap<Upgrade, Boolean> plrUpgrades, Element element, String upgradeName) {
+        for (Upgrade branches : element.root.children) {
+            for (Upgrade u : branches.nextUpgrades(plrUpgrades)) {
+                if (u.name.equals(upgradeName) && u.canBuy(plrUpgrades)) {
+                    return true;
+                }
+            }
         }
         return false;
     }

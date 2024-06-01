@@ -1,6 +1,7 @@
 package dev.saperate.elementals.elements.water;
 
 import dev.saperate.elementals.data.Bender;
+import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.elements.Ability;
 import dev.saperate.elementals.entities.water.WaterHelmetEntity;
 import net.minecraft.entity.LivingEntity;
@@ -16,8 +17,15 @@ public class AbilityWaterSuffocate implements Ability {
     @Override
     public void onCall(Bender bender, long deltaT) {
         PlayerEntity player = bender.player;
+        PlayerData plrData = PlayerData.get(player);
 
-        HitResult hit = raycastFull(player,12,false);
+        int range = 10;
+        if (plrData.canUseUpgrade("waterSuffocateRange")) {
+            range = 15;
+        }
+
+
+        HitResult hit = raycastFull(player,range + 2,false);
         if(hit == null || !hit.getType().equals(HitResult.Type.ENTITY)){
             bender.setCurrAbility(null);
             return;
@@ -30,6 +38,7 @@ public class AbilityWaterSuffocate implements Ability {
             entity.setDrown(true);
             entity.setCaster(player);
             player.getWorld().spawnEntity(entity);
+            entity.setRange(range);
 
             bender.abilityData = entity;
             bender.setCurrAbility(this);

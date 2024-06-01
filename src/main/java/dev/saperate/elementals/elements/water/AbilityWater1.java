@@ -11,17 +11,21 @@ public class AbilityWater1 implements Ability {
     @Override
     public void onCall(Bender bender, long deltaT) {
         PlayerData playerData = PlayerData.get(bender.player);
-
+        if (!playerData.canUseUpgrade("waterBubble")) {
+            bender.setCurrAbility(null);
+            return;
+        }
 
         if (bender.player.isSneaking()) {
-            if (playerData.canUseUpgrade("waterShield") && deltaT >= 1000) {
+            if ((playerData.canUseUpgrade("waterShieldHelmetPath")
+                    || playerData.canUseUpgrade("waterShieldSuffocatePath"))  && deltaT >= 1000) {
                 WaterElement.get().abilityList.get(5).onCall(bender, deltaT);
                 return;
             } else if (playerData.canUseUpgrade("waterHelmet") && bender.player.isSubmergedInWater()
                     && !bender.player.hasStatusEffect(StatusEffects.WATER_BREATHING)) {
                 WaterElement.get().abilityList.get(4).onCall(bender, deltaT);
                 return;
-            } else if (playerData.canUseUpgrade("suffocate")) {
+            } else if (playerData.canUseUpgrade("waterSuffocate")) {
                 WaterElement.get().abilityList.get(6).onCall(bender, deltaT);
                 return;
             }

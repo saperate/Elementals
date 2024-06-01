@@ -1,6 +1,7 @@
 package dev.saperate.elementals.elements.water;
 
 import dev.saperate.elementals.data.Bender;
+import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.elements.Ability;
 import dev.saperate.elementals.entities.water.WaterJetEntity;
 import dev.saperate.elementals.utils.MathHelper;
@@ -68,6 +69,17 @@ public class AbilityWaterCannon implements Ability {
             parent.setStreamSize(4);
             parent.setRange(20);
             player.getWorld().spawnEntity(child);
+
+            PlayerData plrData = PlayerData.get(player);
+            if(plrData.canUseUpgrade("waterCannonRangeI")){
+                parent.setRange(15);
+                child.setRange(15);
+            }
+            if(plrData.canUseUpgrade("waterCannonDamageI")){
+                parent.setStreamSize(6);
+                child.setStreamSize(6);
+            }
+
         } else if (chargeTime == -60) {//Reached end of life
             onRemove(bender);
         }else if(chargeTime > 0){//charging

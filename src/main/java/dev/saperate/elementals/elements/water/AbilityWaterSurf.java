@@ -1,6 +1,7 @@
 package dev.saperate.elementals.elements.water;
 
 import dev.saperate.elementals.data.Bender;
+import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.elements.Ability;
 import dev.saperate.elementals.entities.water.WaterArcEntity;
 import net.minecraft.block.Blocks;
@@ -37,8 +38,14 @@ public class AbilityWaterSurf implements Ability {
 
     @Override
     public void onTick(Bender bender) {//TODO make cloud particles go away from where the player is going
-        //TODO make it so if the player has the upgrade water jump and they press space while surfing (not diving) they jump
         PlayerEntity player = bender.player;
+        float power = 0.25f;
+        PlayerData plrData = PlayerData.get(player);
+        if (plrData.canUseUpgrade("waterJumpRangeII")) {
+            power = 0.75f;
+        }else if (plrData.canUseUpgrade("waterJumpRangeI")) {
+            power = 0.5f;
+        }
         serverSummonParticles((ServerWorld) player.getWorld(),
                 ParticleTypes.SPLASH, player, player.getRandom(),
                 0, 0.1f, 0,
@@ -46,13 +53,8 @@ public class AbilityWaterSurf implements Ability {
                 0, -0.5f, 0, 0);
         if(player.isTouchingWater() && !player.isSubmergedInWater()){
             //TODO maybe make an upgrade that makes it also work in the rain
-            Vector3f velocity = getEntityLookVector(player, 2)
-                    .subtract(player.getEyePos()).multiply(1,0,1)
-                    .normalize().multiply(0.5f).toVector3f();
-            player.setVelocity(velocity.x, velocity.y, velocity.z);
-            player.velocityModified = true;
-            player.move(MovementType.PLAYER, player.getVelocity());
-            bender.abilityData = true;
+            movePlayer(player,bender,power,0);
+
             serverSummonParticles((ServerWorld) player.getWorld(),
                     ParticleTypes.CLOUD, player, player.getRandom(),
                     0, 0.1f, 0,
@@ -60,13 +62,8 @@ public class AbilityWaterSurf implements Ability {
                     0, -0.5f, 0, 0);
         } else if (player.isSubmergedInWater()) {
             player.startFallFlying();
-            Vector3f velocity = getEntityLookVector(player, 2)
-                    .subtract(player.getEyePos())
-                    .normalize().multiply(0.5f).toVector3f();
-            player.setVelocity(velocity.x, velocity.y, velocity.z);
-            player.velocityModified = true;
-            player.move(MovementType.PLAYER, player.getVelocity());
-            bender.abilityData = true;
+            movePlayer(player,bender,power,1);
+
             serverSummonParticles((ServerWorld) player.getWorld(),
                     ParticleTypes.BUBBLE, player, player.getRandom(),
                     0, 0.1f, 0,
@@ -80,6 +77,16 @@ public class AbilityWaterSurf implements Ability {
     @Override
     public void onRemove(Bender bender) {
         bender.setCurrAbility(null);
+    }
+
+    private void movePlayer(PlayerEntity player, Bender bender, float power, int yMult){
+        Vector3f velocity = getEntityLookVector(player, 2)
+                .subtract(player.getEyePos()).multiply(1,yMult,1)
+                .normalize().multiply(power).toVector3f();
+        player.setVelocity(velocity.x, velocity.y, velocity.z);
+        player.velocityModified = true;
+        player.move(MovementType.PLAYER, player.getVelocity());
+        bender.abilityData = true;
     }
 
 }

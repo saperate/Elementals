@@ -13,13 +13,25 @@ import static dev.saperate.elementals.effects.StationaryStatusEffect.STATIONARY_
 public class AbilityWaterHelmet implements Ability {
     @Override
     public void onCall(Bender bender, long deltaT) {
+        bender.setCurrAbility(null);
         PlayerEntity player = bender.player;
+        PlayerData plrData = PlayerData.get(player);
 
         WaterHelmetEntity entity = new WaterHelmetEntity(player.getWorld(), player, player.getX(), player.getY(), player.getZ());
         player.getWorld().spawnEntity(entity);
+        entity.setStealthy(plrData.canUseUpgrade("waterHelmetStealth"));
 
-
-        bender.setCurrAbility(null);
+        if(plrData.canUseUpgrade("waterHelmetMastery")){
+            entity.setMaxLifeTime(-1);
+        } else if (plrData.canUseUpgrade("waterHelmetDurationIV")) {
+            entity.setMaxLifeTime(6000);
+        } else if (plrData.canUseUpgrade("waterHelmetDurationIII")) {
+            entity.setMaxLifeTime(4800);
+        } else if (plrData.canUseUpgrade("waterHelmetDurationII")) {
+            entity.setMaxLifeTime(3600);
+        }  else if (plrData.canUseUpgrade("waterHelmetDurationI")) {
+            entity.setMaxLifeTime(2400);
+        }
     }
 
     @Override

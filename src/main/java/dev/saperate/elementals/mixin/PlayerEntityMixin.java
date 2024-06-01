@@ -52,6 +52,7 @@ public abstract class PlayerEntityMixin {
     private void tick(CallbackInfo ci) {
         PlayerEntity player = ((PlayerEntity) (Object) this);
 
+
         if(safeHasStatusEffect(SPIRIT_PROJECTION_EFFECT,player)){
             //checks if we are inside a wall
             float f = player.getDimensions(player.getPose()).width * 0.8f;

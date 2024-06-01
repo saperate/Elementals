@@ -1,6 +1,7 @@
 package dev.saperate.elementals.elements.water;
 
 import dev.saperate.elementals.data.Bender;
+import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.elements.Ability;
 import dev.saperate.elementals.entities.water.WaterCubeEntity;
 import dev.saperate.elementals.entities.water.WaterJetEntity;
@@ -29,7 +30,13 @@ public class AbilityWaterTower implements Ability {
 
         WaterTowerEntity entity = new WaterTowerEntity(player.getWorld(), player);
         bender.abilityData = entity;
-        entity.setMaxTowerHeight(10);
+
+        int height = 10;
+        PlayerData plrData = PlayerData.get(player);
+        if (plrData.canUseUpgrade("waterTowerRangeI")) {
+            height = 15;
+        }
+        entity.setMaxTowerHeight(height);
 
         player.getWorld().spawnEntity(entity);
         bender.setCurrAbility(this);
@@ -54,7 +61,13 @@ public class AbilityWaterTower implements Ability {
     public void onTick(Bender bender) {
         PlayerEntity player = bender.player;
 
-        BlockHitResult hit = raycastBlockCustomRotation(player, 12, true, new Vec3d(0, -1, 0));
+        int height = 10;
+        PlayerData plrData = PlayerData.get(player);
+        if (plrData.canUseUpgrade("waterTowerRangeI")) {
+            height = 15;
+        }
+
+        BlockHitResult hit = raycastBlockCustomRotation(player, height, true, new Vec3d(0, -1, 0));
 
         boolean isAir = hit == null;
 

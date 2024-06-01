@@ -17,7 +17,7 @@ public class AbilityWater3 implements Ability {
     public void onCall(Bender bender, long deltaT) {
         PlayerData playerData = PlayerData.get(bender.player);
 
-        if (bender.player.isSprinting() && playerData.canUseUpgrade("surf")
+        if (bender.player.isSprinting() && playerData.canUseUpgrade("waterSurf")
                 && (bender.player.isOnGround() || bender.player.isSubmergedInWater())) {
             WaterElement.get().abilityList.get(13).onCall(bender, deltaT);
             return;
@@ -30,15 +30,29 @@ public class AbilityWater3 implements Ability {
     @Override
     public void onLeftClick(Bender bender, boolean started) {
         PlayerEntity player = bender.player;
+        PlayerData playerData = PlayerData.get(player);
+        if (!playerData.canUseUpgrade("waterJump")) {
+            bender.setCurrAbility(null);
+            return;
+        }
+
         if (player.isTouchingWaterOrRain()) {
             bender.abilityData = 1;
 
+            float power = 1;
+            PlayerData plrData = PlayerData.get(player);
+            if (plrData.canUseUpgrade("waterJumpRangeII")) {
+                power = 2;
+            } else if (plrData.canUseUpgrade("waterJumpRangeI")) {
+                power = 1.5f;
+            }
+
             Vector3f velocity = getEntityLookVector(player, 1)
                     .subtract(player.getEyePos())
-                    .normalize().multiply(1.75f).toVector3f();
+                    .normalize().multiply(power).toVector3f();
 
             player.setVelocity(velocity.x,
-                    velocity.y > 0 ? Math.min(velocity.y, 1) : Math.max(velocity.y, -1),
+                    velocity.y > 0 ? Math.min(velocity.y, power - 0.75f) : Math.max(velocity.y, -power + 0.75f),
                     velocity.z);
             player.velocityModified = true;
             player.move(MovementType.PLAYER, player.getVelocity());
@@ -70,7 +84,7 @@ public class AbilityWater3 implements Ability {
         }
 
         //TODO add a system that if is not touching water search inventory for water containers
-        if (!bender.player.isOnGround() && ((int) bender.abilityData) < 0) {
+        if (!bender.player.isOnGround() && ((int) bender.abilityData) < 0 && PlayerData.get(player).canUseUpgrade("waterTower")) {
             WaterElement.get().abilityList.get(16).onCall(bender, -1);//dT doesn't matter here
         } else if (bender.abilityData.equals(1) && (bender.player.isOnGround() || bender.player.isSubmergedInWater())) {
             //Trigger when jump touches the ground, use for abilities

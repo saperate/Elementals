@@ -24,6 +24,7 @@ import static dev.saperate.elementals.utils.SapsUtils.summonParticles;
 
 public class WaterHealingEntity extends ProjectileEntity {
     private static final TrackedData<Integer> OWNER_ID = DataTracker.registerData(WaterHealingEntity.class, TrackedDataHandlerRegistry.INTEGER);
+    private static final TrackedData<Float> HEALING = DataTracker.registerData(WaterHealingEntity.class, TrackedDataHandlerRegistry.FLOAT);
     private static final TrackedData<Boolean> IS_CONTROLLED = DataTracker.registerData(WaterHealingEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
 
 
@@ -48,6 +49,7 @@ public class WaterHealingEntity extends ProjectileEntity {
     protected void initDataTracker() {
         this.getDataTracker().startTracking(OWNER_ID, 0);
         this.getDataTracker().startTracking(IS_CONTROLLED, false);
+        this.getDataTracker().startTracking(OWNER_ID, 2);
     }
 
     @Override
@@ -90,7 +92,7 @@ public class WaterHealingEntity extends ProjectileEntity {
 
     private void onHitEntity(LivingEntity entity) {
         if (age % 20 == 0) {
-            entity.setHealth(entity.getHealth() + 2);
+            entity.setHealth(entity.getHealth() + getHealing());
         }
 
         if (!getIsControlled()) {
@@ -173,4 +175,11 @@ public class WaterHealingEntity extends ProjectileEntity {
         this.getDataTracker().set(OWNER_ID, owner.getId());
     }
 
+    public void setHealing(float val) {
+        this.dataTracker.set(HEALING,val);
+    }
+
+    public float getHealing() {
+        return this.dataTracker.get(HEALING);
+    }
 }

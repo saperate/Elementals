@@ -56,7 +56,7 @@ public class BendingCommand {
     }
 
     public static int setSelfElement(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
-        if(context.getSource().getPlayer().getWorld().isClient){
+        if (context.getSource().getPlayer().getWorld().isClient) {
             return 1;
         }
         Bender bender = Bender.getBender(context.getSource().getPlayer());
@@ -149,18 +149,15 @@ public class BendingCommand {
         PlayerData plrData = StateDataSaverAndLoader.getPlayerState(bender.player);
 
         String name = StringArgumentType.getString(context, "name");
+        Upgrade upgrade = element.root.getUpgradeByNameRecursive(name);
 
-        for (Upgrade upgrade : element.root.children) {
-            for (Upgrade u : upgrade.nextUpgrades(plrData.upgrades)) {
-                if (u.name.equals(name) && u.canBuy(plrData.upgrades)) {
-                    plrData.upgrades.put(u,true);
-                    StateDataSaverAndLoader.getServerState(bender.player.getServer()).markDirty();
-                    context.getSource().sendFeedback((() -> Text.of(
-                            "Upgrade  \"" + u.name + "\" was bought successfully!")
-                    ), false);
-                    return 1;
-                }
-            }
+        if (plrData.canBuyUpgrade(name)) {
+            plrData.upgrades.put(upgrade, true);
+            StateDataSaverAndLoader.getServerState(bender.player.getServer()).markDirty();
+            context.getSource().sendFeedback((() -> Text.of(
+                    "Upgrade  \"" + upgrade.name + "\" was bought successfully!")
+            ), false);
+            return 1;
         }
 
 
@@ -183,7 +180,7 @@ public class BendingCommand {
     }
 
 
-    private static int status(CommandContext<ServerCommandSource> context){
+    private static int status(CommandContext<ServerCommandSource> context) {
         Bender bender = Bender.getBender(context.getSource().getPlayer());
 
         System.out.println(bender.toString());

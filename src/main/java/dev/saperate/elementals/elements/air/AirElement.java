@@ -17,7 +17,23 @@ import net.minecraft.world.event.GameEvent;
 public class AirElement extends Element {
     public AirElement() {
         super("Air", new Upgrade[]{
-
+                new Upgrade("path1", new Upgrade[]{
+                        new Upgrade("airShield"),
+                        new Upgrade("airTornado")
+                },true),
+                new Upgrade("path2", new Upgrade[]{
+                        new Upgrade("airBall"),
+                        new Upgrade("tempNode", new Upgrade[]{
+                                new Upgrade("airBullets"),
+                                new Upgrade("airSuffocate")
+                        }, true)
+                }),
+                new Upgrade("path3", new Upgrade[]{
+                        new Upgrade("temp")
+                }),
+                new Upgrade("path4", new Upgrade[]{
+                        new Upgrade("spiritProjection")
+                })
         });
         addAbility(new AbilityAir1(), true);
         addAbility(new AbilityAirGust());

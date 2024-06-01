@@ -19,16 +19,17 @@ import static dev.saperate.elementals.utils.SapsUtils.summonParticles;
 /**
  * <b>IMPORTANT NOTICE</b> this entity also handles air bending's suffocate. To modify the air suffocate model,
  * go to the water helmet renderer
- * @see WaterHelmetEntityRenderer
  */
 public class WaterHelmetEntity extends Entity {
     public boolean isOwnerBiped = false;
+    private static final TrackedData<Integer> MAX_LIFETIME = DataTracker.registerData(WaterHelmetEntity.class, TrackedDataHandlerRegistry.INTEGER);
+    private static final TrackedData<Integer> RANGE = DataTracker.registerData(WaterHelmetEntity.class, TrackedDataHandlerRegistry.INTEGER);
     private static final TrackedData<Integer> CASTER_ID = DataTracker.registerData(WaterHelmetEntity.class, TrackedDataHandlerRegistry.INTEGER);
     private static final TrackedData<Integer> OWNER_ID = DataTracker.registerData(WaterHelmetEntity.class, TrackedDataHandlerRegistry.INTEGER);
     private static final TrackedData<Boolean> DROWN = DataTracker.registerData(WaterHelmetEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
+    private static final TrackedData<Boolean> STEALTHY = DataTracker.registerData(WaterHelmetEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
     private static final TrackedData<Integer> MODEL_ID = DataTracker.registerData(WaterHelmetEntity.class, TrackedDataHandlerRegistry.INTEGER);
-    public int aliveTicks = 0, maxLifeTime = 1000;
-
+    public int aliveTicks = 0;
 
 
     public WaterHelmetEntity(EntityType<WaterHelmetEntity> type, World world) {
@@ -56,6 +57,9 @@ public class WaterHelmetEntity extends Entity {
         this.getDataTracker().startTracking(OWNER_ID, 0);
         this.getDataTracker().startTracking(DROWN, false);
         this.getDataTracker().startTracking(MODEL_ID, 0);
+        this.getDataTracker().startTracking(STEALTHY, false);
+        this.getDataTracker().startTracking(MAX_LIFETIME, 1200);
+        this.getDataTracker().startTracking(RANGE, 10);
 
     }
 
@@ -63,13 +67,14 @@ public class WaterHelmetEntity extends Entity {
     public void tick() {
         super.tick();
         boolean drown = getDrown();
-        if(!drown){
+        if (!drown) {
             aliveTicks++;
         }
-
+        int maxLifeTime = getMaxLifeTime();
 
         LivingEntity owner = getOwner();
-        if (owner == null || aliveTicks > maxLifeTime || owner.isOnFire()) {
+        if (owner == null || (aliveTicks > maxLifeTime && maxLifeTime != -1) || owner.isOnFire()
+                || (maxLifeTime == -1 && !owner.isSubmergedInWater())) {
             discard();
             return;
         }
@@ -77,12 +82,12 @@ public class WaterHelmetEntity extends Entity {
             aliveTicks += 50;
         }
 
-        isOwnerBiped = owner.getWidth() / owner.getHeight() < 0.4 || owner instanceof PlayerEntity;
 
-        if(!isOwnerBiped && getWorld().isClient){
-            summonParticles(owner,this.random, getModelId() == 0 ? ParticleTypes.SPLASH : ParticleTypes.WHITE_SMOKE,0,10);
+        isOwnerBiped = (owner.getWidth() / owner.getHeight() < 0.4 || (owner instanceof PlayerEntity && !owner.isSprinting())) && !owner.hasStatusEffect(StatusEffects.INVISIBILITY) ;
+
+        if (!isOwnerBiped && getWorld().isClient) {
+            summonParticles(owner, this.random, getModelId() == 0 ? ParticleTypes.SPLASH : ParticleTypes.WHITE_SMOKE, 0, 10);
         }
-
 
 
         Vec3d eyePos = owner.getEyePos();
@@ -90,20 +95,24 @@ public class WaterHelmetEntity extends Entity {
 
 
         if (!drown) {
+            if (isStealthy() && owner.isSneaking() && owner.getVelocity().lengthSquared() <= 0.5) {
+                owner.addStatusEffect(new StatusEffectInstance(StatusEffects.INVISIBILITY, 10, 1, false, false, false));
+            }
             owner.addStatusEffect(new StatusEffectInstance(StatusEffects.WATER_BREATHING, 10, 1, false, false, false));
         } else {
+            int range = getRange();
             LivingEntity caster = getCaster();
-            if(caster == null){
+            if (caster == null) {
                 return;
             }
             owner.addStatusEffect(new StatusEffectInstance(DROWNING_EFFECT, 10, 1, false, false, false));
             Vec3d direction = caster.getPos().subtract(owner.getPos());
             double distance = direction.length();
-            if (distance > 10) {
-                direction = direction.multiply(distance - 10).multiply(0.1f);
+            if (distance > range) {
+                direction = direction.multiply(distance - range).multiply(0.1f);
 
 
-                double damping = 0.1f + (0.3f - 0.1f) * (1 - Math.min(1, distance / 10));
+                double damping = 0.1f + (0.3f - 0.1f) * (1 - Math.min(1, distance / range));
                 direction = direction.multiply(damping);
 
                 owner.addVelocity(direction.x, direction.y, direction.z);
@@ -143,7 +152,6 @@ public class WaterHelmetEntity extends Entity {
         this.getDataTracker().set(CASTER_ID, caster.getId());
     }
 
-
     public boolean getDrown() {
         return this.getDataTracker().get(DROWN);
     }
@@ -162,5 +170,29 @@ public class WaterHelmetEntity extends Entity {
 
     public boolean isOwnerBiped() {
         return isOwnerBiped;
+    }
+
+    public boolean isStealthy() {
+        return this.getDataTracker().get(STEALTHY);
+    }
+
+    public void setStealthy(boolean val) {
+        this.getDataTracker().set(STEALTHY, val);
+    }
+
+    public int getMaxLifeTime() {
+        return this.getDataTracker().get(MAX_LIFETIME);
+    }
+
+    public void setMaxLifeTime(int val) {
+        this.getDataTracker().set(MAX_LIFETIME, val);
+    }
+
+    public int getRange() {
+        return this.getDataTracker().get(RANGE);
+    }
+
+    public void setRange(int val) {
+        this.getDataTracker().set(RANGE, val);
     }
 }

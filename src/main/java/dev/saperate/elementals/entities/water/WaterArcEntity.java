@@ -1,5 +1,7 @@
 package dev.saperate.elementals.entities.water;
 
+import dev.saperate.elementals.data.PlayerData;
+import dev.saperate.elementals.utils.SapsUtils;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.*;
 import net.minecraft.entity.data.DataTracker;
@@ -73,36 +75,39 @@ public class WaterArcEntity extends ProjectileEntity {
     @Override
     public void tick() {
         super.tick();
-        Entity owner = getOwner();
+        LivingEntity owner = getOwner();
         if (owner == null) {
             this.setVelocity(this.getVelocity().add(0.0, -0.04, 0.0));
             this.move(MovementType.SELF, this.getVelocity());
             return;
         }
         WaterArcEntity parent = getParent();
-        if (!getIsControlled() && parent == null) {
+        if (!getIsControlled() && parent == null && !getWorld().isClient) {
             HitResult hit = ProjectileUtil.getCollision(this, entity -> entity instanceof LivingEntity);
             if (hit.getType() == HitResult.Type.ENTITY) {
                 LivingEntity entity = (LivingEntity) ((EntityHitResult) hit).getEntity();
-                entity.damage(this.getDamageSources().playerAttack((PlayerEntity) owner), 4);
+                PlayerData plrData = PlayerData.get(owner);
+
+                int damage = 4;
+                if (plrData.canUseUpgrade("waterArcMastery")) {
+                    damage = 8;
+                } else if (plrData.canUseUpgrade("waterArcDamageI")) {
+                    damage = 6;
+                }
+
+                entity.damage(this.getDamageSources().playerAttack((PlayerEntity) owner), damage);
                 entity.addVelocity(this.getVelocity().multiply(0.2f));
                 WaterArcEntity child = getChild();
                 if (child != null) {
                     this.getChild().setParent(null);
                 }
                 discard();
-            }
-            if (!getWorld().isClient) {
-                BlockPos blockDown = getBlockPos().down();
-                BlockState blockState = getWorld().getBlockState(blockDown);
-
-                if (!blockState.isAir() && getY() - getBlockPos().getY() == 0) {
-                    WaterArcEntity child = getChild();
-                    if (child != null) {
-                        this.getChild().setParent(null);
-                    }
-                    discard();
+            } else if (SapsUtils.checkBlockCollision(this, 0.1f, false) != null) {
+                WaterArcEntity child = getChild();
+                if (child != null) {
+                    this.getChild().setParent(null);
                 }
+                discard();
             }
         }
 
@@ -171,7 +176,7 @@ public class WaterArcEntity extends ProjectileEntity {
 
     @Override
     public void onRemoved() {
-        summonParticles(this, random, ParticleTypes.SPLASH, 10, 100);
+        summonParticles(this, random, ParticleTypes.SPLASH, 0, 100);
     }
 
     /**

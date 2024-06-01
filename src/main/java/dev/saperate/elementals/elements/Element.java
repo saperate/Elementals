@@ -86,11 +86,15 @@ public abstract class Element{
 
     public NbtCompound onSave(HashMap<Upgrade,Boolean> plrUpgrades){
         NbtCompound nbt = new NbtCompound();
-        root.onSave(nbt,plrUpgrades);
+        for(Upgrade child : root.children){
+            child.onSave(nbt,plrUpgrades);
+        }
         return nbt;
     }
 
     public void onRead(NbtCompound nbt, HashMap<Upgrade,Boolean> plrUpgrades){
-        root.onRead(nbt,plrUpgrades);
+        for(Upgrade child : root.children){
+            child.onRead(nbt,plrUpgrades);
+        }
     }
 }

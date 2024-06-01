@@ -1,6 +1,7 @@
 package dev.saperate.elementals.elements.water;
 
 import dev.saperate.elementals.data.Bender;
+import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.elements.Ability;
 import dev.saperate.elementals.entities.water.WaterCubeEntity;
 import dev.saperate.elementals.entities.water.WaterHealingEntity;
@@ -12,15 +13,22 @@ public class AbilityWaterHealing implements Ability {
     @Override
     public void onCall(Bender bender, long deltaT) {
         PlayerEntity player = bender.player;
-        Vector3f pos = WaterElement.canBend(player,true);
+        Vector3f pos = WaterElement.canBend(player, true);
 
         if (pos != null) {
             WaterHealingEntity entity = new WaterHealingEntity(player.getWorld(), player, pos.x, pos.y, pos.z);
             bender.abilityData = entity;
             player.getWorld().spawnEntity(entity);
 
+            PlayerData plrData = PlayerData.get(player);
+            if (plrData.canUseUpgrade("waterHealingEfficiencyII")) {
+                entity.setHealing(6);
+            } else if (plrData.canUseUpgrade("waterHealingEfficiencyI")) {
+                entity.setHealing(4);
+            }
+
             bender.setCurrAbility(this);
-        }else{
+        } else {
             bender.setCurrAbility(null);
         }
     }
@@ -30,7 +38,7 @@ public class AbilityWaterHealing implements Ability {
     public void onLeftClick(Bender bender, boolean started) {
         WaterHealingEntity entity = (WaterHealingEntity) bender.abilityData;
         onRemove(bender);
-        if(entity == null){
+        if (entity == null) {
             return;
         }
 

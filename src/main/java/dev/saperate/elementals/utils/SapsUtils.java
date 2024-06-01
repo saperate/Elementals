@@ -13,6 +13,7 @@ import net.minecraft.fluid.FluidState;
 import net.minecraft.particle.ParticleEffect;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.text.Text;
 import net.minecraft.util.crash.CrashException;
 import net.minecraft.util.crash.CrashReport;
 import net.minecraft.util.crash.CrashReportSection;
@@ -32,6 +33,7 @@ import org.joml.Vector3f;
 
 import java.util.*;
 import java.util.function.Predicate;
+import java.util.stream.IntStream;
 
 /**
  * A collection of methods that makes some redundant stuff easier to use
@@ -76,7 +78,7 @@ public class SapsUtils {
 
         //There is a weird but where if you didn't move the entity yet, the bounding box doesnt add position
         //So this is here to fix that
-        if(!isAboutEquals(box.minX,entity.getX(),box.maxX - box.minX)){
+        if (!isAboutEquals(box.minX, entity.getX(), box.maxX - box.minX)) {
             blockPos = blockPos.add(entity.getBlockPos());
             blockPos2 = blockPos2.add(entity.getBlockPos());
         }
@@ -296,8 +298,8 @@ public class SapsUtils {
         }
     }
 
-    public static Boolean isAboutEquals(double a, double b, double errorMargin){
-        return Math.abs(a-b) <= errorMargin;
+    public static Boolean isAboutEquals(double a, double b, double errorMargin) {
+        return Math.abs(a - b) <= errorMargin;
     }
 
     /**
@@ -308,15 +310,60 @@ public class SapsUtils {
      * @param entity The entity that we check
      * @return true if the entity has the status effect
      */
-    public static boolean safeHasStatusEffect(StatusEffect effect, LivingEntity entity){
+    public static boolean safeHasStatusEffect(StatusEffect effect, LivingEntity entity) {
         boolean hasEffect = false;
-        try{
-            if(entity != null){
+        try {
+            if (entity != null) {
                 hasEffect = entity.hasStatusEffect(effect);
-            }else {
+            } else {
                 return false;
             }
-        }catch (Exception ignored){}
+        } catch (Exception ignored) {
+        }
         return hasEffect;
+    }
+
+
+
+    /**
+     * Searches for "<br>" in the translatable to be able to actually do line breaks in tooltips
+     * @return the number of args used in the translatable
+     */
+    public static int addTranslatable(List<Text> tooltip, String key, Object... args) {
+        String raw = Text.translatable(key, args).getString();
+        if (raw.equals(key)) {
+            return 0;
+        }
+        for (String str : raw.split("<br>")) {
+            tooltip.add(Text.of(str));
+        }
+        return raw.split("%d").length;
+    }
+
+    /**
+     * Takes in a translatable and makes a new line every N amount of spaces (defined by max)
+     *
+     * @param tooltip the list where we will add lines
+     * @param key Where we will find the translatable
+     * @param max The maximum amount of words per line (recommended: 6)
+     * @param args The arguments used by the translatable
+     * @return the number of args used in the translatable
+     */
+    public static int addTranslatableAutomaticLineBreaks(List<Text> tooltip, String key, int max, Object... args) {
+        String raw = Text.translatable(key, args).getString();
+        if (raw.equals(key)) {
+            return 0;
+        }
+        StringBuilder builder = new StringBuilder();
+        String[] arr = raw.split(" ");
+        for (int i = 0; i < arr.length; i ++) {
+            builder.append(arr[i]).append(" ");
+            if(i % max == 0 && i != arr.length - 1){
+                tooltip.add(Text.of(builder.toString()));
+                builder = new StringBuilder();
+            }
+        }
+        tooltip.add(Text.of(builder.toString()));
+        return raw.split("%d").length;
     }
 }

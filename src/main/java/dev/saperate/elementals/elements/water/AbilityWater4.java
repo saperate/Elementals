@@ -16,6 +16,11 @@ import static dev.saperate.elementals.utils.SapsUtils.serverSummonParticles;
 public class AbilityWater4 implements Ability {
     @Override
     public void onCall(Bender bender, long deltaT) {
+        PlayerData playerData = PlayerData.get(bender.player);
+        if (!playerData.canUseUpgrade("waterHealing")) {
+            bender.setCurrAbility(null);
+            return;
+        }
         WaterElement.get().abilityList.get(15).onCall(bender, deltaT);
     }
 

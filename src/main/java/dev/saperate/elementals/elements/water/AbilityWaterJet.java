@@ -44,6 +44,7 @@ public class AbilityWaterJet implements Ability {
     public void onRightClick(Bender bender, boolean started) {
         if (started) {
             PlayerEntity player = bender.player;
+
             Vec3d pos = getEntityLookVector(player, .5f);
 
             WaterJetEntity parent = new WaterJetEntity(player.getWorld(), player, pos.x, pos.y, pos.z);
@@ -53,6 +54,17 @@ public class AbilityWaterJet implements Ability {
             WaterJetEntity child = new WaterJetEntity(player.getWorld(), player, pos.x, pos.y, pos.z);
             parent.setChild(child);
             player.getWorld().spawnEntity(child);
+
+            PlayerData plrData = PlayerData.get(player);
+            if(plrData.canUseUpgrade("waterJetRangeI")){
+                parent.setRange(15);
+                child.setRange(15);
+            }
+            if(plrData.canUseUpgrade("waterJetDamageI")){
+                parent.setStreamSize(2);
+                child.setStreamSize(2);
+            }
+
         } else {
             onRemove(bender);
         }

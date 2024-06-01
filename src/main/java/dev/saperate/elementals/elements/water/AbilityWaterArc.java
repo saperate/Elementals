@@ -1,6 +1,7 @@
 package dev.saperate.elementals.elements.water;
 
 import dev.saperate.elementals.data.Bender;
+import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.elements.Ability;
 import dev.saperate.elementals.entities.water.WaterArcEntity;
 import dev.saperate.elementals.entities.water.WaterCubeEntity;
@@ -33,8 +34,15 @@ public class AbilityWaterArc implements Ability {
             throw new RuntimeException("Elementals: Tried to launch entity while having none!");
         }
         onRemove(bender);
+        PlayerData plrData = PlayerData.get(bender.player);
 
-        entity.setVelocity(bender.player, bender.player.getPitch(), bender.player.getYaw(), 0, 1, 0);
+        float speed = 1;
+        if (plrData.canUseUpgrade("waterArcSpeedII")) {
+            speed = 2;
+        } else if (plrData.canUseUpgrade("waterArcSpeedI")) {
+            speed = 1.5f;
+        }
+        entity.setVelocity(bender.player, bender.player.getPitch(), bender.player.getYaw(), 0, speed, 0);
     }
 
     @Override

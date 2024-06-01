@@ -9,6 +9,9 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 
+/**
+ * This serves as a node to make an upgrade tree, each node <b>MUST</b> have a different name, otherwise it can break stuff
+ */
 public final class Upgrade {
     public Upgrade parent;
     public Upgrade[] children = new Upgrade[0];
@@ -90,10 +93,10 @@ public final class Upgrade {
             return this;
         }
 
-        for (Upgrade ignored : children) {
-            Upgrade foundUpgrade = getUpgradeByNameRecursive(upgradeName);
-            if (foundUpgrade != null) {
-                return foundUpgrade;
+        for (Upgrade child : children) {
+            Upgrade u = child.getUpgradeByNameRecursive(upgradeName);
+            if(u != null){
+                return u;
             }
         }
 
@@ -120,6 +123,14 @@ public final class Upgrade {
 
     public void setParent(Upgrade parent) {
         this.parent = parent;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(obj instanceof Upgrade other){
+            return other.hashCode() == hashCode();
+        }
+        return false;
     }
 
     @Override

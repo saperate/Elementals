@@ -1,0 +1,143 @@
+{
+  "upgrade.elementals.waterBubble": "Water Bubble",
+  "upgrade.elementals.waterBubble.description": " A basic move allowing you to transport water or attack enemies.",
+
+  "upgrade.elementals.waterHelmet": "Water Helmet",
+  "upgrade.elementals.waterHelmet.description": " By making an air pocket with your water bending, you can allow yourself to breathe underwater just like a fish.",
+  "upgrade.elementals.waterHelmet.use": " Use: sneak submerged in water",
+
+  "upgrade.elementals.waterHelmetDurationI": "Duration I",
+  "upgrade.elementals.waterHelmetDurationI.description": " Stay underwater for up to 2 minutes.",
+
+  "upgrade.elementals.waterHelmetDurationII": "Duration II",
+  "upgrade.elementals.waterHelmetDurationII.description": " Stay underwater for up to 3 minutes.",
+
+  "upgrade.elementals.waterHelmetDurationIII": "Duration III",
+  "upgrade.elementals.waterHelmetDurationIII.description": " Stay underwater for up to 4 minutes.",
+
+  "upgrade.elementals.waterHelmetDurationIV": "Duration IV",
+  "upgrade.elementals.waterHelmetDurationIV.description": " Stay underwater for up to 5 minutes.",
+
+  "upgrade.elementals.waterHelmetMastery": "Water Helmet Mastery",
+  "upgrade.elementals.waterHelmetMastery.description": " Allows you to stay underwater indefinitely!",
+
+  "upgrade.elementals.waterHelmetStealth": "Stealthy",
+  "upgrade.elementals.waterHelmetStealth.description": " By using refraction, you can make it so you are invisible while using water helmet and barely moving.",
+  "upgrade.elementals.waterHelmetStealth.use": " Use: sneak",
+
+  "upgrade.elementals.waterSuffocate": "Suffocate",
+  "upgrade.elementals.waterSuffocate.description": " By taking water and forcing it on the head of a living being, you can drown them even on land.",
+  "upgrade.elementals.waterSuffocate.use": " Use: sneak while looking at enemy",
+
+  "upgrade.elementals.waterSuffocateRange": "Range I",
+  "upgrade.elementals.waterSuffocateRange.description": " Reach mobs for up to 15 blocks away.",
+
+  "upgrade.elementals.waterShieldSuffocatePath": "Shield",
+  "upgrade.elementals.waterShieldSuffocatePath.description": " By rapidly spinning streams of water around you, you can deflect any projectile or enemy coming your way.",
+  "upgrade.elementals.waterShieldSuffocatePath.use": " Use: sneak in water + hold (1s)",
+  "upgrade.elementals.waterShieldHelmetPath": "Shield",
+  "upgrade.elementals.waterShieldHelmetPath.description": " By rapidly spinning streams of water around you, you can deflect any projectile or enemy coming your way.",
+  "upgrade.elementals.waterShieldHelmetPath.use": " Use: sneak in water + hold (1s)",
+
+  "upgrade.elementals.waterArc": "Water Arc",
+  "upgrade.elementals.waterArc.description": " A sweeping arc of water that can knock back enemies and damage them from a distance.",
+
+  "upgrade.elementals.waterArcDamageI": "Damage I",
+  "upgrade.elementals.waterArcDamageI.description": " Allows you to deal a little bit more damage.",
+
+  "upgrade.elementals.waterArcEfficiencyI": "Efficiency I",
+  "upgrade.elementals.waterArcEfficiencyI.description": " Use 25% less chi when casting water arc.",
+
+  "upgrade.elementals.waterArcSpeedI": "Speed I",
+  "upgrade.elementals.waterArcSpeedI.description": " Make water arc faster, allowing you to get more range",
+
+  "upgrade.elementals.waterArcSpeedII": "Speed II",
+  "upgrade.elementals.waterArcSpeedII.description": " Make water arc even faster, allowing you to get more range",
+
+  "upgrade.elementals.waterArcMastery": "Water Arc Mastery",
+  "upgrade.elementals.waterArcMastery.description": " Mastery of the water arc ability allows you to deal more damage.",
+
+  "upgrade.elementals.waterJet": "Water Jet",
+  "upgrade.elementals.waterJet.description": " A concentrated stream of water that can be used to push objects or attack enemies.",
+  "upgrade.elementals.waterJet.use": " Use: hold (1s)",
+
+  "upgrade.elementals.waterJetDamageI": "Damage I",
+  "upgrade.elementals.waterJetDamageI.description": " Allows you to deal a little bit more damage.",
+
+  "upgrade.elementals.waterJetRangeI": "Range I",
+  "upgrade.elementals.waterJetRangeI.description": " Reach mobs for up to 15 blocks away.",
+
+  "upgrade.elementals.waterBlade": "Blade",
+  "upgrade.elementals.waterBlade.description": " A sharp blade formed from water, capable of cutting through most materials.",
+  "upgrade.elementals.waterBlade.use": " Use: sneak",
+
+  "upgrade.elementals.waterBladeDamageI": "Damage I",
+  "upgrade.elementals.waterBladeDamageI.description": " Allows you to deal a little bit more damage.",
+
+  "upgrade.elementals.waterBladeMiningI": "Mining I",
+  "upgrade.elementals.waterBladeMiningI.description": " Water blade will mine a bit faster.",
+
+  "upgrade.elementals.waterBladeMiningII": "Mining II",
+  "upgrade.elementals.waterBladeMiningII.description": " Water blade will mine even faster.",
+
+  "upgrade.elementals.waterBladeSpeedI": "Speed I",
+  "upgrade.elementals.waterBladeSpeedI.description": " Make water blade faster, allowing you to get more range",
+
+  "upgrade.elementals.waterBladeSpeedII": "Speed II",
+  "upgrade.elementals.waterBladeSpeedII.description": " Make water blade even faster, allowing you to get more range",
+
+  "upgrade.elementals.waterCannon": "Water Cannon",
+  "upgrade.elementals.waterCannon.description": " A powerful blast of water that can knock back enemies and break through obstacles.",
+  "upgrade.elementals.waterCannon.use": " Use: sneak",
+
+  "upgrade.elementals.waterCannonRangeI": "Range I",
+  "upgrade.elementals.waterCannonRangeI.description": " Reach mobs for up to 15 blocks away.",
+
+  "upgrade.elementals.waterCannonDamageI": "Damage I",
+  "upgrade.elementals.waterCannonDamageI.description": " Allows you to deal a little bit more damage.",
+
+  "upgrade.elementals.waterJump": "Water Jump",
+  "upgrade.elementals.waterJump.description": " Use a burst of water to propel yourself high into the air.",
+  "upgrade.elementals.waterJump.use": " Use: l-click + touch water",
+
+  "upgrade.elementals.waterJumpRangeI": "Range I",
+  "upgrade.elementals.waterJumpRangeI.description": " Jump farther away.",
+
+  "upgrade.elementals.waterJumpRangeII": "Range II",
+  "upgrade.elementals.waterJumpRangeII.description": " Jump even farther away.",
+
+  "upgrade.elementals.waterTower": "Water Tower",
+  "upgrade.elementals.waterTower.description": " Create a towering column of water to elevate yourself.",
+  "upgrade.elementals.waterTower.use": " Use: not touching ground + water below",
+
+  "upgrade.elementals.waterTowerRangeI": "Range I",
+  "upgrade.elementals.waterTowerRangeI.description": " Make a taller column of water.",
+
+  "upgrade.elementals.waterSurf": "Surf",
+  "upgrade.elementals.waterSurf.description": " Ride a wave of water to move swiftly across water.",
+  "upgrade.elementals.waterSurf.use": " Use: sprint + touch ground or submerged in water",
+
+  "upgrade.elementals.waterSurfSpeedI": "Speed I",
+  "upgrade.elementals.waterSurfSpeedI.description": " Move faster across water.",
+
+  "upgrade.elementals.waterSurfSpeedII": "Speed II",
+  "upgrade.elementals.waterSurfSpeedII.description": " Move even faster across water.",
+
+  "upgrade.elementals.waterPickupRangeI": "Range I",
+  "upgrade.elementals.waterPickupRangeI.description": " Pickup water from 10 blocks away",
+
+  "upgrade.elementals.waterPickupRangeII": "Range II",
+  "upgrade.elementals.waterPickupRangeII.description": " Pickup water from 15 blocks away",
+
+  "upgrade.elementals.waterPickupEfficiencyI": "Efficiency I",
+  "upgrade.elementals.waterPickupEfficiencyI.description": " Get water from more diverse sources",
+
+  "upgrade.elementals.waterHealing": "Water Healing",
+  "upgrade.elementals.waterHealing.description": " Using water to direct the flow of chi, it is possible to heal allies.",
+
+  "upgrade.elementals.waterHealingEfficiencyI": "Efficiency I",
+  "upgrade.elementals.waterHealingEfficiencyI.description": " Water healing is more potent.",
+
+  "upgrade.elementals.waterHealingEfficiencyII": "Efficiency II",
+  "upgrade.elementals.waterHealingEfficiencyII.description": " Water healing is even more potent."
+}
