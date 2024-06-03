@@ -144,7 +144,7 @@ public class AirBulletEntity extends ProjectileEntity {
 
     @Override
     public void onRemoved() {
-        summonParticles(this, random, ParticleTypes.WHITE_SMOKE, 0.01f, 10);
+        summonParticles(this, random, ParticleTypes.POOF, 0.01f, 10);
     }
 
     @Override

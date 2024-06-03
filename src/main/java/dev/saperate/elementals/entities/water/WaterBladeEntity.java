@@ -222,10 +222,10 @@ public class WaterBladeEntity extends ProjectileEntity {
             getWorld().updateListeners(pos, blockState, blockState, Block.NOTIFY_ALL);
             return false;
         }
-        BlockState blockState2 = block.onBreak(getWorld(), pos, blockState, getOwner());
+        block.onBreak(getWorld(), pos, blockState, getOwner());
         boolean bl = getWorld().removeBlock(pos, false);
         if (bl) {
-            block.onBroken(getWorld(), pos, blockState2);
+            block.onBroken(getWorld(), pos, blockState);
         }
 
         return true;

@@ -39,7 +39,7 @@ public class FireExplosion extends Explosion {
 
     public FireExplosion(World world, @Nullable Entity entity, double x, double y, double z, float power, boolean createFire, DestructionType destructionType, float maxDamage) {
         super(world, entity, x, y, z, power, createFire, destructionType);
-        damageSource = Explosion.createDamageSource(world, entity);
+        damageSource = world.getDamageSources().explosion(this);
         this.x = x;
         this.y = y;
         this.z = z;
@@ -48,12 +48,13 @@ public class FireExplosion extends Explosion {
         this.behavior = chooseBehavior(entity);
         this.maxDamage = maxDamage;
     }
+
     public FireExplosion(World world, @Nullable Entity entity, double x, double y, double z, float power, boolean createFire, DestructionType destructionType, float maxDamage, float velocityMultiplier) {
-        this(world,entity,x,y,z,power,createFire,destructionType,maxDamage);
+        this(world, entity, x, y, z, power, createFire, destructionType, maxDamage);
         this.velocityMultiplier = velocityMultiplier;
     }
 
-        @Override
+    @Override
     public void collectBlocksAndDamageEntities() {
         int l;
         int k;
@@ -113,14 +114,14 @@ public class FireExplosion extends Explosion {
             double w;
             double z;
             double v;
-            if (entity.isImmuneToExplosion(this) || !((v = Math.sqrt(entity.squaredDistanceTo(vec3d)) / (double) q) <= 1.0) || (z = Math.sqrt((w = entity.getX() - this.x) * w + (x = (entity instanceof TntEntity ? entity.getY() : entity.getEyeY()) - this.y) * x + (y = entity.getZ() - this.z) * y)) == 0.0)
+            if (entity.isImmuneToExplosion() || !((v = Math.sqrt(entity.squaredDistanceTo(vec3d)) / (double) q) <= 1.0) || (z = Math.sqrt((w = entity.getX() - this.x) * w + (x = (entity instanceof TntEntity ? entity.getY() : entity.getEyeY()) - this.y) * x + (y = entity.getZ() - this.z) * y)) == 0.0)
                 continue;
             w /= z;
             x /= z;
             y /= z;
-            if (behavior.shouldDamage(this, entity) && !entity.equals(getEntity())) {
-                entity.damage(this.damageSource, Math.min(this.behavior.calculateDamage(this, entity), maxDamage));
-            }
+            ab = (double)getExposure(vec3d, entity);
+            double ac = (1.0 - w) * ab;
+            entity.damage(this.getDamageSource(), (float)((int)((ac * ac + ac) / 2.0 * 7.0 * (double)q + 1.0)));
             double aa = (1.0 - v) * (double) Explosion.getExposure(vec3d, entity);
             if (entity instanceof LivingEntity) {
                 LivingEntity livingEntity = (LivingEntity) entity;

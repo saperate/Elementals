@@ -53,7 +53,7 @@ public class AirScooterEntity extends Entity {
     @Override
     public void tick() {
         summonParticles(this, random,
-                ParticleTypes.WHITE_SMOKE,
+                ParticleTypes.POOF,
                 0, 1);
         moveEntity();
     }
@@ -81,7 +81,7 @@ public class AirScooterEntity extends Entity {
     @Override
     public void onRemoved() {
         summonParticles(this, random,
-                ParticleTypes.WHITE_SMOKE,
+                ParticleTypes.POOF,
                 0.25f, 25);
     }
 

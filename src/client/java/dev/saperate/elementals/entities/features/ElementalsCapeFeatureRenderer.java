@@ -11,11 +11,11 @@ import net.minecraft.client.render.entity.feature.FeatureRenderer;
 import net.minecraft.client.render.entity.feature.FeatureRendererContext;
 import net.minecraft.client.render.entity.model.PlayerEntityModel;
 import net.minecraft.client.util.DefaultSkinHelper;
-import net.minecraft.client.util.SkinTextures;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RotationAxis;
 
@@ -30,7 +30,8 @@ public class ElementalsCapeFeatureRenderer extends FeatureRenderer<DecoyPlayerEn
         if (entity.isInvisible()) {
             return;
         }
-        SkinTextures skinTextures = DefaultSkinHelper.getSkinTextures(entity.getOwnerUUID());
+        return;
+        /*Identifier skinTextures = ((AbstractClientPlayerEntity) entity.getOwner()).getCapeTexture()
         if (skinTextures.capeTexture() == null) {
             return;
         }
@@ -66,6 +67,7 @@ public class ElementalsCapeFeatureRenderer extends FeatureRenderer<DecoyPlayerEn
         VertexConsumer vertexConsumer = vertexConsumerProvider.getBuffer(RenderLayer.getEntitySolid(skinTextures.capeTexture()));
         ((PlayerEntityModel)this.getContextModel()).renderCape(matrixStack, vertexConsumer, i, OverlayTexture.DEFAULT_UV);
         matrixStack.pop();
+        */
     }
 }
 

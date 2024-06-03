@@ -40,6 +40,7 @@ public class DecoyPlayerEntity extends PathAwareEntity {
     public double prevCapeX, prevCapeY, prevCapeZ;
     public double capeX, capeY, capeZ;
     public static final TrackedData<Optional<UUID>> OWNER_ID = DataTracker.registerData(DecoyPlayerEntity.class, TrackedDataHandlerRegistry.OPTIONAL_UUID);
+    public static final TrackedData<String> OWNER_NAME = DataTracker.registerData(DecoyPlayerEntity.class, TrackedDataHandlerRegistry.STRING);
     private DefaultedList<ItemStack> items = DefaultedList.ofSize(6, ItemStack.EMPTY);
 
     public DecoyPlayerEntity(EntityType<? extends PathAwareEntity> entityType, World world) {
@@ -57,6 +58,7 @@ public class DecoyPlayerEntity extends PathAwareEntity {
     protected void initDataTracker() {
         super.initDataTracker();
         this.getDataTracker().startTracking(OWNER_ID, Optional.empty());
+        this.getDataTracker().startTracking(OWNER_NAME, "");
     }
 
 
@@ -188,6 +190,15 @@ public class DecoyPlayerEntity extends PathAwareEntity {
 
     public void setOwner(PlayerEntity owner) {
         this.getDataTracker().set(OWNER_ID, Optional.of(owner.getUuid()));
+        setOwnerName(owner);
+    }
+
+    public String getOwnerName() {
+        return getDataTracker().get(OWNER_NAME);
+    }
+
+    private void setOwnerName(PlayerEntity owner) {
+        this.getDataTracker().set(OWNER_NAME, owner.getEntityName());
     }
 
     public void equipItemStack() {

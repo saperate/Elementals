@@ -71,19 +71,17 @@ public class StateDataSaverAndLoader extends PersistentState {
         return state;
     }
 
-    private static Type<StateDataSaverAndLoader> type = new Type<>(
-            StateDataSaverAndLoader::new,
-            StateDataSaverAndLoader::createFromNbt,
-            null
-    );
-
     public static StateDataSaverAndLoader getServerState(MinecraftServer server) {
         ServerWorld world = server.getWorld(World.OVERWORLD);
 
         assert world != null;
         PersistentStateManager persistentStateManager = world.getPersistentStateManager();
 
-        StateDataSaverAndLoader state = persistentStateManager.getOrCreate(type, MODID);
+        StateDataSaverAndLoader state = persistentStateManager.getOrCreate(
+                StateDataSaverAndLoader::createFromNbt,
+                StateDataSaverAndLoader::new,
+                MODID
+        );
         state.markDirty();
         return state;
     }

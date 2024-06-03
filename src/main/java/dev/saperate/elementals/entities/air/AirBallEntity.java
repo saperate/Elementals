@@ -62,7 +62,7 @@ public class AirBallEntity extends ProjectileEntity {
     public void tick() {
         if (random.nextBetween(0, 20) == 6) {
             summonParticles(this, random,
-                    ParticleTypes.WHITE_SMOKE,
+                    ParticleTypes.POOF,
                     0, 1);
         }
 
@@ -130,9 +130,9 @@ public class AirBallEntity extends ProjectileEntity {
     @Override
     public void onRemoved() {
         summonParticles(this, random,
-                ParticleTypes.WHITE_SMOKE,
+                ParticleTypes.POOF,
                 0.25f, 25);
-        this.getWorld().playSound(getX(), getY(), getZ(), SoundEvents.ENTITY_BREEZE_JUMP, SoundCategory.BLOCKS, 4.0f, (1.0f + (this.getWorld().random.nextFloat() - this.getWorld().random.nextFloat()) * 0.2f) * 0.7f, true);
+        this.getWorld().playSound(getX(), getY(), getZ(), SoundEvents.ENTITY_GOAT_SCREAMING_AMBIENT, SoundCategory.BLOCKS, 4.0f, (1.0f + (this.getWorld().random.nextFloat() - this.getWorld().random.nextFloat()) * 0.2f) * 0.7f, true);
     }
 
     @Override

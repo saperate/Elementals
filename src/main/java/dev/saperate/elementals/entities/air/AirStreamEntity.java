@@ -81,7 +81,7 @@ public class AirStreamEntity extends ProjectileEntity {
     public void tick() {
         if (random.nextBetween(0, 40) == 6) {
             summonParticles(this, random,
-                    ParticleTypes.WHITE_SMOKE,
+                    ParticleTypes.POOF,
                     0, 1);
         }
 
@@ -160,7 +160,7 @@ public class AirStreamEntity extends ProjectileEntity {
     @Override
     public void onRemoved() {
         summonParticles(this, random,
-                ParticleTypes.WHITE_SMOKE,
+                ParticleTypes.POOF,
                 0.1f, 10);
     }
 

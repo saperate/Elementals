@@ -94,7 +94,7 @@ public class BendingCommand {
 
 
         context.getSource().sendFeedback((() -> Text.of(
-                bender.player.getNameForScoreboard() + " can now bend: " + bender.getElement().name)
+                bender.player.getEntityName() + " can now bend: " + bender.getElement().name)
         ), true);
         return 1;
     }

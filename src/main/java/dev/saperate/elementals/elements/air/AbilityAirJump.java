@@ -34,7 +34,7 @@ public class AbilityAirJump implements Ability {
         player.fallDistance = 0;
 
         serverSummonParticles((ServerWorld) player.getWorld(),
-                ParticleTypes.WHITE_SMOKE, player, player.getRandom(),
+                ParticleTypes.POOF, player, player.getRandom(),
                 0, 0, 0,
                 0.1f, 8,
                 0, -1.5f, 0, 0);

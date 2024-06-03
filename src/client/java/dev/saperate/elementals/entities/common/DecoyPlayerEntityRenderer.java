@@ -6,6 +6,7 @@ import dev.saperate.elementals.network.ModMessages;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.render.VertexConsumerProvider;
@@ -13,11 +14,18 @@ import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.render.entity.LivingEntityRenderer;
 import net.minecraft.client.render.entity.feature.*;
 import net.minecraft.client.render.entity.model.*;
+import net.minecraft.client.texture.AbstractTexture;
+import net.minecraft.client.texture.PlayerSkinTexture;
 import net.minecraft.client.util.DefaultSkinHelper;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.StringHelper;
+import net.minecraft.util.Uuids;
+
+import java.io.File;
+import java.util.Locale;
 
 import static dev.saperate.elementals.ElementalsClient.MODEL_DECOY_PLAYER;
 import static dev.saperate.elementals.network.ModMessages.SYNC_ELEMENT_PACKET_ID;
@@ -38,12 +46,11 @@ public class DecoyPlayerEntityRenderer extends LivingEntityRenderer<DecoyPlayerE
 
     @Override
     public void render(DecoyPlayerEntity decoy, float f, float g, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i) {
-
         super.render(decoy, f, g, matrixStack, vertexConsumerProvider, i);
     }
 
     @Override
     public Identifier getTexture(DecoyPlayerEntity decoy) {
-        return DefaultSkinHelper.getSkinTextures(decoy.getOwnerUUID()).texture();
+        return MinecraftClient.getInstance().getNetworkHandler().getPlayerListEntry(decoy.getOwnerUUID()).getSkinTexture();
     }
 }

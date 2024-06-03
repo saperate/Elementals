@@ -64,7 +64,7 @@ public class AbilityAirGust implements Ability {
 
 
             serverSummonParticles((ServerWorld) player.getWorld(),
-                    ParticleTypes.WHITE_SMOKE, player, player.getRandom(),
+                    ParticleTypes.POOF, player, player.getRandom(),
                     pos.x - 1,
                     pos.y - 1.6f,
                     pos.z - 1,

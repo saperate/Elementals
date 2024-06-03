@@ -18,10 +18,11 @@ public class BuyUpgradeC2SPacket {
     public static void receive(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler,
                                PacketByteBuf buf, PacketSender responseSender) {
         // Everything here happens ONLY on the Server!
+        String name = buf.readString();
         server.execute(() -> {
             Bender bender = Bender.getBender(player);
 
-            Upgrade upgrade = bender.getElement().root.getUpgradeByNameRecursive(buf.readString());
+            Upgrade upgrade = bender.getElement().root.getUpgradeByNameRecursive(name);
             if (upgrade == null) {
                 return;
             }

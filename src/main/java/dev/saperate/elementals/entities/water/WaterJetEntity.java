@@ -70,7 +70,7 @@ public class WaterJetEntity extends ProjectileEntity {
             if (hit instanceof BlockHitResult bHit) {
                 BlockState bState = getWorld().getBlockState(bHit.getBlockPos());
                 Block bBlock = bState.getBlock();
-                if (bBlock.equals(Blocks.TALL_GRASS) || bBlock.equals(Blocks.SHORT_GRASS)) {
+                if (bBlock.equals(Blocks.TALL_GRASS) || bBlock.equals(Blocks.GRASS)) {
                     getWorld().setBlockState(bHit.getBlockPos(),Blocks.AIR.getDefaultState());
                 }
             } else if (hit instanceof EntityHitResult eHit) {
