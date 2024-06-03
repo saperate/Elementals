@@ -77,7 +77,7 @@ public class BendingCommand {
         plrData.boundAbilities = new Ability[4];
 
 
-        //TODO Very temporary stuff, will get removed once I get a GUI working
+
         int abilitySize = newElement.bindableAbilities.size();
         if (abilitySize >= 1) {
             bender.bindAbility(newElement.getBindableAbility(0), 0);

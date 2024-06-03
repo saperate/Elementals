@@ -9,7 +9,6 @@ import java.util.*;
 import static dev.saperate.elementals.utils.SapsUtils.extractBits;
 
 public abstract class Element{
-    //TODO consider changing this for a set
     public static final List<Element> elementList = new ArrayList<>();
     public final List<Ability> abilityList = new ArrayList<>();
     public final List<Ability> bindableAbilities = new ArrayList<>();

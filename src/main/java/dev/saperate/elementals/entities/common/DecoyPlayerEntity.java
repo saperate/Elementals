@@ -56,7 +56,6 @@ public class DecoyPlayerEntity extends PathAwareEntity {
     @Override
     protected void initDataTracker() {
         super.initDataTracker();
-        //TODO do this shit for every class that uses an ID to get its owner
         this.getDataTracker().startTracking(OWNER_ID, Optional.empty());
     }
 

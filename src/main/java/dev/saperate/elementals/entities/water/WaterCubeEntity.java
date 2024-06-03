@@ -101,9 +101,8 @@ public class WaterCubeEntity extends ProjectileEntity {
         this.setVelocity(this.getVelocity().add(0.0, -0.04, 0.0));
 
         if (getIsControlled()) {
-
             controlEntity(owner);
-        } else if (!getWorld().isClient && SapsUtils.checkBlockCollision(this, 0.1f) != null) {
+        } else if (!getWorld().isClient && SapsUtils.checkBlockCollision(this, 0.1f, false) != null) {
             collidesWithGround();
         }
 

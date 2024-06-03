@@ -28,7 +28,7 @@ public class AbilityWaterSurf implements Ability {
 
     @Override
     public void onMiddleClick(Bender bender, boolean started) {
-        onRemove(bender);//TODO dont forget to mention this
+        onRemove(bender);
     }
 
     @Override
@@ -37,7 +37,7 @@ public class AbilityWaterSurf implements Ability {
     }
 
     @Override
-    public void onTick(Bender bender) {//TODO make cloud particles go away from where the player is going
+    public void onTick(Bender bender) {
         PlayerEntity player = bender.player;
         float power = 0.25f;
         PlayerData plrData = PlayerData.get(player);
