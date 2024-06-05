@@ -70,8 +70,7 @@ public class AbilityFireArc implements Ability {
             return;
         }
         entity.setControlled(false);
-        //TODO check each time i do this stupid ass cast and remove it
-        Bender.getBender((PlayerEntity) entity.getOwner()).setCurrAbility(null);
+        bender.setCurrAbility(null);
     }
 
 }

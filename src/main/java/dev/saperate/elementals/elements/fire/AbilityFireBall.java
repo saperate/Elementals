@@ -69,6 +69,6 @@ public class AbilityFireBall implements Ability {
             return;
         }
         entity.setControlled(false);
-        Bender.getBender((PlayerEntity) entity.getOwner()).setCurrAbility(null);
+        bender.setCurrAbility(null);
     }
 }

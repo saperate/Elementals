@@ -43,12 +43,7 @@ public class AbilityAirBall implements Ability {
 
     @Override
     public void onRightClick(Bender bender, boolean started) {
-        AirBallEntity entity = (AirBallEntity) bender.abilityData;
-        if (entity == null) {
-            return;
-        }
-        entity.discard();
-        Bender.getBender((PlayerEntity) entity.getOwner()).setCurrAbility(null);
+        onRemove(bender);
     }
 
     @Override
@@ -63,6 +58,6 @@ public class AbilityAirBall implements Ability {
             return;
         }
         entity.setControlled(false);
-        Bender.getBender((PlayerEntity) entity.getOwner()).setCurrAbility(null);
+        bender.setCurrAbility(null);
     }
 }
