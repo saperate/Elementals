@@ -1,6 +1,7 @@
 package dev.saperate.elementals.elements.air;
 
 import dev.saperate.elementals.data.Bender;
+import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.elements.Ability;
 import dev.saperate.elementals.entities.air.AirShieldEntity;
 import dev.saperate.elementals.entities.air.AirTornadoEntity;
@@ -15,6 +16,15 @@ public class AbilityAirTornado implements Ability {
         PlayerEntity player = bender.player;
 
         AirTornadoEntity entity = new AirTornadoEntity(player.getWorld(), player, player.getX(), player.getY(), player.getZ());
+        PlayerData plrData = PlayerData.get(player);
+        float speed = 0.001f;
+
+        if (plrData.canUseUpgrade("airTornadoSpeedII")) {
+            speed = 0.005f;
+        } else if (plrData.canUseUpgrade("airTornadoSpeedI")) {
+            speed = 0.002f;
+        }
+        entity.setSpeed(speed);
         bender.abilityData = entity;
         entity.setOwner(player);
         player.getWorld().spawnEntity(entity);

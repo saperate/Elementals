@@ -97,6 +97,7 @@ public class WaterArcEntity extends ProjectileEntity {
 
                 entity.damage(this.getDamageSources().playerAttack((PlayerEntity) owner), damage);
                 entity.addVelocity(this.getVelocity().multiply(0.2f));
+                entity.velocityModified = true;//todo add this everywhere i do knock back
                 remove();
             } else if (SapsUtils.checkBlockCollision(this, 0.1f, false) != null) {
                 remove();

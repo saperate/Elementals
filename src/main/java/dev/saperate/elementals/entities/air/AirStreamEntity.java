@@ -1,5 +1,6 @@
 package dev.saperate.elementals.entities.air;
 
+import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.utils.SapsUtils;
 import net.minecraft.block.AbstractFireBlock;
 import net.minecraft.block.BlockState;
@@ -92,13 +93,24 @@ public class AirStreamEntity extends ProjectileEntity {
             return;
         }
         AirStreamEntity parent = getParent();
-        if (!getIsControlled() && parent == null) {
+        if (!getIsControlled() && parent == null && !getWorld().isClient) {
             HitResult hit = ProjectileUtil.getCollision(this, entity -> entity instanceof LivingEntity);
             if (hit.getType() == HitResult.Type.ENTITY) {
                 LivingEntity entity = (LivingEntity) ((EntityHitResult) hit).getEntity();
-                entity.damage(getDamageSources().playerAttack(owner),2.5f);
+
+                PlayerData plrData = PlayerData.get(owner);
+
+                float damage = 2.5f;
+                if (plrData.canUseUpgrade("airStreamMastery")) {
+                    damage = 6.5f;
+                } else if (plrData.canUseUpgrade("airStreamDamageI")) {
+                    damage = 4.5f;
+                }
+
+                entity.damage(getDamageSources().playerAttack(owner),damage);
                 entity.addVelocity(this.getVelocity().multiply(1f));
                 entity.move(MovementType.SELF, entity.getVelocity());
+                entity.velocityModified = true;
                 remove();
             }
             if (!getWorld().isClient) {

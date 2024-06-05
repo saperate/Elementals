@@ -10,6 +10,10 @@ public class AbilityAir1 implements Ability {
     @Override
     public void onCall(Bender bender, long deltaT) {
         PlayerData playerData = PlayerData.get(bender.player);
+        if(!playerData.canUseUpgrade("airGust")){
+            bender.setCurrAbility(null);
+            return;
+        }
 
         if (bender.player.isSneaking()) {
             if(playerData.canUseUpgrade("airShield")){

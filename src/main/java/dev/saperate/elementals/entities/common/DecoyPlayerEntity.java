@@ -3,6 +3,7 @@ package dev.saperate.elementals.entities.common;
 import com.google.common.collect.Lists;
 import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.entities.air.AirBallEntity;
+import dev.saperate.elementals.utils.SapsUtils;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.LookAroundGoal;
 import net.minecraft.entity.ai.goal.SitGoal;
@@ -42,6 +43,7 @@ public class DecoyPlayerEntity extends PathAwareEntity {
     public static final TrackedData<Optional<UUID>> OWNER_ID = DataTracker.registerData(DecoyPlayerEntity.class, TrackedDataHandlerRegistry.OPTIONAL_UUID);
     public static final TrackedData<String> OWNER_NAME = DataTracker.registerData(DecoyPlayerEntity.class, TrackedDataHandlerRegistry.STRING);
     private DefaultedList<ItemStack> items = DefaultedList.ofSize(6, ItemStack.EMPTY);
+    public static final TrackedData<Integer> RANGE = DataTracker.registerData(DecoyPlayerEntity.class, TrackedDataHandlerRegistry.INTEGER);
 
     public DecoyPlayerEntity(EntityType<? extends PathAwareEntity> entityType, World world) {
         super(entityType, world);
@@ -51,7 +53,6 @@ public class DecoyPlayerEntity extends PathAwareEntity {
         super(DECOYPLAYER, world);
         setOwner(owner);
         setPos(owner.getX(), owner.getY(), owner.getZ());
-        System.out.println(getMaxHealth());
     }
 
     @Override
@@ -59,6 +60,7 @@ public class DecoyPlayerEntity extends PathAwareEntity {
         super.initDataTracker();
         this.getDataTracker().startTracking(OWNER_ID, Optional.empty());
         this.getDataTracker().startTracking(OWNER_NAME, "");
+        this.getDataTracker().startTracking(RANGE,5);
     }
 
 
@@ -73,10 +75,14 @@ public class DecoyPlayerEntity extends PathAwareEntity {
             return;
         }
 
-        preventOwnerFromGoingFar(10);
+        preventOwnerFromGoingFar(getRange());
+
+        if(SapsUtils.checkBlockCollision(this,-0.1f,false) != null){//checks if we are INSIDE a block
+            setVelocity(0,0,0);
+        }
 
         //I have no idea why, but this prevents the entity from floating and being stuck so it is staying
-        if (age < 10) {
+        if (age <= 10) {
             this.prevX = this.getX();
             this.prevY = this.getY();
             this.prevZ = this.getZ();
@@ -251,5 +257,13 @@ public class DecoyPlayerEntity extends PathAwareEntity {
     private void applyLavaBuoyancy() {
         Vec3d vec3d = this.getVelocity();
         this.setVelocity(vec3d.x * (double) 0.95f, vec3d.y + (double) (vec3d.y < (double) 0.06f ? 5.0E-4f : 0.0f), vec3d.z * (double) 0.95f);
+    }
+
+    public void setRange(int range) {
+        this.dataTracker.set(RANGE, range);
+    }
+
+    public int getRange() {
+        return this.dataTracker.get(RANGE);
     }
 }

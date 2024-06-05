@@ -29,6 +29,7 @@ import static dev.saperate.elementals.utils.SapsUtils.summonParticles;
 
 public class AirScooterEntity extends Entity {
     private static final TrackedData<Integer> OWNER_ID = DataTracker.registerData(AirScooterEntity.class, TrackedDataHandlerRegistry.INTEGER);
+    private static final TrackedData<Float> SPEED = DataTracker.registerData(AirScooterEntity.class, TrackedDataHandlerRegistry.FLOAT);
 
     public AirScooterEntity(EntityType<AirScooterEntity> type, World world) {
         super(type, world);
@@ -48,6 +49,7 @@ public class AirScooterEntity extends Entity {
     @Override
     protected void initDataTracker() {
         this.getDataTracker().startTracking(OWNER_ID, 0);
+        this.getDataTracker().startTracking(SPEED, 0.5f);
     }
 
     @Override
@@ -60,7 +62,7 @@ public class AirScooterEntity extends Entity {
 
     private void moveEntity() {
         PlayerEntity player = getOwner();
-        if (player == null || !player.equals(getFirstPassenger())) {
+        if (player == null || !player.equals(getFirstPassenger()) || isOnFire()) {
             discard();
             return;
         }
@@ -69,9 +71,12 @@ public class AirScooterEntity extends Entity {
         int dz = (int) Math.round(Math.cos(Math.toRadians(player.getYaw())));
 
         this.addVelocity(dx, 0, dz);
-        this.setVelocity(getVelocity().normalize().multiply(0.5f));
-        //gravity
-        this.setVelocity(this.getVelocity().add(0.0, -0.5, 0.0));
+        this.setVelocity(getVelocity().normalize().multiply(getSpeed()));
+        System.out.println(isTouchingWater());
+        if (!isTouchingWater()) {
+            //gravity
+            this.setVelocity(this.getVelocity().add(0.0, -0.5, 0.0));
+        }
 
 
         this.move(MovementType.SELF, this.getVelocity());
@@ -102,5 +107,13 @@ public class AirScooterEntity extends Entity {
 
     public void setOwner(PlayerEntity owner) {
         this.getDataTracker().set(OWNER_ID, owner.getId());
+    }
+
+    public void setSpeed(float speed) {
+        this.dataTracker.set(SPEED, speed);
+    }
+
+    public float getSpeed() {
+        return this.dataTracker.get(SPEED);
     }
 }

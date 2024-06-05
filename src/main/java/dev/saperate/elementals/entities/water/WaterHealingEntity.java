@@ -49,7 +49,7 @@ public class WaterHealingEntity extends ProjectileEntity {
     protected void initDataTracker() {
         this.getDataTracker().startTracking(OWNER_ID, 0);
         this.getDataTracker().startTracking(IS_CONTROLLED, false);
-        this.getDataTracker().startTracking(OWNER_ID, 2);
+        this.getDataTracker().startTracking(HEALING, 2f);
     }
 
     @Override

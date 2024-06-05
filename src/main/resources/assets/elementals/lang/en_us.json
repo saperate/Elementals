@@ -26,7 +26,7 @@
   "upgrade.elementals.waterHelmetStealth.use": " Use: sneak",
 
   "upgrade.elementals.waterSuffocate": "Suffocate",
-  "upgrade.elementals.waterSuffocate.description": " By taking water and forcing it on the head of a living being, you can drown them even on land.",
+  "upgrade.elementals.waterSuffocate.description": " By taking water and forcing it on the head of a living being, you can drown them, even on land.",
   "upgrade.elementals.waterSuffocate.use": " Use: sneak while looking at enemy",
 
   "upgrade.elementals.waterSuffocateRange": "Range I",
@@ -49,10 +49,10 @@
   "upgrade.elementals.waterArcEfficiencyI.description": " Use 25% less chi when casting water arc.",
 
   "upgrade.elementals.waterArcSpeedI": "Speed I",
-  "upgrade.elementals.waterArcSpeedI.description": " Make water arc faster, allowing you to get more range",
+  "upgrade.elementals.waterArcSpeedI.description": " Makes water arc faster, allowing you to get more range",
 
   "upgrade.elementals.waterArcSpeedII": "Speed II",
-  "upgrade.elementals.waterArcSpeedII.description": " Make water arc even faster, allowing you to get more range",
+  "upgrade.elementals.waterArcSpeedII.description": " Makes water arc even faster, allowing you to get more range",
 
   "upgrade.elementals.waterArcMastery": "Water Arc Mastery",
   "upgrade.elementals.waterArcMastery.description": " Mastery of the water arc ability allows you to deal more damage.",
@@ -81,10 +81,10 @@
   "upgrade.elementals.waterBladeMiningII.description": " Water blade will mine even faster.",
 
   "upgrade.elementals.waterBladeSpeedI": "Speed I",
-  "upgrade.elementals.waterBladeSpeedI.description": " Make water blade faster, allowing you to get more range",
+  "upgrade.elementals.waterBladeSpeedI.description": " Makes water blade faster, allowing you to get more range",
 
   "upgrade.elementals.waterBladeSpeedII": "Speed II",
-  "upgrade.elementals.waterBladeSpeedII.description": " Make water blade even faster, allowing you to get more range",
+  "upgrade.elementals.waterBladeSpeedII.description": " Makes water blade even faster, allowing you to get more range",
 
   "upgrade.elementals.waterCannon": "Water Cannon",
   "upgrade.elementals.waterCannon.description": " A powerful blast of water that can knock back enemies and break through obstacles.",
@@ -111,7 +111,7 @@
   "upgrade.elementals.waterTower.use": " Use: not touching ground + water below",
 
   "upgrade.elementals.waterTowerRangeI": "Range I",
-  "upgrade.elementals.waterTowerRangeI.description": " Make a taller column of water.",
+  "upgrade.elementals.waterTowerRangeI.description": " Makes a taller column of water.",
 
   "upgrade.elementals.waterSurf": "Surf",
   "upgrade.elementals.waterSurf.description": " Ride a wave of water to move swiftly across water.",
@@ -161,7 +161,7 @@
   "upgrade.elementals.fireWallTallI.description": " Your walls of fire are taller.",
 
   "upgrade.elementals.fireSpikes": "Fire Spikes",
-  "upgrade.elementals.fireSpikes.description": " [FILL HERE], mostly effective offensively.",
+  "upgrade.elementals.fireSpikes.description": " Create spikes of fire that erupt from the ground, mostly effective offensively.",
   "upgrade.elementals.fireSpikes.use": " Use: sneak",
 
   "upgrade.elementals.fireSpikesCountI": "Count I",
@@ -180,10 +180,10 @@
   "upgrade.elementals.fireArcEfficiencyI.description": " Use 25% less chi when casting fire arc.",
 
   "upgrade.elementals.fireArcSpeedI": "Speed I",
-  "upgrade.elementals.fireArcSpeedI.description": " Make fire arc faster, allowing you to get more range",
+  "upgrade.elementals.fireArcSpeedI.description": " Makes fire arc faster, allowing you to get more range",
 
   "upgrade.elementals.fireArcSpeedII": "Speed II",
-  "upgrade.elementals.fireArcSpeedII.description": " Make fire arc even faster, allowing you to get more range",
+  "upgrade.elementals.fireArcSpeedII.description": " Makes fire arc even faster, allowing you to get more range",
 
   "upgrade.elementals.fireArcMastery": "Fire Arc Mastery",
   "upgrade.elementals.fireArcMastery.description": " Mastery of the fire arc ability allows you to deal more damage.",
@@ -193,10 +193,10 @@
   "upgrade.elementals.fireBall.use": " Use: hold (1s)",
 
   "upgrade.elementals.fireBallSpeedI": "Speed I",
-  "upgrade.elementals.fireBallSpeedI.description": " Make fireball faster, allowing you to get more range",
+  "upgrade.elementals.fireBallSpeedI.description": " Makes fireball faster, allowing you to get more range",
 
   "upgrade.elementals.fireBallSpeedII": "Speed II",
-  "upgrade.elementals.fireBallSpeedII.description": " Make fireball even faster, allowing you to get more range",
+  "upgrade.elementals.fireBallSpeedII.description": " Makes fireball even faster, allowing you to get more range",
 
   "upgrade.elementals.flameThrower": "Flamethrower",
   "upgrade.elementals.flameThrower.description": " Makes a stream of fire to incinerate enemies in front of you.",
@@ -224,5 +224,215 @@
   "upgrade.elementals.fireJetSpeedI.description": " Allows you to fly faster using the jet ability.",
 
   "upgrade.elementals.fireJetSpeedII": "Speed II",
-  "upgrade.elementals.fireJetSpeedII.description": " Allows you to fly even faster using the jet ability."
+  "upgrade.elementals.fireJetSpeedII.description": " Allows you to fly even faster using the jet ability.",
+
+  "upgrade.elementals.earthBlock": "Earth Pickup",
+  "upgrade.elementals.earthBlock.description": " A simple move allowing you to lift earth from the ground and throw it at your enemies.",
+
+  "upgrade.elementals.earthBlockShrapnel": "Shrapnel",
+  "upgrade.elementals.earthBlockShrapnel.description": " By compressing earth into a tight space, you can create a sharp projectile that deals more damage.",
+  "upgrade.elementals.earthBlockShrapnel.use": " Use: Earth Pickup + r-click",
+
+  "upgrade.elementals.earthBlockSpeedI": "Speed I",
+  "upgrade.elementals.earthBlockSpeedI.description": " Makes Earth Pickup and Shrapnel faster, allowing you to get more range.",
+
+  "upgrade.elementals.earthBlockSpeedII": "Speed II",
+  "upgrade.elementals.earthBlockSpeedII.description": " Makes Earth Pickup and Shrapnel even faster, allowing you to get even more range.",
+
+  "upgrade.elementals.earthBlockDamageI": "Damage I",
+  "upgrade.elementals.earthBlockDamageI.description": " Deal more damage using Earth Pickup and Shrapnel.",
+
+  "upgrade.elementals.earthWall": "Wall",
+  "upgrade.elementals.earthWall.description": " Allows you to rise a wall of earth to protect yourself in combat.",
+  "upgrade.elementals.earthWall.use": " Use: sneak",
+
+  "upgrade.elementals.earthWallDurationI": "Duration I",
+  "upgrade.elementals.earthWallDurationI.description": " Walls stay up for 5 seconds after you dismiss them.",
+  "upgrade.elementals.earthWallDurationI.use": " Use: sneak when dismissing to disable this behavior",
+
+  "upgrade.elementals.earthWallDurationII": "Duration II",
+  "upgrade.elementals.earthWallDurationII.description": " Walls stay up for 15 seconds after you dismiss them.",
+  "upgrade.elementals.earthWallDurationII.use": " Use: sneak when dismissing to disable this behavior",
+
+  "upgrade.elementals.earthWallDurationIII": "Duration III",
+  "upgrade.elementals.earthWallDurationIII.description": " Walls stay up for 30 seconds after you dismiss them.",
+  "upgrade.elementals.earthWallDurationIII.use": " Use: sneak when dismissing to disable this behavior",
+
+  "upgrade.elementals.earthWallDurationIV": "Duration IV",
+  "upgrade.elementals.earthWallDurationIV.description": " Walls stay up for 60 seconds after you dismiss them.",
+  "upgrade.elementals.earthWallDurationIV.use": " Use: sneak when dismissing to disable this behavior",
+
+  "upgrade.elementals.earthWallAutoTimer": "Auto Timer",
+  "upgrade.elementals.earthWallAutoTimer.description": " Automatically dismisses walls when casting Earth Wall, allows you to cast walls in quick succession.",
+
+  "upgrade.elementals.earthChunk": "Chunk Pickup",
+  "upgrade.elementals.earthChunk.description": " Pickup large amounts of earth to throw at your enemies or terraform the landscape.",
+  "upgrade.elementals.earthChunk.use": " Use: sneak",
+
+  "upgrade.elementals.earthChunkSizeI": "Size I",
+  "upgrade.elementals.earthChunkSizeI.description": " You can pickup larger amounts of earth.",
+
+  "upgrade.elementals.earthMine": "Mining",
+  "upgrade.elementals.earthMine.description": " Allows you to mine earth bendable blocks as if you had a pickaxe.",
+
+  "upgrade.elementals.earthTrap": "Trap",
+  "upgrade.elementals.earthTrap.description": " By engulfing your victim's feet in earth, you can effectively prevent them from moving for some time.",
+  "upgrade.elementals.earthTrap.use": " Use: sneak + hold (1s)",
+
+  "upgrade.elementals.earthRavine": "Ravine",
+  "upgrade.elementals.earthRavine.description": " By Splitting the earth in two, you can create a ravine for your enemies to fall into.",
+  "upgrade.elementals.earthRavine.use": " Use: sneak",
+
+  "upgrade.elementals.earthRavineRangeI": "Range I",
+  "upgrade.elementals.earthRavineRangeI.description": " Your ravine extends farther.",
+
+  "upgrade.elementals.earthRavineSpreadI": "Spread I",
+  "upgrade.elementals.earthRavineSpreadI.description": " Your ravine spreads more.",
+
+  "upgrade.elementals.earthSpikes": "Spikes",
+  "upgrade.elementals.earthSpikes.description": " A move allowing you to form sharp spikes that stick out of the ground, they will damage any entity that touches them.",
+  "upgrade.elementals.earthSpikes.use": " Use: sneak",
+
+  "upgrade.elementals.earthSpikesRangeI": "Range I",
+  "upgrade.elementals.earthSpikesRangeI.description": " Your spikes extends farther.",
+
+  "upgrade.elementals.earthSpikesSpreadI": "Spread I",
+  "upgrade.elementals.earthSpikesSpreadI.description": " Your spikes spreads more.",
+
+  "upgrade.elementals.earthPillar": "Pillar",
+  "upgrade.elementals.earthPillar.description": " Launch and damage enemies using a pillar made of earth.",
+  "upgrade.elementals.earthPillar.use": " Use: Look at earth bendable block",
+
+  "upgrade.elementals.earthPillarTallI": "Taller Walls",
+  "upgrade.elementals.earthPillarTallI.description": " Your pillars are taller.",
+
+  "upgrade.elementals.earthJump": "Earth Jump",
+  "upgrade.elementals.earthJump.description": " Launch yourself using earth to get high into the air.",
+  "upgrade.elementals.earthJump.use": " Use: cast when not looking at the ground + standing on earth",
+
+  "upgrade.elementals.earthJumpRangeI": "Range I",
+  "upgrade.elementals.earthJumpRangeI.description": " Jump farther away.",
+
+  "upgrade.elementals.earthJumpRangeII": "Range II",
+  "upgrade.elementals.earthJumpRangeII.description": " Jump even farther away.",
+
+  "upgrade.elementals.earthPickupRangeI": "Range I",
+  "upgrade.elementals.earthPickupRangeI.description": " Pickup earth from 10 blocks away.",
+
+  "upgrade.elementals.earthPickupRangeII": "Range II",
+  "upgrade.elementals.earthPickupRangeII.description": " Pickup earth from 15 blocks away.",
+
+  "upgrade.elementals.earthSeismicSense": "Seismic Sense",
+  "upgrade.elementals.earthSeismicSense.description": " By listening to the earth and its vibration, you can detect living being, even across walls.",
+
+  "upgrade.elementals.earthArmor": "Armor",
+  "upgrade.elementals.earthArmor.description": " A move allowing you to shield yourself from harm by using earth as armor. Since your armor lacks any eye holes, you will need to use seismic sense to know where your enemies are.",
+  "upgrade.elementals.earthArmor.use": " Use: hold (1s)",
+
+  "upgrade.elementals.airGust": "Gust",
+  "upgrade.elementals.airGust.description": " Makes a stream of air to knock back enemies in front of you.",
+
+  "upgrade.elementals.airShield": "Air Shield",
+  "upgrade.elementals.airShield.description": " By rapidly spinning air around you, you can knock back any projectile or enemy coming your way.",
+  "upgrade.elementals.airShield.use": " Use: sneak",
+
+  "upgrade.elementals.airTornado": "Tornado",
+  "upgrade.elementals.airTornado.description": " Create a powerful tornado that damages and sends your enemies in the sky.",
+  "upgrade.elementals.airTornado.use": " Use: sneak",
+
+  "upgrade.elementals.airTornadoSpeedI": "Speed I",
+  "upgrade.elementals.airTornadoSpeedI.description": " Makes tornadoes faster, making them more responsive.",
+
+  "upgrade.elementals.airTornadoSpeedII": "Speed II",
+  "upgrade.elementals.airTornadoSpeedII.description": " Makes tornadoes even faster, making them even more responsive.",
+
+  "upgrade.elementals.airStream": "Air Stream",
+  "upgrade.elementals.airStream.description": " A sweeping arc of water that can knock back enemies and damage them from a distance.",
+
+  "upgrade.elementals.airStreamDamageI": "Damage I",
+  "upgrade.elementals.airStreamDamageI.description": " Allows you to deal a little bit more damage.",
+
+  "upgrade.elementals.airStreamEfficiencyI": "Efficiency I",
+  "upgrade.elementals.airStreamEfficiencyI.description": " Use 25% less chi when casting air stream.",
+
+  "upgrade.elementals.airStreamSpeedI": "Speed I",
+  "upgrade.elementals.airStreamSpeedI.description": " Makes air stream faster, allowing you to get more range",
+
+  "upgrade.elementals.airStreamSpeedII": "Speed II",
+  "upgrade.elementals.airStreamSpeedII.description": " Makes air stream even faster, allowing you to get more range",
+
+  "upgrade.elementals.airStreamMastery": "Air Stream Mastery",
+  "upgrade.elementals.airStreamMastery.description": " Mastery of the air stream ability allows you to deal more damage.",
+
+  "upgrade.elementals.airBall": "Air Ball",
+  "upgrade.elementals.airBall.description": " By compressing a lot of air in a tight space, you can create an air ball with devastating power.",
+  "upgrade.elementals.airBall.use": " Use: hold (1s)",
+
+  "upgrade.elementals.airBallSpeedI": "Speed I",
+  "upgrade.elementals.airBallSpeedI.description": " Makes air ball faster, allowing you to get more range",
+
+  "upgrade.elementals.airBallSpeedII": "Speed II",
+  "upgrade.elementals.airBallSpeedII.description": " Makes air ball even faster, allowing you to get more range",
+
+  "upgrade.elementals.airBullets": "Bullets",
+  "upgrade.elementals.airBullets.description": " Compressing air into multiple little pellets allows you to unleash a barrage upon your enemies.",
+  "upgrade.elementals.airBullets.use": " Use: sneak",
+
+  "upgrade.elementals.airBulletsDamageI": "Damage I",
+  "upgrade.elementals.airBulletsDamageI.description": " Allows you to deal a little bit more damage.",
+
+  "upgrade.elementals.airBulletsSpeedI": "Speed I",
+  "upgrade.elementals.airBulletsSpeedI.description": " Makes air bullets faster, allowing you to get more range",
+
+  "upgrade.elementals.airBulletsSpeedII": "Speed II",
+  "upgrade.elementals.airBulletsSpeedII.description": " Makes air bullets even faster, allowing you to get more range",
+
+  "upgrade.elementals.airBulletsMastery": "Air Bullets Mastery",
+  "upgrade.elementals.airBulletsMastery.description": " Mastery of the air bullets ability allows you to deal more damage.",
+
+  "upgrade.elementals.airBulletsCountI": "Count I",
+  "upgrade.elementals.airBulletsCountI.description": " Increases the number of bullets you can throw to 10.",
+
+  "upgrade.elementals.airBulletsCountII": "Count II",
+  "upgrade.elementals.airBulletsCountII.description": " Increases the number of bullets you can throw to 20.",
+
+  "upgrade.elementals.airSuffocate": "Suffocate",
+  "upgrade.elementals.airSuffocate.description": " By taking air and forcing it on the head of a living being, you can drown them, even on land.",
+  "upgrade.elementals.airSuffocate.use": " Use: sneak while looking at enemy",
+
+  "upgrade.elementals.airJump": "Air Jump",
+  "upgrade.elementals.airJump.description": " Launch yourself with air to gain altitude or dodge blows.",
+
+  "upgrade.elementals.airJumpRangeI": "Range I",
+  "upgrade.elementals.airJumpRangeI.description": " Jump farther away.",
+
+  "upgrade.elementals.airJumpRangeII": "Range II",
+  "upgrade.elementals.airJumpRangeII.description": " Jump even farther away.",
+
+  "upgrade.elementals.airScooter": "Air Scooter",
+  "upgrade.elementals.airScooter.description": " By creating a ball of air and riding it, you can breeze through distances in an instant.",
+  "upgrade.elementals.airScooter.use": " Use: hold (0.5s)",
+
+  "upgrade.elementals.airScooterSpeedI": "Speed I",
+  "upgrade.elementals.airScooterSpeedI.description": " Makes air scooter faster.",
+
+  "upgrade.elementals.airScooterSpeedII": "Speed II",
+  "upgrade.elementals.airScooterSpeedII.description": " Makes air scooter even faster.",
+
+  "upgrade.elementals.airSpiritProjection": "Spirit Projection",
+  "upgrade.elementals.airSpiritProjection.description": " This technique allows air benders to leave their body and project their consciousness elsewhere.",
+  "upgrade.elementals.airSpiritProjection.use": " Use: l-click your body to go back.",
+
+  "upgrade.elementals.airSpiritProjectionRangeI": "Range I",
+  "upgrade.elementals.airSpiritProjectionRangeI.description": " Go up to 10 blocks away from your body",
+
+  "upgrade.elementals.airSpiritProjectionRangeII": "Range II",
+  "upgrade.elementals.airSpiritProjectionRangeII.description": " Go up to 15 blocks away from your body",
+
+  "upgrade.elementals.airSpiritProjectionRangeIII": "Range III",
+  "upgrade.elementals.airSpiritProjectionRangeIII.description": " Go up to 20 blocks away from your body",
+
+  "upgrade.elementals.airSpiritProjectionRangeIV": "Range IV",
+  "upgrade.elementals.airSpiritProjectionRangeIV.description": " Go up to 25 blocks away from your body"
+
 }

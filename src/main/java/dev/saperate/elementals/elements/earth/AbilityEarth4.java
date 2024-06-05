@@ -10,16 +10,20 @@ import static dev.saperate.elementals.effects.SeismicSenseStatusEffect.SEISMIC_S
 public class AbilityEarth4 implements Ability {
     @Override
     public void onCall(Bender bender, long deltaT) {
-
-        if(deltaT > 1000){
-            EarthElement.get().abilityList.get(13).onCall(bender,deltaT);
+        PlayerData plrData = PlayerData.get(bender.player);
+        if (!plrData.canUseUpgrade("earthSeismicSense")) {
             return;
         }
 
-        if(bender.player.hasStatusEffect(SEISMIC_SENSE_EFFECT)){
+        if (deltaT > 1000 && plrData.canUseUpgrade("earthArmor")) {
+            EarthElement.get().abilityList.get(13).onCall(bender, deltaT);
+            return;
+        }
+
+        if (bender.player.hasStatusEffect(SEISMIC_SENSE_EFFECT)) {
             bender.player.removeStatusEffect(SEISMIC_SENSE_EFFECT);
-        }else {
-            bender.player.addStatusEffect(new StatusEffectInstance(SEISMIC_SENSE_EFFECT,2400));
+        } else {
+            bender.player.addStatusEffect(new StatusEffectInstance(SEISMIC_SENSE_EFFECT, 2400));
         }
         bender.setCurrAbility(null);
     }

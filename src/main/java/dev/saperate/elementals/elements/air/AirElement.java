@@ -17,22 +17,61 @@ import net.minecraft.world.event.GameEvent;
 public class AirElement extends Element {
     public AirElement() {
         super("Air", new Upgrade[]{
-                new Upgrade("path1", new Upgrade[]{
+                new Upgrade("airGust", new Upgrade[]{
                         new Upgrade("airShield"),
-                        new Upgrade("airTornado")
+                        new Upgrade("airTornado", new Upgrade[]{
+                                new Upgrade("airTornadoSpeedI", new Upgrade[]{
+                                        new Upgrade("airTornadoSpeedII")
+                                })
+                        })
                 },true),
-                new Upgrade("path2", new Upgrade[]{
-                        new Upgrade("airBall"),
-                        new Upgrade("tempNode", new Upgrade[]{
-                                new Upgrade("airBullets"),
+                new Upgrade("airStream", new Upgrade[]{
+                        new Upgrade("airBall", new Upgrade[]{
+                                new Upgrade("airBallSpeedI", new Upgrade[]{
+                                        new Upgrade("airBallSpeedII")
+                                })
+                        }, false, -1),
+                        new Upgrade("airStreamDamageI", new Upgrade[]{
+                                new Upgrade("airBullets", new Upgrade[]{
+                                        new Upgrade("airBulletsDamageI", new Upgrade[]{
+                                                new Upgrade("airBulletsSpeedI", new Upgrade[]{
+                                                        new Upgrade("airBulletsSpeedII", new Upgrade[]{
+                                                                new Upgrade("airBulletsMastery")
+                                                        })
+                                                })
+                                        }),
+                                        new Upgrade("airBulletsCountI", new Upgrade[]{
+                                                new Upgrade("airBulletsCountII")
+                                        })
+                                }),
                                 new Upgrade("airSuffocate")
-                        }, true)
+                        }, true),
+                        new Upgrade("airStreamSpeedI", new Upgrade[]{
+                                new Upgrade("airStreamSpeedII", new Upgrade[]{
+                                        new Upgrade("airStreamEfficiencyI", new Upgrade[]{
+                                                new Upgrade("airStreamMastery")
+                                        })
+                                })
+                        }, false, 1)
                 }),
-                new Upgrade("path3", new Upgrade[]{
-                        new Upgrade("temp")
+                new Upgrade("airJump", new Upgrade[]{
+                        new Upgrade("airJumpRangeI", new Upgrade[]{
+                                new Upgrade("airJumpRangeII"),
+                        }),
+                        new Upgrade("airScooter", new Upgrade[]{
+                                new Upgrade("airScooterSpeedI", new Upgrade[]{
+                                        new Upgrade("airScooterSpeedII")
+                                })
+                        })
                 }),
-                new Upgrade("path4", new Upgrade[]{
-                        new Upgrade("spiritProjection")
+                new Upgrade("airSpiritProjection", new Upgrade[]{
+                        new Upgrade("airSpiritProjectionRangeI", new Upgrade[]{
+                                new Upgrade("airSpiritProjectionRangeII", new Upgrade[]{
+                                        new Upgrade("airSpiritProjectionRangeIII", new Upgrade[]{
+                                                new Upgrade("airSpiritProjectionRangeIV")
+                                        })
+                                })
+                        })
                 })
         });
         addAbility(new AbilityAir1(), true);

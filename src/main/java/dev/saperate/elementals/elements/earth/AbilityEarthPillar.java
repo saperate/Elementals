@@ -32,7 +32,7 @@ public class AbilityEarthPillar implements Ability {
 
 
 
-        int height = (plrData.canUseUpgrade("tallerPillar") ? 5 : 3);
+        int height = (plrData.canUseUpgrade("earthPillarTallI") ? 5 : 3);
         for (int i = 0; i < height; i++) {
             if (dir.equals(Direction.UP)){
                 BlockPos bPos = startPos.offset(dir,i);

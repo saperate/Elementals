@@ -9,8 +9,13 @@ public class AbilityAir3 implements Ability {
     @Override
     public void onCall(Bender bender, long deltaT) {
         PlayerData playerData = PlayerData.get(bender.player);
+        if(!playerData.canUseUpgrade("airJump")){
+            bender.setCurrAbility(null);
+            return;
+        }
 
-        if (bender.player.isSprinting() && deltaT >= 500 && !bender.player.hasVehicle()) {//0.5 seconds
+        if (bender.player.isSprinting() && deltaT >= 500 && !bender.player.hasVehicle() //0.5 seconds
+                && playerData.canUseUpgrade("airScooter")) {
             AirElement.get().abilityList.get(10).onCall(bender, deltaT);
             return;
         }

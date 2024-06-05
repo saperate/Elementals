@@ -1,6 +1,7 @@
 package dev.saperate.elementals.elements.earth;
 
 import dev.saperate.elementals.data.Bender;
+import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.elements.Element;
 import dev.saperate.elementals.elements.Upgrade;
 import net.minecraft.block.BlockState;
@@ -22,15 +23,56 @@ import static dev.saperate.elementals.misc.ElementalsCustomTags.EARTH_BENDABLE_B
 public class EarthElement extends Element {
     public EarthElement() {
         super("Earth", new Upgrade[]{
-                new Upgrade("shrapnel", new Upgrade[]{
-                        new Upgrade("earthWall"),
-                        new Upgrade("chunkPickup")
-                },true),
-                new Upgrade("mine", new Upgrade[]{
+                new Upgrade("earthBlock", new Upgrade[]{
+                        new Upgrade("earthBlockShrapnel", new Upgrade[]{
+                                new Upgrade("earthWall", new Upgrade[]{
+                                        new Upgrade("earthWallDurationI", new Upgrade[]{
+                                                new Upgrade("earthWallDurationII", new Upgrade[]{
+                                                        new Upgrade("earthWallDurationIII", new Upgrade[]{
+                                                                new Upgrade("earthWallDurationIV", new Upgrade[]{
+                                                                        new Upgrade("earthWallAutoTimer")
+                                                                })
+                                                        })
+                                                })
+                                        })
+                                }),
+                                new Upgrade("earthChunk", new Upgrade[]{
+                                        new Upgrade("earthChunkSizeI")
+                                })
+                        }, true),
+                        new Upgrade("earthBlockSpeedI", new Upgrade[]{
+                                new Upgrade("earthBlockDamageI", new Upgrade[]{
+                                        new Upgrade("earthBlockSpeedII")
+                                })
+                        }, false, 1)
+                }),
+
+                new Upgrade("earthMine", new Upgrade[]{
                         new Upgrade("earthTrap", new Upgrade[]{
-                                new Upgrade("earthRavine"),
-                                new Upgrade("earthSpikes")
-                        },true)
+                                new Upgrade("earthRavine", new Upgrade[]{
+                                        new Upgrade("earthRavineRangeI"),
+                                        new Upgrade("earthRavineSpreadI")
+                                }, true, -1),
+                                new Upgrade("earthSpikes", new Upgrade[]{
+                                        new Upgrade("earthSpikesRangeI"),
+                                        new Upgrade("earthSpikesSpreadI")
+                                }, true, 1)
+                        }, true)
+                }),
+                new Upgrade("earthPillar", new Upgrade[]{
+                        new Upgrade("earthJump", new Upgrade[]{
+                                new Upgrade("earthJumpRangeI", new Upgrade[]{
+                                        new Upgrade("earthJumpRangeII"),
+                                })
+                        }),
+                        new Upgrade("earthPillarTallI")
+                }),
+                new Upgrade("earthPickupRangeI", new Upgrade[]{
+                        new Upgrade("earthPickupRangeII", new Upgrade[]{
+                                new Upgrade("earthSeismicSense", new Upgrade[]{
+                                        new Upgrade("earthArmor")
+                                })
+                        })
                 })
         });
         addAbility(new AbilityEarth1(), true);
@@ -62,7 +104,14 @@ public class EarthElement extends Element {
      * @return Array of calculated items
      */
     public static Object[] canBend(PlayerEntity player, boolean consumeBlock) {
-        BlockHitResult hit = (BlockHitResult) player.raycast(5, 1, false);
+        PlayerData plrData = PlayerData.get(player);
+        int range = 5;
+        if(plrData.canUseUpgrade("earthPickupRangeII")){
+            range = 15;
+        } else if(plrData.canUseUpgrade("earthPickupRangeI")){
+            range = 10;
+        }
+        BlockHitResult hit = (BlockHitResult) player.raycast(range, 1, false);
 
         BlockState blockState = player.getEntityWorld().getBlockState(hit.getBlockPos());
 
@@ -70,7 +119,7 @@ public class EarthElement extends Element {
             if (consumeBlock) {
                 player.getWorld().setBlockState(hit.getBlockPos(), Blocks.AIR.getDefaultState());
             }
-            return new Object[]{hit.getPos(),blockState, hit.getBlockPos(), hit.getSide()};
+            return new Object[]{hit.getPos(), blockState, hit.getBlockPos(), hit.getSide()};
         }
         return null;
     }
@@ -95,15 +144,16 @@ public class EarthElement extends Element {
     public static void makeHole(BlockPos pos, int depth, Bender bender, ArrayList<LivingEntity> damagedEntities) {
         for (int y = 0; y < depth; y++) {
             BlockPos bPos = pos.down(y);
-            if(EarthElement.isBlockBendable(bPos, bender.player.getWorld())){
-                bender.player.getWorld().breakBlock(bPos,false);
+            if (EarthElement.isBlockBendable(bPos, bender.player.getWorld())) {
+                bender.player.getWorld().breakBlock(bPos, false);
             }
         }
 
-        if(damagedEntities != null){
-            damageEntityAboveBlock(bender.player,pos,damagedEntities,1);
+        if (damagedEntities != null) {
+            damageEntityAboveBlock(bender.player, pos, damagedEntities, 1);
         }
     }
+
     /**
      * Damages entities above a certain block. This is made for full blocks, stairs and slabs might not work
      *
@@ -111,8 +161,8 @@ public class EarthElement extends Element {
      * @param pos The position of the block where we want to damage entities above
      * @param amount The amount of damage dealt
      */
-    public static void damageEntityAboveBlock(PlayerEntity player, BlockPos pos, float amount){
-        damageEntityAboveBlock(player,pos,new ArrayList<>(), amount);
+    public static void damageEntityAboveBlock(PlayerEntity player, BlockPos pos, float amount) {
+        damageEntityAboveBlock(player, pos, new ArrayList<>(), amount);
     }
 
     /**
@@ -123,11 +173,11 @@ public class EarthElement extends Element {
      * @param damagedEntities (Optional) List of already damaged entities to prevent double hits
      * @param amount The amount of damage dealt
      */
-    public static void damageEntityAboveBlock(PlayerEntity player, BlockPos pos, ArrayList<LivingEntity> damagedEntities, float amount){
+    public static void damageEntityAboveBlock(PlayerEntity player, BlockPos pos, ArrayList<LivingEntity> damagedEntities, float amount) {
         List<LivingEntity> hits = player.getWorld().getEntitiesByClass(LivingEntity.class,
-                EARTHBLOCK.createSimpleBoundingBox(pos.getX() + 0.5f,pos.getY() + 1,pos.getZ() + 0.5f), LivingEntity::isOnGround);
-        for (LivingEntity entity : hits){
-            if(entity == player){
+                EARTHBLOCK.createSimpleBoundingBox(pos.getX() + 0.5f, pos.getY() + 1, pos.getZ() + 0.5f), LivingEntity::isOnGround);
+        for (LivingEntity entity : hits) {
+            if (entity == player) {
                 continue;
             }
             damagedEntities.add(entity);

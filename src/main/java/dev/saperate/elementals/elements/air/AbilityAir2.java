@@ -9,6 +9,10 @@ public class AbilityAir2 implements Ability {
     @Override
     public void onCall(Bender bender, long deltaT) {
         PlayerData playerData = PlayerData.get(bender.player);
+        if(!playerData.canUseUpgrade("airStream")){
+            bender.setCurrAbility(null);
+            return;
+        }
 
 
         if (playerData.canUseUpgrade("airBall") && deltaT > 1000) {

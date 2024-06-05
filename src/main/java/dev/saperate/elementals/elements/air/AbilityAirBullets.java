@@ -1,6 +1,7 @@
 package dev.saperate.elementals.elements.air;
 
 import dev.saperate.elementals.data.Bender;
+import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.elements.Ability;
 import dev.saperate.elementals.elements.water.WaterElement;
 import dev.saperate.elementals.entities.air.AirBulletEntity;
@@ -11,41 +12,57 @@ import org.joml.Vector3f;
 import static dev.saperate.elementals.utils.SapsUtils.getEntityLookVector;
 
 public class AbilityAirBullets implements Ability {
-    private int bulletCount = 20;
+
     @Override
     public void onCall(Bender bender, long deltaT) {
         PlayerEntity player = bender.player;
 
-        Vec3d pos = getEntityLookVector(player,2.85f);
+        Vec3d pos = getEntityLookVector(player, 2.85f);
+        PlayerData plrData = PlayerData.get(bender.player);
 
-            AirBulletEntity[] bullets = new AirBulletEntity[bulletCount];
-            for (int i = 0; i < bulletCount; i++) {
-                AirBulletEntity entity = new AirBulletEntity(player.getWorld(), player, pos.x, pos.y, pos.z);
-                entity.setArrayId(i);
-                entity.setArraySize(bulletCount);
-                bullets[i] = entity;
+        int bulletCount = 5;
+        if (plrData.canUseUpgrade("airBulletsCountII")) {
+            bulletCount = 20;
+        } else if (plrData.canUseUpgrade("airBulletsCountI")) {
+            bulletCount = 10;
+        }
 
-                player.getWorld().spawnEntity(entity);
-            }
-            bender.abilityData = bullets;
-            bender.setCurrAbility(this);
+        AirBulletEntity[] bullets = new AirBulletEntity[bulletCount];
+        for (int i = 0; i < bulletCount; i++) {
+            AirBulletEntity entity = new AirBulletEntity(player.getWorld(), player, pos.x, pos.y, pos.z);
+            entity.setArrayId(i);
+            entity.setArraySize(bulletCount);
+            bullets[i] = entity;
+
+            player.getWorld().spawnEntity(entity);
+        }
+        bender.abilityData = bullets;
+        bender.setCurrAbility(this);
     }
 
 
     @Override
     public void onLeftClick(Bender bender, boolean started) {
-        if(started) {
+        if (started) {
             return;
         }
         AirBulletEntity[] bullets = (AirBulletEntity[]) bender.abilityData;
 
-        if(bullets.length == 1){
+        if (bullets.length == 1) {
             onRemove(bender);
         }
 
         AirBulletEntity bullet = bullets[bullets.length - 1];
         bullet.setControlled(false);
-        bullet.setVelocity(bender.player, bender.player.getPitch(), bender.player.getYaw(), 0, 1, 0);
+        PlayerData plrData = PlayerData.get(bender.player);
+
+        float speed = 1;
+        if (plrData.canUseUpgrade("airBulletsSpeedII")) {
+            speed = 2;
+        } else if (plrData.canUseUpgrade("airBulletsSpeedI")) {
+            speed = 1.5f;
+        }
+        bullet.setVelocity(bender.player, bender.player.getPitch(), bender.player.getYaw(), 0, speed, 0);
 
         AirBulletEntity[] newArray = new AirBulletEntity[bullets.length - 1];
         for (int i = 0; i < bullets.length - 1; i++) {

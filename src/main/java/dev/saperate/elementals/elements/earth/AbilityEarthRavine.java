@@ -33,14 +33,14 @@ public class AbilityEarthRavine implements Ability {
         int dx = (int) Math.round(-Math.sin(Math.toRadians(player.getYaw())));
         int dz = (int) Math.round(Math.cos(Math.toRadians(player.getYaw())));
 
+        int range = plrData.canUseUpgrade("earthRavineRangeI") ? 12 : 6;
         makeHole(bPos, 2, bender,damagedEntities);
-        for (int i = 1; i <= 6; i++) {
+        for (int i = 1; i <= range; i++) {
             makeHole(bPos.add(dx * i, 0 , dz * i), 2, bender, damagedEntities);
 
-            //TODO maybe make this an upgrade so you could choose between narrower and farther and larger but closer
-            int spread = Math.min(i,2);//TODO add this to a config file
+            int spread = Math.min(i,plrData.canUseUpgrade("earthRavineSpreadI") ? 4 : 2);
             for (int j = -spread; j < spread; j++) {
-                if(rnd.nextBetween(0,5) == 5 || j == 0){//TODO this could also be an upgrade
+                if(rnd.nextBetween(0,5) == 5 || j == 0){
                     continue;
                 }
                 makeHole(bPos.add(dz * j + (i * dx), 0,  - (dx * j - (i * dz))), 2, bender, damagedEntities);

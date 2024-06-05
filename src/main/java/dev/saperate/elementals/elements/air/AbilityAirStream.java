@@ -32,7 +32,15 @@ public class AbilityAirStream implements Ability {
         if(entity == null){
             return;
         }
-        entity.setVelocity(bender.player, bender.player.getPitch(), bender.player.getYaw(), 0, 1, 0);
+        PlayerData plrData = PlayerData.get(bender.player);
+
+        float speed = 1;
+        if (plrData.canUseUpgrade("airStreamSpeedII")) {
+            speed = 2;
+        } else if (plrData.canUseUpgrade("airStreamSpeedI")) {
+            speed = 1.5f;
+        }
+        entity.setVelocity(bender.player, bender.player.getPitch(), bender.player.getYaw(), 0, speed, 0);
     }
 
     @Override

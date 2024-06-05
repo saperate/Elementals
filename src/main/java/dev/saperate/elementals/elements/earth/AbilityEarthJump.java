@@ -1,6 +1,7 @@
 package dev.saperate.elementals.elements.earth;
 
 import dev.saperate.elementals.data.Bender;
+import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.elements.Ability;
 import dev.saperate.elementals.entities.water.WaterTowerEntity;
 import net.minecraft.entity.MovementType;
@@ -9,8 +10,7 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.Vec3d;
 import org.joml.Vector3f;
 
-import static dev.saperate.elementals.utils.SapsUtils.getEntityLookVector;
-import static dev.saperate.elementals.utils.SapsUtils.raycastBlockCustomRotation;
+import static dev.saperate.elementals.utils.SapsUtils.*;
 
 public class AbilityEarthJump implements Ability {
 
@@ -24,15 +24,17 @@ public class AbilityEarthJump implements Ability {
         if(!EarthElement.isBlockBendable(player.getWorld().getBlockState(hit.getBlockPos()))){
             return;
         }
-        Vector3f velocity = getEntityLookVector(player, 1)
-                .subtract(player.getEyePos())
-                .normalize().multiply(2).toVector3f();
 
-        player.setVelocity(velocity.x,
-                velocity.y > 0 ? Math.min(velocity.y,1) : Math.max(velocity.y,-1),
-                velocity.z);
-        player.velocityModified = true;
-        player.move(MovementType.PLAYER, player.getVelocity());
+        PlayerData plrData = PlayerData.get(player);
+        float power = 1;
+
+        if (plrData.canUseUpgrade("earthJumpRangeII")) {
+            power = 2;
+        } else if (plrData.canUseUpgrade("earthJumpRangeI")) {
+            power = 1.5f;
+        }
+        launchPlayer(player,power);
+
     }
 
     @Override

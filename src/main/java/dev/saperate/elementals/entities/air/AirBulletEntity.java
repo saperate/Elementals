@@ -1,5 +1,6 @@
 package dev.saperate.elementals.entities.air;
 
+import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.utils.SapsUtils;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -81,16 +82,26 @@ public class AirBulletEntity extends ProjectileEntity {
             return;
         }
 
+        if (!getIsControlled() && !getWorld().isClient) {
+            HitResult hit = ProjectileUtil.getCollision(this, entity -> entity instanceof LivingEntity);
+            if (hit.getType() == HitResult.Type.ENTITY) {
+                LivingEntity entity = (LivingEntity) ((EntityHitResult) hit).getEntity();
+                PlayerData plrData = PlayerData.get(owner);
 
-        HitResult hit = ProjectileUtil.getCollision(this, entity -> entity instanceof LivingEntity);
-        if (hit.getType() == HitResult.Type.ENTITY) {
-            LivingEntity entity = (LivingEntity) ((EntityHitResult) hit).getEntity();
-            entity.damage(this.getDamageSources().playerAttack(owner), 1);
-            if (!getIsControlled()) {
-                entity.addVelocity(this.getVelocity().multiply(1.2f));
-                discard();
+                float damage = 0.5f;
+                if (plrData.canUseUpgrade("airBulletMastery")) {
+                    damage = 8;
+                } else if (plrData.canUseUpgrade("airBulletsDamageI")) {
+                    damage = 1;
+                }
+                entity.damage(this.getDamageSources().playerAttack(owner), damage);
+                if (!getIsControlled()) {
+                    entity.addVelocity(this.getVelocity().multiply(1.2f));
+                    discard();
+                }
             }
         }
+
 
         moveEntity(owner);
     }
@@ -114,7 +125,7 @@ public class AirBulletEntity extends ProjectileEntity {
         Vector3f direction;
         if (!owner.isSneaking() || lastCenterPos == null) {
             direction = getEntityLookVector(owner, 3)
-                    .subtract(0,1,0)
+                    .subtract(0, 1, 0)
                     .subtract(getPos()).toVector3f();
             lastCenterPos = direction;
         } else {
@@ -124,7 +135,7 @@ public class AirBulletEntity extends ProjectileEntity {
         double angle = ((2 * Math.PI) / getArraySize()) * getArrayId() + Math.toRadians(age * 2);
 
         direction = direction.add(
-                new Vector3f(0,1,0).add(new Vector3f(1,0,0).mul((float) Math.sin(angle)).add(new Vector3f(0,0,1).mul((float) Math.cos(angle))))
+                new Vector3f(0, 1, 0).add(new Vector3f(1, 0, 0).mul((float) Math.sin(angle)).add(new Vector3f(0, 0, 1).mul((float) Math.cos(angle))))
         );
 
         direction.mul(0.25f);
@@ -138,7 +149,6 @@ public class AirBulletEntity extends ProjectileEntity {
     }
 
     public void collidesWithGround() {
-        //getWorld().setBlockState(getBlockPos(), Blocks.WATER.getDefaultState());
         discard();
     }
 

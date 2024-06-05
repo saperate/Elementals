@@ -38,8 +38,13 @@ public class AbilityEarthWall implements Ability {
             placePillar(pos.add(-dxScaled,0,-dzScaled),3, entities, bender);
         }
         placePillar(pos,3, entities, bender);
-        bender.setCurrAbility(this);
+
         bender.abilityData = entities;
+        if(plrData.canUseUpgrade("earthWallAutoTimer")){
+            onRightClick(bender, false);
+        }else{
+            bender.setCurrAbility(this);
+        }
     }
 
     public static void placePillar(BlockPos startPos, int height, LinkedList<EarthBlockEntity> entities, Bender bender){
@@ -87,9 +92,28 @@ public class AbilityEarthWall implements Ability {
         if(entities == null){
             return;
         }
+        PlayerData plrData = PlayerData.get(bender.player);
+        boolean canUseTimer = plrData.canUseUpgrade("earthWallDurationI");
+
+        int timer = 100;
+        if(canUseTimer){
+            if (plrData.canUseUpgrade("earthWallDurationIV")) {
+                timer = 1200;
+            } else if (plrData.canUseUpgrade("earthWallDurationIII")) {
+                timer = 600;
+            } else if (plrData.canUseUpgrade("earthWallDurationII")) {
+                timer = 300;
+            }
+        }
 
         for (EarthBlockEntity entity : entities){
-            entity.setControlled(false);
+            if((!canUseTimer && bender.player.isSneaking()) || !canUseTimer){
+                entity.setControlled(false);
+            }else {
+                entity.setShiftToFreeze(false);
+                entity.setDropOnEndOfLife(true);
+                entity.setLifeTime(timer);
+            }
         }
     }
 

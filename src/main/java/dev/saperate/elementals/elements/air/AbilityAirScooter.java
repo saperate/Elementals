@@ -1,6 +1,7 @@
 package dev.saperate.elementals.elements.air;
 
 import dev.saperate.elementals.data.Bender;
+import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.elements.Ability;
 import dev.saperate.elementals.entities.air.AirBallEntity;
 import dev.saperate.elementals.entities.air.AirScooterEntity;
@@ -13,8 +14,18 @@ public class AbilityAirScooter implements Ability {
     @Override
     public void onCall(Bender bender, long deltaT) {
         PlayerEntity player = bender.player;
+        PlayerData plrData = PlayerData.get(player);
+
+        float speed = 0.25f;
+
+        if (plrData.canUseUpgrade("airScooterSpeedII")) {
+            speed = 0.75f;
+        } else if (plrData.canUseUpgrade("airScooterSpeedI")) {
+            speed = 0.5f;
+        }
 
         AirScooterEntity entity = new AirScooterEntity(player.getWorld(), player);
+        entity.setSpeed(speed);
         player.getWorld().spawnEntity(entity);
         player.startRiding(entity);
 

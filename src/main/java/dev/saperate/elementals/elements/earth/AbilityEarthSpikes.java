@@ -30,14 +30,15 @@ public class AbilityEarthSpikes implements Ability {
         int dz = (int) Math.round(Math.cos(Math.toRadians(player.getYaw())));
         int a = 0;
 
+        int range = plrData.canUseUpgrade("earthSpikesRangeI") ? 8 : 5;
         placeSpike(bPos, bender,damagedEntities);
-        for (int i = 1; i <= 5; i++) {
+        for (int i = 1; i <= range; i++) {
             placeSpike(bPos.add(dx * i, 0 , dz * i), bender, damagedEntities);
 
-            //TODO maybe make this an upgrade so you could choose between narrower and farther and larger but closer
-            int spread = Math.min(i,3);//TODO add this to a config file
+
+            int spread = Math.min(i,plrData.canUseUpgrade("earthSpikesSpreadI") ? 6 : 3);
             for (int j = -spread; j < spread; j++) {
-                if(rnd.nextBetween(0,3) != 1 || j == 0){//TODO this could also be an upgrade
+                if(rnd.nextBetween(0,3) != 1 || j == 0){
                     a++;
                     continue;
                 }
@@ -59,7 +60,7 @@ public class AbilityEarthSpikes implements Ability {
         block.setBlockState(bender.player.getWorld().getBlockState(pos));
         block.setDrops(false);
         block.setLifeTime(60);
-        block.setMovementSpeed(0.3f);
+        block.setMovementSpeed(0.6f);
         block.setDamageOnTouch(true);
         block.setShiftToFreeze(false);
         block.setTargetPosition(pos.toCenterPos().toVector3f().add(0,1,0));

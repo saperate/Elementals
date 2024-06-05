@@ -16,6 +16,11 @@ public class PlayerData {
     public HashMap<Upgrade, Boolean> upgrades = new HashMap<>();
 
 
+    /**
+     * Checks if the player both has the upgrade AND has it enabled.
+     * @param upgradeName The name of the upgrade we are checking
+     * @return if the player can use the upgrade
+     */
     public boolean canUseUpgrade(String upgradeName) {
         Upgrade key = new Upgrade(upgradeName);
         return upgrades.getOrDefault(key,false);

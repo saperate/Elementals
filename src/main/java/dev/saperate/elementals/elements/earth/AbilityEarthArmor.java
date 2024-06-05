@@ -33,7 +33,6 @@ public class AbilityEarthArmor implements Ability {
         DefaultedList<ItemStack> inv = player.getInventory().armor;
 
         if (player.getInventory().containsAny(EARTH_ARMOR_SET)) {
-            System.out.println("removing armor");
             removeArmorSet(inv);
             return;
         }

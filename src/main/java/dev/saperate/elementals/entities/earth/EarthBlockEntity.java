@@ -35,6 +35,7 @@ public class EarthBlockEntity extends ProjectileEntity {
     private static final TrackedData<Boolean> USES_OFFSET = DataTracker.registerData(EarthBlockEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
     private static final TrackedData<Boolean> IS_COLLIDABLE = DataTracker.registerData(EarthBlockEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
     private static final TrackedData<Float> MOVEMENT_SPEED = DataTracker.registerData(EarthBlockEntity.class, TrackedDataHandlerRegistry.FLOAT);
+    private static final TrackedData<Float> DAMAGE = DataTracker.registerData(EarthBlockEntity.class, TrackedDataHandlerRegistry.FLOAT);
 
     private boolean drops = true, damageOnTouch = false, shiftToFreeze = true, dropOnLifeTime = false;
     private int lifeTime = -1;
@@ -68,6 +69,7 @@ public class EarthBlockEntity extends ProjectileEntity {
         this.getDataTracker().startTracking(USES_OFFSET, false);
         this.getDataTracker().startTracking(IS_COLLIDABLE, true);
         this.getDataTracker().startTracking(MOVEMENT_SPEED, 0.1f);
+        this.getDataTracker().startTracking(DAMAGE, 2f);
     }
 
     @Override
@@ -91,7 +93,6 @@ public class EarthBlockEntity extends ProjectileEntity {
             if (SapsUtils.checkBlockCollision(this, 0.05f, false) != null) {
                 collidesWithGround();
             }
-
             return;
         }
 
@@ -112,10 +113,11 @@ public class EarthBlockEntity extends ProjectileEntity {
 
             for (LivingEntity e : entities) {
                 if(!e.equals(owner)){
-                    e.damage(this.getDamageSources().playerAttack((PlayerEntity) owner), 2);
-                    e.setVelocity(this.getVelocity().multiply(1.2f));
-                    e.move(MovementType.SELF,e.getVelocity());
+                    e.damage(this.getDamageSources().playerAttack((PlayerEntity) owner), getDamage());
                 }
+                e.setVelocity(this.getVelocity().multiply(1.2f));
+                e.velocityModified = true;
+                e.move(MovementType.SELF,e.getVelocity());
             }
         }
 
@@ -123,9 +125,10 @@ public class EarthBlockEntity extends ProjectileEntity {
             HitResult hit = ProjectileUtil.getCollision(this, entity -> entity instanceof LivingEntity);
             if (hit.getType() == HitResult.Type.ENTITY) {
                 LivingEntity entity = (LivingEntity) ((EntityHitResult) hit).getEntity();
-                entity.damage(this.getDamageSources().playerAttack((PlayerEntity) owner), 2);
+                entity.damage(this.getDamageSources().playerAttack((PlayerEntity) owner), getDamage());
                 entity.setVelocity(this.getVelocity().multiply(1.2f));
                 entity.move(MovementType.SELF,entity.getVelocity());
+                entity.velocityModified = true;
                 discard();
             }
         }
@@ -326,6 +329,14 @@ public class EarthBlockEntity extends ProjectileEntity {
 
     public void setDropOnEndOfLife(boolean val) {
         this.dropOnLifeTime = val;
+    }
+
+    public float getDamage() {
+        return getDataTracker().get(DAMAGE);
+    }
+
+    public void setDamage(float dmg) {
+        getDataTracker().set(DAMAGE, dmg);
     }
 
     protected void pushAway(Entity entity) {

@@ -6,6 +6,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.FluidBlock;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.MovementType;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ProjectileUtil;
@@ -365,5 +366,17 @@ public class SapsUtils {
         }
         tooltip.add(Text.of(builder.toString()));
         return raw.split("%d").length;
+    }
+
+    public static void launchPlayer(PlayerEntity player, float power){
+        Vector3f velocity = getEntityLookVector(player, 1)
+                .subtract(player.getEyePos())
+                .normalize().multiply(power).toVector3f();
+
+        player.setVelocity(velocity.x,
+                velocity.y > 0 ? Math.min(velocity.y, power - 0.75f) : Math.max(velocity.y, -power + 0.75f),
+                velocity.z);
+        player.velocityModified = true;
+        player.move(MovementType.PLAYER, player.getVelocity());
     }
 }

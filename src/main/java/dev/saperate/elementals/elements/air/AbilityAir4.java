@@ -1,6 +1,7 @@
 package dev.saperate.elementals.elements.air;
 
 import dev.saperate.elementals.data.Bender;
+import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.effects.SpiritProjectionStatusEffect;
 import dev.saperate.elementals.elements.Ability;
 import dev.saperate.elementals.entities.common.DecoyPlayerEntity;
@@ -22,8 +23,25 @@ public class AbilityAir4 implements Ability {
     @Override
     public void onCall(Bender bender, long deltaT) {
         ServerPlayerEntity plr = (ServerPlayerEntity) bender.player;
+        PlayerData plrData = PlayerData.get(plr);
+        if (!plrData.canUseUpgrade("airSpiritProjection")) {
+            bender.setCurrAbility(null);
+            return;
+        }
 
         DecoyPlayerEntity decoy = new DecoyPlayerEntity(plr.getWorld(), plr);
+        int range = 5;
+        if (plrData.canUseUpgrade("airSpiritProjectionRangeIV")) {
+            range = 25;
+        } else if (plrData.canUseUpgrade("airSpiritProjectionRangeIII")) {
+            range = 20;
+        } else if (plrData.canUseUpgrade("airSpiritProjectionRangeII")) {
+            range = 15;
+        } else if (plrData.canUseUpgrade("airSpiritProjectionRangeI")) {
+            range = 10;
+        }
+        decoy.setRange(range);
+
         decoy.setCustomName(plr.getName());
 
         decoy.equipStack(EquipmentSlot.HEAD, plr.getEquippedStack(EquipmentSlot.HEAD));

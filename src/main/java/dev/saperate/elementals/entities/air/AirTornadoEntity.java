@@ -33,6 +33,7 @@ public class AirTornadoEntity extends ProjectileEntity {
     private static final TrackedData<Float> RANGE = DataTracker.registerData(AirTornadoEntity.class, TrackedDataHandlerRegistry.FLOAT);
     private static final TrackedData<Integer> OWNER_ID = DataTracker.registerData(AirTornadoEntity.class, TrackedDataHandlerRegistry.INTEGER);
     private static final TrackedData<Boolean> IS_CONTROLLED = DataTracker.registerData(AirTornadoEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
+    private static final TrackedData<Float> SPEED = DataTracker.registerData(AirTornadoEntity.class, TrackedDataHandlerRegistry.FLOAT);
 
     private int lifeTime = 100; // 5 seconds
 
@@ -59,6 +60,7 @@ public class AirTornadoEntity extends ProjectileEntity {
         this.getDataTracker().startTracking(RANGE, 20f);
         this.getDataTracker().startTracking(OWNER_ID, 0);
         this.getDataTracker().startTracking(IS_CONTROLLED, true);
+        this.getDataTracker().startTracking(SPEED, 0.001f);
     }
 
     @Override
@@ -84,7 +86,8 @@ public class AirTornadoEntity extends ProjectileEntity {
         if (hit.getType() == HitResult.Type.ENTITY) {
             LivingEntity entity = (LivingEntity) ((EntityHitResult) hit).getEntity();
             entity.damage(this.getDamageSources().playerAttack(owner), 0.5f);//TODO maybe add a debris upgrade for more dmg
-            entity.addVelocity(0, 0.75, 0);//TODO add upgrade for this
+            entity.addVelocity(0, 0.75, 0);
+            entity.velocityModified = true;
             entity.move(MovementType.SELF, entity.getVelocity());
         }
     }
@@ -116,7 +119,7 @@ public class AirTornadoEntity extends ProjectileEntity {
         if (direction.length() <= 1f) {
             this.setVelocity(0, 0, 0);
         }
-        direction.mul(0.001f);
+        direction.mul(getSpeed());
 
 
         this.addVelocity(direction.x, direction.y, direction.z);
@@ -164,7 +167,13 @@ public class AirTornadoEntity extends ProjectileEntity {
         this.getDataTracker().set(RANGE, val);
     }
 
+    public void setSpeed(float speed) {
+        this.dataTracker.set(SPEED, speed);
+    }
 
+    public float getSpeed() {
+        return this.dataTracker.get(SPEED);
+    }
     protected void pushAway(Entity entity) {
         entity.pushAwayFrom(this);
     }

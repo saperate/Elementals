@@ -37,8 +37,16 @@ public class AbilityEarthBlockPickup implements Ability {
             return;
         }
 
-        entity.setVelocity(bender.player, bender.player.getPitch(), bender.player.getYaw(), 0, 1, 0);
+        PlayerData plrData = PlayerData.get(bender.player);
 
+        float speed = 1;
+        if (plrData.canUseUpgrade("earthBlockSpeedII")) {
+            speed = 2;
+        } else if (plrData.canUseUpgrade("earthBlockSpeedI")) {
+            speed = 1.5f;
+        }
+        entity.setVelocity(bender.player, bender.player.getPitch(), bender.player.getYaw(), 0, speed, 0);
+        entity.setDamage(plrData.canUseUpgrade("earthBlockDamageI") ? 2.5f : 3);
     }
 
     @Override
@@ -55,11 +63,20 @@ public class AbilityEarthBlockPickup implements Ability {
 
         EarthBlockEntity blockEntity = (EarthBlockEntity) bender.abilityData;
         onRemove(bender);
-        if(blockEntity == null || !PlayerData.get(player).canUseUpgrade("shrapnel")){
+        if(blockEntity == null || !PlayerData.get(player).canUseUpgrade("earthBlockShrapnel")){
             return;
         }
-        blockEntity.setVelocity(bender.player, bender.player.getPitch(), bender.player.getYaw(), 0, 1, 0);
+        PlayerData plrData = PlayerData.get(bender.player);
+
+        float speed = 1.5f;
+        if (plrData.canUseUpgrade("earthBlockSpeedII")) {
+            speed = 2.5f;
+        } else if (plrData.canUseUpgrade("earthBlockSpeedI")) {
+            speed = 2;
+        }
+        blockEntity.setVelocity(bender.player, bender.player.getPitch(), bender.player.getYaw(), 0, speed, 0);
         blockEntity.setModelShapeId(1);
+        blockEntity.setDamage(plrData.canUseUpgrade("earthBlockDamageI") ? 3 : 2.5f);
     }
 
     @Override

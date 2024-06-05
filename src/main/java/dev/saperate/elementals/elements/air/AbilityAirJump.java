@@ -21,16 +21,15 @@ public class AbilityAirJump implements Ability {
         //TODO make it more costly to cast when not on the ground
         bender.setCurrAbility(null);
         PlayerEntity player = bender.player;
+        PlayerData plrData = PlayerData.get(player);
+        float power = 2;
 
-        Vector3f velocity = getEntityLookVector(player, 1)
-                .subtract(player.getEyePos())
-                .normalize().multiply(2).toVector3f();
-
-        player.setVelocity(velocity.x,
-                velocity.y > 0 ? Math.min(velocity.y,1) : Math.max(velocity.y,-1),
-                velocity.z);
-        player.velocityModified = true;
-        player.move(MovementType.PLAYER, player.getVelocity());
+        if (plrData.canUseUpgrade("airJumpRangeII")) {
+            power = 3;
+        } else if (plrData.canUseUpgrade("airJumpRangeI")) {
+            power = 2.5f;
+        }
+        launchPlayer(player,power);
         player.fallDistance = 0;
 
         serverSummonParticles((ServerWorld) player.getWorld(),

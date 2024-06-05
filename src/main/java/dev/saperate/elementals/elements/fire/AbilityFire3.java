@@ -15,8 +15,7 @@ import org.joml.Vector3f;
 
 import java.util.List;
 
-import static dev.saperate.elementals.utils.SapsUtils.getEntityLookVector;
-import static dev.saperate.elementals.utils.SapsUtils.serverSummonParticles;
+import static dev.saperate.elementals.utils.SapsUtils.*;
 
 public class AbilityFire3 implements Ability {
     @Override
@@ -42,15 +41,7 @@ public class AbilityFire3 implements Ability {
                 power = 1.5f;
             }
 
-            Vector3f velocity = getEntityLookVector(player, 1)
-                    .subtract(player.getEyePos())
-                    .normalize().multiply(power).toVector3f();
-
-            player.setVelocity(velocity.x,
-                    velocity.y > 0 ? Math.min(velocity.y, power - 0.75f) : Math.max(velocity.y, -power + 0.75f),
-                    velocity.z);
-            player.velocityModified = true;
-            player.move(MovementType.PLAYER, player.getVelocity());
+            launchPlayer(player,power);
         }
     }
 

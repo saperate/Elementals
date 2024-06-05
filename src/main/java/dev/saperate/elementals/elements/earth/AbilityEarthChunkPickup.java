@@ -13,7 +13,6 @@ import org.joml.Vector3f;
 import java.util.LinkedList;
 
 public class AbilityEarthChunkPickup implements Ability {
-    //TODO make an ability that makes it so you can throw the chunk one block at a time
     @Override
     public void onCall(Bender bender, long deltaT) {
         PlayerEntity player = bender.player;
@@ -28,11 +27,11 @@ public class AbilityEarthChunkPickup implements Ability {
         LinkedList<EarthBlockEntity> entities = new LinkedList<>();
         BlockPos pos = (BlockPos) vars[2];
 
-        int size = (plrData.canUseUpgrade("biggerChunk") ? 2 : 1);//TODO make this toggleable when you bought the upgrade
+        float size = (plrData.canUseUpgrade("earthChunkSizeI") ? 1.5f : 1);
 
         for (int y = 0; y < size + size; y++) {
-            for (int x = -size; x < size; x++) {
-                for (int z = -size; z < size; z++) {
+            for (int x = (int) -Math.floor(size); x < Math.ceil(size); x++) {
+                for (int z = (int) -Math.floor(size); z < size; z++) {
                     BlockPos bPos = pos.add(x,-y,z);
                     BlockState state = player.getWorld().getBlockState(bPos);
                     if(EarthElement.isBlockBendable(state)){

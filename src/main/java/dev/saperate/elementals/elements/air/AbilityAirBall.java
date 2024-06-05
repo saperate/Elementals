@@ -28,12 +28,20 @@ public class AbilityAirBall implements Ability {
     @Override
     public void onLeftClick(Bender bender, boolean started) {
         AirBallEntity entity = (AirBallEntity) bender.abilityData;
-        if(entity == null){
-            throw new RuntimeException("Elementals: Tried to launch entity while having none!");
-        }
         onRemove(bender);
+        if(entity == null){
+            return;
+        }
+        PlayerData plrData = PlayerData.get(bender.player);
 
-        entity.setVelocity(bender.player, bender.player.getPitch(), bender.player.getYaw(), 0, 0.75f, 0);
+        float speed = 0.75f;
+        if (plrData.canUseUpgrade("airBallSpeedII")) {
+            speed = 1.75f;
+        } else if (plrData.canUseUpgrade("airBallSpeedI")) {
+            speed = 1.25f;
+        }
+
+        entity.setVelocity(bender.player, bender.player.getPitch(), bender.player.getYaw(), 0, speed, 0);
     }
 
     @Override
