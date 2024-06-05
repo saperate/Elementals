@@ -38,7 +38,7 @@ public class AbilityFireIgnite implements Ability {
         BlockState blockState = player.getEntityWorld().getBlockState(hit.getBlockPos());
         BlockPos bPos = hit.getBlockPos();
 
-        boolean hasFlareUp = PlayerData.get(player).canUseUpgrade("flareUp");
+        boolean hasFlareUp = PlayerData.get(player).canUseUpgrade("fireFlareUp");
 
 
         if (hit.getType() == HitResult.Type.BLOCK) {

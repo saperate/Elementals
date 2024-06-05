@@ -33,13 +33,19 @@ public class AbilityFireArc implements Ability {
     @Override
     public void onLeftClick(Bender bender, boolean started) {
         FireArcEntity entity = (FireArcEntity) bender.abilityData;
-        if(entity == null){
-            //TODO remove this useless runtime exception everywhere i use it
-            throw new RuntimeException("Elementals: Tried to launch entity while having none!");
-        }
         onRemove(bender);
+        if(entity == null){
+            return;
+        }
+        PlayerData plrData = PlayerData.get(bender.player);
 
-        entity.setVelocity(bender.player, bender.player.getPitch(), bender.player.getYaw(), 0, 1, 0);
+        float speed = 0.75f;
+        if (plrData.canUseUpgrade("fireBallSpeedII")) {
+            speed = 1.25f;
+        } else if (plrData.canUseUpgrade("fireBallSpeedI")) {
+            speed = 1f;
+        }
+        entity.setVelocity(bender.player, bender.player.getPitch(), bender.player.getYaw(), 0, speed, 0);
     }
 
     @Override
@@ -49,12 +55,7 @@ public class AbilityFireArc implements Ability {
 
     @Override
     public void onRightClick(Bender bender, boolean started) {
-        FireArcEntity entity = (FireArcEntity) bender.abilityData;
-        if (entity == null) {
-            return;//TODO fix this everywhere i do it
-        }
-        entity.discard();
-        Bender.getBender((PlayerEntity) entity.getOwner()).setCurrAbility(null);
+        onRemove(bender);
     }
 
     @Override

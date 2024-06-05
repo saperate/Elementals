@@ -24,7 +24,7 @@ public class AbilityFireWall implements Ability {
         double dx = -Math.sin(Math.toRadians(player.getYaw() - 90));//Side to side
         double dz = Math.cos(Math.toRadians(player.getYaw() - 90));
 
-        for (int i = 1; i <= (plrData.canUseUpgrade("widerWall") ? 8 : 4); i++) {
+        for (int i = 1; i <= (plrData.canUseUpgrade("fireWallWideI") ? 8 : 4); i++) {
             int dxScaled = (int) Math.round(dx * i);
             int dzScaled = (int) Math.round(dz * i);
 
@@ -38,7 +38,7 @@ public class AbilityFireWall implements Ability {
 
         if( AbstractFireBlock.canPlaceAt(player.getWorld(),bPos.up(),hit.getSide())) {
             FireBlockEntity entity = new FireBlockEntity(player.getWorld(), player, bPos.getX() + 0.5f, bPos.getY() + 1, bPos.getZ() + 0.5f);
-            entity.setFinalFireHeight(plrData.canUseUpgrade("tallerWall") ? 2.5f : 1.5f );
+            entity.setFinalFireHeight(plrData.canUseUpgrade("fireWallTallI") ? 2.5f : 1.5f );
             player.getWorld().spawnEntity(entity);
         }
     }

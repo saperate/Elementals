@@ -24,14 +24,18 @@ public class AbilityFireSpikes implements Ability {
         int dx = (int) Math.round(-Math.sin(Math.toRadians(player.getYaw())));
         int dz = (int) Math.round(Math.cos(Math.toRadians(player.getYaw())));
 
-        for (int i = 1; i <= 6; i++) {
+        int range = PlayerData.get(player).canUseUpgrade("fireSpikesRangeI") ? 10 : 6;
 
-            if(rnd.nextBetween(0,6) == 6){
+        int countMod = PlayerData.get(player).canUseUpgrade("fireSpikesCountI") ? 2 : 1;
+
+        for (int i = 1; i <= range; i++) {
+
+            if(rnd.nextBetween(0,6 / countMod) == 0){
                 placeFire(bender, bPos.add(dx * i, 0, dz * i), hit, plrData);
             }
 
             for (int j = -i; j < i; j++) {
-                if(rnd.nextBetween(0,4) == 4) {
+                if(rnd.nextBetween(0,4 / countMod) == 0) {
                     placeFire(bender, bPos.add(dz * j + (i * dx), 0,  - (dx * j - (i * dz))), hit, plrData);
                 }
             }

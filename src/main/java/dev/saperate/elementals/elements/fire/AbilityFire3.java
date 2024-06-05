@@ -21,7 +21,7 @@ import static dev.saperate.elementals.utils.SapsUtils.serverSummonParticles;
 public class AbilityFire3 implements Ability {
     @Override
     public void onCall(Bender bender, long deltaT) {
-        if (PlayerData.get(bender.player).canUseUpgrade("fireAgility")) {
+        if (PlayerData.get(bender.player).canUseUpgrade("fireJump")) {
             bender.setCurrAbility(this);
             return;
         }
@@ -30,7 +30,28 @@ public class AbilityFire3 implements Ability {
 
     @Override
     public void onLeftClick(Bender bender, boolean started) {
+        if (bender.abilityData == null) {
+            bender.abilityData = false;
+            PlayerEntity player = bender.player;
 
+            float power = 1;
+            PlayerData plrData = PlayerData.get(player);
+            if (plrData.canUseUpgrade("fireJumpRangeII")) {
+                power = 2;
+            } else if (plrData.canUseUpgrade("fireJumpRangeI")) {
+                power = 1.5f;
+            }
+
+            Vector3f velocity = getEntityLookVector(player, 1)
+                    .subtract(player.getEyePos())
+                    .normalize().multiply(power).toVector3f();
+
+            player.setVelocity(velocity.x,
+                    velocity.y > 0 ? Math.min(velocity.y, power - 0.75f) : Math.max(velocity.y, -power + 0.75f),
+                    velocity.z);
+            player.velocityModified = true;
+            player.move(MovementType.PLAYER, player.getVelocity());
+        }
     }
 
     @Override
@@ -40,33 +61,28 @@ public class AbilityFire3 implements Ability {
 
     @Override
     public void onRightClick(Bender bender, boolean started) {
-        if (bender.abilityData == null) {
-            bender.abilityData = false;
-            PlayerEntity player = bender.player;
 
-            Vector3f velocity = getEntityLookVector(player, 1)
-                    .subtract(player.getEyePos())
-                    .normalize().multiply(1.75f).toVector3f();
-
-            player.setVelocity(velocity.x,
-                    velocity.y > 0 ? Math.min(velocity.y,1) : Math.max(velocity.y,-1),
-                    velocity.z);
-            player.velocityModified = true;
-            player.move(MovementType.PLAYER, player.getVelocity());
-            player.fallDistance = 0;
-        }
     }
 
     @Override
     public void onTick(Bender bender) {
         PlayerEntity player = bender.player;
         int count = 1;
-        if ((bender.abilityData == null || bender.abilityData.equals(true)) && player.isSprinting()
-        && PlayerData.get(player).canUseUpgrade("jet")) {
+        if ((bender.abilityData == null || bender.abilityData.equals(true)) && player.isSprinting() && !player.isOnGround()
+        && PlayerData.get(player).canUseUpgrade("fireJet")) {
+
+            float power = 0.45f;
+            PlayerData plrData = PlayerData.get(player);
+            if (plrData.canUseUpgrade("fireJetSpeedII")) {
+                power = 0.85f;
+            } else if (plrData.canUseUpgrade("fireJetSpeedI")) {
+                power = 0.65f;
+            }
+
             player.startFallFlying();
             Vector3f velocity = getEntityLookVector(player, 2)
                     .subtract(player.getEyePos())
-                    .normalize().multiply(0.65f).toVector3f();
+                    .normalize().multiply(power).toVector3f();
             player.setVelocity(velocity.x, velocity.y, velocity.z);
             player.velocityModified = true;
             player.move(MovementType.PLAYER, player.getVelocity());

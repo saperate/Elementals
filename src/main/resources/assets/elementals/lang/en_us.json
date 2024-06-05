@@ -124,13 +124,13 @@
   "upgrade.elementals.waterSurfSpeedII.description": " Move even faster across water.",
 
   "upgrade.elementals.waterPickupRangeI": "Range I",
-  "upgrade.elementals.waterPickupRangeI.description": " Pickup water from 10 blocks away",
+  "upgrade.elementals.waterPickupRangeI.description": " Pickup water from 10 blocks away.",
 
   "upgrade.elementals.waterPickupRangeII": "Range II",
-  "upgrade.elementals.waterPickupRangeII.description": " Pickup water from 15 blocks away",
+  "upgrade.elementals.waterPickupRangeII.description": " Pickup water from 15 blocks away.",
 
   "upgrade.elementals.waterPickupEfficiencyI": "Efficiency I",
-  "upgrade.elementals.waterPickupEfficiencyI.description": " Get water from more diverse sources",
+  "upgrade.elementals.waterPickupEfficiencyI.description": " Get water from more diverse sources.",
 
   "upgrade.elementals.waterHealing": "Water Healing",
   "upgrade.elementals.waterHealing.description": " Using water to direct the flow of chi, it is possible to heal allies.",
@@ -139,5 +139,90 @@
   "upgrade.elementals.waterHealingEfficiencyI.description": " Water healing is more potent.",
 
   "upgrade.elementals.waterHealingEfficiencyII": "Efficiency II",
-  "upgrade.elementals.waterHealingEfficiencyII.description": " Water healing is even more potent."
+  "upgrade.elementals.waterHealingEfficiencyII.description": " Water healing is even more potent.",
+
+  "upgrade.elementals.fireIgnition": "Ignition",
+  "upgrade.elementals.fireIgnition.description": " A basic move allowing you to set the ground on fire or fuel furnaces.",
+
+  "upgrade.elementals.fireFlareUp": "Flare Up",
+  "upgrade.elementals.fireFlareUp.description": " Upgrade your Ignition ability to be even more powerful.",
+
+  "upgrade.elementals.blueFire": "Blue Fire",
+  "upgrade.elementals.blueFire.description": " By more effectively controlling your fire, you can make your abilities burn hotter, giving them a blue hue.",
+
+  "upgrade.elementals.fireWall": "Fire Wall",
+  "upgrade.elementals.fireWall.description": " Allows you to close off areas using fire, mostly effective defensively.",
+  "upgrade.elementals.fireWall.use": " Use: sneak",
+
+  "upgrade.elementals.fireWallWideI": "Wider Walls",
+  "upgrade.elementals.fireWallWideI.description": " Your walls of fire are wider.",
+
+  "upgrade.elementals.fireWallTallI": "Taller Walls",
+  "upgrade.elementals.fireWallTallI.description": " Your walls of fire are taller.",
+
+  "upgrade.elementals.fireSpikes": "Fire Spikes",
+  "upgrade.elementals.fireSpikes.description": " [FILL HERE], mostly effective offensively.",
+  "upgrade.elementals.fireSpikes.use": " Use: sneak",
+
+  "upgrade.elementals.fireSpikesCountI": "Count I",
+  "upgrade.elementals.fireSpikesCountI.description": " Increases the amount of fire spikes spawned.",
+
+  "upgrade.elementals.fireSpikesRangeI": "Range I",
+  "upgrade.elementals.fireSpikesRangeI.description": " Increases the amount of fire spikes spawned.",
+
+  "upgrade.elementals.fireArc": "Fire Arc",
+  "upgrade.elementals.fireArc.description": " A sweeping arc of fire that can knock back enemies, set them on fire and damage them from a distance.",
+
+  "upgrade.elementals.fireArcDamageI": "Damage I",
+  "upgrade.elementals.fireArcDamageI.description": " Deal more damage using fire arc.",
+
+  "upgrade.elementals.fireArcEfficiencyI": "Efficiency I",
+  "upgrade.elementals.fireArcEfficiencyI.description": " Use 25% less chi when casting fire arc.",
+
+  "upgrade.elementals.fireArcSpeedI": "Speed I",
+  "upgrade.elementals.fireArcSpeedI.description": " Make fire arc faster, allowing you to get more range",
+
+  "upgrade.elementals.fireArcSpeedII": "Speed II",
+  "upgrade.elementals.fireArcSpeedII.description": " Make fire arc even faster, allowing you to get more range",
+
+  "upgrade.elementals.fireArcMastery": "Fire Arc Mastery",
+  "upgrade.elementals.fireArcMastery.description": " Mastery of the fire arc ability allows you to deal more damage.",
+
+  "upgrade.elementals.fireBall": "Fireball",
+  "upgrade.elementals.fireBall.description": " By compressing a lot of fire in a tight space, you can create a fireball with devastating power.",
+  "upgrade.elementals.fireBall.use": " Use: hold (1s)",
+
+  "upgrade.elementals.fireBallSpeedI": "Speed I",
+  "upgrade.elementals.fireBallSpeedI.description": " Make fireball faster, allowing you to get more range",
+
+  "upgrade.elementals.fireBallSpeedII": "Speed II",
+  "upgrade.elementals.fireBallSpeedII.description": " Make fireball even faster, allowing you to get more range",
+
+  "upgrade.elementals.flameThrower": "Flamethrower",
+  "upgrade.elementals.flameThrower.description": " Makes a stream of fire to incinerate enemies in front of you.",
+  "upgrade.elementals.flameThrower.use": " Use: sneak",
+
+  "upgrade.elementals.fireShield": "Fire Shield",
+  "upgrade.elementals.fireShield.description": " By rapidly spinning fire around you, you can incinerate any projectile or enemy coming your way.",
+  "upgrade.elementals.fireShield.use": " Use: sneak",
+
+  "upgrade.elementals.fireJump": "Fire Jump",
+  "upgrade.elementals.fireJump.description": " Use a burst of fire to propel yourself high into the air.",
+  "upgrade.elementals.fireJump.use": " Use: l-click",
+
+  "upgrade.elementals.fireJumpRangeI": "Range I",
+  "upgrade.elementals.fireJumpRangeI.description": " Jump farther away.",
+
+  "upgrade.elementals.fireJumpRangeII": "Range II",
+  "upgrade.elementals.fireJumpRangeII.description": " Jump even farther away.",
+
+  "upgrade.elementals.fireJet": "Fire Jet",
+  "upgrade.elementals.fireJet.description": " Generate a powerful jet of fire to enable you to fly.",
+  "upgrade.elementals.fireJet.use": " Use: sprint + not touching ground",
+
+  "upgrade.elementals.fireJetSpeedI": "Speed I",
+  "upgrade.elementals.fireJetSpeedI.description": " Allows you to fly faster using the jet ability.",
+
+  "upgrade.elementals.fireJetSpeedII": "Speed II",
+  "upgrade.elementals.fireJetSpeedII.description": " Allows you to fly even faster using the jet ability."
 }

@@ -10,7 +10,7 @@ public class AbilityFire2 implements Ability {
         PlayerData playerData = PlayerData.get(bender.player);
 
 
-        if(deltaT >= 1000 && playerData.canUseUpgrade("fireball")){
+        if(deltaT >= 1000 && playerData.canUseUpgrade("fireBall")){
             FireElement.get().abilityList.get(6).onCall(bender,deltaT);
             return;
         }

@@ -1,5 +1,8 @@
 package dev.saperate.elementals.entities.fire;
 
+import dev.saperate.elementals.data.PlayerData;
+import dev.saperate.elementals.entities.water.WaterArcEntity;
+import dev.saperate.elementals.utils.SapsUtils;
 import net.minecraft.block.AbstractFireBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.*;
@@ -84,7 +87,7 @@ public class FireArcEntity extends ProjectileEntity {
         }
 
         super.tick();
-        Entity owner = getOwner();
+        PlayerEntity owner = getOwner();
         if (owner == null) {
             discard();
             return;
@@ -95,22 +98,23 @@ public class FireArcEntity extends ProjectileEntity {
             if (hit.getType() == HitResult.Type.ENTITY) {
                 LivingEntity entity = (LivingEntity) ((EntityHitResult) hit).getEntity();
                 entity.addVelocity(this.getVelocity().multiply(0.2f));
+                PlayerData plrData = PlayerData.get(owner);
+
+                float damage = isBlue() ? 3.5f : 2.5f;
+                if (plrData.canUseUpgrade("fireArcMastery")) {
+                    damage += 4;
+                } else if (plrData.canUseUpgrade("fireArcDamageI")) {
+                    damage += 2;
+                }
+
+
                 if (!entity.isFireImmune()) {
                     entity.setOnFireFor(8);
                 }
-                entity.damage(getDamageSources().inFire(), isBlue() ? 3.5f : 2.5f);
+                entity.damage(getDamageSources().inFire(),damage);
                 remove();
-            }
-            if (!getWorld().isClient) {
-                BlockPos blockDown = getBlockPos().down();
-                BlockState blockState = getWorld().getBlockState(blockDown);
-
-                //TODO add the better collision system
-                if ((!blockState.isAir() && getY() - getBlockPos().getY() == 0)) {
-                    getWorld().setBlockState(getBlockPos(), AbstractFireBlock.getState(getWorld(),getBlockPos()));
-                    remove();
-                    return;
-                }
+            }else if (SapsUtils.checkBlockCollision(this, 0.1f, false) != null) {
+                remove();
             }
         }
 
@@ -232,9 +236,9 @@ public class FireArcEntity extends ProjectileEntity {
         return this.getDataTracker().get(IS_CONTROLLED);
     }
 
-    public LivingEntity getOwner() {
+    public PlayerEntity getOwner() {
         Entity owner = this.getWorld().getEntityById(this.getDataTracker().get(OWNER_ID));
-        return (owner instanceof LivingEntity) ? (LivingEntity) owner : null;
+        return (owner instanceof PlayerEntity) ? (PlayerEntity) owner : null;
     }
 
     public void setOwner(LivingEntity owner) {

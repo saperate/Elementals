@@ -36,7 +36,15 @@ public class AbilityFireBall implements Ability {
         }
         onRemove(bender);
 
-        entity.setVelocity(bender.player, bender.player.getPitch(), bender.player.getYaw(), 0, 0.75f, 0);
+        PlayerData plrData = PlayerData.get(bender.player);
+
+        float speed = 1;
+        if (plrData.canUseUpgrade("fireArcSpeedII")) {
+            speed = 2;
+        } else if (plrData.canUseUpgrade("fireArcSpeedI")) {
+            speed = 1.5f;
+        }
+        entity.setVelocity(bender.player, bender.player.getPitch(), bender.player.getYaw(), 0, speed, 0);
     }
 
     @Override
@@ -46,12 +54,7 @@ public class AbilityFireBall implements Ability {
 
     @Override
     public void onRightClick(Bender bender, boolean started) {
-        FireBallEntity entity = (FireBallEntity) bender.abilityData;
-        if (entity == null) {
-            return;
-        }
-        entity.discard();
-        Bender.getBender((PlayerEntity) entity.getOwner()).setCurrAbility(null);
+        onRemove(bender);
     }
 
     @Override

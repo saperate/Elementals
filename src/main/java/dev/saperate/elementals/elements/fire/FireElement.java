@@ -19,26 +19,46 @@ import net.minecraft.world.event.GameEvent;
 public class FireElement extends Element {
     public FireElement() {
         super("Fire", new Upgrade[]{
-                new Upgrade("flareUp",new Upgrade[]{
-                        new Upgrade("blueFire"),
-                        new Upgrade("fireWall", new Upgrade[]{
-                                new Upgrade("widerWall"),
-                                new Upgrade("tallerWall")
+                new Upgrade("fireIgnition", new Upgrade[]{
+                        new Upgrade("fireFlareUp",new Upgrade[]{
+                                new Upgrade("blueFire"),
+                                new Upgrade("fireWall", new Upgrade[]{
+                                        new Upgrade("fireWallWideI"),
+                                        new Upgrade("fireWallTallI")
+                                }, true),
+                                new Upgrade("fireSpikes", new Upgrade[]{
+                                        new Upgrade("fireSpikesCountI"),
+                                        new Upgrade("fireSpikesRangeI")
+                                },false,1)
                         }, true),
-                        new Upgrade("fireSpikes", new Upgrade[]{
-                                new Upgrade("test"),
-                                new Upgrade("hello")
-                        },false,1)
-                }, true),
+                }),
                 new Upgrade("fireArc", new Upgrade[]{
-                        new Upgrade("fireball"),
-                        new Upgrade("hotterArcs", new Upgrade[]{
+                        new Upgrade("fireBall", new Upgrade[]{
+                                new Upgrade("fireBallSpeedI", new Upgrade[]{
+                                        new Upgrade("fireBallSpeedII")
+                                })
+                        }, false, -1),
+                        new Upgrade("fireArcDamageI", new Upgrade[]{
                                 new Upgrade("flameThrower"),
                                 new Upgrade("fireShield")
-                        }, true)
+                        }, true),
+                        new Upgrade("fireArcEfficiencyI", new Upgrade[]{
+                                new Upgrade("fireArcSpeedI", new Upgrade[]{
+                                        new Upgrade("fireArcSpeedII", new Upgrade[]{
+                                                new Upgrade("fireArcMastery")
+                                        })
+                                })
+                        }, false, 1)
                 }),
-                new Upgrade("fireAgility", new Upgrade[]{
-                        new Upgrade("jet")
+                new Upgrade("fireJump", new Upgrade[]{
+                        new Upgrade("fireJumpRangeI", new Upgrade[]{
+                                new Upgrade("fireJumpRangeII"),
+                                new Upgrade("fireJet", new Upgrade[]{
+                                        new Upgrade("fireJetSpeedI", new Upgrade[]{
+                                                new Upgrade("fireJetSpeedII")
+                                        })
+                                })
+                        })
                 })
         });
         addAbility(new AbilityFire1(),true);
