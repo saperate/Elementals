@@ -1,4 +1,18 @@
 {
+  "upgrade.elementals.exclusive": " Notice: this upgrade is exclusive with its sister upgrades.",
+
+  "upgrade.elementals.bendingAir": "Air Bending",
+  "upgrade.elementals.bendingAir.description": " Allows you to gain control of air, the element of freedom.",
+
+  "upgrade.elementals.bendingWater": "Water Bending",
+  "upgrade.elementals.bendingWater.description": " Allows you to gain control of water, the element of change.",
+
+  "upgrade.elementals.bendingEarth": "Earth Bending",
+  "upgrade.elementals.bendingEarth.description": " Allows you to gain control of earth, the element of substance.",
+
+  "upgrade.elementals.bendingFire": "Fire Bending",
+  "upgrade.elementals.bendingFire.description": " Allows you to gain control of fire, the element of power.",
+
   "upgrade.elementals.waterBubble": "Water Bubble",
   "upgrade.elementals.waterBubble.description": " A basic move allowing you to transport water or attack enemies.",
 

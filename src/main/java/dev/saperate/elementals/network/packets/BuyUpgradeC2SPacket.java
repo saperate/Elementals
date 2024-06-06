@@ -2,6 +2,7 @@ package dev.saperate.elementals.network.packets;
 
 import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.data.PlayerData;
+import dev.saperate.elementals.elements.Element;
 import dev.saperate.elementals.elements.Upgrade;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
@@ -21,6 +22,12 @@ public class BuyUpgradeC2SPacket {
         String name = buf.readString();
         server.execute(() -> {
             Bender bender = Bender.getBender(player);
+
+            if(name.startsWith("bending")){
+                bender.setElement(Element.getElementByName(name.replace("bending", "")), true);
+                bender.bindDefaultAbilities();
+                return;
+            }
 
             Upgrade upgrade = bender.getElement().root.getUpgradeByNameRecursive(name);
             if (upgrade == null) {

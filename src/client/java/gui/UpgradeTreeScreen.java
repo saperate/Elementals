@@ -45,14 +45,12 @@ public class UpgradeTreeScreen extends SpruceScreen {
     private int spacing = tileSize * 2;
     private double originX = 0, originY = 0;
     //we only need to store the center point since all the upgrade buttons are of equal sizes
-    private HashMap<Upgrade, Point> upgradeButtons = new HashMap<>();
-
-
-    private String tempString = "";//TODO remove
+    public HashMap<Upgrade, Point> upgradeButtons = new HashMap<>();
+    public Upgrade hoveredUpgrade = null;
 
 
     public UpgradeTreeScreen(@Nullable Screen parent) {
-        super(Text.literal(":)"));
+        super(Text.literal("why are you looking at this? :)"));
         this.parent = parent;
     }
 
@@ -78,16 +76,33 @@ public class UpgradeTreeScreen extends SpruceScreen {
         Upgrade root = bender.element.root;
 
         int len = root.children.length;
+        int halfSize = tileSize /2;
         if (len >= 1) {
+            context.fill(oX + halfSize - pathSize, oY + tileSize,
+                    oX + root.children[0].mod + halfSize + pathSize, oY + spacing,
+                    0xFF454545
+                    );
             drawTree(root.children[0], context, oX + root.children[0].mod, oY + spacing, 1);
         }
         if (len >= 2) {
+            context.fill(oX , oY + halfSize - pathSize ,
+                    oX - spacing , oY + halfSize + pathSize ,
+                    0xFF454545
+            );
             drawMirroredTree(root.children[1], context, oX - spacing, oY + root.children[1].mod, -1);
         }
         if (len >= 3) {
+            context.fill(oX + tileSize , oY + halfSize - pathSize ,
+                    oX + tileSize + spacing , oY + halfSize + pathSize ,
+                    0xFF454545
+            );
             drawMirroredTree(root.children[2], context, oX + spacing, oY + root.children[2].mod, 1);
         }
         if (len == 4) {
+            context.fill(oX + halfSize - pathSize, oY,
+                    oX + root.children[0].mod + halfSize + pathSize, oY - spacing,
+                    0xFF454545
+            );
             drawTree(root.children[3], context, oX + root.children[1].mod, oY - spacing, -1);
         }
 
@@ -127,24 +142,26 @@ public class UpgradeTreeScreen extends SpruceScreen {
     @Override
     public void mouseMoved(double mouseX, double mouseY) {
         super.mouseMoved(mouseX, mouseY);
-        Upgrade upgrade = mouseOnUpgrade(mouseX, mouseY);
-        if (upgrade != null) {
-            tempString = upgrade.name;
-        } else {
-            tempString = "";
-        }
+        hoveredUpgrade = mouseOnUpgrade(mouseX, mouseY);
     }
 
     @Override
     public void renderTitle(DrawContext graphics, int mouseX, int mouseY, float delta) {
-        graphics.drawCenteredTextWithShadow(this.textRenderer, bender.element.name, this.width / 2, 8, 0xFFFFFFFF);
-        graphics.drawCenteredTextWithShadow(this.textRenderer, tempString, this.width / 2, 24, 0xFFc4c4c4);
+        String upgradeName = hoveredUpgrade == null ? "" : hoveredUpgrade.name;
 
-        if (!tempString.isEmpty()) {
+        graphics.drawCenteredTextWithShadow(this.textRenderer, bender.element.name, this.width / 2, 8, 0xFFFFFFFF);
+
+        //Use this when you wanna know what the upgrade name is
+        //graphics.drawCenteredTextWithShadow(this.textRenderer, upgradeName, this.width / 2, 24, 0xFFc4c4c4);
+
+        if (!upgradeName.isEmpty()) {
             ArrayList<Text> tooltip = new ArrayList<>();
-            SapsUtils.addTranslatable(tooltip,"upgrade.elementals." + tempString);
-            SapsUtils.addTranslatableAutomaticLineBreaks(tooltip,"upgrade.elementals." + tempString + ".description",5);
-            SapsUtils.addTranslatableAutomaticLineBreaks(tooltip,"upgrade.elementals." + tempString + ".use",6);
+            SapsUtils.addTranslatable(tooltip,"upgrade.elementals." + upgradeName);
+            SapsUtils.addTranslatableAutomaticLineBreaks(tooltip,"upgrade.elementals." + upgradeName + ".description",5);
+            SapsUtils.addTranslatableAutomaticLineBreaks(tooltip,"upgrade.elementals." + upgradeName + ".use",6);
+            if(hoveredUpgrade.parent.exclusive){
+                SapsUtils.addTranslatableAutomaticLineBreaks(tooltip,"upgrade.elementals.exclusive", 5);
+            }
             graphics.drawTooltip(this.textRenderer, tooltip, mouseX, mouseY);
         }
     }

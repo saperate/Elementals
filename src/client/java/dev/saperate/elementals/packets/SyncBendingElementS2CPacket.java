@@ -3,6 +3,7 @@ package dev.saperate.elementals.packets;
 import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.data.ClientBender;
 import dev.saperate.elementals.elements.Element;
+import gui.UpgradeTreeScreen;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -19,8 +20,17 @@ public class SyncBendingElementS2CPacket {
                                PacketByteBuf buf, PacketSender responseSender) {
 
         ClientBender bender = ClientBender.get();
-
         String e = buf.readString();
-        bender.element = Element.getElementByName(e);
+
+        client.execute(() -> {
+            if (bender.element != null && e.equals(bender.element.name)) {
+                return;
+            }
+            bender.element = Element.getElementByName(e);
+            if (client.currentScreen instanceof UpgradeTreeScreen treeScreen) {
+                treeScreen.upgradeButtons.clear();
+                treeScreen.hoveredUpgrade = null;
+            }
+        });
     }
 }

@@ -21,7 +21,8 @@ public class ElementArgumentType implements ArgumentType<Element> {
     private static final Collection<String> EXAMPLES = List.of(
             "water",
             "air",
-            "fire"
+            "fire",
+            "earth"
     );
     public static final DynamicCommandExceptionType INVALID_ELEMENT = new DynamicCommandExceptionType(o -> Text.literal("Invalid element: " + o));
     @Override

@@ -75,23 +75,7 @@ public class BendingCommand {
 
         bender.boundAbilities = new Ability[4];
         plrData.boundAbilities = new Ability[4];
-
-
-
-        int abilitySize = newElement.bindableAbilities.size();
-        if (abilitySize >= 1) {
-            bender.bindAbility(newElement.getBindableAbility(0), 0);
-        }
-        if (abilitySize >= 2) {
-            bender.bindAbility(newElement.getBindableAbility(1), 1);
-        }
-        if (abilitySize >= 3) {
-            bender.bindAbility(newElement.getBindableAbility(2), 2);
-        }
-        if (abilitySize >= 4) {
-            bender.bindAbility(newElement.getBindableAbility(3), 3);
-        }
-
+        bender.bindDefaultAbilities();
 
         context.getSource().sendFeedback((() -> Text.of(
                 bender.player.getEntityName() + " can now bend: " + bender.getElement().name)

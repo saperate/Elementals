@@ -15,14 +15,14 @@ public abstract class Element{
     public final String name;
     public Upgrade root;
 
+    public Element(String name, Upgrade root){
+        elementList.add(this);
+        this.name = name;
+        this.root = root;
+    }
 
     public Element(String name, Upgrade[] upgrades){
-        if (upgrades.length > 4){
-            throw new RuntimeException("Element " + name + " had more than 4 abilities in its upgrade path!");
-        }
-        this.name = name;
-        elementList.add(this);
-        this.root = new Upgrade(name,upgrades);
+        this(name,new Upgrade(name,upgrades));
     }
 
     public Element(String name){

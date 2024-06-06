@@ -95,7 +95,7 @@ public class Bender {
         }
 
         if (sync && !player.getWorld().isClient && player.getServer() != null) {
-            StateDataSaverAndLoader.getServerState(player.getServer()).players.get(player.getUuid()).element = element;
+            PlayerData.get(player).element = element;
             syncBending(this);
         }
     }
@@ -145,6 +145,22 @@ public class Bender {
         return builder;
     }
 
+
+    public void bindDefaultAbilities(){
+        int abilitySize = element.bindableAbilities.size();
+        if (abilitySize >= 1) {
+            bindAbility(element.getBindableAbility(0), 0);
+        }
+        if (abilitySize >= 2) {
+            bindAbility(element.getBindableAbility(1), 1);
+        }
+        if (abilitySize >= 3) {
+            bindAbility(element.getBindableAbility(2), 2);
+        }
+        if (abilitySize >= 4) {
+            bindAbility(element.getBindableAbility(3), 3);
+        }
+    }
 
     @Override
     public String toString() {
