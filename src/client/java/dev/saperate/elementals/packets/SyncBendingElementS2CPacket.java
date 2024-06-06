@@ -28,8 +28,7 @@ public class SyncBendingElementS2CPacket {
             }
             bender.element = Element.getElementByName(e);
             if (client.currentScreen instanceof UpgradeTreeScreen treeScreen) {
-                treeScreen.upgradeButtons.clear();
-                treeScreen.hoveredUpgrade = null;
+                treeScreen.close();
             }
         });
     }

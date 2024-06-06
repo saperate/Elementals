@@ -35,6 +35,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import static dev.saperate.elementals.Elementals.MODID;
 import static dev.saperate.elementals.network.ModMessages.BUY_UPGRADE_PACKET_ID;
 import static dev.saperate.elementals.network.ModMessages.GET_UPGRADE_LIST_PACKET_ID;
 
@@ -71,7 +72,9 @@ public class UpgradeTreeScreen extends SpruceScreen {
         int oY = MathHelper.floor(originY);
 
         context.drawTexture(CreateWorldScreen.LIGHT_DIRT_BACKGROUND_TEXTURE, 0, 0, -oX, -oY, width, height, 32, 32);
-        context.fill(oX, oY, oX + tileSize, oY + tileSize, 0xFFFFFFFF);
+        context.drawTexture(new Identifier(MODID, "textures/gui/upgrade_button_on.png"),
+                oX, oY, 0, 0, tileSize, tileSize, 32 ,32);
+
 
         Upgrade root = bender.element.root;
 
@@ -166,22 +169,35 @@ public class UpgradeTreeScreen extends SpruceScreen {
         }
     }
 
-    public void drawUpgradeButton(int x1, int y1, int x2, int y2, DrawContext context, Upgrade upgrade) {
-        int color;
+    public void drawUpgradeButton(int x1, int y1, DrawContext context, Upgrade upgrade) {
         if (bender.upgrades.containsKey(upgrade)) {
-            color = 0xFFFFFFFF;
+            context.drawTexture(new Identifier(MODID, "textures/gui/upgrade_button_on.png"),
+                    x1, y1, 0, 0, tileSize, tileSize, 32 ,32);
+
+            String icon = Text.translatable("upgrade.elementals." + upgrade.name + ".icon").getString();
+            if(!icon.equals("upgrade.elementals." + upgrade.name + ".icon")){
+                context.drawTexture(new Identifier(MODID,"textures/gui/" + icon + "_icon_on.png"),
+                        x1, y1, 0, 0, tileSize, tileSize, 32 ,32);
+            }
         } else {
-            color = 0xFF9b9b9b;
+            context.drawTexture(new Identifier(MODID, "textures/gui/upgrade_button_off.png"),
+                    x1, y1, 0, 0, tileSize, tileSize, 32 ,32);
+
+            String icon = Text.translatable("upgrade.elementals." + upgrade.name + ".icon").getString();
+            if(!icon.equals("upgrade.elementals." + upgrade.name + ".icon")){
+                context.drawTexture(new Identifier(MODID, "textures/gui/" + icon + "_icon_off.png"),
+                        x1, y1, 0, 0, tileSize, tileSize, 32 ,32);
+            }
         }
-        context.fill(x1, y1, x2, y2, color);
-        upgradeButtons.put(upgrade, new Point((x1 + x2) / 2, (y1 + y2) / 2));
+
+        upgradeButtons.put(upgrade, new Point(x1 + tileSize/2, y1 + tileSize / 2));
     }
 
 
     //BEWARE: beyond this point is shitty code that might be hard to understand, read at your own peril traveller
     public void drawTree(Upgrade parent, DrawContext context, int oX, int oY, int mult) {
         //Draw the node
-        drawUpgradeButton(oX, oY, oX + tileSize, oY + tileSize, context, parent);
+        drawUpgradeButton(oX, oY, context, parent);
         if (parent.children.length == 0) {
             return;
         }
@@ -230,7 +246,7 @@ public class UpgradeTreeScreen extends SpruceScreen {
 
     public void drawMirroredTree(Upgrade parent, DrawContext context, int oX, int oY, int mult) {
         //Draw the node
-        drawUpgradeButton(oX, oY, oX + tileSize, oY + tileSize, context, parent);
+        drawUpgradeButton(oX, oY, context, parent);
         if (parent.children.length == 0) {
             return;
         }
