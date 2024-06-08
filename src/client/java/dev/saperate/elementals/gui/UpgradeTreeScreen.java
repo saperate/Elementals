@@ -1,4 +1,4 @@
-package gui;
+package dev.saperate.elementals.gui;
 
 import dev.lambdaurora.spruceui.Position;
 import dev.lambdaurora.spruceui.background.Background;

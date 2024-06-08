@@ -15,6 +15,33 @@ public class ClientBender {
     public Ability currAbility;
     public PlayerEntity player;
     public HashMap<Upgrade, Boolean> upgrades = new HashMap<>();
+    private double castTime = -1;
+    public float chi = 100;
+
+    public void startCasting() {
+        castTime = 0;
+    }
+
+    public void stopCasting(){
+        castTime = -1;
+    }
+
+    public boolean isCasting(){
+        return castTime != -1;
+    }
+
+    public double getCastTime() {
+        return castTime;
+    }
+
+    public void tick(){
+        if(castTime >= 0){
+            castTime += 0.05;
+        }
+        //We don't cap chi to 100 here since we also want to know when we last used a move
+        //so when it gets higher than 100 we can use that as a countdown for when we will not display the chi counter anymore
+        chi += Bender.CHI_REGENERATION_RATE;
+    }
 
     private ClientBender() {
 

@@ -17,6 +17,8 @@ public class ModMessages {
     public static final Identifier SYNC_UPGRADE_LIST_PACKET_ID = new Identifier(MODID,"sync_upgrades");
     public static final Identifier GET_UPGRADE_LIST_PACKET_ID = new Identifier(MODID,"get_upgrades");
     public static final Identifier BUY_UPGRADE_PACKET_ID = new Identifier(MODID,"buy_upgrade");
+    public static final Identifier SYNC_CHI_PACKET_ID = new Identifier(MODID,"sync_chi");
+
     public static void registerC2SPackets(){
         ServerPlayNetworking.registerGlobalReceiver(MOUSE_PACKET_ID, MouseC2SPacket::receive);
         ServerPlayNetworking.registerGlobalReceiver(ABILITY1_PACKET_ID, Ability1C2SPacket::receive);

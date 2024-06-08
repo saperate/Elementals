@@ -27,8 +27,11 @@ public abstract class PlayerEntityMixin {
     @Inject(at = @At("TAIL"), method = "tick")
     private void render(CallbackInfo ci) {
         PlayerEntity plr = ((PlayerEntity) (Object) this);
-        if (plr == MinecraftClient.getInstance().player && ClientBender.get().player != plr) {
-            ClientBender.get().player = plr;
+        if (plr == MinecraftClient.getInstance().player) {
+            if(ClientBender.get().player != plr){
+                ClientBender.get().player = plr;
+            }
+            ClientBender.get().tick();
         }
     }
 }

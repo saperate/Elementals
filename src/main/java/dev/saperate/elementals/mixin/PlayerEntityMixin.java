@@ -70,6 +70,7 @@ public abstract class PlayerEntityMixin {
         if(bender == null){
             return;
         }
+        bender.tick();
         if(bender.castTime != null){
             return;
         }

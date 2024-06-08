@@ -10,18 +10,22 @@ import dev.saperate.elementals.entities.fire.FireBlockEntityRenderer;
 import dev.saperate.elementals.entities.fire.FireShieldEntityRenderer;
 import dev.saperate.elementals.entities.models.common.DecoyPlayerModel;
 import dev.saperate.elementals.entities.models.water.WaterBladeModel;
+import dev.saperate.elementals.gui.CastTimerHudOverlay;
+import dev.saperate.elementals.gui.ChiHudOverlay;
 import dev.saperate.elementals.keys.abilities.KeyAbility1;
 import dev.saperate.elementals.keys.abilities.KeyAbility2;
 import dev.saperate.elementals.keys.abilities.KeyAbility3;
 import dev.saperate.elementals.keys.abilities.KeyAbility4;
 import dev.saperate.elementals.keys.gui.GuiKey;
 import dev.saperate.elementals.packets.SyncBendingElementS2CPacket;
+import dev.saperate.elementals.packets.SyncChiS2CPacket;
 import dev.saperate.elementals.packets.SyncCurrAbilityS2CPacket;
 import dev.saperate.elementals.packets.SyncUpgradeListS2CPacket;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.client.render.entity.model.EntityModelLayer;
 import net.minecraft.util.Identifier;
 
@@ -45,6 +49,10 @@ public class ElementalsClient implements ClientModInitializer {
 		new GuiKey();
 
 
+		HudRenderCallback.EVENT.register(new CastTimerHudOverlay());
+		HudRenderCallback.EVENT.register(new ChiHudOverlay());
+
+
 		EntityModelLayerRegistry.registerModelLayer(MODEL_WATER_BLADE_LAYER, WaterBladeModel::getTexturedModelData);
 		EntityModelLayerRegistry.registerModelLayer(MODEL_DECOY_PLAYER, DecoyPlayerModel::getTexturedModelData);
 
@@ -54,6 +62,7 @@ public class ElementalsClient implements ClientModInitializer {
 		ClientPlayNetworking.registerGlobalReceiver(SYNC_CURR_ABILITY_PACKET_ID, SyncCurrAbilityS2CPacket::receive);
 		ClientPlayNetworking.registerGlobalReceiver(SYNC_ELEMENT_PACKET_ID, SyncBendingElementS2CPacket::receive);
 		ClientPlayNetworking.registerGlobalReceiver(SYNC_UPGRADE_LIST_PACKET_ID, SyncUpgradeListS2CPacket::receive);
+		ClientPlayNetworking.registerGlobalReceiver(SYNC_CHI_PACKET_ID, SyncChiS2CPacket::receive);
 	}
 
 	public void registerEntityRenderers(){

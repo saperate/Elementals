@@ -13,8 +13,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
-import static dev.saperate.elementals.network.ModMessages.SYNC_CURR_ABILITY_PACKET_ID;
-import static dev.saperate.elementals.network.ModMessages.SYNC_ELEMENT_PACKET_ID;
+import static dev.saperate.elementals.network.ModMessages.*;
 
 public class Bender {
     public static Map<UUID, Bender> benders = new HashMap<>();
@@ -26,6 +25,8 @@ public class Bender {
     public Ability currAbility;
     @Nullable
     public Object abilityData;
+    public float chi = 100;
+    public static final float CHI_REGENERATION_RATE = 1;
 
     public Bender(PlayerEntity player, Element element) {
         this.player = player;
@@ -62,6 +63,7 @@ public class Bender {
                 return;
             }
             if (currAbility != null && castTime != null) {
+                reduceChi(25);
                 currAbility.onCall(this, System.currentTimeMillis() - castTime);
                 castTime = null;
             }
@@ -70,6 +72,10 @@ public class Bender {
 
     public static Bender getBender(PlayerEntity player) {
         return benders.get(player.getUuid());
+    }
+
+    public void tick(){
+        chi = Math.min(100, chi + Bender.CHI_REGENERATION_RATE);
     }
 
     public void setCurrAbility(Ability ability) {
@@ -120,9 +126,10 @@ public class Bender {
      * This collects necessary information and outputs it in a stylised manner, the brakets
      * are not yet closed which makes it easy to add more information if necessary, when you are done
      * modifying the builder, simply append "\n}" and it will look good
+     *
      * @return A stylised string builder of the information present
      */
-    public StringBuilder getStatus(){
+    public StringBuilder getStatus() {
         return getStatus(new StringBuilder());
     }
 
@@ -130,9 +137,10 @@ public class Bender {
      * This collects necessary information and outputs it in a stylised manner, the brakets
      * are not yet closed which makes it easy to add more information if necessary, when you are done
      * modifying the builder, simply append "\n}" and it will look good
+     *
      * @return A stylised string builder of the information present
      */
-    public StringBuilder getStatus(StringBuilder builder){
+    public StringBuilder getStatus(StringBuilder builder) {
         builder.append(player.getGameProfile().getName()).append(" = {");
         builder.append("\n    Element = ").append(getElement().name);
         builder.append("\n    Current ability = ").append(Ability.getName(currAbility));
@@ -146,7 +154,7 @@ public class Bender {
     }
 
 
-    public void bindDefaultAbilities(){
+    public void bindDefaultAbilities() {
         int abilitySize = element.bindableAbilities.size();
         if (abilitySize >= 1) {
             bindAbility(element.getBindableAbility(0), 0);
@@ -160,6 +168,18 @@ public class Bender {
         if (abilitySize >= 4) {
             bindAbility(element.getBindableAbility(3), 3);
         }
+    }
+
+    public void reduceChi(float val) {
+        chi -= val;
+        syncChi();
+        System.out.println(chi);
+    }
+
+    public void syncChi() {
+        PacketByteBuf buf = PacketByteBufs.create();
+        buf.writeFloat(chi);
+        ServerPlayNetworking.send((ServerPlayerEntity) player, SYNC_CHI_PACKET_ID, buf);
     }
 
     @Override
