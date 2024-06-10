@@ -6,6 +6,10 @@ import dev.saperate.elementals.elements.Upgrade;
 import net.minecraft.block.*;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
+import net.minecraft.item.Items;
+import net.minecraft.item.PotionItem;
+import net.minecraft.potion.PotionUtil;
+import net.minecraft.potion.Potions;
 import net.minecraft.state.property.IntProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.hit.BlockHitResult;
@@ -13,6 +17,8 @@ import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.joml.Vector3f;
+
+import static dev.saperate.elementals.utils.SapsUtils.getEntityLookVector;
 
 public class WaterElement extends Element {
 
@@ -122,9 +128,9 @@ public class WaterElement extends Element {
         PlayerData plrData = PlayerData.get(player);
 
         int range = 5;
-        if(plrData.canUseUpgrade("waterPickupRangeII")){
+        if (plrData.canUseUpgrade("waterPickupRangeII")) {
             range = 15;
-        } else if(plrData.canUseUpgrade("waterPickupRangeI")){
+        } else if (plrData.canUseUpgrade("waterPickupRangeI")) {
             range = 10;
         }
 
@@ -133,39 +139,55 @@ public class WaterElement extends Element {
         BlockState blockState = player.getEntityWorld().getBlockState(hit.getBlockPos());
 
 
-        if (hit.getType() == HitResult.Type.BLOCK && isBlockBendable(hit.getBlockPos(),player.getWorld(),true)) {
-            if (blockState.get(IntProperty.of("level", 0, 15)).equals(0)) {//TODO maybe make this less strict
-                if(consumeWater ){
-                    if(blockState.contains(Properties.WATERLOGGED)){
-                        ((Waterloggable) blockState.getBlock()).tryFillWithFluid(player.getWorld(),hit.getBlockPos(),blockState, Blocks.AIR.getDefaultState().getFluidState());
-                    }else{
+        if (hit.getType() == HitResult.Type.BLOCK && isBlockBendable(hit.getBlockPos(), player.getWorld(), true, plrData.canUseUpgrade("waterPickupEfficiencyI"))) {
+            if (blockState.get(IntProperty.of("level", 0, 15)).equals(0)) {
+                if (consumeWater) {
+                    if (blockState.contains(Properties.WATERLOGGED)) {
+                        ((Waterloggable) blockState.getBlock()).tryFillWithFluid(player.getWorld(), hit.getBlockPos(), blockState, Blocks.AIR.getDefaultState().getFluidState());
+                    } else {
                         player.getWorld().setBlockState(hit.getBlockPos(), Blocks.AIR.getDefaultState());
                     }
                 }
-               return hit.getPos().toVector3f();
+                return hit.getPos().toVector3f();
             }
         }
+
+        //checks if we have any water bottles in our inventory, if we do, consume it do cast our stuff
+        if (player.getInventory().containsAny((stack) -> {
+            if (PotionUtil.getPotion(stack).equals(Potions.WATER)) {
+                player.getInventory().removeOne(stack);
+                player.getInventory().insertStack(Items.GLASS_BOTTLE.getDefaultStack());
+                return true;
+            }
+            return false;
+        })) {
+            return getEntityLookVector(player, 2.5f).toVector3f();
+        }
+
         return null;
     }
 
-    public static boolean isBlockBendable(BlockPos pos, World world, boolean requireFullBlock){
+    public static boolean isBlockBendable(BlockPos pos, World world, boolean requireFullBlock, boolean canUseDiverseBlocks) {
         BlockState bState = world.getBlockState(pos);
         Block block = bState.getBlock();
 
 
-        if(block.equals(Blocks.WATER)
-                || block.equals(Blocks.ICE)
-                || block.equals(Blocks.PACKED_ICE)
-                || block.equals(Blocks.BLUE_ICE)
-                || block.equals(Blocks.POWDER_SNOW)
-                || block.equals(Blocks.WATER_CAULDRON)
-                || block.equals(Blocks.POWDER_SNOW_CAULDRON)
-                || block.equals(Blocks.SNOW)
-                || block.equals(Blocks.SNOW_BLOCK)){
+        if (block.equals(Blocks.WATER) ||
+                canUseDiverseBlocks && (
+                        block.equals(Blocks.ICE)
+                                || block.equals(Blocks.PACKED_ICE)
+                                || block.equals(Blocks.BLUE_ICE)
+                                || block.equals(Blocks.POWDER_SNOW)
+                                || block.equals(Blocks.WATER_CAULDRON)
+                                || block.equals(Blocks.POWDER_SNOW_CAULDRON)
+                                || block.equals(Blocks.SNOW)
+                                || block.equals(Blocks.SNOW_BLOCK)
+                )
+        ) {
             return true;
         }
 
-        return  (bState.contains(Properties.WATERLOGGED) && bState.get(Properties.WATERLOGGED) && !requireFullBlock);
+        return (bState.contains(Properties.WATERLOGGED) && bState.get(Properties.WATERLOGGED) && !requireFullBlock);
     }
 
     public static Element get() {

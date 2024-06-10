@@ -124,7 +124,9 @@ public class WaterCubeEntity extends ProjectileEntity {
     }
 
     public void collidesWithGround() {
-        getWorld().setBlockState(getBlockPos(), Blocks.WATER.getDefaultState());
+        if(!getEntityWorld().getRegistryKey().equals(World.NETHER)){
+            getWorld().setBlockState(getBlockPos(), Blocks.WATER.getDefaultState());
+        }
         discard();
     }
 

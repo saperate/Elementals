@@ -25,8 +25,7 @@ public class Bender {
     public Ability currAbility;
     @Nullable
     public Object abilityData;
-    public float chi = 100;
-    public static final float CHI_REGENERATION_RATE = 1;
+    public static final float CHI_REGENERATION_RATE = 0.05f;//this is per tick (1/20 of a second)
 
     public Bender(PlayerEntity player, Element element) {
         this.player = player;
@@ -74,8 +73,13 @@ public class Bender {
         return benders.get(player.getUuid());
     }
 
+    public static Bender getBender(UUID player) {
+        return benders.get(player);
+    }
+
     public void tick(){
-        chi = Math.min(100, chi + Bender.CHI_REGENERATION_RATE);
+        PlayerData data = PlayerData.get(player);
+        data.chi = Math.min(100, data.chi + Bender.CHI_REGENERATION_RATE);
     }
 
     public void setCurrAbility(Ability ability) {
@@ -171,14 +175,13 @@ public class Bender {
     }
 
     public void reduceChi(float val) {
-        chi -= val;
+        PlayerData.get(player).chi -= val;
         syncChi();
-        System.out.println(chi);
     }
 
     public void syncChi() {
         PacketByteBuf buf = PacketByteBufs.create();
-        buf.writeFloat(chi);
+        buf.writeFloat(PlayerData.get(player).chi);
         ServerPlayNetworking.send((ServerPlayerEntity) player, SYNC_CHI_PACKET_ID, buf);
     }
 

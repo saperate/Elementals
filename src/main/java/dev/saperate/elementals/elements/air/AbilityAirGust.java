@@ -77,7 +77,6 @@ public class AbilityAirGust implements Ability {
 
             //the reason why we make the y multiplier higher is because i makes the player "float"
             //which is more fun c:
-            //TODO add controlled knockback so that if you shift you dont get knocked back
             player.addVelocity(pos.multiply(-0.0025f, -0.020f, -0.0025f));
             //reset it so we don't kill ourselves when we gently glide down
             if(player.getVelocity().y <= -0.020f){

@@ -11,10 +11,10 @@ public class ChiHudOverlay implements HudRenderCallback {
 
     @Override
     public void onHudRender(DrawContext drawContext, float tickDelta) {
-        float chi = MathHelper.clamp(ClientBender.get().chi, 0 , 100);
-        if(chi >= 200){
+        if(ClientBender.get().chi >= 115){
             return;
         }
+        float chi = MathHelper.clamp(ClientBender.get().chi, 0 , 100);
 
         MinecraftClient client = MinecraftClient.getInstance();
         int x = client.getWindow().getScaledWidth();

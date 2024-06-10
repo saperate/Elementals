@@ -12,7 +12,6 @@ public class AbilityWaterHealing implements Ability {
 
     @Override
     public void onCall(Bender bender, long deltaT) {
-        //TODO find bug
         PlayerEntity player = bender.player;
         Vector3f pos = WaterElement.canBend(player, true);
 

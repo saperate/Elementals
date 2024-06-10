@@ -109,7 +109,6 @@ public class AbilityAir4 implements Ability {
 
     @Override
     public void onRemove(Bender bender) {
-        //TODO add upgrade to uncast before the timer, otherwise they have to punch their bodies or smth
 
         Object[] data = (Object[]) bender.abilityData;
 

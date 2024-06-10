@@ -74,7 +74,7 @@ public class AbilityWater3 implements Ability {
             return;
         }
 
-        //TODO add a system that if is not touching water search inventory for water containers
+
         if (!bender.player.isOnGround() && ((int) bender.abilityData) < 0 && PlayerData.get(player).canUseUpgrade("waterTower")) {
             WaterElement.get().abilityList.get(16).onCall(bender, -1);//dT doesn't matter here
         } else if (bender.abilityData.equals(1) && (bender.player.isOnGround() || bender.player.isSubmergedInWater())) {

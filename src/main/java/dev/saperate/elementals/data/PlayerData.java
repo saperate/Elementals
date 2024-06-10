@@ -3,17 +3,24 @@ package dev.saperate.elementals.data;
 import dev.saperate.elementals.elements.Ability;
 import dev.saperate.elementals.elements.Element;
 import dev.saperate.elementals.elements.Upgrade;
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.network.PacketByteBuf;
+import net.minecraft.server.network.ServerPlayerEntity;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
+import static dev.saperate.elementals.network.ModMessages.SYNC_CHI_PACKET_ID;
+
 public class PlayerData {
     public Ability[] boundAbilities = new Ability[4];
     public Element element = Element.elementList.get(0);
     public HashMap<Upgrade, Boolean> upgrades = new HashMap<>();
+    public float chi = 100;
 
 
     /**

@@ -73,7 +73,7 @@ public class AbilityWaterTower implements Ability {
 
         if (!player.isSubmergedInWater() && (player.isOnGround()
                 || ((WaterTowerEntity) bender.abilityData).getY() - 0.25f > player.getY()
-                || (!isAir && !WaterElement.isBlockBendable(hit.getBlockPos(), player.getWorld(), false)))) {
+                || (!isAir && !WaterElement.isBlockBendable(hit.getBlockPos(), player.getWorld(), false, plrData.canUseUpgrade("waterPickupEfficiencyI"))))) {
             //TODO we could make it so players can bend while using this move by delegating this part to the entity
             //TODO we could even make an upgrade that switches between the two behaviors
             onRemove(bender);
