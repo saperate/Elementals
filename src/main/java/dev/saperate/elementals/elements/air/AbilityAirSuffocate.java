@@ -15,7 +15,14 @@ import static dev.saperate.elementals.utils.SapsUtils.raycastFull;
 public class AbilityAirSuffocate implements Ability {
     @Override
     public void onCall(Bender bender, long deltaT) {
-        bender.reduceChi(5);
+        if (!bender.reduceChi(5)) {
+            if (bender.abilityData == null) {
+                bender.setCurrAbility(null);
+            } else {
+                onRemove(bender);
+            }
+            return;
+        }
         PlayerEntity player = bender.player;
 
         HitResult hit = raycastFull(player,12,false);
@@ -63,7 +70,14 @@ public class AbilityAirSuffocate implements Ability {
             onRemove(bender);
             return;
         }
-        bender.reduceChi(0.2f);
+        if (!bender.reduceChi(0.2f)) {
+            if (bender.abilityData == null) {
+                bender.setCurrAbility(null);
+            } else {
+                onRemove(bender);
+            }
+            return;
+        }
         double distance = ((WaterHelmetEntity)bender.abilityData)
                 .getOwner().getPos().subtract(bender.player.getPos()).length();
 

@@ -23,7 +23,14 @@ public class AbilityEarthChunkPickup implements Ability {
             bender.setCurrAbility(null);
             return;
         }
-        bender.reduceChi(30);
+        if (!bender.reduceChi(30)) {
+            if (bender.abilityData == null) {
+                bender.setCurrAbility(null);
+            } else {
+                onRemove(bender);
+            }
+            return;
+        }
         LinkedList<EarthBlockEntity> entities = new LinkedList<>();
         BlockPos pos = (BlockPos) vars[2];
 

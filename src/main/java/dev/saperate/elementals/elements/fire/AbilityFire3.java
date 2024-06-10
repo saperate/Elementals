@@ -30,7 +30,14 @@ public class AbilityFire3 implements Ability {
     @Override
     public void onLeftClick(Bender bender, boolean started) {
         if (bender.abilityData == null) {
-            bender.reduceChi(15);
+            if (!bender.reduceChi(15)) {
+            if (bender.abilityData == null) {
+                bender.setCurrAbility(null);
+            } else {
+                onRemove(bender);
+            }
+            return;
+        }
             bender.abilityData = false;
             PlayerEntity player = bender.player;
 
@@ -81,7 +88,14 @@ public class AbilityFire3 implements Ability {
             bender.abilityData = true;
             player.fallDistance = 0;
 
-            bender.reduceChi(0.5f);
+            if (!bender.reduceChi(0.5f)) {
+            if (bender.abilityData == null) {
+                bender.setCurrAbility(null);
+            } else {
+                onRemove(bender);
+            }
+            return;
+        }
             serverSummonParticles((ServerWorld) player.getWorld(),
                     PlayerData.get(player).canUseUpgrade("blueFire") ?
                             ParticleTypes.SOUL_FIRE_FLAME : ParticleTypes.FLAME, player, player.getRandom(),

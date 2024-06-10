@@ -22,7 +22,14 @@ import static dev.saperate.elementals.elements.earth.EarthElement.makeHole;
 public class AbilityEarthRavine implements Ability {
     @Override
     public void onCall(Bender bender, long deltaT) {
-        bender.reduceChi(15);
+        if (!bender.reduceChi(15)) {
+            if (bender.abilityData == null) {
+                bender.setCurrAbility(null);
+            } else {
+                onRemove(bender);
+            }
+            return;
+        }
         PlayerEntity player = bender.player;
         Random rnd = player.getRandom();
         PlayerData plrData = PlayerData.get(player);

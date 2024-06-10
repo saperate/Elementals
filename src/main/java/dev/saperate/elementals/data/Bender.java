@@ -175,7 +175,12 @@ public class Bender {
     }
 
     public boolean reduceChi(float val) {
-        PlayerData.get(player).chi -= val;
+        PlayerData data = PlayerData.get(player);
+        float newChi = data.chi - val;
+        if(newChi < 0){
+            return false;
+        }
+        data.chi = newChi;
         syncChi();
         return true;
     }

@@ -25,7 +25,14 @@ public class AbilityEarthJump implements Ability {
             return;
         }
 
-        bender.reduceChi(15);
+        if (!bender.reduceChi(15)) {
+            if (bender.abilityData == null) {
+                bender.setCurrAbility(null);
+            } else {
+                onRemove(bender);
+            }
+            return;
+        }
 
         PlayerData plrData = PlayerData.get(player);
         float power = 1;

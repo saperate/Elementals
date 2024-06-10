@@ -30,6 +30,11 @@ public class AbilityAir4 implements Ability {
         }
 
         if (!bender.reduceChi(30)) {
+            if (bender.abilityData == null) {
+                bender.setCurrAbility(null);
+            } else {
+                onRemove(bender);
+            }
             return;
         }
 

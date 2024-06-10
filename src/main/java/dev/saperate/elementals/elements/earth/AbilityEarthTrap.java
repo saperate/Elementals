@@ -33,7 +33,14 @@ public class AbilityEarthTrap implements Ability {
             block.setBlockState(state);
             block.setModelShapeId(2);
             player.getWorld().spawnEntity(block);
-            bender.reduceChi(5);
+            if (!bender.reduceChi(5)) {
+            if (bender.abilityData == null) {
+                bender.setCurrAbility(null);
+            } else {
+                onRemove(bender);
+            }
+            return;
+        }
 
             bender.abilityData = new Object[]{victim, block};
             bender.setCurrAbility(this);
@@ -66,7 +73,14 @@ public class AbilityEarthTrap implements Ability {
             return;
         }
 
-        bender.reduceChi(0.25f);
+        if (!bender.reduceChi(0.25f)) {
+            if (bender.abilityData == null) {
+                bender.setCurrAbility(null);
+            } else {
+                onRemove(bender);
+            }
+            return;
+        }
 
         Object[] vars = ((Object[]) bender.abilityData);
 

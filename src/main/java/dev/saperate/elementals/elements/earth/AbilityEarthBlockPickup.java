@@ -15,7 +15,14 @@ public class AbilityEarthBlockPickup implements Ability {
         Object[] vars = EarthElement.canBend(player, true);
 
         if (vars != null) {
-            bender.reduceChi(10);
+            if (!bender.reduceChi(10)) {
+            if (bender.abilityData == null) {
+                bender.setCurrAbility(null);
+            } else {
+                onRemove(bender);
+            }
+            return;
+        }
             Vec3d pos = (Vec3d) vars[0];
             BlockState state = (BlockState) vars[1];
 

@@ -18,7 +18,14 @@ public class AbilityAirJump implements Ability {
 
     @Override
     public void onCall(Bender bender, long deltaT) {
-        bender.reduceChi(10);
+        if (!bender.reduceChi(10)) {
+            if (bender.abilityData == null) {
+                bender.setCurrAbility(null);
+            } else {
+                onRemove(bender);
+            }
+            return;
+        }
 
         bender.setCurrAbility(null);
         PlayerEntity player = bender.player;

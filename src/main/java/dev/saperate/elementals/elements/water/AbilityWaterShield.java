@@ -17,7 +17,14 @@ import static dev.saperate.elementals.utils.SapsUtils.getEntityLookVector;
 public class AbilityWaterShield implements Ability {
     @Override
     public void onCall(Bender bender, long deltaT) {
-        bender.reduceChi(5);
+        if (!bender.reduceChi(5)) {
+            if (bender.abilityData == null) {
+                bender.setCurrAbility(null);
+            } else {
+                onRemove(bender);
+            }
+            return;
+        }
         PlayerEntity player = bender.player;
 
         WaterShieldEntity entity = new WaterShieldEntity(player.getWorld(), player, player.getX(), player.getY(), player.getZ());
@@ -46,7 +53,14 @@ public class AbilityWaterShield implements Ability {
 
     @Override
     public void onTick(Bender bender) {
-        bender.reduceChi(0.15f);
+        if (!bender.reduceChi(0.15f)) {
+            if (bender.abilityData == null) {
+                bender.setCurrAbility(null);
+            } else {
+                onRemove(bender);
+            }
+            return;
+        }
         bender.player.addStatusEffect(new StatusEffectInstance(STATIONARY_EFFECT,1,1,false,false,false));
         if(!bender.player.isSneaking()){
             onRemove(bender);

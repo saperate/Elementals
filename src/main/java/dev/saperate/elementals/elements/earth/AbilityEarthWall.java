@@ -24,7 +24,14 @@ public class AbilityEarthWall implements Ability {
             return;
         }
 
-        bender.reduceChi(15);
+        if (!bender.reduceChi(15)) {
+            if (bender.abilityData == null) {
+                bender.setCurrAbility(null);
+            } else {
+                onRemove(bender);
+            }
+            return;
+        }
 
         LinkedList<EarthBlockEntity> entities = new LinkedList<>();
         BlockPos pos = (BlockPos) vars[2];

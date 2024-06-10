@@ -36,7 +36,14 @@ public class AbilityWater3 implements Ability {
         }
 
         if (player.isTouchingWaterOrRain()) {
-            bender.reduceChi(15);
+            if (!bender.reduceChi(15)) {
+            if (bender.abilityData == null) {
+                bender.setCurrAbility(null);
+            } else {
+                onRemove(bender);
+            }
+            return;
+        }
             bender.abilityData = 1;
 
             float power = 1;

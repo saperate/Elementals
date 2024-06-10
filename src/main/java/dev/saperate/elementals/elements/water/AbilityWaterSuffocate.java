@@ -18,7 +18,14 @@ public class AbilityWaterSuffocate implements Ability {
     public void onCall(Bender bender, long deltaT) {
         PlayerEntity player = bender.player;
         PlayerData plrData = PlayerData.get(player);
-        bender.reduceChi(5);
+        if (!bender.reduceChi(5)) {
+            if (bender.abilityData == null) {
+                bender.setCurrAbility(null);
+            } else {
+                onRemove(bender);
+            }
+            return;
+        }
 
         int range = 10;
         if (plrData.canUseUpgrade("waterSuffocateRange")) {
@@ -71,7 +78,14 @@ public class AbilityWaterSuffocate implements Ability {
             onRemove(bender);
             return;
         }
-        bender.reduceChi(0.2f);
+        if (!bender.reduceChi(0.2f)) {
+            if (bender.abilityData == null) {
+                bender.setCurrAbility(null);
+            } else {
+                onRemove(bender);
+            }
+            return;
+        }
 
         double distance = ((WaterHelmetEntity)bender.abilityData)
                 .getOwner().getPos().subtract(bender.player.getPos()).length();

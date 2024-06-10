@@ -22,7 +22,14 @@ public class AbilityEarthMine implements Ability {
             return;
         }
 
-        bender.reduceChi(5);
+        if (!bender.reduceChi(5)) {
+            if (bender.abilityData == null) {
+                bender.setCurrAbility(null);
+            } else {
+                onRemove(bender);
+            }
+            return;
+        }
         BlockPos pos = (BlockPos) vars[2];
         player.getWorld().breakBlock(pos,true);
         bender.setCurrAbility(null);
