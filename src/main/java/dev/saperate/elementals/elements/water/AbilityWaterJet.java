@@ -23,6 +23,7 @@ public class AbilityWaterJet implements Ability {
         Vector3f pos = WaterElement.canBend(player, true);
 
         if (pos != null) {
+            bender.reduceChi(10);
             bender.abilityData = null;
             bender.setCurrAbility(this);
         }else{
@@ -81,6 +82,7 @@ public class AbilityWaterJet implements Ability {
                     0, 0, 0, 0);
         } else {
             bender.player.addStatusEffect(new StatusEffectInstance(STATIONARY_EFFECT, 1, 1, false, false, false));
+            bender.reduceChi(0.2f);
         }
     }
 

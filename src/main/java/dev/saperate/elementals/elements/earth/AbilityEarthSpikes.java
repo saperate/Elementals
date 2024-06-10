@@ -18,6 +18,7 @@ import java.util.List;
 public class AbilityEarthSpikes implements Ability {
     @Override
     public void onCall(Bender bender, long deltaT) {
+        bender.reduceChi(20);
         PlayerEntity player = bender.player;
         Random rnd = player.getRandom();
         PlayerData plrData = PlayerData.get(player);

@@ -38,6 +38,7 @@ public class AbilityWaterSurf implements Ability {
 
     @Override
     public void onTick(Bender bender) {
+        bender.reduceChi(0.1f);
         PlayerEntity player = bender.player;
         float power = 0.25f;
         PlayerData plrData = PlayerData.get(player);

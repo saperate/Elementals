@@ -12,6 +12,7 @@ import static dev.saperate.elementals.utils.SapsUtils.getEntityLookVector;
 public class AbilityAirStream implements Ability {
     @Override
     public void onCall(Bender bender, long deltaT) {
+        bender.reduceChi(15);
         PlayerEntity player = bender.player;
 
         Vector3f pos = getEntityLookVector(player, 3).toVector3f();

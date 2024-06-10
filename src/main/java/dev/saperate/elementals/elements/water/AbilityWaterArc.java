@@ -16,6 +16,7 @@ public class AbilityWaterArc implements Ability {
         Vector3f pos = WaterElement.canBend(player,true);
 
         if (pos != null) {
+            bender.reduceChi(20);
             WaterArcEntity entity = new WaterArcEntity(player.getWorld(), player, pos.x, pos.y, pos.z);
             bender.abilityData = entity;
             entity.createChain(player);

@@ -29,6 +29,10 @@ public class AbilityAir4 implements Ability {
             return;
         }
 
+        if (!bender.reduceChi(30)) {
+            return;
+        }
+
         DecoyPlayerEntity decoy = new DecoyPlayerEntity(plr.getWorld(), plr);
         int range = 5;
         if (plrData.canUseUpgrade("airSpiritProjectionRangeIV")) {

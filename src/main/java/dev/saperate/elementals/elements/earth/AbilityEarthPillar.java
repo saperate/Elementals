@@ -17,6 +17,7 @@ import java.util.LinkedList;
 public class AbilityEarthPillar implements Ability {
     @Override
     public void onCall(Bender bender, long deltaT) {
+
         PlayerEntity player = bender.player;
         PlayerData plrData = PlayerData.get(player);
 
@@ -25,7 +26,7 @@ public class AbilityEarthPillar implements Ability {
             bender.setCurrAbility(null);
             return;
         }
-
+        bender.reduceChi(15);
         BlockPos startPos = (BlockPos) vars[2];
         //we want to get into the ground instead of above, so we get the opposite
         Direction dir = ((Direction) vars[3]).getOpposite();

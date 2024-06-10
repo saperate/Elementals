@@ -23,6 +23,7 @@ public class AbilityWaterCannon implements Ability {
         Vector3f pos = WaterElement.canBend(player, true);
 
         if (pos != null) {
+            bender.reduceChi(20);
             bender.abilityData = new Object[]{60,null}; //null is a placeholder, an entity will be there
             bender.setCurrAbility(this);
         } else {

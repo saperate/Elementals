@@ -16,6 +16,7 @@ import static dev.saperate.elementals.utils.SapsUtils.raycastFull;
 public class AbilityEarthTrap implements Ability {
     @Override
     public void onCall(Bender bender, long deltaT) {
+
         PlayerEntity player = bender.player;
 
         HitResult hit = raycastFull(player,12,false);
@@ -32,7 +33,7 @@ public class AbilityEarthTrap implements Ability {
             block.setBlockState(state);
             block.setModelShapeId(2);
             player.getWorld().spawnEntity(block);
-
+            bender.reduceChi(5);
 
             bender.abilityData = new Object[]{victim, block};
             bender.setCurrAbility(this);
@@ -64,6 +65,8 @@ public class AbilityEarthTrap implements Ability {
             onRemove(bender);
             return;
         }
+
+        bender.reduceChi(0.25f);
 
         Object[] vars = ((Object[]) bender.abilityData);
 

@@ -12,6 +12,7 @@ import static dev.saperate.elementals.utils.SapsUtils.getEntityLookVector;
 public class AbilityAirBall implements Ability {
     @Override
     public void onCall(Bender bender, long deltaT) {
+        bender.reduceChi(20);
         PlayerEntity player = bender.player;
 
         //TODO remove 0.15 from every stuff like this to fix the velocity bug

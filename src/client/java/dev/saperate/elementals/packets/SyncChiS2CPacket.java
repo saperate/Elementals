@@ -19,5 +19,6 @@ public class SyncChiS2CPacket {
             return;
         }
         ClientBender.get().chi = buf.readFloat();
+        System.out.println(ClientBender.get().chi);
     }
 }

@@ -12,6 +12,7 @@ public class AbilityWaterHealing implements Ability {
 
     @Override
     public void onCall(Bender bender, long deltaT) {
+        bender.reduceChi(30);
         PlayerEntity player = bender.player;
         Vector3f pos = WaterElement.canBend(player, true);
 

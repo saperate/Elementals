@@ -21,6 +21,7 @@ public class AbilityFlameThrower implements Ability {
     public static final Box boundingBox = new Box(new Vec3d(-1,-1,-1), new Vec3d(1,1,1));
     @Override
     public void onCall(Bender bender, long deltaT) {
+        bender.reduceChi(5);
         bender.abilityData = true;
         bender.setCurrAbility(this);
     }
@@ -46,6 +47,7 @@ public class AbilityFlameThrower implements Ability {
 
     @Override
     public void onTick(Bender bender) {
+        bender.reduceChi(0.15f);
         if(bender.abilityData == null){
             bender.setCurrAbility(null);
             return;

@@ -24,6 +24,7 @@ public class AbilityEarth4 implements Ability {
             bender.player.removeStatusEffect(SEISMIC_SENSE_EFFECT);
         } else {
             bender.player.addStatusEffect(new StatusEffectInstance(SEISMIC_SENSE_EFFECT, 2400));
+            bender.reduceChi(15);
         }
         bender.setCurrAbility(null);
     }

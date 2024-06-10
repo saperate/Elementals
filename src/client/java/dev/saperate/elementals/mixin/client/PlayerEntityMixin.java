@@ -28,10 +28,10 @@ public abstract class PlayerEntityMixin {
     private void render(CallbackInfo ci) {
         PlayerEntity plr = ((PlayerEntity) (Object) this);
         if (plr == MinecraftClient.getInstance().player) {
+            ClientBender.get().tick();
             if(ClientBender.get().player != plr){
                 ClientBender.get().player = plr;
             }
-            ClientBender.get().tick();
         }
     }
 }

@@ -36,6 +36,7 @@ public class AbilityWater3 implements Ability {
         }
 
         if (player.isTouchingWaterOrRain()) {
+            bender.reduceChi(15);
             bender.abilityData = 1;
 
             float power = 1;

@@ -15,6 +15,7 @@ public class AbilityAirBullets implements Ability {
 
     @Override
     public void onCall(Bender bender, long deltaT) {
+        bender.reduceChi(15);
         PlayerEntity player = bender.player;
 
         Vec3d pos = getEntityLookVector(player, 2.85f);

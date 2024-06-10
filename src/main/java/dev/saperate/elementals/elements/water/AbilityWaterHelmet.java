@@ -13,6 +13,7 @@ import static dev.saperate.elementals.effects.StationaryStatusEffect.STATIONARY_
 public class AbilityWaterHelmet implements Ability {
     @Override
     public void onCall(Bender bender, long deltaT) {
+        bender.reduceChi(25);
         bender.setCurrAbility(null);
         PlayerEntity player = bender.player;
         PlayerData plrData = PlayerData.get(player);

@@ -21,9 +21,11 @@ public class AbilityEarthJump implements Ability {
 
         BlockHitResult hit = raycastBlockCustomRotation(player, 12, true, new Vec3d(0, -1, 0));
 
-        if(!EarthElement.isBlockBendable(player.getWorld().getBlockState(hit.getBlockPos()))){
+        if(!EarthElement.isBlockBendable(player.getWorld().getBlockState(hit.getBlockPos())) || !player.isOnGround()){
             return;
         }
+
+        bender.reduceChi(15);
 
         PlayerData plrData = PlayerData.get(player);
         float power = 1;

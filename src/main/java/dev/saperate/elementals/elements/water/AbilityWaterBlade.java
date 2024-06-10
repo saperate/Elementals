@@ -16,6 +16,7 @@ public class AbilityWaterBlade implements Ability {
         Vector3f pos = WaterElement.canBend(player, true);
 
         if (pos != null) {
+            bender.reduceChi(15);
             WaterBladeEntity entity = new WaterBladeEntity(player.getWorld(), player, pos.x, pos.y, pos.z);
             bender.abilityData = entity;
             player.getWorld().spawnEntity(entity);

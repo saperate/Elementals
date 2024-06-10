@@ -22,6 +22,7 @@ public class AbilityEarthMine implements Ability {
             return;
         }
 
+        bender.reduceChi(5);
         BlockPos pos = (BlockPos) vars[2];
         player.getWorld().breakBlock(pos,true);
         bender.setCurrAbility(null);

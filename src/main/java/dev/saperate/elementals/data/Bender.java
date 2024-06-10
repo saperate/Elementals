@@ -62,7 +62,6 @@ public class Bender {
                 return;
             }
             if (currAbility != null && castTime != null) {
-                reduceChi(25);
                 currAbility.onCall(this, System.currentTimeMillis() - castTime);
                 castTime = null;
             }
@@ -149,6 +148,7 @@ public class Bender {
         builder.append("\n    Element = ").append(getElement().name);
         builder.append("\n    Current ability = ").append(Ability.getName(currAbility));
         builder.append("\n    Cast time = ").append(castTime);
+        builder.append("\n    Chi = ").append(PlayerData.get(player).chi);
 
         for (int i = 0; i < boundAbilities.length; i++) {
             builder.append("\n    bind ").append(i).append(" = ").append(Ability.getName(boundAbilities[i]));
@@ -174,9 +174,10 @@ public class Bender {
         }
     }
 
-    public void reduceChi(float val) {
+    public boolean reduceChi(float val) {
         PlayerData.get(player).chi -= val;
         syncChi();
+        return true;
     }
 
     public void syncChi() {

@@ -67,7 +67,7 @@ public abstract class PlayerEntityMixin {
             }
         }
         Bender bender = Bender.getBender(player);
-        if(bender == null){
+        if(bender == null || player.getWorld().isClient){
             return;
         }
         bender.tick();

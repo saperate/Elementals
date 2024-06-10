@@ -26,6 +26,7 @@ public class AbilityWaterTower implements Ability {
     //TODO could be useful for more intuitive uncast
     @Override
     public void onCall(Bender bender, long deltaT) {
+        bender.reduceChi(5);
         PlayerEntity player = bender.player;
 
         WaterTowerEntity entity = new WaterTowerEntity(player.getWorld(), player);
@@ -59,6 +60,7 @@ public class AbilityWaterTower implements Ability {
 
     @Override
     public void onTick(Bender bender) {
+        bender.reduceChi(0.1f);
         PlayerEntity player = bender.player;
 
         int height = 10;

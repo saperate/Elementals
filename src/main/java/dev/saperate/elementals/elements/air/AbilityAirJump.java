@@ -18,7 +18,8 @@ public class AbilityAirJump implements Ability {
 
     @Override
     public void onCall(Bender bender, long deltaT) {
-        //TODO make it more costly to cast when not on the ground
+        bender.reduceChi(10);
+
         bender.setCurrAbility(null);
         PlayerEntity player = bender.player;
         PlayerData plrData = PlayerData.get(player);

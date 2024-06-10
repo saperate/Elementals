@@ -13,6 +13,7 @@ import static dev.saperate.elementals.utils.SapsUtils.getEntityLookVector;
 public class AbilityAirScooter implements Ability {
     @Override
     public void onCall(Bender bender, long deltaT) {
+        bender.reduceChi(10);
         PlayerEntity player = bender.player;
         PlayerData plrData = PlayerData.get(player);
 
@@ -49,7 +50,7 @@ public class AbilityAirScooter implements Ability {
 
     @Override
     public void onTick(Bender bender) {
-
+        bender.reduceChi(0.1f);
     }
 
     @Override

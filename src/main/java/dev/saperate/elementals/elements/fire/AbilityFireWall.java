@@ -14,6 +14,7 @@ import net.minecraft.util.math.BlockPos;
 public class AbilityFireWall implements Ability {
     @Override
     public void onCall(Bender bender, long deltaT) {
+        bender.reduceChi(15);
         PlayerEntity player = bender.player;
         PlayerData plrData = PlayerData.get(player);
         BlockHitResult hit = (BlockHitResult) player.raycast(5, 0, true);

@@ -11,6 +11,7 @@ import static dev.saperate.elementals.effects.StationaryStatusEffect.STATIONARY_
 public class AbilityAirShield implements Ability {
     @Override
     public void onCall(Bender bender, long deltaT) {
+        bender.reduceChi(5);
         PlayerEntity player = bender.player;
 
         AirShieldEntity entity = new AirShieldEntity(player.getWorld(), player, player.getX(), player.getY(), player.getZ());
@@ -39,6 +40,7 @@ public class AbilityAirShield implements Ability {
 
     @Override
     public void onTick(Bender bender) {
+        bender.reduceChi(0.15f);
         bender.player.addStatusEffect(new StatusEffectInstance(STATIONARY_EFFECT,1,1,false,false,false));
         if(!bender.player.isSneaking()){
             onRemove(bender);

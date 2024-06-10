@@ -22,6 +22,7 @@ public class AbilityAirGust implements Ability {
 
     @Override
     public void onCall(Bender bender, long deltaT) {
+        bender.reduceChi(5);
         bender.abilityData = true;
         bender.setCurrAbility(this);
     }
@@ -51,7 +52,7 @@ public class AbilityAirGust implements Ability {
             bender.setCurrAbility(null);
             return;
         }
-
+        bender.reduceChi(0.15f);
         PlayerEntity player = bender.player;
         if (bender.abilityData.equals(true)) {
             serverSummonParticles((ServerWorld) player.getWorld(),

@@ -42,6 +42,7 @@ public class AbilityEarthArmor implements Ability {
         if (!EarthElement.isBlockBendable(player.getWorld().getBlockState(hit.getBlockPos())) || !player.isOnGround()) {
             return;
         }
+        bender.reduceChi(30);
 
 
         inv.set(EquipmentSlot.HEAD.getEntitySlotId(), EARTH_HELMET.getItemStack(inv.get(3)));

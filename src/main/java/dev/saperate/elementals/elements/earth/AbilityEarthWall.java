@@ -24,6 +24,8 @@ public class AbilityEarthWall implements Ability {
             return;
         }
 
+        bender.reduceChi(15);
+
         LinkedList<EarthBlockEntity> entities = new LinkedList<>();
         BlockPos pos = (BlockPos) vars[2];
 

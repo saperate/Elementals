@@ -13,6 +13,7 @@ import net.minecraft.util.math.random.Random;
 public class AbilityFireSpikes implements Ability {
     @Override
     public void onCall(Bender bender, long deltaT) {
+        bender.reduceChi(15);
         PlayerEntity player = bender.player;
         Random rnd = player.getRandom();
         PlayerData plrData = PlayerData.get(player);
