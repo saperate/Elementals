@@ -35,9 +35,9 @@ public class BuyUpgradeC2SPacket {
             }
 
             PlayerData plrData = PlayerData.get(player);
-            if (plrData.canBuyUpgrade(upgrade.name)) {
-                plrData.upgrades.put(upgrade, true);
+            if (plrData.buyUpgrade(upgrade)) {
                 GetUpgradeListC2SPacket.send(player);
+                SyncLevelC2SPacket.send(player);
             }
         });
     }

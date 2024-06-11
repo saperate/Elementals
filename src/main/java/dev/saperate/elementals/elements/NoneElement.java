@@ -3,11 +3,11 @@ package dev.saperate.elementals.elements;
 public class NoneElement extends Element{
     public NoneElement() {
         super("None", new Upgrade("None",new Upgrade[]{
-                new Upgrade("bendingAir"),
-                new Upgrade("bendingWater"),
-                new Upgrade("bendingEarth"),
-                new Upgrade("bendingFire")
-        }));
+                new Upgrade("bendingAir",0),
+                new Upgrade("bendingWater",0),
+                new Upgrade("bendingEarth",0),
+                new Upgrade("bendingFire",0)
+        },0));
     }
 
     public static Element get(){

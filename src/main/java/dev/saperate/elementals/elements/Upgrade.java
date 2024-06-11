@@ -19,28 +19,29 @@ public final class Upgrade {
     public float localX;
     public int mod = 0;
     public boolean exclusive = false;
+    public final int price; //in levels
 
-    public Upgrade(String name, Upgrade[] children, boolean exclusive, int mod) {
-        this(name, children);
-        this.exclusive = exclusive;
+    public Upgrade(String name, Upgrade[] children, boolean exclusive, int mod, int price) {
+        this(name, children, exclusive, price);
         this.mod = mod;
     }
 
-    public Upgrade(String name, Upgrade[] children, boolean exclusive) {
-        this(name, children);
+    public Upgrade(String name, Upgrade[] children, boolean exclusive, int price) {
+        this(name, children, price);
         this.exclusive = exclusive;
     }
 
-    public Upgrade(String name, Upgrade[] children) {
-        this.name = name;
+    public Upgrade(String name, Upgrade[] children, int price) {
+        this(name,price);
         this.children = children;
         for (Upgrade child : children) {
             child.setParent(this);
         }
     }
 
-    public Upgrade(String name) {
+    public Upgrade(String name, int price) {
         this.name = name;
+        this.price = price;
     }
 
     public void onSave(@NotNull NbtCompound nbtCompound, HashMap<Upgrade,Boolean> plrUpgrades) {
@@ -76,6 +77,12 @@ public final class Upgrade {
         return upgrades.toArray(Upgrade[]::new);
     }
 
+    /**
+     * Checks if this upgrade is part the next buy-able upgrades list.
+     * This does <b>NOT</b> check if the player can afford it with price and whatnot.
+     * @param plrUpgrades The list of upgrades that the player has
+     * @return Whether the player can buy this upgrade or not.
+     */
     public boolean canBuy(HashMap<Upgrade,Boolean> plrUpgrades) {
         if (parent == null || !parent.exclusive) {
             return true;

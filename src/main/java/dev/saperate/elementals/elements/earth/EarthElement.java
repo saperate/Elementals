@@ -30,50 +30,50 @@ public class EarthElement extends Element {
                                                 new Upgrade("earthWallDurationII", new Upgrade[]{
                                                         new Upgrade("earthWallDurationIII", new Upgrade[]{
                                                                 new Upgrade("earthWallDurationIV", new Upgrade[]{
-                                                                        new Upgrade("earthWallAutoTimer")
-                                                                })
-                                                        })
-                                                })
-                                        })
-                                }),
+                                                                        new Upgrade("earthWallAutoTimer", 1)
+                                                                },1)
+                                                        },1)
+                                                },1)
+                                        },1)
+                                },2),
                                 new Upgrade("earthChunk", new Upgrade[]{
-                                        new Upgrade("earthChunkSizeI")
-                                })
-                        }, true),
+                                        new Upgrade("earthChunkSizeI",1)
+                                },2)
+                        }, true, 2),
                         new Upgrade("earthBlockSpeedI", new Upgrade[]{
                                 new Upgrade("earthBlockDamageI", new Upgrade[]{
-                                        new Upgrade("earthBlockSpeedII")
-                                })
-                        }, false, 1)
-                }),
+                                        new Upgrade("earthBlockSpeedII",1)
+                                },1)
+                        }, false, 1,1)
+                },2),
 
                 new Upgrade("earthMine", new Upgrade[]{
                         new Upgrade("earthTrap", new Upgrade[]{
                                 new Upgrade("earthRavine", new Upgrade[]{
-                                        new Upgrade("earthRavineRangeI"),
-                                        new Upgrade("earthRavineSpreadI")
-                                }, true, -1),
+                                        new Upgrade("earthRavineRangeI",1),
+                                        new Upgrade("earthRavineSpreadI",1)
+                                }, true, -1,2),
                                 new Upgrade("earthSpikes", new Upgrade[]{
-                                        new Upgrade("earthSpikesRangeI"),
-                                        new Upgrade("earthSpikesSpreadI")
-                                }, true, 1)
-                        }, true)
-                }),
+                                        new Upgrade("earthSpikesRangeI",1),
+                                        new Upgrade("earthSpikesSpreadI",1)
+                                }, true, 1,2)
+                        }, true,2)
+                },2),
                 new Upgrade("earthPillar", new Upgrade[]{
                         new Upgrade("earthJump", new Upgrade[]{
                                 new Upgrade("earthJumpRangeI", new Upgrade[]{
-                                        new Upgrade("earthJumpRangeII"),
-                                })
-                        }),
-                        new Upgrade("earthPillarTallI")
-                }),
+                                        new Upgrade("earthJumpRangeII",1),
+                                },1)
+                        },2),
+                        new Upgrade("earthPillarTallI",1)
+                },2),
                 new Upgrade("earthPickupRangeI", new Upgrade[]{
                         new Upgrade("earthPickupRangeII", new Upgrade[]{
                                 new Upgrade("earthSeismicSense", new Upgrade[]{
-                                        new Upgrade("earthArmor")
-                                })
-                        })
-                })
+                                        new Upgrade("earthArmor",2)
+                                },2)
+                        },1)
+                },1)
         });
         addAbility(new AbilityEarth1(), true);
         addAbility(new AbilityEarthBlockPickup());

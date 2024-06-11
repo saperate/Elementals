@@ -39,6 +39,16 @@ public class BendingCommand {
                 .then(CommandManager.literal("status")
                         .executes(BendingCommand::status)
                 )
+                .then(CommandManager.literal("level")
+                        .then(CommandManager.literal("set")
+                                .then(CommandManager.argument("value", IntegerArgumentType.integer(0,Integer.MAX_VALUE))
+                                        .executes(BendingCommand::levelSet)
+                                )
+                        )
+                        .then(CommandManager.literal("get")
+                                .executes(BendingCommand::levelGet)
+                        )
+                )
 
         );
     }
@@ -135,7 +145,7 @@ public class BendingCommand {
         String name = StringArgumentType.getString(context, "name");
         Upgrade upgrade = element.root.getUpgradeByNameRecursive(name);
 
-        if (plrData.canBuyUpgrade(name)) {
+        if (plrData.buyUpgrade(upgrade)) {
             plrData.upgrades.put(upgrade, true);
             StateDataSaverAndLoader.getServerState(bender.player.getServer()).markDirty();
             context.getSource().sendFeedback((() -> Text.of(
@@ -170,6 +180,30 @@ public class BendingCommand {
         System.out.println(bender.toString());
         context.getSource().sendFeedback((() -> Text.of(
                 bender.toString())
+        ), false);
+        return 1;
+    }
+
+    private static int levelSet(CommandContext<ServerCommandSource> context) {
+        PlayerEntity plr = context.getSource().getPlayer();
+        if(plr.getWorld().isClient){
+            return 1;
+        }
+        int value = IntegerArgumentType.getInteger(context, "value");
+        PlayerData.get(plr).level = value;
+        context.getSource().sendFeedback((() -> Text.of(
+                "Your level is now: " + value)
+        ), false);
+        return 1;
+    }
+
+    private static int levelGet(CommandContext<ServerCommandSource> context) {
+        PlayerEntity plr = context.getSource().getPlayer();
+        if(plr.getWorld().isClient){
+            return 1;
+        }
+        context.getSource().sendFeedback((() -> Text.of(
+                "Your level is: " + PlayerData.get(plr))
         ), false);
         return 1;
     }

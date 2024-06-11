@@ -178,9 +178,9 @@ public class Bender {
     /**
      * This method also adds xp proportional to the amount of chi used
      * <br>ex:
-     * <br>  5 chi -> 0.83
-     * <br> 15 chi -> 2.5
-     * <br> 30 chi -> 5
+     * <br>  5 chi -> 0.5
+     * <br> 15 chi -> 1.5
+     * <br> 30 chi -> 3
      * @param val The amount by which we should reduce the chi level
      * @return True if we were able to reduce the chi without going in the negatives, false if not.
      */
@@ -203,7 +203,7 @@ public class Bender {
     }
 
     public float xpAddedByChi(float chi){
-        return 0.1666f * chi; //y = ax + b
+        return 0.1f * chi; //y = ax + b
     }
 
     /**

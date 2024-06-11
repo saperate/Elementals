@@ -22,7 +22,7 @@ public abstract class Element{
     }
 
     public Element(String name, Upgrade[] upgrades){
-        this(name,new Upgrade(name,upgrades));
+        this(name,new Upgrade(name,upgrades,0));
     }
 
     public Element(String name){

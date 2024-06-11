@@ -28,80 +28,80 @@ public class WaterElement extends Element {
                 new Upgrade[]{
                         new Upgrade("waterBubble", new Upgrade[]{
                                 new Upgrade("waterHelmet", new Upgrade[]{
-                                        new Upgrade("waterShieldHelmetPath"),
+                                        new Upgrade("waterShieldHelmetPath", 2),
                                         new Upgrade("waterHelmetDurationI", new Upgrade[]{
                                                 new Upgrade("waterHelmetDurationII", new Upgrade[]{
                                                         new Upgrade("waterHelmetDurationIII", new Upgrade[]{
                                                                 new Upgrade("waterHelmetDurationIV", new Upgrade[]{
-                                                                        new Upgrade("waterHelmetMastery")
-                                                                })
-                                                        }),
-                                                        new Upgrade("waterHelmetStealth")
-                                                }, true)
-                                        }),
-                                }, false, -1),
+                                                                        new Upgrade("waterHelmetMastery", 2)
+                                                                }, 1)
+                                                        }, 1),
+                                                        new Upgrade("waterHelmetStealth", 2)
+                                                }, true,1)
+                                        },1),
+                                }, false, -1,2),
                                 new Upgrade("waterSuffocate", new Upgrade[]{
-                                        new Upgrade("waterShieldSuffocatePath"),
-                                        new Upgrade("waterSuffocateRange")
-                                }, false, 1)
-                        }, true),
+                                        new Upgrade("waterShieldSuffocatePath", 1),
+                                        new Upgrade("waterSuffocateRange", 1)
+                                }, false, 1, 2)
+                        }, true, 2),
 
                         new Upgrade("waterArc", new Upgrade[]{
                                 new Upgrade("waterJet", new Upgrade[]{
                                         new Upgrade("waterJetRangeI", new Upgrade[]{
-                                                new Upgrade("waterJetDamageI")
-                                        })
-                                }, false, -2),
+                                                new Upgrade("waterJetDamageI",1)
+                                        }, 1)
+                                }, false, -2, 2),
                                 new Upgrade("waterArcDamageI", new Upgrade[]{
                                         new Upgrade("waterArcEfficiencyI", new Upgrade[]{
                                                 new Upgrade("waterBlade", new Upgrade[]{
                                                         new Upgrade("waterBladeDamageI", new Upgrade[]{
                                                                 new Upgrade("waterBladeMiningI", new Upgrade[]{
-                                                                        new Upgrade("waterBladeMiningII")
-                                                                }),
+                                                                        new Upgrade("waterBladeMiningII", 1)
+                                                                },1),
                                                                 new Upgrade("waterBladeSpeedI", new Upgrade[]{
-                                                                        new Upgrade("waterBladeSpeedII")
-                                                                })
-                                                        })
-                                                }, false, -1),
+                                                                        new Upgrade("waterBladeSpeedII", 1)
+                                                                },1)
+                                                        }, 1)
+                                                }, false, -1, 2),
                                                 new Upgrade("waterCannon", new Upgrade[]{
                                                         new Upgrade("waterCannonRangeI", new Upgrade[]{
-                                                                new Upgrade("waterCannonDamageI")
-                                                        })
-                                                })
-                                        }, true),
+                                                                new Upgrade("waterCannonDamageI",1)
+                                                        }, 1)
+                                                },2)
+                                        }, true,1),
                                         new Upgrade("waterArcSpeedI", new Upgrade[]{
                                                 new Upgrade("waterArcSpeedII", new Upgrade[]{
-                                                        new Upgrade("waterArcMastery")
-                                                })
-                                        }, false, 1)
-                                })
+                                                        new Upgrade("waterArcMastery",2)
+                                                },1)
+                                        }, false, 1,1)
+                                },1)
 
-                        }),
+                        },2),
                         new Upgrade("waterJump", new Upgrade[]{
                                 new Upgrade("waterJumpRangeI", new Upgrade[]{
-                                        new Upgrade("waterJumpRangeII"),
+                                        new Upgrade("waterJumpRangeII",1),
                                         new Upgrade("waterSurf", new Upgrade[]{
                                                 new Upgrade("waterSurfSpeedI", new Upgrade[]{
-                                                        new Upgrade("waterSurfSpeedII"),
+                                                        new Upgrade("waterSurfSpeedII",1),
                                                         new Upgrade("waterTower", new Upgrade[]{
-                                                                new Upgrade("waterTowerRangeI")
-                                                        }),
-                                                })
-                                        })
-                                })
-                        }),
+                                                                new Upgrade("waterTowerRangeI",1)
+                                                        },2),
+                                                },1)
+                                        },2)
+                                },1)
+                        },2),
                         new Upgrade("waterPickupRangeI", new Upgrade[]{
                                 new Upgrade("waterPickupRangeII", new Upgrade[]{
                                         new Upgrade("waterPickupEfficiencyI", new Upgrade[]{
                                                 new Upgrade("waterHealing", new Upgrade[]{
                                                         new Upgrade("waterHealingEfficiencyI", new Upgrade[]{
-                                                                new Upgrade("waterHealingEfficiencyII")
-                                                        })
-                                                })
-                                        })
-                                })
-                        })
+                                                                new Upgrade("waterHealingEfficiencyII", 1)
+                                                        },1)
+                                                },2)
+                                        },1)
+                                },1)
+                        },1)
 
                 });
         addAbility(new AbilityWater1(), true);

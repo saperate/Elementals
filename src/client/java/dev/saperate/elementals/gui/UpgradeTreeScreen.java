@@ -36,6 +36,7 @@ import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static dev.saperate.elementals.Elementals.MODID;
 import static dev.saperate.elementals.network.ModMessages.BUY_UPGRADE_PACKET_ID;
@@ -129,7 +130,7 @@ public class UpgradeTreeScreen extends SpruceScreen {
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if (button == 0) {
             Upgrade upgrade = mouseOnUpgrade(mouseX, mouseY);
-            if (upgrade != null && PlayerData.canBuyUpgrade(bender.upgrades, bender.element, upgrade.name)) {
+            if (upgrade != null && PlayerData.canBuyUpgrade(bender.upgrades, bender.element, upgrade.name, new AtomicInteger(ClientBender.get().level))) {
                 PacketByteBuf buf = PacketByteBufs.create();
                 buf.writeString(upgrade.name);
                 ClientPlayNetworking.send(BUY_UPGRADE_PACKET_ID, buf);
@@ -165,6 +166,9 @@ public class UpgradeTreeScreen extends SpruceScreen {
             SapsUtils.addTranslatable(tooltip, "upgrade.elementals." + upgradeName);
             SapsUtils.addTranslatableAutomaticLineBreaks(tooltip, "upgrade.elementals." + upgradeName + ".description", 5);
             SapsUtils.addTranslatableAutomaticLineBreaks(tooltip, "upgrade.elementals." + upgradeName + ".use", 6);
+            if(hoveredUpgrade.price > 0){
+                SapsUtils.addTranslatableAutomaticLineBreaks(tooltip,"upgrade.elementals.price",6, hoveredUpgrade.price);
+            }
             if (hoveredUpgrade.parent.exclusive) {
                 SapsUtils.addTranslatableAutomaticLineBreaks(tooltip, "upgrade.elementals.exclusive", 5);
             }

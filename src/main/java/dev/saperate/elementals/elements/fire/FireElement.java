@@ -21,45 +21,45 @@ public class FireElement extends Element {
         super("Fire", new Upgrade[]{
                 new Upgrade("fireIgnition", new Upgrade[]{
                         new Upgrade("fireFlareUp",new Upgrade[]{
-                                new Upgrade("blueFire"),
+                                new Upgrade("blueFire",2),
                                 new Upgrade("fireWall", new Upgrade[]{
-                                        new Upgrade("fireWallWideI"),
-                                        new Upgrade("fireWallTallI")
-                                }, true),
+                                        new Upgrade("fireWallWideI",1),
+                                        new Upgrade("fireWallTallI",1)
+                                }, true,2),
                                 new Upgrade("fireSpikes", new Upgrade[]{
-                                        new Upgrade("fireSpikesCountI"),
-                                        new Upgrade("fireSpikesRangeI")
-                                },false,1)
-                        }, true),
-                }),
+                                        new Upgrade("fireSpikesCountI",1),
+                                        new Upgrade("fireSpikesRangeI",1)
+                                },false,1,2)
+                        }, true,1),
+                },2),
                 new Upgrade("fireArc", new Upgrade[]{
                         new Upgrade("fireBall", new Upgrade[]{
                                 new Upgrade("fireBallSpeedI", new Upgrade[]{
-                                        new Upgrade("fireBallSpeedII")
-                                })
-                        }, false, -1),
+                                        new Upgrade("fireBallSpeedII",1)
+                                },1)
+                        }, false, -1,2),
                         new Upgrade("fireArcDamageI", new Upgrade[]{
-                                new Upgrade("flameThrower"),
-                                new Upgrade("fireShield")
-                        }, true),
+                                new Upgrade("flameThrower",2),
+                                new Upgrade("fireShield", 2)
+                        }, true, 1),
                         new Upgrade("fireArcEfficiencyI", new Upgrade[]{
                                 new Upgrade("fireArcSpeedI", new Upgrade[]{
                                         new Upgrade("fireArcSpeedII", new Upgrade[]{
-                                                new Upgrade("fireArcMastery")
-                                        })
-                                })
-                        }, false, 1)
-                }),
+                                                new Upgrade("fireArcMastery",2)
+                                        },1)
+                                },1)
+                        }, false, 1,1)
+                },2),
                 new Upgrade("fireJump", new Upgrade[]{
                         new Upgrade("fireJumpRangeI", new Upgrade[]{
-                                new Upgrade("fireJumpRangeII"),
+                                new Upgrade("fireJumpRangeII",1),
                                 new Upgrade("fireJet", new Upgrade[]{
                                         new Upgrade("fireJetSpeedI", new Upgrade[]{
-                                                new Upgrade("fireJetSpeedII")
-                                        })
-                                })
-                        })
-                })
+                                                new Upgrade("fireJetSpeedII", 1)
+                                        }, 1)
+                                },2)
+                        },1)
+                },2)
         });
         addAbility(new AbilityFire1(),true);
         addAbility(new AbilityFireIgnite());
