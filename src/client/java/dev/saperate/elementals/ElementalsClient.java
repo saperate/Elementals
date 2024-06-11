@@ -17,10 +17,7 @@ import dev.saperate.elementals.keys.abilities.KeyAbility2;
 import dev.saperate.elementals.keys.abilities.KeyAbility3;
 import dev.saperate.elementals.keys.abilities.KeyAbility4;
 import dev.saperate.elementals.keys.gui.GuiKey;
-import dev.saperate.elementals.packets.SyncBendingElementS2CPacket;
-import dev.saperate.elementals.packets.SyncChiS2CPacket;
-import dev.saperate.elementals.packets.SyncCurrAbilityS2CPacket;
-import dev.saperate.elementals.packets.SyncUpgradeListS2CPacket;
+import dev.saperate.elementals.packets.*;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
@@ -63,6 +60,7 @@ public class ElementalsClient implements ClientModInitializer {
 		ClientPlayNetworking.registerGlobalReceiver(SYNC_ELEMENT_PACKET_ID, SyncBendingElementS2CPacket::receive);
 		ClientPlayNetworking.registerGlobalReceiver(SYNC_UPGRADE_LIST_PACKET_ID, SyncUpgradeListS2CPacket::receive);
 		ClientPlayNetworking.registerGlobalReceiver(SYNC_CHI_PACKET_ID, SyncChiS2CPacket::receive);
+		ClientPlayNetworking.registerGlobalReceiver(SYNC_LEVEL_PACKET_ID, SyncLevelS2CPacket::receive);
 	}
 
 	public void registerEntityRenderers(){

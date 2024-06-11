@@ -25,7 +25,8 @@ public class Bender {
     public Ability currAbility;
     @Nullable
     public Object abilityData;
-    public static final float CHI_REGENERATION_RATE = 0.05f;//this is per tick (1/20 of a second)
+    public static final float CHI_REGENERATION_RATE = 0.1f;//this is per tick (1/20 of a second)
+
 
     public Bender(PlayerEntity player, Element element) {
         this.player = player;
@@ -174,7 +175,17 @@ public class Bender {
         }
     }
 
+    /**
+     * This method also adds xp proportional to the amount of chi used
+     * <br>ex:
+     * <br>  5 chi -> 0.83
+     * <br> 15 chi -> 2.5
+     * <br> 30 chi -> 5
+     * @param val The amount by which we should reduce the chi level
+     * @return True if we were able to reduce the chi without going in the negatives, false if not.
+     */
     public boolean reduceChi(float val) {
+        addXp(xpAddedByChi(val));
         PlayerData data = PlayerData.get(player);
         float newChi = data.chi - val;
         if(newChi < 0){
@@ -189,6 +200,31 @@ public class Bender {
         PacketByteBuf buf = PacketByteBufs.create();
         buf.writeFloat(PlayerData.get(player).chi);
         ServerPlayNetworking.send((ServerPlayerEntity) player, SYNC_CHI_PACKET_ID, buf);
+    }
+
+    public float xpAddedByChi(float chi){
+        return 0.1666f * chi; //y = ax + b
+    }
+
+    /**
+     * Adds the specified amount of xp, if the result is equal than the max xp,
+     * it adds a level and resets xp. If it is bigger, it adds the remaining xp.
+     * @param amount The amount of xp added
+     */
+    public void addXp(float amount){
+        PlayerData data = PlayerData.get(player);
+        float maxXp = getMaxXp(data.level);
+        data.xp += amount;
+        if(data.xp >= maxXp){
+            data.level++;
+            float remainder = data.xp - maxXp;
+            data.xp = 0;
+            addXp(remainder);
+        }
+    }
+
+    public static float getMaxXp(int level){ //TODO make a scaling max xp function
+        return 100;
     }
 
     @Override

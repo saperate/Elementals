@@ -25,7 +25,7 @@ public class AbilityAirBullets implements Ability {
         }
         PlayerEntity player = bender.player;
 
-        Vec3d pos = getEntityLookVector(player, 2.85f);
+        Vec3d pos = getEntityLookVector(player, 2);
         PlayerData plrData = PlayerData.get(bender.player);
 
         int bulletCount = 5;

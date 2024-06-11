@@ -22,7 +22,7 @@ public class AbilityAirStream implements Ability {
         }
         PlayerEntity player = bender.player;
 
-        Vector3f pos = getEntityLookVector(player, 3).toVector3f();
+        Vector3f pos = getEntityLookVector(player, 2).toVector3f();
 
         AirStreamEntity entity = new AirStreamEntity(player.getWorld(), player, pos.x, pos.y, pos.z);
         bender.abilityData = entity;

@@ -8,10 +8,12 @@ import dev.lambdaurora.spruceui.widget.SpruceButtonWidget;
 import dev.lambdaurora.spruceui.widget.SpruceIconButtonWidget;
 import dev.lambdaurora.spruceui.widget.container.SpruceContainerWidget;
 import dev.lambdaurora.spruceui.widget.text.SpruceTextAreaWidget;
+import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.data.ClientBender;
 import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.elements.Element;
 import dev.saperate.elementals.elements.Upgrade;
+import dev.saperate.elementals.packets.SyncLevelS2CPacket;
 import dev.saperate.elementals.packets.SyncUpgradeListS2CPacket;
 import dev.saperate.elementals.utils.SapsUtils;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -61,6 +63,7 @@ public class UpgradeTreeScreen extends SpruceScreen {
         originX = width / 2 - tileSize / 2;
         originY = height / 2 - tileSize / 2;
         SyncUpgradeListS2CPacket.send();
+        SyncLevelS2CPacket.send();
         bender = ClientBender.get();
         bender.element.root.calculateXPos();
     }
@@ -73,30 +76,30 @@ public class UpgradeTreeScreen extends SpruceScreen {
 
         context.drawTexture(CreateWorldScreen.LIGHT_DIRT_BACKGROUND_TEXTURE, 0, 0, -oX, -oY, width, height, 32, 32);
         context.drawTexture(new Identifier(MODID, "textures/gui/upgrade_button_on.png"),
-                oX, oY, 0, 0, tileSize, tileSize, 32 ,32);
+                oX, oY, 0, 0, tileSize, tileSize, 32, 32);
 
 
         Upgrade root = bender.element.root;
 
         int len = root.children.length;
-        int halfSize = tileSize /2;
+        int halfSize = tileSize / 2;
         if (len >= 1) {
             context.fill(oX + halfSize - pathSize, oY + tileSize,
                     oX + root.children[0].mod + halfSize + pathSize, oY + spacing,
                     0xFF454545
-                    );
+            );
             drawTree(root.children[0], context, oX + root.children[0].mod, oY + spacing, 1);
         }
         if (len >= 2) {
-            context.fill(oX , oY + halfSize - pathSize ,
-                    oX - spacing , oY + halfSize + pathSize ,
+            context.fill(oX, oY + halfSize - pathSize,
+                    oX - spacing, oY + halfSize + pathSize,
                     0xFF454545
             );
             drawMirroredTree(root.children[1], context, oX - spacing, oY + root.children[1].mod, -1);
         }
         if (len >= 3) {
-            context.fill(oX + tileSize , oY + halfSize - pathSize ,
-                    oX + tileSize + spacing , oY + halfSize + pathSize ,
+            context.fill(oX + tileSize, oY + halfSize - pathSize,
+                    oX + tileSize + spacing, oY + halfSize + pathSize,
                     0xFF454545
             );
             drawMirroredTree(root.children[2], context, oX + spacing, oY + root.children[2].mod, 1);
@@ -109,7 +112,7 @@ public class UpgradeTreeScreen extends SpruceScreen {
             drawTree(root.children[3], context, oX + root.children[1].mod, oY - spacing, -1);
         }
 
-
+        renderExperienceBar(context);
     }
 
     public Upgrade mouseOnUpgrade(double mouseX, double mouseY) {
@@ -152,45 +155,80 @@ public class UpgradeTreeScreen extends SpruceScreen {
     public void renderTitle(DrawContext graphics, int mouseX, int mouseY, float delta) {
         String upgradeName = hoveredUpgrade == null ? "" : hoveredUpgrade.name;
 
-        graphics.drawCenteredTextWithShadow(this.textRenderer, bender.element.name, this.width / 2, 8, 0xFFFFFFFF);
+        //graphics.drawCenteredTextWithShadow(this.textRenderer, bender.element.name, this.width / 2, 8, 0xFFFFFFFF);
 
         //Use this when you wanna know what the upgrade name is
         //graphics.drawCenteredTextWithShadow(this.textRenderer, upgradeName, this.width / 2, 24, 0xFFc4c4c4);
 
         if (!upgradeName.isEmpty()) {
             ArrayList<Text> tooltip = new ArrayList<>();
-            SapsUtils.addTranslatable(tooltip,"upgrade.elementals." + upgradeName);
-            SapsUtils.addTranslatableAutomaticLineBreaks(tooltip,"upgrade.elementals." + upgradeName + ".description",5);
-            SapsUtils.addTranslatableAutomaticLineBreaks(tooltip,"upgrade.elementals." + upgradeName + ".use",6);
-            if(hoveredUpgrade.parent.exclusive){
-                SapsUtils.addTranslatableAutomaticLineBreaks(tooltip,"upgrade.elementals.exclusive", 5);
+            SapsUtils.addTranslatable(tooltip, "upgrade.elementals." + upgradeName);
+            SapsUtils.addTranslatableAutomaticLineBreaks(tooltip, "upgrade.elementals." + upgradeName + ".description", 5);
+            SapsUtils.addTranslatableAutomaticLineBreaks(tooltip, "upgrade.elementals." + upgradeName + ".use", 6);
+            if (hoveredUpgrade.parent.exclusive) {
+                SapsUtils.addTranslatableAutomaticLineBreaks(tooltip, "upgrade.elementals.exclusive", 5);
             }
             graphics.drawTooltip(this.textRenderer, tooltip, mouseX, mouseY);
         }
     }
 
+    /**
+     * Slightly modified vanilla code to render bending levels
+     * @author Mojang
+     */
+    public void renderExperienceBar(DrawContext context) {
+        Identifier ICONS = new Identifier(MODID,"textures/gui/icons.png");
+
+        int scaledWidth = context.getScaledWindowWidth();
+
+        int x = scaledWidth / 2 - 91;
+        int y = 6;
+
+        int level = ClientBender.get().level;
+        int progressWidth = (int) (ClientBender.get().xp / Bender.getMaxXp(level) * 183.0F);
+
+        context.drawTexture(ICONS, x, y, 0, 64, 182, 5);
+        if (progressWidth > 0) {
+            context.drawTexture(ICONS, x, y, 0, 69, progressWidth, 5);
+        }
+
+        if (level > 0) {
+            String title = "" + level;
+
+            progressWidth = (scaledWidth - textRenderer.getWidth(title)) / 2;
+            y = 5;
+
+            context.drawText(textRenderer, title, progressWidth + 1, y, 0, false);
+            context.drawText(textRenderer, title, progressWidth - 1, y, 0, false);
+            context.drawText(textRenderer, title, progressWidth, y + 1, 0, false);
+            context.drawText(textRenderer, title, progressWidth, y - 1, 0, false);
+            context.drawText(textRenderer, title, progressWidth, y, 0x47e2dd, false);
+        }
+
+    }
+
     public void drawUpgradeButton(int x1, int y1, DrawContext context, Upgrade upgrade) {
         if (bender.upgrades.containsKey(upgrade)) {
             context.drawTexture(new Identifier(MODID, "textures/gui/upgrade_button_on.png"),
-                    x1, y1, 0, 0, tileSize, tileSize, 32 ,32);
+                    x1, y1, 0, 0, tileSize, tileSize, 32, 32);
 
             String icon = Text.translatable("upgrade.elementals." + upgrade.name + ".icon").getString();
-            if(!icon.equals("upgrade.elementals." + upgrade.name + ".icon")){
-                context.drawTexture(new Identifier(MODID,"textures/gui/" + icon + "_icon_on.png"),
-                        x1, y1, 0, 0, tileSize, tileSize, 32 ,32);
+            if (!icon.equals("upgrade.elementals." + upgrade.name + ".icon")) {
+                context.drawTexture(new Identifier(MODID, "textures/gui/" + icon + "_icon_on.png"),
+                        x1, y1, 0, 0, tileSize, tileSize, 32, 32);
             }
         } else {
             context.drawTexture(new Identifier(MODID, "textures/gui/upgrade_button_off.png"),
-                    x1, y1, 0, 0, tileSize, tileSize, 32 ,32);
+                    x1, y1, 0, 0, tileSize, tileSize, 32, 32);
 
             String icon = Text.translatable("upgrade.elementals." + upgrade.name + ".icon").getString();
-            if(!icon.equals("upgrade.elementals." + upgrade.name + ".icon")){
+            if (!icon.equals("upgrade.elementals." + upgrade.name + ".icon")) {
                 context.drawTexture(new Identifier(MODID, "textures/gui/" + icon + "_icon_off.png"),
-                        x1, y1, 0, 0, tileSize, tileSize, 32 ,32);
+                        x1, y1, 0, 0, tileSize, tileSize, 32, 32);
             }
         }
 
-        upgradeButtons.put(upgrade, new Point(x1 + tileSize/2, y1 + tileSize / 2));
+        upgradeButtons.put(upgrade, new Point(x1 + tileSize / 2, y1 + tileSize / 2));
     }
 
 

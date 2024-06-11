@@ -37,6 +37,9 @@ public class StateDataSaverAndLoader extends PersistentState {
 
             playerNbt.putFloat("chi", playerData.chi);
 
+            playerNbt.putFloat("xp", playerData.xp);
+            playerNbt.putInt("level", playerData.level);
+
             playersNbt.put(uuid.toString(), playerNbt);
         }));
         nbt.put("players", playersNbt);
@@ -66,6 +69,9 @@ public class StateDataSaverAndLoader extends PersistentState {
             playerData.element.onRead(nbt.getCompound("upgrades"),playerData.upgrades);
 
             playerData.chi = nbt.getFloat("chi");
+
+            playerData.xp = nbt.getFloat("xp");
+            playerData.level = nbt.getInt("level");
 
             UUID uuid = UUID.fromString(key);
             state.players.put(uuid, playerData);

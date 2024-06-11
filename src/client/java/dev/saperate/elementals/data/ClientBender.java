@@ -17,6 +17,8 @@ public class ClientBender {
     public HashMap<Upgrade, Boolean> upgrades = new HashMap<>();
     private double castTime = -1;
     public float chi = 100;
+    public int level = 0;
+    public float xp = 0;
 
     public void startCasting() {
         castTime = 0;
@@ -42,6 +44,7 @@ public class ClientBender {
         //so when it gets higher than 100 we can use that as a countdown for when we will not display the chi counter anymore
         chi += Bender.CHI_REGENERATION_RATE;
     }
+
 
     private ClientBender() {
 

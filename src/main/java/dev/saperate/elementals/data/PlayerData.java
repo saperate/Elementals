@@ -20,7 +20,8 @@ public class PlayerData {
     public Ability[] boundAbilities = new Ability[4];
     public Element element = Element.elementList.get(0);
     public HashMap<Upgrade, Boolean> upgrades = new HashMap<>();
-    public float chi = 100;
+    public float chi = 100, xp = 0;
+    public int level = 0;
 
 
     /**
