@@ -72,7 +72,7 @@ public class AirElement extends Element {
                                         },1)
                                 },1)
                         },1)
-                },2)
+                },4)
         });
         addAbility(new AbilityAir1(), true);
         addAbility(new AbilityAirGust());

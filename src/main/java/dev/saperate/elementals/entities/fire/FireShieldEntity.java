@@ -7,12 +7,15 @@ import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.particle.ParticleTypes;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 import java.util.List;
 
 import static dev.saperate.elementals.entities.ElementalEntities.FIRESHIELD;
+import static dev.saperate.elementals.utils.SapsUtils.summonParticles;
 
 public class FireShieldEntity extends Entity {
     public static final int MAX_FLAME_SIZE = 3;
@@ -50,14 +53,17 @@ public class FireShieldEntity extends Entity {
     public void tick() {
         super.tick();
 
-        Entity owner = getOwner();
+        if (random.nextBetween(0, 20) == 6) {
+            playSound(SoundEvents.BLOCK_FIRE_AMBIENT, 1, 0);
+        }
 
-        if(owner == null){
+        Entity owner = getOwner();
+        if (owner == null) {
             discard();
             return;
         }
 
-        setPos(owner.getX(),owner.getY(),owner.getZ());
+        setPos(owner.getX(), owner.getY(), owner.getZ());
 
 
         float diff = (getFireHeight() - prevFlameSize) / heightAdjustSpeed;
@@ -77,7 +83,7 @@ public class FireShieldEntity extends Entity {
                 getWorld().isClient ? getBoundingBox().expand(1.5f) : getBoundingBox().expand(1.5f).offset(getPos()),
                 ProjectileEntity::isAlive);
 
-        for (ProjectileEntity e : projectiles){
+        for (ProjectileEntity e : projectiles) {
             e.discard();
         }
 
@@ -88,12 +94,12 @@ public class FireShieldEntity extends Entity {
         for (LivingEntity entity : hits) {
             if (entity.getY() - getY() < h + 1
                     && Math.abs(entity.getPos().subtract(getPos()).length()) > 2) {
-                if(!entity.isFireImmune()){
+                if (!entity.isFireImmune()) {
                     entity.setOnFireFor(8);
                     entity.damage(getDamageSources().inFire(), isBlue() ? 2.5f : 1.5f);//1.5f for normal, 2.5f for blue
                 }
 
-                Vec3d direction = entity.getPos().add(0,1.5f,0).subtract(getPos()).multiply(0.1f);
+                Vec3d direction = entity.getPos().add(0, 1.5f, 0).subtract(getPos()).multiply(0.1f);
                 entity.setVelocity(getVelocity().add(direction));
             }
         }
@@ -139,7 +145,6 @@ public class FireShieldEntity extends Entity {
     protected void writeCustomDataToNbt(NbtCompound nbt) {
 
     }
-
 
 
     public float getFinalFireHeight() {

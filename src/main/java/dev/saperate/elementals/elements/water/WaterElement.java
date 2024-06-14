@@ -101,7 +101,7 @@ public class WaterElement extends Element {
                                                 },2)
                                         },1)
                                 },1)
-                        },1)
+                        },3)//This is priced higher than 2 since we don't want players to soft-lock themselves
 
                 });
         addAbility(new AbilityWater1(), true);

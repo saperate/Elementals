@@ -73,7 +73,7 @@ public class EarthElement extends Element {
                                         new Upgrade("earthArmor",2)
                                 },2)
                         },1)
-                },1)
+                },3)
         });
         addAbility(new AbilityEarth1(), true);
         addAbility(new AbilityEarthBlockPickup());

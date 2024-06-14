@@ -15,6 +15,8 @@ import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.entity.projectile.ProjectileUtil;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
@@ -62,6 +64,13 @@ public class WaterBladeEntity extends ProjectileEntity {
     @Override
     public void tick() {
         super.tick();
+
+        if (random.nextBetween(0, 40) == 6) {
+            summonParticles(this, random,
+                    ParticleTypes.SPLASH,
+                    0, 1);
+                playSound(SoundEvents.ENTITY_PLAYER_SWIM,0.25f,0);
+        }
 
         BlockPos blockHit = SapsUtils.checkBlockCollision(this, 0.1f);
 
@@ -173,7 +182,9 @@ public class WaterBladeEntity extends ProjectileEntity {
 
     @Override
     public void onRemoved() {
-        summonParticles(this, random, ParticleTypes.SPLASH, 0, 100);
+        summonParticles(this, random, ParticleTypes.SPLASH, 0, 10);
+        this.getWorld().playSound(getX(), getY(), getZ(), SoundEvents.ENTITY_PLAYER_SPLASH, SoundCategory.BLOCKS, 0.25f, (1.0f + (this.getWorld().random.nextFloat() - this.getWorld().random.nextFloat()) * 0.2f) * 0.7f, false);
+
     }
 
     @Override

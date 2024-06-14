@@ -12,6 +12,8 @@ import net.minecraft.entity.projectile.ProjectileUtil;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.predicate.entity.EntityPredicates;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.TypeFilter;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
@@ -55,6 +57,14 @@ public class WaterCubeEntity extends ProjectileEntity {
     @Override
     public void tick() {
         super.tick();
+
+        if (random.nextBetween(0, 40) == 6) {
+            summonParticles(this, random,
+                    ParticleTypes.SPLASH,
+                    0, 1);
+            playSound(SoundEvents.ENTITY_PLAYER_SWIM,0.25f,0);
+        }
+
         Entity owner = getOwner();
         if (owner == null) {
             this.setVelocity(this.getVelocity().add(0.0, -0.04, 0.0));
@@ -136,7 +146,9 @@ public class WaterCubeEntity extends ProjectileEntity {
     }
     @Override
     public void onRemoved() {
-        summonParticles(this, random, ParticleTypes.SPLASH, 10, 100);
+        summonParticles(this, random, ParticleTypes.SPLASH, 0, 10);
+        this.getWorld().playSound(getX(), getY(), getZ(), SoundEvents.ENTITY_PLAYER_SPLASH, SoundCategory.BLOCKS, 0.25f, (1.0f + (this.getWorld().random.nextFloat() - this.getWorld().random.nextFloat()) * 0.2f) * 0.7f, false);
+
     }
 
     @Override

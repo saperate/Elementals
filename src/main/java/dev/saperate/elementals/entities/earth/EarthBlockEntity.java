@@ -11,7 +11,11 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.entity.projectile.ProjectileUtil;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.particle.BlockStateParticleEffect;
+import net.minecraft.particle.ParticleTypes;
 import net.minecraft.predicate.entity.EntityPredicates;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.TypeFilter;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
@@ -39,7 +43,6 @@ public class EarthBlockEntity extends ProjectileEntity {
 
     private boolean drops = true, damageOnTouch = false, shiftToFreeze = true, dropOnLifeTime = false;
     private int lifeTime = -1;
-
 
 
     public EarthBlockEntity(EntityType<EarthBlockEntity> type, World world) {
@@ -75,6 +78,12 @@ public class EarthBlockEntity extends ProjectileEntity {
     @Override
     public void tick() {
         super.tick();
+        if (random.nextBetween(0, 20) == 6) {
+            summonParticles(this, random,
+                    new BlockStateParticleEffect(ParticleTypes.BLOCK, getBlockState()),
+                    0, 1);
+        }
+
         Entity owner = getOwner();
         if (lifeTime != -1) {
             if (lifeTime <= 0) {
@@ -112,12 +121,12 @@ public class EarthBlockEntity extends ProjectileEntity {
                     LivingEntity::isAlive);
 
             for (LivingEntity e : entities) {
-                if(!e.equals(owner)){
+                if (!e.equals(owner)) {
                     e.damage(this.getDamageSources().playerAttack((PlayerEntity) owner), getDamage());
                 }
                 e.setVelocity(this.getVelocity().multiply(1.2f));
                 e.velocityModified = true;
-                e.move(MovementType.SELF,e.getVelocity());
+                e.move(MovementType.SELF, e.getVelocity());
             }
         }
 
@@ -127,7 +136,7 @@ public class EarthBlockEntity extends ProjectileEntity {
                 LivingEntity entity = (LivingEntity) ((EntityHitResult) hit).getEntity();
                 entity.damage(this.getDamageSources().playerAttack((PlayerEntity) owner), getDamage());
                 entity.setVelocity(this.getVelocity().multiply(1.2f));
-                entity.move(MovementType.SELF,entity.getVelocity());
+                entity.move(MovementType.SELF, entity.getVelocity());
                 entity.velocityModified = true;
                 discard();
             }
@@ -208,6 +217,7 @@ public class EarthBlockEntity extends ProjectileEntity {
     @Override
     public void onRemoved() {
         super.onRemoved();
+        this.getWorld().playSound(getX(), getY(), getZ(), SoundEvents.BLOCK_STONE_BREAK, SoundCategory.BLOCKS, .5f, (1.0f + (this.getWorld().random.nextFloat() - this.getWorld().random.nextFloat()) * 0.2f) * 0.7f, false);
         //TODO make this drop the block's item or place the block
     }
 

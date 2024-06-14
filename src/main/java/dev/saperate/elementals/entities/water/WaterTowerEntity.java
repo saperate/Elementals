@@ -9,6 +9,7 @@ import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.predicate.entity.EntityPredicates;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.TypeFilter;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
@@ -49,6 +50,11 @@ public class WaterTowerEntity extends ProjectileEntity {
     @Override
     public void tick() {
         super.tick();
+
+        if (random.nextBetween(0, 40) == 6) {
+            playSound(SoundEvents.ENTITY_PLAYER_SWIM,0.1f,0);
+        }
+
         PlayerEntity owner = getOwner();
         if (owner == null && !getWorld().isClient) {
             discard();

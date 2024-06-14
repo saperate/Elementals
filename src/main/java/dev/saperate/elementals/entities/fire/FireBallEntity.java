@@ -31,7 +31,6 @@ public class FireBallEntity extends ProjectileEntity {
     private static final TrackedData<Boolean> IS_BLUE = DataTracker.registerData(FireBallEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
 
 
-
     public FireBallEntity(EntityType<FireBallEntity> type, World world) {
         super(type, world);
     }
@@ -62,13 +61,15 @@ public class FireBallEntity extends ProjectileEntity {
             summonParticles(this, random,
                     isBlue() ? ParticleTypes.SOUL_FIRE_FLAME : ParticleTypes.FLAME,
                     0, 1);
+            playSound(SoundEvents.BLOCK_FIRE_AMBIENT, 1, 0);
+
         }
 
         Entity owner = getOwner();
         if (owner == null) {
             this.setVelocity(this.getVelocity().add(0.0, -0.04, 0.0));
             this.move(MovementType.SELF, this.getVelocity());
-            if(SapsUtils.checkBlockCollision(this,0.1f) != null){
+            if (SapsUtils.checkBlockCollision(this, 0.1f) != null) {
                 onCollision();
             }
             return;
@@ -96,9 +97,9 @@ public class FireBallEntity extends ProjectileEntity {
 
         if (getIsControlled()) {
             controlEntity(owner);
-        } else if(SapsUtils.checkBlockCollision(this,0.25f) != null){
-                onCollision();
-                return;
+        } else if (SapsUtils.checkBlockCollision(this, 0.25f) != null) {
+            onCollision();
+            return;
         }
 
         this.move(MovementType.SELF, this.getVelocity());
@@ -132,7 +133,7 @@ public class FireBallEntity extends ProjectileEntity {
         summonParticles(this, random,
                 isBlue() ? ParticleTypes.SOUL_FIRE_FLAME : ParticleTypes.FLAME,
                 0.25f, 25);
-        this.getWorld().playSound(getX(),getY(),getZ(), SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.BLOCKS, 4.0f, (1.0f + (this.getWorld().random.nextFloat() - this.getWorld().random.nextFloat()) * 0.2f) * 0.7f, false);
+        this.getWorld().playSound(getX(), getY(), getZ(), SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.BLOCKS, 4.0f, (1.0f + (this.getWorld().random.nextFloat() - this.getWorld().random.nextFloat()) * 0.2f) * 0.7f, true);
     }
 
     @Override

@@ -9,6 +9,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
@@ -45,6 +46,10 @@ public class WaterShieldEntity extends Entity {
     @Override
     public void tick() {
         super.tick();
+
+        if (random.nextBetween(0, 10) == 6) {
+            playSound(SoundEvents.ENTITY_PLAYER_SWIM,0.05f,0);
+        }
 
         PlayerEntity owner = getOwner();
 

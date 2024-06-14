@@ -8,11 +8,14 @@ import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.particle.ParticleTypes;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.world.World;
 
 import java.util.List;
 
 import static dev.saperate.elementals.entities.ElementalEntities.FIREBLOCK;
+import static dev.saperate.elementals.utils.SapsUtils.summonParticles;
 import static net.minecraft.entity.projectile.ProjectileUtil.getEntityCollision;
 
 public class FireBlockEntity extends Entity {
@@ -61,6 +64,10 @@ public class FireBlockEntity extends Entity {
     @Override
     public void tick() {
         super.tick();
+        if (random.nextBetween(0, 20) == 6) {
+            playSound(SoundEvents.BLOCK_FIRE_AMBIENT, 1, 0);
+        }
+
         lifeTime--;
         if (lifeTime <= 0 && !getWorld().isClient) {
             discard();
@@ -83,7 +90,7 @@ public class FireBlockEntity extends Entity {
                 getWorld().isClient ? getBoundingBox().expand(.25f) : getBoundingBox().offset(getPos()).expand(.25f),
                 ProjectileEntity::isAlive);
 
-        for (ProjectileEntity e : projectiles){
+        for (ProjectileEntity e : projectiles) {
             e.discard();
         }
 

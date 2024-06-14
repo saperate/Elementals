@@ -10,6 +10,7 @@ import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
@@ -53,6 +54,10 @@ public class WaterJetEntity extends ProjectileEntity {
     @Override
     public void tick() {
         super.tick();
+        if (random.nextBetween(0, 20) == 6) {
+            playSound(SoundEvents.ENTITY_PLAYER_SPLASH,0.25f,0);
+        }
+
         Entity owner = getOwner();
         if (owner == null) {
             discard();
@@ -63,7 +68,7 @@ public class WaterJetEntity extends ProjectileEntity {
             setPosition(getEntityLookVector(owner, 0.5f).subtract(0,0.5f,0));
         } else {
             if(getWorld().isClient){
-                summonParticles(this, random, ParticleTypes.SPLASH, 10, 20);
+                summonParticles(this, random, ParticleTypes.SPLASH, 0, 10);
                 summonParticles(this, random, ParticleTypes.CLOUD, 0, 1);
             }
             HitResult hit = raycastFull(owner, getRange(), true);
