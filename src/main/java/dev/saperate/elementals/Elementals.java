@@ -53,7 +53,7 @@ public class Elementals implements ModInitializer {
 
     @Override
     public void onInitialize() {
-        LOGGER.info("Starting registration of the cool stuff...");
+        LOGGER.info("Initialising the cool stuff...");
         ElementalItems.register();
         ElementalEntities.register();
 
@@ -78,16 +78,6 @@ public class Elementals implements ModInitializer {
 
         Registry.register(Registries.SOUND_EVENT, WIND_SOUND_ID, WIND_SOUND_EVENT);
         Registry.register(Registries.SOUND_EVENT, WIND_BURST_SOUND_ID, WIND_BURST_SOUND_EVENT);
-
-        LOGGER.info("Everything successfully registered, have fun!");
-
-
-        //TODO remove before release
-        LOGGER.error("/!\\ IMPORTANT /!\\\n" +
-                "\tDO NOT RELEASE, USE AT YOUR OWN RISK AS IT CAN CONTAIN BUGS AND CAN DESTROY YOUR WORLD \n" +
-                "\tIf this message is in a public release, contact saperate as it shouldn't be there.\n" +
-                "\t06/14/2024\n" +
-                "\t-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
     }
 
 

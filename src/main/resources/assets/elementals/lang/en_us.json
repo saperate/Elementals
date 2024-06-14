@@ -1,4 +1,10 @@
 {
+  "effect.elementals.dense" : "Dense",
+  "effect.elementals.drowning" : "Drowning",
+  "effect.elementals.stationary" : "Stationary",
+  "effect.elementals.seismic_sense" : "Seismic Sense",
+  "effect.elementals.spirit_projection" : "Spirit Projection",
+
   "upgrade.elementals.exclusive": " Notice: this upgrade is exclusive with its sister upgrades.",
   "upgrade.elementals.price": " Price: %d levels",
 
