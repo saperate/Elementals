@@ -17,6 +17,8 @@ import net.minecraft.entity.projectile.ProjectileUtil;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.predicate.entity.EntityPredicates;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.TypeFilter;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
@@ -25,6 +27,8 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.joml.Vector3f;
 
+import static dev.saperate.elementals.Elementals.WIND_BURST_SOUND_EVENT;
+import static dev.saperate.elementals.Elementals.WIND_SOUND_EVENT;
 import static dev.saperate.elementals.entities.ElementalEntities.AIRSTREAM;
 import static dev.saperate.elementals.entities.ElementalEntities.FIREARC;
 import static dev.saperate.elementals.utils.SapsUtils.getEntityLookVector;
@@ -84,6 +88,9 @@ public class AirStreamEntity extends ProjectileEntity {
             summonParticles(this, random,
                     ParticleTypes.POOF,
                     0, 1);
+            if(getParent() == null){
+                playSound(WIND_SOUND_EVENT,1,(1.0f + (this.getWorld().random.nextFloat() - this.getWorld().random.nextFloat()) * 0.2f) * 0.7f);
+            }
         }
 
         super.tick();
@@ -112,10 +119,13 @@ public class AirStreamEntity extends ProjectileEntity {
                 entity.move(MovementType.SELF, entity.getVelocity());
                 entity.velocityModified = true;
                 remove();
+                this.getWorld().playSound(getX(), getY(), getZ(), WIND_BURST_SOUND_EVENT, SoundCategory.BLOCKS, 1, (1.0f + (this.getWorld().random.nextFloat() - this.getWorld().random.nextFloat()) * 0.2f) * 0.7f, true);
+
             }
             if (!getWorld().isClient) {
                 if (SapsUtils.checkBlockCollision(this,0.1f) != null) {
                     remove();
+                    this.getWorld().playSound(getX(), getY(), getZ(), WIND_BURST_SOUND_EVENT, SoundCategory.BLOCKS, 1, (1.0f + (this.getWorld().random.nextFloat() - this.getWorld().random.nextFloat()) * 0.2f) * 0.7f, true);
                     return;
                 }
             }

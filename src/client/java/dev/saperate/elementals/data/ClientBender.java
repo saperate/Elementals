@@ -37,6 +37,7 @@ public class ClientBender {
     }
 
     public void tick(){
+
         if(castTime >= 0){
             castTime += 0.05;
         }

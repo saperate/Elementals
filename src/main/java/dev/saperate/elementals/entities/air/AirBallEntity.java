@@ -24,6 +24,8 @@ import net.minecraft.world.World;
 import net.minecraft.world.explosion.Explosion;
 import org.joml.Vector3f;
 
+import static dev.saperate.elementals.Elementals.WIND_BURST_SOUND_EVENT;
+import static dev.saperate.elementals.Elementals.WIND_SOUND_EVENT;
 import static dev.saperate.elementals.entities.ElementalEntities.AIRBALL;
 import static dev.saperate.elementals.entities.ElementalEntities.FIREBALL;
 import static dev.saperate.elementals.utils.SapsUtils.getEntityLookVector;
@@ -60,10 +62,12 @@ public class AirBallEntity extends ProjectileEntity {
 
     @Override
     public void tick() {
-        if (random.nextBetween(0, 20) == 6) {
+        if (random.nextBetween(0, 40) == 6) {
             summonParticles(this, random,
                     ParticleTypes.POOF,
                     0, 1);
+
+            playSound(WIND_SOUND_EVENT, 1, (1.0f + (this.getWorld().random.nextFloat() - this.getWorld().random.nextFloat()) * 0.2f) * 0.7f);
         }
 
         Entity owner = getOwner();
@@ -132,7 +136,7 @@ public class AirBallEntity extends ProjectileEntity {
         summonParticles(this, random,
                 ParticleTypes.POOF,
                 0.25f, 25);
-        this.getWorld().playSound(getX(), getY(), getZ(), SoundEvents.ENTITY_GOAT_SCREAMING_AMBIENT, SoundCategory.BLOCKS, 4.0f, (1.0f + (this.getWorld().random.nextFloat() - this.getWorld().random.nextFloat()) * 0.2f) * 0.7f, true);
+        this.getWorld().playSound(getX(), getY(), getZ(), WIND_BURST_SOUND_EVENT, SoundCategory.BLOCKS, 4.0f, (1.0f + (this.getWorld().random.nextFloat() - this.getWorld().random.nextFloat()) * 0.2f) * 0.7f, true);
     }
 
     @Override

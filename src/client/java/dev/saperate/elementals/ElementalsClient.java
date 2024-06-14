@@ -94,6 +94,6 @@ public class ElementalsClient implements ClientModInitializer {
 		EntityRendererRegistry.register(AIRSCOOTER, AirScooterEntityRenderer::new);
 
 		//COMMON
-		EntityRendererRegistry.register(DECOYPLAYER, (context) -> new DecoyPlayerEntityRenderer(context, false));
+		EntityRendererRegistry.register(DECOYPLAYER, (context) -> new DecoyPlayerEntityRenderer(context, true));
 	}
 }

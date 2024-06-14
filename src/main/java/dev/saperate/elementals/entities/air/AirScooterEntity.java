@@ -22,6 +22,8 @@ import net.minecraft.world.World;
 import net.minecraft.world.explosion.Explosion;
 import org.joml.Vector3f;
 
+import static dev.saperate.elementals.Elementals.WIND_BURST_SOUND_EVENT;
+import static dev.saperate.elementals.Elementals.WIND_SOUND_EVENT;
 import static dev.saperate.elementals.entities.ElementalEntities.AIRBALL;
 import static dev.saperate.elementals.entities.ElementalEntities.AIRSCOOTER;
 import static dev.saperate.elementals.utils.SapsUtils.getEntityLookVector;
@@ -54,6 +56,13 @@ public class AirScooterEntity extends Entity {
 
     @Override
     public void tick() {
+        if (random.nextBetween(0, 40) == 6) {
+            playSound(WIND_SOUND_EVENT, 1, (1.0f + (this.getWorld().random.nextFloat() - this.getWorld().random.nextFloat()) * 0.2f) * 0.7f);
+        }
+        if(isOnGround()){
+            playStepSound(getBlockPos().down(),getWorld().getBlockState(getBlockPos().down()));
+        }
+
         summonParticles(this, random,
                 ParticleTypes.POOF,
                 0, 1);
@@ -72,10 +81,11 @@ public class AirScooterEntity extends Entity {
 
         this.addVelocity(dx, 0, dz);
         this.setVelocity(getVelocity().normalize().multiply(getSpeed()));
-        System.out.println(isTouchingWater());
-        if (!isTouchingWater()) {
+        if (!isSubmergedInWater()) {
             //gravity
             this.setVelocity(this.getVelocity().add(0.0, -0.5, 0.0));
+        }else {
+            this.setVelocity(this.getVelocity().multiply(1,0,1));
         }
 
 
@@ -88,6 +98,8 @@ public class AirScooterEntity extends Entity {
         summonParticles(this, random,
                 ParticleTypes.POOF,
                 0.25f, 25);
+        this.getWorld().playSound(getX(), getY(), getZ(), WIND_BURST_SOUND_EVENT, SoundCategory.BLOCKS, 1, (1.0f + (this.getWorld().random.nextFloat() - this.getWorld().random.nextFloat()) * 0.2f) * 0.7f, true);
+
     }
 
     @Override

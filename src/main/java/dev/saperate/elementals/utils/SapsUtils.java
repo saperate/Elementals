@@ -14,6 +14,9 @@ import net.minecraft.fluid.FluidState;
 import net.minecraft.particle.ParticleEffect;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvent;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.crash.CrashException;
 import net.minecraft.util.crash.CrashReport;
@@ -218,7 +221,6 @@ public class SapsUtils {
     public static void serverSummonParticles(ServerWorld world, ParticleEffect type, Entity entity, Random rnd,
                                              double vX, double vY, double vZ, double speed, int count,
                                              float offsetX, float offsetY, float offsetZ, float vAmplitude) {
-        System.out.println(vY + rnd.nextDouble() * vAmplitude);
         for (int i = 0; i < count; i++) {
             world.spawnParticles(type,
                     entity.getX() + rnd.nextDouble() - 0.5f + offsetX,
@@ -378,5 +380,19 @@ public class SapsUtils {
                 velocity.z);
         player.velocityModified = true;
         player.move(MovementType.PLAYER, player.getVelocity());
+    }
+
+    /**
+     * This is used from the server to make a sound. It is designed to be called every tick,
+     * and it will play the sound every X ticks.
+     * If you just want to play the sound once (or every tick), set the interval to 1.
+     * @param entity The entity where we will play the sound
+     * @param interval The interval at which we will play the sound
+     * @param sound The sound which will be played
+     */
+    public static void playSoundAtEntity(Entity entity, SoundEvent sound, int interval){
+        if (entity.age % interval == 0) {
+            entity.getWorld().playSound(null, entity.getBlockPos(), sound, SoundCategory.NEUTRAL, 1, (1.0f + (entity.getWorld().random.nextFloat() - entity.getWorld().random.nextFloat()) * 0.2f) * 0.7f);
+        }
     }
 }

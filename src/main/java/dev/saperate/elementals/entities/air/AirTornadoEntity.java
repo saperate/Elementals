@@ -24,6 +24,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.joml.Vector3f;
 
+import static dev.saperate.elementals.Elementals.WIND_SOUND_EVENT;
 import static dev.saperate.elementals.entities.ElementalEntities.AIRTORNADO;
 import static dev.saperate.elementals.entities.ElementalEntities.WATERJET;
 import static dev.saperate.elementals.utils.SapsUtils.*;
@@ -66,6 +67,13 @@ public class AirTornadoEntity extends ProjectileEntity {
     @Override
     public void tick() {
         super.tick();
+        if (random.nextBetween(0, 40) == 6) {
+            summonParticles(this, random,
+                    ParticleTypes.POOF,
+                    0, 1);
+            playSound(WIND_SOUND_EVENT,1,(1.0f + (this.getWorld().random.nextFloat() - this.getWorld().random.nextFloat()) * 0.2f) * 0.7f);
+        }
+
         PlayerEntity owner = getOwner();
         if (owner == null || isSubmergedInWater()) {
             discard();

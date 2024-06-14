@@ -1,0 +1,13 @@
+{
+  "wind": {
+    "sounds": [
+      "elementals:wind"
+    ]
+  },
+  "wind_burst" : {
+    "sounds" : [
+      "elementals:wind_burst"
+    ]
+  }
+}
+

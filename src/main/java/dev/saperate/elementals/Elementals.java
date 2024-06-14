@@ -30,6 +30,7 @@ import net.minecraft.registry.Registry;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Identifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,7 +46,10 @@ import static dev.saperate.elementals.network.ModMessages.registerC2SPackets;
 public class Elementals implements ModInitializer {
     public static final String MODID = "elementals";
     public static final Logger LOGGER = LoggerFactory.getLogger(MODID);
-
+    private static final Identifier WIND_SOUND_ID = new Identifier(MODID, "wind");
+    private static final Identifier WIND_BURST_SOUND_ID = new Identifier(MODID, "wind_burst");
+    public static SoundEvent WIND_SOUND_EVENT = SoundEvent.of(WIND_SOUND_ID);
+    public static SoundEvent WIND_BURST_SOUND_EVENT = SoundEvent.of(WIND_BURST_SOUND_ID);
 
     @Override
     public void onInitialize() {
@@ -71,6 +75,10 @@ public class Elementals implements ModInitializer {
         ServerPlayerEvents.AFTER_RESPAWN.register(Elementals::onPlayerRespawn);
 
         Registry.register(Registries.BANNER_PATTERN, "air", AIR_PATTERN);
+
+        Registry.register(Registries.SOUND_EVENT, WIND_SOUND_ID, WIND_SOUND_EVENT);
+        Registry.register(Registries.SOUND_EVENT, WIND_BURST_SOUND_ID, WIND_BURST_SOUND_EVENT);
+
         LOGGER.info("Everything successfully registered, have fun!");
 
 
@@ -78,7 +86,7 @@ public class Elementals implements ModInitializer {
         LOGGER.error("/!\\ IMPORTANT /!\\\n" +
                 "\tDO NOT RELEASE, USE AT YOUR OWN RISK AS IT CAN CONTAIN BUGS AND CAN DESTROY YOUR WORLD \n" +
                 "\tIf this message is in a public release, contact saperate as it shouldn't be there.\n" +
-                "\t06/01/2024\n" +
+                "\t06/14/2024\n" +
                 "\t-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
     }
 

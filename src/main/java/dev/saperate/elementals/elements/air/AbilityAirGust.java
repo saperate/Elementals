@@ -8,14 +8,16 @@ import net.minecraft.entity.MovementType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 import org.joml.Vector3f;
 
 import java.util.List;
 
-import static dev.saperate.elementals.utils.SapsUtils.getEntityLookVector;
-import static dev.saperate.elementals.utils.SapsUtils.serverSummonParticles;
+import static dev.saperate.elementals.Elementals.WIND_SOUND_EVENT;
+import static dev.saperate.elementals.utils.SapsUtils.*;
 
 public class AbilityAirGust implements Ability {
     public static final Box boundingBox = new Box(new Vec3d(-1, -1, -1), new Vec3d(1, 1, 1));
@@ -85,6 +87,7 @@ public class AbilityAirGust implements Ability {
                     pos.z - 1,
                     0.05f + player.getMovementSpeed(), 12,
                     0, 0, 0, 2);
+            playSoundAtEntity(player,WIND_SOUND_EVENT,5);
 
             List<Entity> hits = player.getWorld().getEntitiesByClass(Entity.class,
                     boundingBox.expand(12).offset(player.getPos()),
@@ -120,6 +123,7 @@ public class AbilityAirGust implements Ability {
             }
         }
     }
+
 
     @Override
     public void onRemove(Bender bender) {

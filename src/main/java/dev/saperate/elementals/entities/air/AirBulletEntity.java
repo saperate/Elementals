@@ -14,12 +14,15 @@ import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.entity.projectile.ProjectileUtil;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.joml.Vector3f;
 
+import static dev.saperate.elementals.Elementals.WIND_BURST_SOUND_EVENT;
+import static dev.saperate.elementals.Elementals.WIND_SOUND_EVENT;
 import static dev.saperate.elementals.entities.ElementalEntities.AIRBULLET;
 import static dev.saperate.elementals.entities.ElementalEntities.WATERBULLET;
 import static dev.saperate.elementals.utils.SapsUtils.getEntityLookVector;
@@ -63,7 +66,14 @@ public class AirBulletEntity extends ProjectileEntity {
     @Override
     public void tick() {
         super.tick();
-
+        if (random.nextBetween(0, 40) == 6) {
+            summonParticles(this, random,
+                    ParticleTypes.POOF,
+                    0, 1);
+            if(getArrayId() == 0){
+                playSound(WIND_SOUND_EVENT,1,(1.0f + (this.getWorld().random.nextFloat() - this.getWorld().random.nextFloat()) * 0.2f) * 0.7f);
+            }
+        }
         BlockPos blockHit = SapsUtils.checkBlockCollision(this, 0.1f);
 
         PlayerEntity owner = getOwner();
@@ -155,6 +165,8 @@ public class AirBulletEntity extends ProjectileEntity {
     @Override
     public void onRemoved() {
         summonParticles(this, random, ParticleTypes.POOF, 0.01f, 10);
+        this.getWorld().playSound(getX(), getY(), getZ(), WIND_BURST_SOUND_EVENT, SoundCategory.BLOCKS, 1, (1.0f + (this.getWorld().random.nextFloat() - this.getWorld().random.nextFloat()) * 0.2f) * 0.7f, true);
+
     }
 
     @Override

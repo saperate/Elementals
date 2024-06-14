@@ -177,7 +177,6 @@ public class BendingCommand {
     private static int status(CommandContext<ServerCommandSource> context) {
         Bender bender = Bender.getBender(context.getSource().getPlayer());
 
-        System.out.println(bender.toString());
         context.getSource().sendFeedback((() -> Text.of(
                 bender.toString())
         ), false);
