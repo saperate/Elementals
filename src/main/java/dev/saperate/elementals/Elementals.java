@@ -44,6 +44,7 @@ import static dev.saperate.elementals.misc.AirBannerPattern.AIR_PATTERN;
 import static dev.saperate.elementals.network.ModMessages.registerC2SPackets;
 
 public class Elementals implements ModInitializer {
+    //TODO add config
     public static final String MODID = "elementals";
     public static final Logger LOGGER = LoggerFactory.getLogger(MODID);
     private static final Identifier WIND_SOUND_ID = new Identifier(MODID, "wind");

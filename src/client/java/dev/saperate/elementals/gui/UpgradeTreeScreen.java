@@ -1,13 +1,6 @@
 package dev.saperate.elementals.gui;
 
-import dev.lambdaurora.spruceui.Position;
-import dev.lambdaurora.spruceui.background.Background;
-import dev.lambdaurora.spruceui.background.SimpleColorBackground;
-import dev.lambdaurora.spruceui.screen.SpruceScreen;
-import dev.lambdaurora.spruceui.widget.SpruceButtonWidget;
-import dev.lambdaurora.spruceui.widget.SpruceIconButtonWidget;
-import dev.lambdaurora.spruceui.widget.container.SpruceContainerWidget;
-import dev.lambdaurora.spruceui.widget.text.SpruceTextAreaWidget;
+
 import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.data.ClientBender;
 import dev.saperate.elementals.data.PlayerData;
@@ -42,7 +35,7 @@ import static dev.saperate.elementals.Elementals.MODID;
 import static dev.saperate.elementals.network.ModMessages.BUY_UPGRADE_PACKET_ID;
 import static dev.saperate.elementals.network.ModMessages.GET_UPGRADE_LIST_PACKET_ID;
 
-public class UpgradeTreeScreen extends SpruceScreen {
+public class UpgradeTreeScreen extends Screen {
     private ClientBender bender;
     private final Screen parent;
     private int tileSize = 32, pathSize = 2;
@@ -114,6 +107,7 @@ public class UpgradeTreeScreen extends SpruceScreen {
         }
 
         renderExperienceBar(context);
+        renderTitle(context,mouseX,mouseY,delta);
     }
 
     public Upgrade mouseOnUpgrade(double mouseX, double mouseY) {
@@ -152,7 +146,6 @@ public class UpgradeTreeScreen extends SpruceScreen {
         hoveredUpgrade = mouseOnUpgrade(mouseX, mouseY);
     }
 
-    @Override
     public void renderTitle(DrawContext graphics, int mouseX, int mouseY, float delta) {
         String upgradeName = hoveredUpgrade == null ? "" : hoveredUpgrade.name;
 

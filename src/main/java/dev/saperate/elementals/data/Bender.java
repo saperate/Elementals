@@ -43,7 +43,7 @@ public class Bender {
         if (element.contains(ability) && index >= 0 && index <= 4) {
             boundAbilities[index] = ability;
             if (!player.getWorld().isClient) {
-                StateDataSaverAndLoader.getServerState(player.getServer()).players.get(player.getUuid()).boundAbilities = boundAbilities;
+                PlayerData.get(player).boundAbilities = boundAbilities;
             }
         }
     }
@@ -51,7 +51,7 @@ public class Bender {
 
     public void clearBindings() {
         boundAbilities = new Ability[5];
-        StateDataSaverAndLoader.getPlayerState(player).boundAbilities = new Ability[5];
+        PlayerData.get(player).boundAbilities = new Ability[5];
     }
 
     public void bend(int index) {

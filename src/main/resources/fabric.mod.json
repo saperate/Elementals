@@ -2,16 +2,16 @@
 	"schemaVersion": 1,
 	"id": "elementals",
 	"version": "${version}",
-	"name": "elementals",
-	"description": "I should probably do this soon, if i haven't yet tell me",
+	"name": "Elementals",
+	"description": "Harness the power of the elements to aid you in your daily life!",
 	"authors": [
 		"Saperate"
 	],
 	"contact": {
-		"homepage": "https://fabricmc.net/",
-		"sources": "https://github.com/FabricMC/fabric-example-mod"
+		"homepage": "https://saperate.dev",
+		"sources": "https://github.com/saperate/Elementals"
 	},
-	"license": "CC0-1.0",
+	"license": "SCSL (https://github.com/saperate/SlimePearls/blob/1.20.X/LICENSE)",
 	"icon": "assets/elementals/icon.png",
 	"environment": "*",
 	"entrypoints": {
@@ -42,6 +42,6 @@
 		"fabric-api": "*"
 	},
 	"suggests": {
-		"another-mod": "*"
+
 	}
 }

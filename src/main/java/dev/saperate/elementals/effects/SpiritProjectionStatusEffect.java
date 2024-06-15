@@ -30,6 +30,9 @@ public class SpiritProjectionStatusEffect extends StatusEffect {
 
     @Override
     public void applyUpdateEffect(LivingEntity entity, int amplifier) {
+        if(entity.getWorld().isClient){
+            return;
+        }
         if(entity instanceof PlayerEntity player){
             Bender bender = Bender.getBender(player);
             if(!(bender.currAbility instanceof AbilityAir4)){

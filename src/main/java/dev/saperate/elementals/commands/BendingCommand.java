@@ -15,6 +15,7 @@ import dev.saperate.elementals.elements.Upgrade;
 import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.command.argument.ArgumentTypes;
 import net.minecraft.command.argument.EntityArgumentType;
+import net.minecraft.command.argument.GameProfileArgumentType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
@@ -26,14 +27,20 @@ public class BendingCommand {
     public static void register(CommandDispatcher<ServerCommandSource> dispatcher, CommandRegistryAccess commandRegistryAccess, CommandManager.RegistrationEnvironment registrationEnvironment) {
         dispatcher.register(CommandManager.literal("bending")
                 .then(CommandManager.literal("get").executes(BendingCommand::getSelfElement))
-                .then(CommandManager.literal("set").then(CommandManager.argument("element", ElementArgumentType.element()).executes(BendingCommand::setSelfElement)))
+                .then(CommandManager.literal("set")
+                        .then(CommandManager.argument("element", ElementArgumentType.element())
+                                .then(CommandManager.argument("player" ,EntityArgumentType.player())
+                                        .executes(BendingCommand::setElement)
+                                )
+                                .executes(BendingCommand::setSelfElement))
+                        ).requires(source -> source.hasPermissionLevel(2)
+                )
                 .then(CommandManager.literal("bind")
                         .then(CommandManager.argument("Ability Index", IntegerArgumentType.integer(1))
                                 .then(CommandManager.argument("Bind Index", IntegerArgumentType.integer(1, 4))
                                         .executes(BendingCommand::bindAbility))))
                 .then(CommandManager.literal("upgrade")
                         .then(CommandManager.literal("list").executes(BendingCommand::listUpgrades))
-                        .then(CommandManager.literal("buy").then(CommandManager.argument("name", StringArgumentType.string()).executes(BendingCommand::buyUpgrade)))
                         .then(CommandManager.literal("clear").executes(BendingCommand::clearUpgrades))
                 )
                 .then(CommandManager.literal("status")
@@ -42,9 +49,12 @@ public class BendingCommand {
                 .then(CommandManager.literal("level")
                         .then(CommandManager.literal("set")
                                 .then(CommandManager.argument("value", IntegerArgumentType.integer(0,Integer.MAX_VALUE))
-                                        .executes(BendingCommand::levelSet)
+                                        .then(CommandManager.argument("player" ,EntityArgumentType.player())
+                                                .executes(BendingCommand::levelSet)
+                                        )
+                                        .executes(BendingCommand::levelSetSelf)
                                 )
-                        )
+                        ).requires(source -> source.hasPermissionLevel(2))
                         .then(CommandManager.literal("get")
                                 .executes(BendingCommand::levelGet)
                         )
@@ -93,6 +103,32 @@ public class BendingCommand {
         return 1;
     }
 
+    public static int setElement(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
+        PlayerEntity plr = EntityArgumentType.getPlayer(context,"player");
+        if (plr.getWorld().isClient) {
+            return 1;
+        }
+        Bender bender = Bender.getBender(plr);
+        PlayerData plrData = StateDataSaverAndLoader.getPlayerState(plr);
+        Element element = bender.getElement();
+        Element newElement = ElementArgumentType.getElement(context, "element");
+
+        if (element == newElement) {
+            return 1;
+        }
+
+        bender.setElement(newElement, true);
+
+        bender.boundAbilities = new Ability[4];
+        plrData.boundAbilities = new Ability[4];
+        bender.bindDefaultAbilities();
+
+        context.getSource().sendFeedback((() -> Text.of(
+                plr.getEntityName() + " can now bend: " + bender.getElement().name)
+        ), true);
+        return 1;
+    }
+
     public static int bindAbility(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
         Bender bender = Bender.getBender(context.getSource().getPlayer());
         Element element = bender.getElement();
@@ -137,30 +173,6 @@ public class BendingCommand {
     }
 
 
-    private static int buyUpgrade(CommandContext<ServerCommandSource> context) {
-        Bender bender = Bender.getBender(context.getSource().getPlayer());
-        Element element = bender.getElement();
-        PlayerData plrData = StateDataSaverAndLoader.getPlayerState(bender.player);
-
-        String name = StringArgumentType.getString(context, "name");
-        Upgrade upgrade = element.root.getUpgradeByNameRecursive(name);
-
-        if (plrData.buyUpgrade(upgrade)) {
-            plrData.upgrades.put(upgrade, true);
-            StateDataSaverAndLoader.getServerState(bender.player.getServer()).markDirty();
-            context.getSource().sendFeedback((() -> Text.of(
-                    "Upgrade  \"" + upgrade.name + "\" was bought successfully!")
-            ), false);
-            return 1;
-        }
-
-
-        context.getSource().sendFeedback((() -> Text.of(
-                "Failed to buy upgrade: \"" + name + "\".")
-        ), false);
-        return -1;
-    }
-
     private static int clearUpgrades(CommandContext<ServerCommandSource> context) {
         Bender bender = Bender.getBender(context.getSource().getPlayer());
         PlayerData plrData = StateDataSaverAndLoader.getPlayerState(bender.player);
@@ -183,8 +195,21 @@ public class BendingCommand {
         return 1;
     }
 
-    private static int levelSet(CommandContext<ServerCommandSource> context) {
+    private static int levelSetSelf(CommandContext<ServerCommandSource> context) {
         PlayerEntity plr = context.getSource().getPlayer();
+        if(plr.getWorld().isClient){
+            return 1;
+        }
+        int value = IntegerArgumentType.getInteger(context, "value");
+        PlayerData.get(plr).level = value;
+        context.getSource().sendFeedback((() -> Text.of(
+                "Your level is now: " + value)
+        ), false);
+        return 1;
+    }
+
+    private static int levelSet(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
+        PlayerEntity plr = EntityArgumentType.getPlayer(context,"player");
         if(plr.getWorld().isClient){
             return 1;
         }
