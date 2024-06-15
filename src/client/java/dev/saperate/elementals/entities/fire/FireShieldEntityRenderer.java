@@ -49,7 +49,7 @@ public class FireShieldEntityRenderer extends EntityRenderer<FireShieldEntity> {
                 (0xFFFFFF >> 16 & 255) / 255.0f,
                 (0xFFFFFF >> 8 & 255) / 255.0f,
                 (0xFFFFFF & 255) / 255.0f,
-                1,
+                0.9f,
                 entity.isBlue() ? blueFireTex : fireTex,
                 1, new Matrix4f()
                         .translate(0, entity.prevFlameSize, 0)
@@ -66,7 +66,7 @@ public class FireShieldEntityRenderer extends EntityRenderer<FireShieldEntity> {
                 (0xFFFFFF >> 16 & 255) / 255.0f,
                 (0xFFFFFF >> 8 & 255) / 255.0f,
                 (0xFFFFFF & 255) / 255.0f,
-                1,
+                0.9f,
                 entity.isBlue() ? blueFireTex : fireTex,
                 1, new Matrix4f()
                         .translate(0, entity.prevFlameSize, 0)

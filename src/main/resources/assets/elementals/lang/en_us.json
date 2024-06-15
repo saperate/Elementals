@@ -1,4 +1,12 @@
 {
+  "category.elementals" : "Elementals",
+
+  "key.elementals.Ability1" : "Ability 1",
+  "key.elementals.Ability2" : "Ability 2",
+  "key.elementals.Ability3" : "Ability 3",
+  "key.elementals.Ability4" : "Ability 4",
+  "key.elementals.guiKey" : "Upgrade Screen",
+
   "effect.elementals.dense" : "Dense",
   "effect.elementals.drowning" : "Drowning",
   "effect.elementals.stationary" : "Stationary",
