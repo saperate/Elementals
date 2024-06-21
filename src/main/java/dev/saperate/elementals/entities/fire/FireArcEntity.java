@@ -98,9 +98,9 @@ public class FireArcEntity extends ProjectileEntity {
             return;
         }
         FireArcEntity parent = getParent();
-        if (!getIsControlled() && parent == null) {
+        if (!getIsControlled() && parent == null && !getWorld().isClient) {
             HitResult hit = ProjectileUtil.getCollision(this, entity -> entity instanceof LivingEntity);
-            if (hit.getType() == HitResult.Type.ENTITY) {
+            if (hit.getType() == HitResult.Type.ENTITY) { //TODO make it ignore if on client
                 LivingEntity entity = (LivingEntity) ((EntityHitResult) hit).getEntity();
                 entity.addVelocity(this.getVelocity().multiply(0.2f));
                 PlayerData plrData = PlayerData.get(owner);

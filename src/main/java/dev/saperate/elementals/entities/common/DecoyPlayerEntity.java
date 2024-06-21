@@ -1,6 +1,7 @@
 package dev.saperate.elementals.entities.common;
 
 import com.google.common.collect.Lists;
+import dev.saperate.elementals.commands.BendingCommand;
 import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.entities.air.AirBallEntity;
 import dev.saperate.elementals.utils.SapsUtils;
@@ -124,6 +125,7 @@ public class DecoyPlayerEntity extends PathAwareEntity {
         }
     }
 
+
     public void preventOwnerFromGoingFar(int max) {
         Vec3d direction = getPos().subtract(getOwner().getPos());
         double distance = direction.length();
@@ -146,9 +148,21 @@ public class DecoyPlayerEntity extends PathAwareEntity {
     }
 
     @Override
+    public void remove(RemovalReason reason) {
+        super.remove(reason);
+        if(BendingCommand.debug){
+            throw new RuntimeException("Debug mod was enabled, checking which mod removes the decoy!");
+        }
+    }
+
+    @Override
     public boolean damage(DamageSource source, float amount) {
         if (!getWorld().isClient && getHealth() - amount <= 0) {
             PlayerEntity owner = getOwner();
+            if(owner == null){
+                discard();
+                return false;
+            }
             Bender.getBender(owner).currAbility.onRemove(Bender.getBender(owner));
             owner.damage(source,amount);
         }

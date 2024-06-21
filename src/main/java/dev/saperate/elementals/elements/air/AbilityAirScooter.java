@@ -35,9 +35,8 @@ public class AbilityAirScooter implements Ability {
         AirScooterEntity entity = new AirScooterEntity(player.getWorld(), player);
         entity.setSpeed(speed);
         player.getWorld().spawnEntity(entity);
-        player.startRiding(entity);
-
-        bender.setCurrAbility(null);
+        bender.setCurrAbility(this);
+        bender.abilityData = entity;
     }
 
     @Override
@@ -57,13 +56,8 @@ public class AbilityAirScooter implements Ability {
 
     @Override
     public void onTick(Bender bender) {
-        if (!bender.reduceChi(0.1f)) {
-            if (bender.abilityData == null) {
-                bender.setCurrAbility(null);
-            } else {
-                onRemove(bender);
-            }
-            return;
+        if (!bender.reduceChi(0.1f) || ((AirScooterEntity)bender.abilityData).isRemoved() ) {
+            bender.setCurrAbility(null);
         }
     }
 

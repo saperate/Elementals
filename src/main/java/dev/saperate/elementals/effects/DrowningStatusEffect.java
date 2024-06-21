@@ -37,7 +37,7 @@ public class DrowningStatusEffect extends StatusEffect {
                         false
                 );
             } else {
-                entity.damage(entity.getDamageSources().drown(), 1.0f );
+                entity.damage(entity.getDamageSources().drown(), 0.5f);
             }
         }
     }
@@ -50,6 +50,6 @@ public class DrowningStatusEffect extends StatusEffect {
         if (i > 0 && entity.getRandom().nextInt(i + 1) > 0) {
             return (air - 4);
         }
-        return (air - 5);
+        return (air - 10);
     }
 }

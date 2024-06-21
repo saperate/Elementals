@@ -1,5 +1,6 @@
 package dev.saperate.elementals.entities.air;
 
+import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.data.FireExplosion;
 import dev.saperate.elementals.utils.SapsUtils;
 import net.minecraft.entity.Entity;
@@ -59,8 +60,8 @@ public class AirScooterEntity extends Entity {
         if (random.nextBetween(0, 40) == 6) {
             playSound(WIND_SOUND_EVENT, 1, (1.0f + (this.getWorld().random.nextFloat() - this.getWorld().random.nextFloat()) * 0.2f) * 0.7f);
         }
-        if(isOnGround()){
-            playStepSound(getBlockPos().down(),getWorld().getBlockState(getBlockPos().down()));
+        if (isOnGround()) {
+            playStepSound(getBlockPos().down(), getWorld().getBlockState(getBlockPos().down()));
         }
 
         summonParticles(this, random,
@@ -71,10 +72,14 @@ public class AirScooterEntity extends Entity {
 
     private void moveEntity() {
         PlayerEntity player = getOwner();
-        if (player == null || !player.equals(getFirstPassenger()) || isOnFire()) {
+        if (player == null || isOnFire() || player.isSneaking()) {
             discard();
             return;
         }
+        if (!player.equals(getFirstPassenger())) {
+            player.startRiding(this);
+        }
+        player.fallDistance = 0;
 
         int dx = (int) Math.round(-Math.sin(Math.toRadians(player.getYaw())));
         int dz = (int) Math.round(Math.cos(Math.toRadians(player.getYaw())));
@@ -84,8 +89,8 @@ public class AirScooterEntity extends Entity {
         if (!isSubmergedInWater()) {
             //gravity
             this.setVelocity(this.getVelocity().add(0.0, -0.5, 0.0));
-        }else {
-            this.setVelocity(this.getVelocity().multiply(1,0,1));
+        } else {
+            this.setVelocity(this.getVelocity().multiply(1, 0, 1));
         }
 
 
@@ -99,7 +104,9 @@ public class AirScooterEntity extends Entity {
                 ParticleTypes.POOF,
                 0.25f, 25);
         this.getWorld().playSound(getX(), getY(), getZ(), WIND_BURST_SOUND_EVENT, SoundCategory.BLOCKS, 1, (1.0f + (this.getWorld().random.nextFloat() - this.getWorld().random.nextFloat()) * 0.2f) * 0.7f, true);
-
+        if(!getWorld().isClient && getOwner() != null){
+            Bender.getBender(getOwner()).currAbility.onRemove(Bender.getBender(getOwner()));
+        }
     }
 
     @Override

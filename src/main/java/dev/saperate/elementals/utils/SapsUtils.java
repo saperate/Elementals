@@ -42,7 +42,7 @@ import java.util.stream.IntStream;
 /**
  * A collection of methods that makes some redundant stuff easier to use
  */
-public class SapsUtils {
+public final class SapsUtils {
 
     /**
      * This checks if an entity collides with blocks. it uses a float to see how close we need to be for it

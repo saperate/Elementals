@@ -37,9 +37,9 @@ public class WaterElement extends Element {
                                                                 }, 1)
                                                         }, 1),
                                                         new Upgrade("waterHelmetStealth", 2)
-                                                }, true,1)
-                                        },1),
-                                }, false, -1,2),
+                                                }, true, 1)
+                                        }, 1),
+                                }, false, -1, 2),
                                 new Upgrade("waterSuffocate", new Upgrade[]{
                                         new Upgrade("waterShieldSuffocatePath", 1),
                                         new Upgrade("waterSuffocateRange", 1)
@@ -49,7 +49,7 @@ public class WaterElement extends Element {
                         new Upgrade("waterArc", new Upgrade[]{
                                 new Upgrade("waterJet", new Upgrade[]{
                                         new Upgrade("waterJetRangeI", new Upgrade[]{
-                                                new Upgrade("waterJetDamageI",1)
+                                                new Upgrade("waterJetDamageI", 1)
                                         }, 1)
                                 }, false, -2, 2),
                                 new Upgrade("waterArcDamageI", new Upgrade[]{
@@ -58,50 +58,50 @@ public class WaterElement extends Element {
                                                         new Upgrade("waterBladeDamageI", new Upgrade[]{
                                                                 new Upgrade("waterBladeMiningI", new Upgrade[]{
                                                                         new Upgrade("waterBladeMiningII", 1)
-                                                                },1),
+                                                                }, 1),
                                                                 new Upgrade("waterBladeSpeedI", new Upgrade[]{
                                                                         new Upgrade("waterBladeSpeedII", 1)
-                                                                },1)
+                                                                }, 1)
                                                         }, 1)
                                                 }, false, -1, 2),
                                                 new Upgrade("waterCannon", new Upgrade[]{
                                                         new Upgrade("waterCannonRangeI", new Upgrade[]{
-                                                                new Upgrade("waterCannonDamageI",1)
+                                                                new Upgrade("waterCannonDamageI", 1)
                                                         }, 1)
-                                                },2)
-                                        }, true,1),
+                                                }, 2)
+                                        }, true, 1),
                                         new Upgrade("waterArcSpeedI", new Upgrade[]{
                                                 new Upgrade("waterArcSpeedII", new Upgrade[]{
-                                                        new Upgrade("waterArcMastery",2)
-                                                },1)
-                                        }, false, 1,1)
-                                },1)
+                                                        new Upgrade("waterArcMastery", 2)
+                                                }, 1)
+                                        }, false, 1, 1)
+                                }, 1)
 
-                        },2),
+                        }, 2),
                         new Upgrade("waterJump", new Upgrade[]{
                                 new Upgrade("waterJumpRangeI", new Upgrade[]{
-                                        new Upgrade("waterJumpRangeII",1),
+                                        new Upgrade("waterJumpRangeII", 1),
                                         new Upgrade("waterSurf", new Upgrade[]{
                                                 new Upgrade("waterSurfSpeedI", new Upgrade[]{
-                                                        new Upgrade("waterSurfSpeedII",1),
+                                                        new Upgrade("waterSurfSpeedII", 1),
                                                         new Upgrade("waterTower", new Upgrade[]{
-                                                                new Upgrade("waterTowerRangeI",1)
-                                                        },2),
-                                                },1)
-                                        },2)
-                                },1)
-                        },2),
+                                                                new Upgrade("waterTowerRangeI", 1)
+                                                        }, 2),
+                                                }, 1)
+                                        }, 2)
+                                }, 1)
+                        }, 2),
                         new Upgrade("waterPickupRangeI", new Upgrade[]{
                                 new Upgrade("waterPickupRangeII", new Upgrade[]{
                                         new Upgrade("waterPickupEfficiencyI", new Upgrade[]{
                                                 new Upgrade("waterHealing", new Upgrade[]{
                                                         new Upgrade("waterHealingEfficiencyI", new Upgrade[]{
                                                                 new Upgrade("waterHealingEfficiencyII", 1)
-                                                        },1)
-                                                },2)
-                                        },1)
-                                },1)
-                        },3)//This is priced higher than 2 since we don't want players to soft-lock themselves
+                                                        }, 1)
+                                                }, 2)
+                                        }, 1)
+                                }, 1)
+                        }, 3)//This is priced higher than 2 since we don't want players to soft-lock themselves
 
                 });
         addAbility(new AbilityWater1(), true);
@@ -138,18 +138,17 @@ public class WaterElement extends Element {
 
         BlockState blockState = player.getEntityWorld().getBlockState(hit.getBlockPos());
 
+        boolean hasEfficiency = plrData.canUseUpgrade("waterPickupEfficiencyI");
 
-        if (hit.getType() == HitResult.Type.BLOCK && isBlockBendable(hit.getBlockPos(), player.getWorld(), true, plrData.canUseUpgrade("waterPickupEfficiencyI"))) {
-            if (blockState.get(IntProperty.of("level", 0, 15)).equals(0)) {
-                if (consumeWater) {
-                    if (blockState.contains(Properties.WATERLOGGED)) {
-                        ((Waterloggable) blockState.getBlock()).tryFillWithFluid(player.getWorld(), hit.getBlockPos(), blockState, Blocks.AIR.getDefaultState().getFluidState());
-                    } else {
-                        player.getWorld().setBlockState(hit.getBlockPos(), Blocks.AIR.getDefaultState());
-                    }
+        if (hit.getType() == HitResult.Type.BLOCK && isBlockBendable(hit.getBlockPos(), player.getWorld(), !hasEfficiency, hasEfficiency)) {
+            if (consumeWater) {
+                if (blockState.contains(Properties.WATERLOGGED) && blockState.get(Properties.WATERLOGGED) && !consumeWater) {
+                    ((Waterloggable) blockState.getBlock()).tryFillWithFluid(player.getWorld(), hit.getBlockPos(), blockState, Blocks.AIR.getDefaultState().getFluidState());
+                } else {
+                    player.getWorld().setBlockState(hit.getBlockPos(), Blocks.AIR.getDefaultState());
                 }
-                return hit.getPos().toVector3f();
             }
+            return hit.getPos().toVector3f();
         }
 
         //checks if we have any water bottles in our inventory, if we do, consume it do cast our stuff
@@ -182,6 +181,10 @@ public class WaterElement extends Element {
                                 || block.equals(Blocks.POWDER_SNOW_CAULDRON)
                                 || block.equals(Blocks.SNOW)
                                 || block.equals(Blocks.SNOW_BLOCK)
+                                || block.equals(Blocks.GRASS)
+                                || block instanceof LeavesBlock
+                                || block instanceof PlantBlock
+                                || block instanceof AbstractPlantBlock
                 )
         ) {
             return true;

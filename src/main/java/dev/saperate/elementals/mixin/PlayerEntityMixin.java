@@ -5,9 +5,17 @@ import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.data.StateDataSaverAndLoader;
 import dev.saperate.elementals.elements.Element;
+import dev.saperate.elementals.elements.air.AbilityAirScooter;
+import dev.saperate.elementals.elements.air.AbilityAirShield;
+import dev.saperate.elementals.elements.fire.AbilityFireIgnite;
+import dev.saperate.elementals.elements.fire.AbilityFireShield;
+import dev.saperate.elementals.elements.water.AbilityWaterShield;
 import dev.saperate.elementals.utils.SapsUtils;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.entity.damage.DamageType;
+import net.minecraft.entity.damage.DamageTypes;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
@@ -77,6 +85,22 @@ public abstract class PlayerEntityMixin {
 
         if (bender.currAbility != null && !player.getWorld().isClient) {
             bender.currAbility.onTick(bender);
+        }
+    }
+
+    @Inject(at = @At("HEAD"), method = "damage", cancellable = true)
+    private void onDamage(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
+        PlayerEntity player = ((PlayerEntity) (Object) this);
+        if(!player.getWorld().isClient){
+            Bender bender = Bender.getBender(player);
+            if (bender.currAbility instanceof AbilityAirShield
+                    || bender.currAbility instanceof AbilityWaterShield
+                    || bender.currAbility instanceof AbilityFireShield
+                    || (bender.currAbility instanceof AbilityAirScooter && source.isOf(DamageTypes.FALL))
+            ){
+                cir.setReturnValue(false);
+                cir.cancel();
+            }
         }
     }
 

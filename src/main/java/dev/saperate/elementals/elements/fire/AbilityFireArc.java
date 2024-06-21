@@ -16,7 +16,9 @@ import static dev.saperate.elementals.utils.SapsUtils.getEntityLookVector;
 public class AbilityFireArc implements Ability {
     @Override
     public void onCall(Bender bender, long deltaT) {
-        if (!bender.reduceChi(20)) {
+        PlayerEntity player = bender.player;
+        int chi = PlayerData.get(player).canUseUpgrade("fireArcEfficiencyI") ? 10 : 20;
+        if (!bender.reduceChi(chi)) {
             if (bender.abilityData == null) {
                 bender.setCurrAbility(null);
             } else {
@@ -24,7 +26,6 @@ public class AbilityFireArc implements Ability {
             }
             return;
         }
-        PlayerEntity player = bender.player;
 
         Vector3f pos = getEntityLookVector(player, 2).toVector3f();
 

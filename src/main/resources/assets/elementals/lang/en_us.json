@@ -13,7 +13,7 @@
   "effect.elementals.seismic_sense" : "Seismic Sense",
   "effect.elementals.spirit_projection" : "Spirit Projection",
 
-  "upgrade.elementals.exclusive": " Notice: this upgrade is exclusive with its sister upgrades.",
+  "upgrade.elementals.exclusive": " IMPORTANT NOTICE: this upgrade is exclusive with its sister upgrades.",
   "upgrade.elementals.price": " Price: %d levels",
 
   "upgrade.elementals.bendingAir": "Air Bending",

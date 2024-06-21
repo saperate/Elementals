@@ -12,7 +12,9 @@ import static dev.saperate.elementals.utils.SapsUtils.getEntityLookVector;
 public class AbilityAirStream implements Ability {
     @Override
     public void onCall(Bender bender, long deltaT) {
-        if (!bender.reduceChi(15)) {
+        PlayerEntity player = bender.player;
+        int chi = PlayerData.get(player).canUseUpgrade("airStreamEfficiencyI") ? 10 : 20;
+        if (!bender.reduceChi(chi)) {
             if (bender.abilityData == null) {
                 bender.setCurrAbility(null);
             } else {
@@ -20,7 +22,6 @@ public class AbilityAirStream implements Ability {
             }
             return;
         }
-        PlayerEntity player = bender.player;
 
         Vector3f pos = getEntityLookVector(player, 2).toVector3f();
 
