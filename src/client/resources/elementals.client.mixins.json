@@ -3,6 +3,7 @@
   "package": "dev.saperate.elementals.mixin.client",
   "compatibilityLevel": "JAVA_17",
   "client": [
+    "CameraMixin",
     "MinecraftClientMixin",
     "MouseMixin",
     "OverlayMixin",

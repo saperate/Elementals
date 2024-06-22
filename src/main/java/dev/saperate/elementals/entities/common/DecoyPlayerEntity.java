@@ -150,9 +150,16 @@ public class DecoyPlayerEntity extends PathAwareEntity {
     @Override
     public void remove(RemovalReason reason) {
         super.remove(reason);
-        if(BendingCommand.debug){
-            throw new RuntimeException("Debug mod was enabled, checking which mod removes the decoy!");
-        }
+    }
+
+    @Override
+    public boolean isPersistent() {
+        return true;
+    }
+
+    @Override
+    public boolean cannotDespawn() {
+        return true;
     }
 
     @Override

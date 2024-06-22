@@ -2,6 +2,7 @@ package dev.saperate.elementals.mixin.client;
 
 import dev.saperate.elementals.entities.earth.EarthBlockEntity;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.render.Camera;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -40,6 +41,7 @@ public abstract class GameRendererMixin {
 
         boolean hasStatusEffect = safeHasStatusEffect(SEISMIC_SENSE_EFFECT,plr);
         boolean customShaderEnabled = customPostProcessorEnabled(renderer,MODID + ":shaders/post/seismicsense.json");
+
         if(hasStatusEffect && !customShaderEnabled){
             renderer.onCameraEntitySet(new EarthBlockEntity(plr.getWorld(),plr));
         }else if(!hasStatusEffect && customShaderEnabled){

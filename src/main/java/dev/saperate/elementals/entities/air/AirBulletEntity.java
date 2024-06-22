@@ -121,7 +121,7 @@ public class AirBulletEntity extends ProjectileEntity {
 
 
         //gravity
-        this.setVelocity(this.getVelocity().add(0.0, -0.02, 0.0));
+        //this.setVelocity(this.getVelocity().add(0.0, -0.02, 0.0));
 
         if (getIsControlled()) {
             controlEntity(owner);
