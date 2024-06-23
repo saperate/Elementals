@@ -6,11 +6,14 @@ import dev.saperate.elementals.elements.Element;
 import dev.saperate.elementals.elements.Upgrade;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
 
 import java.util.ArrayList;
@@ -18,6 +21,7 @@ import java.util.List;
 
 import static dev.saperate.elementals.entities.ElementalEntities.EARTHBLOCK;
 import static dev.saperate.elementals.misc.ElementalsCustomTags.EARTH_BENDABLE_BLOCKS;
+import static dev.saperate.elementals.utils.SapsUtils.getEntityLookVector;
 
 
 public class EarthElement extends Element {
@@ -31,49 +35,49 @@ public class EarthElement extends Element {
                                                         new Upgrade("earthWallDurationIII", new Upgrade[]{
                                                                 new Upgrade("earthWallDurationIV", new Upgrade[]{
                                                                         new Upgrade("earthWallAutoTimer", 1)
-                                                                },1)
-                                                        },1)
-                                                },1)
-                                        },1)
-                                },2),
+                                                                }, 1)
+                                                        }, 1)
+                                                }, 1)
+                                        }, 1)
+                                }, 2),
                                 new Upgrade("earthChunk", new Upgrade[]{
-                                        new Upgrade("earthChunkSizeI",1)
-                                },2)
+                                        new Upgrade("earthChunkSizeI", 1)
+                                }, 2)
                         }, true, 2),
                         new Upgrade("earthBlockSpeedI", new Upgrade[]{
                                 new Upgrade("earthBlockDamageI", new Upgrade[]{
-                                        new Upgrade("earthBlockSpeedII",1)
-                                },1)
-                        }, false, 1,1)
-                },2),
+                                        new Upgrade("earthBlockSpeedII", 1)
+                                }, 1)
+                        }, false, 1, 1)
+                }, 2),
 
                 new Upgrade("earthMine", new Upgrade[]{
                         new Upgrade("earthTrap", new Upgrade[]{
                                 new Upgrade("earthRavine", new Upgrade[]{
-                                        new Upgrade("earthRavineRangeI",1),
-                                        new Upgrade("earthRavineSpreadI",1)
-                                }, true, -1,2),
+                                        new Upgrade("earthRavineRangeI", 1),
+                                        new Upgrade("earthRavineSpreadI", 1)
+                                }, true, -1, 2),
                                 new Upgrade("earthSpikes", new Upgrade[]{
-                                        new Upgrade("earthSpikesRangeI",1),
-                                        new Upgrade("earthSpikesSpreadI",1)
-                                }, true, 1,2)
-                        }, true,2)
-                },2),
+                                        new Upgrade("earthSpikesRangeI", 1),
+                                        new Upgrade("earthSpikesSpreadI", 1)
+                                }, true, 1, 2)
+                        }, true, 2)
+                }, 2),
                 new Upgrade("earthPillar", new Upgrade[]{
                         new Upgrade("earthJump", new Upgrade[]{
                                 new Upgrade("earthJumpRangeI", new Upgrade[]{
-                                        new Upgrade("earthJumpRangeII",1),
-                                },1)
-                        },2),
-                        new Upgrade("earthPillarTallI",1)
-                },2),
+                                        new Upgrade("earthJumpRangeII", 1),
+                                }, 1)
+                        }, 2),
+                        new Upgrade("earthPillarTallI", 1)
+                }, 2),
                 new Upgrade("earthPickupRangeI", new Upgrade[]{
                         new Upgrade("earthPickupRangeII", new Upgrade[]{
                                 new Upgrade("earthSeismicSense", new Upgrade[]{
-                                        new Upgrade("earthArmor",2)
-                                },2)
-                        },1)
-                },3)
+                                        new Upgrade("earthArmor", 2)
+                                }, 2)
+                        }, 1)
+                }, 3)
         });
         addAbility(new AbilityEarth1(), true);
         addAbility(new AbilityEarthBlockPickup());
@@ -106,22 +110,44 @@ public class EarthElement extends Element {
     public static Object[] canBend(PlayerEntity player, boolean consumeBlock) {
         PlayerData plrData = PlayerData.get(player);
         int range = 5;
-        if(plrData.canUseUpgrade("earthPickupRangeII")){
+        if (plrData.canUseUpgrade("earthPickupRangeII")) {
             range = 15;
-        } else if(plrData.canUseUpgrade("earthPickupRangeI")){
+        } else if (plrData.canUseUpgrade("earthPickupRangeI")) {
             range = 10;
         }
-        BlockHitResult hit = (BlockHitResult) player.raycast(range, 1, false);
+        BlockHitResult hit = raycastCollidableBlocks(player.getCameraPosVec(1), getEntityLookVector(player,range), player);
+        if(hit == null){
+            return null;
+        }
 
-        BlockState blockState = player.getEntityWorld().getBlockState(hit.getBlockPos());
-
-        if (hit.getType() == HitResult.Type.BLOCK && isBlockBendable(hit.getBlockPos(), player.getWorld())) {
+        if (isBlockBendable(hit.getBlockPos(), player.getWorld())) {
+            BlockState blockState = player.getEntityWorld().getBlockState(hit.getBlockPos());
             if (consumeBlock) {
                 player.getWorld().setBlockState(hit.getBlockPos(), Blocks.AIR.getDefaultState());
             }
             return new Object[]{hit.getPos(), blockState, hit.getBlockPos(), hit.getSide()};
         }
         return null;
+    }
+
+    public static BlockHitResult raycastCollidableBlocks(Vec3d start, Vec3d end, Entity origin){
+        BlockHitResult bHit = origin.getWorld().raycast(
+                new RaycastContext(
+                        start,end, RaycastContext.ShapeType.OUTLINE, RaycastContext.FluidHandling.NONE, origin
+                ));
+        if(bHit.getType().equals(HitResult.Type.MISS)){
+            System.out.println("missed");
+            return null;
+        }
+
+        BlockState state = origin.getWorld().getBlockState(bHit.getBlockPos());
+        if(state.isSolid()){
+            System.out.println("found solid block!");
+           return bHit;
+        }
+
+        System.out.println("block was not solid, getting another");
+        return raycastCollidableBlocks(bHit.getPos(),end,origin);
     }
 
     public static boolean isBlockBendable(BlockPos pos, World world) {

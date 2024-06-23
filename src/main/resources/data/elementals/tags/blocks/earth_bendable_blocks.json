@@ -68,6 +68,8 @@
     "minecraft:polished_granite",
     "minecraft:polished_diorite",
     "minecraft:mud_bricks",
-    "minecraft:packed_mud"
+    "minecraft:packed_mud",
+    "minecraft:dirt_path",
+    "minecraft:farmland"
   ]
 }

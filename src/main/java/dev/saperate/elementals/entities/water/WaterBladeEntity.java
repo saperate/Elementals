@@ -58,7 +58,7 @@ public class WaterBladeEntity extends ProjectileEntity {
     protected void initDataTracker() {
         this.getDataTracker().startTracking(OWNER_ID, 0);
         this.getDataTracker().startTracking(IS_CONTROLLED, false);
-        this.getDataTracker().startTracking(DAMAGE, 2f);
+        this.getDataTracker().startTracking(DAMAGE, 1.5f);
     }
 
     @Override
@@ -212,7 +212,7 @@ public class WaterBladeEntity extends ProjectileEntity {
 
     public PlayerEntity getOwner() {
         Entity owner = this.getWorld().getEntityById(this.getDataTracker().get(OWNER_ID));
-        return (owner instanceof LivingEntity) ? (PlayerEntity) owner : null;
+        return (owner instanceof PlayerEntity) ? (PlayerEntity) owner : null;
     }
 
     public void setOwner(LivingEntity owner) {

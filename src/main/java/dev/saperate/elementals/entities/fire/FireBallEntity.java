@@ -121,7 +121,7 @@ public class FireBallEntity extends ProjectileEntity {
 
     public void onCollision() {
         getWorld().setBlockState(getBlockPos(), AbstractFireBlock.getState(getWorld(), getBlockPos()));
-        FireExplosion explosion = new FireExplosion(getWorld(), getOwner(), getX(), getY(), getZ(), 2.5f, true, Explosion.DestructionType.KEEP, 6);
+        FireExplosion explosion = new FireExplosion(getWorld(), getOwner(), getX(), getY(), getZ(), 2.5f, true, Explosion.DestructionType.KEEP, 6, getOwner());
         explosion.collectBlocksAndDamageEntities();
         explosion.affectWorld(true);
         discard();

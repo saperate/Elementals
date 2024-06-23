@@ -125,7 +125,7 @@ public class AirBallEntity extends ProjectileEntity {
     }
 
     public void onCollision() {
-        FireExplosion explosion = new FireExplosion(getWorld(), getOwner(), getX(), getY(), getZ(), 2.5f, false, Explosion.DestructionType.KEEP, 4, 4);
+        FireExplosion explosion = new FireExplosion(getWorld(), getOwner(), getX(), getY(), getZ(), 2.5f, false, Explosion.DestructionType.KEEP, 4, 4, getOwner());
         explosion.collectBlocksAndDamageEntities();
         discard();
     }

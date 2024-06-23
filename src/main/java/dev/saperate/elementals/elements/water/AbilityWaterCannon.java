@@ -23,6 +23,7 @@ public class AbilityWaterCannon implements Ability {
         Vector3f pos = WaterElement.canBend(player, true);
 
         if (pos != null) {
+            System.out.println("cast");
             if (!bender.reduceChi(20)) {
             if (bender.abilityData == null) {
                 bender.setCurrAbility(null);
@@ -54,11 +55,6 @@ public class AbilityWaterCannon implements Ability {
 
     @Override
     public void onTick(Bender bender) {
-        if(bender.player.isSneaking()){
-            onRemove(bender);
-            return;
-        }
-
         int chargeTime = (int) ((Object[]) bender.abilityData)[0];
         ((Object[]) bender.abilityData)[0] = chargeTime - 1;
 

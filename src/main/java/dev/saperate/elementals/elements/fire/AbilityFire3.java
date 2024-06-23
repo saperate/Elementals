@@ -70,6 +70,10 @@ public class AbilityFire3 implements Ability {
         if ((bender.abilityData == null || bender.abilityData.equals(true)) && player.isSprinting() && !player.isOnGround()
         && PlayerData.get(player).canUseUpgrade("fireJet")) {
 
+            if(player.isSubmergedInWater()){
+                onRemove(bender);
+            }
+
             float power = 0.45f;
             PlayerData plrData = PlayerData.get(player);
             if (plrData.canUseUpgrade("fireJetSpeedII")) {
@@ -127,7 +131,8 @@ public class AbilityFire3 implements Ability {
 
     @Override
     public void onRemove(Bender bender) {
-
+        bender.setCurrAbility(null);
+        bender.abilityData = null;
     }
 
 }

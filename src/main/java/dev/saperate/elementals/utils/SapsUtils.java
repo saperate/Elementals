@@ -3,6 +3,7 @@ package dev.saperate.elementals.utils;
 import com.google.common.collect.Sets;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.block.FluidBlock;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -27,6 +28,7 @@ import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.Vec3i;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
@@ -58,7 +60,6 @@ public final class SapsUtils {
      * @see World
      */
     public static BlockPos checkBlockCollision(Entity entity, float sensitivity) {
-        //TODO Verify that the moves that use this have to collide with fluids
         return checkBlockCollision(entity, sensitivity, true);
     }
 
@@ -76,11 +77,30 @@ public final class SapsUtils {
      * @see World
      */
     public static BlockPos checkBlockCollision(Entity entity, float sensitivity, boolean includeFluids) {
-        Box box = entity.getBoundingBox().expand(sensitivity);
+        return checkBlockPosition(entity,sensitivity,includeFluids,entity.getBoundingBox());
+    }
+
+    /**
+     * This checks if an entity collides with blocks. it uses a float to see how close we need to be for it
+     * to count as a collision. Lower is not necessarily better since there is a chance that if you set it
+     * too low it will miss the target.
+     * <br><br>Recommended sensitivity is 0.1f.
+     * @param entity The entity that we are checking collisions for
+     * @param sensitivity How close does it have to be to a block to collide
+     * @param includeFluids Whether fluids count in the collision check
+     * @param bounds The bounding box that we are checking
+     * @return The block position of the hit
+     * @see Entity
+     * @see BlockPos
+     * @see World
+     * @see Box
+     */
+    public static BlockPos checkBlockPosition(Entity entity, float sensitivity, boolean includeFluids, Box bounds){
+        Box box = bounds.expand(sensitivity);
         BlockPos blockPos = BlockPos.ofFloored(box.minX + 1.0E-7, box.minY + 1.0E-7, box.minZ + 1.0E-7);
         BlockPos blockPos2 = BlockPos.ofFloored(box.maxX - 1.0E-7, box.maxY - 1.0E-7, box.maxZ - 1.0E-7);
 
-        //There is a weird but where if you didn't move the entity yet, the bounding box doesnt add position
+        //There is a weird but where if you didn't move the entity yet, the bounding box doesn't add position
         //So this is here to fix that
         if (!isAboutEquals(box.minX, entity.getX(), box.maxX - box.minX)) {
             blockPos = blockPos.add(entity.getBlockPos());
@@ -292,6 +312,7 @@ public final class SapsUtils {
             return bHit;
         }
     }
+
 
     public static Entity entityFromHitResult(HitResult result) {
         if (result.getType().equals(HitResult.Type.ENTITY)) {

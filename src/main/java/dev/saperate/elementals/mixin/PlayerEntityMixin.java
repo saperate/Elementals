@@ -42,15 +42,16 @@ import static dev.saperate.elementals.utils.SapsUtils.safeHasStatusEffect;
 public abstract class PlayerEntityMixin {
 
 
-    @Shadow public abstract void remove(Entity.RemovalReason reason);
+    @Shadow
+    public abstract void remove(Entity.RemovalReason reason);
 
     @Inject(at = @At("TAIL"), method = "<init>")
     private void init(CallbackInfo info) {
         PlayerEntity player = ((PlayerEntity) (Object) this);
-        if(!player.getWorld().isClient){
-            if(Bender.getBender(player) == null){
+        if (!player.getWorld().isClient) {
+            if (Bender.getBender(player) == null) {
                 new Bender(player, null);
-            }else{
+            } else {
                 Bender.getBender(player).player = player;
             }
         }
@@ -61,25 +62,21 @@ public abstract class PlayerEntityMixin {
         PlayerEntity player = ((PlayerEntity) (Object) this);
 
 
-        if(safeHasStatusEffect(SPIRIT_PROJECTION_EFFECT,player)){
+        if (safeHasStatusEffect(SPIRIT_PROJECTION_EFFECT, player)) {
             //checks if we are inside a wall
             float f = player.getDimensions(player.getPose()).width * 0.8f;
             Box box = Box.of(player.getEyePos(), f, 1.0E-6, f);
-            boolean e = BlockPos.stream(box).anyMatch(pos -> {
-                BlockState blockState = player.getWorld().getBlockState((BlockPos)pos);
-                return !blockState.isAir() && blockState.shouldSuffocate(player.getWorld(), (BlockPos)pos) && VoxelShapes.matchesAnywhere(blockState.getCollisionShape(player.getWorld(), (BlockPos)pos).offset(pos.getX(), pos.getY(), pos.getZ()), VoxelShapes.cuboid(box), BooleanBiFunction.AND);
-            });
 
-            if(e){
+            if (SapsUtils.checkBlockPosition(player, 0.1f, false, box) != null) {
                 player.addStatusEffect(new StatusEffectInstance(StatusEffects.BLINDNESS, 21, 0, false, false, false));
             }
         }
         Bender bender = Bender.getBender(player);
-        if(bender == null || player.getWorld().isClient){
+        if (bender == null || player.getWorld().isClient) {
             return;
         }
         bender.tick();
-        if(bender.castTime != null){
+        if (bender.castTime != null) {
             return;
         }
 
@@ -91,13 +88,30 @@ public abstract class PlayerEntityMixin {
     @Inject(at = @At("HEAD"), method = "damage", cancellable = true)
     private void onDamage(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
         PlayerEntity player = ((PlayerEntity) (Object) this);
-        if(!player.getWorld().isClient){
+        if (!player.getWorld().isClient) {
             Bender bender = Bender.getBender(player);
             if (bender.currAbility instanceof AbilityAirShield
                     || bender.currAbility instanceof AbilityWaterShield
                     || bender.currAbility instanceof AbilityFireShield
                     || (bender.currAbility instanceof AbilityAirScooter && source.isOf(DamageTypes.FALL))
-            ){
+            ) {
+
+                if(source.isOf(DamageTypes.DRAGON_BREATH)//TODO make something like earthbendable blocks
+                        && source.isOf(DamageTypes.DROWN)
+                        && source.isOf(DamageTypes.DRY_OUT)
+                        && source.isOf(DamageTypes.FREEZE)
+                        && source.isOf(DamageTypes.IN_FIRE)
+                        && source.isOf(DamageTypes.ON_FIRE)
+                        && source.isOf(DamageTypes.LAVA)
+                        && source.isOf(DamageTypes.LIGHTNING_BOLT)
+                        && source.isOf(DamageTypes.MAGIC)
+                        && source.isOf(DamageTypes.OUT_OF_WORLD)
+                        && source.isOf(DamageTypes.INDIRECT_MAGIC)
+                        && source.isOf(DamageTypes.SONIC_BOOM)
+                        && source.isOf(DamageTypes.STARVE)
+                        && source.isOf(DamageTypes.OUTSIDE_BORDER)){
+                    return;
+                }
                 cir.setReturnValue(false);
                 cir.cancel();
             }

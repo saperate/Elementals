@@ -26,6 +26,8 @@ public class AbilityEarthBlockPickup implements Ability {
             Vec3d pos = (Vec3d) vars[0];
             BlockState state = (BlockState) vars[1];
 
+            System.out.println(pos);
+            System.out.println(state);
             EarthBlockEntity entity = new EarthBlockEntity(player.getWorld(), player, pos.x, pos.y, pos.z);
             bender.abilityData = entity;
             entity.setBlockState(state);

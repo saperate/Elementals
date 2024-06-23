@@ -35,9 +35,10 @@ public class FireExplosion extends Explosion {
     private float power, maxDamage, velocityMultiplier = 1;
     private ExplosionBehavior behavior;
     private DamageSource damageSource;
+    private final Entity owner;
 
 
-    public FireExplosion(World world, @Nullable Entity entity, double x, double y, double z, float power, boolean createFire, DestructionType destructionType, float maxDamage) {
+    public FireExplosion(World world, @Nullable Entity entity, double x, double y, double z, float power, boolean createFire, DestructionType destructionType, float maxDamage, Entity owner) {
         super(world, entity, x, y, z, power, createFire, destructionType);
         damageSource = world.getDamageSources().explosion(this);
         this.x = x;
@@ -47,10 +48,11 @@ public class FireExplosion extends Explosion {
         this.power = power;
         this.behavior = chooseBehavior(entity);
         this.maxDamage = maxDamage;
+        this.owner = owner;
     }
 
-    public FireExplosion(World world, @Nullable Entity entity, double x, double y, double z, float power, boolean createFire, DestructionType destructionType, float maxDamage, float velocityMultiplier) {
-        this(world, entity, x, y, z, power, createFire, destructionType, maxDamage);
+    public FireExplosion(World world, @Nullable Entity entity, double x, double y, double z, float power, boolean createFire, DestructionType destructionType, float maxDamage, float velocityMultiplier, Entity owner) {
+        this(world, entity, x, y, z, power, createFire, destructionType, maxDamage, owner);
         this.velocityMultiplier = velocityMultiplier;
     }
 
@@ -104,7 +106,7 @@ public class FireExplosion extends Explosion {
         int s = MathHelper.floor(this.y + (double) q + 1.0);
         int t = MathHelper.floor(this.z - (double) q - 1.0);
         int u = MathHelper.floor(this.z + (double) q + 1.0);
-        List<Entity> list = this.world.getOtherEntities(null, new Box(k, r, t, l, s, u));
+        List<Entity> list = this.world.getOtherEntities(owner, new Box(k, r, t, l, s, u));
         Vec3d vec3d = new Vec3d(this.x, this.y, this.z);
         for (Entity entity : list) {
             PlayerEntity playerEntity;
@@ -121,7 +123,7 @@ public class FireExplosion extends Explosion {
             y /= z;
             ab = (double)getExposure(vec3d, entity);
             double ac = (1.0 - w) * ab;
-            entity.damage(this.getDamageSource(), (float)((int)((ac * ac + ac) / 2.0 * 7.0 * (double)q + 1.0)));
+            entity.damage(this.getDamageSource(), Math.max(maxDamage, (float)((int)((ac * ac + ac) / 2.0 * 7.0 * (double)q + 1.0))));
             double aa = (1.0 - v) * (double) Explosion.getExposure(vec3d, entity);
             if (entity instanceof LivingEntity) {
                 LivingEntity livingEntity = (LivingEntity) entity;

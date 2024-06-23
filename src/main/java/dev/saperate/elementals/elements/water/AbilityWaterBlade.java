@@ -30,7 +30,7 @@ public class AbilityWaterBlade implements Ability {
 
             PlayerData plrData = PlayerData.get(player);
             if (plrData.canUseUpgrade("waterBladeDamageI")) {
-                entity.setDamage(15);
+                entity.setDamage(2);
             }
 
             bender.setCurrAbility(this);
