@@ -67,7 +67,7 @@ public abstract class PlayerEntityMixin {
             float f = player.getDimensions(player.getPose()).width * 0.8f;
             Box box = Box.of(player.getEyePos(), f, 1.0E-6, f);
 
-            if (SapsUtils.checkBlockPosition(player, 0.1f, false, box) != null) {
+            if (SapsUtils.checkBlockCollision(player, 0.1f, false, true, box) != null) {
                 player.addStatusEffect(new StatusEffectInstance(StatusEffects.BLINDNESS, 21, 0, false, false, false));
             }
         }

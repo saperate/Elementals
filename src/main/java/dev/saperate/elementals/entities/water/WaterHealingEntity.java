@@ -65,7 +65,7 @@ public class WaterHealingEntity extends ProjectileEntity {
             playSound(SoundEvents.ENTITY_PLAYER_SWIM,0.25f,0);
         }
 
-        BlockPos blockHit = SapsUtils.checkBlockCollision(this,0.25f);
+        BlockPos blockHit = SapsUtils.checkBlockCollision(this,0.25f, false);
 
         PlayerEntity owner = getOwner();
         if (owner == null) {

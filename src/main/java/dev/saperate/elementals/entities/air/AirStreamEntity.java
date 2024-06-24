@@ -123,7 +123,7 @@ public class AirStreamEntity extends ProjectileEntity {
 
             }
             if (!getWorld().isClient) {
-                if (SapsUtils.checkBlockCollision(this,0.1f) != null) {
+                if (SapsUtils.checkBlockCollision(this,0.1f, false) != null) {
                     remove();
                     this.getWorld().playSound(getX(), getY(), getZ(), WIND_BURST_SOUND_EVENT, SoundCategory.BLOCKS, 1, (1.0f + (this.getWorld().random.nextFloat() - this.getWorld().random.nextFloat()) * 0.2f) * 0.7f, true);
                     return;

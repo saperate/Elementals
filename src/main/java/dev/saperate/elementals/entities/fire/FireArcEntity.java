@@ -118,7 +118,7 @@ public class FireArcEntity extends ProjectileEntity {
                 }
                 entity.damage(getDamageSources().inFire(),damage);
                 remove();
-            }else if (SapsUtils.checkBlockCollision(this, 0.1f, false) != null) {
+            }else if (SapsUtils.checkBlockCollision(this, 0.1f, true) != null) {
                 remove();
             }
         }

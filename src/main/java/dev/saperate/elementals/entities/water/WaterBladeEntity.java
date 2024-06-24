@@ -72,7 +72,7 @@ public class WaterBladeEntity extends ProjectileEntity {
                 playSound(SoundEvents.ENTITY_PLAYER_SWIM,0.25f,0);
         }
 
-        BlockPos blockHit = SapsUtils.checkBlockCollision(this, 0.1f);
+        BlockPos blockHit = SapsUtils.checkBlockCollision(this, 0.1f, false, false);
 
         PlayerEntity owner = getOwner();
         if (owner == null) {

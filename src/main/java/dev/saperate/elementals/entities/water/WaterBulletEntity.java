@@ -60,7 +60,7 @@ public class WaterBulletEntity extends ProjectileEntity {
     public void tick() {
         super.tick();
 
-        BlockPos blockHit = SapsUtils.checkBlockCollision(this, 0.1f);
+        BlockPos blockHit = SapsUtils.checkBlockCollision(this, 0.1f, false);
 
         PlayerEntity owner = getOwner();
         if (owner == null) {

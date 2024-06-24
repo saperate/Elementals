@@ -52,6 +52,7 @@ public final class SapsUtils {
      * too low it will miss the target.
      * <br><br>Recommended sensitivity is 0.1f.
      * <br><b>This includes fluids in the collision check</b>
+     * <br><b>This only checks for solid blocks</b>
      * @param entity The entity that we are checking collisions for
      * @param sensitivity How close does it have to be to a block to collide
      * @return The block position of the hit
@@ -60,7 +61,25 @@ public final class SapsUtils {
      * @see World
      */
     public static BlockPos checkBlockCollision(Entity entity, float sensitivity) {
-        return checkBlockCollision(entity, sensitivity, true);
+        return checkBlockCollision(entity, sensitivity, true, true, entity.getBoundingBox());
+    }
+
+    /**
+     * This checks if an entity collides with blocks. it uses a float to see how close we need to be for it
+     * to count as a collision. Lower is not necessarily better since there is a chance that if you set it
+     * too low it will miss the target.
+     * <br><br>Recommended sensitivity is 0.1f.
+     * <br><b>This only checks for solid blocks</b>
+     * @param entity The entity that we are checking collisions for
+     * @param sensitivity How close does it have to be to a block to collide
+     * @param includeFluids Whether fluids count in the collision check
+     * @return The block position of the hit
+     * @see Entity
+     * @see BlockPos
+     * @see World
+     */
+    public static BlockPos checkBlockCollision(Entity entity, float sensitivity, boolean includeFluids) {
+        return checkBlockCollision(entity, sensitivity, includeFluids, true, entity.getBoundingBox());
     }
 
     /**
@@ -71,13 +90,14 @@ public final class SapsUtils {
      * @param entity The entity that we are checking collisions for
      * @param sensitivity How close does it have to be to a block to collide
      * @param includeFluids Whether fluids count in the collision check
+     * @param requireSolid Whether not solid blocks like grass should be included
      * @return The block position of the hit
      * @see Entity
      * @see BlockPos
      * @see World
      */
-    public static BlockPos checkBlockCollision(Entity entity, float sensitivity, boolean includeFluids) {
-        return checkBlockPosition(entity,sensitivity,includeFluids,entity.getBoundingBox());
+    public static BlockPos checkBlockCollision(Entity entity, float sensitivity, boolean includeFluids, boolean requireSolid) {
+        return checkBlockCollision(entity, sensitivity, includeFluids, requireSolid, entity.getBoundingBox());
     }
 
     /**
@@ -95,12 +115,12 @@ public final class SapsUtils {
      * @see World
      * @see Box
      */
-    public static BlockPos checkBlockPosition(Entity entity, float sensitivity, boolean includeFluids, Box bounds){
+    public static BlockPos checkBlockCollision(Entity entity, float sensitivity, boolean includeFluids, boolean requireSolid, Box bounds) {
         Box box = bounds.expand(sensitivity);
         BlockPos blockPos = BlockPos.ofFloored(box.minX + 1.0E-7, box.minY + 1.0E-7, box.minZ + 1.0E-7);
         BlockPos blockPos2 = BlockPos.ofFloored(box.maxX - 1.0E-7, box.maxY - 1.0E-7, box.maxZ - 1.0E-7);
 
-        //There is a weird but where if you didn't move the entity yet, the bounding box doesn't add position
+        //There is a weird bug where if you didn't move the entity yet, the bounding box doesn't add position
         //So this is here to fix that
         if (!isAboutEquals(box.minX, entity.getX(), box.maxX - box.minX)) {
             blockPos = blockPos.add(entity.getBlockPos());
@@ -117,7 +137,9 @@ public final class SapsUtils {
                     mutable.set(i, j, k);
                     BlockState blockState = entity.getWorld().getBlockState(mutable);
                     if (blockState.isAir()
-                            || (!includeFluids && blockState.getBlock() instanceof FluidBlock)) {
+                            || (!includeFluids && blockState.getBlock() instanceof FluidBlock)
+                            || (requireSolid && !blockState.isSolid())
+                    ) {
                         continue;
                     }
 
@@ -135,12 +157,11 @@ public final class SapsUtils {
         }
 
 
-        //Get the closest hit from all possible hits
+        //Get the closest block from all possible hits
         BlockPos bestHit = possibleHits.isEmpty() ? null : possibleHits.get(0);
         double bestDistance = possibleHits.isEmpty() ? -1 : entity.squaredDistanceTo(bestHit.toCenterPos());
         for (BlockPos hit : possibleHits) {
             double dist = entity.squaredDistanceTo(hit.toCenterPos());
-
             if (dist < bestDistance) {
                 bestHit = hit;
                 bestDistance = dist;
@@ -348,7 +369,6 @@ public final class SapsUtils {
     }
 
 
-
     /**
      * Searches for "<br>" in the translatable to be able to actually do line breaks in tooltips
      * @return the number of args used in the translatable
@@ -380,9 +400,9 @@ public final class SapsUtils {
         }
         StringBuilder builder = new StringBuilder();
         String[] arr = raw.split(" ");
-        for (int i = 0; i < arr.length; i ++) {
+        for (int i = 0; i < arr.length; i++) {
             builder.append(arr[i]).append(" ");
-            if(i % max == 0 && i != arr.length - 1){
+            if (i % max == 0 && i != arr.length - 1) {
                 tooltip.add(Text.of(builder.toString()));
                 builder = new StringBuilder();
             }
@@ -391,7 +411,7 @@ public final class SapsUtils {
         return raw.split("%d").length;
     }
 
-    public static void launchPlayer(PlayerEntity player, float power){
+    public static void launchPlayer(PlayerEntity player, float power) {
         Vector3f velocity = getEntityLookVector(player, 1)
                 .subtract(player.getEyePos())
                 .normalize().multiply(power).toVector3f();
@@ -411,7 +431,7 @@ public final class SapsUtils {
      * @param interval The interval at which we will play the sound
      * @param sound The sound which will be played
      */
-    public static void playSoundAtEntity(Entity entity, SoundEvent sound, int interval){
+    public static void playSoundAtEntity(Entity entity, SoundEvent sound, int interval) {
         if (entity.age % interval == 0) {
             entity.getWorld().playSound(null, entity.getBlockPos(), sound, SoundCategory.NEUTRAL, 1, (1.0f + (entity.getWorld().random.nextFloat() - entity.getWorld().random.nextFloat()) * 0.2f) * 0.7f);
         }

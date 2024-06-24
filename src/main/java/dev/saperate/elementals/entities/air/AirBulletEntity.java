@@ -74,7 +74,7 @@ public class AirBulletEntity extends ProjectileEntity {
                 playSound(WIND_SOUND_EVENT,1,(1.0f + (this.getWorld().random.nextFloat() - this.getWorld().random.nextFloat()) * 0.2f) * 0.7f);
             }
         }
-        BlockPos blockHit = SapsUtils.checkBlockCollision(this, 0.1f);
+        BlockPos blockHit = SapsUtils.checkBlockCollision(this, 0.1f, false);
 
         PlayerEntity owner = getOwner();
         if (owner == null) {
@@ -133,7 +133,7 @@ public class AirBulletEntity extends ProjectileEntity {
 
     private void controlEntity(Entity owner) {
         Vector3f direction;
-        if (!owner.isSneaking() || lastCenterPos == null) {
+        if (lastCenterPos == null) {
             direction = getEntityLookVector(owner, 3)
                     .subtract(0, 1, 0)
                     .subtract(getPos()).toVector3f();
