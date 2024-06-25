@@ -91,7 +91,7 @@ public class WaterHelmetEntity extends Entity {
 
 
         Vec3d eyePos = owner.getEyePos();
-        setPos(eyePos.x, eyePos.y - 0.5f, eyePos.z); // if you change any part of this check the renderer because it also modifies to entity pos
+        setPos(eyePos.x, eyePos.y - 0.5f, eyePos.z); // if you change any part of this check the renderer because it also modifies the entity pos
 
 
         if (!drown) {

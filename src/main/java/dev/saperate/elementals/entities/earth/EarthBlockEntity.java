@@ -99,7 +99,7 @@ public class EarthBlockEntity extends ProjectileEntity {
         if (owner == null) {
             this.setVelocity(this.getVelocity().add(0.0, -0.04, 0.0));
             this.move(MovementType.SELF, this.getVelocity());
-            if (SapsUtils.checkBlockCollision(this, 0.05f, false) != null) {
+            if (SapsUtils.checkBlockCollision(this, 0.05f, false, true) != null) {
                 collidesWithGround();
             }
             return;

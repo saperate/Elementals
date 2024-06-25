@@ -7,6 +7,7 @@ import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.MovementType;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.attribute.EntityAttributes;
+import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
@@ -20,6 +21,8 @@ import org.joml.Vector3f;
 
 import java.util.HashSet;
 
+import static dev.saperate.elementals.effects.DenseStatusEffect.DENSE_EFFECT;
+import static dev.saperate.elementals.effects.SeismicSenseStatusEffect.SEISMIC_SENSE_EFFECT;
 import static dev.saperate.elementals.items.ElementalItems.*;
 import static dev.saperate.elementals.utils.SapsUtils.getEntityLookVector;
 import static dev.saperate.elementals.utils.SapsUtils.raycastBlockCustomRotation;
@@ -34,6 +37,11 @@ public class AbilityEarthArmor implements Ability {
 
         if (player.getInventory().containsAny(EARTH_ARMOR_SET)) {
             removeArmorSet(inv);
+
+            player.removeStatusEffect(SEISMIC_SENSE_EFFECT);
+            player.removeStatusEffect(DENSE_EFFECT);
+            player.removeStatusEffect(StatusEffects.NIGHT_VISION);
+            player.removeStatusEffect(StatusEffects.BLINDNESS);
             return;
         }
 
@@ -60,7 +68,7 @@ public class AbilityEarthArmor implements Ability {
 
     }
 
-    public void removeArmorSet(DefaultedList<ItemStack> inv) {
+    public static void removeArmorSet(DefaultedList<ItemStack> inv) {
         ItemStack[] armor = getArmorStacks(inv);
 
         removeArmor(EquipmentSlot.HEAD, armor[0], inv);
@@ -69,14 +77,14 @@ public class AbilityEarthArmor implements Ability {
         removeArmor(EquipmentSlot.FEET, armor[3], inv);
     }
 
-    public void removeArmor(EquipmentSlot slot, ItemStack stack, DefaultedList<ItemStack> inv) {
-        if (!stack.isEmpty() && stack.getItem() instanceof EarthArmorItem a) {
+    public static void removeArmor(EquipmentSlot slot, ItemStack stack, DefaultedList<ItemStack> inv) {
+        if (!stack.isEmpty() && stack.getItem() instanceof EarthArmorItem) {
             ItemStack item = EarthArmorItem.getBundledStacks(stack).findFirst().orElse(ItemStack.EMPTY);
             inv.set(slot.getEntitySlotId(), item);
         }
     }
 
-    public ItemStack[] getArmorStacks(DefaultedList<ItemStack> inv) {
+    public static ItemStack[] getArmorStacks(DefaultedList<ItemStack> inv) {
         return new ItemStack[]{
                 inv.get(EquipmentSlot.HEAD.getEntitySlotId()),
                 inv.get(EquipmentSlot.CHEST.getEntitySlotId()),

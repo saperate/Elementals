@@ -44,7 +44,6 @@ public class EarthArmorItem extends DyeableArmorItem {
         }
         if(entity instanceof LivingEntity living){//Not inlining since i might need that later
             if(entity instanceof PlayerEntity player){
-                //TODO if this move is too op, add mining fatigue
                 player.addStatusEffect(new StatusEffectInstance(SEISMIC_SENSE_EFFECT,60, 0, false, false, false));
                 player.addStatusEffect(new StatusEffectInstance(DENSE_EFFECT,60,10, false, false, false));
             }

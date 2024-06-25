@@ -6,7 +6,8 @@
     "ActiveTargetGoalMixin",
     "ElementalsLivingEntityAccessor",
     "FurnaceBlockEntityAccessor",
-    "PlayerEntityMixin"
+    "PlayerEntityMixin",
+    "ServerPlayerEntityMixin"
   ],
   "injectors": {
     "defaultRequire": 1

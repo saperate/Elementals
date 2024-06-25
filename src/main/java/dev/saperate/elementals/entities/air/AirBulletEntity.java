@@ -35,7 +35,6 @@ public class AirBulletEntity extends ProjectileEntity {
     private static final TrackedData<Integer> ARRAY_ID = DataTracker.registerData(AirBulletEntity.class, TrackedDataHandlerRegistry.INTEGER);
     private static final TrackedData<Integer> ARRAY_SIZE = DataTracker.registerData(AirBulletEntity.class, TrackedDataHandlerRegistry.INTEGER);
 
-    public Vector3f lastCenterPos;
 
 
     public AirBulletEntity(EntityType<AirBulletEntity> type, World world) {
@@ -71,7 +70,7 @@ public class AirBulletEntity extends ProjectileEntity {
                     ParticleTypes.POOF,
                     0, 1);
             if(getArrayId() == 0){
-                playSound(WIND_SOUND_EVENT,1,(1.0f + (this.getWorld().random.nextFloat() - this.getWorld().random.nextFloat()) * 0.2f) * 0.7f);
+                playSound(WIND_SOUND_EVENT,0.1f,(1.0f + (this.getWorld().random.nextFloat() - this.getWorld().random.nextFloat()) * 0.2f) * 0.7f);
             }
         }
         BlockPos blockHit = SapsUtils.checkBlockCollision(this, 0.1f, false);
@@ -133,14 +132,9 @@ public class AirBulletEntity extends ProjectileEntity {
 
     private void controlEntity(Entity owner) {
         Vector3f direction;
-        if (lastCenterPos == null) {
             direction = getEntityLookVector(owner, 3)
                     .subtract(0, 1, 0)
                     .subtract(getPos()).toVector3f();
-            lastCenterPos = direction;
-        } else {
-            direction = lastCenterPos;
-        }
 
         double angle = ((2 * Math.PI) / getArraySize()) * getArrayId() + Math.toRadians(age * 2);
 
@@ -165,7 +159,7 @@ public class AirBulletEntity extends ProjectileEntity {
     @Override
     public void onRemoved() {
         summonParticles(this, random, ParticleTypes.POOF, 0.01f, 10);
-        this.getWorld().playSound(getX(), getY(), getZ(), WIND_BURST_SOUND_EVENT, SoundCategory.BLOCKS, 1, (1.0f + (this.getWorld().random.nextFloat() - this.getWorld().random.nextFloat()) * 0.2f) * 0.7f, true);
+        this.getWorld().playSound(getX(), getY(), getZ(), WIND_BURST_SOUND_EVENT, SoundCategory.BLOCKS, 0.1f, (1.0f + (this.getWorld().random.nextFloat() - this.getWorld().random.nextFloat()) * 0.2f) * 0.7f, true);
 
     }
 

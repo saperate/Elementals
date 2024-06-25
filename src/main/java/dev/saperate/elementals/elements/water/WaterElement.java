@@ -4,6 +4,7 @@ import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.elements.Element;
 import dev.saperate.elementals.elements.Upgrade;
 import net.minecraft.block.*;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.item.Items;
@@ -125,6 +126,9 @@ public class WaterElement extends Element {
     }
 
     public static Vector3f canBend(PlayerEntity player, boolean consumeWater) {
+        if(isBeingRainedOn(player)){
+            return getEntityLookVector(player,2).toVector3f();
+        }
         PlayerData plrData = PlayerData.get(player);
 
         int range = 5;
@@ -191,6 +195,11 @@ public class WaterElement extends Element {
         }
 
         return (bState.contains(Properties.WATERLOGGED) && bState.get(Properties.WATERLOGGED) && !requireFullBlock);
+    }
+
+    public static boolean isBeingRainedOn(Entity entity) {
+        BlockPos blockPos = entity.getBlockPos();
+        return entity.getWorld().hasRain(blockPos) || entity.getWorld().hasRain(BlockPos.ofFloored((double)blockPos.getX(), entity.getBoundingBox().maxY, (double)blockPos.getZ()));
     }
 
     public static Element get() {

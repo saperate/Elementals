@@ -7,6 +7,7 @@ import dev.saperate.elementals.data.StateDataSaverAndLoader;
 import dev.saperate.elementals.elements.Element;
 import dev.saperate.elementals.elements.air.AbilityAirScooter;
 import dev.saperate.elementals.elements.air.AbilityAirShield;
+import dev.saperate.elementals.elements.earth.AbilityEarthArmor;
 import dev.saperate.elementals.elements.fire.AbilityFireIgnite;
 import dev.saperate.elementals.elements.fire.AbilityFireShield;
 import dev.saperate.elementals.elements.water.AbilityWaterShield;
@@ -40,22 +41,8 @@ import static dev.saperate.elementals.utils.SapsUtils.safeHasStatusEffect;
 
 @Mixin(PlayerEntity.class)
 public abstract class PlayerEntityMixin {
-
-
     @Shadow
     public abstract void remove(Entity.RemovalReason reason);
-
-    @Inject(at = @At("TAIL"), method = "<init>")
-    private void init(CallbackInfo info) {
-        PlayerEntity player = ((PlayerEntity) (Object) this);
-        if (!player.getWorld().isClient) {
-            if (Bender.getBender(player) == null) {
-                new Bender(player, null);
-            } else {
-                Bender.getBender(player).player = player;
-            }
-        }
-    }
 
     @Inject(at = @At("TAIL"), method = "tick")
     private void tick(CallbackInfo ci) {
@@ -82,39 +69,6 @@ public abstract class PlayerEntityMixin {
 
         if (bender.currAbility != null && !player.getWorld().isClient) {
             bender.currAbility.onTick(bender);
-        }
-    }
-
-    @Inject(at = @At("HEAD"), method = "damage", cancellable = true)
-    private void onDamage(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
-        PlayerEntity player = ((PlayerEntity) (Object) this);
-        if (!player.getWorld().isClient) {
-            Bender bender = Bender.getBender(player);
-            if (bender.currAbility instanceof AbilityAirShield
-                    || bender.currAbility instanceof AbilityWaterShield
-                    || bender.currAbility instanceof AbilityFireShield
-                    || (bender.currAbility instanceof AbilityAirScooter && source.isOf(DamageTypes.FALL))
-            ) {
-
-                if(source.isOf(DamageTypes.DRAGON_BREATH)//TODO make something like earthbendable blocks
-                        && source.isOf(DamageTypes.DROWN)
-                        && source.isOf(DamageTypes.DRY_OUT)
-                        && source.isOf(DamageTypes.FREEZE)
-                        && source.isOf(DamageTypes.IN_FIRE)
-                        && source.isOf(DamageTypes.ON_FIRE)
-                        && source.isOf(DamageTypes.LAVA)
-                        && source.isOf(DamageTypes.LIGHTNING_BOLT)
-                        && source.isOf(DamageTypes.MAGIC)
-                        && source.isOf(DamageTypes.OUT_OF_WORLD)
-                        && source.isOf(DamageTypes.INDIRECT_MAGIC)
-                        && source.isOf(DamageTypes.SONIC_BOOM)
-                        && source.isOf(DamageTypes.STARVE)
-                        && source.isOf(DamageTypes.OUTSIDE_BORDER)){
-                    return;
-                }
-                cir.setReturnValue(false);
-                cir.cancel();
-            }
         }
     }
 

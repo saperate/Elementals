@@ -13,6 +13,11 @@
   "effect.elementals.seismic_sense" : "Seismic Sense",
   "effect.elementals.spirit_projection" : "Spirit Projection",
 
+  "item.elementals.earth_helmet" : "Earth Helmet",
+  "item.elementals.earth_chestplate" : "Earth Chestplate",
+  "item.elementals.earth_leggings" : "Earth Leggings",
+  "item.elementals.earth_boots" : "Earth Boots",
+
   "upgrade.elementals.exclusive": " IMPORTANT NOTICE: this upgrade is exclusive with its sister upgrades.",
   "upgrade.elementals.price": " Price: %d levels",
 
