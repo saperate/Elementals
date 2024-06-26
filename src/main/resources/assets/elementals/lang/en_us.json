@@ -145,7 +145,7 @@
 
   "upgrade.elementals.waterJump": "Water Jump",
   "upgrade.elementals.waterJump.description": " Use a burst of water to propel yourself high into the air.",
-  "upgrade.elementals.waterJump.use": " Use: l-click + touch water",
+  "upgrade.elementals.waterJump.use": " Use: touch water",
   "upgrade.elementals.waterJump.icon": "water",
 
   "upgrade.elementals.waterJumpRangeI": "Range I",
@@ -156,7 +156,7 @@
 
   "upgrade.elementals.waterTower": "Water Tower",
   "upgrade.elementals.waterTower.description": " Create a towering column of water to elevate yourself.",
-  "upgrade.elementals.waterTower.use": " Use: not touching ground + water below",
+  "upgrade.elementals.waterTower.use": " Use: not touching ground + water below + hold (0.2s)",
   "upgrade.elementals.waterTower.icon": "water",
 
   "upgrade.elementals.waterTowerRangeI": "Range I",

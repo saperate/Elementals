@@ -93,8 +93,8 @@ public class AirTornadoEntity extends ProjectileEntity {
         HitResult hit = ProjectileUtil.getCollision(this, entity -> entity instanceof LivingEntity);
         if (hit.getType() == HitResult.Type.ENTITY) {
             LivingEntity entity = (LivingEntity) ((EntityHitResult) hit).getEntity();
-            entity.damage(this.getDamageSources().playerAttack(owner), 0.5f);//TODO maybe add a debris upgrade for more dmg
-            entity.addVelocity(0, 0.75, 0);
+            entity.damage(this.getDamageSources().playerAttack(owner), 5);//TODO maybe add a debris upgrade for more dmg
+            entity.addVelocity(0, 1.25, 0);
             entity.velocityModified = true;
             entity.move(MovementType.SELF, entity.getVelocity());
         }

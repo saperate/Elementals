@@ -8,6 +8,7 @@ import dev.saperate.elementals.entities.water.WaterJetEntity;
 import dev.saperate.elementals.entities.water.WaterTowerEntity;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.MovementType;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.particle.ParticleTypes;
@@ -26,7 +27,7 @@ public class AbilityWaterTower implements Ability {
     //TODO could be useful for more intuitive uncast
     @Override
     public void onCall(Bender bender, long deltaT) {
-        if (!bender.reduceChi(5)) {
+        if (!bender.reduceChi(15)) {
             if (bender.abilityData == null) {
                 bender.setCurrAbility(null);
             } else {
@@ -35,6 +36,12 @@ public class AbilityWaterTower implements Ability {
             return;
         }
         PlayerEntity player = bender.player;
+
+        if(player.isTouchingWaterOrRain()) {
+            player.addVelocity(0, 1, 0);
+            player.velocityModified = true;
+            player.move(MovementType.PLAYER, player.getVelocity());
+        }
 
         WaterTowerEntity entity = new WaterTowerEntity(player.getWorld(), player);
         bender.abilityData = entity;
@@ -90,8 +97,6 @@ public class AbilityWaterTower implements Ability {
         if (!player.isSubmergedInWater() && (player.isOnGround()
                 || ((WaterTowerEntity) bender.abilityData).getY() - 0.25f > player.getY()
                 || (!isAir && !WaterElement.isBlockBendable(hit.getBlockPos(), player.getWorld(), false, plrData.canUseUpgrade("waterPickupEfficiencyI"))))) {
-            //TODO we could make it so players can bend while using this move by delegating this part to the entity
-            //TODO we could even make an upgrade that switches between the two behaviors
             onRemove(bender);
             return;
         }

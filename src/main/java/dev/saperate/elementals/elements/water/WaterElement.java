@@ -122,7 +122,7 @@ public class WaterElement extends Element {
         addAbility(new AbilityWater4(), true);
         addAbility(new AbilityWaterHealing());
         addAbility(new AbilityWaterTower());
-
+        addAbility(new AbilityWaterJump());
     }
 
     public static Vector3f canBend(PlayerEntity player, boolean consumeWater) {
