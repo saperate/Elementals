@@ -48,19 +48,19 @@ public abstract class ServerPlayerEntityMixin {
                     || (bender.currAbility instanceof AbilityAirScooter && source.isOf(DamageTypes.FALL))) {
 
                 if (source.isOf(DamageTypes.DRAGON_BREATH)//TODO make a list like earth bendable blocks
-                        && source.isOf(DamageTypes.DROWN)
-                        && source.isOf(DamageTypes.DRY_OUT)
-                        && source.isOf(DamageTypes.FREEZE)
-                        && source.isOf(DamageTypes.IN_FIRE)
-                        && source.isOf(DamageTypes.ON_FIRE)
-                        && source.isOf(DamageTypes.LAVA)
-                        && source.isOf(DamageTypes.LIGHTNING_BOLT)
-                        && source.isOf(DamageTypes.MAGIC)
-                        && source.isOf(DamageTypes.OUT_OF_WORLD)
-                        && source.isOf(DamageTypes.INDIRECT_MAGIC)
-                        && source.isOf(DamageTypes.SONIC_BOOM)
-                        && source.isOf(DamageTypes.STARVE)
-                        && source.isOf(DamageTypes.OUTSIDE_BORDER)) {
+                        || source.isOf(DamageTypes.DROWN)
+                        || source.isOf(DamageTypes.DRY_OUT)
+                        || source.isOf(DamageTypes.FREEZE)
+                        || source.isOf(DamageTypes.IN_FIRE)
+                        || source.isOf(DamageTypes.ON_FIRE)
+                        || source.isOf(DamageTypes.LAVA)
+                        || source.isOf(DamageTypes.LIGHTNING_BOLT)
+                        || source.isOf(DamageTypes.MAGIC)
+                        || source.isOf(DamageTypes.OUT_OF_WORLD)
+                        || source.isOf(DamageTypes.INDIRECT_MAGIC)
+                        || source.isOf(DamageTypes.SONIC_BOOM)
+                        || source.isOf(DamageTypes.STARVE)
+                        || source.isOf(DamageTypes.OUTSIDE_BORDER)) {
                     return;
                 }
                 cir.setReturnValue(false);

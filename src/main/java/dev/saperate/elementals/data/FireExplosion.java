@@ -123,7 +123,7 @@ public class FireExplosion extends Explosion {
             y /= z;
             ab = (double)getExposure(vec3d, entity);
             double ac = (1.0 - w) * ab;
-            entity.damage(this.getDamageSource(), Math.max(maxDamage, (float)((int)((ac * ac + ac) / 2.0 * 7.0 * (double)q + 1.0))));
+            entity.damage(this.getDamageSource(), Math.min(maxDamage, (float)((int)((ac * ac + ac) / 2.0 * 7.0 * (double)q + 1.0))));
             double aa = (1.0 - v) * (double) Explosion.getExposure(vec3d, entity);
             if (entity instanceof LivingEntity) {
                 LivingEntity livingEntity = (LivingEntity) entity;

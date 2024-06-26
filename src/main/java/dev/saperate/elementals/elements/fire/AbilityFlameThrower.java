@@ -112,7 +112,7 @@ public class AbilityFlameThrower implements Ability {
                 if (Math.cos(dot) <= 0.75) {
                     if (!e.isFireImmune()) {
                         e.setOnFireFor(8);
-                        e.damage(e.getDamageSources().inFire(), PlayerData.get(player).canUseUpgrade("blueFire") ? 1.5f : 1.25f);
+                        e.damage(e.getDamageSources().inFire(), PlayerData.get(player).canUseUpgrade("blueFire") ? 3 : 2.5f);
                     }
                 }
             }

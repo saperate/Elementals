@@ -411,16 +411,19 @@ public final class SapsUtils {
         return raw.split("%d").length;
     }
 
-    public static void launchPlayer(PlayerEntity player, float power) {
-        Vector3f velocity = getEntityLookVector(player, 1)
-                .subtract(player.getEyePos())
+    public static void launchEntity(Entity entity, float power) {
+        Vector3f velocity = getEntityLookVector(entity, 1)
+                .subtract(entity.getEyePos())
                 .normalize().multiply(power).toVector3f();
 
-        player.setVelocity(velocity.x,
+        //returns the root vehicle or itself if there are none
+        Entity vehicle = entity.getRootVehicle();
+
+        vehicle.setVelocity(velocity.x,
                 velocity.y > 0 ? Math.min(velocity.y, power - 0.75f) : Math.max(velocity.y, -power + 0.75f),
                 velocity.z);
-        player.velocityModified = true;
-        player.move(MovementType.PLAYER, player.getVelocity());
+        vehicle.velocityModified = true;
+        vehicle.move(MovementType.PLAYER, vehicle.getVelocity());
     }
 
     /**

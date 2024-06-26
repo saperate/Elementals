@@ -21,11 +21,11 @@ public class AbilityEarthJump implements Ability {
 
         BlockHitResult hit = raycastBlockCustomRotation(player, 12, true, new Vec3d(0, -1, 0));
 
-        if(!EarthElement.isBlockBendable(player.getWorld().getBlockState(hit.getBlockPos())) || !player.isOnGround()){
+        if(!EarthElement.isBlockBendable(player.getWorld().getBlockState(hit.getBlockPos())) || !player.getRootVehicle().isOnGround()){
             return;
         }
 
-        if (!bender.reduceChi(15)) {
+        if (!bender.reduceChi(10)) {
             if (bender.abilityData == null) {
                 bender.setCurrAbility(null);
             } else {
@@ -42,7 +42,7 @@ public class AbilityEarthJump implements Ability {
         } else if (plrData.canUseUpgrade("earthJumpRangeI")) {
             power = 1.5f;
         }
-        launchPlayer(player,power);
+        launchEntity(player,power);
 
     }
 

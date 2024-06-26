@@ -17,7 +17,7 @@ public class AbilityEarth3 implements Ability {
 
         if (vars != null) {
             EarthElement.get().abilityList.get(10).onCall(bender,deltaT);
-        } else if (bender.player.isOnGround() && playerData.canUseUpgrade("earthJump")) {
+        } else if (playerData.canUseUpgrade("earthJump")) {
             EarthElement.get().abilityList.get(11).onCall(bender,deltaT);
         }
 

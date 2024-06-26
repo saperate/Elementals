@@ -97,11 +97,11 @@ public class AirBulletEntity extends ProjectileEntity {
                 LivingEntity entity = (LivingEntity) ((EntityHitResult) hit).getEntity();
                 PlayerData plrData = PlayerData.get(owner);
 
-                float damage = 0.5f;
-                if (plrData.canUseUpgrade("airBulletMastery")) {
-                    damage = 8;
+                float damage = 1;
+                if (plrData.canUseUpgrade("airBulletsMastery")) {
+                    damage = 4;
                 } else if (plrData.canUseUpgrade("airBulletsDamageI")) {
-                    damage = 1;
+                    damage = 2;
                 }
                 entity.damage(this.getDamageSources().playerAttack(owner), damage);
                 if (!getIsControlled()) {

@@ -49,7 +49,7 @@ public class AbilityFire3 implements Ability {
                 power = 1.5f;
             }
 
-            launchPlayer(player,power);
+            launchEntity(player,power);
         }
     }
 
@@ -109,9 +109,9 @@ public class AbilityFire3 implements Ability {
             return;
         } else if (bender.abilityData != null) {
             if (bender.abilityData.equals(true)) {
-                bender.setCurrAbility(null);
+                onRemove(bender);
             } else if (bender.abilityData.equals(false)) {
-                bender.abilityData = player.isOnGround();
+                bender.abilityData = player.getRootVehicle().isOnGround();
                 count = 8;
                 if(player.isSneaking()){
                     //bomb jump upgrade will enable it to be canceled

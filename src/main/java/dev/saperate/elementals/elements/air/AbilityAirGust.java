@@ -117,7 +117,7 @@ public class AbilityAirGust implements Ability {
 
 
                 if (Math.cos(dot) <= 0.75) {
-                    e.damage(e.getDamageSources().playerAttack(player), 1.25f);
+                    e.damage(e.getDamageSources().playerAttack(player), 2.5f);
                     e.addVelocity(dir.multiply(-0.1f));
                 }
             }
