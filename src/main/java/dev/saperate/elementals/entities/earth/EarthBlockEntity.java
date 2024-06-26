@@ -1,5 +1,7 @@
 package dev.saperate.elementals.entities.earth;
 
+import dev.saperate.elementals.entities.ElementalEntities;
+import dev.saperate.elementals.entities.common.AbstractElementalsEntity;
 import dev.saperate.elementals.utils.SapsUtils;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -30,9 +32,7 @@ import static dev.saperate.elementals.entities.ElementalEntities.EARTHBLOCK;
 import static dev.saperate.elementals.utils.SapsUtils.getEntityLookVector;
 import static dev.saperate.elementals.utils.SapsUtils.summonParticles;
 
-public class EarthBlockEntity extends ProjectileEntity {
-    private static final TrackedData<Integer> OWNER_ID = DataTracker.registerData(EarthBlockEntity.class, TrackedDataHandlerRegistry.INTEGER);
-    private static final TrackedData<Boolean> IS_CONTROLLED = DataTracker.registerData(EarthBlockEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
+public class EarthBlockEntity extends AbstractElementalsEntity {
     private static final TrackedData<Integer> MODEL_SHAPE_ID = DataTracker.registerData(EarthBlockEntity.class, TrackedDataHandlerRegistry.INTEGER);
     private static final TrackedData<BlockState> BLOCK_STATE = DataTracker.registerData(EarthBlockEntity.class, TrackedDataHandlerRegistry.BLOCK_STATE);
     private static final TrackedData<Vector3f> TARGET_POSITION = DataTracker.registerData(EarthBlockEntity.class, TrackedDataHandlerRegistry.VECTOR3F);
@@ -42,7 +42,6 @@ public class EarthBlockEntity extends ProjectileEntity {
     private static final TrackedData<Float> DAMAGE = DataTracker.registerData(EarthBlockEntity.class, TrackedDataHandlerRegistry.FLOAT);
 
     private boolean drops = true, damageOnTouch = false, shiftToFreeze = true, dropOnLifeTime = false;
-    private int lifeTime = -1;
 
 
     public EarthBlockEntity(EntityType<EarthBlockEntity> type, World world) {
@@ -64,8 +63,6 @@ public class EarthBlockEntity extends ProjectileEntity {
 
     @Override
     protected void initDataTracker() {
-        this.getDataTracker().startTracking(OWNER_ID, 0);
-        this.getDataTracker().startTracking(IS_CONTROLLED, false);
         this.getDataTracker().startTracking(MODEL_SHAPE_ID, 0);
         this.getDataTracker().startTracking(BLOCK_STATE, Blocks.AIR.getDefaultState());
         this.getDataTracker().startTracking(TARGET_POSITION, new Vector3f(0, -50, 0));
@@ -84,76 +81,14 @@ public class EarthBlockEntity extends ProjectileEntity {
                     0, 1);
         }
 
-        Entity owner = getOwner();
-        if (lifeTime != -1) {
-            if (lifeTime <= 0) {
-                if (dropOnLifeTime) {
-                    setControlled(false);
-                } else {
-                    discard();
-                }
-            }
-            lifeTime--;
-        }
-
-        if (owner == null) {
-            this.setVelocity(this.getVelocity().add(0.0, -0.04, 0.0));
-            this.move(MovementType.SELF, this.getVelocity());
-            if (SapsUtils.checkBlockCollision(this, 0.05f, false, true) != null) {
-                collidesWithGround();
-            }
-            return;
-        }
-
-        List<ProjectileEntity> projectiles = getWorld().getEntitiesByClass(ProjectileEntity.class,
-                getWorld().isClient ? getBoundingBox().expand(.25f) : getBoundingBox().offset(getPos()).expand(.25f),
-                ProjectileEntity::isAlive);
-
-        for (ProjectileEntity e : projectiles) {
-            if (!(e instanceof EarthBlockEntity)) {
-                e.discard();
-            }
-        }
-
-        if (damageOnTouch) {
-            List<LivingEntity> entities = getWorld().getEntitiesByClass(LivingEntity.class,
-                    getBoundingBox().expand(0.25f),
-                    LivingEntity::isAlive);
-
-            for (LivingEntity e : entities) {
-                if (!e.equals(owner)) {
-                    e.damage(this.getDamageSources().playerAttack((PlayerEntity) owner), getDamage());
-                }
-                e.setVelocity(this.getVelocity().multiply(1.2f));
-                e.velocityModified = true;
-                e.move(MovementType.SELF, e.getVelocity());
-            }
-        }
-
-        if (!getIsControlled()) {
-            HitResult hit = ProjectileUtil.getCollision(this, entity -> entity instanceof LivingEntity);
-            if (hit.getType() == HitResult.Type.ENTITY) {
-                LivingEntity entity = (LivingEntity) ((EntityHitResult) hit).getEntity();
-                entity.damage(this.getDamageSources().playerAttack((PlayerEntity) owner), getDamage());
-                entity.setVelocity(this.getVelocity().multiply(1.2f));
-                entity.move(MovementType.SELF, entity.getVelocity());
-                entity.velocityModified = true;
-                discard();
-            }
-        }
-
-        this.getWorld().getEntitiesByType(TypeFilter.instanceOf(PlayerEntity.class), this.getBoundingBox(), EntityPredicates.canBePushedBy(this)).forEach(this::pushAway);
+        LivingEntity owner = getOwner();
         if (!(owner.isSneaking() && shiftToFreeze)) {
             moveEntity(owner);
         }
 
     }
 
-    private void moveEntity(Entity owner) {
-
-
-        //gravity
-        this.setVelocity(this.getVelocity().add(0.0, -0.04, 0.0));
+    public void moveEntity(Entity owner) {
 
         if (getIsControlled()) {
             controlEntity(owner);
@@ -177,18 +112,8 @@ public class EarthBlockEntity extends ProjectileEntity {
         if (usesOffset()) {
             direction.add(target);
         }
-        direction = direction.sub(0, 0.5f, 0)
-                .sub(getPos().toVector3f())
-                .mul(getMovementSpeed());
 
-        if (direction.length() < 0.4f) {
-            this.setVelocity(0, 0, 0);
-        } else if (getVelocity().length() > 1) {
-            this.setVelocity(0, 0, 0);
-        }
-
-
-        this.addVelocity(direction.x, direction.y, direction.z);
+        moveEntityTowardsGoal(direction);
     }
 
     @Override
@@ -201,6 +126,7 @@ public class EarthBlockEntity extends ProjectileEntity {
         return true;
     }
 
+    @Override
     public void collidesWithGround() {
         if (!(getModelShapeId() == 1) && drops) {
             getWorld().setBlockState(
@@ -222,37 +148,38 @@ public class EarthBlockEntity extends ProjectileEntity {
     }
 
     @Override
-    public void writeCustomDataToNbt(NbtCompound nbt) {
-        if (getOwner() != null) {
-            super.writeCustomDataToNbt(nbt);
-            nbt.putInt("OwnerID", this.getOwner().getId());
+    public void onTouchEntity(Entity entity) {
+        LivingEntity owner = getOwner();
+        if (!entity.equals(owner)) {
+            entity.damage(this.getDamageSources().playerAttack((PlayerEntity) owner), getDamage());
+        }
+        entity.setVelocity(this.getVelocity().multiply(1.2f));
+        entity.velocityModified = true;
+        entity.move(MovementType.SELF, entity.getVelocity());
+    }
+
+    @Override
+    public void onHitEntity(Entity entity) {
+        entity.damage(this.getDamageSources().playerAttack(getOwner()), getDamage());
+        entity.setVelocity(this.getVelocity().multiply(1.2f));
+        entity.move(MovementType.SELF, entity.getVelocity());
+        entity.velocityModified = true;
+        discard();
+    }
+
+    @Override
+    public void onLifeTimeEnd() {
+        if (dropOnLifeTime) {
+            setControlled(false);
+        } else {
+            discard();
         }
     }
 
     @Override
-    public void readCustomDataFromNbt(NbtCompound nbt) {
-        super.readCustomDataFromNbt(nbt);
-        int ownerId = nbt.getInt("OwnerID");
-        this.getDataTracker().set(OWNER_ID, ownerId);
+    public boolean deflectsProjectiles() {
+        return true;
     }
-
-    public void setControlled(boolean val) {
-        this.getDataTracker().set(IS_CONTROLLED, val);
-    }
-
-    public boolean getIsControlled() {
-        return this.getDataTracker().get(IS_CONTROLLED);
-    }
-
-    public LivingEntity getOwner() {
-        Entity owner = this.getWorld().getEntityById(this.getDataTracker().get(OWNER_ID));
-        return (owner instanceof LivingEntity) ? (LivingEntity) owner : null;
-    }
-
-    public void setOwner(LivingEntity owner) {
-        this.getDataTracker().set(OWNER_ID, owner.getId());
-    }
-
     public BlockState getBlockState() {
         return this.getDataTracker().get(BLOCK_STATE);
     }
@@ -309,6 +236,7 @@ public class EarthBlockEntity extends ProjectileEntity {
         this.lifeTime = lifeTime;
     }
 
+    @Override
     public boolean damagesOnTouch() {
         return damageOnTouch;
     }
@@ -325,6 +253,7 @@ public class EarthBlockEntity extends ProjectileEntity {
         this.shiftToFreeze = shiftToFreeze;
     }
 
+    @Override
     public float getMovementSpeed() {
         return getDataTracker().get(MOVEMENT_SPEED);
     }
@@ -349,7 +278,4 @@ public class EarthBlockEntity extends ProjectileEntity {
         getDataTracker().set(DAMAGE, dmg);
     }
 
-    protected void pushAway(Entity entity) {
-        entity.pushAwayFrom(this);
-    }
 }
