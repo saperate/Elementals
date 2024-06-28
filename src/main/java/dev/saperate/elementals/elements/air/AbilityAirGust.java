@@ -4,7 +4,10 @@ import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.elements.Ability;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.MovementType;
+import net.minecraft.entity.decoration.AbstractDecorationEntity;
+import net.minecraft.entity.decoration.ItemFrameEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.world.ServerWorld;
@@ -105,7 +108,7 @@ public class AbilityAirGust implements Ability {
 
 
             for (Entity e : hits) {
-                if (e.equals(player)) {
+                if (e.equals(player) || e instanceof ItemEntity || e instanceof AbstractDecorationEntity) {
                     continue;
                 }
                 Vec3d dir = player.getPos().subtract(e.getPos());

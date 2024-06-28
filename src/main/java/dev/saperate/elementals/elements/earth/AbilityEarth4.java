@@ -11,6 +11,7 @@ public class AbilityEarth4 implements Ability {
     @Override
     public void onCall(Bender bender, long deltaT) {
         PlayerData plrData = PlayerData.get(bender.player);
+        bender.setCurrAbility(null);
         if (!plrData.canUseUpgrade("earthSeismicSense")) {
             return;
         }
@@ -33,7 +34,6 @@ public class AbilityEarth4 implements Ability {
             return;
         }
         }
-        bender.setCurrAbility(null);
     }
 
     @Override

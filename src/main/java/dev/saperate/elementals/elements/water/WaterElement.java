@@ -125,9 +125,9 @@ public class WaterElement extends Element {
         addAbility(new AbilityWaterJump());
     }
 
-    public static Vector3f canBend(PlayerEntity player, boolean consumeWater) {
-        if(isBeingRainedOn(player)){
-            return getEntityLookVector(player,2).toVector3f();
+    public static Vector3f canBend(PlayerEntity player, boolean consumeWater) {//todo make it so some abilities still consume water, even though you might have efficiency unlocked
+        if (isBeingRainedOn(player)) {
+            return getEntityLookVector(player, 2).toVector3f();
         }
         PlayerData plrData = PlayerData.get(player);
 
@@ -146,8 +146,10 @@ public class WaterElement extends Element {
 
         if (hit.getType() == HitResult.Type.BLOCK && isBlockBendable(hit.getBlockPos(), player.getWorld(), !hasEfficiency, hasEfficiency)) {
             if (consumeWater) {
-                if (blockState.contains(Properties.WATERLOGGED) && blockState.get(Properties.WATERLOGGED) && !consumeWater) {
-                    ((Waterloggable) blockState.getBlock()).tryFillWithFluid(player.getWorld(), hit.getBlockPos(), blockState, Blocks.AIR.getDefaultState().getFluidState());
+                if (blockState.contains(Properties.WATERLOGGED) && blockState.get(Properties.WATERLOGGED)) {
+                    player.getWorld().setBlockState(hit.getBlockPos(), blockState.with(Properties.WATERLOGGED, false), 3);
+                } else if (blockState.getBlock().equals(Blocks.WATER_CAULDRON)) {
+                    player.getWorld().setBlockState(hit.getBlockPos(),Blocks.CAULDRON.getDefaultState());
                 } else {
                     player.getWorld().setBlockState(hit.getBlockPos(), Blocks.AIR.getDefaultState());
                 }
@@ -199,7 +201,7 @@ public class WaterElement extends Element {
 
     public static boolean isBeingRainedOn(Entity entity) {
         BlockPos blockPos = entity.getBlockPos();
-        return entity.getWorld().hasRain(blockPos) || entity.getWorld().hasRain(BlockPos.ofFloored((double)blockPos.getX(), entity.getBoundingBox().maxY, (double)blockPos.getZ()));
+        return entity.getWorld().hasRain(blockPos) || entity.getWorld().hasRain(BlockPos.ofFloored((double) blockPos.getX(), entity.getBoundingBox().maxY, (double) blockPos.getZ()));
     }
 
     public static Element get() {

@@ -4,6 +4,8 @@ import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.elements.Ability;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.ItemEntity;
+import net.minecraft.entity.decoration.AbstractDecorationEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.entity.projectile.thrown.EggEntity;
@@ -98,7 +100,7 @@ public class AbilityFlameThrower implements Ability {
                     Entity::isAlive);
 
             for (Entity e : hits) {
-                if (e.equals(player)) {
+                if (e.equals(player)  || e instanceof ItemEntity || e instanceof AbstractDecorationEntity) {
                     continue;
                 }
                 Vector3f dir = player.getPos().subtract(e.getPos()).toVector3f();

@@ -18,6 +18,7 @@ import net.minecraft.predicate.entity.EntityPredicates;
 import net.minecraft.util.TypeFilter;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.joml.Vector3f;
@@ -192,4 +193,30 @@ public abstract class AbstractElementalsEntity extends Entity {
     public boolean isFireImmune() {
         return true;
     }
+
+    /**
+     * @author Mojang
+     */
+    public void setVelocity(double x, double y, double z, float speed, float divergence) {
+        Vec3d vec3d = (new Vec3d(x, y, z)).normalize().add(this.random.nextTriangular(0.0, 0.0172275 * (double)divergence), this.random.nextTriangular(0.0, 0.0172275 * (double)divergence), this.random.nextTriangular(0.0, 0.0172275 * (double)divergence)).multiply((double)speed);
+        this.setVelocity(vec3d);
+        double d = vec3d.horizontalLength();
+        this.setYaw((float)(MathHelper.atan2(vec3d.x, vec3d.z) * 57.2957763671875));
+        this.setPitch((float)(MathHelper.atan2(vec3d.y, d) * 57.2957763671875));
+        this.prevYaw = this.getYaw();
+        this.prevPitch = this.getPitch();
+    }
+
+    /**
+     * @author Mojang
+     */
+    public void setVelocity(Entity shooter, float pitch, float yaw, float roll, float speed, float divergence) {
+        float f = -MathHelper.sin(yaw * 0.017453292F) * MathHelper.cos(pitch * 0.017453292F);
+        float g = -MathHelper.sin((pitch + roll) * 0.017453292F);
+        float h = MathHelper.cos(yaw * 0.017453292F) * MathHelper.cos(pitch * 0.017453292F);
+        this.setVelocity((double)f, (double)g, (double)h, speed, divergence);
+        Vec3d vec3d = shooter.getVelocity();
+        this.setVelocity(this.getVelocity().add(vec3d.x, shooter.isOnGround() ? 0.0 : vec3d.y, vec3d.z));
+    }
+
 }
