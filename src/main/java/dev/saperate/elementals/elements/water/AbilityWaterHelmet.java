@@ -30,15 +30,15 @@ public class AbilityWaterHelmet implements Ability {
         entity.setStealthy(plrData.canUseUpgrade("waterHelmetStealth"));
 
         if(plrData.canUseUpgrade("waterHelmetMastery")){
-            entity.setMaxLifeTime(-1);
+            entity.maxLifeTime = -1;
         } else if (plrData.canUseUpgrade("waterHelmetDurationIV")) {
-            entity.setMaxLifeTime(6000);
+            entity.maxLifeTime = 6000;
         } else if (plrData.canUseUpgrade("waterHelmetDurationIII")) {
-            entity.setMaxLifeTime(4800);
+            entity.maxLifeTime = 4800;
         } else if (plrData.canUseUpgrade("waterHelmetDurationII")) {
-            entity.setMaxLifeTime(3600);
+            entity.maxLifeTime = 3600;
         }  else if (plrData.canUseUpgrade("waterHelmetDurationI")) {
-            entity.setMaxLifeTime(2400);
+            entity.maxLifeTime = 2400;
         }
     }
 

@@ -1,5 +1,6 @@
 package dev.saperate.elementals.entities.water;
 
+import dev.saperate.elementals.entities.common.AbstractElementalsEntity;
 import net.minecraft.entity.*;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
@@ -17,7 +18,7 @@ import org.jetbrains.annotations.Nullable;
 import static dev.saperate.elementals.entities.ElementalEntities.WATERTOWER;
 import static dev.saperate.elementals.utils.SapsUtils.summonParticles;
 
-public class WaterTowerEntity extends ProjectileEntity {
+public class WaterTowerEntity extends AbstractElementalsEntity {
     public static final int heightLimit = 10;
     private static final TrackedData<Float> TOWER_HEIGHT = DataTracker.registerData(WaterTowerEntity.class, TrackedDataHandlerRegistry.FLOAT);
     private static final TrackedData<Float> MAX_TOWER_HEIGHT = DataTracker.registerData(WaterTowerEntity.class, TrackedDataHandlerRegistry.FLOAT);
@@ -42,7 +43,7 @@ public class WaterTowerEntity extends ProjectileEntity {
 
     @Override
     protected void initDataTracker() {
-        this.getDataTracker().startTracking(OWNER_ID, 0);
+        super.initDataTracker();
         this.getDataTracker().startTracking(TOWER_HEIGHT, 1f);
         this.getDataTracker().startTracking(MAX_TOWER_HEIGHT, 1f);
     }
@@ -56,8 +57,7 @@ public class WaterTowerEntity extends ProjectileEntity {
         }
 
         PlayerEntity owner = getOwner();
-        if (owner == null && !getWorld().isClient) {
-            discard();
+        if(owner == null || isRemoved()){
             return;
         }
 
@@ -69,10 +69,6 @@ public class WaterTowerEntity extends ProjectileEntity {
         owner.getAbilities().allowFlying = true;
         owner.getAbilities().flying = true;
         owner.getAbilities().setFlySpeed(0.02f);
-
-
-
-        this.getWorld().getEntitiesByType(TypeFilter.instanceOf(PlayerEntity.class), this.getBoundingBox(), EntityPredicates.canBePushedBy(this)).forEach(this::pushAway);
     }
 
     public void updatePosition(@Nullable Entity owner){
@@ -110,33 +106,6 @@ public class WaterTowerEntity extends ProjectileEntity {
     }
 
 
-
-    @Override
-    public void writeCustomDataToNbt(NbtCompound nbt) {
-        if (getOwner() != null) {
-            super.writeCustomDataToNbt(nbt);
-            nbt.putInt("OwnerID", this.getOwner().getId());
-        }
-    }
-
-    @Override
-    public void readCustomDataFromNbt(NbtCompound nbt) {
-        super.readCustomDataFromNbt(nbt);
-        int ownerId = nbt.getInt("OwnerID");
-        this.getDataTracker().set(OWNER_ID, ownerId);
-    }
-
-
-
-    public PlayerEntity getOwner() {
-        Entity owner = this.getWorld().getEntityById(this.getDataTracker().get(OWNER_ID));
-        return (owner instanceof PlayerEntity) ? (PlayerEntity) owner : null;
-    }
-
-    public void setOwner(LivingEntity owner) {
-        this.getDataTracker().set(OWNER_ID, owner.getId());
-    }
-
     public void setTowerHeight(float val){
         this.getDataTracker().set(TOWER_HEIGHT,val);
     }
@@ -153,8 +122,8 @@ public class WaterTowerEntity extends ProjectileEntity {
         return this.getDataTracker().get(MAX_TOWER_HEIGHT);
     }
 
-
-    protected void pushAway(Entity entity) {
-        entity.pushAwayFrom(this);
+    @Override
+    public boolean discardsOnNullOwner() {
+        return true;
     }
 }

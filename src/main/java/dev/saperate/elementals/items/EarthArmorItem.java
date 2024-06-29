@@ -2,6 +2,10 @@ package dev.saperate.elementals.items;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
+import net.minecraft.block.Block;
+import net.minecraft.block.Blocks;
+import net.minecraft.block.GrassBlock;
+import net.minecraft.client.color.world.GrassColors;
 import net.minecraft.client.item.BundleTooltipData;
 import net.minecraft.client.item.TooltipData;
 import net.minecraft.enchantment.Enchantments;
@@ -72,8 +76,13 @@ public class EarthArmorItem extends DyeableArmorItem {
         nbtCompound.putFloat("additional_toughness", val);
     }
 
-
-    public ItemStack getItemStack(ItemStack prevArmor) {
+    /**
+     * Stores the previous armor and colors the new one then returns the new armor
+     * @param prevArmor The previous armor the player was wearing
+     * @param standingBlock The block the player is standing on
+     * @return the new armor as an item stack
+     */
+    public ItemStack getItemStack(ItemStack prevArmor, Block standingBlock) {
         ItemStack item = getDefaultStack();
         item.addEnchantment(Enchantments.BINDING_CURSE, 1);
         item.addHideFlag(ItemStack.TooltipSection.ENCHANTMENTS);
@@ -85,11 +94,19 @@ public class EarthArmorItem extends DyeableArmorItem {
         }
 
         addToBundle(item,prevArmor);
+
+
+        int color = standingBlock.getDefaultMapColor().color;
+        if(standingBlock.equals(Blocks.GRASS_BLOCK)){
+            color = Blocks.DIRT.getDefaultMapColor().color;
+        }
+
+        setColor(item, darkenColor(color,4));
+
         return item;
     }
 
     //Taken from vanilla bundle code
-
     private static int addToBundle(ItemStack bundle, ItemStack stack) {
         if (stack.isEmpty() || !stack.getItem().canBeNested()) {
             return 0;
@@ -158,4 +175,11 @@ public class EarthArmorItem extends DyeableArmorItem {
         return false;
     }
 
+
+    static int darkenColor(int col, int amt) {
+        int r = Math.max((col >> 16), amt);
+        int b = Math.max(((col >> 8) & 0x00FF), amt);
+        int g = Math.max((col & 0x0000FF), amt);
+        return g | (b << 8) | (r << 16);
+    }
 }

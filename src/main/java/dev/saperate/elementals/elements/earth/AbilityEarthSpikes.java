@@ -67,7 +67,7 @@ public class AbilityEarthSpikes implements Ability {
         block.setModelShapeId(2);
         block.setBlockState(bender.player.getWorld().getBlockState(pos));
         block.setDrops(false);
-        block.setLifeTime(60);
+        block.maxLifeTime = 60;
         block.setMovementSpeed(0.6f);
         block.setDamageOnTouch(true);
         block.setShiftToFreeze(false);

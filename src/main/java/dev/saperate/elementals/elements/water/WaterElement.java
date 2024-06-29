@@ -11,6 +11,7 @@ import net.minecraft.item.Items;
 import net.minecraft.item.PotionItem;
 import net.minecraft.potion.PotionUtil;
 import net.minecraft.potion.Potions;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.state.property.IntProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.hit.BlockHitResult;
@@ -176,7 +177,6 @@ public class WaterElement extends Element {
         BlockState bState = world.getBlockState(pos);
         Block block = bState.getBlock();
 
-
         if (block.equals(Blocks.WATER) ||
                 canUseDiverseBlocks && (
                         block.equals(Blocks.ICE)
@@ -188,10 +188,11 @@ public class WaterElement extends Element {
                                 || block.equals(Blocks.SNOW)
                                 || block.equals(Blocks.SNOW_BLOCK)
                                 || block.equals(Blocks.GRASS)
+                                || block.equals(Blocks.CACTUS)
                                 || block instanceof LeavesBlock
                                 || block instanceof PlantBlock
                                 || block instanceof AbstractPlantBlock
-                )
+                ) && !block.equals(Blocks.DEAD_BUSH)
         ) {
             return true;
         }

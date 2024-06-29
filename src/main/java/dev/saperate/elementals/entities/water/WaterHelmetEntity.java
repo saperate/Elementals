@@ -1,5 +1,6 @@
 package dev.saperate.elementals.entities.water;
 
+import dev.saperate.elementals.entities.common.AbstractElementalsEntity;
 import net.minecraft.entity.*;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
@@ -11,6 +12,7 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import org.joml.Vector3f;
 
 import static dev.saperate.elementals.effects.DrowningStatusEffect.DROWNING_EFFECT;
 import static dev.saperate.elementals.entities.ElementalEntities.WATERHELMET;
@@ -20,17 +22,13 @@ import static dev.saperate.elementals.utils.SapsUtils.summonParticles;
  * <b>IMPORTANT NOTICE</b> this entity also handles air bending's suffocate. To modify the air suffocate model,
  * go to the water helmet renderer
  */
-public class WaterHelmetEntity extends Entity {
-    public boolean isOwnerBiped = false;
-    private static final TrackedData<Integer> MAX_LIFETIME = DataTracker.registerData(WaterHelmetEntity.class, TrackedDataHandlerRegistry.INTEGER);
+public class WaterHelmetEntity extends AbstractElementalsEntity {
     private static final TrackedData<Integer> RANGE = DataTracker.registerData(WaterHelmetEntity.class, TrackedDataHandlerRegistry.INTEGER);
     private static final TrackedData<Integer> CASTER_ID = DataTracker.registerData(WaterHelmetEntity.class, TrackedDataHandlerRegistry.INTEGER);
-    private static final TrackedData<Integer> OWNER_ID = DataTracker.registerData(WaterHelmetEntity.class, TrackedDataHandlerRegistry.INTEGER);
-    private static final TrackedData<Boolean> DROWN = DataTracker.registerData(WaterHelmetEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
     private static final TrackedData<Boolean> STEALTHY = DataTracker.registerData(WaterHelmetEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
     private static final TrackedData<Integer> MODEL_ID = DataTracker.registerData(WaterHelmetEntity.class, TrackedDataHandlerRegistry.INTEGER);
-    public int aliveTicks = 0;
 
+    public boolean isOwnerBiped = false, suffocate = false;
 
     public WaterHelmetEntity(EntityType<WaterHelmetEntity> type, World world) {
         super(type, world);
@@ -48,17 +46,14 @@ public class WaterHelmetEntity extends Entity {
         super(WATERHELMET, world);
         setPos(x, owner.getEyeY(), z);
         setOwner(owner);
-        setDrown(drown);
     }
 
     @Override
     protected void initDataTracker() {
+        super.initDataTracker();
         this.getDataTracker().startTracking(CASTER_ID, 0);
-        this.getDataTracker().startTracking(OWNER_ID, 0);
-        this.getDataTracker().startTracking(DROWN, false);
         this.getDataTracker().startTracking(MODEL_ID, 0);
         this.getDataTracker().startTracking(STEALTHY, false);
-        this.getDataTracker().startTracking(MAX_LIFETIME, 1200);
         this.getDataTracker().startTracking(RANGE, 10);
 
     }
@@ -66,35 +61,28 @@ public class WaterHelmetEntity extends Entity {
     @Override
     public void tick() {
         super.tick();
-        boolean drown = getDrown();
-        if (!drown) {
-            aliveTicks++;
-        }
-        int maxLifeTime = getMaxLifeTime();
 
         LivingEntity owner = getOwner();
-        if (owner == null || (aliveTicks > maxLifeTime && maxLifeTime != -1) || owner.isOnFire()
-                || (maxLifeTime == -1 && !owner.isSubmergedInWater())) {
+        if (owner.isRemoved()) {
+            return;
+        }
+        if (owner.isOnFire() || (maxLifeTime == -1 && !owner.isSubmergedInWater())) {
             discard();
             return;
         }
-        if (!owner.isSubmergedInWater() && !drown) {
-            aliveTicks += 50;
-        }
 
 
-        isOwnerBiped = (owner.getWidth() / owner.getHeight() < 0.4 || (owner instanceof PlayerEntity && !owner.isSprinting())) && !owner.hasStatusEffect(StatusEffects.INVISIBILITY) ;
+        isOwnerBiped = (owner.getWidth() / owner.getHeight() < 0.4 || (owner instanceof PlayerEntity && !owner.isSprinting())) && !owner.hasStatusEffect(StatusEffects.INVISIBILITY);
 
         if (!isOwnerBiped && getWorld().isClient) {
             summonParticles(owner, this.random, getModelId() == 0 ? ParticleTypes.SPLASH : ParticleTypes.POOF, 0, 10);
         }
 
-
+        // if you change any part of this check the renderer because it also modifies the entity pos
         Vec3d eyePos = owner.getEyePos();
-        setPos(eyePos.x, eyePos.y - 0.5f, eyePos.z); // if you change any part of this check the renderer because it also modifies the entity pos
+        moveEntityTowardsGoal(new Vector3f((float) eyePos.x, (float) (eyePos.y - 0.5), (float) eyePos.z));
 
-
-        if (!drown) {
+        if (!suffocate) {
             if (isStealthy() && owner.isSneaking() && owner.getVelocity().lengthSquared() <= 0.5) {
                 owner.addStatusEffect(new StatusEffectInstance(StatusEffects.INVISIBILITY, 10, 1, false, false, false));
             }
@@ -123,26 +111,6 @@ public class WaterHelmetEntity extends Entity {
     }
 
 
-    @Override
-    protected void readCustomDataFromNbt(NbtCompound nbt) {
-
-    }
-
-    @Override
-    protected void writeCustomDataToNbt(NbtCompound nbt) {
-
-    }
-
-
-    public LivingEntity getOwner() {
-        Entity owner = this.getWorld().getEntityById(this.getDataTracker().get(OWNER_ID));
-        return (owner instanceof LivingEntity) ? (LivingEntity) owner : null;
-    }
-
-    public void setOwner(LivingEntity owner) {
-        this.getDataTracker().set(OWNER_ID, owner.getId());
-    }
-
     public LivingEntity getCaster() {
         Entity owner = this.getWorld().getEntityById(this.getDataTracker().get(CASTER_ID));
         return (owner instanceof LivingEntity) ? (LivingEntity) owner : null;
@@ -150,14 +118,6 @@ public class WaterHelmetEntity extends Entity {
 
     public void setCaster(LivingEntity caster) {
         this.getDataTracker().set(CASTER_ID, caster.getId());
-    }
-
-    public boolean getDrown() {
-        return this.getDataTracker().get(DROWN);
-    }
-
-    public void setDrown(boolean drown) {
-        this.getDataTracker().set(DROWN, drown);
     }
 
     public int getModelId() {
@@ -180,19 +140,32 @@ public class WaterHelmetEntity extends Entity {
         this.getDataTracker().set(STEALTHY, val);
     }
 
-    public int getMaxLifeTime() {
-        return this.getDataTracker().get(MAX_LIFETIME);
-    }
-
-    public void setMaxLifeTime(int val) {
-        this.getDataTracker().set(MAX_LIFETIME, val);
-    }
-
     public int getRange() {
         return this.getDataTracker().get(RANGE);
     }
 
     public void setRange(int val) {
         this.getDataTracker().set(RANGE, val);
+    }
+
+    @Override
+    public boolean pushesEntitiesAway() {
+        return false;
+    }
+
+    @Override
+    public boolean discardsOnNullOwner() {
+        return true;
+    }
+
+    @Override
+    public int getLifeTimeIncrement() {
+        if (suffocate) {
+            return 0;
+        } else if (!getOwner().isSubmergedInWater()) {
+            return 50;
+        } else {
+            return 1;
+        }
     }
 }

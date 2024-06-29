@@ -30,7 +30,7 @@ public abstract class AbstractElementalsEntity extends Entity {
     private static final TrackedData<Integer> OWNER_ID = DataTracker.registerData(AbstractElementalsEntity.class, TrackedDataHandlerRegistry.INTEGER);
     private static final TrackedData<Boolean> IS_CONTROLLED = DataTracker.registerData(AbstractElementalsEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
 
-    public int lifeTime = -1;
+    public int lifeTime = 0, maxLifeTime = -1;
 
     public AbstractElementalsEntity(EntityType<?> type, World world) {
         super(type, world);
@@ -41,6 +41,10 @@ public abstract class AbstractElementalsEntity extends Entity {
         super.tick();
         Entity owner = getOwner();
         if (owner == null) {
+            if(discardsOnNullOwner()){
+                discard();
+                return;
+            }
             this.setVelocity(this.getVelocity().add(0.0, -0.04, 0.0));
             this.move(MovementType.SELF, this.getVelocity());
             if (SapsUtils.checkBlockCollision(this, 0.05f, false, true) != null) {
@@ -49,21 +53,23 @@ public abstract class AbstractElementalsEntity extends Entity {
             return;
         }
 
-        if (deflectsProjectiles()) {
+        if (projectileDeflectionRange() > 0) {
+
             List<ProjectileEntity> projectiles = getWorld().getEntitiesByClass(ProjectileEntity.class,
-                    getWorld().isClient ? getBoundingBox().expand(.25f) : getBoundingBox().offset(getPos()).expand(.25f),
+                    getWorld().isClient ? getBoundingBox().expand(projectileDeflectionRange()) : getBoundingBox().offset(getPos()).expand(projectileDeflectionRange()),
                     ProjectileEntity::isAlive);
 
             for (ProjectileEntity e : projectiles) {
-                e.discard();
+                Vec3d direction = e.getPos().add(0,1.7f,0).subtract(getPos()).multiply(0.1f);
+                e.setVelocity(getVelocity().add(direction));
             }
         }
 
-        if (lifeTime != -1) {
-            if (lifeTime <= 0) {
+        if (maxLifeTime != -1) {
+            if (lifeTime >= maxLifeTime) {
                 onLifeTimeEnd();
             }
-            lifeTime--;
+            lifeTime += getLifeTimeIncrement();
         }
 
         if (damagesOnTouch()) {
@@ -76,10 +82,19 @@ public abstract class AbstractElementalsEntity extends Entity {
             }
         }
 
-        if (!getIsControlled()) {
+        if (!getIsControlled() && !getWorld().isClient) {
             HitResult hit = ProjectileUtil.getCollision(this, entity -> entity instanceof LivingEntity);
             if (hit.getType() == HitResult.Type.ENTITY) {
                 onHitEntity(((EntityHitResult) hit).getEntity());
+                return;
+            }
+
+            if ( SapsUtils.checkBlockCollision(this, 0.05f, false) != null) {
+                if (getVelocity().lengthSquared() > 0.3) {
+                    setVelocity(getVelocity().add(getVelocity().multiply(touchGroundFrictionMultiplier())));
+                } else {
+                    collidesWithGround();
+                }
             }
         }
 
@@ -91,6 +106,22 @@ public abstract class AbstractElementalsEntity extends Entity {
             this.setVelocity(this.getVelocity().add(0.0, -0.04, 0.0));
         }
 
+    }
+
+    /**
+     * The range that will be added to the hit box to detect projectiles.
+     * If set to 0 or lower, projectiles will not be deflected
+     */
+    public float projectileDeflectionRange() {
+        return 0;
+    }
+
+    public int getLifeTimeIncrement(){
+        return 1;
+    }
+
+    public float touchGroundFrictionMultiplier(){
+        return -0.5f;
     }
 
     public void onLifeTimeEnd() {
@@ -114,10 +145,6 @@ public abstract class AbstractElementalsEntity extends Entity {
      */
     public void onHitEntity(Entity entity){
 
-    }
-
-    public boolean deflectsProjectiles() {
-        return false;
     }
 
     public boolean damagesOnTouch() {
@@ -147,9 +174,14 @@ public abstract class AbstractElementalsEntity extends Entity {
         return 0.2f;
     }
 
+    public boolean discardsOnNullOwner(){
+        return false;
+    }
+
     public void collidesWithGround() {
 
     }
+
 
     @Override
     protected void initDataTracker() {

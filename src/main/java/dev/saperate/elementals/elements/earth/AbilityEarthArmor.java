@@ -3,6 +3,7 @@ package dev.saperate.elementals.elements.earth;
 import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.elements.Ability;
 import dev.saperate.elementals.items.EarthArmorItem;
+import net.minecraft.block.Block;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.MovementType;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
@@ -59,11 +60,12 @@ public class AbilityEarthArmor implements Ability {
             return;
         }
 
+        Block standingBlock = player.getWorld().getBlockState(hit.getBlockPos()).getBlock();
 
-        inv.set(EquipmentSlot.HEAD.getEntitySlotId(), EARTH_HELMET.getItemStack(inv.get(3)));
-        inv.set(EquipmentSlot.CHEST.getEntitySlotId(), EARTH_CHESTPLATE.getItemStack(inv.get(2)));
-        inv.set(EquipmentSlot.LEGS.getEntitySlotId(), EARTH_LEGGINGS.getItemStack(inv.get(1)));
-        inv.set(EquipmentSlot.FEET.getEntitySlotId(), EARTH_BOOTS.getItemStack(inv.get(0)));
+        inv.set(EquipmentSlot.HEAD.getEntitySlotId(), EARTH_HELMET.getItemStack(inv.get(3), standingBlock));
+        inv.set(EquipmentSlot.CHEST.getEntitySlotId(), EARTH_CHESTPLATE.getItemStack(inv.get(2), standingBlock));
+        inv.set(EquipmentSlot.LEGS.getEntitySlotId(), EARTH_LEGGINGS.getItemStack(inv.get(1), standingBlock));
+        inv.set(EquipmentSlot.FEET.getEntitySlotId(), EARTH_BOOTS.getItemStack(inv.get(0), standingBlock));
 
 
     }

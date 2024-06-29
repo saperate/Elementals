@@ -35,7 +35,7 @@ public class AbilityAirSuffocate implements Ability {
         if (eHit.getEntity() instanceof LivingEntity victim) {
 
             WaterHelmetEntity entity = new WaterHelmetEntity(player.getWorld(), victim, player.getX(), player.getY(), player.getZ());
-            entity.setDrown(true);
+            entity.suffocate = true;
             entity.setCaster(player);
             entity.setModelId(1);
             player.getWorld().spawnEntity(entity);

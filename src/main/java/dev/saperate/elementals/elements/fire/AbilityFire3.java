@@ -41,12 +41,12 @@ public class AbilityFire3 implements Ability {
             bender.abilityData = false;
             PlayerEntity player = bender.player;
 
-            float power = 1;
+            float power = 2;
             PlayerData plrData = PlayerData.get(player);
             if (plrData.canUseUpgrade("fireJumpRangeII")) {
-                power = 2;
+                power = 3;
             } else if (plrData.canUseUpgrade("fireJumpRangeI")) {
-                power = 1.5f;
+                power = 2.5f;
             }
 
             launchEntity(player,power);

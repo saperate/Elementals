@@ -21,12 +21,12 @@ public class AbilityWaterJump implements Ability {
         PlayerEntity player = bender.player;
         PlayerData plrData = PlayerData.get(player);
 
-        float power = 1;
+        float power = 2;
 
         if (plrData.canUseUpgrade("waterJumpRangeII")) {
-            power = 2;
+            power = 3;
         } else if (plrData.canUseUpgrade("waterJumpRangeI")) {
-            power = 1.5f;
+            power = 2.5f;
         }
 
         launchEntity(player,power);

@@ -1,5 +1,6 @@
 package dev.saperate.elementals.entities.water;
 
+import dev.saperate.elementals.entities.common.AbstractElementalsEntity;
 import dev.saperate.elementals.utils.SapsUtils;
 import net.minecraft.entity.*;
 import net.minecraft.entity.data.DataTracker;
@@ -24,11 +25,8 @@ import static dev.saperate.elementals.entities.ElementalEntities.WATERHEALING;
 import static dev.saperate.elementals.utils.SapsUtils.getEntityLookVector;
 import static dev.saperate.elementals.utils.SapsUtils.summonParticles;
 
-public class WaterHealingEntity extends ProjectileEntity {
-    private static final TrackedData<Integer> OWNER_ID = DataTracker.registerData(WaterHealingEntity.class, TrackedDataHandlerRegistry.INTEGER);
+public class WaterHealingEntity extends AbstractElementalsEntity {
     private static final TrackedData<Float> HEALING = DataTracker.registerData(WaterHealingEntity.class, TrackedDataHandlerRegistry.FLOAT);
-    private static final TrackedData<Boolean> IS_CONTROLLED = DataTracker.registerData(WaterHealingEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
-
 
     public WaterHealingEntity(EntityType<WaterHealingEntity> type, World world) {
         super(type, world);
@@ -49,8 +47,7 @@ public class WaterHealingEntity extends ProjectileEntity {
 
     @Override
     protected void initDataTracker() {
-        this.getDataTracker().startTracking(OWNER_ID, 0);
-        this.getDataTracker().startTracking(IS_CONTROLLED, false);
+        super.initDataTracker();
         this.getDataTracker().startTracking(HEALING, 2f);
     }
 
@@ -62,64 +59,40 @@ public class WaterHealingEntity extends ProjectileEntity {
             summonParticles(this, random,
                     ParticleTypes.SPLASH,
                     0, 1);
-            playSound(SoundEvents.ENTITY_PLAYER_SWIM,0.25f,0);
+            playSound(SoundEvents.ENTITY_PLAYER_SWIM, 0.25f, 0);
         }
-
-        BlockPos blockHit = SapsUtils.checkBlockCollision(this,0.25f, false);
 
         PlayerEntity owner = getOwner();
-        if (owner == null) {
-            this.setVelocity(this.getVelocity().add(0.0, -0.03, 0.0));
-            this.move(MovementType.SELF, this.getVelocity());
-            if (blockHit != null) {
-                collidesWithGround();
-            }
-            return;
+
+        if (owner != null && !isRemoved()) {
+            moveEntity(owner);
         }
-
-        if (blockHit != null && !getIsControlled()) {
-            collidesWithGround();
-        }
-
-        List<LivingEntity> hits = getWorld().getEntitiesByClass(LivingEntity.class,
-                getBoundingBox().expand(0.25f),
-                LivingEntity::isAlive);
-        HitResult hit = ProjectileUtil.getCollision(this, entity -> entity instanceof LivingEntity);
-
-        if (hit.getType() == HitResult.Type.ENTITY) {
-            LivingEntity entity = (LivingEntity) ((EntityHitResult) hit).getEntity();
-            onHitEntity(entity);
-        }
-
-        for (LivingEntity e : hits) {
-            onHitEntity(e);
-        }
-
-
-        moveEntity(owner);
     }
 
-    private void onHitEntity(LivingEntity entity) {
-        if (age % 20 == 0) {
-            entity.setHealth(entity.getHealth() + getHealing());
-        }
+    @Override
+    public void onHitEntity(Entity entity) {
+        entity.addVelocity(this.getVelocity().multiply(0.8f));
+        healTarget(entity);
+        discard();
+    }
 
-        if (!getIsControlled()) {
-            entity.addVelocity(this.getVelocity().multiply(0.8f));
-            discard();
+    @Override
+    public void onTouchEntity(Entity entity) {
+        if (age % 20 == 0) {
+            healTarget(entity);
+        }
+    }
+
+    public void healTarget(Entity entity) {
+        if (entity instanceof LivingEntity living) {
+            living.setHealth(living.getHealth() + getHealing());
         }
     }
 
     private void moveEntity(Entity owner) {
-
-
-        //gravity
-        this.setVelocity(this.getVelocity().add(0.0, -0.02, 0.0));
-
         if (getIsControlled()) {
             controlEntity(owner);
         }
-
 
         this.move(MovementType.SELF, this.getVelocity());
     }
@@ -142,8 +115,8 @@ public class WaterHealingEntity extends ProjectileEntity {
         this.addVelocity(direction.x, direction.y, direction.z);
     }
 
+    @Override
     public void collidesWithGround() {
-        //getWorld().setBlockState(getBlockPos(), Blocks.WATER.getDefaultState());
         discard();
     }
 
@@ -154,40 +127,8 @@ public class WaterHealingEntity extends ProjectileEntity {
 
     }
 
-    @Override
-    public void writeCustomDataToNbt(NbtCompound nbt) {
-        if (getOwner() != null) {
-            super.writeCustomDataToNbt(nbt);
-            nbt.putInt("OwnerID", this.getOwner().getId());
-        }
-    }
-
-    @Override
-    public void readCustomDataFromNbt(NbtCompound nbt) {
-        super.readCustomDataFromNbt(nbt);
-        int ownerId = nbt.getInt("OwnerID");
-        this.getDataTracker().set(OWNER_ID, ownerId);
-    }
-
-    public void setControlled(boolean val) {
-        this.getDataTracker().set(IS_CONTROLLED, val);
-    }
-
-    public boolean getIsControlled() {
-        return this.getDataTracker().get(IS_CONTROLLED);
-    }
-
-    public PlayerEntity getOwner() {
-        Entity owner = this.getWorld().getEntityById(this.getDataTracker().get(OWNER_ID));
-        return (owner instanceof PlayerEntity) ? (PlayerEntity) owner : null;
-    }
-
-    public void setOwner(LivingEntity owner) {
-        this.getDataTracker().set(OWNER_ID, owner.getId());
-    }
-
     public void setHealing(float val) {
-        this.dataTracker.set(HEALING,val);
+        this.dataTracker.set(HEALING, val);
     }
 
     public float getHealing() {

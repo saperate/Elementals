@@ -90,15 +90,8 @@ public class EarthBlockEntity extends AbstractElementalsEntity {
     }
 
     public void moveEntity(Entity owner) {
-
         if (getIsControlled()) {
             controlEntity(owner);
-        } else if (!getWorld().isClient && SapsUtils.checkBlockCollision(this, 0.05f, false) != null) {
-            if (getVelocity().lengthSquared() > 0.3) {
-                setVelocity(getVelocity().add(getVelocity().multiply(!(getModelShapeId() == 1) ? -0.5f : -0.1f)));
-            } else {
-                collidesWithGround();
-            }
         }
 
         this.move(MovementType.SELF, this.getVelocity());
@@ -142,6 +135,11 @@ public class EarthBlockEntity extends AbstractElementalsEntity {
     }
 
     @Override
+    public float touchGroundFrictionMultiplier() {
+        return !(getModelShapeId() == 1) ? -0.5f : -0.1f;
+    }
+
+    @Override
     public void onRemoved() {
         super.onRemoved();
         this.getWorld().playSound(getX(), getY(), getZ(), SoundEvents.BLOCK_STONE_BREAK, SoundCategory.BLOCKS, .5f, (1.0f + (this.getWorld().random.nextFloat() - this.getWorld().random.nextFloat()) * 0.2f) * 0.7f, false);
@@ -178,9 +176,10 @@ public class EarthBlockEntity extends AbstractElementalsEntity {
     }
 
     @Override
-    public boolean deflectsProjectiles() {
-        return true;
+    public float projectileDeflectionRange() {
+        return 0.25f;
     }
+
     public BlockState getBlockState() {
         return this.getDataTracker().get(BLOCK_STATE);
     }
@@ -229,12 +228,8 @@ public class EarthBlockEntity extends AbstractElementalsEntity {
         return drops;
     }
 
-    public int getLifeTime() {
-        return lifeTime;
-    }
-
-    public void setLifeTime(int lifeTime) {
-        this.lifeTime = lifeTime;
+    public void setMaxLifeTime(int maxLifeTime) {
+        this.maxLifeTime = maxLifeTime;
     }
 
     @Override

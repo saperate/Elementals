@@ -1,5 +1,6 @@
 package dev.saperate.elementals.entities.water;
 
+import dev.saperate.elementals.entities.common.AbstractElementalsEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -20,10 +21,9 @@ import net.minecraft.world.World;
 import static dev.saperate.elementals.entities.ElementalEntities.WATERJET;
 import static dev.saperate.elementals.utils.SapsUtils.*;
 
-public class WaterJetEntity extends ProjectileEntity {
+public class WaterJetEntity extends AbstractElementalsEntity {
     private static final TrackedData<Float> STREAM_SIZE = DataTracker.registerData(WaterJetEntity.class, TrackedDataHandlerRegistry.FLOAT);
     private static final TrackedData<Float> RANGE = DataTracker.registerData(WaterJetEntity.class, TrackedDataHandlerRegistry.FLOAT);
-    private static final TrackedData<Integer> OWNER_ID = DataTracker.registerData(WaterJetEntity.class, TrackedDataHandlerRegistry.INTEGER);
     private static final TrackedData<Integer> CHILD_ID = DataTracker.registerData(WaterJetEntity.class, TrackedDataHandlerRegistry.INTEGER);
 
 
@@ -45,10 +45,10 @@ public class WaterJetEntity extends ProjectileEntity {
 
     @Override
     protected void initDataTracker() {
+        super.initDataTracker();
         this.getDataTracker().startTracking(STREAM_SIZE, 1f);
         this.getDataTracker().startTracking(RANGE, 10f);
         this.getDataTracker().startTracking(CHILD_ID, 0);
-        this.getDataTracker().startTracking(OWNER_ID, 0);
     }
 
     @Override
@@ -60,7 +60,6 @@ public class WaterJetEntity extends ProjectileEntity {
 
         Entity owner = getOwner();
         if (owner == null) {
-            discard();
             return;
         }
 
@@ -92,31 +91,6 @@ public class WaterJetEntity extends ProjectileEntity {
         this.move(MovementType.SELF, this.getVelocity());
     }
 
-    @Override
-    public void writeCustomDataToNbt(NbtCompound nbt) {
-        if (getOwner() != null) {
-            super.writeCustomDataToNbt(nbt);
-            nbt.putInt("OwnerID", this.getOwner().getId());
-        }
-    }
-
-    @Override
-    public void readCustomDataFromNbt(NbtCompound nbt) {
-        super.readCustomDataFromNbt(nbt);
-        int ownerId = nbt.getInt("OwnerID");
-        this.getDataTracker().set(OWNER_ID, ownerId);
-    }
-
-
-    public LivingEntity getOwner() {
-        Entity owner = this.getWorld().getEntityById(this.getDataTracker().get(OWNER_ID));
-        return (owner instanceof LivingEntity) ? (LivingEntity) owner : null;
-    }
-
-    public void setOwner(LivingEntity owner) {
-        this.getDataTracker().set(OWNER_ID, owner.getId());
-    }
-
     public WaterJetEntity getChild() {
         Entity child = this.getWorld().getEntityById(this.getDataTracker().get(CHILD_ID));
         return (child instanceof WaterJetEntity) ? (WaterJetEntity) child : null;
@@ -142,10 +116,8 @@ public class WaterJetEntity extends ProjectileEntity {
         this.getDataTracker().set(RANGE, val);
     }
 
-
-
-    protected void pushAway(Entity entity) {
-        entity.pushAwayFrom(this);
+    @Override
+    public boolean discardsOnNullOwner() {
+        return true;
     }
-
 }

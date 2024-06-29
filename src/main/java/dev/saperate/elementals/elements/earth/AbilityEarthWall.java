@@ -121,7 +121,7 @@ public class AbilityEarthWall implements Ability {
             }else {
                 entity.setShiftToFreeze(false);
                 entity.setDropOnEndOfLife(true);
-                entity.setLifeTime(timer);
+                entity.maxLifeTime = timer;
             }
         }
     }
