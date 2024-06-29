@@ -90,6 +90,7 @@ public abstract class AbstractElementalsEntity extends Entity {
         if(!hasNoGravity()){
             this.setVelocity(this.getVelocity().add(0.0, -0.04, 0.0));
         }
+
     }
 
     public void onLifeTimeEnd() {
@@ -135,6 +136,7 @@ public abstract class AbstractElementalsEntity extends Entity {
         Vector3f direction = goal.sub(0, 0.5f, 0)
                 .sub(getPos().toVector3f())
                 .mul(getMovementSpeed());
+        this.setVelocity(direction.x, direction.y, direction.z);
     }
 
     public boolean teleportsToGoal() {

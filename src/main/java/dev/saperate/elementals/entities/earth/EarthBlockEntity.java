@@ -63,6 +63,7 @@ public class EarthBlockEntity extends AbstractElementalsEntity {
 
     @Override
     protected void initDataTracker() {
+        super.initDataTracker();
         this.getDataTracker().startTracking(MODEL_SHAPE_ID, 0);
         this.getDataTracker().startTracking(BLOCK_STATE, Blocks.AIR.getDefaultState());
         this.getDataTracker().startTracking(TARGET_POSITION, new Vector3f(0, -50, 0));
@@ -82,7 +83,7 @@ public class EarthBlockEntity extends AbstractElementalsEntity {
         }
 
         LivingEntity owner = getOwner();
-        if (!(owner.isSneaking() && shiftToFreeze)) {
+        if (!(owner != null && owner.isSneaking() && shiftToFreeze)) {
             moveEntity(owner);
         }
 
