@@ -18,7 +18,7 @@ public class AbilityWater3 implements Ability {
         PlayerEntity player = bender.player;
 
         if (player.isSprinting() && playerData.canUseUpgrade("waterSurf")
-                && (player.isOnGround() || player.isSubmergedInWater())) {
+                && player.isSubmergedInWater()) {
             WaterElement.get().abilityList.get(13).onCall(bender, deltaT);
             return;
 

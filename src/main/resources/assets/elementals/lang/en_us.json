@@ -164,7 +164,7 @@
 
   "upgrade.elementals.waterSurf": "Surf",
   "upgrade.elementals.waterSurf.description": " Ride a wave of water to move swiftly across water.",
-  "upgrade.elementals.waterSurf.use": " Use: sprint + touch ground or submerged in water",
+  "upgrade.elementals.waterSurf.use": " Use: sprint + submerged in water",
   "upgrade.elementals.waterSurf.icon": "water",
 
   "upgrade.elementals.waterSurfSpeedI": "Speed I",
@@ -423,7 +423,7 @@
   "upgrade.elementals.airTornadoSpeedII.description": " Makes tornadoes even faster, making them even more responsive.",
 
   "upgrade.elementals.airStream": "Air Stream",
-  "upgrade.elementals.airStream.description": " A sweeping arc of water that can knock back enemies and damage them from a distance.",
+  "upgrade.elementals.airStream.description": " A sweeping stream of air that can knock back enemies and damage them from a distance.",
   "upgrade.elementals.airStream.icon": "air",
 
   "upgrade.elementals.airStreamDamageI": "Damage I",

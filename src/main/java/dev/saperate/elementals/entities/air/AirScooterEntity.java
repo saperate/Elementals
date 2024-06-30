@@ -46,7 +46,7 @@ public class AirScooterEntity extends Entity {
         super(AIRSCOOTER, world);
         setPos(x, y, z);
         setOwner(owner);
-        setStepHeight(1.5f);
+        setStepHeight(1.1f);
     }
 
     @Override
