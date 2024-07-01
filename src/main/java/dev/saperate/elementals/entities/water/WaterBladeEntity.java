@@ -1,6 +1,7 @@
 package dev.saperate.elementals.entities.water;
 
 import dev.saperate.elementals.data.PlayerData;
+import dev.saperate.elementals.entities.common.AbstractElementalsEntity;
 import dev.saperate.elementals.utils.SapsUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -28,11 +29,8 @@ import static dev.saperate.elementals.entities.ElementalEntities.WATERBLADE;
 import static dev.saperate.elementals.utils.SapsUtils.getEntityLookVector;
 import static dev.saperate.elementals.utils.SapsUtils.summonParticles;
 
-public class WaterBladeEntity extends ProjectileEntity {
-    private static final TrackedData<Integer> OWNER_ID = DataTracker.registerData(WaterBladeEntity.class, TrackedDataHandlerRegistry.INTEGER);
+public class WaterBladeEntity extends AbstractElementalsEntity {
     private static final TrackedData<Float> DAMAGE = DataTracker.registerData(WaterBladeEntity.class, TrackedDataHandlerRegistry.FLOAT);
-    private static final TrackedData<Boolean> IS_CONTROLLED = DataTracker.registerData(WaterBladeEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
-
     private BlockPos currMiningPos = null;
     private int startMiningAge = -1;
 
@@ -56,8 +54,7 @@ public class WaterBladeEntity extends ProjectileEntity {
 
     @Override
     protected void initDataTracker() {
-        this.getDataTracker().startTracking(OWNER_ID, 0);
-        this.getDataTracker().startTracking(IS_CONTROLLED, false);
+        super.initDataTracker();
         this.getDataTracker().startTracking(DAMAGE, 1.5f);
     }
 
@@ -69,30 +66,16 @@ public class WaterBladeEntity extends ProjectileEntity {
             summonParticles(this, random,
                     ParticleTypes.SPLASH,
                     0, 1);
-                playSound(SoundEvents.ENTITY_PLAYER_SWIM,0.25f,0);
+            playSound(SoundEvents.ENTITY_PLAYER_SWIM, 0.25f, 0);
         }
 
         BlockPos blockHit = SapsUtils.checkBlockCollision(this, 0.1f, false, false);
 
         PlayerEntity owner = getOwner();
-        if (owner == null) {
-            this.setVelocity(this.getVelocity().add(0.0, -0.03, 0.0));
-            this.move(MovementType.SELF, this.getVelocity());
-            if (blockHit != null) {
-                collidesWithGround();
-            }
+        if (owner == null || isRemoved()) {
             return;
         }
 
-        HitResult hit = ProjectileUtil.getCollision(this, entity -> entity instanceof LivingEntity);
-        if (hit.getType() == HitResult.Type.ENTITY) {
-            LivingEntity entity = (LivingEntity) ((EntityHitResult) hit).getEntity();
-            entity.damage(this.getDamageSources().playerAttack(owner), getDamage());
-            if (!getIsControlled()) {
-                entity.addVelocity(this.getVelocity().multiply(0.8f));
-                discard();
-            }
-        }
 
         moveEntity(owner);
 
@@ -136,9 +119,9 @@ public class WaterBladeEntity extends ProjectileEntity {
         }
         int miningSpeed = 100;
         PlayerData plrData = PlayerData.get(getOwner());
-        if(plrData.canUseUpgrade("waterBladeMiningII")){
+        if (plrData.canUseUpgrade("waterBladeMiningII")) {
             miningSpeed = 30;
-        } else if(plrData.canUseUpgrade("waterBladeMiningI")){
+        } else if (plrData.canUseUpgrade("waterBladeMiningI")) {
             miningSpeed = 60;
         }
         return 1 / f / (float) miningSpeed;
@@ -176,7 +159,15 @@ public class WaterBladeEntity extends ProjectileEntity {
         this.addVelocity(direction.x, direction.y, direction.z);
     }
 
+    @Override
     public void collidesWithGround() {
+        discard();
+    }
+
+    @Override
+    public void onHitEntity(Entity entity) {
+        entity.damage(this.getDamageSources().playerAttack(getOwner()), getDamage());
+        entity.addVelocity(this.getVelocity().multiply(0.8f));
         discard();
     }
 
@@ -185,61 +176,6 @@ public class WaterBladeEntity extends ProjectileEntity {
         summonParticles(this, random, ParticleTypes.SPLASH, 0, 10);
         this.getWorld().playSound(getX(), getY(), getZ(), SoundEvents.ENTITY_PLAYER_SPLASH, SoundCategory.BLOCKS, 0.25f, (1.0f + (this.getWorld().random.nextFloat() - this.getWorld().random.nextFloat()) * 0.2f) * 0.7f, false);
 
-    }
-
-    @Override
-    public void writeCustomDataToNbt(NbtCompound nbt) {
-        if (getOwner() != null) {
-            super.writeCustomDataToNbt(nbt);
-            nbt.putInt("OwnerID", this.getOwner().getId());
-        }
-    }
-
-    @Override
-    public void readCustomDataFromNbt(NbtCompound nbt) {
-        super.readCustomDataFromNbt(nbt);
-        int ownerId = nbt.getInt("OwnerID");
-        this.getDataTracker().set(OWNER_ID, ownerId);
-    }
-
-    public void setControlled(boolean val) {
-        this.getDataTracker().set(IS_CONTROLLED, val);
-    }
-
-    public boolean getIsControlled() {
-        return this.getDataTracker().get(IS_CONTROLLED);
-    }
-
-    public PlayerEntity getOwner() {
-        Entity owner = this.getWorld().getEntityById(this.getDataTracker().get(OWNER_ID));
-        return (owner instanceof PlayerEntity) ? (PlayerEntity) owner : null;
-    }
-
-    public void setOwner(LivingEntity owner) {
-        this.getDataTracker().set(OWNER_ID, owner.getId());
-    }
-
-    protected void pushAway(Entity entity) {
-        entity.pushAwayFrom(this);
-    }
-
-
-    public boolean tryBreakBlock(BlockPos pos) {
-        BlockState blockState = getWorld().getBlockState(pos);
-
-        BlockEntity blockEntity = getWorld().getBlockEntity(pos);
-        Block block = blockState.getBlock();
-        if (block instanceof OperatorBlock) {
-            getWorld().updateListeners(pos, blockState, blockState, Block.NOTIFY_ALL);
-            return false;
-        }
-        block.onBreak(getWorld(), pos, blockState, getOwner());
-        boolean bl = getWorld().removeBlock(pos, false);
-        if (bl) {
-            block.onBroken(getWorld(), pos, blockState);
-        }
-
-        return true;
     }
 
     public void setDamage(float val) {

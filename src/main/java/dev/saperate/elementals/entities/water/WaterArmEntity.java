@@ -1,5 +1,6 @@
 package dev.saperate.elementals.entities.water;
 
+import dev.saperate.elementals.entities.common.AbstractElementalsEntity;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.*;
 import net.minecraft.entity.data.DataTracker;
@@ -20,12 +21,9 @@ import org.joml.Vector3f;
 import static dev.saperate.elementals.entities.ElementalEntities.WATERARM;
 import static dev.saperate.elementals.utils.SapsUtils.*;
 
-public class WaterArmEntity extends ProjectileEntity {
+public class WaterArmEntity extends AbstractElementalsEntity {
     private static final TrackedData<Integer> PARENT_ID = DataTracker.registerData(WaterArmEntity.class, TrackedDataHandlerRegistry.INTEGER);
     private static final TrackedData<Integer> CHILD_ID = DataTracker.registerData(WaterArmEntity.class, TrackedDataHandlerRegistry.INTEGER);
-    private static final TrackedData<Integer> OWNER_ID = DataTracker.registerData(WaterArmEntity.class, TrackedDataHandlerRegistry.INTEGER);
-    private static final TrackedData<Boolean> IS_CONTROLLED = DataTracker.registerData(WaterArmEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
-
     public static final float chainDistance = 1;
     private static final int MAX_CHAIN_LENGTH = 4;
     public int chainLength = 0;
@@ -62,69 +60,54 @@ public class WaterArmEntity extends ProjectileEntity {
 
     @Override
     protected void initDataTracker() {
+        super.initDataTracker();
         this.getDataTracker().startTracking(PARENT_ID, 0);
         this.getDataTracker().startTracking(CHILD_ID, 0);
-        this.getDataTracker().startTracking(OWNER_ID, 0);
-        this.getDataTracker().startTracking(IS_CONTROLLED, false);
     }
 
     @Override
     public void tick() {
         super.tick();
         Entity owner = getOwner();
-        if (owner == null) {
-            this.setVelocity(this.getVelocity().add(0.0, -0.04, 0.0));
-            this.move(MovementType.SELF, this.getVelocity());
+        if (owner == null || isRemoved()) {
             return;
         }
-        WaterArmEntity parent = getParent();
-        if (!getIsControlled() && parent == null) {
-            HitResult hit = ProjectileUtil.getCollision(this, entity -> entity instanceof LivingEntity);
-            if (hit.getType() == HitResult.Type.ENTITY) {
-                LivingEntity entity = (LivingEntity) ((EntityHitResult) hit).getEntity();
-                entity.damage(this.getDamageSources().playerAttack((PlayerEntity) owner), 4);
-                entity.addVelocity(this.getVelocity().multiply(0.2f));
-                WaterArmEntity child = getChild();
-                if (child != null) {
-                    this.getChild().setParent(null);
-                }
-                discard();
-            }
-            if (!getWorld().isClient) {
-                BlockPos blockDown = getBlockPos().down();
-                BlockState blockState = getWorld().getBlockState(blockDown);
 
-                if (!blockState.isAir() && getY() - getBlockPos().getY() == 0) {
-                    WaterArmEntity child = getChild();
-                    if (child != null) {
-                        this.getChild().setParent(null);
-                    }
-                    discard();
-                }
-            }
-        }
-
-
-        moveEntity(owner, parent);
+        moveEntity(owner);
     }
 
-    private void moveEntity(Entity owner, Entity parent) {
-
-        //gravity
-        if (!hasNoGravity() && parent == null) {
-            this.setVelocity(this.getVelocity().add(0.0, -0.04, 0.0));
+    @Override
+    public void onHitEntity(Entity entity) {
+        if (getParent() == null) {
+            return;
         }
 
+        entity.damage(this.getDamageSources().playerAttack(getOwner()), 4);
+        entity.addVelocity(this.getVelocity().multiply(0.2f));
+        remove();
+    }
 
-        if (!hasNoGravity()) {
-            if (getIsControlled()) {//Head always goes to the center of the player
-                controlEntity(owner);
-                HitResult hit = raycastFull(owner, 5, true, entity -> !(entity instanceof WaterArmEntity));
+    @Override
+    public void collidesWithGround() {
+        if (getParent() == null) {
+            remove();
+        }
+    }
+
+    @Override
+    public boolean hasNoGravity() {
+        return super.hasNoGravity() || getParent() != null;
+    }
+
+    private void moveEntity(Entity owner) {
+
+        if (getIsControlled()) {
+            controlEntity(owner);
+            HitResult hit = raycastFull(owner, 5, true, entity -> !(entity instanceof WaterArmEntity));
 
 
-                forwardIk(hit.getPos());
+            forwardIk(hit.getPos());
 
-            }
         }
 
 
@@ -224,41 +207,6 @@ public class WaterArmEntity extends ProjectileEntity {
         this.discard();
     }
 
-    @Override
-    public void writeCustomDataToNbt(NbtCompound nbt) {
-        if (getOwner() != null) {
-            super.writeCustomDataToNbt(nbt);
-            nbt.putInt("OwnerID", this.getOwner().getId());
-        }
-    }
-
-    @Override
-    public void readCustomDataFromNbt(NbtCompound nbt) {
-        super.readCustomDataFromNbt(nbt);
-        int ownerId = nbt.getInt("OwnerID");
-        this.getDataTracker().set(OWNER_ID, ownerId);
-    }
-
-    public void setControlled(boolean val) {
-        this.getDataTracker().set(IS_CONTROLLED, val);
-    }
-
-    public boolean getIsControlled() {
-        return this.getDataTracker().get(IS_CONTROLLED);
-    }
-
-    public LivingEntity getOwner() {
-        Entity owner = this.getWorld().getEntityById(this.getDataTracker().get(OWNER_ID));
-        return (owner instanceof LivingEntity) ? (LivingEntity) owner : null;
-    }
-
-    public void setOwner(LivingEntity owner) {
-        this.getDataTracker().set(OWNER_ID, owner.getId());
-    }
-
-    protected void pushAway(Entity entity) {
-        entity.pushAwayFrom(this);
-    }
 
     public WaterArmEntity getParent() {
         int parentId = this.getDataTracker().get(PARENT_ID);

@@ -22,8 +22,6 @@ public class WaterTowerEntity extends AbstractElementalsEntity {
     public static final int heightLimit = 10;
     private static final TrackedData<Float> TOWER_HEIGHT = DataTracker.registerData(WaterTowerEntity.class, TrackedDataHandlerRegistry.FLOAT);
     private static final TrackedData<Float> MAX_TOWER_HEIGHT = DataTracker.registerData(WaterTowerEntity.class, TrackedDataHandlerRegistry.FLOAT);
-    private static final TrackedData<Integer> OWNER_ID = DataTracker.registerData(WaterTowerEntity.class, TrackedDataHandlerRegistry.INTEGER);
-
 
     public WaterTowerEntity(EntityType<WaterTowerEntity> type, World world) {
         super(type, world);

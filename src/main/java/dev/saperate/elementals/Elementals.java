@@ -116,5 +116,8 @@ public class Elementals implements ModInitializer {
             bender.abilityData = null;
         }
         bender.player = newPlayer;
+
+        PlayerData.get(newPlayer).chi = 100;
+        bender.syncChi();
     }
 }

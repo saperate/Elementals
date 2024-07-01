@@ -1,5 +1,6 @@
 package dev.saperate.elementals.entities.water;
 
+import dev.saperate.elementals.entities.common.AbstractElementalsEntity;
 import dev.saperate.elementals.utils.SapsUtils;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.*;
@@ -26,10 +27,7 @@ import static dev.saperate.elementals.entities.ElementalEntities.WATERCUBE;
 import static dev.saperate.elementals.utils.SapsUtils.getEntityLookVector;
 import static dev.saperate.elementals.utils.SapsUtils.summonParticles;
 
-public class WaterCubeEntity extends ProjectileEntity {
-    private static final TrackedData<Integer> OWNER_ID = DataTracker.registerData(WaterCubeEntity.class, TrackedDataHandlerRegistry.INTEGER);
-    private static final TrackedData<Boolean> IS_CONTROLLED = DataTracker.registerData(WaterCubeEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
-
+public class WaterCubeEntity extends AbstractElementalsEntity {
 
     public WaterCubeEntity(EntityType<WaterCubeEntity> type, World world) {
         super(type, world);
@@ -49,12 +47,6 @@ public class WaterCubeEntity extends ProjectileEntity {
     }
 
     @Override
-    protected void initDataTracker() {
-        this.getDataTracker().startTracking(OWNER_ID, 0);
-        this.getDataTracker().startTracking(IS_CONTROLLED, false);
-    }
-
-    @Override
     public void tick() {
         super.tick();
 
@@ -62,42 +54,15 @@ public class WaterCubeEntity extends ProjectileEntity {
             summonParticles(this, random,
                     ParticleTypes.SPLASH,
                     0, 1);
-            playSound(SoundEvents.ENTITY_PLAYER_SWIM,0.25f,0);
+            playSound(SoundEvents.ENTITY_PLAYER_SWIM, 0.25f, 0);
         }
 
         Entity owner = getOwner();
-        if (owner == null) {
-            this.setVelocity(this.getVelocity().add(0.0, -0.04, 0.0));
-            this.move(MovementType.SELF, this.getVelocity());
-            if (SapsUtils.checkBlockCollision(this,0.1f, false) != null) {
-                collidesWithGround();
-            }
-
+        if (owner == null || isRemoved()) {
             return;
         }
 
-        List<ProjectileEntity> projectiles = getWorld().getEntitiesByClass(ProjectileEntity.class,
-                getWorld().isClient ? getBoundingBox().expand(.25f) : getBoundingBox().offset(getPos()).expand(.25f),
-                ProjectileEntity::isAlive);
 
-        for (ProjectileEntity e : projectiles) {
-            if (!(e instanceof WaterCubeEntity)) {
-                e.discard();
-            }
-        }
-
-
-        if (!getIsControlled()) {
-            HitResult hit = ProjectileUtil.getCollision(this, entity -> entity instanceof LivingEntity);
-            if (hit.getType() == HitResult.Type.ENTITY) {
-                LivingEntity entity = (LivingEntity) ((EntityHitResult) hit).getEntity();
-                entity.damage(this.getDamageSources().playerAttack((PlayerEntity) owner), 2);
-                entity.addVelocity(this.getVelocity().multiply(0.8f));
-                discard();
-            }
-        }
-
-        this.getWorld().getEntitiesByType(TypeFilter.instanceOf(PlayerEntity.class), this.getBoundingBox(), EntityPredicates.canBePushedBy(this)).forEach(this::pushAway);
         if (!owner.isSneaking()) {
             moveEntity(owner);
         }
@@ -105,38 +70,25 @@ public class WaterCubeEntity extends ProjectileEntity {
     }
 
     private void moveEntity(Entity owner) {
-
-
-        //gravity
-        this.setVelocity(this.getVelocity().add(0.0, -0.04, 0.0));
-
         if (getIsControlled()) {
-            controlEntity(owner);
-        } else if (!getWorld().isClient && SapsUtils.checkBlockCollision(this, 0.1f, false) != null) {
-            collidesWithGround();
+            moveEntityTowardsGoal(getEntityLookVector(owner, 3).toVector3f());
         }
 
         this.move(MovementType.SELF, this.getVelocity());
     }
 
-    private void controlEntity(Entity owner) {
-        Vector3f direction = getEntityLookVector(owner, 3)
-                .subtract(0, 0.5f, 0)
-                .subtract(getPos()).toVector3f();
-        direction.mul(0.1f);
-
-        if (direction.length() < 0.4f) {
-            this.setVelocity(0, 0, 0);
-        }
-
-
-        this.addVelocity(direction.x, direction.y, direction.z);
-    }
-
+    @Override
     public void collidesWithGround() {
-        if(!getEntityWorld().getRegistryKey().equals(World.NETHER)){
+        if (!getEntityWorld().getRegistryKey().equals(World.NETHER)) {
             getWorld().setBlockState(getBlockPos(), Blocks.WATER.getDefaultState());
         }
+        discard();
+    }
+
+    @Override
+    public void onHitEntity(Entity entity) {
+        entity.damage(this.getDamageSources().playerAttack( getOwner()), 2);
+        entity.addVelocity(this.getVelocity().multiply(0.8f));
         discard();
     }
 
@@ -144,6 +96,7 @@ public class WaterCubeEntity extends ProjectileEntity {
     public boolean canHit() {
         return true;
     }
+
     @Override
     public void onRemoved() {
         summonParticles(this, random, ParticleTypes.SPLASH, 0, 10);
@@ -152,38 +105,7 @@ public class WaterCubeEntity extends ProjectileEntity {
     }
 
     @Override
-    public void writeCustomDataToNbt(NbtCompound nbt) {
-        if (getOwner() != null) {
-            super.writeCustomDataToNbt(nbt);
-            nbt.putInt("OwnerID", this.getOwner().getId());
-        }
-    }
-
-    @Override
-    public void readCustomDataFromNbt(NbtCompound nbt) {
-        super.readCustomDataFromNbt(nbt);
-        int ownerId = nbt.getInt("OwnerID");
-        this.getDataTracker().set(OWNER_ID, ownerId);
-    }
-
-    public void setControlled(boolean val) {
-        this.getDataTracker().set(IS_CONTROLLED, val);
-    }
-
-    public boolean getIsControlled() {
-        return this.getDataTracker().get(IS_CONTROLLED);
-    }
-
-    public LivingEntity getOwner() {
-        Entity owner = this.getWorld().getEntityById(this.getDataTracker().get(OWNER_ID));
-        return (owner instanceof LivingEntity) ? (LivingEntity) owner : null;
-    }
-
-    public void setOwner(LivingEntity owner) {
-        this.getDataTracker().set(OWNER_ID, owner.getId());
-    }
-
-    protected void pushAway(Entity entity) {
-        entity.pushAwayFrom(this);
+    public float projectileDeflectionRange() {
+        return .5f;
     }
 }

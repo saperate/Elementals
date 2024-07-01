@@ -13,11 +13,8 @@ public class AbilityWaterArc implements Ability {
     @Override
     public void onCall(Bender bender, long deltaT) {
         PlayerEntity player = bender.player;
-        Vector3f pos = WaterElement.canBend(player,true);
-
-        if (pos != null) {
-            int chi = PlayerData.get(player).canUseUpgrade("waterArcEfficiencyI") ? 10 : 20;
-            if (!bender.reduceChi(chi)) {
+        int chi = PlayerData.get(player).canUseUpgrade("waterArcEfficiencyI") ? 10 : 20;
+        if (!bender.reduceChi(chi)) {
             if (bender.abilityData == null) {
                 bender.setCurrAbility(null);
             } else {
@@ -25,6 +22,10 @@ public class AbilityWaterArc implements Ability {
             }
             return;
         }
+
+        Vector3f pos = WaterElement.canBend(player, true);
+
+        if (pos != null) {
             WaterArcEntity entity = new WaterArcEntity(player.getWorld(), player, pos.x, pos.y, pos.z);
             bender.abilityData = entity;
             entity.createChain(player);
@@ -39,7 +40,7 @@ public class AbilityWaterArc implements Ability {
     @Override
     public void onLeftClick(Bender bender, boolean started) {
         WaterArcEntity entity = (WaterArcEntity) bender.abilityData;
-        if(entity == null){
+        if (entity == null) {
             throw new RuntimeException("Elementals: Tried to launch entity while having none!");
         }
         onRemove(bender);

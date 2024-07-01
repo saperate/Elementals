@@ -1,6 +1,7 @@
 package dev.saperate.elementals.entities.water;
 
 import dev.saperate.elementals.data.PlayerData;
+import dev.saperate.elementals.entities.common.AbstractElementalsEntity;
 import dev.saperate.elementals.utils.SapsUtils;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.*;
@@ -27,11 +28,9 @@ import static dev.saperate.elementals.entities.ElementalEntities.WATERARC;
 import static dev.saperate.elementals.utils.SapsUtils.getEntityLookVector;
 import static dev.saperate.elementals.utils.SapsUtils.summonParticles;
 
-public class WaterArcEntity extends ProjectileEntity {
+public class WaterArcEntity extends AbstractElementalsEntity {
     private static final TrackedData<Integer> PARENT_ID = DataTracker.registerData(WaterArcEntity.class, TrackedDataHandlerRegistry.INTEGER);
     private static final TrackedData<Integer> CHILD_ID = DataTracker.registerData(WaterArcEntity.class, TrackedDataHandlerRegistry.INTEGER);
-    private static final TrackedData<Integer> OWNER_ID = DataTracker.registerData(WaterArcEntity.class, TrackedDataHandlerRegistry.INTEGER);
-    private static final TrackedData<Boolean> IS_CONTROLLED = DataTracker.registerData(WaterArcEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
     public static final float chainDistance = 0.9f;
     private static final int MAX_CHAIN_LENGTH = 4;
     public int chainLength = 0;
@@ -68,10 +67,9 @@ public class WaterArcEntity extends ProjectileEntity {
 
     @Override
     protected void initDataTracker() {
+        super.initDataTracker();
         this.getDataTracker().startTracking(PARENT_ID, 0);
         this.getDataTracker().startTracking(CHILD_ID, 0);
-        this.getDataTracker().startTracking(OWNER_ID, 0);
-        this.getDataTracker().startTracking(IS_CONTROLLED, false);
     }
 
     @Override
@@ -82,100 +80,77 @@ public class WaterArcEntity extends ProjectileEntity {
             summonParticles(this, random,
                     ParticleTypes.SPLASH,
                     0, 1);
-            if(getParent() == null){
-                playSound(SoundEvents.ENTITY_PLAYER_SWIM,0.25f,0);
+            if (getParent() == null) {
+                playSound(SoundEvents.ENTITY_PLAYER_SWIM, 0.25f, 0);
             }
         }
 
         LivingEntity owner = getOwner();
-        if (owner == null) {
-            this.setVelocity(this.getVelocity().add(0.0, -0.04, 0.0));
-            this.move(MovementType.SELF, this.getVelocity());
+        if (owner == null || isRemoved()) {
             return;
         }
-        WaterArcEntity parent = getParent();
-        if (!getIsControlled() && parent == null && !getWorld().isClient) {
-            HitResult hit = ProjectileUtil.getCollision(this, entity -> entity instanceof LivingEntity);
-            if (hit.getType() == HitResult.Type.ENTITY) {
-                LivingEntity entity = (LivingEntity) ((EntityHitResult) hit).getEntity();
-                PlayerData plrData = PlayerData.get(owner);
 
-                int damage = 4;
-                if (plrData.canUseUpgrade("waterArcMastery")) {
-                    damage = 8;
-                } else if (plrData.canUseUpgrade("waterArcDamageI")) {
-                    damage = 6;
-                }
+        moveEntity(owner, getParent());
+    }
 
-                entity.damage(this.getDamageSources().playerAttack((PlayerEntity) owner), damage);
-                entity.addVelocity(this.getVelocity().multiply(0.2f));
-                entity.velocityModified = true;//todo add this everywhere i do knock back
-                remove();
-            } else if (SapsUtils.checkBlockCollision(this, 0.1f, false) != null) {
-                remove();
-            }
+    @Override
+    public void onHitEntity(Entity entity) {
+        PlayerData plrData = PlayerData.get(getOwner());
+
+        int damage = 4;
+        if (plrData.canUseUpgrade("waterArcMastery")) {
+            damage = 8;
+        } else if (plrData.canUseUpgrade("waterArcDamageI")) {
+            damage = 6;
         }
 
+        entity.damage(this.getDamageSources().playerAttack(getOwner()), damage);
+        entity.addVelocity(this.getVelocity().multiply(0.2f));
+        entity.velocityModified = true;
+        remove();
+    }
 
-        moveEntity(owner, parent);
+    @Override
+    public void collidesWithGround() {
+        if (getParent() == null) {
+            remove();
+        }
     }
 
     private void moveEntity(Entity owner, Entity parent) {
         this.getWorld().getEntitiesByType(TypeFilter.instanceOf(PlayerEntity.class), this.getBoundingBox(), EntityPredicates.canBePushedBy(this)).forEach(this::pushAway);
 
-        //gravity
-        if (!hasNoGravity() && parent == null) {
-            this.setVelocity(this.getVelocity().add(0.0, -0.04, 0.0));
-        }
+        if (getIsControlled()) {
+            moveEntityTowardsGoal(getEntityLookVector(getOwner(), 3).add(0,0.5,0).toVector3f());
+        } else if (parent != null) {
 
-
-        if (!hasNoGravity()) {
-            if (getIsControlled()) {
-                controlEntity(owner);
+            Vec3d direction = parent.getPos().subtract(getPos());
+            double distance = direction.length();
+            if (distance > 4) {
+                direction = direction.normalize().multiply(distance - chainDistance).add(getPos());
+                setPos(direction.x, direction.y, direction.z);
             } else {
-                if (parent != null) {
-                    Vec3d direction = parent.getPos().subtract(getPos());
-                    double distance = direction.length();
-                    if (distance > 2) {
-                        direction = direction.normalize().multiply(distance - chainDistance).add(getPos());
-                        setPos(direction.x, direction.y, direction.z);
-                    } else {
-                        //Constraint so that it stays roughly N blocks away from the parent
-                        if (distance > chainDistance) {
-                            direction = direction.multiply(distance - chainDistance).multiply(0.1f);
-                        } else if (distance < chainDistance) {
-                            direction = direction.multiply(-0.025f);
-                        } else {
-                            direction = direction.multiply(0);
-                        }
-
-
-                        double damping = 0.1f + (0.3f - 0.1f) * (1 - Math.min(1, distance / chainDistance));
-                        direction = direction.multiply(damping);
-
-                        this.addVelocity(direction.x, direction.y, direction.z);
-
-                        this.addVelocity(getVelocity().multiply(-0.1f));
-                    }
+                //Constraint so that it stays roughly N blocks away from the parent
+                if (distance > chainDistance) {
+                    direction = direction.multiply(distance - chainDistance).multiply(0.1f);
+                } else if (distance < chainDistance) {
+                    direction = direction.multiply(-0.025f);
+                } else {
+                    direction = direction.multiply(0);
                 }
+
+
+                double damping = 0.1f + (0.3f - 0.1f) * (1 - Math.min(1, distance / chainDistance));
+                direction = direction.multiply(damping);
+
+                this.addVelocity(direction.x, direction.y, direction.z);
+
+                this.addVelocity(getVelocity().multiply(-0.1f));
             }
         }
 
 
         this.move(MovementType.SELF, this.getVelocity());
-    }
-
-    private void controlEntity(Entity owner) {
-        Vector3f direction = getEntityLookVector(owner, 3)
-                .subtract(getPos()).toVector3f();
-        direction.mul(0.125f);
-
-        if (direction.length() < 0.4f) {
-            this.setVelocity(0, 0, 0);
-        }
-
-
-        this.addVelocity(direction.x, direction.y, direction.z);
     }
 
 
@@ -184,6 +159,11 @@ public class WaterArcEntity extends ProjectileEntity {
         summonParticles(this, random, ParticleTypes.SPLASH, 0, 10);
         this.getWorld().playSound(getX(), getY(), getZ(), SoundEvents.ENTITY_PLAYER_SPLASH, SoundCategory.BLOCKS, 0.25f, (1.0f + (this.getWorld().random.nextFloat() - this.getWorld().random.nextFloat()) * 0.2f) * 0.7f, false);
 
+    }
+
+    @Override
+    public boolean hasNoGravity() {
+        return super.hasNoGravity() || getParent() != null;
     }
 
     /**
@@ -208,54 +188,20 @@ public class WaterArcEntity extends ProjectileEntity {
      * remove a specific link from the chain. it also kills its children
      */
     public void remove() {
-        WaterArcEntity child = getChild();
-        if (child == null) {
-            getParent().setChild(null);
-            this.discard();
-            return;
-        }
-        child.remove();
+
         WaterArcEntity parent = getParent();
         if (parent != null) {
             getParent().setChild(null);
         }
-        this.discard();
-    }
 
-    @Override
-    public void writeCustomDataToNbt(NbtCompound nbt) {
-        if (getOwner() != null) {
-            super.writeCustomDataToNbt(nbt);
-            nbt.putInt("OwnerID", this.getOwner().getId());
+        WaterArcEntity child = getChild();
+        if (child == null) {
+            this.discard();
+            return;
         }
-    }
+        child.remove();
 
-    @Override
-    public void readCustomDataFromNbt(NbtCompound nbt) {
-        super.readCustomDataFromNbt(nbt);
-        int ownerId = nbt.getInt("OwnerID");
-        this.getDataTracker().set(OWNER_ID, ownerId);
-    }
-
-    public void setControlled(boolean val) {
-        this.getDataTracker().set(IS_CONTROLLED, val);
-    }
-
-    public boolean getIsControlled() {
-        return this.getDataTracker().get(IS_CONTROLLED);
-    }
-
-    public LivingEntity getOwner() {
-        Entity owner = this.getWorld().getEntityById(this.getDataTracker().get(OWNER_ID));
-        return (owner instanceof LivingEntity) ? (LivingEntity) owner : null;
-    }
-
-    public void setOwner(LivingEntity owner) {
-        this.getDataTracker().set(OWNER_ID, owner.getId());
-    }
-
-    protected void pushAway(Entity entity) {
-        entity.pushAwayFrom(this);
+        this.discard();
     }
 
     public WaterArcEntity getParent() {
@@ -275,4 +221,6 @@ public class WaterArcEntity extends ProjectileEntity {
     public void setChild(WaterArcEntity child) {
         this.getDataTracker().set(CHILD_ID, child != null ? child.getId() : 0);
     }
+
+
 }

@@ -39,7 +39,7 @@ public class WaterJetEntity extends AbstractElementalsEntity {
         super(WATERJET, world);
         setOwner(owner);
         setPos(x, y, z);
-        setNoGravity(false);
+        setNoGravity(true);
     }
 
 
@@ -120,4 +120,5 @@ public class WaterJetEntity extends AbstractElementalsEntity {
     public boolean discardsOnNullOwner() {
         return true;
     }
+
 }

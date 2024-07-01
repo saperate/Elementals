@@ -20,10 +20,7 @@ public class AbilityWaterJet implements Ability {
     @Override
     public void onCall(Bender bender, long deltaT) {
         PlayerEntity player = bender.player;
-        Vector3f pos = WaterElement.canBend(player, true);
-
-        if (pos != null) {
-            if (!bender.reduceChi(10)) {
+        if (!bender.reduceChi(10)) {
             if (bender.abilityData == null) {
                 bender.setCurrAbility(null);
             } else {
@@ -31,9 +28,12 @@ public class AbilityWaterJet implements Ability {
             }
             return;
         }
+        Vector3f pos = WaterElement.canBend(player, true);
+
+        if (pos != null) {
             bender.abilityData = null;
             bender.setCurrAbility(this);
-        }else{
+        } else {
             bender.setCurrAbility(null);
         }
     }
@@ -64,11 +64,11 @@ public class AbilityWaterJet implements Ability {
             player.getWorld().spawnEntity(child);
 
             PlayerData plrData = PlayerData.get(player);
-            if(plrData.canUseUpgrade("waterJetRangeI")){
+            if (plrData.canUseUpgrade("waterJetRangeI")) {
                 parent.setRange(15);
                 child.setRange(15);
             }
-            if(plrData.canUseUpgrade("waterJetDamageI")){
+            if (plrData.canUseUpgrade("waterJetDamageI")) {
                 parent.setStreamSize(2);
                 child.setStreamSize(2);
             }
@@ -90,13 +90,13 @@ public class AbilityWaterJet implements Ability {
         } else {
             bender.player.addStatusEffect(new StatusEffectInstance(STATIONARY_EFFECT, 1, 1, false, false, false));
             if (!bender.reduceChi(0.2f)) {
-            if (bender.abilityData == null) {
-                bender.setCurrAbility(null);
-            } else {
-                onRemove(bender);
+                if (bender.abilityData == null) {
+                    bender.setCurrAbility(null);
+                } else {
+                    onRemove(bender);
+                }
+                return;
             }
-            return;
-        }
         }
     }
 

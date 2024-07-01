@@ -1,5 +1,6 @@
 package dev.saperate.elementals.entities.water;
 
+import dev.saperate.elementals.entities.common.AbstractElementalsEntity;
 import dev.saperate.elementals.utils.SapsUtils;
 import net.minecraft.entity.*;
 import net.minecraft.entity.data.DataTracker;
@@ -22,12 +23,9 @@ import static dev.saperate.elementals.entities.ElementalEntities.WATERBULLET;
 import static dev.saperate.elementals.utils.SapsUtils.getEntityLookVector;
 import static dev.saperate.elementals.utils.SapsUtils.summonParticles;
 
-public class WaterBulletEntity extends ProjectileEntity {
-    private static final TrackedData<Integer> OWNER_ID = DataTracker.registerData(WaterBulletEntity.class, TrackedDataHandlerRegistry.INTEGER);
-    private static final TrackedData<Boolean> IS_CONTROLLED = DataTracker.registerData(WaterBulletEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
+public class WaterBulletEntity extends AbstractElementalsEntity {
     private static final TrackedData<Integer> ARRAY_ID = DataTracker.registerData(WaterBulletEntity.class, TrackedDataHandlerRegistry.INTEGER);
     private static final TrackedData<Integer> ARRAY_SIZE = DataTracker.registerData(WaterBulletEntity.class, TrackedDataHandlerRegistry.INTEGER);
-
     public Vector3f lastCenterPos;
 
 
@@ -50,8 +48,7 @@ public class WaterBulletEntity extends ProjectileEntity {
 
     @Override
     protected void initDataTracker() {
-        this.getDataTracker().startTracking(OWNER_ID, 0);
-        this.getDataTracker().startTracking(IS_CONTROLLED, false);
+        super.initDataTracker();
         this.getDataTracker().startTracking(ARRAY_ID, 0);
         this.getDataTracker().startTracking(ARRAY_SIZE, 1);
     }
@@ -60,33 +57,9 @@ public class WaterBulletEntity extends ProjectileEntity {
     public void tick() {
         super.tick();
 
-        BlockPos blockHit = SapsUtils.checkBlockCollision(this, 0.1f, false);
-
         PlayerEntity owner = getOwner();
-        if (owner == null) {
-            this.setVelocity(this.getVelocity().add(0.0, -0.02, 0.0));
-            this.move(MovementType.SELF, this.getVelocity());
-            if (blockHit != null) {
-                collidesWithGround();
-            }
+        if (owner == null || isRemoved()) {
             return;
-        }
-
-
-        if (blockHit != null && !getIsControlled()) {
-            collidesWithGround();
-            return;
-        }
-
-
-        HitResult hit = ProjectileUtil.getCollision(this, entity -> entity instanceof LivingEntity);
-        if (hit.getType() == HitResult.Type.ENTITY) {
-            LivingEntity entity = (LivingEntity) ((EntityHitResult) hit).getEntity();
-            entity.damage(this.getDamageSources().playerAttack(owner), 2);
-            if (!getIsControlled()) {
-                entity.addVelocity(this.getVelocity().multiply(0.8f));
-                discard();
-            }
         }
 
         moveEntity(owner);
@@ -94,15 +67,9 @@ public class WaterBulletEntity extends ProjectileEntity {
 
 
     private void moveEntity(Entity owner) {
-
-
-        //gravity
-        this.setVelocity(this.getVelocity().add(0.0, -0.02, 0.0));
-
         if (getIsControlled()) {
             controlEntity(owner);
         }
-
 
         this.move(MovementType.SELF, this.getVelocity());
     }
@@ -111,7 +78,7 @@ public class WaterBulletEntity extends ProjectileEntity {
         Vector3f direction;
         if (!owner.isSneaking() || lastCenterPos == null) {
             direction = getEntityLookVector(owner, 3)
-                    .subtract(0,1,0)
+                    .subtract(0, 1, 0)
                     .subtract(getPos()).toVector3f();
             lastCenterPos = direction;
         } else {
@@ -121,59 +88,27 @@ public class WaterBulletEntity extends ProjectileEntity {
         double angle = ((2 * Math.PI) / getArraySize()) * getArrayId() + Math.toRadians(age * 2);
 
         direction = direction.add(
-                new Vector3f(0,1,0).add(new Vector3f(1,0,0).mul((float) Math.sin(angle)).add(new Vector3f(0,0,1).mul((float) Math.cos(angle))))
+                new Vector3f(0, 1, 0).add(new Vector3f(1, 0, 0).mul((float) Math.sin(angle)).add(new Vector3f(0, 0, 1).mul((float) Math.cos(angle))))
         );
 
-        direction.mul(0.25f);
-
-        if (direction.length() < 0.6f) {
-            this.setVelocity(0, 0, 0);
-        }
-
-
-        this.addVelocity(direction.x, direction.y, direction.z);
+        moveEntityTowardsGoal(direction);
     }
 
+    @Override
     public void collidesWithGround() {
-        //getWorld().setBlockState(getBlockPos(), Blocks.WATER.getDefaultState());
+        discard();
+    }
+
+    @Override
+    public void onHitEntity(Entity entity) {
+        entity.damage(this.getDamageSources().playerAttack(getOwner()), 2);
+        entity.addVelocity(this.getVelocity().multiply(0.8f));
         discard();
     }
 
     @Override
     public void onRemoved() {
         summonParticles(this, random, ParticleTypes.SPLASH, 10, 100);
-    }
-
-    @Override
-    public void writeCustomDataToNbt(NbtCompound nbt) {
-        if (getOwner() != null) {
-            super.writeCustomDataToNbt(nbt);
-            nbt.putInt("OwnerID", this.getOwner().getId());
-        }
-    }
-
-    @Override
-    public void readCustomDataFromNbt(NbtCompound nbt) {
-        super.readCustomDataFromNbt(nbt);
-        int ownerId = nbt.getInt("OwnerID");
-        this.getDataTracker().set(OWNER_ID, ownerId);
-    }
-
-    public void setControlled(boolean val) {
-        this.getDataTracker().set(IS_CONTROLLED, val);
-    }
-
-    public boolean getIsControlled() {
-        return this.getDataTracker().get(IS_CONTROLLED);
-    }
-
-    public PlayerEntity getOwner() {
-        Entity owner = this.getWorld().getEntityById(this.getDataTracker().get(OWNER_ID));
-        return (owner instanceof PlayerEntity) ? (PlayerEntity) owner : null;
-    }
-
-    public void setOwner(LivingEntity owner) {
-        this.getDataTracker().set(OWNER_ID, owner.getId());
     }
 
     public void setArrayId(int val) {

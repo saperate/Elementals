@@ -72,7 +72,7 @@ public abstract class AbstractElementalsEntity extends Entity {
             lifeTime += getLifeTimeIncrement();
         }
 
-        if (damagesOnTouch()) {
+        if (damagesOnTouch() && !getWorld().isClient) {
             List<LivingEntity> entities = getWorld().getEntitiesByClass(LivingEntity.class,
                     getBoundingBox().expand(0.25f),
                     LivingEntity::isAlive);
@@ -89,7 +89,7 @@ public abstract class AbstractElementalsEntity extends Entity {
                 return;
             }
 
-            if ( SapsUtils.checkBlockCollision(this, 0.05f, false) != null) {
+            if (SapsUtils.checkBlockCollision(this, 0.05f, false) != null) {
                 if (getVelocity().lengthSquared() > 0.3) {
                     setVelocity(getVelocity().add(getVelocity().multiply(touchGroundFrictionMultiplier())));
                 } else {
@@ -226,6 +226,11 @@ public abstract class AbstractElementalsEntity extends Entity {
     @Override
     public boolean isFireImmune() {
         return true;
+    }
+
+    @Override
+    public boolean doesRenderOnFire() {
+        return false;
     }
 
     /**

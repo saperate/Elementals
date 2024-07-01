@@ -12,11 +12,7 @@ public class AbilityWaterBlade implements Ability {
 
     @Override
     public void onCall(Bender bender, long deltaT) {
-        PlayerEntity player = bender.player;
-        Vector3f pos = WaterElement.canBend(player, true);
-
-        if (pos != null) {
-            if (!bender.reduceChi(15)) {
+        if (!bender.reduceChi(15)) {
             if (bender.abilityData == null) {
                 bender.setCurrAbility(null);
             } else {
@@ -24,6 +20,11 @@ public class AbilityWaterBlade implements Ability {
             }
             return;
         }
+
+        PlayerEntity player = bender.player;
+        Vector3f pos = WaterElement.canBend(player, true);
+
+        if (pos != null) {
             WaterBladeEntity entity = new WaterBladeEntity(player.getWorld(), player, pos.x, pos.y, pos.z);
             bender.abilityData = entity;
             player.getWorld().spawnEntity(entity);

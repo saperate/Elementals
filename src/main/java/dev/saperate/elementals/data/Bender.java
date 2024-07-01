@@ -9,6 +9,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.world.GameMode;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
@@ -185,6 +186,11 @@ public class Bender {
      * @return True if we were able to reduce the chi without going in the negatives, false if not.
      */
     public boolean reduceChi(float val) {
+        ServerPlayerEntity serverPlayer = ((ServerPlayerEntity) player);
+        if(serverPlayer.interactionManager.getGameMode().equals(GameMode.CREATIVE)){
+            return true;
+        }
+
         addXp(xpAddedByChi(val));
         PlayerData data = PlayerData.get(player);
         float newChi = data.chi - val;
@@ -218,6 +224,12 @@ public class Bender {
         if(data.xp >= maxXp){
             data.level++;
             float remainder = data.xp - maxXp;
+
+            if(remainder < maxXp){
+                data.chi = 100;
+                syncChi();
+            }
+
             data.xp = 0;
             addXp(remainder);
         }
