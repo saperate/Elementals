@@ -32,13 +32,13 @@ public class WaterHealingEntity extends AbstractElementalsEntity {
         super(type, world);
     }
 
-    public WaterHealingEntity(World world, LivingEntity owner) {
+    public WaterHealingEntity(World world, PlayerEntity owner) {
         super(WATERHEALING, world);
         setOwner(owner);
         setPos(owner.getX(), owner.getY(), owner.getZ());
     }
 
-    public WaterHealingEntity(World world, LivingEntity owner, double x, double y, double z) {
+    public WaterHealingEntity(World world, PlayerEntity owner, double x, double y, double z) {
         super(WATERHEALING, world);
         setOwner(owner);
         setPos(x, y, z);
@@ -62,7 +62,7 @@ public class WaterHealingEntity extends AbstractElementalsEntity {
             playSound(SoundEvents.ENTITY_PLAYER_SWIM, 0.25f, 0);
         }
 
-        PlayerEntity owner = getOwner();
+        PlayerEntity owner = (PlayerEntity) getOwner();
 
         if (owner != null && !isRemoved()) {
             moveEntity(owner);
@@ -133,5 +133,12 @@ public class WaterHealingEntity extends AbstractElementalsEntity {
 
     public float getHealing() {
         return this.dataTracker.get(HEALING);
+    }
+
+    @Override
+    public void setOwner(LivingEntity owner) {
+        if(owner instanceof PlayerEntity){
+            super.setOwner(owner);
+        }
     }
 }

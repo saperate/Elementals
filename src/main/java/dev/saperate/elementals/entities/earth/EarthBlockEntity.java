@@ -48,13 +48,13 @@ public class EarthBlockEntity extends AbstractElementalsEntity {
         super(type, world);
     }
 
-    public EarthBlockEntity(World world, LivingEntity owner) {
+    public EarthBlockEntity(World world, PlayerEntity owner) {
         super(EARTHBLOCK, world);
         setOwner(owner);
         setPos(owner.getX(), owner.getY(), owner.getZ());
     }
 
-    public EarthBlockEntity(World world, LivingEntity owner, double x, double y, double z) {
+    public EarthBlockEntity(World world, PlayerEntity owner, double x, double y, double z) {
         super(EARTHBLOCK, world);
         setOwner(owner);
         setPos(x, y, z);
@@ -159,7 +159,7 @@ public class EarthBlockEntity extends AbstractElementalsEntity {
 
     @Override
     public void onHitEntity(Entity entity) {
-        entity.damage(this.getDamageSources().playerAttack(getOwner()), getDamage());
+        entity.damage(this.getDamageSources().playerAttack((PlayerEntity) getOwner()), getDamage());
         entity.setVelocity(this.getVelocity().multiply(1.2f));
         entity.move(MovementType.SELF, entity.getVelocity());
         entity.velocityModified = true;
@@ -274,4 +274,10 @@ public class EarthBlockEntity extends AbstractElementalsEntity {
         getDataTracker().set(DAMAGE, dmg);
     }
 
+    @Override
+    public void setOwner(LivingEntity owner) {
+        if(owner instanceof PlayerEntity){
+            super.setOwner(owner);
+        }
+    }
 }

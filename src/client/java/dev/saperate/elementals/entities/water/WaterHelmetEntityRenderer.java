@@ -6,6 +6,7 @@ import net.minecraft.client.render.entity.EntityRenderer;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.RotationAxis;
 import net.minecraft.util.math.Vec3d;
@@ -25,7 +26,7 @@ public class WaterHelmetEntityRenderer extends EntityRenderer<WaterHelmetEntity>
 
     @Override
     public void render(WaterHelmetEntity entity, float yaw, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light) {
-        Entity owner = entity.getOwner();
+        LivingEntity owner = entity.getOwner();
         Vec3d eyePos = owner.getCameraPosVec(tickDelta);
         entity.setPos(eyePos.x,eyePos.y - 0.5f, eyePos.z);
 

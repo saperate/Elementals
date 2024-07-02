@@ -33,13 +33,13 @@ public class WaterBulletEntity extends AbstractElementalsEntity {
         super(type, world);
     }
 
-    public WaterBulletEntity(World world, LivingEntity owner) {
+    public WaterBulletEntity(World world, PlayerEntity owner) {
         super(WATERBULLET, world);
         setOwner(owner);
         setPos(owner.getX(), owner.getY(), owner.getZ());
     }
 
-    public WaterBulletEntity(World world, LivingEntity owner, double x, double y, double z) {
+    public WaterBulletEntity(World world, PlayerEntity owner, double x, double y, double z) {
         super(WATERBULLET, world);
         setOwner(owner);
         setPos(x, y, z);
@@ -57,7 +57,7 @@ public class WaterBulletEntity extends AbstractElementalsEntity {
     public void tick() {
         super.tick();
 
-        PlayerEntity owner = getOwner();
+        PlayerEntity owner = (PlayerEntity) getOwner();
         if (owner == null || isRemoved()) {
             return;
         }
@@ -101,7 +101,7 @@ public class WaterBulletEntity extends AbstractElementalsEntity {
 
     @Override
     public void onHitEntity(Entity entity) {
-        entity.damage(this.getDamageSources().playerAttack(getOwner()), 2);
+        entity.damage(this.getDamageSources().playerAttack((PlayerEntity) getOwner()), 2);
         entity.addVelocity(this.getVelocity().multiply(0.8f));
         discard();
     }
@@ -129,5 +129,13 @@ public class WaterBulletEntity extends AbstractElementalsEntity {
     public int getArraySize() {
         return this.getDataTracker().get(ARRAY_SIZE);
     }
+
+    @Override
+    public void setOwner(LivingEntity owner) {
+        if(owner instanceof PlayerEntity){
+            super.setOwner(owner);
+        }
+    }
+
 
 }

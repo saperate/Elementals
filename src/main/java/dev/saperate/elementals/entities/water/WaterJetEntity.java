@@ -8,6 +8,7 @@ import net.minecraft.entity.*;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.particle.ParticleTypes;
@@ -31,11 +32,11 @@ public class WaterJetEntity extends AbstractElementalsEntity {
         super(type, world);
     }
 
-    public WaterJetEntity(World world, LivingEntity owner) {
+    public WaterJetEntity(World world, PlayerEntity owner) {
         this(world, owner, owner.getX(), owner.getY(), owner.getZ());
     }
 
-    public WaterJetEntity(World world, LivingEntity owner, double x, double y, double z) {
+    public WaterJetEntity(World world, PlayerEntity owner, double x, double y, double z) {
         super(WATERJET, world);
         setOwner(owner);
         setPos(x, y, z);

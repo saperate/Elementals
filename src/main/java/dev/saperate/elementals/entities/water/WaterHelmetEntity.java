@@ -42,10 +42,11 @@ public class WaterHelmetEntity extends AbstractElementalsEntity {
         this(world, owner, x, y, z, false);
     }
 
-    public WaterHelmetEntity(World world, LivingEntity owner, double x, double y, double z, boolean drown) {
+    public WaterHelmetEntity(World world, LivingEntity owner, double x, double y, double z, boolean suffocate) {
         super(WATERHELMET, world);
         setPos(x, owner.getEyeY(), z);
         setOwner(owner);
+        this.suffocate = suffocate;
     }
 
     @Override
@@ -63,24 +64,25 @@ public class WaterHelmetEntity extends AbstractElementalsEntity {
         super.tick();
 
         LivingEntity owner = getOwner();
-        if (owner.isRemoved()) {
-            return;
-        }
-        if (owner.isOnFire() || (maxLifeTime == -1 && !owner.isSubmergedInWater())) {
-            discard();
-            return;
-        }
-
-
         isOwnerBiped = (owner.getWidth() / owner.getHeight() < 0.4 || (owner instanceof PlayerEntity && !owner.isSprinting())) && !owner.hasStatusEffect(StatusEffects.INVISIBILITY);
 
         if (!isOwnerBiped && getWorld().isClient) {
             summonParticles(owner, this.random, getModelId() == 0 ? ParticleTypes.SPLASH : ParticleTypes.POOF, 0, 10);
         }
 
+        if (isRemoved() || owner.isRemoved() ) {
+            return;
+        }
+        if (owner.isOnFire() || (maxLifeTime == -1 && !owner.isSubmergedInWater() && !suffocate && !this.getWorld().isClient)) {
+            discard();
+            return;
+        }
+
+
         // if you change any part of this check the renderer because it also modifies the entity pos
-        Vec3d eyePos = owner.getEyePos();
+        Vec3d eyePos = getOwner().getEyePos();
         moveEntityTowardsGoal(new Vector3f((float) eyePos.x, (float) (eyePos.y - 0.5), (float) eyePos.z));
+        System.out.println(eyePos);
 
         if (!suffocate) {
             if (isStealthy() && owner.isSneaking() && owner.getVelocity().lengthSquared() <= 0.5) {
@@ -110,6 +112,10 @@ public class WaterHelmetEntity extends AbstractElementalsEntity {
         }
     }
 
+    @Override
+    public void onRemoved() {
+        super.onRemoved();
+    }
 
     public LivingEntity getCaster() {
         Entity owner = this.getWorld().getEntityById(this.getDataTracker().get(CASTER_ID));

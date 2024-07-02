@@ -33,11 +33,11 @@ public class WaterArmEntity extends AbstractElementalsEntity {
         super(type, world);
     }
 
-    public WaterArmEntity(World world, LivingEntity owner) {
+    public WaterArmEntity(World world, PlayerEntity owner) {
         this(world, owner, owner.getX(), owner.getY(), owner.getZ());
     }
 
-    public WaterArmEntity(World world, LivingEntity owner, double x, double y, double z) {
+    public WaterArmEntity(World world, PlayerEntity owner, double x, double y, double z) {
         super(WATERARM, world);
         setOwner(owner);
         setPos(x, y, z);
@@ -45,7 +45,7 @@ public class WaterArmEntity extends AbstractElementalsEntity {
         setControlled(true);
     }
 
-    public void createChain(LivingEntity owner) {
+    public void createChain(PlayerEntity owner) {
         if (chainLength < MAX_CHAIN_LENGTH) {
             WaterArmEntity newArc = new WaterArmEntity(getWorld(), owner, getX(), getY(), getZ());
             newArc.setParent(this);
@@ -82,7 +82,7 @@ public class WaterArmEntity extends AbstractElementalsEntity {
             return;
         }
 
-        entity.damage(this.getDamageSources().playerAttack(getOwner()), 4);
+        entity.damage(this.getDamageSources().playerAttack((PlayerEntity) getOwner()), 4);
         entity.addVelocity(this.getVelocity().multiply(0.2f));
         remove();
     }
@@ -224,5 +224,12 @@ public class WaterArmEntity extends AbstractElementalsEntity {
 
     public void setChild(WaterArmEntity child) {
         this.getDataTracker().set(CHILD_ID, child != null ? child.getId() : 0);
+    }
+
+    @Override
+    public void setOwner(LivingEntity owner) {
+        if(owner instanceof PlayerEntity){
+            super.setOwner(owner);
+        }
     }
 }

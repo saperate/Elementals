@@ -28,11 +28,11 @@ public class WaterShieldEntity extends AbstractElementalsEntity {
         super(type, world);
     }
 
-    public WaterShieldEntity(World world, LivingEntity owner) {
+    public WaterShieldEntity(World world, PlayerEntity owner) {
         this(world, owner, owner.getX(), owner.getY(), owner.getZ());
     }
 
-    public WaterShieldEntity(World world, LivingEntity owner, double x, double y, double z) {
+    public WaterShieldEntity(World world, PlayerEntity owner, double x, double y, double z) {
         super(WATERSHIELD, world);
         setPos(x, y, z);
         setOwner(owner);
@@ -46,7 +46,7 @@ public class WaterShieldEntity extends AbstractElementalsEntity {
             playSound(SoundEvents.ENTITY_PLAYER_SWIM,0.05f,0);
         }
 
-        PlayerEntity owner = getOwner();
+        PlayerEntity owner = (PlayerEntity) getOwner();
 
         if(owner == null || isRemoved()){
             return;
@@ -59,7 +59,7 @@ public class WaterShieldEntity extends AbstractElementalsEntity {
     public void onRemoved() {
         summonParticles( this,random, ParticleTypes.SPLASH, 10,100);
         if(!this.getWorld().isClient){
-            Bender bender = Bender.getBender(getOwner());
+            Bender bender = Bender.getBender((PlayerEntity) getOwner());
             if(bender != null && bender.currAbility != null){//Clean up the mess
                 bender.abilityData = null;
                 bender.currAbility.onRemove(bender);
@@ -86,5 +86,12 @@ public class WaterShieldEntity extends AbstractElementalsEntity {
     @Override
     public boolean discardsOnNullOwner() {
         return true;
+    }
+
+    @Override
+    public void setOwner(LivingEntity owner) {
+        if(owner instanceof PlayerEntity){
+            super.setOwner(owner);
+        }
     }
 }

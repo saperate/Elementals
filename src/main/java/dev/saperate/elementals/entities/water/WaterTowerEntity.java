@@ -27,13 +27,13 @@ public class WaterTowerEntity extends AbstractElementalsEntity {
         super(type, world);
     }
 
-    public WaterTowerEntity(World world, LivingEntity owner) {
+    public WaterTowerEntity(World world, PlayerEntity owner) {
         super(WATERTOWER, world);
         setOwner(owner);
         setPos(owner.getX(), owner.getY(), owner.getZ());
     }
 
-    public WaterTowerEntity(World world, LivingEntity owner, double x, double y, double z) {
+    public WaterTowerEntity(World world, PlayerEntity owner, double x, double y, double z) {
         super(WATERTOWER, world);
         setOwner(owner);
         setPos(x, y, z);
@@ -54,7 +54,7 @@ public class WaterTowerEntity extends AbstractElementalsEntity {
             playSound(SoundEvents.ENTITY_PLAYER_SWIM,0.1f,0);
         }
 
-        PlayerEntity owner = getOwner();
+        PlayerEntity owner = (PlayerEntity) getOwner();
         if(owner == null || isRemoved()){
             return;
         }
@@ -94,7 +94,7 @@ public class WaterTowerEntity extends AbstractElementalsEntity {
 
     public void resetOwner(){
         //TODO add values that store what it was before so that we dont mess things up
-        PlayerEntity owner = getOwner();
+        PlayerEntity owner = (PlayerEntity) getOwner();
         if (owner == null) {
             return;
         }
@@ -123,5 +123,12 @@ public class WaterTowerEntity extends AbstractElementalsEntity {
     @Override
     public boolean discardsOnNullOwner() {
         return true;
+    }
+
+    @Override
+    public void setOwner(LivingEntity owner) {
+        if(owner instanceof PlayerEntity){
+            super.setOwner(owner);
+        }
     }
 }

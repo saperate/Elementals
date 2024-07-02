@@ -210,9 +210,9 @@ public abstract class AbstractElementalsEntity extends Entity {
         return this.getDataTracker().get(IS_CONTROLLED);
     }
 
-    public PlayerEntity getOwner() {
+    public LivingEntity getOwner() {
         Entity owner = this.getWorld().getEntityById(this.getDataTracker().get(OWNER_ID));
-        return (owner instanceof PlayerEntity) ? (PlayerEntity) owner : null;
+        return (owner instanceof LivingEntity) ? (LivingEntity) owner : null;
     }
 
     public void setOwner(LivingEntity owner) {

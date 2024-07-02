@@ -39,13 +39,13 @@ public class WaterBladeEntity extends AbstractElementalsEntity {
         super(type, world);
     }
 
-    public WaterBladeEntity(World world, LivingEntity owner) {
+    public WaterBladeEntity(World world, PlayerEntity owner) {
         super(WATERBLADE, world);
         setOwner(owner);
         setPos(owner.getX(), owner.getY(), owner.getZ());
     }
 
-    public WaterBladeEntity(World world, LivingEntity owner, double x, double y, double z) {
+    public WaterBladeEntity(World world, PlayerEntity owner, double x, double y, double z) {
         super(WATERBLADE, world);
         setOwner(owner);
         setPos(x, y, z);
@@ -71,7 +71,7 @@ public class WaterBladeEntity extends AbstractElementalsEntity {
 
         BlockPos blockHit = SapsUtils.checkBlockCollision(this, 0.1f, false, false);
 
-        PlayerEntity owner = getOwner();
+        PlayerEntity owner = (PlayerEntity) getOwner();
         if (owner == null || isRemoved()) {
             return;
         }
@@ -166,7 +166,7 @@ public class WaterBladeEntity extends AbstractElementalsEntity {
 
     @Override
     public void onHitEntity(Entity entity) {
-        entity.damage(this.getDamageSources().playerAttack(getOwner()), getDamage());
+        entity.damage(this.getDamageSources().playerAttack((PlayerEntity) getOwner()), getDamage());
         entity.addVelocity(this.getVelocity().multiply(0.8f));
         discard();
     }
@@ -184,5 +184,12 @@ public class WaterBladeEntity extends AbstractElementalsEntity {
 
     public float getDamage() {
         return getDataTracker().get(DAMAGE);
+    }
+
+    @Override
+    public void setOwner(LivingEntity owner) {
+        if(owner instanceof PlayerEntity){
+            super.setOwner(owner);
+        }
     }
 }
