@@ -1,6 +1,7 @@
 package dev.saperate.elementals.utils;
 
 import com.google.common.collect.Sets;
+import dev.saperate.elementals.elements.Element;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -215,7 +216,20 @@ public final class SapsUtils {
         return result;
     }
 
-    //I dont have any use for this, but i spent time on it so it is staying
+    public static String elementsArrayToString(ArrayList<Element> elements) {
+        StringBuilder builder = new StringBuilder();
+
+        builder.append("elements = {\n");
+        for (int i = 0; i < elements.size() - 1; i++) {
+            builder.append("\t").append(elements.get(i).name).append("\n");
+        }
+        builder.append("\t").append(elements.get(elements.size() - 1).name).append("\n");
+        builder.append("}");
+
+        return builder.toString();
+    }
+
+    //I don't have any use for this, but I spent time on it, so it is staying
     public void parseUpgradeInt(int obj) {
 
         int i = 0;

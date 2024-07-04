@@ -1,9 +1,11 @@
 package dev.saperate.elementals.data;
 
+import dev.saperate.elementals.commands.BendingCommand;
 import dev.saperate.elementals.elements.Ability;
 import dev.saperate.elementals.elements.Element;
 import dev.saperate.elementals.elements.NoneElement;
 import dev.saperate.elementals.elements.water.WaterElement;
+import dev.saperate.elementals.utils.SapsUtils;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.Entity;
@@ -19,52 +21,39 @@ import java.util.*;
 import static dev.saperate.elementals.network.ModMessages.*;
 
 public class Bender {
+    public static final float CHI_REGENERATION_RATE = 0.1f;//this is per tick (1/20 of a second)
     public static Map<UUID, Bender> benders = new HashMap<>();
     public PlayerEntity player;
-    private ArrayList<Element> elements;
-    private int activeElementIndex;
-    public Ability[] boundAbilities = new Ability[4];
+    public PlayerData plrData;
     public Long castTime;
     @Nullable
     public Ability currAbility;
     @Nullable
     public Object abilityData;
-    public static final float CHI_REGENERATION_RATE = 0.1f;//this is per tick (1/20 of a second)
 
 
-    public Bender(PlayerEntity player, ArrayList<Element> elements, int activeElementIndex) {
+    public Bender(PlayerEntity player) {
         this.player = player;
-        this.activeElementIndex = activeElementIndex;
-        if (elements == null) {
-            this.elements = new ArrayList<>();
-            this.elements.add(NoneElement.get());
-        } else {
-            this.elements = elements;
-        }
-
         benders.put(player.getUuid(), this);
+        plrData = getData();
     }
 
     public void bindAbility(Ability ability, int index) {
-        if (elements.get(activeElementIndex).contains(ability) && index >= 0 && index <= 4) {
-            boundAbilities[index] = ability;
-            if (!player.getWorld().isClient) {
-                PlayerData.get(player).boundAbilities = boundAbilities;
-            }
+        if (plrData.elements.get(plrData.activeElementIndex).contains(ability) && index >= 0 && index <= 4) {
+            plrData.boundAbilities[index] = ability;
         }
     }
 
 
     public void clearBindings() {
-        boundAbilities = new Ability[5];
-        PlayerData.get(player).boundAbilities = new Ability[5];
+        plrData.boundAbilities = new Ability[5];
     }
 
     public void bend(int index) {
-        if (index >= 0 && index < 5 && boundAbilities[index] != null) {
+        if (index >= 0 && index < 5 && plrData.boundAbilities[index] != null) {
             if (castTime == null && currAbility == null) {
                 castTime = System.currentTimeMillis();
-                setCurrAbility(boundAbilities[index]);
+                setCurrAbility(plrData.boundAbilities[index]);
                 abilityData = null;
                 return;
             }
@@ -84,8 +73,7 @@ public class Bender {
     }
 
     public void tick() {
-        PlayerData data = PlayerData.get(player);
-        data.chi = Math.min(100, data.chi + Bender.CHI_REGENERATION_RATE);
+        plrData.chi = Math.min(100, plrData.chi + Bender.CHI_REGENERATION_RATE);
     }
 
     public void setCurrAbility(Ability ability) {
@@ -97,7 +85,7 @@ public class Bender {
     }
 
     public void setCurrAbility(int i) {
-        setCurrAbility(boundAbilities[i]);
+        setCurrAbility(plrData.boundAbilities[i]);
         syncAbility(this);
     }
 
@@ -112,7 +100,7 @@ public class Bender {
         if (!hasElement(element)) {
             throw new RuntimeException("debugging, tell sap if this is in prod");
         }
-        setElement(elements.indexOf(element), sync);
+        setElement(plrData.elements.indexOf(element), sync);
     }
 
     /**
@@ -121,7 +109,7 @@ public class Bender {
      * @param sync Whether we send the client this change
      */
     public void setElement(int elementIndex, boolean sync) {
-        activeElementIndex = elementIndex;
+        plrData.activeElementIndex = elementIndex;
 
         if (sync) {
             syncElements();
@@ -130,7 +118,10 @@ public class Bender {
 
     public void addElement(@NotNull Element element, boolean sync) {
         if (!hasElement(element)) {
-            elements.add(element);
+            if(hasElement(NoneElement.get())){
+                plrData.elements.remove(NoneElement.get());
+            }
+            plrData.elements.add(element);
         }
 
         if (sync){
@@ -139,8 +130,11 @@ public class Bender {
     }
 
     public void removeElement(Element element, boolean sync) {
-        if (!hasElement(element)) {
-            elements.remove(element);
+        if (hasElement(element)) {
+            plrData.elements.remove(element);
+            if(plrData.elements.isEmpty()){
+                plrData.elements.add(NoneElement.get());
+            }
         }
 
         if (sync) {
@@ -149,14 +143,14 @@ public class Bender {
     }
 
     public boolean hasElement(Element element) {
-        return elements.contains(element);
+        return plrData.elements.contains(element);
     }
 
     /**
      * @return The current active element
      */
     public Element getElement() {
-        return elements.get(activeElementIndex);
+        return plrData.getElement();
     }
 
     public void syncElements() {
@@ -164,8 +158,8 @@ public class Bender {
             return;
         }
         PacketByteBuf buf = PacketByteBufs.create();
-        buf.writeString(packageElementsIntoString(elements));
-        buf.writeInt(activeElementIndex);
+        buf.writeString(packageElementsIntoString(plrData.elements));
+        buf.writeInt(plrData.activeElementIndex);
         ServerPlayNetworking.send((ServerPlayerEntity) player, SYNC_ELEMENT_PACKET_ID, buf);
     }
 
@@ -198,10 +192,11 @@ public class Bender {
         builder.append("\n    Element = ").append(getElement().name);
         builder.append("\n    Current ability = ").append(Ability.getName(currAbility));
         builder.append("\n    Cast time = ").append(castTime);
-        builder.append("\n    Chi = ").append(PlayerData.get(player).chi);
+        builder.append("\n    Chi = ").append(plrData.chi);
 
-        for (int i = 0; i < boundAbilities.length; i++) {
-            builder.append("\n    bind ").append(i).append(" = ").append(Ability.getName(boundAbilities[i]));
+        PlayerData data = getData();
+        for (int i = 0; i < data.boundAbilities.length; i++) {
+            builder.append("\n    bind ").append(i).append(" = ").append(Ability.getName(data.boundAbilities[i]));
         }
 
         return builder;
@@ -209,18 +204,18 @@ public class Bender {
 
 
     public void bindDefaultAbilities() {
-        int abilitySize = elements.get(activeElementIndex).bindableAbilities.size();
+        int abilitySize = plrData.elements.get(plrData.activeElementIndex).bindableAbilities.size();
         if (abilitySize >= 1) {
-            bindAbility(elements.get(activeElementIndex).getBindableAbility(0), 0);
+            bindAbility(plrData.elements.get(plrData.activeElementIndex).getBindableAbility(0), 0);
         }
         if (abilitySize >= 2) {
-            bindAbility(elements.get(activeElementIndex).getBindableAbility(1), 1);
+            bindAbility(plrData.elements.get(plrData.activeElementIndex).getBindableAbility(1), 1);
         }
         if (abilitySize >= 3) {
-            bindAbility(elements.get(activeElementIndex).getBindableAbility(2), 2);
+            bindAbility(plrData.elements.get(plrData.activeElementIndex).getBindableAbility(2), 2);
         }
         if (abilitySize >= 4) {
-            bindAbility(elements.get(activeElementIndex).getBindableAbility(3), 3);
+            bindAbility(plrData.elements.get(plrData.activeElementIndex).getBindableAbility(3), 3);
         }
     }
 
@@ -240,19 +235,18 @@ public class Bender {
         }
 
         addXp(xpAddedByChi(val));
-        PlayerData data = PlayerData.get(player);
-        float newChi = data.chi - val;
+        float newChi = plrData.chi - val;
         if (newChi < 0) {
             return false;
         }
-        data.chi = newChi;
+        plrData.chi = newChi;
         syncChi();
         return true;
     }
 
     public void syncChi() {
         PacketByteBuf buf = PacketByteBufs.create();
-        buf.writeFloat(PlayerData.get(player).chi);
+        buf.writeFloat(plrData.chi);
         ServerPlayNetworking.send((ServerPlayerEntity) player, SYNC_CHI_PACKET_ID, buf);
     }
 
@@ -266,25 +260,28 @@ public class Bender {
      * @param amount The amount of xp added
      */
     public void addXp(float amount) {
-        PlayerData data = PlayerData.get(player);
-        float maxXp = getMaxXp(data.level);
-        data.xp += amount;
-        if (data.xp >= maxXp) {
-            data.level++;
-            float remainder = data.xp - maxXp;
+        float maxXp = getMaxXp(plrData.level);
+        plrData.xp += amount;
+        if (plrData.xp >= maxXp) {
+            plrData.level++;
+            float remainder = plrData.xp - maxXp;
 
             if (remainder < maxXp) {
-                data.chi = 100;
+                plrData.chi = 100;
                 syncChi();
             }
 
-            data.xp = 0;
+            plrData.xp = 0;
             addXp(remainder);
         }
     }
 
     public static float getMaxXp(int level) { //TODO make a scaling max xp function
         return 100;
+    }
+
+    public PlayerData getData(){
+        return PlayerData.get(player);
     }
 
     @Override
@@ -302,6 +299,10 @@ public class Bender {
             builder.append(elements.get(i)).append(",");
         }
         builder.append(elements.get(elements.size() - 1));
+        if(BendingCommand.debug){
+            System.out.println(builder);
+        }
+
         return builder.toString();
     }
 
@@ -320,7 +321,9 @@ public class Bender {
                 elements.add(element);
             }
         }
-
+        if(BendingCommand.debug) {
+            System.out.println(SapsUtils.elementsArrayToString(elements));
+        }
         return elements;
     }
 }

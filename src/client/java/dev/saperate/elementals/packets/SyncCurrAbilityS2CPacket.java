@@ -25,14 +25,14 @@ public class SyncCurrAbilityS2CPacket {
         }
         int i = buf.readInt();
         ClientBender bender = ClientBender.get();
-        if(bender.element == null){
+        if(bender.getElement() == null){
             return;
         }
         if(i == -1){
             bender.currAbility = null;
             return;
         }
-        bender.currAbility = bender.element.getAbility(i);
+        bender.currAbility = bender.getElement().getAbility(i);
     }
 
     public static void send(Bender bender, int i){

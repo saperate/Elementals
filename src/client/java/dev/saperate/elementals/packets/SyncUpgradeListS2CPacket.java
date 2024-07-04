@@ -22,12 +22,12 @@ public class SyncUpgradeListS2CPacket {
             return;
         }
         ClientBender bender = ClientBender.get();
-        if(bender.element == null){
+        if(bender.getElement() == null){
             return;
         }
         bender.upgrades.clear();
         NbtCompound data = buf.readNbt();
-        bender.element.onRead(data,bender.upgrades);
+        bender.getElement().onRead(data,bender.upgrades);
     }
 
     public static void send(){

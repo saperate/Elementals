@@ -59,7 +59,7 @@ public class UpgradeTreeScreen extends Screen {
         SyncUpgradeListS2CPacket.send();
         SyncLevelS2CPacket.send();
         bender = ClientBender.get();
-        bender.element.root.calculateXPos();
+        bender.getElement().root.calculateXPos();
     }
 
     @Override
@@ -73,7 +73,7 @@ public class UpgradeTreeScreen extends Screen {
                 oX, oY, 0, 0, tileSize, tileSize, 32, 32);
 
 
-        Upgrade root = bender.element.root;
+        Upgrade root = bender.getElement().root;
 
         int len = root.children.length;
         int halfSize = tileSize / 2;
@@ -124,7 +124,7 @@ public class UpgradeTreeScreen extends Screen {
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if (button == 0) {
             Upgrade upgrade = mouseOnUpgrade(mouseX, mouseY);
-            if (upgrade != null && PlayerData.canBuyUpgrade(bender.upgrades, bender.element, upgrade.name, new AtomicInteger(ClientBender.get().level))) {
+            if (upgrade != null && PlayerData.canBuyUpgrade(bender.upgrades, bender.getElement(), upgrade.name, new AtomicInteger(ClientBender.get().level))) {
                 PacketByteBuf buf = PacketByteBufs.create();
                 buf.writeString(upgrade.name);
                 ClientPlayNetworking.send(BUY_UPGRADE_PACKET_ID, buf);

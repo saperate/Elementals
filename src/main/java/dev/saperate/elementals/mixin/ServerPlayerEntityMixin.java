@@ -23,7 +23,7 @@ public abstract class ServerPlayerEntityMixin {
     private void init(CallbackInfo info) {
         PlayerEntity player = ((PlayerEntity) (Object) this);
         if (Bender.getBender(player) == null) {
-            new Bender(player, null);
+            new Bender(player);
         } else {
             Bender.getBender(player).player = player;
         }

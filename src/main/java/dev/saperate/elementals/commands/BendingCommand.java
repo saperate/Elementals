@@ -63,7 +63,7 @@ public class BendingCommand {
                                         )
                                 ).requires(source -> source.hasPermissionLevel(2))
                                 .then(CommandManager.literal("get").then(
-                                        CommandManager.argument("player",EntityArgumentType.player()).executes(BendingCommand::levelGet)
+                                        CommandManager.argument("player", EntityArgumentType.player()).executes(BendingCommand::levelGet)
                                 ).executes(BendingCommand::levelSelfGet))
                         )
                         .then(CommandManager.literal("reset")
@@ -72,7 +72,16 @@ public class BendingCommand {
                                 )
                                 .executes(BendingCommand::resetSelf)
                         )
-                //.then(CommandManager.literal("debug").executes(BendingCommand::debug))
+                        .then(CommandManager.literal("element")
+                                        .then(CommandManager.literal("add").then(
+                                                CommandManager.argument("element", ElementArgumentType.element()).executes(BendingCommand::addElement))
+                                        )
+                                        .then(CommandManager.literal("remove").then(
+                                                CommandManager.argument("element", ElementArgumentType.element()).executes(BendingCommand::removeElement))
+                                        )
+                                //.then(CommandManager.literal("set").then()) TODO add this command
+                        )
+                .then(CommandManager.literal("debug").executes(BendingCommand::debug))
 
         );
     }
@@ -96,7 +105,7 @@ public class BendingCommand {
         return 1;
     }
 
-    public static int setSelfElement(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
+    public static int setSelfElement(CommandContext<ServerCommandSource> context) {
         if (context.getSource().getPlayer().getWorld().isClient) {
             return 1;
         }
@@ -107,19 +116,18 @@ public class BendingCommand {
 
         if (element == newElement) {
             context.getSource().sendFeedback((() -> Text.of(
-                    "You could already bend: " + bender.getElement().name)
+                    "You could already bend: " + newElement.name)
             ), false);
             return 1;
         }
 
         bender.setElement(newElement, true);
 
-        bender.boundAbilities = new Ability[4];
         plrData.boundAbilities = new Ability[4];
         bender.bindDefaultAbilities();
 
         context.getSource().sendFeedback((() -> Text.of(
-                bender.player.getEntityName() + " can now bend: " + bender.getElement().name)
+                bender.player.getEntityName() + " can now bend: " + newElement.name)
         ), true);
         return 1;
     }
@@ -140,12 +148,55 @@ public class BendingCommand {
 
         bender.setElement(newElement, true);
 
-        bender.boundAbilities = new Ability[4];
         plrData.boundAbilities = new Ability[4];
         bender.bindDefaultAbilities();
 
         context.getSource().sendFeedback((() -> Text.of(
-                plr.getEntityName() + " can now bend: " + bender.getElement().name)
+                plr.getEntityName() + " can now bend: " + newElement.name)
+        ), true);
+        return 1;
+    }
+
+    public static int addElement(CommandContext<ServerCommandSource> context) {
+        if (context.getSource().getPlayer().getWorld().isClient) {
+            return 1;
+        }
+        Bender bender = Bender.getBender(context.getSource().getPlayer());
+        Element element = ElementArgumentType.getElement(context, "element");
+
+        if (bender.hasElement(element)) {
+            context.getSource().sendFeedback((() -> Text.of(
+                    "You could already bend: " + element.name)
+            ), false);
+            return 1;
+        }
+
+        bender.addElement(element, true);
+
+        context.getSource().sendFeedback((() -> Text.of(
+                bender.player.getEntityName() + " can now bend: " + element.name)
+        ), true);
+        return 1;
+    }
+
+    public static int removeElement(CommandContext<ServerCommandSource> context) {
+        if (context.getSource().getPlayer().getWorld().isClient) {
+            return 1;
+        }
+        Bender bender = Bender.getBender(context.getSource().getPlayer());
+        Element element = ElementArgumentType.getElement(context, "element");
+
+        if (!bender.hasElement(element)) {
+            context.getSource().sendFeedback((() -> Text.of(
+                    "You couldn't bend: " + element.name)
+            ), false);
+            return 1;
+        }
+
+        bender.removeElement(element, true);
+
+        context.getSource().sendFeedback((() -> Text.of(
+                bender.player.getEntityName() + " can no longer bend: " + element.name)
         ), true);
         return 1;
     }

@@ -2,11 +2,13 @@ package dev.saperate.elementals.data;
 
 import dev.saperate.elementals.elements.Ability;
 import dev.saperate.elementals.elements.Element;
+import dev.saperate.elementals.elements.NoneElement;
 import dev.saperate.elementals.elements.Upgrade;
 import dev.saperate.elementals.network.packets.SyncLevelC2SPacket;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -20,6 +22,8 @@ import static dev.saperate.elementals.network.ModMessages.SYNC_CHI_PACKET_ID;
 public class PlayerData {
     public Ability[] boundAbilities = new Ability[4];
     public HashMap<Upgrade, Boolean> upgrades = new HashMap<>();
+    public ArrayList<Element> elements = new ArrayList<>();
+    public int activeElementIndex = 0;
     public float chi = 100, xp = 0;
     public int level = 2;
 
@@ -41,11 +45,11 @@ public class PlayerData {
      * @return True if we were able to buy the upgrade, False if not
      * @see SyncLevelC2SPacket
      */
-    public boolean buyUpgrade(Upgrade upgrade, Element element) {
+    public boolean buyUpgrade(Upgrade upgrade) {
         //Wrapper class so that we can reduce the levels
         AtomicInteger lvl = new AtomicInteger(level);
 
-        boolean bought = canBuyUpgrade(upgrades, element, upgrade.name, lvl);
+        boolean bought = canBuyUpgrade(upgrades, elements.get(activeElementIndex), upgrade.name, lvl);
         if (bought) {
             upgrades.put(upgrade, true);
         }
@@ -69,7 +73,17 @@ public class PlayerData {
         return false;
     }
 
-    public static PlayerData get(LivingEntity player) {
+    /**
+     * @return The current active element
+     */
+    public Element getElement() {
+        if(elements.isEmpty()){
+            return NoneElement.get();
+        }
+        return elements.get(activeElementIndex);
+    }
+
+    public static PlayerData get(PlayerEntity player) {
         return StateDataSaverAndLoader.getPlayerState(player);
     }
 }

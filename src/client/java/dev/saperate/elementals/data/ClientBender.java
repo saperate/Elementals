@@ -2,6 +2,7 @@ package dev.saperate.elementals.data;
 
 import dev.saperate.elementals.elements.Ability;
 import dev.saperate.elementals.elements.Element;
+import dev.saperate.elementals.elements.NoneElement;
 import dev.saperate.elementals.elements.Upgrade;
 import net.minecraft.entity.player.PlayerEntity;
 
@@ -60,6 +61,9 @@ public class ClientBender {
     }
 
     public Element getElement(){
+        if(elements.isEmpty()){
+            return NoneElement.get();
+        }
         return elements.get(activeElementIndex);
     }
 
