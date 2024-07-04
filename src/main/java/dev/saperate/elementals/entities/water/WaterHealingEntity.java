@@ -25,21 +25,21 @@ import static dev.saperate.elementals.entities.ElementalEntities.WATERHEALING;
 import static dev.saperate.elementals.utils.SapsUtils.getEntityLookVector;
 import static dev.saperate.elementals.utils.SapsUtils.summonParticles;
 
-public class WaterHealingEntity extends AbstractElementalsEntity {
+public class WaterHealingEntity extends AbstractElementalsEntity<PlayerEntity> {
     private static final TrackedData<Float> HEALING = DataTracker.registerData(WaterHealingEntity.class, TrackedDataHandlerRegistry.FLOAT);
 
     public WaterHealingEntity(EntityType<WaterHealingEntity> type, World world) {
-        super(type, world);
+        super(type, world, PlayerEntity.class);
     }
 
     public WaterHealingEntity(World world, PlayerEntity owner) {
-        super(WATERHEALING, world);
+        super(WATERHEALING, world, PlayerEntity.class);
         setOwner(owner);
         setPos(owner.getX(), owner.getY(), owner.getZ());
     }
 
     public WaterHealingEntity(World world, PlayerEntity owner, double x, double y, double z) {
-        super(WATERHEALING, world);
+        super(WATERHEALING, world, PlayerEntity.class);
         setOwner(owner);
         setPos(x, y, z);
         setControlled(true);
@@ -135,10 +135,4 @@ public class WaterHealingEntity extends AbstractElementalsEntity {
         return this.dataTracker.get(HEALING);
     }
 
-    @Override
-    public void setOwner(LivingEntity owner) {
-        if(owner instanceof PlayerEntity){
-            super.setOwner(owner);
-        }
-    }
 }

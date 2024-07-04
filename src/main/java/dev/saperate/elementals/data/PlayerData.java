@@ -19,7 +19,6 @@ import static dev.saperate.elementals.network.ModMessages.SYNC_CHI_PACKET_ID;
 
 public class PlayerData {
     public Ability[] boundAbilities = new Ability[4];
-    public Element element = Element.elementList.get(0);
     public HashMap<Upgrade, Boolean> upgrades = new HashMap<>();
     public float chi = 100, xp = 0;
     public int level = 2;
@@ -42,7 +41,7 @@ public class PlayerData {
      * @return True if we were able to buy the upgrade, False if not
      * @see SyncLevelC2SPacket
      */
-    public boolean buyUpgrade(Upgrade upgrade) {
+    public boolean buyUpgrade(Upgrade upgrade, Element element) {
         //Wrapper class so that we can reduce the levels
         AtomicInteger lvl = new AtomicInteger(level);
 

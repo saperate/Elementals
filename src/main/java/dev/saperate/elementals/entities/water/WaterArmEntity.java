@@ -21,7 +21,7 @@ import org.joml.Vector3f;
 import static dev.saperate.elementals.entities.ElementalEntities.WATERARM;
 import static dev.saperate.elementals.utils.SapsUtils.*;
 
-public class WaterArmEntity extends AbstractElementalsEntity {
+public class WaterArmEntity extends AbstractElementalsEntity<PlayerEntity> {
     private static final TrackedData<Integer> PARENT_ID = DataTracker.registerData(WaterArmEntity.class, TrackedDataHandlerRegistry.INTEGER);
     private static final TrackedData<Integer> CHILD_ID = DataTracker.registerData(WaterArmEntity.class, TrackedDataHandlerRegistry.INTEGER);
     public static final float chainDistance = 1;
@@ -30,7 +30,7 @@ public class WaterArmEntity extends AbstractElementalsEntity {
 
 
     public WaterArmEntity(EntityType<WaterArmEntity> type, World world) {
-        super(type, world);
+        super(type, world, PlayerEntity.class);
     }
 
     public WaterArmEntity(World world, PlayerEntity owner) {
@@ -38,7 +38,7 @@ public class WaterArmEntity extends AbstractElementalsEntity {
     }
 
     public WaterArmEntity(World world, PlayerEntity owner, double x, double y, double z) {
-        super(WATERARM, world);
+        super(WATERARM, world, PlayerEntity.class);
         setOwner(owner);
         setPos(x, y, z);
         setNoGravity(false);
@@ -226,10 +226,4 @@ public class WaterArmEntity extends AbstractElementalsEntity {
         this.getDataTracker().set(CHILD_ID, child != null ? child.getId() : 0);
     }
 
-    @Override
-    public void setOwner(LivingEntity owner) {
-        if(owner instanceof PlayerEntity){
-            super.setOwner(owner);
-        }
-    }
 }

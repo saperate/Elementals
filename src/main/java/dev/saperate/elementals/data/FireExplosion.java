@@ -106,7 +106,7 @@ public class FireExplosion extends Explosion {
         int s = MathHelper.floor(this.y + (double) q + 1.0);
         int t = MathHelper.floor(this.z - (double) q - 1.0);
         int u = MathHelper.floor(this.z + (double) q + 1.0);
-        List<Entity> list = this.world.getOtherEntities(owner, new Box(k, r, t, l, s, u));
+        List<Entity> list = this.world.getOtherEntities(null, new Box(k, r, t, l, s, u));
         Vec3d vec3d = new Vec3d(this.x, this.y, this.z);
         for (Entity entity : list) {
             PlayerEntity playerEntity;
@@ -121,9 +121,11 @@ public class FireExplosion extends Explosion {
             w /= z;
             x /= z;
             y /= z;
-            ab = (double)getExposure(vec3d, entity);
+            ab = (double) getExposure(vec3d, entity);
             double ac = (1.0 - w) * ab;
-            entity.damage(this.getDamageSource(), Math.min(maxDamage, (float)((int)((ac * ac + ac) / 2.0 * 7.0 * (double)q + 1.0))));
+            if (entity != owner) {
+                entity.damage(this.getDamageSource(), Math.min(maxDamage, (float) ((int) ((ac * ac + ac) / 2.0 * 7.0 * (double) q + 1.0))));
+            }
             double aa = (1.0 - v) * (double) Explosion.getExposure(vec3d, entity);
             if (entity instanceof LivingEntity) {
                 LivingEntity livingEntity = (LivingEntity) entity;

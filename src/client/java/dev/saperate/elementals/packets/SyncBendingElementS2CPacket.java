@@ -1,5 +1,6 @@
 package dev.saperate.elementals.packets;
 
+import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.data.ClientBender;
 import dev.saperate.elementals.elements.Element;
 import dev.saperate.elementals.gui.UpgradeTreeScreen;
@@ -13,13 +14,12 @@ public class SyncBendingElementS2CPacket {
                                PacketByteBuf buf, PacketSender responseSender) {
 
         ClientBender bender = ClientBender.get();
-        String e = buf.readString();
+        String elements = buf.readString();
+        int activeElementIndex = buf.readInt();
 
         client.execute(() -> {
-            if (bender.element != null && e.equals(bender.element.name)) {
-                return;
-            }
-            bender.element = Element.getElementByName(e);
+            bender.setElements(Bender.unpackElementsFromString(elements));
+            bender.setActiveElementIndex(activeElementIndex);
             if (client.currentScreen instanceof UpgradeTreeScreen treeScreen) {
                 treeScreen.close();
             }

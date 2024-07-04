@@ -20,12 +20,12 @@ import static dev.saperate.elementals.entities.ElementalEntities.WATERSHIELD;
 import static dev.saperate.elementals.utils.SapsUtils.summonParticles;
 
 
-public class WaterShieldEntity extends AbstractElementalsEntity {
+public class WaterShieldEntity extends AbstractElementalsEntity<PlayerEntity> {
     private static final TrackedData<Integer> OWNER_ID = DataTracker.registerData(WaterShieldEntity.class, TrackedDataHandlerRegistry.INTEGER);
 
 
     public WaterShieldEntity(EntityType<WaterShieldEntity> type, World world) {
-        super(type, world);
+        super(type, world, PlayerEntity.class);
     }
 
     public WaterShieldEntity(World world, PlayerEntity owner) {
@@ -33,7 +33,7 @@ public class WaterShieldEntity extends AbstractElementalsEntity {
     }
 
     public WaterShieldEntity(World world, PlayerEntity owner, double x, double y, double z) {
-        super(WATERSHIELD, world);
+        super(WATERSHIELD, world, PlayerEntity.class);
         setPos(x, y, z);
         setOwner(owner);
     }
@@ -88,10 +88,5 @@ public class WaterShieldEntity extends AbstractElementalsEntity {
         return true;
     }
 
-    @Override
-    public void setOwner(LivingEntity owner) {
-        if(owner instanceof PlayerEntity){
-            super.setOwner(owner);
-        }
-    }
+
 }

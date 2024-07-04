@@ -1,6 +1,7 @@
 package dev.saperate.elementals.entities.air;
 
 import dev.saperate.elementals.data.PlayerData;
+import dev.saperate.elementals.entities.common.AbstractElementalsEntity;
 import dev.saperate.elementals.utils.SapsUtils;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -28,36 +29,33 @@ import static dev.saperate.elementals.entities.ElementalEntities.WATERBULLET;
 import static dev.saperate.elementals.utils.SapsUtils.getEntityLookVector;
 import static dev.saperate.elementals.utils.SapsUtils.summonParticles;
 
-//TODO merge
-public class AirBulletEntity extends ProjectileEntity {
-    private static final TrackedData<Integer> OWNER_ID = DataTracker.registerData(AirBulletEntity.class, TrackedDataHandlerRegistry.INTEGER);
-    private static final TrackedData<Boolean> IS_CONTROLLED = DataTracker.registerData(AirBulletEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
+public class AirBulletEntity extends AbstractElementalsEntity<PlayerEntity> {
     private static final TrackedData<Integer> ARRAY_ID = DataTracker.registerData(AirBulletEntity.class, TrackedDataHandlerRegistry.INTEGER);
     private static final TrackedData<Integer> ARRAY_SIZE = DataTracker.registerData(AirBulletEntity.class, TrackedDataHandlerRegistry.INTEGER);
 
 
 
     public AirBulletEntity(EntityType<AirBulletEntity> type, World world) {
-        super(type, world);
+        super(type, world, PlayerEntity.class);
     }
 
-    public AirBulletEntity(World world, LivingEntity owner) {
-        super(AIRBULLET, world);
+    public AirBulletEntity(World world, PlayerEntity owner) {
+        super(AIRBULLET, world, PlayerEntity.class);
         setOwner(owner);
         setPos(owner.getX(), owner.getY(), owner.getZ());
     }
 
-    public AirBulletEntity(World world, LivingEntity owner, double x, double y, double z) {
-        super(AIRBULLET, world);
+    public AirBulletEntity(World world, PlayerEntity owner, double x, double y, double z) {
+        super(AIRBULLET, world, PlayerEntity.class);
         setOwner(owner);
         setPos(x, y, z);
         setControlled(true);
+        setNoGravity(true);
     }
 
     @Override
     protected void initDataTracker() {
-        this.getDataTracker().startTracking(OWNER_ID, 0);
-        this.getDataTracker().startTracking(IS_CONTROLLED, false);
+        super.initDataTracker();
         this.getDataTracker().startTracking(ARRAY_ID, 0);
         this.getDataTracker().startTracking(ARRAY_SIZE, 1);
     }
@@ -73,59 +71,20 @@ public class AirBulletEntity extends ProjectileEntity {
                 playSound(WIND_SOUND_EVENT,0.1f,(1.0f + (this.getWorld().random.nextFloat() - this.getWorld().random.nextFloat()) * 0.2f) * 0.7f);
             }
         }
-        BlockPos blockHit = SapsUtils.checkBlockCollision(this, 0.1f, false);
 
-        PlayerEntity owner = getOwner();
+        LivingEntity owner = getOwner();
         if (owner == null) {
-            this.setVelocity(this.getVelocity().add(0.0, -0.02, 0.0));
-            this.move(MovementType.SELF, this.getVelocity());
-            if (blockHit != null) {
-                collidesWithGround();
-            }
             return;
         }
-
-
-        if (blockHit != null && !getIsControlled()) {
-            collidesWithGround();
-            return;
-        }
-
-        if (!getIsControlled() && !getWorld().isClient) {
-            HitResult hit = ProjectileUtil.getCollision(this, entity -> entity instanceof LivingEntity);
-            if (hit.getType() == HitResult.Type.ENTITY) {
-                LivingEntity entity = (LivingEntity) ((EntityHitResult) hit).getEntity();
-                PlayerData plrData = PlayerData.get(owner);
-
-                float damage = 1;
-                if (plrData.canUseUpgrade("airBulletsMastery")) {
-                    damage = 4;
-                } else if (plrData.canUseUpgrade("airBulletsDamageI")) {
-                    damage = 2;
-                }
-                entity.damage(this.getDamageSources().playerAttack(owner), damage);
-                if (!getIsControlled()) {
-                    entity.addVelocity(this.getVelocity().multiply(1.2f));
-                    discard();
-                }
-            }
-        }
-
 
         moveEntity(owner);
     }
 
 
     private void moveEntity(Entity owner) {
-
-
-        //gravity
-        //this.setVelocity(this.getVelocity().add(0.0, -0.02, 0.0));
-
         if (getIsControlled()) {
             controlEntity(owner);
         }
-
 
         this.move(MovementType.SELF, this.getVelocity());
     }
@@ -152,8 +111,27 @@ public class AirBulletEntity extends ProjectileEntity {
         this.addVelocity(direction.x, direction.y, direction.z);
     }
 
+    @Override
     public void collidesWithGround() {
         discard();
+    }
+
+    @Override
+    public void onHitEntity(Entity entity) {
+        PlayerEntity owner = (PlayerEntity) getOwner();
+        PlayerData plrData = PlayerData.get(owner);
+
+        float damage = 1;
+        if (plrData.canUseUpgrade("airBulletsMastery")) {
+            damage = 4;
+        } else if (plrData.canUseUpgrade("airBulletsDamageI")) {
+            damage = 2;
+        }
+        entity.damage(this.getDamageSources().playerAttack(owner), damage);
+        if (!getIsControlled()) {
+            entity.addVelocity(this.getVelocity().multiply(1.2f));
+            discard();
+        }
     }
 
     @Override
@@ -161,38 +139,6 @@ public class AirBulletEntity extends ProjectileEntity {
         summonParticles(this, random, ParticleTypes.POOF, 0.01f, 10);
         this.getWorld().playSound(getX(), getY(), getZ(), WIND_BURST_SOUND_EVENT, SoundCategory.BLOCKS, 0.1f, (1.0f + (this.getWorld().random.nextFloat() - this.getWorld().random.nextFloat()) * 0.2f) * 0.7f, true);
 
-    }
-
-    @Override
-    public void writeCustomDataToNbt(NbtCompound nbt) {
-        if (getOwner() != null) {
-            super.writeCustomDataToNbt(nbt);
-            nbt.putInt("OwnerID", this.getOwner().getId());
-        }
-    }
-
-    @Override
-    public void readCustomDataFromNbt(NbtCompound nbt) {
-        super.readCustomDataFromNbt(nbt);
-        int ownerId = nbt.getInt("OwnerID");
-        this.getDataTracker().set(OWNER_ID, ownerId);
-    }
-
-    public void setControlled(boolean val) {
-        this.getDataTracker().set(IS_CONTROLLED, val);
-    }
-
-    public boolean getIsControlled() {
-        return this.getDataTracker().get(IS_CONTROLLED);
-    }
-
-    public PlayerEntity getOwner() {
-        Entity owner = this.getWorld().getEntityById(this.getDataTracker().get(OWNER_ID));
-        return (owner instanceof PlayerEntity) ? (PlayerEntity) owner : null;
-    }
-
-    public void setOwner(LivingEntity owner) {
-        this.getDataTracker().set(OWNER_ID, owner.getId());
     }
 
     public void setArrayId(int val) {

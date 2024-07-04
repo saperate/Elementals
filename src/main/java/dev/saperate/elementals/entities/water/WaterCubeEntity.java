@@ -27,20 +27,20 @@ import static dev.saperate.elementals.entities.ElementalEntities.WATERCUBE;
 import static dev.saperate.elementals.utils.SapsUtils.getEntityLookVector;
 import static dev.saperate.elementals.utils.SapsUtils.summonParticles;
 
-public class WaterCubeEntity extends AbstractElementalsEntity {
+public class WaterCubeEntity extends AbstractElementalsEntity<PlayerEntity> {
 
     public WaterCubeEntity(EntityType<WaterCubeEntity> type, World world) {
-        super(type, world);
+        super(type, world, PlayerEntity.class);
     }
 
     public WaterCubeEntity(World world, PlayerEntity owner) {
-        super(WATERCUBE, world);
+        super(WATERCUBE, world, PlayerEntity.class);
         setOwner(owner);
         setPos(owner.getX(), owner.getY(), owner.getZ());
     }
 
     public WaterCubeEntity(World world, PlayerEntity owner, double x, double y, double z) {
-        super(WATERCUBE, world);
+        super(WATERCUBE, world, PlayerEntity.class);
         setOwner(owner);
         setPos(x, y, z);
         setControlled(true);
@@ -109,10 +109,4 @@ public class WaterCubeEntity extends AbstractElementalsEntity {
         return .5f;
     }
 
-    @Override
-    public void setOwner(LivingEntity owner) {
-        if(owner instanceof PlayerEntity){
-            super.setOwner(owner);
-        }
-    }
 }

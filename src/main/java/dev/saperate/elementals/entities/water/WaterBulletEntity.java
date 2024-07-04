@@ -23,24 +23,24 @@ import static dev.saperate.elementals.entities.ElementalEntities.WATERBULLET;
 import static dev.saperate.elementals.utils.SapsUtils.getEntityLookVector;
 import static dev.saperate.elementals.utils.SapsUtils.summonParticles;
 
-public class WaterBulletEntity extends AbstractElementalsEntity {
+public class WaterBulletEntity extends AbstractElementalsEntity<PlayerEntity> {
     private static final TrackedData<Integer> ARRAY_ID = DataTracker.registerData(WaterBulletEntity.class, TrackedDataHandlerRegistry.INTEGER);
     private static final TrackedData<Integer> ARRAY_SIZE = DataTracker.registerData(WaterBulletEntity.class, TrackedDataHandlerRegistry.INTEGER);
     public Vector3f lastCenterPos;
 
 
     public WaterBulletEntity(EntityType<WaterBulletEntity> type, World world) {
-        super(type, world);
+        super(type, world, PlayerEntity.class);
     }
 
     public WaterBulletEntity(World world, PlayerEntity owner) {
-        super(WATERBULLET, world);
+        super(WATERBULLET, world, PlayerEntity.class);
         setOwner(owner);
         setPos(owner.getX(), owner.getY(), owner.getZ());
     }
 
     public WaterBulletEntity(World world, PlayerEntity owner, double x, double y, double z) {
-        super(WATERBULLET, world);
+        super(WATERBULLET, world, PlayerEntity.class);
         setOwner(owner);
         setPos(x, y, z);
         setControlled(true);
@@ -130,12 +130,6 @@ public class WaterBulletEntity extends AbstractElementalsEntity {
         return this.getDataTracker().get(ARRAY_SIZE);
     }
 
-    @Override
-    public void setOwner(LivingEntity owner) {
-        if(owner instanceof PlayerEntity){
-            super.setOwner(owner);
-        }
-    }
 
 
 }

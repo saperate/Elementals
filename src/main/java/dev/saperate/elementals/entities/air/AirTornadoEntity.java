@@ -1,5 +1,6 @@
 package dev.saperate.elementals.entities.air;
 
+import dev.saperate.elementals.entities.common.AbstractElementalsEntity;
 import dev.saperate.elementals.entities.water.WaterArcEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -29,38 +30,32 @@ import static dev.saperate.elementals.entities.ElementalEntities.AIRTORNADO;
 import static dev.saperate.elementals.entities.ElementalEntities.WATERJET;
 import static dev.saperate.elementals.utils.SapsUtils.*;
 
-public class AirTornadoEntity extends ProjectileEntity {
-    //TODO fix entities like this from getting on fire
+public class AirTornadoEntity extends AbstractElementalsEntity<PlayerEntity> {
     private static final TrackedData<Float> RANGE = DataTracker.registerData(AirTornadoEntity.class, TrackedDataHandlerRegistry.FLOAT);
-    private static final TrackedData<Integer> OWNER_ID = DataTracker.registerData(AirTornadoEntity.class, TrackedDataHandlerRegistry.INTEGER);
-    private static final TrackedData<Boolean> IS_CONTROLLED = DataTracker.registerData(AirTornadoEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
     private static final TrackedData<Float> SPEED = DataTracker.registerData(AirTornadoEntity.class, TrackedDataHandlerRegistry.FLOAT);
 
-    private int lifeTime = 100; // 5 seconds
-
     public AirTornadoEntity(EntityType<AirTornadoEntity> type, World world) {
-        super(type, world);
+        super(type, world, PlayerEntity.class);
     }
 
-    public AirTornadoEntity(World world, LivingEntity owner) {
+    public AirTornadoEntity(World world, PlayerEntity owner) {
         this(world, owner, owner.getX(), owner.getY(), owner.getZ());
     }
 
-    public AirTornadoEntity(World world, LivingEntity owner, double x, double y, double z) {
-        super(AIRTORNADO, world);
+    public AirTornadoEntity(World world, PlayerEntity owner, double x, double y, double z) {
+        super(AIRTORNADO, world, PlayerEntity.class);
         setOwner(owner);
         setPos(x, y, z);
-        setNoGravity(false);
+        setNoGravity(true);
         setStepHeight(2f);
-
+        maxLifeTime = 100;
     }
 
 
     @Override
     protected void initDataTracker() {
+        super.initDataTracker();
         this.getDataTracker().startTracking(RANGE, 20f);
-        this.getDataTracker().startTracking(OWNER_ID, 0);
-        this.getDataTracker().startTracking(IS_CONTROLLED, true);
         this.getDataTracker().startTracking(SPEED, 0.001f);
     }
 
@@ -71,101 +66,60 @@ public class AirTornadoEntity extends ProjectileEntity {
             summonParticles(this, random,
                     ParticleTypes.POOF,
                     0, 1);
-            playSound(WIND_SOUND_EVENT,1,(1.0f + (this.getWorld().random.nextFloat() - this.getWorld().random.nextFloat()) * 0.2f) * 0.7f);
+            playSound(WIND_SOUND_EVENT, 1, (1.0f + (this.getWorld().random.nextFloat() - this.getWorld().random.nextFloat()) * 0.2f) * 0.7f);
         }
 
         PlayerEntity owner = getOwner();
-        if (owner == null || isSubmergedInWater()) {
+        if (owner == null || isRemoved()) {
+            return;
+        }
+
+        if (isSubmergedInWater()) {
             discard();
             return;
         }
 
-        damageEntities(owner);
-        handleMovements(owner);
+        if (getIsControlled()) {
+            moveEntityTowardsGoal(getOwner().raycast(getRange(),1,true).getPos().toVector3f());
+            setVelocity(getVelocity().multiply(1,0,1));
+        }
+        setVelocity(getVelocity().add(0, -0.4, 0));
+
+        this.move(MovementType.SELF, this.getVelocity());
 
         if (isOnGround() && getWorld().isClient) {
             summonParticles(this, random, new BlockStateParticleEffect(ParticleTypes.BLOCK, getWorld().getBlockState(getBlockPos().down())), 0, 3);
         }
     }
 
-    public void damageEntities(PlayerEntity owner) {
-        //TODO add config to see if we target owner too
-        HitResult hit = ProjectileUtil.getCollision(this, entity -> entity instanceof LivingEntity);
-        if (hit.getType() == HitResult.Type.ENTITY) {
-            LivingEntity entity = (LivingEntity) ((EntityHitResult) hit).getEntity();
-            entity.damage(this.getDamageSources().playerAttack(owner), 5);//TODO maybe add a debris upgrade for more dmg
-            entity.addVelocity(0, 1.25, 0);
-            entity.velocityModified = true;
-            entity.move(MovementType.SELF, entity.getVelocity());
-        }
+    @Override
+    public float getMovementSpeed() {
+        return getSpeed();
     }
 
-    public void handleMovements(PlayerEntity owner) {
-        setVelocity(getVelocity().add(0, -0.01, 0));
+    @Override
+    public void onTouchEntity(Entity entity) {
+        if(getOwner() == entity){
+            return;
+        }
+        entity.damage(this.getDamageSources().playerAttack((PlayerEntity) getOwner()), 5);//TODO maybe add a debris upgrade for more dmg
+        entity.addVelocity(0, 0.75f, 0);
+        entity.velocityModified = true;
+        entity.move(MovementType.SELF, entity.getVelocity());
+    }
 
+    @Override
+    public boolean damagesOnTouch() {
+        return true;
+    }
+
+    @Override
+    public int getLifeTimeIncrement() {
         if (getIsControlled()) {
-            HitResult hit = raycastFull(owner, getRange(), true);
-            if (hit instanceof BlockHitResult bHit && !getWorld().getBlockState(bHit.getBlockPos()).isAir()
-                    || hit instanceof EntityHitResult) {
-                goTowardsGoal(hit.getPos());
-            }
-        } else {
-            lifeTime--;
-            if (lifeTime <= 0) {
-                discard();
-                return;
-            }
+            return 0;
         }
-
-        this.move(MovementType.SELF, this.getVelocity());
+        return 1;
     }
-
-    private void goTowardsGoal(Vec3d target) {
-        Vector3f direction = target
-                .subtract(getPos()).toVector3f();
-
-        if (direction.length() <= 1f) {
-            this.setVelocity(0, 0, 0);
-        }
-        direction.mul(getSpeed());
-
-
-        this.addVelocity(direction.x, direction.y, direction.z);
-    }
-
-    @Override
-    public void writeCustomDataToNbt(NbtCompound nbt) {
-        if (getOwner() != null) {
-            super.writeCustomDataToNbt(nbt);
-            nbt.putInt("OwnerID", this.getOwner().getId());
-        }
-    }
-
-    @Override
-    public void readCustomDataFromNbt(NbtCompound nbt) {
-        super.readCustomDataFromNbt(nbt);
-        int ownerId = nbt.getInt("OwnerID");
-        this.getDataTracker().set(OWNER_ID, ownerId);
-    }
-
-
-    public PlayerEntity getOwner() {
-        Entity owner = this.getWorld().getEntityById(this.getDataTracker().get(OWNER_ID));
-        return (owner instanceof PlayerEntity) ? (PlayerEntity) owner : null;
-    }
-
-    public void setOwner(LivingEntity owner) {
-        this.getDataTracker().set(OWNER_ID, owner.getId());
-    }
-
-    public void setControlled(boolean val) {
-        this.getDataTracker().set(IS_CONTROLLED, val);
-    }
-
-    public boolean getIsControlled() {
-        return this.getDataTracker().get(IS_CONTROLLED);
-    }
-
 
     public float getRange() {
         return getDataTracker().get(RANGE);
@@ -182,9 +136,9 @@ public class AirTornadoEntity extends ProjectileEntity {
     public float getSpeed() {
         return this.dataTracker.get(SPEED);
     }
-    protected void pushAway(Entity entity) {
-        entity.pushAwayFrom(this);
+
+    @Override
+    public boolean discardsOnNullOwner() {
+        return true;
     }
-
-
 }

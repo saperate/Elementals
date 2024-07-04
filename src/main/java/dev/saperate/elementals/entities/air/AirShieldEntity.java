@@ -1,6 +1,7 @@
 package dev.saperate.elementals.entities.air;
 
 import dev.saperate.elementals.data.Bender;
+import dev.saperate.elementals.entities.common.AbstractElementalsEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -21,29 +22,22 @@ import static dev.saperate.elementals.entities.ElementalEntities.AIRSHIELD;
 import static dev.saperate.elementals.utils.SapsUtils.summonParticles;
 
 
-public class AirShieldEntity extends Entity {
-    private static final TrackedData<Integer> OWNER_ID = DataTracker.registerData(AirShieldEntity.class, TrackedDataHandlerRegistry.INTEGER);
-
+public class AirShieldEntity extends AbstractElementalsEntity<PlayerEntity> {
 
     public AirShieldEntity(EntityType<AirShieldEntity> type, World world) {
-        super(type, world);
+        super(type, world, PlayerEntity.class);
     }
 
-    public AirShieldEntity(World world, LivingEntity owner) {
+    public AirShieldEntity(World world, PlayerEntity owner) {
         this(world, owner, owner.getX(), owner.getY(), owner.getZ());
     }
 
-    public AirShieldEntity(World world, LivingEntity owner, double x, double y, double z) {
-        super(AIRSHIELD, world);
+    public AirShieldEntity(World world, PlayerEntity owner, double x, double y, double z) {
+        super(AIRSHIELD, world, PlayerEntity.class);
         setPos(x, y, z);
         setOwner(owner);
     }
 
-
-    @Override
-    protected void initDataTracker() {
-        this.getDataTracker().startTracking(OWNER_ID, 0);
-    }
 
     @Override
     public void tick() {
@@ -54,36 +48,13 @@ public class AirShieldEntity extends Entity {
                     0, 1);
             playSound(WIND_SOUND_EVENT, 1, (1.0f + (this.getWorld().random.nextFloat() - this.getWorld().random.nextFloat()) * 0.2f) * 0.7f);
         }
-        PlayerEntity owner = getOwner();
+        LivingEntity owner = getOwner();
 
-        if(owner == null){
-            discard();
+        if (owner == null || isRemoved()) {
             return;
         }
 
-        setPos(owner.getX(),owner.getY(),owner.getZ());
-
-
-        List<LivingEntity> hits = getWorld().getEntitiesByClass(LivingEntity.class,
-                getWorld().isClient ? getBoundingBox() : getBoundingBox().offset(getPos()),
-                LivingEntity::isAlive);
-
-        for (LivingEntity entity : hits) {
-           if(entity != owner){
-               //Naughty entities can still somehow get inside the shield. This pushes them back out
-               Vec3d direction = entity.getPos().add(0,1.5f,0).subtract(getPos()).multiply(0.1f);
-               entity.setVelocity(getVelocity().add(direction));
-           }
-        }
-
-        List<ProjectileEntity> projectiles = getWorld().getEntitiesByClass(ProjectileEntity.class,
-                getWorld().isClient ? getBoundingBox().expand(1.75f) : getBoundingBox().expand(1.75f).offset(getPos()),
-                ProjectileEntity::isAlive);
-
-        for (ProjectileEntity e : projectiles){
-            Vec3d direction = e.getPos().add(0,1.7f,0).subtract(getPos()).multiply(0.2f);
-            e.setVelocity(getVelocity().add(direction));
-        }
+        moveEntityTowardsGoal(owner.getPos().toVector3f());
     }
 
 
@@ -98,22 +69,17 @@ public class AirShieldEntity extends Entity {
     }
 
     @Override
-    protected void readCustomDataFromNbt(NbtCompound nbt) {
-
+    public boolean teleportsToGoal() {
+        return true;
     }
 
     @Override
-    protected void writeCustomDataToNbt(NbtCompound nbt) {
-
+    public float projectileDeflectionRange() {
+        return 1.75f;
     }
 
-
-    public PlayerEntity getOwner() {
-        Entity owner = this.getWorld().getEntityById(this.getDataTracker().get(OWNER_ID));
-        return (owner instanceof LivingEntity) ? (PlayerEntity) owner : null;
-    }
-
-    public void setOwner(LivingEntity owner) {
-        this.getDataTracker().set(OWNER_ID, owner.getId());
+    @Override
+    public boolean discardsOnNullOwner() {
+        return true;
     }
 }

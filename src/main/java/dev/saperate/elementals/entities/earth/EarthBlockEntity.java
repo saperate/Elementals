@@ -32,7 +32,7 @@ import static dev.saperate.elementals.entities.ElementalEntities.EARTHBLOCK;
 import static dev.saperate.elementals.utils.SapsUtils.getEntityLookVector;
 import static dev.saperate.elementals.utils.SapsUtils.summonParticles;
 
-public class EarthBlockEntity extends AbstractElementalsEntity {
+public class EarthBlockEntity extends AbstractElementalsEntity<PlayerEntity> {
     private static final TrackedData<Integer> MODEL_SHAPE_ID = DataTracker.registerData(EarthBlockEntity.class, TrackedDataHandlerRegistry.INTEGER);
     private static final TrackedData<BlockState> BLOCK_STATE = DataTracker.registerData(EarthBlockEntity.class, TrackedDataHandlerRegistry.BLOCK_STATE);
     private static final TrackedData<Vector3f> TARGET_POSITION = DataTracker.registerData(EarthBlockEntity.class, TrackedDataHandlerRegistry.VECTOR3F);
@@ -45,17 +45,17 @@ public class EarthBlockEntity extends AbstractElementalsEntity {
 
 
     public EarthBlockEntity(EntityType<EarthBlockEntity> type, World world) {
-        super(type, world);
+        super(type, world, PlayerEntity.class);
     }
 
     public EarthBlockEntity(World world, PlayerEntity owner) {
-        super(EARTHBLOCK, world);
+        super(EARTHBLOCK, world, PlayerEntity.class);
         setOwner(owner);
         setPos(owner.getX(), owner.getY(), owner.getZ());
     }
 
     public EarthBlockEntity(World world, PlayerEntity owner, double x, double y, double z) {
-        super(EARTHBLOCK, world);
+        super(EARTHBLOCK, world, PlayerEntity.class);
         setOwner(owner);
         setPos(x, y, z);
         setControlled(true);
@@ -274,10 +274,4 @@ public class EarthBlockEntity extends AbstractElementalsEntity {
         getDataTracker().set(DAMAGE, dmg);
     }
 
-    @Override
-    public void setOwner(LivingEntity owner) {
-        if(owner instanceof PlayerEntity){
-            super.setOwner(owner);
-        }
-    }
 }

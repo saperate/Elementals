@@ -18,23 +18,23 @@ import org.jetbrains.annotations.Nullable;
 import static dev.saperate.elementals.entities.ElementalEntities.WATERTOWER;
 import static dev.saperate.elementals.utils.SapsUtils.summonParticles;
 
-public class WaterTowerEntity extends AbstractElementalsEntity {
+public class WaterTowerEntity extends AbstractElementalsEntity<PlayerEntity> {
     public static final int heightLimit = 10;
     private static final TrackedData<Float> TOWER_HEIGHT = DataTracker.registerData(WaterTowerEntity.class, TrackedDataHandlerRegistry.FLOAT);
     private static final TrackedData<Float> MAX_TOWER_HEIGHT = DataTracker.registerData(WaterTowerEntity.class, TrackedDataHandlerRegistry.FLOAT);
 
     public WaterTowerEntity(EntityType<WaterTowerEntity> type, World world) {
-        super(type, world);
+        super(type, world, PlayerEntity.class);
     }
 
     public WaterTowerEntity(World world, PlayerEntity owner) {
-        super(WATERTOWER, world);
+        super(WATERTOWER, world, PlayerEntity.class);
         setOwner(owner);
         setPos(owner.getX(), owner.getY(), owner.getZ());
     }
 
     public WaterTowerEntity(World world, PlayerEntity owner, double x, double y, double z) {
-        super(WATERTOWER, world);
+        super(WATERTOWER, world, PlayerEntity.class);
         setOwner(owner);
         setPos(x, y, z);
     }
@@ -54,7 +54,7 @@ public class WaterTowerEntity extends AbstractElementalsEntity {
             playSound(SoundEvents.ENTITY_PLAYER_SWIM,0.1f,0);
         }
 
-        PlayerEntity owner = (PlayerEntity) getOwner();
+        PlayerEntity owner = getOwner();
         if(owner == null || isRemoved()){
             return;
         }
@@ -75,8 +75,8 @@ public class WaterTowerEntity extends AbstractElementalsEntity {
         }
         setTowerHeight((float) Math.max(0, owner.getY() - getY()));
         setPosition(owner.getPos().multiply(1,0,1).add(0,getY(),0));
-        if(owner.getY() >= getY() + getMaxTowerHeight() - 0.5f){
-            owner.setPosition(owner.getPos().multiply(1,0,1).add(0, getY() + getMaxTowerHeight() - 0.5f, 0));
+        if(owner.getY() >= getY() + getMaxTowerHeight() - 0.25f){
+            owner.setPosition(owner.getPos().multiply(1,0,1).add(0, getY() + getMaxTowerHeight() - 0.25f, 0));
         }
     }
 
@@ -125,10 +125,5 @@ public class WaterTowerEntity extends AbstractElementalsEntity {
         return true;
     }
 
-    @Override
-    public void setOwner(LivingEntity owner) {
-        if(owner instanceof PlayerEntity){
-            super.setOwner(owner);
-        }
-    }
+
 }

@@ -29,24 +29,24 @@ import static dev.saperate.elementals.entities.ElementalEntities.WATERBLADE;
 import static dev.saperate.elementals.utils.SapsUtils.getEntityLookVector;
 import static dev.saperate.elementals.utils.SapsUtils.summonParticles;
 
-public class WaterBladeEntity extends AbstractElementalsEntity {
+public class WaterBladeEntity extends AbstractElementalsEntity<PlayerEntity> {
     private static final TrackedData<Float> DAMAGE = DataTracker.registerData(WaterBladeEntity.class, TrackedDataHandlerRegistry.FLOAT);
     private BlockPos currMiningPos = null;
     private int startMiningAge = -1;
 
 
     public WaterBladeEntity(EntityType<WaterBladeEntity> type, World world) {
-        super(type, world);
+        super(type, world, PlayerEntity.class);
     }
 
     public WaterBladeEntity(World world, PlayerEntity owner) {
-        super(WATERBLADE, world);
+        super(WATERBLADE, world, PlayerEntity.class);
         setOwner(owner);
         setPos(owner.getX(), owner.getY(), owner.getZ());
     }
 
     public WaterBladeEntity(World world, PlayerEntity owner, double x, double y, double z) {
-        super(WATERBLADE, world);
+        super(WATERBLADE, world, PlayerEntity.class);
         setOwner(owner);
         setPos(x, y, z);
         setControlled(true);
@@ -186,10 +186,4 @@ public class WaterBladeEntity extends AbstractElementalsEntity {
         return getDataTracker().get(DAMAGE);
     }
 
-    @Override
-    public void setOwner(LivingEntity owner) {
-        if(owner instanceof PlayerEntity){
-            super.setOwner(owner);
-        }
-    }
 }

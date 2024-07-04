@@ -26,14 +26,16 @@ import org.spongepowered.asm.mixin.Interface;
 
 import java.util.List;
 
-public abstract class AbstractElementalsEntity extends Entity {
+public abstract class AbstractElementalsEntity<OwnerType extends Entity> extends Entity {
     private static final TrackedData<Integer> OWNER_ID = DataTracker.registerData(AbstractElementalsEntity.class, TrackedDataHandlerRegistry.INTEGER);
     private static final TrackedData<Boolean> IS_CONTROLLED = DataTracker.registerData(AbstractElementalsEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
 
+    private final Class<OwnerType> ownerClass;
     public int lifeTime = 0, maxLifeTime = -1;
 
-    public AbstractElementalsEntity(EntityType<?> type, World world) {
+    public AbstractElementalsEntity(EntityType<?> type, World world, Class<OwnerType> ownerClass) {
         super(type, world);
+        this.ownerClass = ownerClass;
     }
 
     @Override
@@ -178,6 +180,9 @@ public abstract class AbstractElementalsEntity extends Entity {
         return false;
     }
 
+    /**
+     * Called when the entity collides with the ground, this is only called if the entity is no longer controlled
+     */
     public void collidesWithGround() {
 
     }
@@ -191,15 +196,10 @@ public abstract class AbstractElementalsEntity extends Entity {
 
     @Override
     public void readCustomDataFromNbt(NbtCompound nbt) {
-        int ownerId = nbt.getInt("OwnerID");
-        this.getDataTracker().set(OWNER_ID, ownerId);
     }
 
     @Override
     public void writeCustomDataToNbt(NbtCompound nbt) {
-        if (getOwner() != null) {
-            nbt.putInt("OwnerID", this.getOwner().getId());
-        }
     }
 
     public void setControlled(boolean val) {
@@ -210,12 +210,12 @@ public abstract class AbstractElementalsEntity extends Entity {
         return this.getDataTracker().get(IS_CONTROLLED);
     }
 
-    public LivingEntity getOwner() {
+    public OwnerType getOwner() {
         Entity owner = this.getWorld().getEntityById(this.getDataTracker().get(OWNER_ID));
-        return (owner instanceof LivingEntity) ? (LivingEntity) owner : null;
+        return (owner != null && ownerClass.isAssignableFrom(owner.getClass())) ? ownerClass.cast(owner) : null;
     }
 
-    public void setOwner(LivingEntity owner) {
+    public void setOwner(OwnerType owner) {
         this.getDataTracker().set(OWNER_ID, owner.getId());
     }
 

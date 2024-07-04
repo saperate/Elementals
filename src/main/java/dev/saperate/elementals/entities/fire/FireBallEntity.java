@@ -1,6 +1,7 @@
 package dev.saperate.elementals.entities.fire;
 
 import dev.saperate.elementals.data.FireExplosion;
+import dev.saperate.elementals.entities.common.AbstractElementalsEntity;
 import dev.saperate.elementals.utils.SapsUtils;
 import net.minecraft.block.AbstractFireBlock;
 import net.minecraft.entity.*;
@@ -25,24 +26,20 @@ import static dev.saperate.elementals.entities.ElementalEntities.FIREBALL;
 import static dev.saperate.elementals.utils.SapsUtils.getEntityLookVector;
 import static dev.saperate.elementals.utils.SapsUtils.summonParticles;
 
-public class FireBallEntity extends ProjectileEntity {
-    private static final TrackedData<Integer> OWNER_ID = DataTracker.registerData(FireBallEntity.class, TrackedDataHandlerRegistry.INTEGER);
-    private static final TrackedData<Boolean> IS_CONTROLLED = DataTracker.registerData(FireBallEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
+public class FireBallEntity extends AbstractElementalsEntity<PlayerEntity> {
     private static final TrackedData<Boolean> IS_BLUE = DataTracker.registerData(FireBallEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
-
-
     public FireBallEntity(EntityType<FireBallEntity> type, World world) {
-        super(type, world);
+        super(type, world, PlayerEntity.class);
     }
 
-    public FireBallEntity(World world, LivingEntity owner) {
-        super(FIREBALL, world);
+    public FireBallEntity(World world, PlayerEntity owner) {
+        super(FIREBALL, world, PlayerEntity.class);
         setOwner(owner);
         setPos(owner.getX(), owner.getY(), owner.getZ());
     }
 
-    public FireBallEntity(World world, LivingEntity owner, double x, double y, double z) {
-        super(FIREBALL, world);
+    public FireBallEntity(World world, PlayerEntity owner, double x, double y, double z) {
+        super(FIREBALL, world, PlayerEntity.class);
         setOwner(owner);
         setPos(x, y, z);
         setControlled(true);
@@ -50,8 +47,7 @@ public class FireBallEntity extends ProjectileEntity {
 
     @Override
     protected void initDataTracker() {
-        this.getDataTracker().startTracking(OWNER_ID, 0);
-        this.getDataTracker().startTracking(IS_CONTROLLED, false);
+        super.initDataTracker();
         this.getDataTracker().startTracking(IS_BLUE, false);
     }
 
@@ -66,60 +62,40 @@ public class FireBallEntity extends ProjectileEntity {
         }
 
         Entity owner = getOwner();
-        if (owner == null) {
-            this.setVelocity(this.getVelocity().add(0.0, -0.04, 0.0));
-            this.move(MovementType.SELF, this.getVelocity());
-            if (SapsUtils.checkBlockCollision(this, 0.1f) != null) {
-                onCollision();
-            }
+        if (owner == null || isRemoved()) {
             return;
         }
-        if (!getIsControlled()) {
-            HitResult hit = ProjectileUtil.getCollision(this, entity -> entity instanceof LivingEntity);
-            if (hit.getType() == HitResult.Type.ENTITY) {
-                onCollision();
-                return;
-            }
-        }
 
-        this.getWorld().getEntitiesByType(TypeFilter.instanceOf(PlayerEntity.class), this.getBoundingBox(), EntityPredicates.canBePushedBy(this)).forEach(this::pushAway);
         if (!owner.isSneaking()) {
-            moveEntity(owner);
+            moveEntity();
         }
 
     }
 
-    private void moveEntity(Entity owner) {
-
-
-        //gravity
-        this.setVelocity(this.getVelocity().add(0.0, -0.04, 0.0));
-
+    private void moveEntity() {
         if (getIsControlled()) {
-            controlEntity(owner);
-        } else if (SapsUtils.checkBlockCollision(this, 0.25f) != null) {
-            onCollision();
-            return;
+            moveEntityTowardsGoal(getEntityLookVector(getOwner(), 3).subtract(0,0.5,0).toVector3f());
         }
 
         this.move(MovementType.SELF, this.getVelocity());
     }
 
-    private void controlEntity(Entity owner) {
-        Vector3f direction = getEntityLookVector(owner, 3)
-                .subtract(0, 0.5f, 0)
-                .subtract(getPos()).toVector3f();
-        direction.mul(0.1f);
-
-        if (direction.length() < 0.4f) {
-            this.setVelocity(0, 0, 0);
-        }
-
-
-        this.addVelocity(direction.x, direction.y, direction.z);
+    @Override
+    public float getMovementSpeed() {
+        return 0.1f;
     }
 
-    public void onCollision() {
+    @Override
+    public void onHitEntity(Entity entity) {
+        onCollision();
+    }
+
+    @Override
+    public void collidesWithGround() {
+        onCollision();
+    }
+
+    public void onCollision(){
         getWorld().setBlockState(getBlockPos(), AbstractFireBlock.getState(getWorld(), getBlockPos()));
         FireExplosion explosion = new FireExplosion(getWorld(), getOwner(), getX(), getY(), getZ(), 2.5f, true, Explosion.DestructionType.KEEP, 12, getOwner());
         explosion.collectBlocksAndDamageEntities();
@@ -127,49 +103,12 @@ public class FireBallEntity extends ProjectileEntity {
         discard();
     }
 
-
     @Override
     public void onRemoved() {
         summonParticles(this, random,
                 isBlue() ? ParticleTypes.SOUL_FIRE_FLAME : ParticleTypes.FLAME,
                 0.25f, 25);
         this.getWorld().playSound(getX(), getY(), getZ(), SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.BLOCKS, 4.0f, (1.0f + (this.getWorld().random.nextFloat() - this.getWorld().random.nextFloat()) * 0.2f) * 0.7f, true);
-    }
-
-    @Override
-    public void writeCustomDataToNbt(NbtCompound nbt) {
-        if (getOwner() != null) {
-            super.writeCustomDataToNbt(nbt);
-            nbt.putInt("OwnerID", this.getOwner().getId());
-        }
-    }
-
-    @Override
-    public void readCustomDataFromNbt(NbtCompound nbt) {
-        super.readCustomDataFromNbt(nbt);
-        int ownerId = nbt.getInt("OwnerID");
-        this.getDataTracker().set(OWNER_ID, ownerId);
-    }
-
-    public void setControlled(boolean val) {
-        this.getDataTracker().set(IS_CONTROLLED, val);
-    }
-
-    public boolean getIsControlled() {
-        return this.getDataTracker().get(IS_CONTROLLED);
-    }
-
-    public LivingEntity getOwner() {
-        Entity owner = this.getWorld().getEntityById(this.getDataTracker().get(OWNER_ID));
-        return (owner instanceof LivingEntity) ? (LivingEntity) owner : null;
-    }
-
-    public void setOwner(LivingEntity owner) {
-        this.getDataTracker().set(OWNER_ID, owner.getId());
-    }
-
-    protected void pushAway(Entity entity) {
-        entity.pushAwayFrom(this);
     }
 
     public boolean isBlue() {

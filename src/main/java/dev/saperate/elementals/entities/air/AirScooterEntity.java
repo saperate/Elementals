@@ -2,6 +2,7 @@ package dev.saperate.elementals.entities.air;
 
 import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.data.FireExplosion;
+import dev.saperate.elementals.entities.common.AbstractElementalsEntity;
 import dev.saperate.elementals.utils.SapsUtils;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -30,12 +31,11 @@ import static dev.saperate.elementals.entities.ElementalEntities.AIRSCOOTER;
 import static dev.saperate.elementals.utils.SapsUtils.getEntityLookVector;
 import static dev.saperate.elementals.utils.SapsUtils.summonParticles;
 
-public class AirScooterEntity extends Entity {
-    private static final TrackedData<Integer> OWNER_ID = DataTracker.registerData(AirScooterEntity.class, TrackedDataHandlerRegistry.INTEGER);
+public class AirScooterEntity extends AbstractElementalsEntity<PlayerEntity> {
     private static final TrackedData<Float> SPEED = DataTracker.registerData(AirScooterEntity.class, TrackedDataHandlerRegistry.FLOAT);
 
     public AirScooterEntity(EntityType<AirScooterEntity> type, World world) {
-        super(type, world);
+        super(type, world, PlayerEntity.class);
     }
 
     public AirScooterEntity(World world, PlayerEntity owner) {
@@ -43,7 +43,7 @@ public class AirScooterEntity extends Entity {
     }
 
     public AirScooterEntity(World world, PlayerEntity owner, double x, double y, double z) {
-        super(AIRSCOOTER, world);
+        super(AIRSCOOTER, world, PlayerEntity.class);
         setPos(x, y, z);
         setOwner(owner);
         setStepHeight(1.1f);
@@ -51,7 +51,7 @@ public class AirScooterEntity extends Entity {
 
     @Override
     protected void initDataTracker() {
-        this.getDataTracker().startTracking(OWNER_ID, 0);
+        super.initDataTracker();
         this.getDataTracker().startTracking(SPEED, 0.5f);
     }
 
@@ -71,8 +71,13 @@ public class AirScooterEntity extends Entity {
     }
 
     private void moveEntity() {
-        PlayerEntity player = getOwner();
-        if (player == null || isOnFire() || player.isSneaking()) {
+        LivingEntity player = getOwner();
+
+        if(player == null || player.isRemoved()){
+            return;
+        }
+
+        if (isOnFire() || player.isSneaking()) {
             discard();
             return;
         }
@@ -86,13 +91,6 @@ public class AirScooterEntity extends Entity {
 
         this.addVelocity(dx, 0, dz);
         this.setVelocity(getVelocity().normalize().multiply(getSpeed()));
-        if (!isSubmergedInWater()) {
-            //gravity
-            this.setVelocity(this.getVelocity().add(0.0, -0.5, 0.0));
-        } else {
-            this.setVelocity(this.getVelocity().multiply(1, 0, 1));
-        }
-
 
         this.move(MovementType.SELF, this.getVelocity());
     }
@@ -105,28 +103,11 @@ public class AirScooterEntity extends Entity {
                 0.25f, 25);
         this.getWorld().playSound(getX(), getY(), getZ(), WIND_BURST_SOUND_EVENT, SoundCategory.BLOCKS, 1, (1.0f + (this.getWorld().random.nextFloat() - this.getWorld().random.nextFloat()) * 0.2f) * 0.7f, true);
         if(!getWorld().isClient && getOwner() != null){
-            Bender.getBender(getOwner()).currAbility.onRemove(Bender.getBender(getOwner()));
+            PlayerEntity owner = (PlayerEntity) getOwner();
+            Bender.getBender(owner).currAbility.onRemove(Bender.getBender(owner));
         }
     }
 
-    @Override
-    protected void readCustomDataFromNbt(NbtCompound nbt) {
-
-    }
-
-    @Override
-    protected void writeCustomDataToNbt(NbtCompound nbt) {
-
-    }
-
-    public PlayerEntity getOwner() {
-        Entity owner = this.getWorld().getEntityById(this.getDataTracker().get(OWNER_ID));
-        return (owner instanceof PlayerEntity) ? (PlayerEntity) owner : null;
-    }
-
-    public void setOwner(PlayerEntity owner) {
-        this.getDataTracker().set(OWNER_ID, owner.getId());
-    }
 
     public void setSpeed(float speed) {
         this.dataTracker.set(SPEED, speed);
@@ -134,5 +115,10 @@ public class AirScooterEntity extends Entity {
 
     public float getSpeed() {
         return this.dataTracker.get(SPEED);
+    }
+
+    @Override
+    public boolean discardsOnNullOwner() {
+        return true;
     }
 }

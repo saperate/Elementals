@@ -35,7 +35,7 @@ public class BuyUpgradeC2SPacket {
             }
 
             PlayerData plrData = PlayerData.get(player);
-            if (plrData.buyUpgrade(upgrade)) {
+            if (plrData.buyUpgrade(upgrade, bender.getElement())) {
                 GetUpgradeListC2SPacket.send(player);
                 SyncLevelC2SPacket.send(player);
             }

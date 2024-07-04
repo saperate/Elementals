@@ -22,14 +22,14 @@ import net.minecraft.world.World;
 import static dev.saperate.elementals.entities.ElementalEntities.WATERJET;
 import static dev.saperate.elementals.utils.SapsUtils.*;
 
-public class WaterJetEntity extends AbstractElementalsEntity {
+public class WaterJetEntity extends AbstractElementalsEntity<PlayerEntity> {
     private static final TrackedData<Float> STREAM_SIZE = DataTracker.registerData(WaterJetEntity.class, TrackedDataHandlerRegistry.FLOAT);
     private static final TrackedData<Float> RANGE = DataTracker.registerData(WaterJetEntity.class, TrackedDataHandlerRegistry.FLOAT);
     private static final TrackedData<Integer> CHILD_ID = DataTracker.registerData(WaterJetEntity.class, TrackedDataHandlerRegistry.INTEGER);
 
 
     public WaterJetEntity(EntityType<WaterJetEntity> type, World world) {
-        super(type, world);
+        super(type, world, PlayerEntity.class);
     }
 
     public WaterJetEntity(World world, PlayerEntity owner) {
@@ -37,7 +37,7 @@ public class WaterJetEntity extends AbstractElementalsEntity {
     }
 
     public WaterJetEntity(World world, PlayerEntity owner, double x, double y, double z) {
-        super(WATERJET, world);
+        super(WATERJET, world, PlayerEntity.class);
         setOwner(owner);
         setPos(x, y, z);
         setNoGravity(true);

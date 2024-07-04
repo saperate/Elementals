@@ -11,7 +11,8 @@ import java.util.List;
 
 public class ClientBender {
     private static ClientBender instance;
-    public Element element;
+    private ArrayList<Element> elements = new ArrayList<>();
+    private int activeElementIndex = 0;
     public Ability currAbility;
     public PlayerEntity player;
     public HashMap<Upgrade, Boolean> upgrades = new HashMap<>();
@@ -56,6 +57,18 @@ public class ClientBender {
             instance = new ClientBender();
         }
         return instance;
+    }
+
+    public Element getElement(){
+        return elements.get(activeElementIndex);
+    }
+
+    public void setActiveElementIndex(int index){
+        activeElementIndex = index;
+    }
+
+    public void setElements(ArrayList<Element> elements){
+        this.elements = elements;
     }
 
 }

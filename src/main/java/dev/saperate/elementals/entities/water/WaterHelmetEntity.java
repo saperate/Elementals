@@ -22,7 +22,7 @@ import static dev.saperate.elementals.utils.SapsUtils.summonParticles;
  * <b>IMPORTANT NOTICE</b> this entity also handles air bending's suffocate. To modify the air suffocate model,
  * go to the water helmet renderer
  */
-public class WaterHelmetEntity extends AbstractElementalsEntity {
+public class WaterHelmetEntity extends AbstractElementalsEntity<LivingEntity> {
     private static final TrackedData<Integer> RANGE = DataTracker.registerData(WaterHelmetEntity.class, TrackedDataHandlerRegistry.INTEGER);
     private static final TrackedData<Integer> CASTER_ID = DataTracker.registerData(WaterHelmetEntity.class, TrackedDataHandlerRegistry.INTEGER);
     private static final TrackedData<Boolean> STEALTHY = DataTracker.registerData(WaterHelmetEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
@@ -31,7 +31,7 @@ public class WaterHelmetEntity extends AbstractElementalsEntity {
     public boolean isOwnerBiped = false, suffocate = false;
 
     public WaterHelmetEntity(EntityType<WaterHelmetEntity> type, World world) {
-        super(type, world);
+        super(type, world, LivingEntity.class);
     }
 
     public WaterHelmetEntity(World world, LivingEntity owner) {
@@ -43,7 +43,7 @@ public class WaterHelmetEntity extends AbstractElementalsEntity {
     }
 
     public WaterHelmetEntity(World world, LivingEntity owner, double x, double y, double z, boolean suffocate) {
-        super(WATERHELMET, world);
+        super(WATERHELMET, world, LivingEntity.class);
         setPos(x, owner.getEyeY(), z);
         setOwner(owner);
         this.suffocate = suffocate;
@@ -64,15 +64,16 @@ public class WaterHelmetEntity extends AbstractElementalsEntity {
         super.tick();
 
         LivingEntity owner = getOwner();
+        if (owner == null || isRemoved() || owner.isRemoved()) {
+            return;
+        }
+
         isOwnerBiped = (owner.getWidth() / owner.getHeight() < 0.4 || (owner instanceof PlayerEntity && !owner.isSprinting())) && !owner.hasStatusEffect(StatusEffects.INVISIBILITY);
 
         if (!isOwnerBiped && getWorld().isClient) {
             summonParticles(owner, this.random, getModelId() == 0 ? ParticleTypes.SPLASH : ParticleTypes.POOF, 0, 10);
         }
 
-        if (isRemoved() || owner.isRemoved() ) {
-            return;
-        }
         if (owner.isOnFire() || (maxLifeTime == -1 && !owner.isSubmergedInWater() && !suffocate && !this.getWorld().isClient)) {
             discard();
             return;

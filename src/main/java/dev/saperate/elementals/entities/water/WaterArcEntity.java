@@ -11,9 +11,11 @@ import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.entity.projectile.ProjectileUtil;
+import net.minecraft.fluid.Fluids;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.predicate.entity.EntityPredicates;
+import net.minecraft.registry.tag.TagKey;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.TypeFilter;
@@ -28,7 +30,7 @@ import static dev.saperate.elementals.entities.ElementalEntities.WATERARC;
 import static dev.saperate.elementals.utils.SapsUtils.getEntityLookVector;
 import static dev.saperate.elementals.utils.SapsUtils.summonParticles;
 
-public class WaterArcEntity extends AbstractElementalsEntity {
+public class WaterArcEntity extends AbstractElementalsEntity<PlayerEntity> {
     private static final TrackedData<Integer> PARENT_ID = DataTracker.registerData(WaterArcEntity.class, TrackedDataHandlerRegistry.INTEGER);
     private static final TrackedData<Integer> CHILD_ID = DataTracker.registerData(WaterArcEntity.class, TrackedDataHandlerRegistry.INTEGER);
     public static final float chainDistance = 0.9f;
@@ -37,7 +39,7 @@ public class WaterArcEntity extends AbstractElementalsEntity {
 
 
     public WaterArcEntity(EntityType<WaterArcEntity> type, World world) {
-        super(type, world);
+        super(type, world, PlayerEntity.class);
     }
 
     public WaterArcEntity(World world, PlayerEntity owner) {
@@ -45,7 +47,7 @@ public class WaterArcEntity extends AbstractElementalsEntity {
     }
 
     public WaterArcEntity(World world, PlayerEntity owner, double x, double y, double z) {
-        super(WATERARC, world);
+        super(WATERARC, world, PlayerEntity.class);
         setOwner(owner);
         setPos(x, y, z);
         setNoGravity(false);
@@ -95,6 +97,9 @@ public class WaterArcEntity extends AbstractElementalsEntity {
 
     @Override
     public void onHitEntity(Entity entity) {
+        if(entity == getOwner()){
+            return;
+        }
         PlayerData plrData = PlayerData.get(getOwner());
 
         int damage = 4;
@@ -118,7 +123,6 @@ public class WaterArcEntity extends AbstractElementalsEntity {
     }
 
     private void moveEntity(Entity owner, Entity parent) {
-        this.getWorld().getEntitiesByType(TypeFilter.instanceOf(PlayerEntity.class), this.getBoundingBox(), EntityPredicates.canBePushedBy(this)).forEach(this::pushAway);
 
         if (getIsControlled()) {
             moveEntityTowardsGoal(getEntityLookVector(getOwner(), 3).add(0,0.5,0).toVector3f());
@@ -222,11 +226,5 @@ public class WaterArcEntity extends AbstractElementalsEntity {
         this.getDataTracker().set(CHILD_ID, child != null ? child.getId() : 0);
     }
 
-    @Override
-    public void setOwner(LivingEntity owner) {
-        if(owner instanceof PlayerEntity){
-            super.setOwner(owner);
-        }
-    }
 
 }

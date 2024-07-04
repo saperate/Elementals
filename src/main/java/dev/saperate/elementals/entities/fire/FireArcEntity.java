@@ -1,6 +1,7 @@
 package dev.saperate.elementals.entities.fire;
 
 import dev.saperate.elementals.data.PlayerData;
+import dev.saperate.elementals.entities.common.AbstractElementalsEntity;
 import dev.saperate.elementals.entities.water.WaterArcEntity;
 import dev.saperate.elementals.utils.SapsUtils;
 import net.minecraft.block.AbstractFireBlock;
@@ -29,11 +30,9 @@ import static dev.saperate.elementals.entities.ElementalEntities.FIREARC;
 import static dev.saperate.elementals.utils.SapsUtils.getEntityLookVector;
 import static dev.saperate.elementals.utils.SapsUtils.summonParticles;
 
-public class FireArcEntity extends ProjectileEntity {
+public class FireArcEntity extends AbstractElementalsEntity<PlayerEntity> {
     private static final TrackedData<Integer> PARENT_ID = DataTracker.registerData(FireArcEntity.class, TrackedDataHandlerRegistry.INTEGER);
     private static final TrackedData<Integer> CHILD_ID = DataTracker.registerData(FireArcEntity.class, TrackedDataHandlerRegistry.INTEGER);
-    private static final TrackedData<Integer> OWNER_ID = DataTracker.registerData(FireArcEntity.class, TrackedDataHandlerRegistry.INTEGER);
-    private static final TrackedData<Boolean> IS_CONTROLLED = DataTracker.registerData(FireArcEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
     private static final TrackedData<Boolean> IS_BLUE = DataTracker.registerData(FireArcEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
 
     public static final float chainDistance = 0.75f;
@@ -42,22 +41,22 @@ public class FireArcEntity extends ProjectileEntity {
 
 
     public FireArcEntity(EntityType<FireArcEntity> type, World world) {
-        super(type, world);
+        super(type, world, PlayerEntity.class);
     }
 
-    public FireArcEntity(World world, LivingEntity owner) {
+    public FireArcEntity(World world, PlayerEntity owner) {
         this(world, owner, owner.getX(), owner.getY(), owner.getZ());
     }
 
-    public FireArcEntity(World world, LivingEntity owner, double x, double y, double z) {
-        super(FIREARC, world);
+    public FireArcEntity(World world, PlayerEntity owner, double x, double y, double z) {
+        super(FIREARC, world, PlayerEntity.class);
         setOwner(owner);
         setPos(x, y, z);
         setNoGravity(false);
         setControlled(true);
     }
 
-    public void createChain(LivingEntity owner) {
+    public void createChain(PlayerEntity owner) {
         if (chainLength < MAX_CHAIN_LENGTH) {
             FireArcEntity newArc = new FireArcEntity(getWorld(), owner, getX(), getY(), getZ());
             newArc.setParent(this);
@@ -73,10 +72,9 @@ public class FireArcEntity extends ProjectileEntity {
 
     @Override
     protected void initDataTracker() {
+        super.initDataTracker();
         this.getDataTracker().startTracking(PARENT_ID, 0);
         this.getDataTracker().startTracking(CHILD_ID, 0);
-        this.getDataTracker().startTracking(OWNER_ID, 0);
-        this.getDataTracker().startTracking(IS_CONTROLLED, false);
         this.getDataTracker().startTracking(IS_BLUE, false);
     }
 
@@ -86,88 +84,69 @@ public class FireArcEntity extends ProjectileEntity {
             summonParticles(this, random,
                     isBlue() ? ParticleTypes.SOUL_FIRE_FLAME : ParticleTypes.FLAME,
                     0, 1);
-            if(getParent() == null){
-                playSound(SoundEvents.BLOCK_FIRE_AMBIENT,1,0);
+            if (getParent() == null) {
+                playSound(SoundEvents.BLOCK_FIRE_AMBIENT, 1, 0);
             }
         }
 
         super.tick();
-        PlayerEntity owner = getOwner();
-        if (owner == null) {
-            discard();
+
+        LivingEntity owner = getOwner();
+        if (owner == null && isRemoved()) {
             return;
         }
-        FireArcEntity parent = getParent();
-        if (!getIsControlled() && parent == null && !getWorld().isClient) {
-            HitResult hit = ProjectileUtil.getCollision(this, entity -> entity instanceof LivingEntity);
-            if (hit.getType() == HitResult.Type.ENTITY) { //TODO make it ignore if on client
-                LivingEntity entity = (LivingEntity) ((EntityHitResult) hit).getEntity();
-                entity.addVelocity(this.getVelocity().multiply(0.2f));
-                PlayerData plrData = PlayerData.get(owner);
 
-                float damage = isBlue() ? 3.5f : 2.5f;
-                if (plrData.canUseUpgrade("fireArcMastery")) {
-                    damage += 4;
-                } else if (plrData.canUseUpgrade("fireArcDamageI")) {
-                    damage += 2;
-                }
+        moveEntity(owner, getParent());
+    }
 
+    @Override
+    public void collidesWithGround() {
+        if (getParent() == null) {
+            remove();
+        }
+    }
 
-                if (!entity.isFireImmune()) {
-                    entity.setOnFireFor(8);
-                }
-                entity.damage(getDamageSources().inFire(),damage);
-                remove();
-            }else if (SapsUtils.checkBlockCollision(this, 0.1f, true) != null) {
-                remove();
-            }
+    @Override
+    public void onHitEntity(Entity entity) {
+        if (entity == getOwner()) {
+            return;
+        }
+        entity.addVelocity(this.getVelocity().multiply(0.2f));
+        PlayerData plrData = PlayerData.get(getOwner());
+
+        float damage = isBlue() ? 3.5f : 2.5f;
+        if (plrData.canUseUpgrade("fireArcMastery")) {
+            damage += 4;
+        } else if (plrData.canUseUpgrade("fireArcDamageI")) {
+            damage += 2;
         }
 
 
-        moveEntity(owner, parent);
+        if (!entity.isFireImmune()) {
+            entity.setOnFireFor(8);
+        }
+        entity.damage(getDamageSources().inFire(), damage);
+        remove();
     }
 
     private void moveEntity(Entity owner, Entity parent) {
-        this.getWorld().getEntitiesByType(TypeFilter.instanceOf(PlayerEntity.class), this.getBoundingBox(), EntityPredicates.canBePushedBy(this)).forEach(this::pushAway);
 
-        //gravity
-        if (!hasNoGravity() && parent == null) {
-            this.setVelocity(this.getVelocity().add(0.0, -0.02, 0.0));
-        }
+        if (getIsControlled()) {
+            moveEntityTowardsGoal(getEntityLookVector(getOwner(), 3).add(0,0.5,0).toVector3f());
+        } else {
+            if (parent != null) {
+                Vec3d direction = parent.getPos().subtract(getPos());
+                double distance = direction.length();
 
-
-        if (!hasNoGravity()) {
-            if (getIsControlled()) {
-                controlEntity(owner);
-            } else {
-                if (parent != null) {
-                    Vec3d direction = parent.getPos().subtract(getPos());
-                    double distance = direction.length();
-
-                    if (distance > chainDistance) {
-                        direction = direction.normalize().multiply(distance - chainDistance).add(getPos());
-                        setPos(direction.x, direction.y, direction.z);
-                    }
-
+                if (distance > chainDistance) {
+                    direction = direction.normalize().multiply(distance - chainDistance).add(getPos());
+                    setPos(direction.x, direction.y, direction.z);
                 }
             }
         }
 
 
         this.move(MovementType.SELF, this.getVelocity());
-    }
-
-    private void controlEntity(Entity owner) {
-        Vector3f direction = getEntityLookVector(owner, 3)
-                .subtract(getPos()).toVector3f();
-        direction.mul(0.2f);
-
-        if (direction.length() < 0.4f) {
-            this.setVelocity(0, 0, 0);
-        }
-
-
-        this.addVelocity(direction.x, direction.y, direction.z);
     }
 
 
@@ -203,7 +182,7 @@ public class FireArcEntity extends ProjectileEntity {
     public void remove() {
         FireArcEntity child = getChild();
         if (child == null) {
-            if(getParent() == null){
+            if (getParent() == null) {
                 this.discard();
                 return;
             }
@@ -217,42 +196,6 @@ public class FireArcEntity extends ProjectileEntity {
             getParent().setChild(null);
         }
         this.discard();
-    }
-
-    @Override
-    public void writeCustomDataToNbt(NbtCompound nbt) {
-        if (getOwner() != null) {
-            super.writeCustomDataToNbt(nbt);
-            nbt.putInt("OwnerID", this.getOwner().getId());
-        }
-    }
-
-    @Override
-    public void readCustomDataFromNbt(NbtCompound nbt) {
-        super.readCustomDataFromNbt(nbt);
-        int ownerId = nbt.getInt("OwnerID");
-        this.getDataTracker().set(OWNER_ID, ownerId);
-    }
-
-    public void setControlled(boolean val) {
-        this.getDataTracker().set(IS_CONTROLLED, val);
-    }
-
-    public boolean getIsControlled() {
-        return this.getDataTracker().get(IS_CONTROLLED);
-    }
-
-    public PlayerEntity getOwner() {
-        Entity owner = this.getWorld().getEntityById(this.getDataTracker().get(OWNER_ID));
-        return (owner instanceof PlayerEntity) ? (PlayerEntity) owner : null;
-    }
-
-    public void setOwner(LivingEntity owner) {
-        this.getDataTracker().set(OWNER_ID, owner.getId());
-    }
-
-    protected void pushAway(Entity entity) {
-        entity.pushAwayFrom(this);
     }
 
     public FireArcEntity getParent() {
@@ -279,5 +222,10 @@ public class FireArcEntity extends ProjectileEntity {
 
     public void setIsBlue(boolean val) {
         this.getDataTracker().set(IS_BLUE, val);
+    }
+
+    @Override
+    public boolean hasNoGravity() {
+        return super.hasNoGravity() || getParent() != null;
     }
 }

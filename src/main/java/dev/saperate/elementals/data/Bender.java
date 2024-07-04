@@ -2,6 +2,7 @@ package dev.saperate.elementals.data;
 
 import dev.saperate.elementals.elements.Ability;
 import dev.saperate.elementals.elements.Element;
+import dev.saperate.elementals.elements.NoneElement;
 import dev.saperate.elementals.elements.water.WaterElement;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -10,6 +11,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.world.GameMode;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
@@ -19,7 +21,8 @@ import static dev.saperate.elementals.network.ModMessages.*;
 public class Bender {
     public static Map<UUID, Bender> benders = new HashMap<>();
     public PlayerEntity player;
-    private Element element;
+    private ArrayList<Element> elements;
+    private int activeElementIndex;
     public Ability[] boundAbilities = new Ability[4];
     public Long castTime;
     @Nullable
@@ -29,19 +32,21 @@ public class Bender {
     public static final float CHI_REGENERATION_RATE = 0.1f;//this is per tick (1/20 of a second)
 
 
-    public Bender(PlayerEntity player, Element element) {
+    public Bender(PlayerEntity player, ArrayList<Element> elements, int activeElementIndex) {
         this.player = player;
-        if (element == null) {
-            this.element = Element.elementList.get(0);
+        this.activeElementIndex = activeElementIndex;
+        if (elements == null) {
+            this.elements = new ArrayList<>();
+            this.elements.add(NoneElement.get());
         } else {
-            this.element = element;
+            this.elements = elements;
         }
 
         benders.put(player.getUuid(), this);
     }
 
     public void bindAbility(Ability ability, int index) {
-        if (element.contains(ability) && index >= 0 && index <= 4) {
+        if (elements.get(activeElementIndex).contains(ability) && index >= 0 && index <= 4) {
             boundAbilities[index] = ability;
             if (!player.getWorld().isClient) {
                 PlayerData.get(player).boundAbilities = boundAbilities;
@@ -78,7 +83,7 @@ public class Bender {
         return benders.get(player);
     }
 
-    public void tick(){
+    public void tick() {
         PlayerData data = PlayerData.get(player);
         data.chi = Math.min(100, data.chi + Bender.CHI_REGENERATION_RATE);
     }
@@ -96,29 +101,72 @@ public class Bender {
         syncAbility(this);
     }
 
+    /**
+     * Sets the active element to the one passed,
+     * this does not work if the bender doesn't have the element,
+     * consider checking if they have it with hasElement and then adding it with addElement
+     * @param element The element we want to be active
+     * @param sync Whether we send the client this change
+     */
     public void setElement(Element element, boolean sync) {
-        castTime = null;
-        currAbility = null;
-        if (element == null) {
-            this.element = Element.elementList.get(0);
-        } else {
-            this.element = element;
+        if (!hasElement(element)) {
+            throw new RuntimeException("debugging, tell sap if this is in prod");
         }
+        setElement(elements.indexOf(element), sync);
+    }
 
-        if (sync && !player.getWorld().isClient && player.getServer() != null) {
-            PlayerData.get(player).element = element;
-            syncBending(this);
+    /**
+     * Sets the active element to the one passed,
+     * @param elementIndex The index of the element we want to be active
+     * @param sync Whether we send the client this change
+     */
+    public void setElement(int elementIndex, boolean sync) {
+        activeElementIndex = elementIndex;
+
+        if (sync) {
+            syncElements();
         }
     }
 
+    public void addElement(@NotNull Element element, boolean sync) {
+        if (!hasElement(element)) {
+            elements.add(element);
+        }
+
+        if (sync){
+            syncElements();
+        }
+    }
+
+    public void removeElement(Element element, boolean sync) {
+        if (!hasElement(element)) {
+            elements.remove(element);
+        }
+
+        if (sync) {
+            syncElements();
+        }
+    }
+
+    public boolean hasElement(Element element) {
+        return elements.contains(element);
+    }
+
+    /**
+     * @return The current active element
+     */
     public Element getElement() {
-        return element;
+        return elements.get(activeElementIndex);
     }
 
-    public static void syncBending(Bender bender) {
+    public void syncElements() {
+        if(player.getWorld().isClient || player.getServer() == null){
+            return;
+        }
         PacketByteBuf buf = PacketByteBufs.create();
-        buf.writeString(bender.getElement().name);
-        ServerPlayNetworking.send((ServerPlayerEntity) bender.player, SYNC_ELEMENT_PACKET_ID, buf);
+        buf.writeString(packageElementsIntoString(elements));
+        buf.writeInt(activeElementIndex);
+        ServerPlayNetworking.send((ServerPlayerEntity) player, SYNC_ELEMENT_PACKET_ID, buf);
     }
 
     public static void syncAbility(Bender bender) {
@@ -161,18 +209,18 @@ public class Bender {
 
 
     public void bindDefaultAbilities() {
-        int abilitySize = element.bindableAbilities.size();
+        int abilitySize = elements.get(activeElementIndex).bindableAbilities.size();
         if (abilitySize >= 1) {
-            bindAbility(element.getBindableAbility(0), 0);
+            bindAbility(elements.get(activeElementIndex).getBindableAbility(0), 0);
         }
         if (abilitySize >= 2) {
-            bindAbility(element.getBindableAbility(1), 1);
+            bindAbility(elements.get(activeElementIndex).getBindableAbility(1), 1);
         }
         if (abilitySize >= 3) {
-            bindAbility(element.getBindableAbility(2), 2);
+            bindAbility(elements.get(activeElementIndex).getBindableAbility(2), 2);
         }
         if (abilitySize >= 4) {
-            bindAbility(element.getBindableAbility(3), 3);
+            bindAbility(elements.get(activeElementIndex).getBindableAbility(3), 3);
         }
     }
 
@@ -187,14 +235,14 @@ public class Bender {
      */
     public boolean reduceChi(float val) {
         ServerPlayerEntity serverPlayer = ((ServerPlayerEntity) player);
-        if(serverPlayer.interactionManager.getGameMode().equals(GameMode.CREATIVE)){
+        if (serverPlayer.interactionManager.getGameMode().equals(GameMode.CREATIVE)) {
             return true;
         }
 
         addXp(xpAddedByChi(val));
         PlayerData data = PlayerData.get(player);
         float newChi = data.chi - val;
-        if(newChi < 0){
+        if (newChi < 0) {
             return false;
         }
         data.chi = newChi;
@@ -208,7 +256,7 @@ public class Bender {
         ServerPlayNetworking.send((ServerPlayerEntity) player, SYNC_CHI_PACKET_ID, buf);
     }
 
-    public float xpAddedByChi(float chi){
+    public float xpAddedByChi(float chi) {
         return 0.1f * chi; //y = ax + b
     }
 
@@ -217,15 +265,15 @@ public class Bender {
      * it adds a level and resets xp. If it is bigger, it adds the remaining xp.
      * @param amount The amount of xp added
      */
-    public void addXp(float amount){
+    public void addXp(float amount) {
         PlayerData data = PlayerData.get(player);
         float maxXp = getMaxXp(data.level);
         data.xp += amount;
-        if(data.xp >= maxXp){
+        if (data.xp >= maxXp) {
             data.level++;
             float remainder = data.xp - maxXp;
 
-            if(remainder < maxXp){
+            if (remainder < maxXp) {
                 data.chi = 100;
                 syncChi();
             }
@@ -235,12 +283,44 @@ public class Bender {
         }
     }
 
-    public static float getMaxXp(int level){ //TODO make a scaling max xp function
+    public static float getMaxXp(int level) { //TODO make a scaling max xp function
         return 100;
     }
 
     @Override
     public String toString() {
         return getStatus().append("\n}").toString();
+    }
+
+    public static String packageElementsIntoString(ArrayList<Element> elements) {
+        if (elements.isEmpty()) {
+            return "";
+        }
+
+        StringBuilder builder = new StringBuilder();
+        for (int i = 0; i < elements.size() - 1; i++) {
+            builder.append(elements.get(i)).append(",");
+        }
+        builder.append(elements.get(elements.size() - 1));
+        return builder.toString();
+    }
+
+    public static ArrayList<Element> unpackElementsFromString(String obj) {
+        ArrayList<Element> elements = new ArrayList<>();
+        String[] eNames = obj.split(",");
+
+        if (eNames.length == 0) {
+            elements.add(NoneElement.get());
+            return elements;
+        }
+
+        for (String eName : eNames) {
+            Element element = Element.getElementByName(eName);
+            if (!elements.contains(element)) {
+                elements.add(element);
+            }
+        }
+
+        return elements;
     }
 }
