@@ -13,6 +13,7 @@ import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ProjectileUtil;
+import net.minecraft.fluid.Fluids;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.predicate.entity.EntityPredicates;
@@ -47,7 +48,7 @@ public class AirScooterEntity extends AbstractElementalsEntity<PlayerEntity> {
         setPos(x, y, z);
         setOwner(owner);
         setStepHeight(1.1f);
-        setNoGravity(false);
+        setNoGravity(true);
     }
 
     @Override
@@ -87,12 +88,12 @@ public class AirScooterEntity extends AbstractElementalsEntity<PlayerEntity> {
             player.startRiding(this);
         }
         player.fallDistance = 0;
+        float dx = (float) (-Math.sin(Math.toRadians(player.getYaw())));
+        float dz = (float) (Math.cos(Math.toRadians(player.getYaw())));
 
-        int dx = (int) Math.round(-Math.sin(Math.toRadians(player.getYaw())));
-        int dz = (int) Math.round(Math.cos(Math.toRadians(player.getYaw())));
-
-        this.addVelocity(dx, 0, dz);
-        this.setVelocity(getVelocity().normalize().multiply(getSpeed()));
+        float gravity = touchingWater ? 0 : -0.4f;
+        this.addVelocity(dx, gravity, dz);
+        this.setVelocity(getVelocity().normalize().multiply(getSpeed() * (touchingWater ? 0.65f : 1f)));
 
         this.move(MovementType.SELF, this.getVelocity());
     }

@@ -110,4 +110,9 @@ public class AirBallEntity extends AbstractElementalsEntity<PlayerEntity> {
                 0.25f, 25);
         this.getWorld().playSound(getX(), getY(), getZ(), WIND_BURST_SOUND_EVENT, SoundCategory.BLOCKS, 4.0f, (1.0f + (this.getWorld().random.nextFloat() - this.getWorld().random.nextFloat()) * 0.2f) * 0.7f, true);
     }
+    @Override
+    public float touchGroundFrictionMultiplier() {
+        return -1;
+    }
+
 }

@@ -56,8 +56,8 @@ public abstract class AbstractElementalsEntity<OwnerType extends Entity> extends
             return;
         }
 
-        if(!hasNoGravity()){
-            this.move(MovementType.SELF, new Vec3d(0,-0.04f, 0));
+        if(!hasNoGravity() && !getIsControlled()){
+            this.addVelocity(new Vec3d(0,-0.04f,0));
         }
 
         if (projectileDeflectionRange() > 0) {
@@ -94,15 +94,14 @@ public abstract class AbstractElementalsEntity<OwnerType extends Entity> extends
             if (hit.getType() == HitResult.Type.ENTITY) {
                 onHitEntity(((EntityHitResult) hit).getEntity());
                 return;
-            }
-
-            if (SapsUtils.checkBlockCollision(this, 0.05f, false) != null) {
+            } else if (SapsUtils.checkBlockCollision(this, 0.1f, false) != null) {
                 if (getVelocity().lengthSquared() > 0.3) {
                     setVelocity(getVelocity().add(getVelocity().multiply(touchGroundFrictionMultiplier())));
                 } else {
                     collidesWithGround();
                 }
             }
+
         }
 
         if(pushesEntitiesAway()){

@@ -20,9 +20,11 @@ public class SyncBendingElementS2CPacket {
         client.execute(() -> {
             bender.setElements(Bender.unpackElementsFromString(elements));
             bender.setActiveElementIndex(activeElementIndex);
-            System.out.println("client:" + activeElementIndex);
             if (client.currentScreen instanceof UpgradeTreeScreen treeScreen) {
                 treeScreen.close();
+            }
+            if(bender.chi > 100){
+                bender.chi = 100;
             }
         });
     }

@@ -9,6 +9,9 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Items;
+import net.minecraft.potion.PotionUtil;
+import net.minecraft.potion.Potions;
 import net.minecraft.state.property.IntProperty;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
@@ -62,6 +65,25 @@ public class AbilityWaterCube implements Ability {
 
     @Override
     public void onRightClick(Bender bender, boolean started) {
+        PlayerEntity player = bender.player;
+        boolean storedWater = player.getInventory().containsAny((stack) -> {
+            if (PotionUtil.getPotion(stack).equals(Potions.EMPTY)) {
+                player.getInventory().removeOne(stack);
+                player.getInventory().insertStack(PotionUtil.setPotion(Items.POTION.getDefaultStack(), Potions.WATER));
+                return true;
+            }
+            return false;
+        });
+
+        if (storedWater) {
+            WaterCubeEntity entity = (WaterCubeEntity) bender.abilityData;
+            if (entity == null) {
+                return;
+            }
+            entity.discard();
+            bender.setCurrAbility(null);
+            return;
+        }
         onRemove(bender);
     }
 

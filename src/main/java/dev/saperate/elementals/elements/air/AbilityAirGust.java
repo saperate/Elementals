@@ -74,6 +74,7 @@ public class AbilityAirGust implements Ability {
         }
         PlayerEntity player = bender.player;
         if (bender.abilityData.equals(true)) {
+            player.fallDistance -= 0.2f;
             serverSummonParticles((ServerWorld) player.getWorld(),
                     ParticleTypes.CLOUD, player, player.getRandom(),
                     0, 0.1f, 0,

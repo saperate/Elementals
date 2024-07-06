@@ -80,7 +80,7 @@ public class UpgradeTreeScreen extends Screen {
         int oY = MathHelper.floor(originY);
         context.drawTexture(CreateWorldScreen.LIGHT_DIRT_BACKGROUND_TEXTURE, 0, 0, -5, -oX, -oY, width, height, 32, 32);
 
-        context.drawTexture(new Identifier(MODID, "textures/gui/" + ClientBender.get().getElement().getName().toLowerCase() + "/upgrade_button.png"),
+        context.drawTexture(new Identifier(MODID, "textures/gui/" + ClientBender.get().getElement().getName().toLowerCase() + "_upgrade_button.png"),
                 oX - 2, oY - 2, 0, 0, tileSize + 4, tileSize + 4, tileSize + 4, tileSize + 4);
 
 
@@ -245,7 +245,7 @@ public class UpgradeTreeScreen extends Screen {
         float color = bender.upgrades.containsKey(upgrade) ? 1 : 0.25f;
         boolean isUpgrade = !icon.equals("upgrade.elementals." + upgrade.name + ".icon");
 
-        drawTexturedQuad(context, new Identifier(MODID, "textures/gui/" + ClientBender.get().getElement().getName().toLowerCase() + "/" + (isUpgrade ? "" : "plain_") + "upgrade_button.png"),
+        drawTexturedQuad(context, new Identifier(MODID, "textures/gui/" + ClientBender.get().getElement().getName().toLowerCase() + "_" + (isUpgrade ? "" : "plain_") + "upgrade_button.png"),
                 x1, y1, (int) textureSize, (int) textureSize, (float) 0, (float) 0, (int) textureSize, color, color, color, 1
                 , 0);
 
@@ -393,7 +393,7 @@ public class UpgradeTreeScreen extends Screen {
 
     }
 
-    void drawTexturedQuad(DrawContext context, Identifier texture, int x, int y, int width, int height, float u1, float v1, int textureSize, float red, float green, float blue, float alpha, float z) {
+    public void drawTexturedQuad(DrawContext context, Identifier texture, int x, int y, int width, int height, float u1, float v1, int textureSize, float red, float green, float blue, float alpha, float z) {
         float u2 = (u1 + width) / textureSize;
         float v2 = (v1 + height) / textureSize;
 

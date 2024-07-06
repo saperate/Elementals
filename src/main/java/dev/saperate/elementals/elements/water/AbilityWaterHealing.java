@@ -3,9 +3,13 @@ package dev.saperate.elementals.elements.water;
 import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.elements.Ability;
+import dev.saperate.elementals.entities.water.WaterArcEntity;
 import dev.saperate.elementals.entities.water.WaterCubeEntity;
 import dev.saperate.elementals.entities.water.WaterHealingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Items;
+import net.minecraft.potion.PotionUtil;
+import net.minecraft.potion.Potions;
 import org.joml.Vector3f;
 
 public class AbilityWaterHealing implements Ability {
@@ -60,6 +64,25 @@ public class AbilityWaterHealing implements Ability {
 
     @Override
     public void onRightClick(Bender bender, boolean started) {
+        PlayerEntity player = bender.player;
+        boolean storedWater = player.getInventory().containsAny((stack) -> {
+            if (PotionUtil.getPotion(stack).equals(Potions.EMPTY)) {
+                player.getInventory().removeOne(stack);
+                player.getInventory().insertStack(PotionUtil.setPotion(Items.POTION.getDefaultStack(), Potions.WATER));
+                return true;
+            }
+            return false;
+        });
+
+        if (storedWater) {
+            WaterHealingEntity entity = (WaterHealingEntity) bender.abilityData;
+            if (entity == null) {
+                return;
+            }
+            entity.discard();
+            bender.setCurrAbility(null);
+            return;
+        }
         onRemove(bender);
     }
 

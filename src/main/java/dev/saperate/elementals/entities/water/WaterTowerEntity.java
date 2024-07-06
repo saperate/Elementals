@@ -12,6 +12,7 @@ import net.minecraft.particle.ParticleTypes;
 import net.minecraft.predicate.entity.EntityPredicates;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.TypeFilter;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
@@ -37,6 +38,7 @@ public class WaterTowerEntity extends AbstractElementalsEntity<PlayerEntity> {
         super(WATERTOWER, world, PlayerEntity.class);
         setOwner(owner);
         setPos(x, y, z);
+        setNoGravity(true);
     }
 
     @Override
@@ -75,7 +77,7 @@ public class WaterTowerEntity extends AbstractElementalsEntity<PlayerEntity> {
         }
         setTowerHeight((float) Math.max(0, owner.getY() - getY()));
         setPosition(owner.getPos().multiply(1,0,1).add(0,getY(),0));
-        if(owner.getY() >= getY() + getMaxTowerHeight() - 0.25f){
+        if(getTowerHeight() - 1 > getMaxTowerHeight()){
             owner.setPosition(owner.getPos().multiply(1,0,1).add(0, getY() + getMaxTowerHeight() - 0.25f, 0));
         }
     }
@@ -125,5 +127,8 @@ public class WaterTowerEntity extends AbstractElementalsEntity<PlayerEntity> {
         return true;
     }
 
-
+    @Override
+    public boolean pushesEntitiesAway() {
+        return false;
+    }
 }

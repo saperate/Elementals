@@ -6,6 +6,7 @@
   "key.elementals.Ability3" : "Ability 3",
   "key.elementals.Ability4" : "Ability 4",
   "key.elementals.guiKey" : "Upgrade Screen",
+  "key.elementals.cycle" : "Cycle Elements",
 
   "effect.elementals.dense" : "Dense",
   "effect.elementals.drowning" : "Drowning",
@@ -412,7 +413,7 @@
 
   "upgrade.elementals.airGust": "Gust",
   "upgrade.elementals.airGust.description": " Makes a stream of air to knock back enemies in front of you.",
-  "upgrade.elementals.airGust.use": " Use: %d",
+  "upgrade.elementals.airGust.use": " Use: %d then r-click",
   "upgrade.elementals.airGust.icon": "air_gust",
 
   "upgrade.elementals.airShield": "Air Shield ",

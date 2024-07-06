@@ -7,7 +7,14 @@ import dev.saperate.elementals.entities.water.WaterArcEntity;
 import dev.saperate.elementals.entities.water.WaterCubeEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
+import net.minecraft.potion.Potion;
+import net.minecraft.potion.PotionUtil;
+import net.minecraft.potion.Potions;
 import org.joml.Vector3f;
+
+import static dev.saperate.elementals.utils.SapsUtils.getEntityLookVector;
 
 public class AbilityWaterArc implements Ability {
     @Override
@@ -62,6 +69,25 @@ public class AbilityWaterArc implements Ability {
 
     @Override
     public void onRightClick(Bender bender, boolean started) {
+        PlayerEntity player = bender.player;
+        boolean storedWater = player.getInventory().containsAny((stack) -> {
+            if (PotionUtil.getPotion(stack).equals(Potions.EMPTY)) {
+                player.getInventory().removeOne(stack);
+                player.getInventory().insertStack(PotionUtil.setPotion(Items.POTION.getDefaultStack(), Potions.WATER));
+                return true;
+            }
+            return false;
+        });
+
+        if (storedWater) {
+            WaterArcEntity entity = (WaterArcEntity) bender.abilityData;
+            if (entity == null) {
+                return;
+            }
+            entity.remove();
+            bender.setCurrAbility(null);
+            return;
+        }
         onRemove(bender);
     }
 
@@ -72,12 +98,12 @@ public class AbilityWaterArc implements Ability {
 
     @Override
     public void onRemove(Bender bender) {
+        bender.setCurrAbility(null);
         WaterArcEntity entity = (WaterArcEntity) bender.abilityData;
         if (entity == null) {
             return;
         }
         entity.setControlled(false);
-        bender.setCurrAbility(null);
     }
 
 }

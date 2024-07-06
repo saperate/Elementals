@@ -119,4 +119,9 @@ public class FireBallEntity extends AbstractElementalsEntity<PlayerEntity> {
     public void setIsBlue(boolean val) {
         this.getDataTracker().set(IS_BLUE, val);
     }
+
+    @Override
+    public float touchGroundFrictionMultiplier() {
+        return -1;
+    }
 }

@@ -28,15 +28,7 @@ public class BendingCommand {
 
     public static void register(CommandDispatcher<ServerCommandSource> dispatcher, CommandRegistryAccess commandRegistryAccess, CommandManager.RegistrationEnvironment registrationEnvironment) {
         dispatcher.register(CommandManager.literal("bending")
-                        .then(CommandManager.literal("get").executes(BendingCommand::getSelfElement))
-                        .then(CommandManager.literal("set")
-                                .then(CommandManager.argument("element", ElementArgumentType.element())
-                                        .then(CommandManager.argument("player", EntityArgumentType.player())
-                                                .executes(BendingCommand::setElement)
-                                        )
-                                        .executes(BendingCommand::setSelfElement))
-                        ).requires(source -> source.hasPermissionLevel(2)
-                        )
+                        .then(CommandManager.literal("get").executes(BendingCommand::getSelfElement)).requires(source -> source.hasPermissionLevel(2))
                         .then(CommandManager.literal("upgrade")
                                 .then(CommandManager.literal("list").then(
                                         CommandManager.argument("player", EntityArgumentType.player()).executes(BendingCommand::listUpgrades)
@@ -61,7 +53,7 @@ public class BendingCommand {
                                                 )
                                                 .executes(BendingCommand::levelSetSelf)
                                         )
-                                ).requires(source -> source.hasPermissionLevel(2))
+                                )
                                 .then(CommandManager.literal("get").then(
                                         CommandManager.argument("player", EntityArgumentType.player()).executes(BendingCommand::levelGet)
                                 ).executes(BendingCommand::levelSelfGet))
@@ -81,7 +73,7 @@ public class BendingCommand {
                                         )
                                 //.then(CommandManager.literal("set").then()) TODO add this command
                         )
-                .then(CommandManager.literal("debug").executes(BendingCommand::debug))
+                .then(CommandManager.literal("debug").executes(BendingCommand::debug)).requires(source -> source.hasPermissionLevel(2))
 
         );
     }
@@ -102,66 +94,6 @@ public class BendingCommand {
         } else {
             context.getSource().sendFeedback((() -> Text.of("You can bend " + bender.getElement().getName().toLowerCase() + "!")), false);
         }
-        return 1;
-    }
-
-    public static int setSelfElement(CommandContext<ServerCommandSource> context) {
-        if (context.getSource().getPlayer().getWorld().isClient) {
-            return 1;
-        }
-        Bender bender = Bender.getBender(context.getSource().getPlayer());
-        PlayerData plrData = StateDataSaverAndLoader.getPlayerState(bender.player);
-        Element element = bender.getElement();
-        Element newElement = ElementArgumentType.getElement(context, "element");
-
-        if (element == newElement) {
-            context.getSource().sendFeedback((() -> Text.of(
-                    "You could already bend: " + newElement.name)
-            ), false);
-            return 1;
-        }
-
-        if(bender.hasElement(newElement)){
-            bender.setElement(newElement, true);
-        }else{
-            context.getSource().sendFeedback((() -> Text.of(
-                    "You can't bend " + newElement.name + "! (did you mean to use /bending element add?)")
-            ), false);
-            return -1;
-        }
-
-
-        plrData.boundAbilities = new Ability[4];
-        bender.bindDefaultAbilities();
-
-        context.getSource().sendFeedback((() -> Text.of(
-                bender.player.getEntityName() + " can now bend: " + newElement.name)
-        ), true);
-        return 1;
-    }
-
-    public static int setElement(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
-        PlayerEntity plr = EntityArgumentType.getPlayer(context, "player");
-        if (plr.getWorld().isClient) {
-            return 1;
-        }
-        Bender bender = Bender.getBender(plr);
-        PlayerData plrData = StateDataSaverAndLoader.getPlayerState(plr);
-        Element element = bender.getElement();
-        Element newElement = ElementArgumentType.getElement(context, "element");
-
-        if (element == newElement) {
-            return 1;
-        }
-
-        bender.setElement(newElement, true);
-
-        plrData.boundAbilities = new Ability[4];
-        bender.bindDefaultAbilities();
-
-        context.getSource().sendFeedback((() -> Text.of(
-                plr.getEntityName() + " can now bend: " + newElement.name)
-        ), true);
         return 1;
     }
 

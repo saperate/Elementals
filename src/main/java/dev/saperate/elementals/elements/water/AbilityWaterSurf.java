@@ -47,12 +47,12 @@ public class AbilityWaterSurf implements Ability {
             return;
         }
         PlayerEntity player = bender.player;
-        float power = 0.25f;
+        float power = 0.5f;
         PlayerData plrData = PlayerData.get(player);
-        if (plrData.canUseUpgrade("waterJumpRangeII")) {
-            power = 0.75f;
-        }else if (plrData.canUseUpgrade("waterJumpRangeI")) {
-            power = 0.5f;
+        if (plrData.canUseUpgrade("waterSurfSpeedI")) {
+            power = 0.85f;
+        }else if (plrData.canUseUpgrade("waterSurfSpeedII")) {
+            power = 0.65f;
         }
         serverSummonParticles((ServerWorld) player.getWorld(),
                 ParticleTypes.SPLASH, player, player.getRandom(),

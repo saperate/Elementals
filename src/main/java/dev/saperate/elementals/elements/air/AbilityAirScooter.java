@@ -24,12 +24,12 @@ public class AbilityAirScooter implements Ability {
         PlayerEntity player = bender.player;
         PlayerData plrData = PlayerData.get(player);
 
-        float speed = 0.25f;
+        float speed = 0.5f;
 
         if (plrData.canUseUpgrade("airScooterSpeedII")) {
-            speed = 0.75f;
+            speed = 0.85f;
         } else if (plrData.canUseUpgrade("airScooterSpeedI")) {
-            speed = 0.5f;
+            speed = 0.65f;
         }
 
         AirScooterEntity entity = new AirScooterEntity(player.getWorld(), player);
