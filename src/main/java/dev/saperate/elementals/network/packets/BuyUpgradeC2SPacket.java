@@ -24,7 +24,7 @@ public class BuyUpgradeC2SPacket {
             Bender bender = Bender.getBender(player);
 
             if(name.startsWith("bending")){
-                bender.setElement(Element.getElementByName(name.replace("bending", "")), true);
+                bender.addElement(Element.getElementByName(name.replace("bending", "")), true);
                 bender.bindDefaultAbilities();
                 return;
             }

@@ -204,8 +204,17 @@ public class WaterElement extends Element {
         BlockPos blockPos = entity.getBlockPos();
         return entity.getWorld().hasRain(blockPos) || entity.getWorld().hasRain(BlockPos.ofFloored((double) blockPos.getX(), entity.getBoundingBox().maxY, (double) blockPos.getZ()));
     }
-
     public static Element get() {
         return elementList.get(1);
+    }
+
+    @Override
+    public int getColor() {
+        return 0xFF40BEFF;
+    }
+
+    @Override
+    public int getAccentColor() {
+        return 0xFF0053F3;
     }
 }

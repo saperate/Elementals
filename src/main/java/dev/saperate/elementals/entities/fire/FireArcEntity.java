@@ -80,6 +80,7 @@ public class FireArcEntity extends AbstractElementalsEntity<PlayerEntity> {
 
     @Override
     public void tick() {
+        super.tick();
         if (random.nextBetween(0, 20) == 6) {
             summonParticles(this, random,
                     isBlue() ? ParticleTypes.SOUL_FIRE_FLAME : ParticleTypes.FLAME,
@@ -200,7 +201,8 @@ public class FireArcEntity extends AbstractElementalsEntity<PlayerEntity> {
 
     public FireArcEntity getParent() {
         int parentId = this.getDataTracker().get(PARENT_ID);
-        return parentId != 0 ? (FireArcEntity) this.getWorld().getEntityById(parentId) : null;
+        Entity parent = this.getWorld().getEntityById(parentId);
+        return parent instanceof FireArcEntity ? (FireArcEntity) this.getWorld().getEntityById(parentId) : null;
     }
 
     public void setParent(FireArcEntity parent) {
@@ -209,7 +211,8 @@ public class FireArcEntity extends AbstractElementalsEntity<PlayerEntity> {
 
     public FireArcEntity getChild() {
         int childId = this.getDataTracker().get(CHILD_ID);
-        return childId != 0 ? (FireArcEntity) this.getWorld().getEntityById(childId) : null;
+        Entity child = this.getWorld().getEntityById(childId);
+        return child instanceof FireArcEntity ? (FireArcEntity) this.getWorld().getEntityById(childId) : null;
     }
 
     public void setChild(FireArcEntity child) {

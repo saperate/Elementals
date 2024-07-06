@@ -124,6 +124,13 @@ public final class Upgrade {
         }
     }
 
+    public Upgrade getHead(){
+        if(parent.parent == null){//we don't want to get to the starting node, just the start
+            return this;
+        }
+        return parent.getHead();
+    }
+
     public float getPositionX(){
         return localX + mod;
     }

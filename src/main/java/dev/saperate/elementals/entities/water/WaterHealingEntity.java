@@ -135,4 +135,13 @@ public class WaterHealingEntity extends AbstractElementalsEntity<PlayerEntity> {
         return this.dataTracker.get(HEALING);
     }
 
+    @Override
+    public boolean damagesOnTouch() {
+        return true;
+    }
+
+    @Override
+    public boolean pushesEntitiesAway() {
+        return false;
+    }
 }

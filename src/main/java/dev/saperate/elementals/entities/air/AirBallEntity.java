@@ -53,6 +53,7 @@ public class AirBallEntity extends AbstractElementalsEntity<PlayerEntity> {
 
     @Override
     public void tick() {
+        super.tick();
         if (random.nextBetween(0, 40) == 6) {
             summonParticles(this, random,
                     ParticleTypes.POOF,

@@ -97,6 +97,14 @@ public abstract class Element{
         }
     }
 
+    public int getColor(){
+        return 0xFFa0e8e6;
+    }
+
+    public int getAccentColor(){
+        return 0xFF13AEA9;
+    }
+
     @Override
     public int hashCode() {
         return name.hashCode();
@@ -106,4 +114,5 @@ public abstract class Element{
     public String toString() {
         return name;
     }
+
 }

@@ -47,6 +47,7 @@ public class AirScooterEntity extends AbstractElementalsEntity<PlayerEntity> {
         setPos(x, y, z);
         setOwner(owner);
         setStepHeight(1.1f);
+        setNoGravity(false);
     }
 
     @Override
@@ -57,6 +58,7 @@ public class AirScooterEntity extends AbstractElementalsEntity<PlayerEntity> {
 
     @Override
     public void tick() {
+        super.tick();
         if (random.nextBetween(0, 40) == 6) {
             playSound(WIND_SOUND_EVENT, 1, (1.0f + (this.getWorld().random.nextFloat() - this.getWorld().random.nextFloat()) * 0.2f) * 0.7f);
         }

@@ -83,6 +83,7 @@ public class AbilityAirTornado implements Ability {
         entity.setControlled(false);
         entity.setVelocity(bender.player, bender.player.getPitch(), bender.player.getYaw(), 0, 0.2f, 0);
         entity.setVelocity(entity.getVelocity().multiply(1, 0, 1));//We can't fling tornadoes upwards
+        entity.maxLifeTime = 120;
         entity.setStepHeight(1f);
     }
 }

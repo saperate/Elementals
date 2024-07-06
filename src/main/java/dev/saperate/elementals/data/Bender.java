@@ -110,6 +110,12 @@ public class Bender {
      */
     public void setElement(int elementIndex, boolean sync) {
         plrData.activeElementIndex = elementIndex;
+        bindDefaultAbilities();
+        if(currAbility != null){
+            currAbility.onRemove(this);
+            currAbility = null;
+            abilityData = null;
+        }
 
         if (sync) {
             syncElements();
@@ -118,10 +124,11 @@ public class Bender {
 
     public void addElement(@NotNull Element element, boolean sync) {
         if (!hasElement(element)) {
+            plrData.elements.add(element);
             if(hasElement(NoneElement.get())){
                 plrData.elements.remove(NoneElement.get());
+                bindDefaultAbilities();
             }
-            plrData.elements.add(element);
         }
 
         if (sync){
@@ -135,6 +142,10 @@ public class Bender {
             if(plrData.elements.isEmpty()){
                 plrData.elements.add(NoneElement.get());
             }
+            if(plrData.activeElementIndex >= plrData.elements.size() - 1){
+                plrData.activeElementIndex -= plrData.activeElementIndex - plrData.elements.size() - 1;
+            }
+            bindDefaultAbilities();
         }
 
         if (sync) {
@@ -281,6 +292,7 @@ public class Bender {
     }
 
     public PlayerData getData(){
+        this.plrData = PlayerData.get(player);
         return PlayerData.get(player);
     }
 

@@ -53,6 +53,7 @@ public class FireBallEntity extends AbstractElementalsEntity<PlayerEntity> {
 
     @Override
     public void tick() {
+        super.tick();
         if (random.nextBetween(0, 20) == 6) {
             summonParticles(this, random,
                     isBlue() ? ParticleTypes.SOUL_FIRE_FLAME : ParticleTypes.FLAME,

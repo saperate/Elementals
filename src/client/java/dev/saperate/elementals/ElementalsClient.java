@@ -12,6 +12,7 @@ import dev.saperate.elementals.entities.models.common.DecoyPlayerModel;
 import dev.saperate.elementals.entities.models.water.WaterBladeModel;
 import dev.saperate.elementals.gui.CastTimerHudOverlay;
 import dev.saperate.elementals.gui.ChiHudOverlay;
+import dev.saperate.elementals.keys.KeyCycleBending;
 import dev.saperate.elementals.keys.abilities.KeyAbility1;
 import dev.saperate.elementals.keys.abilities.KeyAbility2;
 import dev.saperate.elementals.keys.abilities.KeyAbility3;
@@ -44,6 +45,7 @@ public class ElementalsClient implements ClientModInitializer {
 		new KeyAbility3();
 		new KeyAbility4();
 		new GuiKey();
+		new KeyCycleBending();
 
 
 		HudRenderCallback.EVENT.register(new CastTimerHudOverlay());

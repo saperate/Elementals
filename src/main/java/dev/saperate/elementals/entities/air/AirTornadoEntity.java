@@ -88,7 +88,7 @@ public class AirTornadoEntity extends AbstractElementalsEntity<PlayerEntity> {
         this.move(MovementType.SELF, this.getVelocity());
 
         if (isOnGround() && getWorld().isClient) {
-            summonParticles(this, random, new BlockStateParticleEffect(ParticleTypes.BLOCK, getWorld().getBlockState(getBlockPos().down())), 0, 3);
+            summonParticles(this, random, new BlockStateParticleEffect(ParticleTypes.BLOCK, getWorld().getBlockState(getBlockPos().down())), 0, 5);
         }
     }
 
@@ -141,4 +141,5 @@ public class AirTornadoEntity extends AbstractElementalsEntity<PlayerEntity> {
     public boolean discardsOnNullOwner() {
         return true;
     }
+
 }

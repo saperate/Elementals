@@ -121,7 +121,15 @@ public class BendingCommand {
             return 1;
         }
 
-        bender.setElement(newElement, true);
+        if(bender.hasElement(newElement)){
+            bender.setElement(newElement, true);
+        }else{
+            context.getSource().sendFeedback((() -> Text.of(
+                    "You can't bend " + newElement.name + "! (did you mean to use /bending element add?)")
+            ), false);
+            return -1;
+        }
+
 
         plrData.boundAbilities = new Ability[4];
         bender.bindDefaultAbilities();

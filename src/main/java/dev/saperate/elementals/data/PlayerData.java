@@ -21,6 +21,8 @@ import static dev.saperate.elementals.network.ModMessages.SYNC_CHI_PACKET_ID;
 
 public class PlayerData {
     public Ability[] boundAbilities = new Ability[4];
+    //the upgrades in these are incomplete, meaning that most methods in them won't work because they lack
+    //parents & children. However, they are equal to their complete counterparts so use that if you need the methods.
     public HashMap<Upgrade, Boolean> upgrades = new HashMap<>();
     public ArrayList<Element> elements = new ArrayList<>();
     public int activeElementIndex = 0;

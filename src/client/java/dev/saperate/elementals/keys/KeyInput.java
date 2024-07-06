@@ -16,8 +16,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class KeyInput {
-    private static final List<KeyInput> keyInputs = new ArrayList<>();
-    private KeyBinding keyBinding;
+    public static final List<KeyInput> keyInputs = new ArrayList<>();
+    public static final List<KeyBinding> bindings = new ArrayList<>();
+    public KeyBinding keyBinding;
     public boolean lastFrameWasHolding;
 
     public KeyInput() {
@@ -31,6 +32,7 @@ public abstract class KeyInput {
                 GLFWKey,
                 category
         ));
+        bindings.add(keyBinding);
 
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             if (keyBinding.isPressed() && !lastFrameWasHolding && !ClientBender.get().isCasting()) {

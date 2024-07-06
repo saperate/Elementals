@@ -36,6 +36,7 @@ public abstract class AbstractElementalsEntity<OwnerType extends Entity> extends
     public AbstractElementalsEntity(EntityType<?> type, World world, Class<OwnerType> ownerClass) {
         super(type, world);
         this.ownerClass = ownerClass;
+        setNoGravity(false);
     }
 
     @Override
@@ -53,6 +54,10 @@ public abstract class AbstractElementalsEntity<OwnerType extends Entity> extends
                 collidesWithGround();
             }
             return;
+        }
+
+        if(!hasNoGravity()){
+            this.move(MovementType.SELF, new Vec3d(0,-0.04f, 0));
         }
 
         if (projectileDeflectionRange() > 0) {
@@ -104,10 +109,6 @@ public abstract class AbstractElementalsEntity<OwnerType extends Entity> extends
             this.getWorld().getEntitiesByType(TypeFilter.instanceOf(PlayerEntity.class), this.getBoundingBox(), EntityPredicates.canBePushedBy(this)).forEach(this::pushAway);
         }
 
-        if(!hasNoGravity()){
-            this.setVelocity(this.getVelocity().add(0.0, -0.04, 0.0));
-        }
-
     }
 
     /**
@@ -127,6 +128,7 @@ public abstract class AbstractElementalsEntity<OwnerType extends Entity> extends
     }
 
     public void onLifeTimeEnd() {
+        discard();
     }
 
     /**
@@ -196,10 +198,12 @@ public abstract class AbstractElementalsEntity<OwnerType extends Entity> extends
 
     @Override
     public void readCustomDataFromNbt(NbtCompound nbt) {
+
     }
 
     @Override
     public void writeCustomDataToNbt(NbtCompound nbt) {
+
     }
 
     public void setControlled(boolean val) {

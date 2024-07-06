@@ -15,7 +15,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.event.GameEvent;
 
-
+//TODO add compat with blue fire overlay mod
 public class FireElement extends Element {
     public FireElement() {
         super("Fire", new Upgrade[]{
@@ -88,5 +88,15 @@ public class FireElement extends Element {
 
     public static Element get(){
         return elementList.get(2);
+    }
+
+    @Override
+    public int getColor() {
+        return 0xFFFD9A4D;
+    }
+
+    @Override
+    public int getAccentColor() {
+        return 0xFFB32616;
     }
 }

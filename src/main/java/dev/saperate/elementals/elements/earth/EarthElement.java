@@ -210,4 +210,14 @@ public class EarthElement extends Element {
             entity.damage(player.getDamageSources().playerAttack(player), 1);
         }
     }
+
+    @Override
+    public int getColor() {
+        return 0xFF77F963;
+    }
+
+    @Override
+    public int getAccentColor() {
+        return 0xFF17711B;
+    }
 }
