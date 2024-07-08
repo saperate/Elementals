@@ -143,7 +143,7 @@ public class Bender {
                 plrData.elements.add(NoneElement.get());
             }
             if(plrData.activeElementIndex >= plrData.elements.size() - 1){
-                plrData.activeElementIndex -= plrData.activeElementIndex - plrData.elements.size() - 1;
+                plrData.activeElementIndex = 0;
             }
             bindDefaultAbilities();
         }

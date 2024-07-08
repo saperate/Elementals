@@ -142,11 +142,8 @@ public class EarthElement extends Element {
 
         BlockState state = origin.getWorld().getBlockState(bHit.getBlockPos());
         if(state.isSolid()){
-            System.out.println("found solid block!");
            return bHit;
         }
-
-        System.out.println("block was not solid, getting another");
         return raycastCollidableBlocks(bHit.getPos(),end,origin);
     }
 

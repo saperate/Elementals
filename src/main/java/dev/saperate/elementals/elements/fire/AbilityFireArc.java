@@ -48,11 +48,11 @@ public class AbilityFireArc implements Ability {
         }
         PlayerData plrData = PlayerData.get(bender.player);
 
-        float speed = 0.75f;
-        if (plrData.canUseUpgrade("fireBallSpeedII")) {
-            speed = 1.25f;
-        } else if (plrData.canUseUpgrade("fireBallSpeedI")) {
-            speed = 1f;
+        float speed = 1;
+        if (plrData.canUseUpgrade("fireArcSpeedII")) {
+            speed = 2;
+        } else if (plrData.canUseUpgrade("fireArcSpeedI")) {
+            speed = 1.5f;
         }
         entity.setVelocity(bender.player, bender.player.getPitch(), bender.player.getYaw(), 0, speed, 0);
     }

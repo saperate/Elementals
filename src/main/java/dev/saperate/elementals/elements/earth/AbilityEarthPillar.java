@@ -77,7 +77,7 @@ public class AbilityEarthPillar implements Ability {
             entity.setDamage(1);
             entity.maxLifeTime = 20;
             entity.setDropOnEndOfLife(true);
-            entity.setMovementSpeed(0.3f);
+            entity.setMovementSpeed(0.5f);
 
             player.getWorld().spawnEntity(entity);
     }
