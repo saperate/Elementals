@@ -20,6 +20,9 @@ public class ModMessages {
     public static final Identifier SYNC_CHI_PACKET_ID = new Identifier(MODID,"sync_chi");
     public static final Identifier SYNC_LEVEL_PACKET_ID = new Identifier(MODID,"sync_level");
     public static final Identifier CYCLE_BENDING_PACKET_ID = new Identifier(MODID,"cycle_bending");
+    public static final Identifier GET_MOD_VERSION = new Identifier(MODID,"get_mod_version");
+    public static final Identifier SEND_MOD_VERSION = new Identifier(MODID,"send_mod_version");
+
 
     public static void registerC2SPackets(){
         ServerPlayNetworking.registerGlobalReceiver(MOUSE_PACKET_ID, MouseC2SPacket::receive);
@@ -31,6 +34,7 @@ public class ModMessages {
         ServerPlayNetworking.registerGlobalReceiver(BUY_UPGRADE_PACKET_ID, BuyUpgradeC2SPacket::receive);
         ServerPlayNetworking.registerGlobalReceiver(SYNC_LEVEL_PACKET_ID, SyncLevelC2SPacket::receive);
         ServerPlayNetworking.registerGlobalReceiver(CYCLE_BENDING_PACKET_ID, CycleBendingC2SPacket::receive);
+        ServerPlayNetworking.registerGlobalReceiver(GET_MOD_VERSION, CycleBendingC2SPacket::receive);
     }
 
 }
