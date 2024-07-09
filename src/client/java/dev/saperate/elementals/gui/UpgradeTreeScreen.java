@@ -101,23 +101,23 @@ public class UpgradeTreeScreen extends Screen {
             drawTree(root.children[0], context, oX + root.children[0].mod, oY + spacing, 1);
         }
         if (len >= 2) {
-            context.fill(oX, oY + halfSize - pathSize - 1,
+            context.fill(oX + 4, oY + halfSize - pathSize - 1,
                     oX - spacing + 2, oY + halfSize + pathSize + 1,
                     outlineColor
             );
-            context.fill(oX, oY + halfSize - pathSize,
+            context.fill(oX + 4, oY + halfSize - pathSize,
                     oX - spacing + 2, oY + halfSize + pathSize,
                     lineColor
             );
             drawMirroredTree(root.children[1], context, oX - spacing, oY + root.children[1].mod, -1);
         }
         if (len >= 3) {
-            context.fill(oX + tileSize - 2, oY + halfSize - pathSize - 1,
-                    oX + tileSize + spacing + 1, oY + halfSize + pathSize + 1,
+            context.fill(oX + tileSize - 4, oY + halfSize - pathSize - 1,
+                    oX + tileSize + spacing - 2, oY + halfSize + pathSize + 1,
                     outlineColor
             );
-            context.fill(oX + tileSize - 2, oY + halfSize - pathSize,
-                    oX + tileSize + spacing, oY + halfSize + pathSize,
+            context.fill(oX + tileSize - 4, oY + halfSize - pathSize,
+                    oX + tileSize + spacing - 2, oY + halfSize + pathSize,
                     lineColor
             );
             drawMirroredTree(root.children[2], context, oX + spacing, oY + root.children[2].mod, 1);
@@ -146,7 +146,7 @@ public class UpgradeTreeScreen extends Screen {
                     Upgrade head = entry.getKey().getHead();
                     Upgrade[] root = ClientBender.get().getElement().root.children;
                     for (int i = 0; i < root.length; i++) {
-                        if(root[i].equals(head)){
+                        if (root[i].equals(head)) {
                             keybindID = i;
                         }
                     }
@@ -195,13 +195,18 @@ public class UpgradeTreeScreen extends Screen {
             ArrayList<Text> tooltip = new ArrayList<>();
             SapsUtils.addTranslatable(tooltip, "upgrade.elementals." + upgradeName);
             SapsUtils.addTranslatableAutomaticLineBreaks(tooltip, "upgrade.elementals." + upgradeName + ".description", 5);
-            SapsUtils.addTranslatableAutomaticLineBreaks(tooltip, "upgrade.elementals." + upgradeName + ".use", 6, KeyInput.bindings.get(keybindID).getBoundKeyTranslationKey().split("key\\.keyboard\\.")[1].toUpperCase());
+
+
+
+            SapsUtils.addTranslatableAutomaticLineBreaks(tooltip, "upgrade.elementals." + upgradeName + ".use", 6, getKeyName());
+
             if (hoveredUpgrade.price > 0) {
                 SapsUtils.addTranslatableAutomaticLineBreaks(tooltip, "upgrade.elementals.price", 6, hoveredUpgrade.price);
             }
             if (hoveredUpgrade.parent.exclusive) {
                 SapsUtils.addTranslatableAutomaticLineBreaks(tooltip, "upgrade.elementals.exclusive", 5);
             }
+
             graphics.drawTooltip(this.textRenderer, tooltip, mouseX, mouseY);
         }
     }
@@ -409,5 +414,23 @@ public class UpgradeTreeScreen extends Screen {
         bufferBuilder.vertex(matrix4f, (float) x + width, (float) y, (float) z).color(red, green, blue, alpha).texture(u2, v1).next();
         BufferRenderer.drawWithGlobalProgram(bufferBuilder.end());
         RenderSystem.disableBlend();
+    }
+
+    private String getKeyName(){
+        String key = KeyInput.bindings.get(keybindID).getBoundKeyTranslationKey();
+        String raw = Text.translatable(key).getString();
+
+        //if we were able to find a translation
+        if(!raw.equals(key)){
+            return raw;
+        }
+
+        if(raw.contains("keyboard")){
+            return raw.split("\\.")[2].toUpperCase();
+        } else if (raw.contains("mouse")) {
+            return "Mouse " + raw.split("\\.")[2];
+        }else {
+            return "UNKNOWN";
+        }
     }
 }

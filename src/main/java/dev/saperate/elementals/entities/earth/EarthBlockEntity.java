@@ -168,7 +168,7 @@ public class EarthBlockEntity extends AbstractElementalsEntity<PlayerEntity> {
 
     @Override
     public void onLifeTimeEnd() {
-        if (dropOnLifeTime) {
+        if (dropsOnEndOfLife()) {
             setControlled(false);
         } else {
             discard();
@@ -274,4 +274,8 @@ public class EarthBlockEntity extends AbstractElementalsEntity<PlayerEntity> {
         getDataTracker().set(DAMAGE, dmg);
     }
 
+    @Override
+    public float collisionSensitivity() {
+        return 0.05f;
+    }
 }

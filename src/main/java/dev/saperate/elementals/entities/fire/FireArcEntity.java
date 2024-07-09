@@ -92,7 +92,7 @@ public class FireArcEntity extends AbstractElementalsEntity<PlayerEntity> {
 
         super.tick();
 
-        LivingEntity owner = getOwner();
+        PlayerEntity owner = getOwner();
         if (owner == null && isRemoved()) {
             return;
         }
@@ -133,7 +133,7 @@ public class FireArcEntity extends AbstractElementalsEntity<PlayerEntity> {
     private void moveEntity(Entity owner, Entity parent) {
 
         if (getIsControlled()) {
-            moveEntityTowardsGoal(getEntityLookVector(getOwner(), 3).add(0,0.5,0).toVector3f());
+            moveEntityTowardsGoal(getEntityLookVector(owner, 3).add(0,0.5,0).toVector3f());
         } else {
             if (parent != null) {
                 Vec3d direction = parent.getPos().subtract(getPos());

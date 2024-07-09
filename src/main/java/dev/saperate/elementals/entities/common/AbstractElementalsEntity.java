@@ -48,7 +48,7 @@ public abstract class AbstractElementalsEntity<OwnerType extends Entity> extends
                 discard();
                 return;
             }
-            this.setVelocity(this.getVelocity().add(0.0, -0.04, 0.0));
+            this.setVelocity(this.getVelocity().add(0.0, -0.02, 0.0));
             this.move(MovementType.SELF, this.getVelocity());
             if (SapsUtils.checkBlockCollision(this, 0.05f, false, true) != null) {
                 collidesWithGround();
@@ -57,7 +57,7 @@ public abstract class AbstractElementalsEntity<OwnerType extends Entity> extends
         }
 
         if(!hasNoGravity() && !getIsControlled()){
-            this.addVelocity(new Vec3d(0,-0.04f,0));
+            this.addVelocity(new Vec3d(0,-0.02f,0));
         }
 
         if (projectileDeflectionRange() > 0) {
@@ -94,7 +94,7 @@ public abstract class AbstractElementalsEntity<OwnerType extends Entity> extends
             if (hit.getType() == HitResult.Type.ENTITY) {
                 onHitEntity(((EntityHitResult) hit).getEntity());
                 return;
-            } else if (SapsUtils.checkBlockCollision(this, 0.1f, false) != null) {
+            } else if (SapsUtils.checkBlockCollision(this, collisionSensitivity(), false) != null) {
                 if (getVelocity().lengthSquared() > 0.3) {
                     setVelocity(getVelocity().add(getVelocity().multiply(touchGroundFrictionMultiplier())));
                 } else {
@@ -261,4 +261,7 @@ public abstract class AbstractElementalsEntity<OwnerType extends Entity> extends
         this.setVelocity(this.getVelocity().add(vec3d.x, shooter.isOnGround() ? 0.0 : vec3d.y, vec3d.z));
     }
 
+    public float collisionSensitivity(){
+        return 0.1f;
+    }
 }

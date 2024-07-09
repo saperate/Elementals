@@ -3,10 +3,10 @@ package dev.saperate.elementals;
 import dev.saperate.elementals.blocks.SoulFireCore;
 import dev.saperate.elementals.blocks.WaterRapid;
 import dev.saperate.elementals.commands.BendingCommand;
+import dev.saperate.elementals.commands.ElementalsCommand;
 import dev.saperate.elementals.commands.ElementArgumentType;
 import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.data.PlayerData;
-import dev.saperate.elementals.data.StateDataSaverAndLoader;
 import dev.saperate.elementals.elements.NoneElement;
 import dev.saperate.elementals.elements.air.AirElement;
 import dev.saperate.elementals.elements.earth.EarthElement;
@@ -27,8 +27,6 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.loader.api.Version;
 import net.minecraft.command.argument.serialize.ConstantArgumentSerializer;
-import net.minecraft.entity.attribute.EntityAttributeModifier;
-import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.server.MinecraftServer;
@@ -79,7 +77,6 @@ public class Elementals implements ModInitializer {
         registerCommands();
         registerC2SPackets();
 
-        CommandRegistrationCallback.EVENT.register(BendingCommand::register);
         ServerPlayConnectionEvents.JOIN.register(Elementals::onPlayReady);
         ServerPlayerEvents.AFTER_RESPAWN.register(Elementals::onPlayerRespawn);
 
@@ -99,6 +96,11 @@ public class Elementals implements ModInitializer {
     }
 
     private void registerCommands() {
+
+        CommandRegistrationCallback.EVENT.register(BendingCommand::register);
+        CommandRegistrationCallback.EVENT.register(ElementalsCommand::register);
+
+
         ArgumentTypeRegistry.registerArgumentType(
                 new Identifier(MODID, "bending"),
                 ElementArgumentType.class,

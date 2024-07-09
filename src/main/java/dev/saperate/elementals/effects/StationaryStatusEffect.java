@@ -25,6 +25,6 @@ public class StationaryStatusEffect extends StatusEffect {
 
     @Override
     public void applyUpdateEffect(LivingEntity entity, int amplifier) {
-        entity.slowMovement(Blocks.COBWEB.getDefaultState(), new Vec3d(0.00001f,1,0.00001f));
+        entity.slowMovement(Blocks.AIR.getDefaultState(), new Vec3d(0.00001f,1,0.00001f));
     }
 }
