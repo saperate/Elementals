@@ -42,6 +42,11 @@ public abstract class AbstractElementalsEntity<OwnerType extends Entity> extends
     @Override
     public void tick() {
         super.tick();
+
+        if(getVelocity().x == 0 || getVelocity().z == 0 || getVelocity().y == 0){
+            addVelocity(0.01,0.01,0.01);
+        }
+
         Entity owner = getOwner();
         if (owner == null) {
             if(discardsOnNullOwner()){

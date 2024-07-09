@@ -31,13 +31,13 @@ public class AbilityFire3 implements Ability {
     public void onLeftClick(Bender bender, boolean started) {
         if (bender.abilityData == null) {
             if (!bender.reduceChi(15)) {
-            if (bender.abilityData == null) {
-                bender.setCurrAbility(null);
-            } else {
-                onRemove(bender);
+                if (bender.abilityData == null) {
+                    bender.setCurrAbility(null);
+                } else {
+                    onRemove(bender);
+                }
+                return;
             }
-            return;
-        }
             bender.abilityData = false;
             PlayerEntity player = bender.player;
 
@@ -49,7 +49,7 @@ public class AbilityFire3 implements Ability {
                 power = 2.5f;
             }
 
-            launchEntity(player,power);
+            launchEntity(player, power);
         }
     }
 
@@ -68,9 +68,9 @@ public class AbilityFire3 implements Ability {
         PlayerEntity player = bender.player;
         int count = 1;
         if ((bender.abilityData == null || bender.abilityData.equals(true)) && player.isSprinting() && !player.isOnGround()
-        && PlayerData.get(player).canUseUpgrade("fireJet")) {
+                && PlayerData.get(player).canUseUpgrade("fireJet")) {
 
-            if(player.isSubmergedInWater()){
+            if (player.isSubmergedInWater()) {
                 onRemove(bender);
             }
 
@@ -93,13 +93,13 @@ public class AbilityFire3 implements Ability {
             player.fallDistance = 0;
 
             if (!bender.reduceChi(0.5f)) {
-            if (bender.abilityData == null) {
-                bender.setCurrAbility(null);
-            } else {
-                onRemove(bender);
+                if (bender.abilityData == null) {
+                    bender.setCurrAbility(null);
+                } else {
+                    onRemove(bender);
+                }
+                return;
             }
-            return;
-        }
             serverSummonParticles((ServerWorld) player.getWorld(),
                     PlayerData.get(player).canUseUpgrade("blueFire") ?
                             ParticleTypes.SOUL_FIRE_FLAME : ParticleTypes.FLAME, player, player.getRandom(),
@@ -113,7 +113,7 @@ public class AbilityFire3 implements Ability {
             } else if (bender.abilityData.equals(false)) {
                 bender.abilityData = player.getRootVehicle().isOnGround();
                 count = 8;
-                if(player.isSneaking()){
+                if (player.isSneaking()) {
                     //bomb jump upgrade will enable it to be canceled
                     //bender.setCurrAbility(null);
                 }

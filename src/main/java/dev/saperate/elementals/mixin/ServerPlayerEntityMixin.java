@@ -6,6 +6,7 @@ import dev.saperate.elementals.elements.air.AbilityAirShield;
 import dev.saperate.elementals.elements.earth.AbilityEarthArmor;
 import dev.saperate.elementals.elements.fire.AbilityFireShield;
 import dev.saperate.elementals.elements.water.AbilityWaterShield;
+import net.fabricmc.fabric.api.entity.FakePlayer;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.damage.DamageTypes;
 import net.minecraft.entity.player.PlayerEntity;
@@ -22,6 +23,9 @@ public abstract class ServerPlayerEntityMixin {
     @Inject(at = @At("TAIL"), method = "<init>")
     private void init(CallbackInfo info) {
         PlayerEntity player = ((PlayerEntity) (Object) this);
+        if(player instanceof FakePlayer){
+            return;
+        }
         if (Bender.getBender(player) == null) {
             new Bender(player);
         } else {

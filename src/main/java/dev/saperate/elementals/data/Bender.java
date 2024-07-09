@@ -6,6 +6,7 @@ import dev.saperate.elementals.elements.Element;
 import dev.saperate.elementals.elements.NoneElement;
 import dev.saperate.elementals.elements.water.WaterElement;
 import dev.saperate.elementals.utils.SapsUtils;
+import net.fabricmc.fabric.api.entity.FakePlayer;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.Entity;
@@ -245,11 +246,13 @@ public class Bender {
             return true;
         }
 
-        addXp(xpAddedByChi(val));
+
         float newChi = plrData.chi - val;
         if (newChi < 0) {
             return false;
         }
+
+        addXp(xpAddedByChi(val));
         plrData.chi = newChi;
         syncChi();
         return true;
