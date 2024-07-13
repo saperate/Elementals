@@ -91,7 +91,6 @@ public class AbilityWaterSuffocate implements Ability {
                 .getOwner().getPos().subtract(bender.player.getPos()).length();
 
 
-        bender.player.addStatusEffect(new StatusEffectInstance(STATIONARY_EFFECT, 1, 1, false, false, false));
         if (!bender.player.isSneaking()
                 || distance > 15) {
             onRemove(bender);

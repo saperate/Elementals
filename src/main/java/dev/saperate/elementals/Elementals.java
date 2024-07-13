@@ -78,6 +78,7 @@ public class Elementals implements ModInitializer {
         registerC2SPackets();
 
         ServerPlayConnectionEvents.JOIN.register(Elementals::onPlayReady);
+
         ServerPlayerEvents.AFTER_RESPAWN.register(Elementals::onPlayerRespawn);
 
         Registry.register(Registries.BANNER_PATTERN, "air", AIR_PATTERN);
@@ -109,7 +110,6 @@ public class Elementals implements ModInitializer {
     }
 
     public static void onPlayReady(ServerPlayNetworkHandler handler, PacketSender sender, MinecraftServer server) {
-        GetModVersionC2SPacket.send(handler.player);
         Bender.getBender(handler.player).syncElements();
     }
 

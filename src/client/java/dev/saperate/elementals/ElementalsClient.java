@@ -1,5 +1,6 @@
 package dev.saperate.elementals;
 
+import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.entities.air.*;
 import dev.saperate.elementals.entities.water.*;
 import dev.saperate.elementals.entities.common.DecoyPlayerEntityRenderer;
@@ -20,12 +21,25 @@ import dev.saperate.elementals.keys.abilities.KeyAbility4;
 import dev.saperate.elementals.keys.gui.GuiKey;
 import dev.saperate.elementals.packets.*;
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.fabricmc.fabric.api.networking.v1.PacketSender;
+import net.fabricmc.loader.api.FabricLoader;
+import net.fabricmc.loader.api.ModContainer;
+import net.fabricmc.loader.api.Version;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.render.entity.model.EntityModelLayer;
+import net.minecraft.network.PacketByteBuf;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.util.Identifier;
+
+import java.util.Optional;
 
 import static dev.saperate.elementals.Elementals.MODID;
 import static dev.saperate.elementals.entities.ElementalEntities.*;
@@ -55,7 +69,10 @@ public class ElementalsClient implements ClientModInitializer {
 		EntityModelLayerRegistry.registerModelLayer(MODEL_WATER_BLADE_LAYER, WaterBladeModel::getTexturedModelData);
 		EntityModelLayerRegistry.registerModelLayer(MODEL_DECOY_PLAYER, DecoyPlayerModel::getTexturedModelData);
 
+
+		ClientPlayConnectionEvents.JOIN.register(ElementalsClient::onClientJoin);
 	}
+
 
 	public void registerS2CPackets(){
 		ClientPlayNetworking.registerGlobalReceiver(SYNC_CURR_ABILITY_PACKET_ID, SyncCurrAbilityS2CPacket::receive);
@@ -63,7 +80,6 @@ public class ElementalsClient implements ClientModInitializer {
 		ClientPlayNetworking.registerGlobalReceiver(SYNC_UPGRADE_LIST_PACKET_ID, SyncUpgradeListS2CPacket::receive);
 		ClientPlayNetworking.registerGlobalReceiver(SYNC_CHI_PACKET_ID, SyncChiS2CPacket::receive);
 		ClientPlayNetworking.registerGlobalReceiver(SYNC_LEVEL_PACKET_ID, SyncLevelS2CPacket::receive);
-		ClientPlayNetworking.registerGlobalReceiver(SEND_MOD_VERSION,SendModVersionS2CPacket::receive);
 	}
 
 	public void registerEntityRenderers(){
@@ -98,5 +114,19 @@ public class ElementalsClient implements ClientModInitializer {
 
 		//COMMON
 		EntityRendererRegistry.register(DECOYPLAYER, (context) -> new DecoyPlayerEntityRenderer(context, true));
+	}
+
+	private static void onClientJoin(ClientPlayNetworkHandler clientPlayNetworkHandler, PacketSender packetSender, MinecraftClient client) {
+		PacketByteBuf response = PacketByteBufs.create();
+
+		Optional<ModContainer> container = FabricLoader.getInstance().getModContainer(Elementals.MODID);
+		if (container.isPresent()) {
+			Version modVersion = container.get().getMetadata().getVersion();
+			response.writeString(modVersion.toString());
+		} else {
+			response.writeString("No ModContainer found");
+		}
+
+		ClientPlayNetworking.send(GET_MOD_VERSION_PACKET_ID, response);
 	}
 }

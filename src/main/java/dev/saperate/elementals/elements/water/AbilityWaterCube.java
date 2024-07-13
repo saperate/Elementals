@@ -67,13 +67,14 @@ public class AbilityWaterCube implements Ability {
     public void onRightClick(Bender bender, boolean started) {
         PlayerEntity player = bender.player;
         boolean storedWater = player.getInventory().containsAny((stack) -> {
-            if (PotionUtil.getPotion(stack).equals(Potions.EMPTY)) {
-                player.getInventory().removeOne(stack);
+            if (stack.getItem().equals(Items.GLASS_BOTTLE)) {
+                stack.decrement(1);
                 player.getInventory().insertStack(PotionUtil.setPotion(Items.POTION.getDefaultStack(), Potions.WATER));
                 return true;
             }
             return false;
         });
+
 
         if (storedWater) {
             WaterCubeEntity entity = (WaterCubeEntity) bender.abilityData;
