@@ -2,6 +2,7 @@ package dev.saperate.elementals;
 
 import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.entities.air.*;
+import dev.saperate.elementals.entities.lightning.LightningArcEntityRenderer;
 import dev.saperate.elementals.entities.water.*;
 import dev.saperate.elementals.entities.common.DecoyPlayerEntityRenderer;
 import dev.saperate.elementals.entities.earth.EarthBlockEntityRenderer;
@@ -114,6 +115,9 @@ public class ElementalsClient implements ClientModInitializer {
 
 		//COMMON
 		EntityRendererRegistry.register(DECOYPLAYER, (context) -> new DecoyPlayerEntityRenderer(context, true));
+
+		//LIGHTNING
+		EntityRendererRegistry.register(LIGHTNINGARC, LightningArcEntityRenderer::new);
 	}
 
 	private static void onClientJoin(ClientPlayNetworkHandler clientPlayNetworkHandler, PacketSender packetSender, MinecraftClient client) {

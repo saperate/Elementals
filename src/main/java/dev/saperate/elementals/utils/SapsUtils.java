@@ -276,11 +276,17 @@ public final class SapsUtils {
     public static void serverSummonParticles(ServerWorld world, ParticleEffect type, Entity entity, Random rnd,
                                              double vX, double vY, double vZ, double speed, int count,
                                              float offsetX, float offsetY, float offsetZ, float vAmplitude) {
+        serverSummonParticles(world,type,entity.getPos(),rnd,vX,vY,vZ,speed,count,offsetX,offsetY,offsetZ,vAmplitude);
+    }
+
+    public static void serverSummonParticles(ServerWorld world, ParticleEffect type, Vec3d pos, Random rnd,
+                                             double vX, double vY, double vZ, double speed, int count,
+                                             float offsetX, float offsetY, float offsetZ, float vAmplitude) {
         for (int i = 0; i < count; i++) {
             world.spawnParticles(type,
-                    entity.getX() + rnd.nextDouble() - 0.5f + offsetX,
-                    entity.getY() + rnd.nextDouble() + 0.5f + offsetY,
-                    entity.getZ() + rnd.nextDouble() - 0.5f + offsetZ,
+                    pos.getX() + rnd.nextDouble() - 0.5f + offsetX,
+                    pos.getY() + rnd.nextDouble() + 0.5f + offsetY,
+                    pos.getZ() + rnd.nextDouble() - 0.5f + offsetZ,
                     0,
                     vX + rnd.nextDouble() * vAmplitude,
                     vY + rnd.nextDouble() * vAmplitude,
@@ -291,6 +297,7 @@ public final class SapsUtils {
 
 
     }
+
 
     public static BlockPos vec3fToBlockPos(Vector3f vec) {
         return new BlockPos(

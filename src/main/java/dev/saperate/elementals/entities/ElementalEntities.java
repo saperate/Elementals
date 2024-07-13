@@ -9,6 +9,7 @@ import dev.saperate.elementals.entities.fire.FireArcEntity;
 import dev.saperate.elementals.entities.fire.FireBallEntity;
 import dev.saperate.elementals.entities.fire.FireBlockEntity;
 import dev.saperate.elementals.entities.fire.FireShieldEntity;
+import dev.saperate.elementals.entities.lightning.LightningArcEntity;
 import dev.saperate.elementals.entities.water.*;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
@@ -135,6 +136,14 @@ public class ElementalEntities {
             FabricEntityTypeBuilder.<AirScooterEntity>create(SpawnGroup.MISC, AirScooterEntity::new)
                     .dimensions(EntityDimensions.fixed(1, 1)).build());
 
+    //LIGHTNING
+    public static final EntityType<LightningArcEntity> LIGHTNINGARC = Registry.register(
+            Registries.ENTITY_TYPE,
+            new Identifier("elementals", "lightning_arc"),
+            FabricEntityTypeBuilder.<LightningArcEntity>create(SpawnGroup.MISC, LightningArcEntity::new)
+                    .dimensions(EntityDimensions.changing(0.25f, 0.25f)).build());
+
+
     //Common
     public static final EntityType<DecoyPlayerEntity> DECOYPLAYER = Registry.register(
             Registries.ENTITY_TYPE,
@@ -144,4 +153,5 @@ public class ElementalEntities {
     public static void register() {
         FabricDefaultAttributeRegistry.register(DECOYPLAYER, DecoyPlayerEntity.createMobAttributes());
     }
+
 }

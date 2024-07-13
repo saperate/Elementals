@@ -102,10 +102,10 @@ public class AirStreamEntity extends AbstractElementalsEntity<PlayerEntity> {
 
     @Override
     public void onHitEntity(Entity entity) {
-        if (getParent() != null) {
+        if(entity == getOwner() || getParent() != null){
             return;
         }
-        PlayerEntity owner = (PlayerEntity) getOwner();
+        PlayerEntity owner = getOwner();
         PlayerData plrData = PlayerData.get(owner);
 
         float damage = 2.5f;

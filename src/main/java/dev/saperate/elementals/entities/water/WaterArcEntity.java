@@ -97,7 +97,7 @@ public class WaterArcEntity extends AbstractElementalsEntity<PlayerEntity> {
 
     @Override
     public void onHitEntity(Entity entity) {
-        if(entity == getOwner()){
+        if(entity == getOwner() || getParent() != null){
             return;
         }
         PlayerData plrData = PlayerData.get(getOwner());
