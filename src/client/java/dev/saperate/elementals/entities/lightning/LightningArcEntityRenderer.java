@@ -19,7 +19,7 @@ import static dev.saperate.elementals.entities.utils.RenderUtils.drawCube;
 
 
 public class LightningArcEntityRenderer extends EntityRenderer<LightningArcEntity> {
-    private static final Identifier fireTex = new Identifier(MODID, "block/air_block");//"block/fire_0");
+    private static final Identifier fireTex = new Identifier(MODID, "block/lightning_block");//"block/fire_0");
 
     public LightningArcEntityRenderer(EntityRendererFactory.Context context) {
         super(context);
@@ -42,9 +42,7 @@ public class LightningArcEntityRenderer extends EntityRenderer<LightningArcEntit
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
 
-        VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderLayer.getCutout());
-
-        int color = 0xFFFFFF;
+        VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderLayer.getTranslucent());
 
 
         Vec3d dir = child.getPos().subtract(entity.getPos());
@@ -56,33 +54,23 @@ public class LightningArcEntityRenderer extends EntityRenderer<LightningArcEntit
         matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees((float) Math.toDegrees(Math.atan2(dir.x, dir.z))));
         matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees((float) Math.toDegrees(Math.asin(-dir.y))));
 
+        for (int i = 1; i < 5; i++) {
+            Matrix4f nMat = new Matrix4f(mat);
+            nMat.scale((float)i / 4,(float)i / 4,(float)i / 4);
+            drawCube(vertexConsumer, matrices, 255,
+                    1,
+                    1,
+                    1,
+                    (float)(4 / i) / 4,
+                    fireTex,
+                    d * (1 / ((float)i / 4)), nMat,
+                    false,
+                    true,
+                    true
+            );
 
-        drawCube(vertexConsumer, matrices, 255,
-                (color >> 16 & 255) / 255.0f,
-                (color >> 8 & 255) / 255.0f,
-                (color & 255) / 255.0f,
-                1,
-                fireTex,
-                d, mat,
-                false,
-                true,
-                true
-        );
+        }
 
-        matrices.scale(0.8f, 0.8f, 0.8f);
-
-        int color2 = 0xfff600;
-        drawCube(vertexConsumer, matrices, 255,
-                (color2 >> 16 & 255) / 255.0f,
-                (color2 >> 8 & 255) / 255.0f,
-                (color2 & 255) / 255.0f,
-                0.5f,
-                fireTex,
-                d * 1.25f, mat,
-                false,
-                true,
-                true
-        );
 
 
         RenderSystem.disableBlend();

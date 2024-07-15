@@ -1,5 +1,7 @@
 package dev.saperate.elementals.mixin.client;
 
+import dev.saperate.elementals.data.ClientBender;
+import dev.saperate.elementals.elements.lightning.AbilityLightningBolt;
 import dev.saperate.elementals.entities.earth.EarthBlockEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.Camera;
