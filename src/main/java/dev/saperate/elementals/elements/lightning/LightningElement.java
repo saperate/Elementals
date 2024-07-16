@@ -5,17 +5,20 @@ import dev.saperate.elementals.elements.Upgrade;
 
 public class LightningElement extends Element {
     public LightningElement() {
-        super("Lightning", new Upgrade("Lightning",new Upgrade[]{
-                new Upgrade("Ability 1", new Upgrade[]{
+        super("Lightning", new Upgrade("Lightning", new Upgrade[]{
+                new Upgrade("lightningRedirection", new Upgrade[]{
+                        new Upgrade("lightningBolt", new Upgrade[]{
 
+                        }, 2)
                 }, 2)
-        },0));
+        }, 0));
 
-        addAbility(new AbilityLightning1(),true);
+        addAbility(new AbilityLightning1(), true);
         addAbility(new AbilityLightningBolt());
+        addAbility(new AbilityLightningRedirect());
     }
 
-    public static Element get(){
+    public static Element get() {
         return elementList.get(5);
     }
 }

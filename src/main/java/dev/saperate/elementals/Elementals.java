@@ -46,6 +46,7 @@ import java.util.Optional;
 import static dev.saperate.elementals.effects.DenseStatusEffect.DENSE_EFFECT;
 import static dev.saperate.elementals.effects.DrowningStatusEffect.DROWNING_EFFECT;
 import static dev.saperate.elementals.effects.SeismicSenseStatusEffect.SEISMIC_SENSE_EFFECT;
+import static dev.saperate.elementals.effects.ShockedStatusEffect.SHOCKED_EFFECT;
 import static dev.saperate.elementals.effects.SpiritProjectionStatusEffect.SPIRIT_PROJECTION_EFFECT;
 import static dev.saperate.elementals.effects.StationaryStatusEffect.STATIONARY_EFFECT;
 import static dev.saperate.elementals.misc.AirBannerPattern.AIR_PATTERN;
@@ -76,6 +77,7 @@ public class Elementals implements ModInitializer {
         Registry.register(Registries.STATUS_EFFECT, new Identifier(MODID, "drowning"), DROWNING_EFFECT);
         Registry.register(Registries.STATUS_EFFECT, new Identifier(MODID, "seismic_sense"), SEISMIC_SENSE_EFFECT);
         Registry.register(Registries.STATUS_EFFECT, new Identifier(MODID, "spirit_projection"), SPIRIT_PROJECTION_EFFECT);
+        Registry.register(Registries.STATUS_EFFECT, new Identifier(MODID, "shocked"), SHOCKED_EFFECT);
 
         registerElements();
         registerCommands();

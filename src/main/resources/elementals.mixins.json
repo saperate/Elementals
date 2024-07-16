@@ -6,6 +6,7 @@
     "ActiveTargetGoalMixin",
     "ElementalsLivingEntityAccessor",
     "FurnaceBlockEntityAccessor",
+    "LivingEntityMixin",
     "PlayerEntityMixin",
     "ServerPlayerEntityMixin"
   ],

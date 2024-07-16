@@ -10,24 +10,17 @@ public class AbilityLightning1 implements Ability {
     @Override
     public void onCall(Bender bender, long deltaT) {
         PlayerData playerData = PlayerData.get(bender.player);
-        /*
-        if(!playerData.canUseUpgrade("Ability 1")){
+
+        if(!playerData.canUseUpgrade("lightningRedirection")){
             bender.setCurrAbility(null);
             return;
-        }*/
+        }
 
-        /*
-        if (bender.player.isSneaking()) {
-            if(playerData.canUseUpgrade("airShield")){
-                AirElement.get().abilityList.get(2).onCall(bender,deltaT);
-                return;
-            } else if (playerData.canUseUpgrade("airTornado")) {
-                AirElement.get().abilityList.get(3).onCall(bender,deltaT);
-                return;
-            }
-        }*/
-
-        LightningElement.get().abilityList.get(1).onCall(bender,deltaT);
+        if (bender.player.isSneaking() && playerData.canUseUpgrade("lightningBolt") && deltaT >= 2500) {
+            LightningElement.get().abilityList.get(1).onCall(bender,deltaT);
+            return;
+        }
+        LightningElement.get().abilityList.get(2).onCall(bender,deltaT);
     }
 
     @Override
