@@ -49,6 +49,7 @@ import static dev.saperate.elementals.effects.SeismicSenseStatusEffect.SEISMIC_S
 import static dev.saperate.elementals.effects.ShockedStatusEffect.SHOCKED_EFFECT;
 import static dev.saperate.elementals.effects.SpiritProjectionStatusEffect.SPIRIT_PROJECTION_EFFECT;
 import static dev.saperate.elementals.effects.StationaryStatusEffect.STATIONARY_EFFECT;
+import static dev.saperate.elementals.effects.StunnedStatusEffect.STUNNED_EFFECT;
 import static dev.saperate.elementals.misc.AirBannerPattern.AIR_PATTERN;
 import static dev.saperate.elementals.network.ModMessages.registerC2SPackets;
 
@@ -78,6 +79,7 @@ public class Elementals implements ModInitializer {
         Registry.register(Registries.STATUS_EFFECT, new Identifier(MODID, "seismic_sense"), SEISMIC_SENSE_EFFECT);
         Registry.register(Registries.STATUS_EFFECT, new Identifier(MODID, "spirit_projection"), SPIRIT_PROJECTION_EFFECT);
         Registry.register(Registries.STATUS_EFFECT, new Identifier(MODID, "shocked"), SHOCKED_EFFECT);
+        Registry.register(Registries.STATUS_EFFECT, new Identifier(MODID, "stunned"), STUNNED_EFFECT);
 
         registerElements();
         registerCommands();
