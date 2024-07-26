@@ -10,6 +10,7 @@ import dev.saperate.elementals.entities.fire.FireBallEntity;
 import dev.saperate.elementals.entities.fire.FireBlockEntity;
 import dev.saperate.elementals.entities.fire.FireShieldEntity;
 import dev.saperate.elementals.entities.lightning.LightningArcEntity;
+import dev.saperate.elementals.entities.lightning.VoltArcEntity;
 import dev.saperate.elementals.entities.water.*;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
@@ -142,6 +143,11 @@ public class ElementalEntities {
             new Identifier("elementals", "lightning_arc"),
             FabricEntityTypeBuilder.<LightningArcEntity>create(SpawnGroup.MISC, LightningArcEntity::new)
                     .dimensions(EntityDimensions.changing(0.25f, 0.25f)).build());
+    public static final EntityType<VoltArcEntity> VOLTARC = Registry.register(
+            Registries.ENTITY_TYPE,
+            new Identifier("elementals", "volt_arc"),
+            FabricEntityTypeBuilder.<VoltArcEntity>create(SpawnGroup.MISC, VoltArcEntity::new)
+                    .dimensions(EntityDimensions.changing(0.125f, 0.125f)).build());
 
 
     //Common

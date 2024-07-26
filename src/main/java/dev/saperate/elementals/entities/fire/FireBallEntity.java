@@ -124,4 +124,5 @@ public class FireBallEntity extends AbstractElementalsEntity<PlayerEntity> {
     public float touchGroundFrictionMultiplier() {
         return -1;
     }
+
 }

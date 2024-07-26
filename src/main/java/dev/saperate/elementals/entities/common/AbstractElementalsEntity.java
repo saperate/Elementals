@@ -44,7 +44,7 @@ public abstract class AbstractElementalsEntity<OwnerType extends Entity> extends
         super.tick();
 
         if(getVelocity().x == 0 || getVelocity().z == 0 || getVelocity().y == 0){
-            addVelocity(0.01,0.01,0.01);
+            addVelocity(0.0001,0.0001,0.0001);
         }
 
         Entity owner = getOwner();

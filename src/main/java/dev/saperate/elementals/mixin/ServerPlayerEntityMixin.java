@@ -36,8 +36,6 @@ public abstract class ServerPlayerEntityMixin {
     @Inject(at = @At("HEAD"), method = "onDeath")
     private void onDeath(DamageSource damageSource, CallbackInfo ci) {
         PlayerEntity player = ((PlayerEntity) (Object) this);
-
-        System.out.println("removing armor");
         AbilityEarthArmor.removeArmorSet(player.getInventory().armor);
     }
 
@@ -46,6 +44,10 @@ public abstract class ServerPlayerEntityMixin {
         PlayerEntity player = ((PlayerEntity) (Object) this);
         if (!player.getWorld().isClient) {
             Bender bender = Bender.getBender(player);
+            if(bender == null){
+                System.err.println("bender was null and player too damage. Either something went wrong, or the player hasn't been initialized yet!");
+                return;
+            }
             if (bender.currAbility instanceof AbilityAirShield   //damage canceler
                     || bender.currAbility instanceof AbilityWaterShield
                     || bender.currAbility instanceof AbilityFireShield

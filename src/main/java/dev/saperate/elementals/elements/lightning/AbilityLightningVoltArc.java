@@ -1,37 +1,34 @@
 package dev.saperate.elementals.elements.lightning;
 
 import dev.saperate.elementals.data.Bender;
-import dev.saperate.elementals.data.PlayerData;
-import dev.saperate.elementals.effects.StationaryStatusEffect;
 import dev.saperate.elementals.elements.Ability;
-import dev.saperate.elementals.entities.fire.FireArcEntity;
 import dev.saperate.elementals.entities.lightning.LightningArcEntity;
+import dev.saperate.elementals.entities.lightning.VoltArcEntity;
 import dev.saperate.elementals.utils.SapsUtils;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LightningEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.particle.ParticleTypes;
-import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.Vec3d;
 import org.joml.Vector3f;
 
 import static dev.saperate.elementals.effects.StationaryStatusEffect.STATIONARY_EFFECT;
 import static dev.saperate.elementals.utils.SapsUtils.getEntityLookVector;
-import static dev.saperate.elementals.utils.SapsUtils.serverSummonParticles;
 
-public class AbilityLightningBolt implements Ability {
+public class AbilityLightningVoltArc implements Ability {
     @Override
     public void onCall(Bender bender, long deltaT) {
         PlayerEntity player = bender.player;
 
-        Vector3f pos = getEntityLookVector(player, 2).toVector3f();
+        Vector3f pos = getEntityLookVector(player, 1).toVector3f();
 
-        LightningArcEntity entity = new LightningArcEntity(player.getWorld(), player, pos.x, pos.y, pos.z);
+        VoltArcEntity entity = new VoltArcEntity(player.getWorld(), player, pos.x, pos.y, pos.z);
         entity.makeChild();
 
         bender.abilityData = entity;
         player.getWorld().spawnEntity(entity);
+        entity.setVelocity(0.001f, 0.001f, 0.001f);
 
 
         bender.setCurrAbility(this);
@@ -39,14 +36,7 @@ public class AbilityLightningBolt implements Ability {
 
     @Override
     public void onLeftClick(Bender bender, boolean started) {
-        LightningArcEntity e = (LightningArcEntity) bender.abilityData;
-        if(e.getTail().chainLength == LightningArcEntity.MAX_CHAIN_LENGTH){
-            Vec3d pos = SapsUtils.raycastFull(bender.player, 100,true).getPos();
-            LightningEntity lightning = new LightningEntity(EntityType.LIGHTNING_BOLT,e.getWorld());
-            lightning.setPos(pos.x,pos.y,pos.z);
-            e.getWorld().spawnEntity(lightning);
-            onRemove(bender);
-        }
+
     }
 
     @Override
@@ -61,13 +51,15 @@ public class AbilityLightningBolt implements Ability {
 
     @Override
     public void onTick(Bender bender) {
-        bender.player.addStatusEffect(new StatusEffectInstance(STATIONARY_EFFECT,20, 0, false, false, false));
+        VoltArcEntity entity = (VoltArcEntity) bender.abilityData;
+        if (entity != null && entity.age % 2 == 0){
+            entity.setVelocity(bender.player, bender.player.getPitch(), bender.player.getYaw(), 0, 4, 0);
+            entity.setControlled(false);
+            bender.setCurrAbility(null);
+        }
     }
 
     @Override
     public void onRemove(Bender bender) {
-        LightningArcEntity e = (LightningArcEntity) bender.abilityData;
-        e.remove();
-        bender.setCurrAbility(null);
     }
 }

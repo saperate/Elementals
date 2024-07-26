@@ -42,7 +42,7 @@ public class LightningArcEntityRenderer extends EntityRenderer<LightningArcEntit
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
 
-        VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderLayer.getTranslucent());
+        VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderLayer.getTranslucentMovingBlock());
 
 
         Vec3d dir = child.getPos().subtract(entity.getPos());
