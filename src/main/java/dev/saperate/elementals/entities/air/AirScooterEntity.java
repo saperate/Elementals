@@ -1,10 +1,7 @@
 package dev.saperate.elementals.entities.air;
 
 import dev.saperate.elementals.data.Bender;
-import dev.saperate.elementals.data.FireExplosion;
 import dev.saperate.elementals.entities.common.AbstractElementalsEntity;
-import dev.saperate.elementals.utils.SapsUtils;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MovementType;
@@ -12,24 +9,13 @@ import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.projectile.ProjectileUtil;
-import net.minecraft.fluid.Fluids;
-import net.minecraft.nbt.NbtCompound;
 import net.minecraft.particle.ParticleTypes;
-import net.minecraft.predicate.entity.EntityPredicates;
 import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.TypeFilter;
-import net.minecraft.util.hit.HitResult;
 import net.minecraft.world.World;
-import net.minecraft.world.explosion.Explosion;
-import org.joml.Vector3f;
 
 import static dev.saperate.elementals.Elementals.WIND_BURST_SOUND_EVENT;
 import static dev.saperate.elementals.Elementals.WIND_SOUND_EVENT;
-import static dev.saperate.elementals.entities.ElementalEntities.AIRBALL;
 import static dev.saperate.elementals.entities.ElementalEntities.AIRSCOOTER;
-import static dev.saperate.elementals.utils.SapsUtils.getEntityLookVector;
 import static dev.saperate.elementals.utils.SapsUtils.summonParticles;
 
 public class AirScooterEntity extends AbstractElementalsEntity<PlayerEntity> {

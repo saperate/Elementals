@@ -1,26 +1,18 @@
 package dev.saperate.elementals.entities.fire;
 
-import dev.saperate.elementals.data.FireExplosion;
+import dev.saperate.elementals.misc.FireExplosion;
 import dev.saperate.elementals.entities.common.AbstractElementalsEntity;
-import dev.saperate.elementals.utils.SapsUtils;
 import net.minecraft.block.AbstractFireBlock;
 import net.minecraft.entity.*;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.projectile.ProjectileEntity;
-import net.minecraft.entity.projectile.ProjectileUtil;
-import net.minecraft.nbt.NbtCompound;
 import net.minecraft.particle.ParticleTypes;
-import net.minecraft.predicate.entity.EntityPredicates;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.TypeFilter;
-import net.minecraft.util.hit.HitResult;
 import net.minecraft.world.World;
 import net.minecraft.world.explosion.Explosion;
-import org.joml.Vector3f;
 
 import static dev.saperate.elementals.entities.ElementalEntities.FIREBALL;
 import static dev.saperate.elementals.utils.SapsUtils.getEntityLookVector;

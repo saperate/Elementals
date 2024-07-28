@@ -15,8 +15,8 @@ public class AbilityLightning2 implements Ability {
             return;
         }
 */
-        if (bender.player.isSneaking() && playerData.canUseUpgrade("lightningBolt") && deltaT >= 2500 && false) {
-            //LightningElement.get().abilityList.get(1).onCall(bender,deltaT);
+        if (deltaT >= 500) {
+            LightningElement.get().abilityList.get(5).onCall(bender,deltaT);
             return;
         }
         LightningElement.get().abilityList.get(4).onCall(bender,deltaT);

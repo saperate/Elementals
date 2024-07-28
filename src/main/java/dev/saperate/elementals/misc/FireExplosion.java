@@ -1,4 +1,4 @@
-package dev.saperate.elementals.data;
+package dev.saperate.elementals.misc;
 
 import com.google.common.collect.Sets;
 import net.minecraft.block.BlockState;

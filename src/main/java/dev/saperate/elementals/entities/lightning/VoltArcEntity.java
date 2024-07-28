@@ -2,22 +2,23 @@ package dev.saperate.elementals.entities.lightning;
 
 import dev.saperate.elementals.entities.common.AbstractElementalsEntity;
 import dev.saperate.elementals.entities.fire.FireArcEntity;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LightningEntity;
-import net.minecraft.entity.MovementType;
+import net.minecraft.entity.*;
+import net.minecraft.entity.damage.DamageTypes;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
+import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 import static dev.saperate.elementals.Elementals.LIGHTNING_PARTICLE_TYPE;
+import static dev.saperate.elementals.effects.StunnedStatusEffect.STUNNED_EFFECT;
 import static dev.saperate.elementals.entities.ElementalEntities.LIGHTNINGARC;
 import static dev.saperate.elementals.entities.ElementalEntities.VOLTARC;
-import static dev.saperate.elementals.utils.SapsUtils.getEntityLookVector;
-import static dev.saperate.elementals.utils.SapsUtils.summonParticles;
+import static dev.saperate.elementals.utils.SapsUtils.*;
 
 public class VoltArcEntity extends AbstractElementalsEntity<PlayerEntity> {
 
@@ -65,16 +66,6 @@ public class VoltArcEntity extends AbstractElementalsEntity<PlayerEntity> {
     public void tick() {
         super.tick();
 
-        if (random.nextBetween(0, 20) == 6) {
-            summonParticles(this, random,
-                    LIGHTNING_PARTICLE_TYPE,
-                    0, 1, 0);
-            if (getParent() == null) {
-                //playSound(SoundEvents.BLOCK_FIRE_AMBIENT, 1, 0);
-            }
-        }
-
-        super.tick();
 
         PlayerEntity owner = getOwner();
         if (owner == null && isRemoved()) {
@@ -96,10 +87,14 @@ public class VoltArcEntity extends AbstractElementalsEntity<PlayerEntity> {
         if(entity == getOwner() || getParent() != null || entity == getOwner()){
             return;
         }
-        LightningEntity lightning = new LightningEntity(EntityType.LIGHTNING_BOLT,getWorld());
-        lightning.setPos(getX(),getY(),getZ());
-        getWorld().spawnEntity(lightning);
-        remove();
+        if(entity instanceof LivingEntity living){
+            //TODO make a custom sound
+            playSound(SoundEvents.ENTITY_LIGHTNING_BOLT_THUNDER,1,1);
+            living.addStatusEffect(new StatusEffectInstance(STUNNED_EFFECT,200, 1, false,false,true));
+            living.damage(this.getDamageSources().playerAttack(getOwner()),1);
+            remove();
+        }
+
     }
 
     private void moveEntity(Entity owner, Entity parent) {
@@ -132,7 +127,7 @@ public class VoltArcEntity extends AbstractElementalsEntity<PlayerEntity> {
         }
         summonParticles(this, random,
                 LIGHTNING_PARTICLE_TYPE,
-                0.05f, 2);
+                0.01f, 5);
     }
 
     /**

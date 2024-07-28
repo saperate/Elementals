@@ -21,7 +21,7 @@ public class AbilityLightningVoltArc implements Ability {
     public void onCall(Bender bender, long deltaT) {
         PlayerEntity player = bender.player;
 
-        Vector3f pos = getEntityLookVector(player, 1).toVector3f();
+        Vector3f pos = getEntityLookVector(player, 2.5f).toVector3f();
 
         VoltArcEntity entity = new VoltArcEntity(player.getWorld(), player, pos.x, pos.y, pos.z);
         entity.makeChild();
