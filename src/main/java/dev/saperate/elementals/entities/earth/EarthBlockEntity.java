@@ -28,6 +28,7 @@ import org.joml.Vector3f;
 
 import java.util.List;
 
+import static dev.saperate.elementals.Elementals.BENDING_GRIEFING;
 import static dev.saperate.elementals.entities.ElementalEntities.EARTHBLOCK;
 import static dev.saperate.elementals.utils.SapsUtils.getEntityLookVector;
 import static dev.saperate.elementals.utils.SapsUtils.summonParticles;
@@ -122,7 +123,7 @@ public class EarthBlockEntity extends AbstractElementalsEntity<PlayerEntity> {
 
     @Override
     public void collidesWithGround() {
-        if (!(getModelShapeId() == 1) && drops) {
+        if (!(getModelShapeId() == 1) && drops && getWorld().getGameRules().getBoolean(BENDING_GRIEFING)) {
             getWorld().setBlockState(
                     new BlockPos(
                             getBlockX(),

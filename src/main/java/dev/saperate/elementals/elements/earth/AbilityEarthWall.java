@@ -12,6 +12,8 @@ import net.minecraft.util.math.Vec3d;
 
 import java.util.LinkedList;
 
+import static dev.saperate.elementals.Elementals.BENDING_GRIEFING;
+
 public class AbilityEarthWall implements Ability {
     @Override
     public void onCall(Bender bender, long deltaT) {
@@ -69,7 +71,10 @@ public class AbilityEarthWall implements Ability {
             if(!EarthElement.isBlockBendable(state)){
                 return;
             }
-            player.getWorld().setBlockState(bPos, Blocks.AIR.getDefaultState());
+            if(player.getWorld().getGameRules().getBoolean(BENDING_GRIEFING)){
+                player.getWorld().setBlockState(bPos, Blocks.AIR.getDefaultState());
+            }
+
 
             EarthBlockEntity entity = new EarthBlockEntity(player.getWorld(), player, startPos.getX() + 0.5f, startPos.getY() - y, startPos.getZ() + 0.5f);
             entity.setBlockState(state);

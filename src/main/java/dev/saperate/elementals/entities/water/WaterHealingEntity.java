@@ -48,7 +48,7 @@ public class WaterHealingEntity extends AbstractElementalsEntity<PlayerEntity> {
     @Override
     protected void initDataTracker() {
         super.initDataTracker();
-        this.getDataTracker().startTracking(HEALING, 2f);
+        this.getDataTracker().startTracking(HEALING, 1f);
     }
 
     @Override
@@ -85,7 +85,7 @@ public class WaterHealingEntity extends AbstractElementalsEntity<PlayerEntity> {
 
     public void healTarget(Entity entity) {
         if (entity instanceof LivingEntity living) {
-            living.setHealth(living.getHealth() + getHealing());
+            living.setHealth(living.getHealth() + (getHealing() * (entity.equals(getOwner()) ? 0.5f : 1)));
         }
     }
 

@@ -66,10 +66,17 @@ public class BendingCommand {
                         )
                         .then(CommandManager.literal("element")
                                         .then(CommandManager.literal("add").then(
-                                                CommandManager.argument("element", ElementArgumentType.element()).executes(BendingCommand::addElement))
+                                                CommandManager.argument("element", ElementArgumentType.element())
+                                                        .then(CommandManager.argument("player", EntityArgumentType.player())
+                                                                .executes(BendingCommand::addElement))
+                                                        .executes(BendingCommand::addSelfElement))
+
                                         )
                                         .then(CommandManager.literal("remove").then(
-                                                CommandManager.argument("element", ElementArgumentType.element()).executes(BendingCommand::removeElement))
+                                                CommandManager.argument("element", ElementArgumentType.element())
+                                                        .then(CommandManager.argument("player", EntityArgumentType.player())
+                                                                .executes(BendingCommand::removeElement))
+                                                        .executes(BendingCommand::removeSelfElement))
                                         )
                                 //.then(CommandManager.literal("set").then()) TODO add this command
                         )
@@ -97,7 +104,7 @@ public class BendingCommand {
         return 1;
     }
 
-    public static int addElement(CommandContext<ServerCommandSource> context) {
+    public static int addSelfElement(CommandContext<ServerCommandSource> context) {
         if (context.getSource().getPlayer().getWorld().isClient) {
             return 1;
         }
@@ -119,11 +126,56 @@ public class BendingCommand {
         return 1;
     }
 
-    public static int removeElement(CommandContext<ServerCommandSource> context) {
+    public static int addElement(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
+        if (EntityArgumentType.getPlayer(context, "player").getWorld().isClient) {
+            return 1;
+        }
+        Bender bender = Bender.getBender(EntityArgumentType.getPlayer(context, "player"));
+        Element element = ElementArgumentType.getElement(context, "element");
+
+        if (bender.hasElement(element)) {
+            context.getSource().sendFeedback((() -> Text.of(
+                    "You could already bend: " + element.name)
+            ), false);
+            return 1;
+        }
+
+        bender.addElement(element, true);
+
+        context.getSource().sendFeedback((() -> Text.of(
+                bender.player.getEntityName() + " can now bend: " + element.name)
+        ), true);
+        return 1;
+    }
+
+    public static int removeSelfElement(CommandContext<ServerCommandSource> context) {
         if (context.getSource().getPlayer().getWorld().isClient) {
             return 1;
         }
         Bender bender = Bender.getBender(context.getSource().getPlayer());
+        Element element = ElementArgumentType.getElement(context, "element");
+
+        if (!bender.hasElement(element)) {
+            context.getSource().sendFeedback((() -> Text.of(
+                    "You couldn't bend: " + element.name)
+            ), false);
+            return 1;
+        }
+
+        bender.removeElement(element, true);
+
+        context.getSource().sendFeedback((() -> Text.of(
+                bender.player.getEntityName() + " can no longer bend: " + element.name)
+        ), true);
+        return 1;
+    }
+
+
+    public static int removeElement(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
+        if (EntityArgumentType.getPlayer(context, "player").getWorld().isClient) {
+            return 1;
+        }
+        Bender bender = Bender.getBender(EntityArgumentType.getPlayer(context, "player"));
         Element element = ElementArgumentType.getElement(context, "element");
 
         if (!bender.hasElement(element)) {

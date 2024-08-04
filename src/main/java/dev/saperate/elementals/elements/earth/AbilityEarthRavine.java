@@ -17,11 +17,16 @@ import net.minecraft.world.World;
 import java.util.ArrayList;
 import java.util.List;
 
+import static dev.saperate.elementals.Elementals.BENDING_GRIEFING;
 import static dev.saperate.elementals.elements.earth.EarthElement.makeHole;
 
 public class AbilityEarthRavine implements Ability {
     @Override
     public void onCall(Bender bender, long deltaT) {
+        if(bender.player.getWorld().getGameRules().getBoolean(BENDING_GRIEFING)){
+            bender.setCurrAbility(null);
+            return;
+        }
         if (!bender.reduceChi(15)) {
             if (bender.abilityData == null) {
                 bender.setCurrAbility(null);

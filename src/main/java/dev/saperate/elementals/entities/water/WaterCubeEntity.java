@@ -23,6 +23,7 @@ import org.joml.Vector3f;
 
 import java.util.List;
 
+import static dev.saperate.elementals.Elementals.BENDING_GRIEFING;
 import static dev.saperate.elementals.entities.ElementalEntities.WATERCUBE;
 import static dev.saperate.elementals.utils.SapsUtils.getEntityLookVector;
 import static dev.saperate.elementals.utils.SapsUtils.summonParticles;
@@ -79,7 +80,7 @@ public class WaterCubeEntity extends AbstractElementalsEntity<PlayerEntity> {
 
     @Override
     public void collidesWithGround() {
-        if (!getEntityWorld().getRegistryKey().equals(World.NETHER)) {
+        if (!getEntityWorld().getRegistryKey().equals(World.NETHER) && getWorld().getGameRules().getBoolean(BENDING_GRIEFING)) {
             getWorld().setBlockState(getBlockPos(), Blocks.WATER.getDefaultState());
         }
         discard();
@@ -87,8 +88,8 @@ public class WaterCubeEntity extends AbstractElementalsEntity<PlayerEntity> {
 
     @Override
     public void onHitEntity(Entity entity) {
-        entity.damage(this.getDamageSources().playerAttack((PlayerEntity) getOwner()), 2);
-        entity.addVelocity(this.getVelocity().multiply(0.8f));
+        entity.damage(this.getDamageSources().playerAttack((PlayerEntity) getOwner()), 4);
+        entity.addVelocity(this.getVelocity().multiply(1));
         discard();
     }
 

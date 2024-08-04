@@ -24,15 +24,15 @@ public class AbilityEarth4 implements Ability {
         if (bender.player.hasStatusEffect(SEISMIC_SENSE_EFFECT)) {
             bender.player.removeStatusEffect(SEISMIC_SENSE_EFFECT);
         } else {
-            bender.player.addStatusEffect(new StatusEffectInstance(SEISMIC_SENSE_EFFECT, 2400));
             if (!bender.reduceChi(15)) {
-            if (bender.abilityData == null) {
-                bender.setCurrAbility(null);
-            } else {
-                onRemove(bender);
+                if (bender.abilityData == null) {
+                    bender.setCurrAbility(null);
+                } else {
+                    onRemove(bender);
+                }
+                return;
             }
-            return;
-        }
+            bender.player.addStatusEffect(new StatusEffectInstance(SEISMIC_SENSE_EFFECT, 2400));
         }
     }
 

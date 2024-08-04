@@ -19,6 +19,7 @@ import net.minecraft.world.World;
 import java.util.ArrayList;
 import java.util.List;
 
+import static dev.saperate.elementals.Elementals.BENDING_GRIEFING;
 import static dev.saperate.elementals.entities.ElementalEntities.EARTHBLOCK;
 import static dev.saperate.elementals.misc.ElementalsCustomTags.EARTH_BENDABLE_BLOCKS;
 import static dev.saperate.elementals.utils.SapsUtils.getEntityLookVector;
@@ -115,14 +116,14 @@ public class EarthElement extends Element {
         } else if (plrData.canUseUpgrade("earthPickupRangeI")) {
             range = 10;
         }
-        BlockHitResult hit = raycastCollidableBlocks(player.getCameraPosVec(1), getEntityLookVector(player,range), player);
+        BlockHitResult hit = raycastCollidableBlocks(player.getCameraPosVec(1), getEntityLookVector(player,range), player, 0);
         if(hit == null){
             return null;
         }
 
         if (isBlockBendable(hit.getBlockPos(), player.getWorld())) {
             BlockState blockState = player.getEntityWorld().getBlockState(hit.getBlockPos());
-            if (consumeBlock) {
+            if (consumeBlock && player.getWorld().getGameRules().getBoolean(BENDING_GRIEFING)) {
                 player.getWorld().setBlockState(hit.getBlockPos(), Blocks.AIR.getDefaultState());
             }
             return new Object[]{hit.getPos(), blockState, hit.getBlockPos(), hit.getSide()};
@@ -130,13 +131,15 @@ public class EarthElement extends Element {
         return null;
     }
 
-    public static BlockHitResult raycastCollidableBlocks(Vec3d start, Vec3d end, Entity origin){
+    public static BlockHitResult raycastCollidableBlocks(Vec3d start, Vec3d end, Entity origin, int depth){
+        if(depth >= 20){
+            return null;
+        }
         BlockHitResult bHit = origin.getWorld().raycast(
                 new RaycastContext(
                         start,end, RaycastContext.ShapeType.OUTLINE, RaycastContext.FluidHandling.NONE, origin
                 ));
         if(bHit.getType().equals(HitResult.Type.MISS)){
-            System.out.println("missed");
             return null;
         }
 
@@ -144,7 +147,7 @@ public class EarthElement extends Element {
         if(state.isSolid()){
            return bHit;
         }
-        return raycastCollidableBlocks(bHit.getPos(),end,origin);
+        return raycastCollidableBlocks(bHit.getPos(),end,origin, depth + 1);
     }
 
     public static boolean isBlockBendable(BlockPos pos, World world) {
@@ -165,6 +168,9 @@ public class EarthElement extends Element {
      * @param damagedEntities  Entities that were already damaged, set to null to deal no damage
      */
     public static void makeHole(BlockPos pos, int depth, Bender bender, ArrayList<LivingEntity> damagedEntities) {
+        if(!bender.player.getWorld().getGameRules().getBoolean(BENDING_GRIEFING)){
+            return;
+        }
         for (int y = 0; y < depth; y++) {
             BlockPos bPos = pos.down(y);
             if (EarthElement.isBlockBendable(bPos, bender.player.getWorld())) {

@@ -20,6 +20,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.joml.Vector3f;
 
+import static dev.saperate.elementals.Elementals.BENDING_GRIEFING;
 import static dev.saperate.elementals.utils.SapsUtils.getEntityLookVector;
 
 public class WaterElement extends Element {
@@ -146,7 +147,7 @@ public class WaterElement extends Element {
         boolean hasEfficiency = plrData.canUseUpgrade("waterPickupEfficiencyI");
 
         if (hit.getType() == HitResult.Type.BLOCK && isBlockBendable(hit.getBlockPos(), player.getWorld(), !hasEfficiency, hasEfficiency)) {
-            if (consumeWater) {
+            if (consumeWater && player.getWorld().getGameRules().getBoolean(BENDING_GRIEFING)) {
                 if (blockState.contains(Properties.WATERLOGGED) && blockState.get(Properties.WATERLOGGED)) {
                     player.getWorld().setBlockState(hit.getBlockPos(), blockState.with(Properties.WATERLOGGED, false), 3);
                 } else if (blockState.getBlock().equals(Blocks.WATER_CAULDRON)) {
@@ -177,7 +178,7 @@ public class WaterElement extends Element {
         BlockState bState = world.getBlockState(pos);
         Block block = bState.getBlock();
 
-        if (block.equals(Blocks.WATER) ||
+        if (block.equals(Blocks.WATER) || block.equals(Blocks.KELP) ||
                 canUseDiverseBlocks && (
                         block.equals(Blocks.ICE)
                                 || block.equals(Blocks.PACKED_ICE)

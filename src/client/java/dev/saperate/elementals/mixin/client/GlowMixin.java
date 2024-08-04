@@ -27,11 +27,10 @@ public abstract class GlowMixin {
     private void render(CallbackInfoReturnable<Boolean> cir) {
         PlayerEntity player = MinecraftClient.getInstance().player;
         LivingEntity e = ((LivingEntity) (Object) this);
-
         if (safeHasStatusEffect(SEISMIC_SENSE_EFFECT, player) && e.getWorld().isClient && e.isOnGround()
                 && player.isOnGround()
                 && !player.equals(e)
-                && e.getPos().subtract(player.getPos()).length() <= 15) {
+                && e.getPos().subtract(player.getPos()).length() <= 30) {
             cir.setReturnValue(true);
         }
     }

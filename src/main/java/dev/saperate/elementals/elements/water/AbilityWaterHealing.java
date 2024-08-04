@@ -34,9 +34,9 @@ public class AbilityWaterHealing implements Ability {
 
             PlayerData plrData = PlayerData.get(player);
             if (plrData.canUseUpgrade("waterHealingEfficiencyII")) {
-                entity.setHealing(6);
-            } else if (plrData.canUseUpgrade("waterHealingEfficiencyI")) {
                 entity.setHealing(4);
+            } else if (plrData.canUseUpgrade("waterHealingEfficiencyI")) {
+                entity.setHealing(2);
             }
 
             bender.setCurrAbility(this);

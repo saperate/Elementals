@@ -35,12 +35,12 @@ public class AbilityEarthJump implements Ability {
         }
 
         PlayerData plrData = PlayerData.get(player);
-        float power = 2;
+        float power = 3;
 
         if (plrData.canUseUpgrade("earthJumpRangeII")) {
-            power = 3;
+            power = 4;
         } else if (plrData.canUseUpgrade("earthJumpRangeI")) {
-            power = 2.5f;
+            power = 3.5f;
         }
         launchEntity(player,power);
 

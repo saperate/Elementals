@@ -16,6 +16,7 @@ public class AbilityWaterJump implements Ability {
     public void onCall(Bender bender, long deltaT) {
         if (!bender.reduceChi(15)) {
             onRemove(bender);
+            return;
         }
 
         PlayerEntity player = bender.player;

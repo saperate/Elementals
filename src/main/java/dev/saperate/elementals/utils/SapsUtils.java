@@ -435,13 +435,12 @@ public final class SapsUtils {
     public static void launchEntity(Entity entity, float power) {
         Vector3f velocity = getEntityLookVector(entity, 1)
                 .subtract(entity.getEyePos())
-                .normalize().multiply(power).toVector3f();
-
+                .normalize().multiply(power, power * 0.5f, power).toVector3f();
         //returns the root vehicle or itself if there are none
         Entity vehicle = entity.getRootVehicle();
 
         vehicle.setVelocity(velocity.x,
-                velocity.y > 0 ? Math.min(velocity.y, power - 0.75f) : Math.max(velocity.y, -power + 0.75f),
+                velocity.y,
                 velocity.z);
         vehicle.velocityModified = true;
         vehicle.move(MovementType.PLAYER, vehicle.getVelocity());

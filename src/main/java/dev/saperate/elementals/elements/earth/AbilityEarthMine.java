@@ -9,6 +9,8 @@ import net.minecraft.util.math.BlockPos;
 
 import java.util.LinkedList;
 
+import static dev.saperate.elementals.Elementals.BENDING_GRIEFING;
+
 public class AbilityEarthMine implements Ability {
     @Override
     public void onCall(Bender bender, long deltaT) {
@@ -17,7 +19,7 @@ public class AbilityEarthMine implements Ability {
         //TODO make it so it consumes more chi if the block is harder to break
 
         Object[] vars = EarthElement.canBend(player, false);
-        if (vars == null) {
+        if (vars == null || !player.getWorld().getGameRules().getBoolean(BENDING_GRIEFING)) {
             bender.setCurrAbility(null);
             return;
         }
