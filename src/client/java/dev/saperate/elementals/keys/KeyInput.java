@@ -10,6 +10,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
 
 import java.util.ArrayList;
@@ -50,11 +51,15 @@ public abstract class KeyInput {
 
 
     public void onStartHolding(Identifier packetID) {
-        ClientPlayNetworking.send(packetID, PacketByteBufs.create());
+        PacketByteBuf buf = PacketByteBufs.create();
+        buf.writeBoolean(true);//isStart
+        ClientPlayNetworking.send(packetID, buf);
     }
 
     public void onEndHolding(Identifier packetID) {
-        ClientPlayNetworking.send(packetID, PacketByteBufs.create());
+        PacketByteBuf buf = PacketByteBufs.create();
+        buf.writeBoolean(false);//isStart
+        ClientPlayNetworking.send(packetID, buf);
     }
 
 }

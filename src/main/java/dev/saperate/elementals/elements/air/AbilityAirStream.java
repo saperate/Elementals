@@ -37,6 +37,9 @@ public class AbilityAirStream implements Ability {
     @Override
     public void onLeftClick(Bender bender, boolean started) {
         AirStreamEntity entity = (AirStreamEntity) bender.abilityData;
+        if(entity != null && entity.age <= 2){
+            return;
+        }
         onRemove(bender);
         if(entity == null){
             return;

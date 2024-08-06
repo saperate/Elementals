@@ -52,7 +52,7 @@ public class AbilityLightningVoltArc implements Ability {
     @Override
     public void onTick(Bender bender) {
         VoltArcEntity entity = (VoltArcEntity) bender.abilityData;
-        if (entity != null && entity.age % 2 == 0){
+        if (entity != null && entity.age >= 5){
             entity.setVelocity(bender.player, bender.player.getPitch(), bender.player.getYaw(), 0, 4, 0);
             entity.setControlled(false);
             bender.setCurrAbility(null);
@@ -61,5 +61,10 @@ public class AbilityLightningVoltArc implements Ability {
 
     @Override
     public void onRemove(Bender bender) {
+        bender.setCurrAbility(null);
+        VoltArcEntity entity = (VoltArcEntity) bender.abilityData;
+        if(entity != null){
+            entity.discard();
+        }
     }
 }

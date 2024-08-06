@@ -40,25 +40,26 @@ public class Bender {
     }
 
     public void bindAbility(Ability ability, int index) {
-        if (plrData.elements.get(plrData.activeElementIndex).contains(ability) && index >= 0 && index <= 4) {
+        if ( (plrData.elements.get(plrData.activeElementIndex).contains(ability) || ability == null )
+                && index >= 0 && index <= 4) {
             plrData.boundAbilities[index] = ability;
         }
     }
 
 
     public void clearBindings() {
-        plrData.boundAbilities = new Ability[5];
+        plrData.boundAbilities = new Ability[4];
     }
 
-    public void bend(int index) {
+    public void bend(int index, boolean isStart) {
         if (index >= 0 && index < 5 && plrData.boundAbilities[index] != null) {
-            if (castTime == null && currAbility == null) {
+            if (castTime == null && currAbility == null && isStart) {
                 castTime = System.currentTimeMillis();
                 setCurrAbility(plrData.boundAbilities[index]);
                 abilityData = null;
                 return;
             }
-            if (currAbility != null && castTime != null) {
+            if (currAbility != null && castTime != null && !isStart) {
                 currAbility.onCall(this, System.currentTimeMillis() - castTime);
                 castTime = null;
             }
@@ -216,18 +217,13 @@ public class Bender {
 
 
     public void bindDefaultAbilities() {
+        clearBindings();
+
         int abilitySize = plrData.elements.get(plrData.activeElementIndex).bindableAbilities.size();
-        if (abilitySize >= 1) {
-            bindAbility(plrData.elements.get(plrData.activeElementIndex).getBindableAbility(0), 0);
-        }
-        if (abilitySize >= 2) {
-            bindAbility(plrData.elements.get(plrData.activeElementIndex).getBindableAbility(1), 1);
-        }
-        if (abilitySize >= 3) {
-            bindAbility(plrData.elements.get(plrData.activeElementIndex).getBindableAbility(2), 2);
-        }
-        if (abilitySize >= 4) {
-            bindAbility(plrData.elements.get(plrData.activeElementIndex).getBindableAbility(3), 3);
+        for (int i = 0; i < 4; i++) {
+            if(i < abilitySize){
+                bindAbility(plrData.elements.get(plrData.activeElementIndex).getBindableAbility(i),i);
+            }
         }
     }
 

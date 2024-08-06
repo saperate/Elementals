@@ -46,8 +46,11 @@ public class AbilityWaterArc implements Ability {
 
     @Override
     public void onLeftClick(Bender bender, boolean started) {
-        onRemove(bender);
         WaterArcEntity entity = (WaterArcEntity) bender.abilityData;
+        if(entity != null && entity.age <= 2){
+            return;
+        }
+        onRemove(bender);
         if (entity == null) {
             return;
         }

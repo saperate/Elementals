@@ -42,6 +42,9 @@ public class AbilityFireArc implements Ability {
     @Override
     public void onLeftClick(Bender bender, boolean started) {
         FireArcEntity entity = (FireArcEntity) bender.abilityData;
+        if(entity != null && entity.age <= 2){
+            return;
+        }
         onRemove(bender);
         if(entity == null){
             return;
