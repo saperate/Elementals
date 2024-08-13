@@ -4,13 +4,16 @@ import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.elements.Ability;
 import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
 
+import static dev.saperate.elementals.effects.BurnoutStatusEffect.BURNOUT_EFFECT;
+import static dev.saperate.elementals.effects.OverchargedStatusEffect.OVERCHARGED_EFFECT;
 import static dev.saperate.elementals.effects.StaticAuraStatusEffect.STATIC_AURA_EFFECT;
 import static dev.saperate.elementals.utils.SapsUtils.safeHasStatusEffect;
 
 
-public class AbilityLightning2 implements Ability {
+public class AbilityLightning3 implements Ability {
     @Override
     public void onCall(Bender bender, long deltaT) {
         PlayerEntity player = bender.player;
@@ -21,21 +24,10 @@ public class AbilityLightning2 implements Ability {
             return;
         }
 */
-        if (deltaT >= 1000) {
-            LightningElement.get().abilityList.get(5).onCall(bender, deltaT);
-            return;
+        if (deltaT >= 500 && !safeHasStatusEffect(OVERCHARGED_EFFECT, player) || !safeHasStatusEffect(BURNOUT_EFFECT, player) ) {
+            player.addStatusEffect(new StatusEffectInstance(OVERCHARGED_EFFECT, 400, 0, false, false, true));
         }
-        if (player.isSneaking()) {
-            if (safeHasStatusEffect(STATIC_AURA_EFFECT, player)) {
-                player.removeStatusEffect(STATIC_AURA_EFFECT);
-            } else {
-                player.addStatusEffect(new StatusEffectInstance(STATIC_AURA_EFFECT, 400, 0, false, false, true));
-            }
-            bender.setCurrAbility(null);
-            return;
-        }
-
-        LightningElement.get().abilityList.get(4).onCall(bender, deltaT);
+        bender.setCurrAbility(null);
     }
 
     @Override

@@ -8,6 +8,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
@@ -20,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static dev.saperate.elementals.Elementals.BENDING_GRIEFING;
+import static dev.saperate.elementals.effects.StunnedStatusEffect.STUNNED_EFFECT;
 import static dev.saperate.elementals.entities.ElementalEntities.EARTHBLOCK;
 import static dev.saperate.elementals.misc.ElementalsCustomTags.EARTH_BENDABLE_BLOCKS;
 import static dev.saperate.elementals.utils.SapsUtils.getEntityLookVector;
@@ -211,6 +213,7 @@ public class EarthElement extends Element {
             }
             damagedEntities.add(entity);
             entity.damage(player.getDamageSources().playerAttack(player), 1);
+            entity.addStatusEffect(new StatusEffectInstance(STUNNED_EFFECT, 200, 1, false,false,true));
         }
     }
 

@@ -90,7 +90,7 @@ public class VoltArcEntity extends AbstractElementalsEntity<PlayerEntity> {
         if(entity instanceof LivingEntity living){
             //TODO make a custom sound
             playSound(SoundEvents.ENTITY_LIGHTNING_BOLT_THUNDER,1,1);
-            living.addStatusEffect(new StatusEffectInstance(STUNNED_EFFECT,200, 1, false,false,true));
+            living.addStatusEffect(new StatusEffectInstance(STUNNED_EFFECT,200, 0, false,false,true));
             living.damage(this.getDamageSources().playerAttack(getOwner()),1);
             remove();
         }

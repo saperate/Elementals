@@ -10,6 +10,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import static dev.saperate.elementals.effects.BurnoutStatusEffect.BURNOUT_EFFECT;
+import static dev.saperate.elementals.effects.OverchargedStatusEffect.OVERCHARGED_EFFECT;
+import static dev.saperate.elementals.utils.SapsUtils.safeHasStatusEffect;
+
 public class ClientBender {
     private static ClientBender instance;
     private ArrayList<Element> elements = new ArrayList<>();
@@ -45,7 +49,9 @@ public class ClientBender {
         }
         //We don't cap chi to 100 here since we also want to know when we last used a move
         //so when it gets higher than 100 we can use that as a countdown for when we will not display the chi counter anymore
-        chi += Bender.CHI_REGENERATION_RATE;
+        chi += Bender.CHI_REGENERATION_RATE
+                * (safeHasStatusEffect(OVERCHARGED_EFFECT, player) ? 2 : 1)
+                * (safeHasStatusEffect(BURNOUT_EFFECT, player) ? 0.5f : 1);
     }
 
 

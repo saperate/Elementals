@@ -91,7 +91,7 @@ public class StunExplosion extends Explosion {
             double aa = (1.0 - v) * (double) Explosion.getExposure(vec3d, entity);
             if (entity instanceof LivingEntity living) {
                 ab = ProtectionEnchantment.transformExplosionKnockback(living, aa);
-                living.addStatusEffect(new StatusEffectInstance(STUNNED_EFFECT,200,1,false,false,true));
+                living.addStatusEffect(new StatusEffectInstance(STUNNED_EFFECT,200,0,false,false,true));
             } else {
                 ab = aa;
             }

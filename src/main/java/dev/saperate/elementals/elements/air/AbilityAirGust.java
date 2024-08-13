@@ -119,8 +119,7 @@ public class AbilityAirGust implements Ability {
                 dir = dir.normalize();
                 float dot = -pos.normalize().toVector3f().dot(dir.toVector3f());
 
-
-                if (Math.cos(dot) <= 0.75) {
+                if (Math.cos(dot) <= 0.75 && dot >= 0) {
                     e.damage(e.getDamageSources().playerAttack(player), 2.5f);
                     e.addVelocity(dir.multiply(-0.1f));
                 }

@@ -83,7 +83,7 @@ public class WaterJetEntity extends AbstractElementalsEntity<PlayerEntity> {
                 Vec3d direction = getOwner().getEyePos().subtract(victim.getPos()).normalize().multiply(-0.075f);
                 victim.addVelocity(direction);
 
-                victim.damage(getDamageSources().inFire(), 1 * getStreamSize());
+                victim.damage(getDamageSources().playerAttack(getOwner()), 1 * getStreamSize());
 
             }
             setPosition(hit.getPos());

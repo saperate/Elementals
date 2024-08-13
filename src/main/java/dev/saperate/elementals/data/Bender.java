@@ -19,7 +19,10 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
+import static dev.saperate.elementals.effects.BurnoutStatusEffect.BURNOUT_EFFECT;
+import static dev.saperate.elementals.effects.OverchargedStatusEffect.OVERCHARGED_EFFECT;
 import static dev.saperate.elementals.network.ModMessages.*;
+import static dev.saperate.elementals.utils.SapsUtils.safeHasStatusEffect;
 
 public class Bender {
     public static final float CHI_REGENERATION_RATE = 0.1f;//this is per tick (1/20 of a second)
@@ -40,7 +43,7 @@ public class Bender {
     }
 
     public void bindAbility(Ability ability, int index) {
-        if ( (plrData.elements.get(plrData.activeElementIndex).contains(ability) || ability == null )
+        if ((plrData.elements.get(plrData.activeElementIndex).contains(ability) || ability == null)
                 && index >= 0 && index <= 4) {
             plrData.boundAbilities[index] = ability;
         }
@@ -75,7 +78,11 @@ public class Bender {
     }
 
     public void tick() {
-        plrData.chi = Math.min(100, plrData.chi + Bender.CHI_REGENERATION_RATE);
+        plrData.chi = Math.min(100,
+                plrData.chi + (Bender.CHI_REGENERATION_RATE
+                        * (safeHasStatusEffect(OVERCHARGED_EFFECT, player) ? 2 : 1)
+                        * (safeHasStatusEffect(BURNOUT_EFFECT, player) ? 0.5f : 1)
+                ));
     }
 
     public void setCurrAbility(Ability ability) {
@@ -113,7 +120,7 @@ public class Bender {
     public void setElement(int elementIndex, boolean sync) {
         plrData.activeElementIndex = elementIndex;
         bindDefaultAbilities();
-        if(currAbility != null){
+        if (currAbility != null) {
             currAbility.onRemove(this);
             currAbility = null;
             abilityData = null;
@@ -127,13 +134,13 @@ public class Bender {
     public void addElement(@NotNull Element element, boolean sync) {
         if (!hasElement(element)) {
             plrData.elements.add(element);
-            if(hasElement(NoneElement.get())){
+            if (hasElement(NoneElement.get())) {
                 plrData.elements.remove(NoneElement.get());
                 bindDefaultAbilities();
             }
         }
 
-        if (sync){
+        if (sync) {
             syncElements();
         }
     }
@@ -141,10 +148,10 @@ public class Bender {
     public void removeElement(Element element, boolean sync) {
         if (hasElement(element)) {
             plrData.elements.remove(element);
-            if(plrData.elements.isEmpty()){
+            if (plrData.elements.isEmpty()) {
                 plrData.elements.add(NoneElement.get());
             }
-            if(plrData.activeElementIndex >= plrData.elements.size() - 1){
+            if (plrData.activeElementIndex >= plrData.elements.size() - 1) {
                 plrData.activeElementIndex = 0;
             }
             bindDefaultAbilities();
@@ -167,7 +174,7 @@ public class Bender {
     }
 
     public void syncElements() {
-        if(player.getWorld().isClient || player.getServer() == null){
+        if (player.getWorld().isClient || player.getServer() == null) {
             return;
         }
         PacketByteBuf buf = PacketByteBufs.create();
@@ -221,8 +228,8 @@ public class Bender {
 
         int abilitySize = plrData.elements.get(plrData.activeElementIndex).bindableAbilities.size();
         for (int i = 0; i < 4; i++) {
-            if(i < abilitySize){
-                bindAbility(plrData.elements.get(plrData.activeElementIndex).getBindableAbility(i),i);
+            if (i < abilitySize) {
+                bindAbility(plrData.elements.get(plrData.activeElementIndex).getBindableAbility(i), i);
             }
         }
     }
@@ -290,7 +297,7 @@ public class Bender {
         return 100;
     }
 
-    public PlayerData getData(){
+    public PlayerData getData() {
         this.plrData = PlayerData.get(player);
         return PlayerData.get(player);
     }
@@ -310,7 +317,7 @@ public class Bender {
             builder.append(elements.get(i)).append(",");
         }
         builder.append(elements.get(elements.size() - 1));
-        if(BendingCommand.debug){
+        if (BendingCommand.debug) {
             System.out.println(builder);
         }
 
@@ -332,7 +339,7 @@ public class Bender {
                 elements.add(element);
             }
         }
-        if(BendingCommand.debug) {
+        if (BendingCommand.debug) {
             System.out.println(SapsUtils.elementsArrayToString(elements));
         }
         return elements;

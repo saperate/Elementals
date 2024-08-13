@@ -15,6 +15,9 @@
   "effect.elementals.spirit_projection" : "Spirit Projection",
   "effect.elementals.shocked" : "Shocked",
   "effect.elementals.stunned" : "Stunned",
+  "effect.elementals.static_aura" : "Static Aura",
+  "effect.elementals.overcharged" : "Overcharged",
+  "effect.elementals.burnout" : "Burnout",
 
   "item.elementals.earth_helmet" : "Earth Helmet",
   "item.elementals.earth_chestplate" : "Earth Chestplate",

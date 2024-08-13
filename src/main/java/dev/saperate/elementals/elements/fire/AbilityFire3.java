@@ -74,12 +74,12 @@ public class AbilityFire3 implements Ability {
                 onRemove(bender);
             }
 
-            float power = 0.45f;
+            float power = 1.35f;
             PlayerData plrData = PlayerData.get(player);
             if (plrData.canUseUpgrade("fireJetSpeedII")) {
-                power = 0.85f;
+                power = 1.65f;
             } else if (plrData.canUseUpgrade("fireJetSpeedI")) {
-                power = 0.65f;
+                power = 1.5f;
             }
 
             player.startFallFlying();

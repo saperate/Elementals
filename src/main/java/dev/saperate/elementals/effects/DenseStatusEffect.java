@@ -32,8 +32,8 @@ public class DenseStatusEffect extends StatusEffect {
 
         double currV = entity.getVelocity().y;
 
-        if (((ElementalsLivingEntityAccessor) entity).isJumping() && entity.isOnGround() && entity.isTouchingWater()) {
-            currV += 1.5f * amplifier;
+        if (((ElementalsLivingEntityAccessor) entity).isJumping() && entity.isOnGround() && entity.isSubmergedInWater()) {
+            currV += 0.8f * amplifier;
         } else {
             currV -= 0.07f * amplifier;
         }

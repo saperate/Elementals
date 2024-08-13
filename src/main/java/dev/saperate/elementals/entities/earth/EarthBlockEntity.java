@@ -277,6 +277,6 @@ public class EarthBlockEntity extends AbstractElementalsEntity<PlayerEntity> {
 
     @Override
     public float collisionSensitivity() {
-        return 0.05f;
+        return 0.01f;
     }
 }

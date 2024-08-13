@@ -4,12 +4,12 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectCategory;
 
-public class ShockedStatusEffect extends StatusEffect {
-    public static ShockedStatusEffect SHOCKED_EFFECT = new ShockedStatusEffect();
+public class StaticAuraStatusEffect extends StatusEffect {
+    public static StaticAuraStatusEffect STATIC_AURA_EFFECT = new StaticAuraStatusEffect();
 
-    public ShockedStatusEffect() {
+    public StaticAuraStatusEffect() {
         super(
-                StatusEffectCategory.HARMFUL,
+                StatusEffectCategory.BENEFICIAL,
                 0x454545);
     }
 
@@ -20,6 +20,9 @@ public class ShockedStatusEffect extends StatusEffect {
 
     @Override
     public void applyUpdateEffect(LivingEntity entity, int amplifier) {
+        if(entity.isTouchingWaterOrRain()){
+            entity.removeStatusEffect(STATIC_AURA_EFFECT);
+        }
     }
 
 }

@@ -15,7 +15,6 @@ import dev.saperate.elementals.elements.lightning.LightningElement;
 import dev.saperate.elementals.elements.water.WaterElement;
 import dev.saperate.elementals.entities.ElementalEntities;
 import dev.saperate.elementals.items.ElementalItems;
-import dev.saperate.elementals.network.packets.GetModVersionC2SPacket;
 import net.fabricmc.api.ModInitializer;
 
 
@@ -27,9 +26,6 @@ import net.fabricmc.fabric.api.gamerule.v1.GameRuleRegistry;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.particle.v1.FabricParticleTypes;
-import net.fabricmc.loader.api.FabricLoader;
-import net.fabricmc.loader.api.ModContainer;
-import net.fabricmc.loader.api.Version;
 import net.minecraft.command.argument.serialize.ConstantArgumentSerializer;
 import net.minecraft.particle.DefaultParticleType;
 import net.minecraft.registry.Registries;
@@ -38,19 +34,19 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundEvent;
-import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.GameRules;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Optional;
-
+import static dev.saperate.elementals.effects.BurnoutStatusEffect.BURNOUT_EFFECT;
 import static dev.saperate.elementals.effects.DenseStatusEffect.DENSE_EFFECT;
 import static dev.saperate.elementals.effects.DrowningStatusEffect.DROWNING_EFFECT;
+import static dev.saperate.elementals.effects.OverchargedStatusEffect.OVERCHARGED_EFFECT;
 import static dev.saperate.elementals.effects.SeismicSenseStatusEffect.SEISMIC_SENSE_EFFECT;
 import static dev.saperate.elementals.effects.ShockedStatusEffect.SHOCKED_EFFECT;
 import static dev.saperate.elementals.effects.SpiritProjectionStatusEffect.SPIRIT_PROJECTION_EFFECT;
+import static dev.saperate.elementals.effects.StaticAuraStatusEffect.STATIC_AURA_EFFECT;
 import static dev.saperate.elementals.effects.StationaryStatusEffect.STATIONARY_EFFECT;
 import static dev.saperate.elementals.effects.StunnedStatusEffect.STUNNED_EFFECT;
 import static dev.saperate.elementals.misc.AirBannerPattern.AIR_PATTERN;
@@ -86,6 +82,9 @@ public class Elementals implements ModInitializer {
         Registry.register(Registries.STATUS_EFFECT, new Identifier(MODID, "spirit_projection"), SPIRIT_PROJECTION_EFFECT);
         Registry.register(Registries.STATUS_EFFECT, new Identifier(MODID, "shocked"), SHOCKED_EFFECT);
         Registry.register(Registries.STATUS_EFFECT, new Identifier(MODID, "stunned"), STUNNED_EFFECT);
+        Registry.register(Registries.STATUS_EFFECT, new Identifier(MODID, "static_aura"), STATIC_AURA_EFFECT);
+        Registry.register(Registries.STATUS_EFFECT, new Identifier(MODID, "overcharged"), OVERCHARGED_EFFECT);
+        Registry.register(Registries.STATUS_EFFECT, new Identifier(MODID, "burnout"), BURNOUT_EFFECT);
 
         registerElements();
         registerCommands();

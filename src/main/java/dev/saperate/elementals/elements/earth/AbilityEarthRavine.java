@@ -23,7 +23,7 @@ import static dev.saperate.elementals.elements.earth.EarthElement.makeHole;
 public class AbilityEarthRavine implements Ability {
     @Override
     public void onCall(Bender bender, long deltaT) {
-        if(bender.player.getWorld().getGameRules().getBoolean(BENDING_GRIEFING)){
+        if(!bender.player.getWorld().getGameRules().getBoolean(BENDING_GRIEFING)){
             bender.setCurrAbility(null);
             return;
         }
