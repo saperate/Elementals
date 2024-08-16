@@ -4,6 +4,7 @@ import dev.saperate.elementals.armors.materials.ElementalArmorMaterial;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.minecraft.item.ArmorItem;
 import net.minecraft.item.DyeableArmorItem;
+import net.minecraft.item.FoodComponents;
 import net.minecraft.item.Item;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
@@ -31,7 +32,8 @@ public class ElementalItems {
                     .maxCount(1)));
     public static final LightningBottleItem LIGHTNING_BOTTLE_ITEM = (LightningBottleItem) registerItem("lightning_bottle",
             new LightningBottleItem(new FabricItemSettings()
-                    .maxCount(1)));
+                    .maxCount(1)
+                    .food(FoodComponents.HONEY_BOTTLE)));
 
     public static final DirtBottleItem DIRT_BOTTLE_ITEM = (DirtBottleItem) registerItem("dirt_bottle",
             new DirtBottleItem(new FabricItemSettings()
