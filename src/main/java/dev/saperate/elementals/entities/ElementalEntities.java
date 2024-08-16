@@ -4,6 +4,7 @@ package dev.saperate.elementals.entities;
 
 import dev.saperate.elementals.entities.common.DecoyPlayerEntity;
 import dev.saperate.elementals.entities.air.*;
+import dev.saperate.elementals.entities.common.DirtBottleEntity;
 import dev.saperate.elementals.entities.earth.EarthBlockEntity;
 import dev.saperate.elementals.entities.fire.FireArcEntity;
 import dev.saperate.elementals.entities.fire.FireBallEntity;
@@ -156,6 +157,12 @@ public class ElementalEntities {
             new Identifier("elementals", "decoy_player"),
             FabricEntityTypeBuilder.<DecoyPlayerEntity>create(SpawnGroup.MISC, DecoyPlayerEntity::new)
                     .dimensions(EntityDimensions.fixed(0.6f, 2)).build());
+
+    public static final EntityType<DirtBottleEntity> DIRTBOTTLEENTITY = Registry.register(
+            Registries.ENTITY_TYPE,
+            new Identifier("elementals", "dirt_bottle"),
+            FabricEntityTypeBuilder.<DirtBottleEntity>create(SpawnGroup.MISC, DirtBottleEntity::new)
+                    .dimensions(EntityDimensions.fixed(.75f, .75f)).build());
     public static void register() {
         FabricDefaultAttributeRegistry.register(DECOYPLAYER, DecoyPlayerEntity.createMobAttributes());
     }

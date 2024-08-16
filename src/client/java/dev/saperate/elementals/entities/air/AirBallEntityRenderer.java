@@ -1,10 +1,7 @@
 package dev.saperate.elementals.entities.air;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.minecraft.client.render.GameRenderer;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.VertexConsumer;
-import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.render.*;
 import net.minecraft.client.render.entity.EntityRenderer;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;
@@ -32,7 +29,6 @@ public class AirBallEntityRenderer extends EntityRenderer<AirBallEntity> {
         float rot = (float) (System.currentTimeMillis() - firstTime) / 500;
 
         matrices.push();
-
 
         RenderSystem.setShader(GameRenderer::getPositionColorProgram);
         RenderSystem.enableBlend();

@@ -1,11 +1,8 @@
 package dev.saperate.elementals.mixin.client;
 
-import dev.saperate.elementals.data.ClientBender;
-import dev.saperate.elementals.elements.lightning.AbilityLightningBolt;
 import dev.saperate.elementals.entities.earth.EarthBlockEntity;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.Camera;
-import net.minecraft.client.render.GameRenderer;
+import net.minecraft.client.render.*;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Identifier;
@@ -25,7 +22,6 @@ import static dev.saperate.elementals.utils.ClientUtils.safeHasStatusEffect;
 @Mixin(GameRenderer.class)
 public abstract class GameRendererMixin {
 
-
     @Shadow abstract void loadPostProcessor(Identifier id);
 
     @Inject(at = @At("TAIL"), method = "onCameraEntitySet")
@@ -41,6 +37,8 @@ public abstract class GameRendererMixin {
         PlayerEntity plr = MinecraftClient.getInstance().player;
         GameRenderer renderer = MinecraftClient.getInstance().gameRenderer;
 
+
+
         boolean hasStatusEffect = safeHasStatusEffect(SEISMIC_SENSE_EFFECT,plr);
         boolean customShaderEnabled = customPostProcessorEnabled(renderer,MODID + ":shaders/post/seismicsense.json");
 
@@ -49,6 +47,7 @@ public abstract class GameRendererMixin {
         }else if(!hasStatusEffect && customShaderEnabled){
             renderer.onCameraEntitySet(null);
         }
+
     }
 
     @Unique

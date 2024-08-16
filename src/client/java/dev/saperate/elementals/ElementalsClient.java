@@ -2,6 +2,7 @@ package dev.saperate.elementals;
 
 import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.entities.air.*;
+import dev.saperate.elementals.entities.common.DirtBottleEntityRenderer;
 import dev.saperate.elementals.entities.lightning.LightningArcEntityRenderer;
 import dev.saperate.elementals.entities.lightning.VoltArcEntityRenderer;
 import dev.saperate.elementals.entities.water.*;
@@ -125,6 +126,7 @@ public class ElementalsClient implements ClientModInitializer {
 
 		//COMMON
 		EntityRendererRegistry.register(DECOYPLAYER, (context) -> new DecoyPlayerEntityRenderer(context, true));
+		EntityRendererRegistry.register(DIRTBOTTLEENTITY, DirtBottleEntityRenderer::new);
 
 		//LIGHTNING
 		EntityRendererRegistry.register(LIGHTNINGARC, LightningArcEntityRenderer::new);

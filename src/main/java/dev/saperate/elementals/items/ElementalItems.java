@@ -26,6 +26,17 @@ public class ElementalItems {
     public static final EarthArmorItem EARTH_BOOTS = (EarthArmorItem) registerItem("earth_boots",
             new EarthArmorItem(ElementalArmorMaterial.EARTH, ArmorItem.Type.BOOTS, new FabricItemSettings()));
 
+    public static final FireScrollItem FIRE_SCROLL_ITEM = (FireScrollItem) registerItem("fire_scroll",
+            new FireScrollItem(new FabricItemSettings()
+                    .maxCount(1)));
+    public static final LightningBottleItem LIGHTNING_BOTTLE_ITEM = (LightningBottleItem) registerItem("lightning_bottle",
+            new LightningBottleItem(new FabricItemSettings()
+                    .maxCount(1)));
+
+    public static final DirtBottleItem DIRT_BOTTLE_ITEM = (DirtBottleItem) registerItem("dirt_bottle",
+            new DirtBottleItem(new FabricItemSettings()
+                    .maxCount(1)));
+
     private static Item registerItem(String name, Item item) {
         return Registry.register(Registries.ITEM, new Identifier(MODID,name), item);
     }
@@ -35,7 +46,5 @@ public class ElementalItems {
         EARTH_ARMOR_SET.add(EARTH_CHESTPLATE);
         EARTH_ARMOR_SET.add(EARTH_LEGGINGS);
         EARTH_ARMOR_SET.add(EARTH_BOOTS);
-
-
     }
 }

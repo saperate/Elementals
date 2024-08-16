@@ -1,0 +1,19 @@
+{
+  "display": {
+    "icon": {
+      "item": "elementals:fire_scroll"
+    },
+    "title": "Elementals",
+    "description": "The power of the four elements!",
+    "frame": "task",
+    "show_toast": false,
+    "announce_to_chat": false,
+    "hidden": true,
+    "background": "minecraft:textures/block/white_terracotta.png"
+  },
+  "criteria": {
+    "requirement": {
+      "trigger": "minecraft:tick"
+    }
+  }
+}

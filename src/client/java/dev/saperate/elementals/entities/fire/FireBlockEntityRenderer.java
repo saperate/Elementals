@@ -20,6 +20,8 @@ public class FireBlockEntityRenderer extends EntityRenderer<FireBlockEntity> {
 
     @Override
     public void render(FireBlockEntity entity, float yaw, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light) {
+
+
         matrices.push();
         matrices.translate(-0.5f, 0, -0.5f);
 

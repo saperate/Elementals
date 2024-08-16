@@ -1,6 +1,5 @@
 package dev.saperate.elementals.gui;
 
-import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.data.ClientBender;
 import dev.saperate.elementals.utils.MathHelper;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
@@ -14,6 +13,7 @@ public class ChiHudOverlay implements HudRenderCallback {
 
     @Override
     public void onHudRender(DrawContext drawContext, float tickDelta) {
+
         if (ClientBender.get().chi >= 115) {
             return;
         }
@@ -38,5 +38,7 @@ public class ChiHudOverlay implements HudRenderCallback {
 
         //TODO add config that toggles between number and bar
         //drawContext.drawCenteredTextWithShadow(client.textRenderer, String.format("%.2f", chi), x, y - 10, 0xFFFFFFFF);
+
+
     }
 }
