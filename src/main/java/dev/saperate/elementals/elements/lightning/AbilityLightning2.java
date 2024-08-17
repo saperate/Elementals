@@ -62,5 +62,4 @@ public class AbilityLightning2 implements Ability {
     public void onRemove(Bender bender) {
 
     }
-
 }

@@ -61,13 +61,19 @@ public class AbilityLightningBolt implements Ability {
 
     @Override
     public void onTick(Bender bender) {
+        if(!bender.player.isSneaking()){
+            onRemove(bender);
+        }
         bender.player.addStatusEffect(new StatusEffectInstance(STATIONARY_EFFECT,20, 0, false, false, false));
     }
 
     @Override
     public void onRemove(Bender bender) {
         LightningArcEntity e = (LightningArcEntity) bender.abilityData;
-        e.remove();
         bender.setCurrAbility(null);
+        if(e == null){
+            return;
+        }
+        e.remove();
     }
 }

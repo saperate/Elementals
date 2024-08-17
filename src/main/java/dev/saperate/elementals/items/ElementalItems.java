@@ -2,10 +2,8 @@ package dev.saperate.elementals.items;
 
 import dev.saperate.elementals.armors.materials.ElementalArmorMaterial;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
-import net.minecraft.item.ArmorItem;
-import net.minecraft.item.DyeableArmorItem;
-import net.minecraft.item.FoodComponents;
-import net.minecraft.item.Item;
+import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.item.*;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
@@ -14,8 +12,17 @@ import java.util.HashSet;
 import java.util.Set;
 
 import static dev.saperate.elementals.Elementals.MODID;
+import static dev.saperate.elementals.effects.OverchargedStatusEffect.OVERCHARGED_EFFECT;
 
 public class ElementalItems {
+
+    public static final FoodComponent LIGHTNING_BOTTLE_FOOD_COMPONENT = new FoodComponent.Builder()
+            .alwaysEdible()
+            .saturationModifier(-1.2f)
+            .hunger(-6)
+            .statusEffect(new StatusEffectInstance(OVERCHARGED_EFFECT,400,0,false,false,true), 1)
+            .build();
+
 
     public static final Set<Item> EARTH_ARMOR_SET = new HashSet<>();
     public static final EarthArmorItem EARTH_HELMET = (EarthArmorItem) registerItem("earth_helmet",
@@ -33,11 +40,14 @@ public class ElementalItems {
     public static final LightningBottleItem LIGHTNING_BOTTLE_ITEM = (LightningBottleItem) registerItem("lightning_bottle",
             new LightningBottleItem(new FabricItemSettings()
                     .maxCount(1)
-                    .food(FoodComponents.HONEY_BOTTLE)));
+                    .food(LIGHTNING_BOTTLE_FOOD_COMPONENT)
+            ));
 
     public static final DirtBottleItem DIRT_BOTTLE_ITEM = (DirtBottleItem) registerItem("dirt_bottle",
             new DirtBottleItem(new FabricItemSettings()
                     .maxCount(1)));
+
+
 
     private static Item registerItem(String name, Item item) {
         return Registry.register(Registries.ITEM, new Identifier(MODID,name), item);

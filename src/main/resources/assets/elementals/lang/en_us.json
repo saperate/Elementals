@@ -1,6 +1,10 @@
 {
   "category.elementals" : "Elementals",
 
+  "item.elementals.dirt_bottle" : "Dirt bottle",
+  "item.elementals.lightning_bottle" : "Lightning bottle",
+  "item.elementals.fire_scroll" : "Fire scroll",
+
   "key.elementals.Ability1" : "Ability 1",
   "key.elementals.Ability2" : "Ability 2",
   "key.elementals.Ability3" : "Ability 3",

@@ -20,6 +20,8 @@ public class LightningElement extends Element {
         addAbility(new AbilityLightningVoltArc());
         addAbility(new AbilityLightningEMP());
         addAbility(new AbilityLightning3(), true);
+        addAbility(new AbilityLightning4(), true);
+        addAbility(new AbilityLightningStorm());
     }
 
     public static Element get() {

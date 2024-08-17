@@ -3,24 +3,30 @@ package dev.saperate.elementals.elements.lightning;
 import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.elements.Ability;
-import dev.saperate.elementals.elements.air.AirElement;
+import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.entity.player.PlayerEntity;
+
+import static dev.saperate.elementals.effects.BurnoutStatusEffect.BURNOUT_EFFECT;
+import static dev.saperate.elementals.effects.OverchargedStatusEffect.OVERCHARGED_EFFECT;
+import static dev.saperate.elementals.utils.SapsUtils.safeHasStatusEffect;
 
 
-public class AbilityLightning1 implements Ability {
+public class AbilityLightning4 implements Ability {
     @Override
     public void onCall(Bender bender, long deltaT) {
-        PlayerData playerData = PlayerData.get(bender.player);
-
+        PlayerEntity player = bender.player;
+        PlayerData playerData = PlayerData.get(player);
+/*
         if(!playerData.canUseUpgrade("lightningRedirection")){
             bender.setCurrAbility(null);
             return;
         }
-
-        if (bender.player.isSneaking() && playerData.canUseUpgrade("lightningBolt") && deltaT >= 2500) {
-            LightningElement.get().abilityList.get(1).onCall(bender,deltaT);
+*/
+        if(deltaT >= 3000 && player.isSneaking()){
+            LightningElement.get().abilityList.get(8).onCall(bender, deltaT);
             return;
         }
-        LightningElement.get().abilityList.get(2).onCall(bender,deltaT);
+        bender.setCurrAbility(null);
     }
 
     @Override
@@ -46,11 +52,6 @@ public class AbilityLightning1 implements Ability {
     @Override
     public void onRemove(Bender bender) {
 
-    }
-
-    @Override
-    public boolean shouldImmobilizePlayer() {
-        return true;
     }
 
 }

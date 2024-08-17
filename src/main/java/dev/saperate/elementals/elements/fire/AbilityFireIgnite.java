@@ -39,7 +39,7 @@ public class AbilityFireIgnite implements Ability {
             onRemove(bender);
             return;
         }
-        
+
         if (!bender.reduceChi(5)) {
             if (bender.abilityData == null) {
                 bender.setCurrAbility(null);

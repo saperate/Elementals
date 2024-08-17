@@ -14,6 +14,11 @@ public interface Ability {
 
     void onTick(Bender bender);
 
+    default void onBackgroundTick(Bender bender, Object data){}
+    default boolean shouldImmobilizePlayer(){
+        return false;
+    }
+
     void onRemove(Bender bender);
 
 

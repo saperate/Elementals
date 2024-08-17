@@ -10,6 +10,7 @@ import net.fabricmc.fabric.api.entity.FakePlayer;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -18,9 +19,11 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 import static dev.saperate.elementals.effects.BurnoutStatusEffect.BURNOUT_EFFECT;
 import static dev.saperate.elementals.effects.OverchargedStatusEffect.OVERCHARGED_EFFECT;
+import static dev.saperate.elementals.effects.StationaryStatusEffect.STATIONARY_EFFECT;
 import static dev.saperate.elementals.network.ModMessages.*;
 import static dev.saperate.elementals.utils.SapsUtils.safeHasStatusEffect;
 
@@ -29,6 +32,8 @@ public class Bender {
     public static Map<UUID, Bender> benders = new HashMap<>();
     public PlayerEntity player;
     public PlayerData plrData;
+    public final ConcurrentHashMap<Ability, Object> backgroundAbilities = new ConcurrentHashMap<>();
+    @Nullable
     public Long castTime;
     @Nullable
     public Ability currAbility;
@@ -56,7 +61,7 @@ public class Bender {
 
     public void bend(int index, boolean isStart) {
         if (index >= 0 && index < 5 && plrData.boundAbilities[index] != null) {
-            if (castTime == null && currAbility == null && isStart) {
+            if (currAbility == null && isStart) {
                 castTime = System.currentTimeMillis();
                 setCurrAbility(plrData.boundAbilities[index]);
                 abilityData = null;
@@ -83,6 +88,12 @@ public class Bender {
                         * (safeHasStatusEffect(OVERCHARGED_EFFECT, player) ? 2 : 1)
                         * (safeHasStatusEffect(BURNOUT_EFFECT, player) ? 0.5f : 1)
                 ));
+
+        backgroundAbilities.forEach((Ability ability, Object data) -> ability.onBackgroundTick(this, data));
+
+        if(currAbility != null && currAbility.shouldImmobilizePlayer()){
+            player.addStatusEffect(new StatusEffectInstance(STATIONARY_EFFECT,1,0,false,false,true));
+        }
     }
 
     public void setCurrAbility(Ability ability) {
@@ -96,6 +107,38 @@ public class Bender {
     public void setCurrAbility(int i) {
         setCurrAbility(plrData.boundAbilities[i]);
         syncAbility(this);
+    }
+
+    /**
+     * Adds an ability to be ticked in the background, if the ability was already there, the new data overrides the old.
+     * @param ability The ability that will tick in the background
+     * @param data Any data needed for it to work or null
+     */
+    public void addBackgroundAbility(Ability ability, Object data){
+        backgroundAbilities.put(ability,data);
+    }
+
+    public void setBackgroundAbilityData(Ability ability, Object data){
+        backgroundAbilities.put(ability,data);
+    }
+
+    /**
+     * Checks if an ability is already in the background for safer use of addBackgroundAbility.
+     * @param ability The ability we want to check
+     * @return Whether the ability is already in the background or not
+     */
+    public boolean isAbilityInBackground(Ability ability){
+        return backgroundAbilities.containsKey(ability);
+    }
+
+    /**
+     * Stops an ability from being ticked in the background further
+     * @param ability The ability we want to remove
+     */
+    public void removeAbilityFromBackground(Ability ability){
+        if(isAbilityInBackground(ability)){
+            backgroundAbilities.remove(ability);
+        }
     }
 
     /**
@@ -252,7 +295,12 @@ public class Bender {
 
         float newChi = plrData.chi - val;
         if (newChi < 0) {
-            return false;
+            if(newChi >= -10){
+                newChi = 0;
+                player.addStatusEffect(new StatusEffectInstance(BURNOUT_EFFECT,200,0,false,false,true));
+            }else {
+                return false;
+            }
         }
 
         addXp(xpAddedByChi(val));
