@@ -1,7 +1,9 @@
 package dev.saperate.elementals;
 
+import dev.saperate.elementals.blocks.LitAir;
 import dev.saperate.elementals.blocks.SoulFireCore;
 import dev.saperate.elementals.blocks.WaterRapid;
+import dev.saperate.elementals.blocks.blockEntities.LitAirBlockEntity;
 import dev.saperate.elementals.commands.BendingCommand;
 import dev.saperate.elementals.commands.ElementalsCommand;
 import dev.saperate.elementals.commands.ElementArgumentType;
@@ -26,6 +28,7 @@ import net.fabricmc.fabric.api.gamerule.v1.GameRuleRegistry;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.particle.v1.FabricParticleTypes;
+import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.command.argument.serialize.ConstantArgumentSerializer;
 import net.minecraft.particle.DefaultParticleType;
 import net.minecraft.registry.Registries;
@@ -39,6 +42,7 @@ import net.minecraft.world.GameRules;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import static dev.saperate.elementals.blocks.LitAir.LIT_AIR;
 import static dev.saperate.elementals.effects.BurnoutStatusEffect.BURNOUT_EFFECT;
 import static dev.saperate.elementals.effects.DenseStatusEffect.DENSE_EFFECT;
 import static dev.saperate.elementals.effects.DrowningStatusEffect.DROWNING_EFFECT;
@@ -66,6 +70,12 @@ public class Elementals implements ModInitializer {
     public static final GameRules.Key<GameRules.BooleanRule> BENDING_GRIEFING =
             GameRuleRegistry.register("bendingGriefing", GameRules.Category.MISC, GameRuleFactory.createBooleanRule(true));
 
+    public static final BlockEntityType<LitAirBlockEntity> LIT_AIR_BLOCK_ENTITY = Registry.register(
+            Registries.BLOCK_ENTITY_TYPE,
+            new Identifier(MODID, "lit_air_block_entity"),
+            BlockEntityType.Builder.create(LitAirBlockEntity::new, LIT_AIR).build(null)
+    );
+
     @Override
     public void onInitialize() {
         LOGGER.info("Initialising the cool stuff...");
@@ -74,6 +84,7 @@ public class Elementals implements ModInitializer {
 
         SoulFireCore.registerBlock();
         WaterRapid.registerBlock();
+        LitAir.registerBlock();
 
         Registry.register(Registries.STATUS_EFFECT, new Identifier(MODID, "stationary"), STATIONARY_EFFECT);
         Registry.register(Registries.STATUS_EFFECT, new Identifier(MODID, "dense"), DENSE_EFFECT);

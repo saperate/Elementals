@@ -1,6 +1,8 @@
 package dev.saperate.elementals.mixin;
 
 import com.mojang.brigadier.ParseResults;
+import dev.saperate.elementals.blocks.LitAir;
+import dev.saperate.elementals.blocks.blockEntities.LitAirBlockEntity;
 import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.data.StateDataSaverAndLoader;
@@ -36,6 +38,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import static dev.saperate.elementals.blocks.LitAir.LIT_AIR;
 import static dev.saperate.elementals.effects.SpiritProjectionStatusEffect.SPIRIT_PROJECTION_EFFECT;
 import static dev.saperate.elementals.utils.SapsUtils.safeHasStatusEffect;
 
@@ -48,6 +51,14 @@ public abstract class PlayerEntityMixin {
     private void tick(CallbackInfo ci) {
         PlayerEntity player = ((PlayerEntity) (Object) this);
 
+        BlockPos pos = player.getBlockPos().up();
+        BlockState state = player.getWorld().getBlockState(pos);
+        if (player.age % 2 == 0 && state.getBlock().equals(LIT_AIR)
+                && player.getWorld().getBlockEntity(pos) instanceof LitAirBlockEntity litAirBlockEntity) {
+            litAirBlockEntity.resetTimer();
+        } else if (state.isAir()) {
+            player.getWorld().setBlockState(pos, LIT_AIR.getDefaultState());
+        }
 
         if (safeHasStatusEffect(SPIRIT_PROJECTION_EFFECT, player)) {
             //checks if we are inside a wall
