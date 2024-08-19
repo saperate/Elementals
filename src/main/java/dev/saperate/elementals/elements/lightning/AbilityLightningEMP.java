@@ -18,6 +18,9 @@ import static dev.saperate.elementals.utils.SapsUtils.summonParticles;
 public class AbilityLightningEMP implements Ability {
     @Override
     public void onCall(Bender bender, long deltaT) {
+        if (!bender.reduceChi(15)) {
+            return;
+        }
         bender.setCurrAbility(null);
         PlayerEntity player = bender.player;
         SapsUtils.serverSummonParticles((ServerWorld) player.getWorld(),

@@ -1,6 +1,7 @@
 package dev.saperate.elementals.elements.lightning;
 
 import dev.saperate.elementals.data.Bender;
+import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.elements.Ability;
 import dev.saperate.elementals.utils.SapsUtils;
 import net.minecraft.entity.EntityType;
@@ -13,9 +14,20 @@ import static dev.saperate.elementals.effects.ShockedStatusEffect.SHOCKED_EFFECT
 public class AbilityLightningRedirect implements Ability {
     @Override
     public void onCall(Bender bender, long deltaT) {
+        PlayerEntity player = bender.player;
         bender.setCurrAbility(null);
 
-        PlayerEntity player = bender.player;
+        float cost = 25;
+        PlayerData plrData = PlayerData.get(player);
+        if (plrData.canUseUpgrade("lightningRedirectionEfficiencyII")) {
+            cost = 10;
+        } else if (plrData.canUseUpgrade("lightningRedirectionEfficiencyI")) {
+            cost = 15;
+        }
+        if (!bender.reduceChi(cost)) {
+            return;
+        }
+
 
         if(!SapsUtils.safeHasStatusEffect(SHOCKED_EFFECT,player)){
             return;

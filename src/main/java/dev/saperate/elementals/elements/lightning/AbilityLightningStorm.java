@@ -1,6 +1,7 @@
 package dev.saperate.elementals.elements.lightning;
 
 import dev.saperate.elementals.data.Bender;
+import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.elements.Ability;
 import dev.saperate.elementals.misc.StunExplosion;
 import dev.saperate.elementals.utils.SapsUtils;
@@ -27,10 +28,10 @@ public class AbilityLightningStorm implements Ability {
     @Override
     public void onCall(Bender bender, long deltaT) {
         bender.setCurrAbility(null);
-        if (!bender.reduceChi(100)) {
+        if (bender.isAbilityInBackground(this) || !bender.player.getWorld().isSkyVisible(bender.player.getBlockPos())) {
             return;
         }
-        if (bender.isAbilityInBackground(this) || !bender.player.getWorld().isSkyVisible(bender.player.getBlockPos())) {
+        if (!bender.reduceChi(100)) {
             return;
         }
         bender.addBackgroundAbility(this, new Object[]{0, bender.player.getPos()});
@@ -59,12 +60,15 @@ public class AbilityLightningStorm implements Ability {
     @Override
     public void onBackgroundTick(Bender bender, Object data) {
         PlayerEntity player = bender.player;
+        PlayerData plrData = bender.getData();
         World world = player.getWorld();
 
         int aliveTicks = (int) ((Object[]) data)[0];
         Vec3d origin = (Vec3d) ((Object[]) data)[1];
 
-        if (aliveTicks >= 600) {
+
+
+        if (aliveTicks >= (plrData.canUseUpgrade("lightningStormDurationI") ? 600 : 300)) {
             bender.removeAbilityFromBackground(this);
             return;
         }

@@ -7,10 +7,36 @@ public class LightningElement extends Element {
     public LightningElement() {
         super("Lightning", new Upgrade("Lightning", new Upgrade[]{
                 new Upgrade("lightningRedirection", new Upgrade[]{
-                        new Upgrade("lightningBolt", new Upgrade[]{
-
+                        new Upgrade("lightningRedirectionEfficiencyI", new Upgrade[]{
+                                new Upgrade("lightningRedirectionEfficiencyII", 2),
+                                new Upgrade("lightningBolt", new Upgrade[]{
+                                        new Upgrade("lightningBoltEfficiencyI", new Upgrade[]{
+                                                new Upgrade("lightningBoltEfficiencyII", 2)
+                                        }, 2)
+                                }, 4)
                         }, 2)
-                }, 2)
+                }, 4),
+                new Upgrade("lightningVoltArc", new Upgrade[]{
+                        new Upgrade("lightningVoltArcStrengthI", new Upgrade[]{
+                                new Upgrade("lightningEMP", new Upgrade[]{
+                                        new Upgrade("lightningEMPSizeI", 2),
+                                }, 4),
+                                new Upgrade("lightningVoltArcStrengthII", 2),
+                                new Upgrade("lightningStaticAura", new Upgrade[]{
+                                        new Upgrade("lightningStaticAuraStrengthI", new Upgrade[]{
+                                                new Upgrade("lightningStaticAuraStrengthII", 2)
+                                        }, 2)
+                                }, 4)
+                        }, 2)
+                }, 4),
+                new Upgrade("lightningOvercharge", new Upgrade[]{
+                        new Upgrade("lightningOverchargeStrengthI", new Upgrade[]{
+                                new Upgrade("lightningOverchargeStrengthII", 2)
+                        }, 2)
+                }, 4),
+                new Upgrade("lightningStorm", new Upgrade[]{
+                        new Upgrade("lightningStormDurationI", 2)
+                },4)
         }, 0));
 
         addAbility(new AbilityLightning1(), true);

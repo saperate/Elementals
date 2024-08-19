@@ -189,7 +189,7 @@ public class UpgradeTreeScreen extends Screen {
         //graphics.drawCenteredTextWithShadow(this.textRenderer, bender.element.name, this.width / 2, 8, 0xFFFFFFFF);
 
         //Use this when you wanna know what the upgrade name is
-        //graphics.drawCenteredTextWithShadow(this.textRenderer, upgradeName, this.width / 2, 24, 0xFFc4c4c4);
+        graphics.drawCenteredTextWithShadow(this.textRenderer, upgradeName, this.width / 2, 24, 0xFFc4c4c4);
 
         if (!upgradeName.isEmpty()) {
             ArrayList<Text> tooltip = new ArrayList<>();
@@ -343,12 +343,12 @@ public class UpgradeTreeScreen extends Screen {
 
         //Path directly down that stops halfway to the next tile
         context.fill(
-                oX + (mult > 0 ? tileSize : 0), oY + tileSize / 2 - pathSize,
+                oX + (mult > 0 ? tileSize - 1 : 0), oY + tileSize / 2 - pathSize,
                 oX + (tileSize / 2 * mult) + (mult > 0 ? tileSize : 0), oY + tileSize / 2 + pathSize,
                 -1, lineColor
         );
         context.fill(
-                oX + (mult > 0 ? tileSize : 0), oY + tileSize / 2 - pathSize - 1,
+                oX + (mult > 0 ? tileSize - 1 : 0), oY + tileSize / 2 - pathSize - 1,
                 oX + (tileSize / 2 * mult) + (mult > 0 ? tileSize : 0) + 1, oY + tileSize / 2 + pathSize + 1,
                 -2, outlineColor
         );
@@ -372,12 +372,12 @@ public class UpgradeTreeScreen extends Screen {
             //Path directly up that stop halfway through
             context.fill(
                     oX + (mult > 0 ? spacing : -tileSize / 2), pY + tileSize / 2 - pathSize,
-                    oX + (mult > 0 ? spacing - tileSize / 2 : -tileSize) - pathSize / 2, pY + tileSize - tileSize / 2 + pathSize,
+                    oX + (mult > 0 ? spacing - tileSize / 2 : -tileSize - 1) - pathSize / 2, pY + tileSize - tileSize / 2 + pathSize,
                     -1, lineColor
             );
             context.fill(
-                    oX + (mult > 0 ? spacing : -tileSize / 2) + 2, pY + tileSize / 2 - pathSize - 1,
-                    oX + (mult > 0 ? spacing - tileSize / 2 : -tileSize) - pathSize / 2, pY + tileSize - tileSize / 2 + pathSize + 1,
+                    oX + (mult > 0 ? spacing : -tileSize / 2 ) + 2, pY + tileSize / 2 - pathSize - 1,
+                    oX + (mult > 0 ? spacing - tileSize / 2 : -tileSize - 1) - pathSize / 2, pY + tileSize - tileSize / 2 + pathSize + 1,
                     -2, outlineColor
             );
 

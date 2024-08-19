@@ -1,6 +1,7 @@
 package dev.saperate.elementals.items;
 
 import dev.saperate.elementals.armors.materials.ElementalArmorMaterial;
+import dev.saperate.elementals.items.scrolls.*;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.item.*;
@@ -34,8 +35,28 @@ public class ElementalItems {
     public static final EarthArmorItem EARTH_BOOTS = (EarthArmorItem) registerItem("earth_boots",
             new EarthArmorItem(ElementalArmorMaterial.EARTH, ArmorItem.Type.BOOTS, new FabricItemSettings()));
 
+    public static final ScrollItem SCROLL_ITEM = (ScrollItem) registerItem("scroll",
+            new ScrollItem(new FabricItemSettings()
+                    .maxCount(1)));
+
     public static final FireScrollItem FIRE_SCROLL_ITEM = (FireScrollItem) registerItem("fire_scroll",
             new FireScrollItem(new FabricItemSettings()
+                    .maxCount(1)));
+
+    public static final WaterScrollItem WATER_SCROLL_ITEM = (WaterScrollItem) registerItem("water_scroll",
+            new WaterScrollItem(new FabricItemSettings()
+                    .maxCount(1)));
+
+    public static final EarthScrollItem EARTH_SCROLL_ITEM = (EarthScrollItem) registerItem("earth_scroll",
+            new EarthScrollItem(new FabricItemSettings()
+                    .maxCount(1)));
+
+    public static final AirScrollItem AIR_SCROLL_ITEM = (AirScrollItem) registerItem("air_scroll",
+            new AirScrollItem(new FabricItemSettings()
+                    .maxCount(1)));
+
+    public static final LightningScrollItem LIGHTNING_SCROLL_ITEM = (LightningScrollItem) registerItem("lightning_scroll",
+            new LightningScrollItem(new FabricItemSettings()
                     .maxCount(1)));
     public static final LightningBottleItem LIGHTNING_BOTTLE_ITEM = (LightningBottleItem) registerItem("lightning_bottle",
             new LightningBottleItem(new FabricItemSettings()

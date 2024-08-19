@@ -1,0 +1,21 @@
+{
+  "display": {
+    "icon": {
+      "item": "elementals:earth_scroll"
+    },
+    "title": "Dirty Stuff",
+    "description": "Have the element of earth",
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true
+  },
+  "criteria": {
+    "requirement": {
+      "conditions": {
+        "element" : "earth"
+      },
+      "trigger": "minecraft:elementals/has_element"
+    }
+  },
+  "parent": "elementals:root"
+}

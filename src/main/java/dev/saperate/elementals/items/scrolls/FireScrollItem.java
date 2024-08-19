@@ -1,4 +1,4 @@
-package dev.saperate.elementals.items;
+package dev.saperate.elementals.items.scrolls;
 
 import net.minecraft.block.DispenserBlock;
 import net.minecraft.block.dispenser.DispenserBehavior;

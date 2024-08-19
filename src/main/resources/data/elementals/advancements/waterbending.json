@@ -1,0 +1,21 @@
+{
+  "display": {
+    "icon": {
+      "item": "elementals:water_scroll"
+    },
+    "title": "Wet Stuff",
+    "description": "Have the element of water",
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true
+  },
+  "criteria": {
+    "requirement": {
+      "conditions": {
+        "element" : "water"
+      },
+      "trigger": "minecraft:elementals/has_element"
+    }
+  },
+  "parent": "elementals:root"
+}

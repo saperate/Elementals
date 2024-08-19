@@ -23,7 +23,7 @@ public class AbilityWaterCube implements Ability {
 
     @Override
     public void onCall(Bender bender, long deltaT) {
-        if (!bender.reduceChi(10)) {
+        if (!bender.reduceChi(2.5f)) {
             if (bender.abilityData == null) {
                 bender.setCurrAbility(null);
             } else {

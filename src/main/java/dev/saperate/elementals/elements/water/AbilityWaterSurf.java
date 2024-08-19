@@ -38,7 +38,7 @@ public class AbilityWaterSurf implements Ability {
 
     @Override
     public void onTick(Bender bender) {
-        if (!bender.reduceChi(0.1f)) {
+        if (!bender.reduceChi(0.25f)) {
             if (bender.abilityData == null) {
                 bender.setCurrAbility(null);
             } else {
@@ -46,13 +46,18 @@ public class AbilityWaterSurf implements Ability {
             }
             return;
         }
+
+        if(bender.player.isSneaking()){
+            onRemove(bender);
+        }
+
         PlayerEntity player = bender.player;
-        float power = 0.5f;
+        float power = 1.35f;
         PlayerData plrData = PlayerData.get(player);
         if (plrData.canUseUpgrade("waterSurfSpeedI")) {
-            power = 0.85f;
+            power = 1.65f;
         }else if (plrData.canUseUpgrade("waterSurfSpeedII")) {
-            power = 0.65f;
+            power = 1.5f;
         }
         serverSummonParticles((ServerWorld) player.getWorld(),
                 ParticleTypes.SPLASH, player, player.getRandom(),

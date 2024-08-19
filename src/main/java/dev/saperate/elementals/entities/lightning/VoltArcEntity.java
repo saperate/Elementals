@@ -28,6 +28,8 @@ public class VoltArcEntity extends AbstractElementalsEntity<PlayerEntity> {
     public static final int MAX_CHAIN_LENGTH = 1;
     public int chainLength = 0;
 
+    public int duration = 200;
+
 
     public VoltArcEntity(EntityType<VoltArcEntity> type, World world) {
         super(type, world, PlayerEntity.class);
@@ -90,7 +92,7 @@ public class VoltArcEntity extends AbstractElementalsEntity<PlayerEntity> {
         if(entity instanceof LivingEntity living){
             //TODO make a custom sound
             playSound(SoundEvents.ENTITY_LIGHTNING_BOLT_THUNDER,1,1);
-            living.addStatusEffect(new StatusEffectInstance(STUNNED_EFFECT,200, 0, false,false,true));
+            living.addStatusEffect(new StatusEffectInstance(STUNNED_EFFECT,duration, 0, false,false,true));
             living.damage(this.getDamageSources().playerAttack(getOwner()),1);
             remove();
         }

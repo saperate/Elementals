@@ -110,13 +110,13 @@ public class AirStreamEntity extends AbstractElementalsEntity<PlayerEntity> {
 
         float damage = 2.5f;
         if (plrData.canUseUpgrade("airStreamMastery")) {
-            damage = 6.5f;
-        } else if (plrData.canUseUpgrade("airStreamDamageI")) {
             damage = 4.5f;
+        } else if (plrData.canUseUpgrade("airStreamDamageI")) {
+            damage = 3.5f;
         }
 
         entity.damage(getDamageSources().playerAttack(owner), damage);
-        entity.addVelocity(this.getVelocity().multiply(1f));
+        entity.addVelocity(this.getVelocity().multiply(1.2f));
         entity.move(MovementType.SELF, entity.getVelocity());
         entity.velocityModified = true;
         remove();

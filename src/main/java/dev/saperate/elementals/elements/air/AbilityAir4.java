@@ -29,7 +29,7 @@ public class AbilityAir4 implements Ability {
             return;
         }
 
-        if (!bender.reduceChi(30)) {
+        if (!bender.reduceChi(15)) {
             if (bender.abilityData == null) {
                 bender.setCurrAbility(null);
             } else {

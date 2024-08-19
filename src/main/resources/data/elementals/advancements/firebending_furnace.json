@@ -1,0 +1,21 @@
+{
+  "display": {
+    "icon": {
+      "item": "minecraft:furnace"
+    },
+    "title": "Infinite power!",
+    "description": "Power a furnace using your firebending",
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true
+  },
+  "criteria": {
+    "requirement": {
+      "conditions": {
+        "ability" : "ignite/furnace"
+      },
+      "trigger": "minecraft:elementals/used_ability"
+    }
+  },
+  "parent": "elementals:firebending"
+}

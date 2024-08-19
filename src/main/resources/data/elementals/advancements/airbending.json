@@ -1,0 +1,21 @@
+{
+  "display": {
+    "icon": {
+      "item": "elementals:air_scroll"
+    },
+    "title": "No Stuff",
+    "description": "Have the element of air",
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true
+  },
+  "criteria": {
+    "requirement": {
+      "conditions": {
+        "element" : "air"
+      },
+      "trigger": "minecraft:elementals/has_element"
+    }
+  },
+  "parent": "elementals:root"
+}

@@ -18,14 +18,24 @@ public class AbilityLightning3 implements Ability {
     public void onCall(Bender bender, long deltaT) {
         PlayerEntity player = bender.player;
         PlayerData playerData = PlayerData.get(player);
-/*
-        if(!playerData.canUseUpgrade("lightningRedirection")){
+
+        if(!playerData.canUseUpgrade("lightningOvercharge")){
             bender.setCurrAbility(null);
             return;
         }
-*/
+
+        int duration = 200;
+        PlayerData plrData = PlayerData.get(player);
+        if (plrData.canUseUpgrade("lightningOverchargeStrengthII")) {
+            duration = 600;
+        } else if (plrData.canUseUpgrade("lightningOverchargeStrengthI")) {
+            duration = 400;
+        }
         if (deltaT >= 500 && !safeHasStatusEffect(OVERCHARGED_EFFECT, player) || !safeHasStatusEffect(BURNOUT_EFFECT, player) ) {
-            player.addStatusEffect(new StatusEffectInstance(OVERCHARGED_EFFECT, 400, 0, false, false, true));
+            if (!bender.reduceChi(15)) {
+                return;
+            }
+            player.addStatusEffect(new StatusEffectInstance(OVERCHARGED_EFFECT, duration, 0, false, false, true));
         }
         bender.setCurrAbility(null);
     }

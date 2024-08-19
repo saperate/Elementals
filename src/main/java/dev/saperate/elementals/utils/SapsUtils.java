@@ -56,7 +56,7 @@ public final class SapsUtils {
      * <br><b>This only checks for solid blocks</b>
      * @param entity The entity that we are checking collisions for
      * @param sensitivity How close does it have to be to a block to collide
-     * @return The block position of the hit
+     * @return The block position of the hit or null if none is found
      * @see Entity
      * @see BlockPos
      * @see World
@@ -74,7 +74,7 @@ public final class SapsUtils {
      * @param entity The entity that we are checking collisions for
      * @param sensitivity How close does it have to be to a block to collide
      * @param includeFluids Whether fluids count in the collision check
-     * @return The block position of the hit
+     * @return The block position of the hit or null if none is found
      * @see Entity
      * @see BlockPos
      * @see World
@@ -92,7 +92,7 @@ public final class SapsUtils {
      * @param sensitivity How close does it have to be to a block to collide
      * @param includeFluids Whether fluids count in the collision check
      * @param requireSolid Whether not solid blocks like grass should be included
-     * @return The block position of the hit
+     * @return The block position of the hit or null if none is found
      * @see Entity
      * @see BlockPos
      * @see World
@@ -110,7 +110,7 @@ public final class SapsUtils {
      * @param sensitivity How close does it have to be to a block to collide
      * @param includeFluids Whether fluids count in the collision check
      * @param bounds The bounding box that we are checking
-     * @return The block position of the hit
+     * @return The block position of the hit or null if none is found
      * @see Entity
      * @see BlockPos
      * @see World
@@ -308,6 +308,9 @@ public final class SapsUtils {
     }
 
     public static Vec3d getEntityLookVector(Entity e, float distance) {
+        if(e == null){
+            return new Vec3d(0,0,0);
+        }
         double rYaw = Math.toRadians(e.getYaw() + 90);
         double rPitch = Math.toRadians(-e.getPitch());
 

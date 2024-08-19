@@ -14,7 +14,7 @@ public class AbilityWaterJump implements Ability {
 
     @Override
     public void onCall(Bender bender, long deltaT) {
-        if (!bender.reduceChi(15)) {
+        if (!bender.reduceChi(10)) {
             onRemove(bender);
             return;
         }
@@ -25,9 +25,9 @@ public class AbilityWaterJump implements Ability {
         float power = 2;
 
         if (plrData.canUseUpgrade("waterJumpRangeII")) {
-            power = 3;
+            power = 6;
         } else if (plrData.canUseUpgrade("waterJumpRangeI")) {
-            power = 2.5f;
+            power = 4;
         }
 
         launchEntity(player,power);

@@ -99,6 +99,10 @@ public class EarthBlockEntity extends AbstractElementalsEntity<PlayerEntity> {
     }
 
     private void controlEntity(Entity owner) {
+        if(owner == null){
+            setControlled(false);
+            return;
+        }
         Vector3f target = getTargetPosition();
         Vector3f direction = (target.y == -50 || usesOffset() ?
                 getEntityLookVector(owner, 3) : new Vec3d(target.x, target.y, target.z))

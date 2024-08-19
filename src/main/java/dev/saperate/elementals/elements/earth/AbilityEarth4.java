@@ -1,9 +1,11 @@
 package dev.saperate.elementals.elements.earth;
 
+import dev.saperate.elementals.Elementals;
 import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.elements.Ability;
 import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.server.network.ServerPlayerEntity;
 
 import static dev.saperate.elementals.effects.SeismicSenseStatusEffect.SEISMIC_SENSE_EFFECT;
 
@@ -32,6 +34,7 @@ public class AbilityEarth4 implements Ability {
                 }
                 return;
             }
+            Elementals.USED_ABILITY.trigger((ServerPlayerEntity) bender.player, "seismic_sense");
             bender.player.addStatusEffect(new StatusEffectInstance(SEISMIC_SENSE_EFFECT, 2400));
         }
     }

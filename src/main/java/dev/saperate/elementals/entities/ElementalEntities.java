@@ -168,7 +168,7 @@ public class ElementalEntities {
             Registries.ENTITY_TYPE,
             new Identifier("elementals", "boomerang"),
             FabricEntityTypeBuilder.<BoomerangEntity>create(SpawnGroup.MISC, BoomerangEntity::new)
-                    .dimensions(EntityDimensions.fixed(.75f, .75f)).build());
+                    .dimensions(EntityDimensions.fixed(.6f, .2f)).build());
     public static void register() {
         FabricDefaultAttributeRegistry.register(DECOYPLAYER, DecoyPlayerEntity.createMobAttributes());
     }

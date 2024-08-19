@@ -1,0 +1,27 @@
+{
+  "display": {
+    "icon": {
+      "item": "elementals:dirt_bottle"
+    },
+    "title": "Pocket sand",
+    "description": " Acquire a dirt bottle",
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true
+  },
+  "criteria": {
+    "lava_bucket": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "elementals:dirt_bottle"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "parent": "elementals:earthbending"
+}

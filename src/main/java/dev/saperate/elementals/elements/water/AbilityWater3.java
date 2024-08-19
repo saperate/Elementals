@@ -26,7 +26,7 @@ public class AbilityWater3 implements Ability {
             WaterElement.get().abilityList.get(16).onCall(bender, deltaT);
             return;
 
-        } else if (player.getRootVehicle().isTouchingWaterOrRain() && playerData.canUseUpgrade("waterJump")) {
+        } else if (player.getRootVehicle().isTouchingWaterOrRain() && playerData.canUseUpgrade("waterJump") || WaterElement.canBend(player,true) != null) {
             WaterElement.get().abilityList.get(17).onCall(bender, deltaT);
             return;
         }

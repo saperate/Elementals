@@ -1,0 +1,21 @@
+{
+  "display": {
+    "icon": {
+      "item": "elementals:lightning_scroll"
+    },
+    "title": "The power of Thor!",
+    "description": "Unlock the lightning sub bending",
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true
+  },
+  "criteria": {
+    "requirement": {
+      "conditions": {
+        "element" : "lightning"
+      },
+      "trigger": "minecraft:elementals/has_element"
+    }
+  },
+  "parent": "elementals:firebending"
+}

@@ -1,6 +1,7 @@
 package dev.saperate.elementals.elements.lightning;
 
 import dev.saperate.elementals.data.Bender;
+import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.elements.Ability;
 import dev.saperate.elementals.entities.lightning.LightningArcEntity;
 import dev.saperate.elementals.entities.lightning.VoltArcEntity;
@@ -20,11 +21,25 @@ public class AbilityLightningVoltArc implements Ability {
     @Override
     public void onCall(Bender bender, long deltaT) {
         PlayerEntity player = bender.player;
+        if (!bender.reduceChi(10)) {
+            bender.setCurrAbility(null);
+            return;
+        }
 
         Vector3f pos = getEntityLookVector(player, 2.5f).toVector3f();
 
         VoltArcEntity entity = new VoltArcEntity(player.getWorld(), player, pos.x, pos.y, pos.z);
         entity.makeChild();
+
+        int duration = 200;
+        PlayerData plrData = PlayerData.get(player);
+        if (plrData.canUseUpgrade("lightningVoltArcStrengthII")) {
+            duration = 600;
+        } else if (plrData.canUseUpgrade("lightningVoltArcStrengthI")) {
+            duration = 400;
+        }
+
+        entity.duration = duration;
 
         bender.abilityData = entity;
         player.getWorld().spawnEntity(entity);

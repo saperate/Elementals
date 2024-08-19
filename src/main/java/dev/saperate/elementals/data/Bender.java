@@ -1,5 +1,7 @@
 package dev.saperate.elementals.data;
 
+import dev.saperate.elementals.Elementals;
+import dev.saperate.elementals.advancements.HasElementCriterion;
 import dev.saperate.elementals.commands.BendingCommand;
 import dev.saperate.elementals.elements.Ability;
 import dev.saperate.elementals.elements.Element;
@@ -9,6 +11,7 @@ import dev.saperate.elementals.utils.SapsUtils;
 import net.fabricmc.fabric.api.entity.FakePlayer;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.minecraft.advancement.Advancement;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.player.PlayerEntity;
@@ -85,8 +88,8 @@ public class Bender {
     public void tick() {
         plrData.chi = Math.min(100,
                 plrData.chi + (Bender.CHI_REGENERATION_RATE
-                        * (safeHasStatusEffect(OVERCHARGED_EFFECT, player) ? 2 : 1)
-                        * (safeHasStatusEffect(BURNOUT_EFFECT, player) ? 0.5f : 1)
+                        * (safeHasStatusEffect(OVERCHARGED_EFFECT, player) ? 4 : 1)
+                        * (safeHasStatusEffect(BURNOUT_EFFECT, player) ? 0.25f : 1)
                 ));
 
         backgroundAbilities.forEach((Ability ability, Object data) -> ability.onBackgroundTick(this, data));
@@ -94,6 +97,8 @@ public class Bender {
         if(currAbility != null && currAbility.shouldImmobilizePlayer()){
             player.addStatusEffect(new StatusEffectInstance(STATIONARY_EFFECT,1,0,false,false,true));
         }
+
+        Elementals.HAS_ELEMENT.trigger((ServerPlayerEntity) player);
     }
 
     public void setCurrAbility(Ability ability) {
@@ -295,7 +300,7 @@ public class Bender {
 
         float newChi = plrData.chi - val;
         if (newChi < 0) {
-            if(newChi >= -10){
+            if(newChi >= -10 && !safeHasStatusEffect(BURNOUT_EFFECT,player)){
                 newChi = 0;
                 player.addStatusEffect(new StatusEffectInstance(BURNOUT_EFFECT,200,0,false,false,true));
             }else {

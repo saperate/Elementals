@@ -1,0 +1,21 @@
+{
+  "display": {
+    "icon": {
+      "item": "minecraft:furnace"
+    },
+    "title": "A blind bandit's secret weapon",
+    "description": "Use the seismic sense ability",
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true
+  },
+  "criteria": {
+    "requirement": {
+      "conditions": {
+        "ability" : "seismic_sense"
+      },
+      "trigger": "minecraft:elementals/used_ability"
+    }
+  },
+  "parent": "elementals:earthbending"
+}

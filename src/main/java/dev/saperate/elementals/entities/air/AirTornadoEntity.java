@@ -103,7 +103,7 @@ public class AirTornadoEntity extends AbstractElementalsEntity<PlayerEntity> {
             return;
         }
         entity.damage(this.getDamageSources().playerAttack((PlayerEntity) getOwner()), 5);//TODO maybe add a debris upgrade for more dmg
-        entity.addVelocity(0, 0.75f, 0);
+        entity.addVelocity(0, 0.50f, 0);
         entity.velocityModified = true;
         entity.move(MovementType.SELF, entity.getVelocity());
     }

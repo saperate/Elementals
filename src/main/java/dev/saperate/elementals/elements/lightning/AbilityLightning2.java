@@ -15,21 +15,28 @@ public class AbilityLightning2 implements Ability {
     public void onCall(Bender bender, long deltaT) {
         PlayerEntity player = bender.player;
         PlayerData playerData = PlayerData.get(player);
-/*
-        if(!playerData.canUseUpgrade("lightningRedirection")){
+
+        if(!playerData.canUseUpgrade("lightningVoltArc")){
             bender.setCurrAbility(null);
             return;
         }
-*/
-        if (deltaT >= 1000) {
+
+        if (deltaT >= 1000 && playerData.canUseUpgrade("lightningEMP")) {
             LightningElement.get().abilityList.get(5).onCall(bender, deltaT);
             return;
         }
-        if (player.isSneaking()) {
+        if (player.isSneaking() && playerData.canUseUpgrade("lightningStaticAura")) {
             if (safeHasStatusEffect(STATIC_AURA_EFFECT, player)) {
                 player.removeStatusEffect(STATIC_AURA_EFFECT);
             } else {
-                player.addStatusEffect(new StatusEffectInstance(STATIC_AURA_EFFECT, 400, 0, false, false, true));
+                int duration = 200;
+                PlayerData plrData = PlayerData.get(player);
+                if (plrData.canUseUpgrade("lightningStaticAuraStrengthII")) {
+                    duration = 600;
+                } else if (plrData.canUseUpgrade("lightningStaticAuraStrengthI")) {
+                    duration = 400;
+                }
+                player.addStatusEffect(new StatusEffectInstance(STATIC_AURA_EFFECT, duration, 0, false, false, true));
             }
             bender.setCurrAbility(null);
             return;

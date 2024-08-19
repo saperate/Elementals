@@ -24,7 +24,7 @@ public class AbilityEarthMine implements Ability {
             return;
         }
 
-        if (!bender.reduceChi(5)) {
+        if (!bender.reduceChi(2.5f)) {
             if (bender.abilityData == null) {
                 bender.setCurrAbility(null);
             } else {

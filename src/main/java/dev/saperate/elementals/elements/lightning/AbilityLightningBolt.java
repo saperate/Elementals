@@ -25,6 +25,18 @@ public class AbilityLightningBolt implements Ability {
     public void onCall(Bender bender, long deltaT) {
         PlayerEntity player = bender.player;
 
+        float cost = 35;
+        PlayerData plrData = PlayerData.get(player);
+        if (plrData.canUseUpgrade("lightningBoltEfficiencyII")) {
+            cost = 25;
+        } else if (plrData.canUseUpgrade("lightningBoltEfficiencyI")) {
+            cost = 30;
+        }
+        if (!bender.reduceChi(cost)) {
+            bender.setCurrAbility(null);
+            return;
+        }
+
         Vector3f pos = getEntityLookVector(player, 2).toVector3f();
 
         LightningArcEntity entity = new LightningArcEntity(player.getWorld(), player, pos.x, pos.y, pos.z);

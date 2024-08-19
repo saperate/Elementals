@@ -1,5 +1,6 @@
 package dev.saperate.elementals.elements.fire;
 
+import dev.saperate.elementals.Elementals;
 import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.data.StateDataSaverAndLoader;
@@ -17,6 +18,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.property.IntProperty;
 import net.minecraft.state.property.Properties;
@@ -40,7 +42,7 @@ public class AbilityFireIgnite implements Ability {
             return;
         }
 
-        if (!bender.reduceChi(5)) {
+        if (!bender.reduceChi(2.5f)) {
             if (bender.abilityData == null) {
                 bender.setCurrAbility(null);
             } else {
@@ -62,6 +64,7 @@ public class AbilityFireIgnite implements Ability {
                 BlockEntity blockEntity = player.getWorld().getBlockEntity(bPos);
 
                 if (blockEntity instanceof AbstractFurnaceBlockEntity furnace){
+                    Elementals.USED_ABILITY.trigger((ServerPlayerEntity) player, "ignite/furnace");
                     ((FurnaceBlockEntityAccessor) furnace).setBurnTime(hasFlareUp ? 225 : 100);
                     ((FurnaceBlockEntityAccessor) furnace).setFuelTime(hasFlareUp ? 225 : 100);
                 }

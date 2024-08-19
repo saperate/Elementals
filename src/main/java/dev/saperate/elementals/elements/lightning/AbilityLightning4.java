@@ -16,13 +16,13 @@ public class AbilityLightning4 implements Ability {
     public void onCall(Bender bender, long deltaT) {
         PlayerEntity player = bender.player;
         PlayerData playerData = PlayerData.get(player);
-/*
-        if(!playerData.canUseUpgrade("lightningRedirection")){
+//todo mention this
+        if (!playerData.canUseUpgrade("lightningStorm") || !playerData.canUseUpgrade("lightningBolt")) {
             bender.setCurrAbility(null);
             return;
         }
-*/
-        if(deltaT >= 3000 && player.isSneaking()){
+
+        if (deltaT >= 3000 && player.isSneaking()) {
             LightningElement.get().abilityList.get(8).onCall(bender, deltaT);
             return;
         }

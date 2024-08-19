@@ -4,6 +4,7 @@
   "item.elementals.dirt_bottle" : "Dirt bottle",
   "item.elementals.lightning_bottle" : "Lightning bottle",
   "item.elementals.fire_scroll" : "Fire scroll",
+  "item.elementals.boomerang" : "Boomerang",
 
   "key.elementals.Ability1" : "Ability 1",
   "key.elementals.Ability2" : "Ability 2",
@@ -538,6 +539,76 @@
   "upgrade.elementals.airSpiritProjectionRangeIII.description": " Go up to 20 blocks away from your body",
 
   "upgrade.elementals.airSpiritProjectionRangeIV": "Range IV",
-  "upgrade.elementals.airSpiritProjectionRangeIV.description": " Go up to 25 blocks away from your body"
+  "upgrade.elementals.airSpiritProjectionRangeIV.description": " Go up to 25 blocks away from your body",
 
+  "upgrade.elementals.lightningRedirection": "Lightning redirection",
+  "upgrade.elementals.lightningRedirection.description": " This technique is derived from water benders and it allows you to redirect a lightning bolt thrown at you back at your enemies.",
+  "upgrade.elementals.lightningRedirection.use": " Use: get struck by lightning + %d",
+  "upgrade.elementals.lightningRedirection.icon": "lightning",
+
+  "upgrade.elementals.lightningRedirectionEfficiencyI": "Efficiency I",
+  "upgrade.elementals.lightningRedirectionEfficiencyI.description": " Allows you to redirect lightning at a lower cost",
+
+  "upgrade.elementals.lightningRedirectionEfficiencyII": "Efficiency II",
+  "upgrade.elementals.lightningRedirectionEfficiencyII.description": " Allows you to redirect lightning at an even lower cost",
+
+  "upgrade.elementals.lightningBolt": "Lightning bolt",
+  "upgrade.elementals.lightningBolt.description": " By creating an imbalance between the positive and negative energies, you can produce lightning.",
+  "upgrade.elementals.lightningBolt.use": " Use: %d + shift + hold (2.5s)",
+  "upgrade.elementals.lightningBolt.icon": "lightning",
+
+  "upgrade.elementals.lightningBoltEfficiencyI": "Efficiency I",
+  "upgrade.elementals.lightningBoltEfficiencyI.description": " Allows you to produce lightning at a lower cost",
+
+  "upgrade.elementals.lightningBoltEfficiencyII": "Efficiency II",
+  "upgrade.elementals.lightningBoltEfficiencyII.description": " Allows you to produce lightning at an even lower cost",
+
+  "upgrade.elementals.lightningVoltArc": "Volt arc",
+  "upgrade.elementals.lightningVoltArc.description": " Creates a short lived, taser-like ability that stuns whatever it hits.",
+  "upgrade.elementals.lightningVoltArc.use": " Use: %d",
+  "upgrade.elementals.lightningVoltArc.icon": "lightning",
+
+  "upgrade.elementals.lightningVoltArcStrengthI": "Strength I",
+  "upgrade.elementals.lightningVoltArcStrengthI.description": " Makes the stun effect last longer",
+
+  "upgrade.elementals.lightningVoltArcStrengthII": "Strength II",
+  "upgrade.elementals.lightningVoltArcStrengthII.description": " Makes the stun effect last even longer",
+
+  "upgrade.elementals.lightningEMP": "EMP",
+  "upgrade.elementals.lightningEMP.description": " By compressing a volt arc, you can create a blast that stuns every living thing in a radius.",
+  "upgrade.elementals.lightningEMP.use": " Use: %d + hold (1s)",
+  "upgrade.elementals.lightningEMP.icon": "lightning",
+
+  "upgrade.elementals.lightningEMPSizeI": "Size I",
+  "upgrade.elementals.lightningEMPSizeI.description": " Makes the blast radius bigger",
+
+  "upgrade.elementals.lightningStaticAura": "Static aura",
+  "upgrade.elementals.lightningStaticAura.description": " By boosting your natural static electricity, you can make a passive shield on yourself that stuns whoever touches it. It also mitigates damage from lightning bolts.",
+  "upgrade.elementals.lightningStaticAura.use": " Use: %d + shift",
+  "upgrade.elementals.lightningStaticAura.icon": "lightning",
+
+  "upgrade.elementals.lightningStaticAuraStrengthI": "Strength I",
+  "upgrade.elementals.lightningStaticAuraStrengthI.description": " Makes the aura last longer",
+
+  "upgrade.elementals.lightningStaticAuraStrengthII": "Strength II",
+  "upgrade.elementals.lightningStaticAuraStrengthII.description": " Makes the aura last even longer",
+
+  "upgrade.elementals.lightningOvercharge": "Overcharge",
+  "upgrade.elementals.lightningOvercharge.description": " By overloading your muscles with electricity, you can make them function at a higher capacity than normal. However, your body will be burnt out afterwards.",
+  "upgrade.elementals.lightningOvercharge.use": " Use: %d + hold (0.5s)",
+  "upgrade.elementals.lightningOvercharge.icon": "lightning",
+
+  "upgrade.elementals.lightningOverchargeStrengthI": "Strength I",
+  "upgrade.elementals.lightningOverchargeStrengthI.description": " Makes the overcharge last longer",
+
+  "upgrade.elementals.lightningOverchargeStrengthII": "Strength II",
+  "upgrade.elementals.lightningOverchargeStrengthII.description": " Makes the overcharge last even longer",
+
+  "upgrade.elementals.lightningStorm": "Localised storm",
+  "upgrade.elementals.lightningStorm.description": " This is the pinnacle of lightning bending, by precisely producing lightning in the clouds, you can create a localised storm that will smite any enemies you might be fighting.",
+  "upgrade.elementals.lightningStorm.use": " Use: %d + hold (3s) + shift + unlock lightning bolt",
+  "upgrade.elementals.lightningStorm.icon": "lightning",
+
+  "upgrade.elementals.lightningStormDurationI": "Duration I",
+  "upgrade.elementals.lightningStormDurationI.description": " Makes your storm last longer"
 }

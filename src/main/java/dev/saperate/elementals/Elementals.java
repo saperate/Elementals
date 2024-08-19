@@ -1,5 +1,7 @@
 package dev.saperate.elementals;
 
+import dev.saperate.elementals.advancements.HasElementCriterion;
+import dev.saperate.elementals.advancements.UsedAbilityCriterion;
 import dev.saperate.elementals.blocks.LitAir;
 import dev.saperate.elementals.blocks.SoulFireCore;
 import dev.saperate.elementals.blocks.WaterRapid;
@@ -28,6 +30,7 @@ import net.fabricmc.fabric.api.gamerule.v1.GameRuleRegistry;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.particle.v1.FabricParticleTypes;
+import net.minecraft.advancement.criterion.Criteria;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.command.argument.serialize.ConstantArgumentSerializer;
 import net.minecraft.particle.DefaultParticleType;
@@ -61,6 +64,8 @@ public class Elementals implements ModInitializer {
     //TODO add config
     public static final String MODID = "elementals";
     public static final Logger LOGGER = LoggerFactory.getLogger(MODID);
+    public static HasElementCriterion HAS_ELEMENT = Criteria.register(new HasElementCriterion());
+    public static UsedAbilityCriterion USED_ABILITY = Criteria.register(new UsedAbilityCriterion());
     private static final Identifier WIND_SOUND_ID = new Identifier(MODID, "wind");
     private static final Identifier WIND_BURST_SOUND_ID = new Identifier(MODID, "wind_burst");
     public static SoundEvent WIND_SOUND_EVENT = SoundEvent.of(WIND_SOUND_ID);
