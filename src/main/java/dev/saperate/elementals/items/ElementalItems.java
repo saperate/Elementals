@@ -46,6 +46,10 @@ public class ElementalItems {
     public static final DirtBottleItem DIRT_BOTTLE_ITEM = (DirtBottleItem) registerItem("dirt_bottle",
             new DirtBottleItem(new FabricItemSettings()
                     .maxCount(1)));
+    public static final BoomerangItem BOOMERANG_ITEM = (BoomerangItem) registerItem("boomerang",
+            new BoomerangItem(new FabricItemSettings()
+                    .maxCount(1)
+            ));
 
 
 

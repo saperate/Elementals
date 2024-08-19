@@ -2,6 +2,7 @@ package dev.saperate.elementals.entities;
 
 
 
+import dev.saperate.elementals.entities.common.BoomerangEntity;
 import dev.saperate.elementals.entities.common.DecoyPlayerEntity;
 import dev.saperate.elementals.entities.air.*;
 import dev.saperate.elementals.entities.common.DirtBottleEntity;
@@ -162,6 +163,11 @@ public class ElementalEntities {
             Registries.ENTITY_TYPE,
             new Identifier("elementals", "dirt_bottle"),
             FabricEntityTypeBuilder.<DirtBottleEntity>create(SpawnGroup.MISC, DirtBottleEntity::new)
+                    .dimensions(EntityDimensions.fixed(.75f, .75f)).build());
+    public static final EntityType<BoomerangEntity> BOOMERANGENTITY = Registry.register(
+            Registries.ENTITY_TYPE,
+            new Identifier("elementals", "boomerang"),
+            FabricEntityTypeBuilder.<BoomerangEntity>create(SpawnGroup.MISC, BoomerangEntity::new)
                     .dimensions(EntityDimensions.fixed(.75f, .75f)).build());
     public static void register() {
         FabricDefaultAttributeRegistry.register(DECOYPLAYER, DecoyPlayerEntity.createMobAttributes());
