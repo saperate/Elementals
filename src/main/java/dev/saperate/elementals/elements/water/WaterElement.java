@@ -1,5 +1,6 @@
 package dev.saperate.elementals.elements.water;
 
+import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.elements.Element;
 import dev.saperate.elementals.elements.Upgrade;
@@ -217,5 +218,21 @@ public class WaterElement extends Element {
     @Override
     public int getAccentColor() {
         return 0xFF0053F3;
+    }
+
+    @Override
+    public boolean isSkillTreeComplete(Bender bender) {
+        PlayerData plrData = bender.plrData;
+        return bender.hasElement(this)
+                && (plrData.canUseUpgrade("waterShieldSuffocatePath") || plrData.canUseUpgrade("waterShieldHelmetPath"))
+                && (plrData.canUseUpgrade("waterHelmetMastery") || plrData.canUseUpgrade("waterHelmetStealth") || plrData.canUseUpgrade("waterSuffocateRange"))
+                && plrData.canUseUpgrade("waterJetDamageI")
+                && ((plrData.canUseUpgrade("waterBladeMiningII") && plrData.canUseUpgrade("waterBladeSpeedII")) || plrData.canUseUpgrade("waterCannonDamageI"))
+                && plrData.canUseUpgrade("waterArcMastery")
+                && plrData.canUseUpgrade("waterJumpRangeII")
+                && plrData.canUseUpgrade("waterTowerRangeI")
+                && plrData.canUseUpgrade("waterSurfSpeedII")
+                && plrData.canUseUpgrade("waterHealingEfficiencyII")
+                ;
     }
 }

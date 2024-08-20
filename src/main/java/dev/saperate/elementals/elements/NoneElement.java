@@ -1,5 +1,7 @@
 package dev.saperate.elementals.elements;
 
+import dev.saperate.elementals.data.Bender;
+
 public class NoneElement extends Element{
     public NoneElement() {
         super("None", new Upgrade("None",new Upgrade[]{
@@ -12,5 +14,11 @@ public class NoneElement extends Element{
 
     public static Element get(){
         return elementList.get(0);
+    }
+
+
+    @Override
+    public boolean isSkillTreeComplete(Bender bender) {
+        return false;
     }
 }

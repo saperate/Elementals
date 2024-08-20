@@ -1,5 +1,7 @@
 package dev.saperate.elementals.elements.air;
 
+import dev.saperate.elementals.data.Bender;
+import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.elements.Element;
 import dev.saperate.elementals.elements.Upgrade;
 import dev.saperate.elementals.elements.fire.*;
@@ -18,61 +20,61 @@ public class AirElement extends Element {
     public AirElement() {
         super("Air", new Upgrade[]{
                 new Upgrade("airGust", new Upgrade[]{
-                        new Upgrade("airShield",2),
+                        new Upgrade("airShield", 2),
                         new Upgrade("airTornado", new Upgrade[]{
                                 new Upgrade("airTornadoSpeedI", new Upgrade[]{
-                                        new Upgrade("airTornadoSpeedII",1)
-                                },1)
-                        },2)
-                },true,2),
+                                        new Upgrade("airTornadoSpeedII", 1)
+                                }, 1)
+                        }, 2)
+                }, true, 2),
                 new Upgrade("airStream", new Upgrade[]{
                         new Upgrade("airBall", new Upgrade[]{
                                 new Upgrade("airBallSpeedI", new Upgrade[]{
-                                        new Upgrade("airBallSpeedII",1)
-                                },1)
-                        }, false, -1,2),
+                                        new Upgrade("airBallSpeedII", 1)
+                                }, 1)
+                        }, false, -1, 2),
                         new Upgrade("airStreamDamageI", new Upgrade[]{
                                 new Upgrade("airBullets", new Upgrade[]{
                                         new Upgrade("airBulletsDamageI", new Upgrade[]{
                                                 new Upgrade("airBulletsSpeedI", new Upgrade[]{
                                                         new Upgrade("airBulletsSpeedII", new Upgrade[]{
-                                                                new Upgrade("airBulletsMastery",2)
-                                                        },1)
-                                                },1)
-                                        },1),
+                                                                new Upgrade("airBulletsMastery", 2)
+                                                        }, 1)
+                                                }, 1)
+                                        }, 1),
                                         new Upgrade("airBulletsCountI", new Upgrade[]{
-                                                new Upgrade("airBulletsCountII",1)
-                                        },1)
-                                },2),
-                                new Upgrade("airSuffocate",2)
-                        }, true,1),
+                                                new Upgrade("airBulletsCountII", 1)
+                                        }, 1)
+                                }, 2),
+                                new Upgrade("airSuffocate", 2)
+                        }, true, 1),
                         new Upgrade("airStreamSpeedI", new Upgrade[]{
                                 new Upgrade("airStreamSpeedII", new Upgrade[]{
                                         new Upgrade("airStreamEfficiencyI", new Upgrade[]{
-                                                new Upgrade("airStreamMastery",2)
-                                        },1)
-                                },1)
-                        }, false, 1,1)
-                },2),
+                                                new Upgrade("airStreamMastery", 2)
+                                        }, 1)
+                                }, 1)
+                        }, false, 1, 1)
+                }, 2),
                 new Upgrade("airJump", new Upgrade[]{
                         new Upgrade("airJumpRangeI", new Upgrade[]{
-                                new Upgrade("airJumpRangeII",1),
-                        },1),
+                                new Upgrade("airJumpRangeII", 1),
+                        }, 1),
                         new Upgrade("airScooter", new Upgrade[]{
                                 new Upgrade("airScooterSpeedI", new Upgrade[]{
-                                        new Upgrade("airScooterSpeedII",1)
-                                },1)
-                        },2)
-                },2),
+                                        new Upgrade("airScooterSpeedII", 1)
+                                }, 1)
+                        }, 2)
+                }, 2),
                 new Upgrade("airSpiritProjection", new Upgrade[]{
                         new Upgrade("airSpiritProjectionRangeI", new Upgrade[]{
                                 new Upgrade("airSpiritProjectionRangeII", new Upgrade[]{
                                         new Upgrade("airSpiritProjectionRangeIII", new Upgrade[]{
-                                                new Upgrade("airSpiritProjectionRangeIV",1)
-                                        },1)
-                                },1)
-                        },1)
-                },4)
+                                                new Upgrade("airSpiritProjectionRangeIV", 1)
+                                        }, 1)
+                                }, 1)
+                        }, 1)
+                }, 4)
         });
         addAbility(new AbilityAir1(), true);
         addAbility(new AbilityAirGust());
@@ -86,10 +88,24 @@ public class AirElement extends Element {
         addAbility(new AbilityAir3(), true);
         addAbility(new AbilityAirScooter());
         addAbility(new AbilityAirJump());
-        addAbility(new AbilityAir4(),true);
+        addAbility(new AbilityAir4(), true);
     }
 
-    public static Element get(){
+    public static Element get() {
         return elementList.get(4);
+    }
+
+    @Override
+    public boolean isSkillTreeComplete(Bender bender) {
+        PlayerData plrData = bender.plrData;
+        return bender.hasElement(this)
+                && (plrData.canUseUpgrade("airTornadoSpeedII") || plrData.canUseUpgrade("airShield"))
+                && plrData.canUseUpgrade("airBallSpeedII")
+                && ((plrData.canUseUpgrade("airBulletsMastery") && plrData.canUseUpgrade("airBulletsCountII")) || plrData.canUseUpgrade("airSuffocate"))
+                && plrData.canUseUpgrade("airStreamMastery")
+                && plrData.canUseUpgrade("airJumpRangeII")
+                && plrData.canUseUpgrade("airScooterSpeedII")
+                && plrData.canUseUpgrade("airSpiritProjectionRangeIV")
+        ;
     }
 }

@@ -1,5 +1,6 @@
 package dev.saperate.elementals.elements;
 
+import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.utils.SapsUtils;
 import net.minecraft.nbt.NbtCompound;
@@ -96,6 +97,8 @@ public abstract class Element{
             child.onRead(nbt,plrUpgrades);
         }
     }
+
+    public abstract boolean isSkillTreeComplete(Bender bender);
 
     public int getColor(){
         return 0xFFa0e8e6;

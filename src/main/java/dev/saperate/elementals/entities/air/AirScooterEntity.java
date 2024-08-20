@@ -67,6 +67,7 @@ public class AirScooterEntity extends AbstractElementalsEntity<PlayerEntity> {
         }
 
         if (isOnFire() || player.isSneaking()) {
+            player.setSneaking(false);
             discard();
             return;
         }

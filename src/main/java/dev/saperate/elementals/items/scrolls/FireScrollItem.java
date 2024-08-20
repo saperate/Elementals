@@ -1,5 +1,7 @@
 package dev.saperate.elementals.items.scrolls;
 
+import dev.saperate.elementals.data.Bender;
+import dev.saperate.elementals.elements.fire.FireElement;
 import net.minecraft.block.DispenserBlock;
 import net.minecraft.block.dispenser.DispenserBehavior;
 import net.minecraft.client.item.TooltipContext;
@@ -29,6 +31,10 @@ public class FireScrollItem extends Item {
 
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
+        if (!user.getWorld().isClient) {
+            Bender bender = Bender.getBender(user);
+            bender.addElement(FireElement.get(), true);
+        }
         return super.use(world, user, hand);
     }
 

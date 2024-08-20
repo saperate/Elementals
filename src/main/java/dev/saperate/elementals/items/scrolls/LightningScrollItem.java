@@ -1,5 +1,8 @@
 package dev.saperate.elementals.items.scrolls;
 
+import dev.saperate.elementals.data.Bender;
+import dev.saperate.elementals.elements.fire.FireElement;
+import dev.saperate.elementals.elements.lightning.LightningElement;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -16,6 +19,12 @@ public class LightningScrollItem extends Item {
 
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
+        if(!user.getWorld().isClient){
+            Bender bender = Bender.getBender(user);
+            if(!bender.hasElement(LightningElement.get()) && FireElement.get().isSkillTreeComplete(bender)){
+                bender.addElement(LightningElement.get(), true);
+            }
+        }
         return super.use(world, user, hand);
     }
 

@@ -31,6 +31,7 @@ import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.particle.v1.FabricParticleTypes;
 import net.minecraft.advancement.criterion.Criteria;
+import net.minecraft.block.DispenserBlock;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.command.argument.serialize.ConstantArgumentSerializer;
 import net.minecraft.particle.DefaultParticleType;
@@ -56,6 +57,8 @@ import static dev.saperate.elementals.effects.SpiritProjectionStatusEffect.SPIRI
 import static dev.saperate.elementals.effects.StaticAuraStatusEffect.STATIC_AURA_EFFECT;
 import static dev.saperate.elementals.effects.StationaryStatusEffect.STATIONARY_EFFECT;
 import static dev.saperate.elementals.effects.StunnedStatusEffect.STUNNED_EFFECT;
+import static dev.saperate.elementals.items.ElementalItems.BOOMERANG_ITEM;
+import static dev.saperate.elementals.items.ElementalItems.DIRT_BOTTLE_ITEM;
 import static dev.saperate.elementals.misc.AirBannerPattern.AIR_PATTERN;
 import static dev.saperate.elementals.network.ModMessages.registerC2SPackets;
 
@@ -85,6 +88,9 @@ public class Elementals implements ModInitializer {
     public void onInitialize() {
         LOGGER.info("Initialising the cool stuff...");
         ElementalItems.register();
+        DispenserBlock.registerBehavior(BOOMERANG_ITEM,BOOMERANG_ITEM);
+        DispenserBlock.registerBehavior(DIRT_BOTTLE_ITEM,DIRT_BOTTLE_ITEM);
+
         ElementalEntities.register();
 
         SoulFireCore.registerBlock();

@@ -36,6 +36,11 @@ public class DirtBottleEntity extends ThrownItemEntity {
         super(DIRTBOTTLEENTITY, owner, world);
     }
 
+    public DirtBottleEntity(World world, Vec3d position) {
+        super(DIRTBOTTLEENTITY, position.x, position.y, position.z, world);
+    }
+
+
     @Override
     protected Item getDefaultItem() {
         return DIRT_BOTTLE_ITEM;
@@ -48,10 +53,10 @@ public class DirtBottleEntity extends ThrownItemEntity {
         Entity hit = entityHitResult.getEntity();
         BlockPos bPos = hit.getBlockPos();
 
-        if(!world.getBlockState(bPos).isAir() && !world.getBlockState(bPos).isLiquid()){
+        if (!world.getBlockState(bPos).isAir() && !world.getBlockState(bPos).isLiquid()) {
             bPos = bPos.up();
         }
-        if(world.getBlockState(bPos).isAir() || world.getBlockState(bPos).isLiquid()){
+        if (world.getBlockState(bPos).isAir() || world.getBlockState(bPos).isLiquid()) {
             getWorld().setBlockState(
                     bPos,
                     Blocks.DIRT.getDefaultState());
@@ -63,11 +68,11 @@ public class DirtBottleEntity extends ThrownItemEntity {
     @Override
     protected void onCollision(HitResult hitResult) {
         super.onCollision(hitResult);
-        if(hitResult.getType().equals(HitResult.Type.ENTITY)){
+        if (hitResult.getType().equals(HitResult.Type.ENTITY)) {
             return;
         }
         BlockPos bPos = new BlockPos(getBlockX(), (int) Math.round(getY()), getBlockZ());
-        FallingBlockEntity.spawnFromBlock(world,bPos,Blocks.DIRT.getDefaultState());
+        FallingBlockEntity.spawnFromBlock(world, bPos, Blocks.DIRT.getDefaultState());
         discard();
     }
 

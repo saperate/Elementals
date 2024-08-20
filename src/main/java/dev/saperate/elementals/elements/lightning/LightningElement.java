@@ -1,5 +1,7 @@
 package dev.saperate.elementals.elements.lightning;
 
+import dev.saperate.elementals.data.Bender;
+import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.elements.Element;
 import dev.saperate.elementals.elements.Upgrade;
 
@@ -52,5 +54,19 @@ public class LightningElement extends Element {
 
     public static Element get() {
         return elementList.get(5);
+    }
+
+    @Override
+    public boolean isSkillTreeComplete(Bender bender) {
+        PlayerData plrData = bender.plrData;
+        return bender.hasElement(this)
+                && plrData.canUseUpgrade("lightningRedirectionEfficiencyII")
+                && plrData.canUseUpgrade("lightningBoltEfficiencyII")
+                && plrData.canUseUpgrade("lightningEMPSizeI")
+                && plrData.canUseUpgrade("lightningVoltArcStrengthII")
+                && plrData.canUseUpgrade("lightningStaticAuraStrengthII")
+                && plrData.canUseUpgrade("lightningOverchargeStrengthII")
+                && plrData.canUseUpgrade("lightningStormDurationI")
+                ;
     }
 }

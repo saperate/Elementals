@@ -1,0 +1,21 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "category": "equipment",
+    "key": {
+        "#": {
+            "item": "minecraft:oak_planks"
+        },
+        "X": {
+            "item": "minecraft:leather"
+        }
+    },
+    "pattern": [
+        "X##",
+        "#  ",
+        "#  "
+    ],
+    "result": {
+        "item": "elementals:boomerang"
+    },
+    "show_notification": true
+}

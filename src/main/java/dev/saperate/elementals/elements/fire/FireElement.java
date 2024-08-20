@@ -1,5 +1,7 @@
 package dev.saperate.elementals.elements.fire;
 
+import dev.saperate.elementals.data.Bender;
+import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.elements.Element;
 import dev.saperate.elementals.elements.Upgrade;
 import net.minecraft.block.AbstractFireBlock;
@@ -59,7 +61,8 @@ public class FireElement extends Element {
                                         }, 1)
                                 },2)
                         },1)
-                },2)
+                },2),
+                new Upgrade("fireWisp",4)
         });
         addAbility(new AbilityFire1(),true);
         addAbility(new AbilityFireIgnite());
@@ -98,5 +101,17 @@ public class FireElement extends Element {
     @Override
     public int getAccentColor() {
         return 0xFFB32616;
+    }
+
+    @Override
+    public boolean isSkillTreeComplete(Bender bender) {
+        PlayerData plrData = bender.plrData;
+        return bender.hasElement(this)
+                && (plrData.canUseUpgrade("blueFire") || plrData.canUseUpgrade("fireWallWideI")|| plrData.canUseUpgrade("fireWallTallI") || (plrData.canUseUpgrade("fireSpikesCountI") && plrData.canUseUpgrade("fireSpikesRangeI")))
+                && plrData.canUseUpgrade("fireBallSpeedII")
+                && (plrData.canUseUpgrade("flameThrower") || plrData.canUseUpgrade("fireShield"))
+                && plrData.canUseUpgrade("fireArcMastery")
+                && plrData.canUseUpgrade("fireJetSpeedII")
+                ;
     }
 }

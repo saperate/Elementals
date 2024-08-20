@@ -56,6 +56,11 @@ public class AbilityAirScooter implements Ability {
 
     @Override
     public void onTick(Bender bender) {
+        if(bender.player.isSneaking()){
+            ((AirScooterEntity)bender.abilityData).discard();
+            bender.setCurrAbility(null);
+            return;
+        }
         if (!bender.reduceChi(0.1f) || ((AirScooterEntity)bender.abilityData).isRemoved() ) {
             bender.setCurrAbility(null);
         }

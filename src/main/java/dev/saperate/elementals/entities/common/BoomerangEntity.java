@@ -40,6 +40,12 @@ public class BoomerangEntity extends PersistentProjectileEntity {
         setSilent(true);
     }
 
+    public BoomerangEntity(World world, Vec3d startingPos) {
+        super(BOOMERANGENTITY, startingPos.x, startingPos.y, startingPos.z, world);
+        this.startingPos = startingPos;
+        setNoGravity(true);
+        setSilent(true);
+    }
 
     @Override
     public void tick() {
@@ -52,8 +58,9 @@ public class BoomerangEntity extends PersistentProjectileEntity {
             return;
         }
 
+
         if (age < 20) {
-            if(inGround){
+            if (inGround) {
                 inGround = false;
                 inGroundTime = 0;
                 Vec3d dir = this.getPos().subtract(startingPos).normalize().multiply(-0.5);
@@ -71,7 +78,15 @@ public class BoomerangEntity extends PersistentProjectileEntity {
             setVelocity(dir);
         } else if (age == 70) {
             setNoGravity(false);
+        } else if (age > 70 && inGround && getOwner() == null) {
+            dropBoomerang();
         }
+    }
+
+    public void dropBoomerang(){
+        ItemEntity itemEntity = new ItemEntity(getWorld(), getX(), getY(), getZ(), BOOMERANG_ITEM.getDefaultStack());
+        getWorld().spawnEntity(itemEntity);
+        discard();
     }
 
     @Override
@@ -85,6 +100,13 @@ public class BoomerangEntity extends PersistentProjectileEntity {
                 discard();
             }
             return;
+        } else if (entityHitResult.getEntity() instanceof PlayerEntity player && owner == null) {
+            if (!tryPickup(player)) {
+                age = 70;
+            } else {
+                discard();
+            }
+            return;
         }
         if (age <= 20) {
             age = 20;
@@ -92,17 +114,17 @@ public class BoomerangEntity extends PersistentProjectileEntity {
             age = 70;
         }
 
-        if(entityHitResult.getEntity() instanceof LivingEntity living){
+        if (entityHitResult.getEntity() instanceof LivingEntity living) {
             DamageSource damageSource;
             if (owner == null) {
                 damageSource = this.getDamageSources().arrow(this, this);
             } else {
                 damageSource = this.getDamageSources().arrow(this, owner);
                 if (owner instanceof LivingEntity) {
-                    ((LivingEntity)owner).onAttacking(living);
+                    ((LivingEntity) owner).onAttacking(living);
                 }
             }
-            living.damage(damageSource,1);
+            living.damage(damageSource, 4);
         }
     }
 

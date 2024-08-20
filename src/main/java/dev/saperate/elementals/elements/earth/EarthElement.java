@@ -226,4 +226,17 @@ public class EarthElement extends Element {
     public int getAccentColor() {
         return 0xFF17711B;
     }
+
+    @Override
+    public boolean isSkillTreeComplete(Bender bender) {
+        PlayerData plrData = bender.plrData;
+        return bender.hasElement(this)
+                && (plrData.canUseUpgrade("earthWallAutoTimer") || plrData.canUseUpgrade("earthChunkSizeI"))
+                && plrData.canUseUpgrade("earthBlockSpeedII")
+                && (plrData.canUseUpgrade("earthRavineRangeI") || plrData.canUseUpgrade("earthRavineSpreadI") || plrData.canUseUpgrade("earthSpikesRangeI") || plrData.canUseUpgrade("earthSpikesSpreadI"))
+                && plrData.canUseUpgrade("earthJumpRangeII")
+                && plrData.canUseUpgrade("earthPillarTallI")
+                && plrData.canUseUpgrade("earthArmor")
+        ;
+    }
 }
