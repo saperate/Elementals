@@ -3,11 +3,13 @@ package dev.saperate.elementals.items;
 import dev.saperate.elementals.armors.materials.ElementalArmorMaterial;
 import dev.saperate.elementals.items.scrolls.*;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
+import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.minecraft.block.DispenserBlock;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.item.*;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
 import java.util.HashSet;
@@ -73,6 +75,21 @@ public class ElementalItems {
                     .maxCount(1)
             ));
 
+    public static  final ItemGroup ELEMENTALS_GROUP = FabricItemGroup.builder()
+            .icon(() -> new ItemStack(SCROLL_ITEM))
+            .displayName(Text.of("Elementals"))
+            .entries((context,entries) -> {
+                entries.add(SCROLL_ITEM);
+                entries.add(FIRE_SCROLL_ITEM);
+                entries.add(WATER_SCROLL_ITEM);
+                entries.add(EARTH_SCROLL_ITEM);
+                entries.add(AIR_SCROLL_ITEM);
+                entries.add(LIGHTNING_SCROLL_ITEM);
+                entries.add(DIRT_BOTTLE_ITEM);
+                entries.add(LIGHTNING_BOTTLE_ITEM);
+                entries.add(BOOMERANG_ITEM);
+            }).build();
+
 
 
     private static Item registerItem(String name, Item item) {
@@ -84,5 +101,6 @@ public class ElementalItems {
         EARTH_ARMOR_SET.add(EARTH_CHESTPLATE);
         EARTH_ARMOR_SET.add(EARTH_LEGGINGS);
         EARTH_ARMOR_SET.add(EARTH_BOOTS);
+        Registry.register(Registries.ITEM_GROUP, Identifier.of("tutorial", "test_group"), ELEMENTALS_GROUP);
     }
 }

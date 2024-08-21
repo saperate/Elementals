@@ -189,7 +189,7 @@ public class UpgradeTreeScreen extends Screen {
         //graphics.drawCenteredTextWithShadow(this.textRenderer, bender.element.name, this.width / 2, 8, 0xFFFFFFFF);
 
         //Use this when you wanna know what the upgrade name is
-        graphics.drawCenteredTextWithShadow(this.textRenderer, upgradeName, this.width / 2, 24, 0xFFc4c4c4);
+        //graphics.drawCenteredTextWithShadow(this.textRenderer, upgradeName, this.width / 2, 24, 0xFFc4c4c4);
 
         if (!upgradeName.isEmpty()) {
             ArrayList<Text> tooltip = new ArrayList<>();

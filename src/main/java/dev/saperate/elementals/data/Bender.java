@@ -128,6 +128,16 @@ public class Bender {
     }
 
     /**
+     * Gets the ability data of a specific background ability.
+     * This should be used carefully since it returns an Object with unknown contents.
+     * @param ability The ability whose data we want
+     * @return The data in the form of an Object
+     */
+    public Object getBackgroundAbilityData(Ability ability){
+        return backgroundAbilities.get(ability);
+    }
+
+    /**
      * Checks if an ability is already in the background for safer use of addBackgroundAbility.
      * @param ability The ability we want to check
      * @return Whether the ability is already in the background or not

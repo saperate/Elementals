@@ -30,7 +30,7 @@ public class AbilityFire3 implements Ability {
     @Override
     public void onLeftClick(Bender bender, boolean started) {
         if (bender.abilityData == null) {
-            if (!bender.reduceChi(15)) {
+            if (!bender.reduceChi(10)) {
                 if (bender.abilityData == null) {
                     bender.setCurrAbility(null);
                 } else {
@@ -41,12 +41,12 @@ public class AbilityFire3 implements Ability {
             bender.abilityData = false;
             PlayerEntity player = bender.player;
 
-            float power = 2;
+            float power = 3;
             PlayerData plrData = PlayerData.get(player);
             if (plrData.canUseUpgrade("fireJumpRangeII")) {
-                power = 3;
+                power = 5;
             } else if (plrData.canUseUpgrade("fireJumpRangeI")) {
-                power = 2.5f;
+                power = 3;
             }
 
             launchEntity(player, power);

@@ -51,15 +51,6 @@ public abstract class PlayerEntityMixin {
     private void tick(CallbackInfo ci) {
         PlayerEntity player = ((PlayerEntity) (Object) this);
 
-        BlockPos pos = player.getBlockPos().up();
-        BlockState state = player.getWorld().getBlockState(pos);
-        if (player.age % 2 == 0 && state.getBlock().equals(LIT_AIR)
-                && player.getWorld().getBlockEntity(pos) instanceof LitAirBlockEntity litAirBlockEntity) {
-            litAirBlockEntity.resetTimer();
-        } else if (state.isAir()) {
-            player.getWorld().setBlockState(pos, LIT_AIR.getDefaultState());
-        }
-
         if (safeHasStatusEffect(SPIRIT_PROJECTION_EFFECT, player)) {
             //checks if we are inside a wall
             float f = player.getDimensions(player.getPose()).width * 0.8f;

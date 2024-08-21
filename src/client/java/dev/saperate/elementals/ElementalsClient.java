@@ -4,15 +4,12 @@ import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.entities.air.*;
 import dev.saperate.elementals.entities.common.BoomerangEntityRenderer;
 import dev.saperate.elementals.entities.common.DirtBottleEntityRenderer;
+import dev.saperate.elementals.entities.fire.*;
 import dev.saperate.elementals.entities.lightning.LightningArcEntityRenderer;
 import dev.saperate.elementals.entities.lightning.VoltArcEntityRenderer;
 import dev.saperate.elementals.entities.water.*;
 import dev.saperate.elementals.entities.common.DecoyPlayerEntityRenderer;
 import dev.saperate.elementals.entities.earth.EarthBlockEntityRenderer;
-import dev.saperate.elementals.entities.fire.FireArcEntityRenderer;
-import dev.saperate.elementals.entities.fire.FireBallEntityRenderer;
-import dev.saperate.elementals.entities.fire.FireBlockEntityRenderer;
-import dev.saperate.elementals.entities.fire.FireShieldEntityRenderer;
 import dev.saperate.elementals.entities.models.common.DecoyPlayerModel;
 import dev.saperate.elementals.entities.models.water.WaterBladeModel;
 import dev.saperate.elementals.gui.CastTimerHudOverlay;
@@ -113,6 +110,7 @@ public class ElementalsClient implements ClientModInitializer {
 		EntityRendererRegistry.register(FIREARC, FireArcEntityRenderer::new);
 		EntityRendererRegistry.register(FIREBALL, FireBallEntityRenderer::new);
 		EntityRendererRegistry.register(FIRESHIELD, FireShieldEntityRenderer::new);
+		EntityRendererRegistry.register(FIREWISP, FireWispEntityRenderer::new);
 
 		//EARTH
 		EntityRendererRegistry.register(EARTHBLOCK, EarthBlockEntityRenderer::new);

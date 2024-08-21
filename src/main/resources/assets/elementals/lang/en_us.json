@@ -3,7 +3,12 @@
 
   "item.elementals.dirt_bottle" : "Dirt bottle",
   "item.elementals.lightning_bottle" : "Lightning bottle",
+  "item.elementals.scroll" : "Empty scroll",
   "item.elementals.fire_scroll" : "Fire scroll",
+  "item.elementals.water_scroll" : "Water scroll",
+  "item.elementals.earth_scroll" : "Earth scroll",
+  "item.elementals.air_scroll" : "Air scroll",
+  "item.elementals.lightning_scroll" : "Lightning scroll",
   "item.elementals.boomerang" : "Boomerang",
 
   "key.elementals.Ability1" : "Ability 1",
@@ -302,6 +307,11 @@
 
   "upgrade.elementals.fireJetSpeedII": "Speed II",
   "upgrade.elementals.fireJetSpeedII.description": " Allows you to fly even faster using the jet ability.",
+
+  "upgrade.elementals.fireWisp": "Fire Wisp",
+  "upgrade.elementals.fireWisp.description": " Creates a ball of fire that follows you around and lights up the surrounding area",
+  "upgrade.elementals.fireWisp.use": " Use: %d",
+  "upgrade.elementals.fireWisp.icon": "fire",
 
   "upgrade.elementals.earthBlock": "Earth Pickup",
   "upgrade.elementals.earthBlock.description": " A simple move allowing you to lift earth from the ground and throw it at your enemies.",

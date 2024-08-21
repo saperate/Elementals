@@ -27,6 +27,7 @@ import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
 import net.fabricmc.fabric.api.gamerule.v1.GameRuleFactory;
 import net.fabricmc.fabric.api.gamerule.v1.GameRuleRegistry;
+import net.fabricmc.fabric.api.loot.v2.LootTableEvents;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.particle.v1.FabricParticleTypes;
@@ -34,6 +35,15 @@ import net.minecraft.advancement.criterion.Criteria;
 import net.minecraft.block.DispenserBlock;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.command.argument.serialize.ConstantArgumentSerializer;
+import net.minecraft.item.Items;
+import net.minecraft.loot.LootPool;
+import net.minecraft.loot.LootTable;
+import net.minecraft.loot.LootTables;
+import net.minecraft.loot.entry.ItemEntry;
+import net.minecraft.loot.entry.LootPoolEntry;
+import net.minecraft.loot.function.SetContentsLootFunction;
+import net.minecraft.loot.function.SetLootTableLootFunction;
+import net.minecraft.loot.provider.number.ConstantLootNumberProvider;
 import net.minecraft.particle.DefaultParticleType;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
@@ -46,6 +56,10 @@ import net.minecraft.world.GameRules;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import static dev.saperate.elementals.blocks.LitAir.LIT_AIR;
 import static dev.saperate.elementals.effects.BurnoutStatusEffect.BURNOUT_EFFECT;
 import static dev.saperate.elementals.effects.DenseStatusEffect.DENSE_EFFECT;
@@ -57,8 +71,7 @@ import static dev.saperate.elementals.effects.SpiritProjectionStatusEffect.SPIRI
 import static dev.saperate.elementals.effects.StaticAuraStatusEffect.STATIC_AURA_EFFECT;
 import static dev.saperate.elementals.effects.StationaryStatusEffect.STATIONARY_EFFECT;
 import static dev.saperate.elementals.effects.StunnedStatusEffect.STUNNED_EFFECT;
-import static dev.saperate.elementals.items.ElementalItems.BOOMERANG_ITEM;
-import static dev.saperate.elementals.items.ElementalItems.DIRT_BOTTLE_ITEM;
+import static dev.saperate.elementals.items.ElementalItems.*;
 import static dev.saperate.elementals.misc.AirBannerPattern.AIR_PATTERN;
 import static dev.saperate.elementals.network.ModMessages.registerC2SPackets;
 
@@ -122,6 +135,18 @@ public class Elementals implements ModInitializer {
         Registry.register(Registries.SOUND_EVENT, WIND_BURST_SOUND_ID, WIND_BURST_SOUND_EVENT);
 
         Registry.register(Registries.PARTICLE_TYPE, Identifier.of(MODID, "lightning"), LIGHTNING_PARTICLE_TYPE);
+
+        LootTableEvents.REPLACE.register((resourceManager, lootManager, id, tableBuilder, source) -> {
+            if (id.equals(LootTables.DESERT_PYRAMID_ARCHAEOLOGY)) {
+                List<LootPoolEntry> entries = new ArrayList<>(Arrays.asList(tableBuilder.pools[0].entries));
+                entries.add(ItemEntry.builder(LIGHTNING_SCROLL_ITEM).build());
+
+                LootPool.Builder pool = LootPool.builder().with(entries);
+                return LootTable.builder().pool(pool).build();
+            }
+
+            return null;
+        });
     }
 
 

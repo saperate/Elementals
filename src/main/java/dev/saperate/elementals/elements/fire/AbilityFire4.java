@@ -15,7 +15,7 @@ public class AbilityFire4 implements Ability {
     @Override
     public void onCall(Bender bender, long deltaT) {
         if (PlayerData.get(bender.player).canUseUpgrade("fireWisp")) {
-            bender.setCurrAbility(this);
+            FireElement.get().getAbility(11).onCall(bender,deltaT);
             return;
         }
         bender.setCurrAbility(null);

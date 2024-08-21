@@ -74,6 +74,8 @@ public class FireElement extends Element {
         addAbility(new AbilityFireShield());
         addAbility(new AbilityFlameThrower());
         addAbility(new AbilityFire3(), true);
+        addAbility(new AbilityFire4(), true);
+        addAbility(new AbilityFireWisp());
     }
 
     public static void placeFire(BlockPos pos, Direction side, Entity entity, BlockState state){
@@ -112,6 +114,7 @@ public class FireElement extends Element {
                 && (plrData.canUseUpgrade("flameThrower") || plrData.canUseUpgrade("fireShield"))
                 && plrData.canUseUpgrade("fireArcMastery")
                 && plrData.canUseUpgrade("fireJetSpeedII")
+                && plrData.canUseUpgrade("fireJumpRangeII")
                 ;
     }
 }

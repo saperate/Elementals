@@ -7,10 +7,7 @@ import dev.saperate.elementals.entities.common.DecoyPlayerEntity;
 import dev.saperate.elementals.entities.air.*;
 import dev.saperate.elementals.entities.common.DirtBottleEntity;
 import dev.saperate.elementals.entities.earth.EarthBlockEntity;
-import dev.saperate.elementals.entities.fire.FireArcEntity;
-import dev.saperate.elementals.entities.fire.FireBallEntity;
-import dev.saperate.elementals.entities.fire.FireBlockEntity;
-import dev.saperate.elementals.entities.fire.FireShieldEntity;
+import dev.saperate.elementals.entities.fire.*;
 import dev.saperate.elementals.entities.lightning.LightningArcEntity;
 import dev.saperate.elementals.entities.lightning.VoltArcEntity;
 import dev.saperate.elementals.entities.water.*;
@@ -99,6 +96,12 @@ public class ElementalEntities {
             new Identifier("elementals", "fire_shield"),
             FabricEntityTypeBuilder.<FireShieldEntity>create(SpawnGroup.MISC, FireShieldEntity::new)
                     .dimensions(EntityDimensions.changing(3.5f, FireShieldEntity.MAX_FLAME_SIZE)).build());
+
+    public static final EntityType<FireWispEntity> FIREWISP = Registry.register(
+            Registries.ENTITY_TYPE,
+            new Identifier("elementals", "fire_wisp"),
+            FabricEntityTypeBuilder.<FireWispEntity>create(SpawnGroup.MISC, FireWispEntity::new)
+                    .dimensions(EntityDimensions.fixed(0.25f, 0.25f)).build());
 
     //Earth
     public static final EntityType<EarthBlockEntity> EARTHBLOCK = Registry.register(
