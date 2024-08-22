@@ -189,18 +189,25 @@ public class Bender {
         }
     }
 
-    public void addElement(@NotNull Element element, boolean sync) {
+    /**
+     * Adds an element to the bender
+     * @return whether the element was added or not
+     */
+    public boolean addElement(@NotNull Element element, boolean sync) {
+        boolean changed = false;
         if (!hasElement(element)) {
             plrData.elements.add(element);
+            changed = true;
             if (hasElement(NoneElement.get())) {
                 plrData.elements.remove(NoneElement.get());
                 bindDefaultAbilities();
             }
         }
 
-        if (sync) {
+        if (sync && changed) {
             syncElements();
         }
+        return changed;
     }
 
     public void removeElement(Element element, boolean sync) {

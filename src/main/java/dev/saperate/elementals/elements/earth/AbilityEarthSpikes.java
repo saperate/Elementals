@@ -57,7 +57,7 @@ public class AbilityEarthSpikes implements Ability {
     }
 
     public void placeSpike(BlockPos pos, Bender bender, ArrayList<LivingEntity> damagedEntities){
-        EarthElement.damageEntityAboveBlock(bender.player,pos,damagedEntities,2.5f);
+        EarthElement.damageEntityAboveBlock(bender.player,pos,damagedEntities,3.5f);
 
         EarthBlockEntity block = new EarthBlockEntity(
                 bender.player.getWorld(), bender.player,

@@ -123,7 +123,7 @@ public class AirBulletEntity extends AbstractElementalsEntity<PlayerEntity> {
 
         float damage = 1;
         if (plrData.canUseUpgrade("airBulletsMastery")) {
-            damage = 3;
+            damage = 4;
         } else if (plrData.canUseUpgrade("airBulletsDamageI")) {
             damage = 2;
         }

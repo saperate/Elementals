@@ -166,7 +166,7 @@ public class WaterBladeEntity extends AbstractElementalsEntity<PlayerEntity> {
 
     @Override
     public void onHitEntity(Entity entity) {
-        entity.damage(this.getDamageSources().playerAttack((PlayerEntity) getOwner()), getDamage());
+        entity.damage(this.getDamageSources().playerAttack(getOwner()), getDamage() * 5);
         entity.addVelocity(this.getVelocity().multiply(0.8f));
         discard();
     }

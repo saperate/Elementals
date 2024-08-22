@@ -56,7 +56,7 @@ public class AbilityEarthBlockPickup implements Ability {
             speed = 1.5f;
         }
         entity.setVelocity(bender.player, bender.player.getPitch(), bender.player.getYaw(), 0, speed, 0);
-        entity.setDamage(plrData.canUseUpgrade("earthBlockDamageI") ? 4 : 3);
+        entity.setDamage(plrData.canUseUpgrade("earthBlockDamageI") ? 5 : 4);
     }
 
     @Override

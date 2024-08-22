@@ -212,7 +212,7 @@ public class EarthElement extends Element {
                 continue;
             }
             damagedEntities.add(entity);
-            entity.damage(player.getDamageSources().playerAttack(player), 1);
+            entity.damage(player.getDamageSources().playerAttack(player), 2.5f);
             entity.addStatusEffect(new StatusEffectInstance(STUNNED_EFFECT, 200, 1, false,false,true));
         }
     }

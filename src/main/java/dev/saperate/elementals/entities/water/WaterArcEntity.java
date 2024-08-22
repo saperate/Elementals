@@ -102,11 +102,11 @@ public class WaterArcEntity extends AbstractElementalsEntity<PlayerEntity> {
         }
         PlayerData plrData = PlayerData.get(getOwner());
 
-        int damage = 4;
+        float damage = 5;
         if (plrData.canUseUpgrade("waterArcMastery")) {
-            damage = 8;
+            damage = 9;
         } else if (plrData.canUseUpgrade("waterArcDamageI")) {
-            damage = 6;
+            damage = 7;
         }
 
         entity.damage(this.getDamageSources().playerAttack((PlayerEntity) getOwner()), damage);

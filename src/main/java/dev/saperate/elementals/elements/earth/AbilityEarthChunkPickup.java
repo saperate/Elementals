@@ -48,7 +48,7 @@ public class AbilityEarthChunkPickup implements Ability {
                         entity.setBlockState(state);
                         entity.setTargetPosition(new Vector3f(x,y - (size / 2),z));
                         entity.setUseOffset(true);
-                        entity.setDamage(4f);
+                        entity.setDamage(6);
 
                         player.getWorld().spawnEntity(entity);
                         entities.add(entity);

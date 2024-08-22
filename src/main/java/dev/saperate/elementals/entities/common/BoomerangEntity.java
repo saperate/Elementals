@@ -80,6 +80,8 @@ public class BoomerangEntity extends PersistentProjectileEntity {
             setNoGravity(false);
         } else if (age > 70 && inGround && getOwner() == null) {
             dropBoomerang();
+        } else if (age > 200 && inGround) {
+            dropBoomerang();
         }
     }
 

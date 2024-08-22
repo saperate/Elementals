@@ -88,8 +88,8 @@ public class WaterCubeEntity extends AbstractElementalsEntity<PlayerEntity> {
 
     @Override
     public void onHitEntity(Entity entity) {
-        entity.damage(this.getDamageSources().playerAttack((PlayerEntity) getOwner()), 4);
-        entity.addVelocity(this.getVelocity().multiply(1));
+        entity.damage(this.getDamageSources().playerAttack((PlayerEntity) getOwner()), 6);
+        entity.addVelocity(this.getVelocity().multiply(1.25));
         discard();
     }
 

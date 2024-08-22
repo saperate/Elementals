@@ -18,7 +18,7 @@ public class AbilityAirJump implements Ability {
 
     @Override
     public void onCall(Bender bender, long deltaT) {
-        if (!bender.reduceChi(bender.player.getRootVehicle().isOnGround() ? 10 : 15)) {
+        if (!bender.reduceChi(10)) {
             if (bender.abilityData == null) {
                 bender.setCurrAbility(null);
             } else {

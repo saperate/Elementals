@@ -4,8 +4,8 @@
       "item": "elementals:lightning_scroll"
     },
     "title": "The power of Thor!",
-    "description": "Unlock the lightning sub bending",
-    "frame": "task",
+    "description": "Complete Fire bending and unlock the Lightning sub-bending",
+    "frame": "challenge",
     "show_toast": true,
     "announce_to_chat": true
   },

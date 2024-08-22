@@ -3,6 +3,7 @@ package dev.saperate.elementals.elements.air;
 import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.elements.Ability;
+import dev.saperate.elementals.utils.SapsUtils;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.MovementType;
@@ -64,7 +65,7 @@ public class AbilityAirGust implements Ability {
             bender.setCurrAbility(null);
             return;
         }
-        if (!bender.reduceChi(0.15f)) {
+        if (!bender.reduceChi(0.25f)) {
             if (bender.abilityData == null) {
                 bender.setCurrAbility(null);
             } else {
@@ -97,11 +98,14 @@ public class AbilityAirGust implements Ability {
                     boundingBox.expand(12).offset(player.getPos()),
                     Entity::isAlive);
 
+            float horizontalKnockback = -0.045f;
+
             //the reason why we make the y multiplier higher is because i makes the player "float"
             //which is more fun c:
-            player.addVelocity(pos.multiply(-0.0025f, -0.020f, -0.0025f));
+            player.addVelocity(pos.normalize().multiply(horizontalKnockback));
             //reset it so we don't kill ourselves when we gently glide down
             if(player.getVelocity().y <= -0.020f){
+                System.out.println("beep");
                 player.fallDistance = 0;
             }
             player.velocityModified = true;

@@ -33,9 +33,16 @@ public class FireScrollItem extends Item {
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         if (!user.getWorld().isClient) {
             Bender bender = Bender.getBender(user);
-            bender.addElement(FireElement.get(), true);
+            if(bender.addElement(FireElement.get(), true)){
+                user.getInventory().removeOne(user.getStackInHand(hand));
+            }
         }
         return super.use(world, user, hand);
+    }
+
+    @Override
+    public void appendTooltip(ItemStack itemStack, World world, List<Text> tooltip, TooltipContext tooltipContext) {
+        tooltip.add(Text.translatable("item.elementals.fire_scroll.tooltip"));
     }
 
 }

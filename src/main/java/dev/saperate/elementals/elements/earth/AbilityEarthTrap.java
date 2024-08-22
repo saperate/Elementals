@@ -92,7 +92,7 @@ public class AbilityEarthTrap implements Ability {
 
         block.setTargetPosition(victim.getPos().toVector3f());
         bender.player.addStatusEffect(new StatusEffectInstance(STATIONARY_EFFECT, 5, 1, false, false, false));
-        victim.addStatusEffect(new StatusEffectInstance(STATIONARY_EFFECT, 20, 1, false, true, false));
+        victim.addStatusEffect(new StatusEffectInstance(STATIONARY_EFFECT, 60, 1, false, true, false));
 
 
 
