@@ -50,7 +50,6 @@ public class BoomerangItem extends Item implements Vanishable, DispenserBehavior
     @Override
     public ItemStack dispense(BlockPointer pointer, ItemStack stack) {
         stack.decrement(1);
-        System.out.println("he");
         World world = pointer.getWorld();
         world.playSound(null, pointer.getPos(), SoundEvents.ENTITY_ENDER_PEARL_THROW,
                 SoundCategory.NEUTRAL, 0.5f, 0.4f / (world.getRandom().nextFloat() * 0.4f + 0.8f));

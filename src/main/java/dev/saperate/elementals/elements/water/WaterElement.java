@@ -4,6 +4,8 @@ import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.elements.Element;
 import dev.saperate.elementals.elements.Upgrade;
+import dev.saperate.elementals.items.ElementalItems;
+import dev.saperate.elementals.items.WaterPouchItem;
 import net.minecraft.block.*;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -160,15 +162,7 @@ public class WaterElement extends Element {
             return hit.getPos().toVector3f();
         }
 
-        //checks if we have any water bottles in our inventory, if we do, consume it do cast our stuff
-        if (player.getInventory().containsAny((stack) -> {
-            if (PotionUtil.getPotion(stack).equals(Potions.WATER)) {
-                player.getInventory().removeOne(stack);
-                player.getInventory().insertStack(Items.GLASS_BOTTLE.getDefaultStack());
-                return true;
-            }
-            return false;
-        })) {
+        if (tryRetrieveWater(player)) {
             return getEntityLookVector(player, 2.5f).toVector3f();
         }
 
@@ -206,6 +200,55 @@ public class WaterElement extends Element {
         BlockPos blockPos = entity.getBlockPos();
         return entity.getWorld().hasRain(blockPos) || entity.getWorld().hasRain(BlockPos.ofFloored((double) blockPos.getX(), entity.getBoundingBox().maxY, (double) blockPos.getZ()));
     }
+
+    /**
+     * Places a single unit of water in the player's inventory.
+     * 1 unit of water can produce 1 ability
+     * @param player The player where the water will be placed
+     * @return true if water was placed in the player's inventory
+     */
+    public static boolean tryStoreWater(PlayerEntity player){
+        return player.getInventory().containsAny((stack) -> {
+            if(stack.getItem().equals(Items.GLASS_BOTTLE)){
+                stack.decrement(1);
+                player.getInventory().insertStack(PotionUtil.setPotion(Items.POTION.getDefaultStack(), Potions.WATER));
+                return true;
+            } else if (stack.getItem().equals(ElementalItems.WATER_POUCH_ITEM)) {
+                WaterPouchItem item = (WaterPouchItem) stack.getItem();
+                int waterLevel = item.getWaterLevel(stack);
+                if(waterLevel < 3){
+                    item.setWaterLevel(stack,waterLevel + 1);
+                    return true;
+                }
+            }
+            return false;
+        });
+    }
+
+    /**
+     * Takes a single unit of water in the player's inventory.
+     * 1 unit of water can produce 1 ability
+     * @param player The player where the water will be taken
+     * @return true if water was taken from the player's inventory
+     */
+    public static boolean tryRetrieveWater(PlayerEntity player){
+        return player.getInventory().containsAny((stack) -> {
+            if (PotionUtil.getPotion(stack).equals(Potions.WATER)) {
+                player.getInventory().removeOne(stack);
+                player.getInventory().insertStack(Items.GLASS_BOTTLE.getDefaultStack());
+                return true;
+            } else if (stack.getItem().equals(ElementalItems.WATER_POUCH_ITEM)) {
+                WaterPouchItem item = (WaterPouchItem) stack.getItem();
+                int waterLevel = item.getWaterLevel(stack);
+                if(waterLevel > 0){
+                    item.setWaterLevel(stack,waterLevel - 1);
+                    return true;
+                }
+            }
+            return false;
+        });
+    }
+
     public static Element get() {
         return elementList.get(1);
     }

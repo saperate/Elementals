@@ -65,16 +65,7 @@ public class AbilityWaterHealing implements Ability {
     @Override
     public void onRightClick(Bender bender, boolean started) {
         PlayerEntity player = bender.player;
-        boolean storedWater = player.getInventory().containsAny((stack) -> {
-            if(stack.getItem().equals(Items.GLASS_BOTTLE)){
-                stack.decrement(1);
-                player.getInventory().insertStack(PotionUtil.setPotion(Items.POTION.getDefaultStack(), Potions.WATER));
-                return true;
-            }
-            return false;
-        });
-
-        if (storedWater) {
+        if (WaterElement.tryStoreWater(player)) {
             WaterHealingEntity entity = (WaterHealingEntity) bender.abilityData;
             if (entity == null) {
                 return;

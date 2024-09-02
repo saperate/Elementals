@@ -66,7 +66,6 @@ public class ElementalItems {
                     .maxCount(1)
                     .food(LIGHTNING_BOTTLE_FOOD_COMPONENT)
             ));
-
     public static final DirtBottleItem DIRT_BOTTLE_ITEM = (DirtBottleItem) registerItem("dirt_bottle",
             new DirtBottleItem(new FabricItemSettings()
                     .maxCount(1)));
@@ -74,6 +73,9 @@ public class ElementalItems {
             new BoomerangItem(new FabricItemSettings()
                     .maxCount(1)
             ));
+    public static final WaterPouchItem WATER_POUCH_ITEM = (WaterPouchItem) registerItem("water_pouch",
+            new WaterPouchItem(new FabricItemSettings()
+                    .maxCount(1)));
 
     public static  final ItemGroup ELEMENTALS_GROUP = FabricItemGroup.builder()
             .icon(() -> new ItemStack(SCROLL_ITEM))
@@ -88,6 +90,7 @@ public class ElementalItems {
                 entries.add(DIRT_BOTTLE_ITEM);
                 entries.add(LIGHTNING_BOTTLE_ITEM);
                 entries.add(BOOMERANG_ITEM);
+                entries.add(WATER_POUCH_ITEM);
             }).build();
 
 

@@ -1,7 +1,9 @@
 package dev.saperate.elementals.entities.common;
 
+import dev.saperate.elementals.blocks.blockEntities.LitAirBlockEntity;
 import dev.saperate.elementals.entities.earth.EarthBlockEntity;
 import dev.saperate.elementals.utils.SapsUtils;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -18,6 +20,7 @@ import net.minecraft.predicate.entity.EntityPredicates;
 import net.minecraft.util.TypeFilter;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -25,6 +28,8 @@ import org.joml.Vector3f;
 import org.spongepowered.asm.mixin.Interface;
 
 import java.util.List;
+
+import static dev.saperate.elementals.blocks.LitAir.LIT_AIR;
 
 public abstract class AbstractElementalsEntity<OwnerType extends Entity> extends Entity {
     private static final TrackedData<Integer> OWNER_ID = DataTracker.registerData(AbstractElementalsEntity.class, TrackedDataHandlerRegistry.INTEGER);
@@ -42,6 +47,17 @@ public abstract class AbstractElementalsEntity<OwnerType extends Entity> extends
     @Override
     public void tick() {
         super.tick();
+
+        if(emitsLight()){
+            BlockPos pos = getBlockPos().up();
+            BlockState state = getWorld().getBlockState(pos);
+            if (age % 2 == 0 && state.getBlock().equals(LIT_AIR)
+                    && getWorld().getBlockEntity(pos) instanceof LitAirBlockEntity litAirBlockEntity) {
+                litAirBlockEntity.resetTimer();
+            } else if (state.isAir()) {
+                getWorld().setBlockState(pos, LIT_AIR.getDefaultState());
+            }
+        }
 
         if(getVelocity().x == 0 || getVelocity().z == 0 || getVelocity().y == 0){
             addVelocity(0.0001,0.0001,0.0001);
@@ -186,12 +202,17 @@ public abstract class AbstractElementalsEntity<OwnerType extends Entity> extends
         return false;
     }
 
+    public boolean emitsLight(){
+        return false;
+    }
+
     /**
      * Called when the entity collides with the ground, this is only called if the entity is no longer controlled
      */
     public void collidesWithGround() {
 
     }
+
 
 
     @Override
@@ -240,6 +261,7 @@ public abstract class AbstractElementalsEntity<OwnerType extends Entity> extends
     public boolean doesRenderOnFire() {
         return false;
     }
+
 
     /**
      * @author Mojang

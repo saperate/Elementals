@@ -231,4 +231,9 @@ public class FireArcEntity extends AbstractElementalsEntity<PlayerEntity> {
     public boolean hasNoGravity() {
         return super.hasNoGravity() || getParent() != null;
     }
+
+    @Override
+    public boolean emitsLight() {
+        return true;
+    }
 }

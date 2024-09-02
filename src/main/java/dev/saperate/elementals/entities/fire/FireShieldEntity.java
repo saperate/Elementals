@@ -79,6 +79,11 @@ public class FireShieldEntity extends AbstractElementalsEntity<PlayerEntity> {
     }
 
     @Override
+    public boolean emitsLight() {
+        return true;
+    }
+
+    @Override
     public void onTouchEntity(Entity entity) {
         if (entity.getY() - getY() < getFireHeight() + 1
                 && Math.abs(entity.getPos().subtract(getPos()).length()) > 2) {

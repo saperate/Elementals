@@ -117,4 +117,8 @@ public class FireBallEntity extends AbstractElementalsEntity<PlayerEntity> {
         return -1;
     }
 
+    @Override
+    public boolean emitsLight() {
+        return true;
+    }
 }

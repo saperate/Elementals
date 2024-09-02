@@ -1,11 +1,13 @@
 package dev.saperate.elementals.entities.fire;
 
+import dev.saperate.elementals.entities.common.AbstractElementalsEntity;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.*;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.particle.ParticleTypes;
@@ -18,26 +20,26 @@ import static dev.saperate.elementals.entities.ElementalEntities.FIREBLOCK;
 import static dev.saperate.elementals.utils.SapsUtils.summonParticles;
 import static net.minecraft.entity.projectile.ProjectileUtil.getEntityCollision;
 
-public class FireBlockEntity extends Entity {
+public class FireBlockEntity extends AbstractElementalsEntity<PlayerEntity> {
     public static final int MAX_FLAME_SIZE = 5;
     private static final TrackedData<Float> FINAL_HEIGHT = DataTracker.registerData(FireBlockEntity.class, TrackedDataHandlerRegistry.FLOAT);
     private static final TrackedData<Float> HEIGHT = DataTracker.registerData(FireBlockEntity.class, TrackedDataHandlerRegistry.FLOAT);
     private static final TrackedData<Boolean> IS_BLUE = DataTracker.registerData(FireBlockEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
-    public int lifeTime = 0;
     public float prevFlameSize = 0;
     public int heightAdjustSpeed = 10;//Smaller is faster
 
 
     public FireBlockEntity(EntityType<FireBlockEntity> type, World world) {
-        super(type, world);
+        super(type, world, PlayerEntity.class);
     }
 
-    public FireBlockEntity(World world, LivingEntity owner) {
+    public FireBlockEntity(World world, PlayerEntity owner) {
         this(world, owner, owner.getX(), owner.getY(), owner.getZ());
     }
 
-    public FireBlockEntity(World world, LivingEntity owner, double x, double y, double z) {
-        super(FIREBLOCK, world);
+    public FireBlockEntity(World world, PlayerEntity owner, double x, double y, double z) {
+        super(FIREBLOCK, world, PlayerEntity.class);
+        setOwner(owner);
         setPos(x, y, z);
         lifeTime = 200;
         setFireHeight(MAX_FLAME_SIZE);
@@ -59,6 +61,7 @@ public class FireBlockEntity extends Entity {
         this.getDataTracker().startTracking(HEIGHT, 1f);
         this.getDataTracker().startTracking(FINAL_HEIGHT, 1.5f);
         this.getDataTracker().startTracking(IS_BLUE, false);
+        super.initDataTracker();
     }
 
     @Override
@@ -79,34 +82,34 @@ public class FireBlockEntity extends Entity {
             setFireHeight(getFinalFireHeight());
             heightAdjustSpeed = 5;
         }
-        float h = getFireHeight();
 
         if (getWorld().getBlockState(getBlockPos()).getBlock().equals(Blocks.WATER)
                 || getWorld().getBlockState(getBlockPos().down()).isAir()) {
             this.discard();
         }
+    }
 
-        List<ProjectileEntity> projectiles = getWorld().getEntitiesByClass(ProjectileEntity.class,
-                getWorld().isClient ? getBoundingBox().expand(.25f) : getBoundingBox().offset(getPos()).expand(.25f),
-                ProjectileEntity::isAlive);
-
-        for (ProjectileEntity e : projectiles) {
-            e.discard();
+    @Override
+    public void onTouchEntity(Entity entity) {
+        if (!entity.isFireImmune() && entity.getY() - getY() < getFireHeight()) {
+            entity.setOnFireFor(8);
+            entity.damage(getDamageSources().inFire(), isBlue() ? 2.5f : 1.5f);
         }
+    }
 
-        List<LivingEntity> hits = getWorld().getEntitiesByClass(LivingEntity.class, getWorld().isClient ? getBoundingBox() : getBoundingBox().offset(getPos()), LivingEntity::isAlive);
-
-        for (LivingEntity entity : hits) {
-            if (!entity.isFireImmune() && entity.getY() - getY() < h) {
-                entity.setOnFireFor(8);
-                entity.damage(getDamageSources().inFire(), isBlue() ? 2.5f : 1.5f);
-            }
-        }
+    @Override
+    public float projectileDeflectionRange() {
+        return 1;
     }
 
     @Override
     public void onDataTrackerUpdate(List<DataTracker.SerializedEntry<?>> dataEntries) {
         super.onDataTrackerUpdate(dataEntries);
+    }
+
+    @Override
+    public boolean emitsLight() {
+        return true;
     }
 
 
@@ -132,21 +135,6 @@ public class FireBlockEntity extends Entity {
         return true;
     }
 
-    @Override
-    protected void readCustomDataFromNbt(NbtCompound nbt) {
-        nbt.putInt("lifeTime", lifeTime);
-    }
-
-    @Override
-    protected void writeCustomDataToNbt(NbtCompound nbt) {
-        if (nbt.contains("lifeTime")) {
-            lifeTime = nbt.getInt("lifeTime");
-        }
-    }
-
-    public int getLifeTime() {
-        return lifeTime;
-    }
 
     public float getFinalFireHeight() {
         return this.dataTracker.get(FINAL_HEIGHT);

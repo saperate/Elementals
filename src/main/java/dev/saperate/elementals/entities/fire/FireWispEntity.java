@@ -75,14 +75,7 @@ public class FireWispEntity extends AbstractElementalsEntity<PlayerEntity> {
             moveEntity();
         }
 
-        BlockPos pos = getBlockPos().up();
-        BlockState state = getWorld().getBlockState(pos);
-        if (age % 2 == 0 && state.getBlock().equals(LIT_AIR)
-                && getWorld().getBlockEntity(pos) instanceof LitAirBlockEntity litAirBlockEntity) {
-            litAirBlockEntity.resetTimer();
-        } else if (state.isAir()) {
-            getWorld().setBlockState(pos, LIT_AIR.getDefaultState());
-        }
+
 
     }
 
@@ -106,6 +99,10 @@ public class FireWispEntity extends AbstractElementalsEntity<PlayerEntity> {
         return 0.1f;
     }
 
+    @Override
+    public boolean emitsLight() {
+        return true;
+    }
 
     @Override
     public void onRemoved() {

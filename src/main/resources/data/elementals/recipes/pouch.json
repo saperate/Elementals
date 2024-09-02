@@ -3,19 +3,19 @@
     "category": "equipment",
     "key": {
         "#": {
-            "tag": "minecraft:planks"
+            "item": "minecraft:leather"
         },
         "X": {
-            "item": "minecraft:leather"
+            "item": "minecraft:string"
         }
     },
     "pattern": [
+        "#X ",
         "X##",
-        "#  ",
-        "#  "
+        " ##"
     ],
     "result": {
-        "item": "elementals:boomerang"
+        "item": "elementals:water_pouch"
     },
     "show_notification": true
 }
