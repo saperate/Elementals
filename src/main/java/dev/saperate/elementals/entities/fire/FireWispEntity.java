@@ -57,7 +57,7 @@ public class FireWispEntity extends AbstractElementalsEntity<PlayerEntity> {
             summonParticles(this, random,
                     isBlue() ? ParticleTypes.SOUL_FIRE_FLAME : ParticleTypes.FLAME,
                     0, 1);
-            playSound(SoundEvents.BLOCK_FIRE_AMBIENT, 1, 0);
+            //playSound(SoundEvents.BLOCK_FIRE_AMBIENT, 1, 0);
 
         }
 

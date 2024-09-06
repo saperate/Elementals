@@ -27,25 +27,6 @@ public class ScrollItem extends Item {
 
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
-        if (!user.getWorld().isClient) {
-            Bender bender = Bender.getBender(user);
-            boolean changed = false;
-            Element curr = bender.getElement();
-            while (curr != NoneElement.get()) {
-                changed = true;
-                curr = bender.getElement();
-                bender.removeElement(curr, true);
-            }
-            if(changed){
-                user.getInventory().removeOne(user.getStackInHand(hand));
-            }
-        }
         return super.use(world, user, hand);
     }
-
-    @Override
-    public void appendTooltip(ItemStack itemStack, World world, List<Text> tooltip, TooltipContext tooltipContext) {
-        tooltip.add(Text.translatable("item.elementals.scroll.tooltip"));
-    }
-
 }

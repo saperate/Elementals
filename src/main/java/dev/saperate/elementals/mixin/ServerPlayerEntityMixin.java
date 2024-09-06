@@ -6,11 +6,16 @@ import dev.saperate.elementals.elements.air.AbilityAirShield;
 import dev.saperate.elementals.elements.earth.AbilityEarthArmor;
 import dev.saperate.elementals.elements.fire.AbilityFireShield;
 import dev.saperate.elementals.elements.water.AbilityWaterShield;
+import dev.saperate.elementals.items.ElementalItems;
 import net.fabricmc.fabric.api.entity.FakePlayer;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.damage.DamageTypes;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.WrittenBookItem;
+import net.minecraft.network.packet.s2c.play.OpenWrittenBookS2CPacket;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.util.Hand;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -74,4 +79,6 @@ public abstract class ServerPlayerEntityMixin {
             }
         }
     }
+
+
 }

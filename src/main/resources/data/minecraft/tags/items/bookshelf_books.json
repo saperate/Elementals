@@ -1,0 +1,11 @@
+{
+  "replace" : false,
+  "values": [
+    "elementals:scroll",
+    "elementals:fire_scroll",
+    "elementals:water_scroll",
+    "elementals:earth_scroll",
+    "elementals:air_scroll",
+    "elementals:lightning_scroll"
+  ]
+}

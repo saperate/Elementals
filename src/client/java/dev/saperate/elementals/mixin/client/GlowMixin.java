@@ -30,7 +30,7 @@ public abstract class GlowMixin {
         if (safeHasStatusEffect(SEISMIC_SENSE_EFFECT, player) && e.getWorld().isClient && e.isOnGround()
                 && player.isOnGround()
                 && !player.equals(e)
-                && e.getPos().subtract(player.getPos()).length() <= 30) {
+                && e.getPos().subtract(player.getPos()).length() <= 60) {
             cir.setReturnValue(true);
         }
     }

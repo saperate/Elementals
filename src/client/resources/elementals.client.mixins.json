@@ -16,6 +16,6 @@
   "mixins": [
     "GameRendererMixin",
     "GlowMixin",
-    "PlayerEntityMixin"
+    "ClientPlayerEntityMixin"
   ]
 }
