@@ -143,4 +143,14 @@ public class FireBlockEntity extends AbstractElementalsEntity<PlayerEntity> {
     public void setFinalFireHeight(float h) {
         this.getDataTracker().set(FINAL_HEIGHT, h);
     }
+
+    @Override
+    public boolean damagesOnTouch() {
+        return true;
+    }
+
+    @Override
+    public boolean pushesEntitiesAway() {
+        return false;
+    }
 }

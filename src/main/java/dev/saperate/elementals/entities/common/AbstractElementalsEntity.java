@@ -102,7 +102,7 @@ public abstract class AbstractElementalsEntity<OwnerType extends Entity> extends
 
         if (damagesOnTouch() && !getWorld().isClient) {
             List<LivingEntity> entities = getWorld().getEntitiesByClass(LivingEntity.class,
-                    getBoundingBox().expand(0.25f),
+                    getBoundingBox().expand(0.25f).offset(getPos()),
                     LivingEntity::isAlive);
 
             for (LivingEntity e : entities) {

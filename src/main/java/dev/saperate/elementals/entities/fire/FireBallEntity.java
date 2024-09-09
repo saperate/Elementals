@@ -14,6 +14,8 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.world.World;
 import net.minecraft.world.explosion.Explosion;
 
+import java.util.Objects;
+
 import static dev.saperate.elementals.entities.ElementalEntities.FIREBALL;
 import static dev.saperate.elementals.utils.SapsUtils.getEntityLookVector;
 import static dev.saperate.elementals.utils.SapsUtils.summonParticles;
@@ -98,6 +100,9 @@ public class FireBallEntity extends AbstractElementalsEntity<PlayerEntity> {
 
     @Override
     public void onRemoved() {
+        if(Objects.equals(getRemovalReason(), RemovalReason.KILLED)){
+            return;
+        }
         summonParticles(this, random,
                 isBlue() ? ParticleTypes.SOUL_FIRE_FLAME : ParticleTypes.FLAME,
                 0.25f, 25);

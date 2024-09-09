@@ -186,4 +186,8 @@ public class WaterBladeEntity extends AbstractElementalsEntity<PlayerEntity> {
         return getDataTracker().get(DAMAGE);
     }
 
+    @Override
+    public boolean damagesOnTouch() {
+        return true;
+    }
 }
