@@ -153,4 +153,5 @@ public class FireBlockEntity extends AbstractElementalsEntity<PlayerEntity> {
     public boolean pushesEntitiesAway() {
         return false;
     }
+
 }

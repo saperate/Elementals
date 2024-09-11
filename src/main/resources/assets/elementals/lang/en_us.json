@@ -329,7 +329,7 @@
 
   "upgrade.elementals.earthBlockShrapnel": "Shrapnel",
   "upgrade.elementals.earthBlockShrapnel.description": " By compressing earth into a tight space, you can create a sharp projectile that deals more damage.",
-  "upgrade.elementals.earthBlockShrapnel.use": " Use: Earth Pickup + r-click",
+  "upgrade.elementals.earthBlockShrapnel.use": " Use: Earth Pickup + r-click + sneak",
   "upgrade.elementals.earthBlockShrapnel.icon": "earth",
 
   "upgrade.elementals.earthBlockSpeedI": "Speed I",

@@ -73,7 +73,7 @@ public class AbilityEarthBlockPickup implements Ability {
 
         EarthBlockEntity blockEntity = (EarthBlockEntity) bender.abilityData;
         onRemove(bender);
-        if (blockEntity == null || !PlayerData.get(player).canUseUpgrade("earthBlockShrapnel")) {
+        if (blockEntity == null || !PlayerData.get(player).canUseUpgrade("earthBlockShrapnel") || !player.isSneaking()) {
             return;
         }
         PlayerData plrData = PlayerData.get(bender.player);
@@ -87,6 +87,7 @@ public class AbilityEarthBlockPickup implements Ability {
         blockEntity.setVelocity(bender.player, bender.player.getPitch(), bender.player.getYaw(), 0, speed, 0);
         blockEntity.setModelShapeId(1);
         blockEntity.setDamage(plrData.canUseUpgrade("earthBlockDamageI") ? 5 : 4);
+        blockEntity.setShiftToFreeze(false);
     }
 
     @Override

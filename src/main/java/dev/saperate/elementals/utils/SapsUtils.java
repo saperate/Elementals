@@ -3,6 +3,7 @@ package dev.saperate.elementals.utils;
 import com.google.common.collect.Sets;
 import dev.saperate.elementals.elements.Element;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import net.fabricmc.loader.impl.lib.sat4j.core.Vec;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.FluidBlock;
@@ -369,6 +370,10 @@ public final class SapsUtils {
 
     public static Boolean isAboutEquals(double a, double b, double errorMargin) {
         return Math.abs(a - b) <= errorMargin;
+    }
+
+    public static Boolean isAboutEquals(Vec3d a, Vec3d b, double errorMargin) {
+        return a.distanceTo(b) <= errorMargin;
     }
 
     /**

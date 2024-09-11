@@ -8,6 +8,9 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.OperatorBlock;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.*;
+import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.entity.damage.DamageSources;
+import net.minecraft.entity.damage.DamageTypes;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
@@ -169,6 +172,14 @@ public class WaterBladeEntity extends AbstractElementalsEntity<PlayerEntity> {
         entity.damage(this.getDamageSources().playerAttack(getOwner()), getDamage() * 5);
         entity.addVelocity(this.getVelocity().multiply(0.8f));
         discard();
+    }
+
+    @Override
+    public void onTouchEntity(Entity entity) {
+        if(age % 10 == 0){
+            entity.damage(this.getDamageSources().playerAttack(getOwner()), getDamage());
+        }
+
     }
 
     @Override

@@ -41,8 +41,9 @@ public class EarthBlockEntity extends AbstractElementalsEntity<PlayerEntity> {
     private static final TrackedData<Boolean> IS_COLLIDABLE = DataTracker.registerData(EarthBlockEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
     private static final TrackedData<Float> MOVEMENT_SPEED = DataTracker.registerData(EarthBlockEntity.class, TrackedDataHandlerRegistry.FLOAT);
     private static final TrackedData<Float> DAMAGE = DataTracker.registerData(EarthBlockEntity.class, TrackedDataHandlerRegistry.FLOAT);
+    private static final TrackedData<Boolean> SHIFT_FREEZE = DataTracker.registerData(EarthBlockEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
 
-    private boolean drops = true, damageOnTouch = false, shiftToFreeze = true, dropOnLifeTime = false;
+    private boolean drops = true, damageOnTouch = false, dropOnLifeTime = false;
 
 
     public EarthBlockEntity(EntityType<EarthBlockEntity> type, World world) {
@@ -72,6 +73,7 @@ public class EarthBlockEntity extends AbstractElementalsEntity<PlayerEntity> {
         this.getDataTracker().startTracking(IS_COLLIDABLE, true);
         this.getDataTracker().startTracking(MOVEMENT_SPEED, 0.1f);
         this.getDataTracker().startTracking(DAMAGE, 2f);
+        this.getDataTracker().startTracking(SHIFT_FREEZE, true);
     }
 
     @Override
@@ -84,7 +86,7 @@ public class EarthBlockEntity extends AbstractElementalsEntity<PlayerEntity> {
         }
 
         LivingEntity owner = getOwner();
-        if (!(owner != null && owner.isSneaking() && shiftToFreeze)) {
+        if (!(owner != null && owner.isSneaking() && isShiftToFreeze())) {
             moveEntity(owner);
         }
 
@@ -246,12 +248,12 @@ public class EarthBlockEntity extends AbstractElementalsEntity<PlayerEntity> {
         this.damageOnTouch = damageOnTouch;
     }
 
-    public boolean isShiftToFreeze() {
-        return shiftToFreeze;
+    public void setShiftToFreeze(boolean val) {
+        this.getDataTracker().set(SHIFT_FREEZE, val);
     }
 
-    public void setShiftToFreeze(boolean shiftToFreeze) {
-        this.shiftToFreeze = shiftToFreeze;
+    public boolean isShiftToFreeze() {
+        return this.getDataTracker().get(SHIFT_FREEZE);
     }
 
     @Override

@@ -21,6 +21,7 @@ import net.minecraft.util.TypeFilter;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Box;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -101,8 +102,16 @@ public abstract class AbstractElementalsEntity<OwnerType extends Entity> extends
         }
 
         if (damagesOnTouch() && !getWorld().isClient) {
+            Box boundingBox = getBoundingBox();
+
+            //if the bounding box doesn't offset by the entity position for some reason,
+            // we need to add it manually for collisions to work properly
+            if(!SapsUtils.isAboutEquals(boundingBox.getCenter(),getEyePos(), 4)){
+                boundingBox =  boundingBox.offset(getPos());
+            }
+
             List<LivingEntity> entities = getWorld().getEntitiesByClass(LivingEntity.class,
-                    getBoundingBox().expand(0.25f).offset(getPos()),
+                    boundingBox.expand(0.25f),
                     LivingEntity::isAlive);
 
             for (LivingEntity e : entities) {
