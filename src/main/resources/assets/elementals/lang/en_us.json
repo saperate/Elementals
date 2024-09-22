@@ -20,6 +20,8 @@
   "item.elementals.water_pouch" : "Water Pouch",
   "item.elementals.water_pouch.tooltip" : "Water level: %d",
 
+  "enchantment.elementals.volume" : "Volume",
+
   "key.elementals.Ability1" : "Ability 1",
   "key.elementals.Ability2" : "Ability 2",
   "key.elementals.Ability3" : "Ability 3",

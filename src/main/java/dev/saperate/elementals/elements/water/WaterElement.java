@@ -215,11 +215,7 @@ public class WaterElement extends Element {
                 return true;
             } else if (stack.getItem().equals(ElementalItems.WATER_POUCH_ITEM)) {
                 WaterPouchItem item = (WaterPouchItem) stack.getItem();
-                int waterLevel = item.getWaterLevel(stack);
-                if(waterLevel < 3){
-                    item.setWaterLevel(stack,waterLevel + 1);
-                    return true;
-                }
+                return item.fillPouch(stack,1);
             }
             return false;
         });
@@ -239,11 +235,7 @@ public class WaterElement extends Element {
                 return true;
             } else if (stack.getItem().equals(ElementalItems.WATER_POUCH_ITEM)) {
                 WaterPouchItem item = (WaterPouchItem) stack.getItem();
-                int waterLevel = item.getWaterLevel(stack);
-                if(waterLevel > 0){
-                    item.setWaterLevel(stack,waterLevel - 1);
-                    return true;
-                }
+                return item.emptyPouch(stack,1);
             }
             return false;
         });

@@ -17,6 +17,7 @@ import dev.saperate.elementals.elements.earth.EarthElement;
 import dev.saperate.elementals.elements.fire.FireElement;
 import dev.saperate.elementals.elements.lightning.LightningElement;
 import dev.saperate.elementals.elements.water.WaterElement;
+import dev.saperate.elementals.enchantments.VolumeEnchantment;
 import dev.saperate.elementals.entities.ElementalEntities;
 import dev.saperate.elementals.items.ElementalItems;
 import net.fabricmc.api.ModInitializer;
@@ -35,6 +36,8 @@ import net.minecraft.advancement.criterion.Criteria;
 import net.minecraft.block.DispenserBlock;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.command.argument.serialize.ConstantArgumentSerializer;
+import net.minecraft.enchantment.Enchantment;
+import net.minecraft.enchantment.Enchantments;
 import net.minecraft.item.Items;
 import net.minecraft.loot.LootPool;
 import net.minecraft.loot.LootTable;
@@ -76,6 +79,7 @@ import static dev.saperate.elementals.misc.AirBannerPattern.AIR_PATTERN;
 import static dev.saperate.elementals.network.ModMessages.registerC2SPackets;
 
 public class Elementals implements ModInitializer {
+    public static Enchantment VOLUME_ENCHANTMENT = new VolumeEnchantment();
 
     //TODO add config
     public static final String MODID = "elementals";
@@ -103,6 +107,8 @@ public class Elementals implements ModInitializer {
         ElementalItems.register();
         DispenserBlock.registerBehavior(BOOMERANG_ITEM,BOOMERANG_ITEM);
         DispenserBlock.registerBehavior(DIRT_BOTTLE_ITEM,DIRT_BOTTLE_ITEM);
+
+        Registry.register(Registries.ENCHANTMENT, new Identifier(MODID, "volume"), VOLUME_ENCHANTMENT);
 
         ElementalEntities.register();
 
