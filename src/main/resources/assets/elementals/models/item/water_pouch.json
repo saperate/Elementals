@@ -2,8 +2,10 @@
 	"credit": "Made with Blockbench",
 	"parent": "minecraft:item/handheld",
 	"textures": {
-		"layer0": "elementals:item/water_pouch/water_pouch"
+		"layer0" : "elementals:item/water_pouch",
+		"layer1" : "elementals:item/water_pouch_overlay"
 	},
+
 	"display": {
 		"thirdperson_righthand": {
 			"rotation": [150, -90, 55],

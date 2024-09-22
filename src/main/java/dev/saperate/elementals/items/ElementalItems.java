@@ -66,6 +66,9 @@ public class ElementalItems {
                     .maxCount(1)
                     .food(LIGHTNING_BOTTLE_FOOD_COMPONENT)
             ));
+    public static final BloodScrollItem BLOOD_SCROLL_ITEM = (BloodScrollItem) registerItem("blood_scroll",
+            new BloodScrollItem(new FabricItemSettings()
+                    .maxCount(1)));
     public static final DirtBottleItem DIRT_BOTTLE_ITEM = (DirtBottleItem) registerItem("dirt_bottle",
             new DirtBottleItem(new FabricItemSettings()
                     .maxCount(1)));
@@ -87,6 +90,7 @@ public class ElementalItems {
                 entries.add(EARTH_SCROLL_ITEM);
                 entries.add(AIR_SCROLL_ITEM);
                 entries.add(LIGHTNING_SCROLL_ITEM);
+                entries.add(BLOOD_SCROLL_ITEM);
                 entries.add(DIRT_BOTTLE_ITEM);
                 entries.add(LIGHTNING_BOTTLE_ITEM);
                 entries.add(BOOMERANG_ITEM);

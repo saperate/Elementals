@@ -126,7 +126,7 @@ public class FireArcEntity extends AbstractElementalsEntity<PlayerEntity> {
         if (!entity.isFireImmune()) {
             entity.setOnFireFor(8);
         }
-        entity.damage(getDamageSources().inFire(), damage);
+        entity.damage(this.getDamageSources().playerAttack(getOwner()), damage);
         remove();
     }
 

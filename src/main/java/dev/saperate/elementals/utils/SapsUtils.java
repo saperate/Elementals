@@ -359,7 +359,11 @@ public final class SapsUtils {
         }
     }
 
-
+    /**
+     * Checks if the hit result contains an entity.
+     * If it does contain an entity we return it, if it doesn't we return null.
+     * @return An entity or null
+     */
     public static Entity entityFromHitResult(HitResult result) {
         if (result.getType().equals(HitResult.Type.ENTITY)) {
             return ((EntityHitResult) result).getEntity();

@@ -13,6 +13,7 @@ import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.elements.NoneElement;
 import dev.saperate.elementals.elements.air.AirElement;
+import dev.saperate.elementals.elements.blood.BloodElement;
 import dev.saperate.elementals.elements.earth.EarthElement;
 import dev.saperate.elementals.elements.fire.FireElement;
 import dev.saperate.elementals.elements.lightning.LightningElement;
@@ -153,6 +154,7 @@ public class Elementals implements ModInitializer {
 
             return null;
         });
+
     }
 
 
@@ -163,6 +165,7 @@ public class Elementals implements ModInitializer {
         new EarthElement();
         new AirElement();
         new LightningElement();
+        new BloodElement();
     }
 
     private void registerCommands() {

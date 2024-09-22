@@ -9,6 +9,7 @@ import net.minecraft.block.dispenser.DispenserBehavior;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.DyeableItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
@@ -35,7 +36,7 @@ import java.util.Iterator;
 import java.util.List;
 
 
-public class WaterPouchItem extends Item {
+public class WaterPouchItem extends Item implements DyeableItem {
     public WaterPouchItem(Settings settings) {
         super(settings);
     }
@@ -122,4 +123,6 @@ public class WaterPouchItem extends Item {
     public void appendTooltip(ItemStack itemStack, World world, List<Text> tooltip, TooltipContext tooltipContext) {
         SapsUtils.addTranslatable(tooltip,"item.elementals.water_pouch.tooltip",getWaterLevel(itemStack));
     }
+
+
 }

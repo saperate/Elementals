@@ -1,6 +1,0 @@
-{
-  "parent": "builtin/generated",
-  "textures": {
-    "layer0": "elementals:item/water_pouch/water_pouch_1"
-  }
-}

@@ -14,6 +14,8 @@ import dev.saperate.elementals.entities.models.common.DecoyPlayerModel;
 import dev.saperate.elementals.entities.models.water.WaterBladeModel;
 import dev.saperate.elementals.gui.CastTimerHudOverlay;
 import dev.saperate.elementals.gui.ChiHudOverlay;
+import dev.saperate.elementals.items.ElementalItems;
+import dev.saperate.elementals.items.WaterPouchItem;
 import dev.saperate.elementals.keys.KeyCycleBending;
 import dev.saperate.elementals.keys.abilities.KeyAbility1;
 import dev.saperate.elementals.keys.abilities.KeyAbility2;
@@ -25,6 +27,7 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
@@ -77,10 +80,14 @@ public class ElementalsClient implements ClientModInitializer {
 		EntityModelLayerRegistry.registerModelLayer(MODEL_WATER_BLADE_LAYER, WaterBladeModel::getTexturedModelData);
 		EntityModelLayerRegistry.registerModelLayer(MODEL_DECOY_PLAYER, DecoyPlayerModel::getTexturedModelData);
 
-
 		ParticleFactoryRegistry.getInstance().register(LIGHTNING_PARTICLE_TYPE, FlameParticle.Factory::new);
 
 		ClientPlayConnectionEvents.JOIN.register(ElementalsClient::onClientJoin);
+
+		ColorProviderRegistry.ITEM.register(
+				(stack, tintIndex) -> tintIndex == 0 ? ((WaterPouchItem) stack.getItem()).getColor(stack) : 0xFFFFFF,
+				ElementalItems.WATER_POUCH_ITEM
+		);
 	}
 
 
