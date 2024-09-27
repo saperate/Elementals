@@ -471,4 +471,26 @@ public final class SapsUtils {
             entity.getWorld().playSound(null, entity.getBlockPos(), sound, SoundCategory.NEUTRAL, 1, (1.0f + (entity.getWorld().random.nextFloat() - entity.getWorld().random.nextFloat()) * 0.2f) * 0.7f);
         }
     }
+
+    /**
+     * Checks if the looker is looking at the observed entity.
+     * Normally used with a player in order to know if the entity is within the screen or not.
+     * The way this works is by making a kind of cone that shoots off from where the looker is looking.
+     * @param looker The entity from which we are casting the top of the cone
+     * @param observed The entity used to check if it is within that cone
+     * @param maxDistance The height of the cone (put negative numbers for no limit)
+     * @param angle The "radius" of the base of the cone. Usually 0.75 works best for a screen
+     * @return True if the observed is within the cone made by the looker
+     */
+    public static boolean isLookingAt(Entity looker, Entity observed, int maxDistance, float angle){
+        Vector3f pos = getEntityLookVector(looker, 3).subtract(looker.getPos()).normalize().multiply(3).toVector3f();
+        Vector3f dir = looker.getPos().subtract(observed.getPos()).toVector3f();
+        if (dir.length() > maxDistance && maxDistance >= 0) {
+            return false;
+        }
+        dir = dir.normalize();
+        float dot = -pos.normalize().dot(dir);
+
+        return (Math.cos(dot) <= angle  && dot >= 0);
+    }
 }

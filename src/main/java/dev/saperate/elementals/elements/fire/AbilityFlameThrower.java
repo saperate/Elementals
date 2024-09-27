@@ -3,6 +3,7 @@ package dev.saperate.elementals.elements.fire;
 import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.elements.Ability;
+import dev.saperate.elementals.utils.SapsUtils;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.decoration.AbstractDecorationEntity;
@@ -103,15 +104,7 @@ public class AbilityFlameThrower implements Ability {
                 if (e.equals(player)  || e instanceof ItemEntity || e instanceof AbstractDecorationEntity) {
                     continue;
                 }
-                Vector3f dir = player.getPos().subtract(e.getPos()).toVector3f();
-                if (dir.length() > 6) {
-                    continue;
-                }
-                dir = dir.normalize();
-                float dot = -pos.normalize().dot(dir);
-
-
-                if (Math.cos(dot) <= 0.75  && dot >= 0) {
+                if (SapsUtils.isLookingAt(bender.player,e,6,0.75f)) {
                     if (!e.isFireImmune()) {
                         e.setOnFireFor(8);
                         e.damage(e.getDamageSources().playerAttack(player), PlayerData.get(player).canUseUpgrade("blueFire") ? 3 : 2.5f);

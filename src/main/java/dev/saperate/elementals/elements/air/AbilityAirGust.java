@@ -105,7 +105,6 @@ public class AbilityAirGust implements Ability {
             player.addVelocity(pos.normalize().multiply(horizontalKnockback));
             //reset it so we don't kill ourselves when we gently glide down
             if(player.getVelocity().y <= -0.020f){
-                System.out.println("beep");
                 player.fallDistance = 0;
             }
             player.velocityModified = true;

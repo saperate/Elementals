@@ -6,13 +6,13 @@ import net.minecraft.entity.player.PlayerEntity;
 public interface Ability {
     void onCall(Bender bender, long deltaT);
 
-    void onLeftClick(Bender bender, boolean started);
+    default void onLeftClick(Bender bender, boolean started){};
 
-    void onMiddleClick(Bender bender, boolean started);
+    default void onMiddleClick(Bender bender, boolean started){};
 
-    void onRightClick(Bender bender, boolean started);
+    default void onRightClick(Bender bender, boolean started){};
 
-    void onTick(Bender bender);
+    default void onTick(Bender bender){};
 
     default void onBackgroundTick(Bender bender, Object data){}
     default boolean shouldImmobilizePlayer(){

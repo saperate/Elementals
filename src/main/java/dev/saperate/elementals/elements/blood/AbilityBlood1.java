@@ -11,8 +11,11 @@ public class AbilityBlood1 implements Ability {
     public void onCall(Bender bender, long deltaT) {
         PlayerData playerData = PlayerData.get(bender.player);
 
-        if(false && !playerData.canUseUpgrade("Ability 1 upgrade")){ //TODO
-            bender.setCurrAbility(null);
+        if(bender.player.isSneaking() && deltaT >= 1500){
+            BloodElement.get().abilityList.get(2).onCall(bender,deltaT);
+            return;
+        } else if (bender.player.isSneaking()) {
+            BloodElement.get().abilityList.get(3).onCall(bender,deltaT);
             return;
         }
 
