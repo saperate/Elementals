@@ -11,16 +11,21 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MovementType;
 import net.minecraft.entity.effect.StatusEffect;
+import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ProjectileUtil;
 import net.minecraft.fluid.FluidState;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.particle.ParticleEffect;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.potion.PotionUtil;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
+import net.minecraft.util.Hand;
 import net.minecraft.util.crash.CrashException;
 import net.minecraft.util.crash.CrashReport;
 import net.minecraft.util.crash.CrashReportSection;
@@ -492,5 +497,23 @@ public final class SapsUtils {
         float dot = -pos.normalize().dot(dir);
 
         return (Math.cos(dot) <= angle  && dot >= 0);
+    }
+
+    /**
+     * Checks what status effects we can get from the player's hand. Then removes those from the inventory.
+     */
+    public static List<StatusEffectInstance> getEffectsFromHands(PlayerEntity player){
+        ArrayList<StatusEffectInstance> effects = new ArrayList<>();
+
+        for (ItemStack stack : player.getHandItems()) {
+            List<StatusEffectInstance> effectInstances = PotionUtil.getPotionEffects(stack);
+            if(!effectInstances.isEmpty()){
+                effects.addAll(effectInstances);
+                player.getInventory().removeOne(stack);
+                player.getInventory().insertStack(Items.GLASS_BOTTLE.getDefaultStack());
+            }
+
+        }
+        return effects;
     }
 }

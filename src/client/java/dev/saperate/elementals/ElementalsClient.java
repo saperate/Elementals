@@ -2,6 +2,7 @@ package dev.saperate.elementals;
 
 import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.entities.air.*;
+import dev.saperate.elementals.entities.blood.BloodShotEntityRenderer;
 import dev.saperate.elementals.entities.common.BoomerangEntityRenderer;
 import dev.saperate.elementals.entities.common.DirtBottleEntityRenderer;
 import dev.saperate.elementals.entities.fire.*;
@@ -138,6 +139,9 @@ public class ElementalsClient implements ClientModInitializer {
 		//LIGHTNING
 		EntityRendererRegistry.register(LIGHTNINGARC, LightningArcEntityRenderer::new);
 		EntityRendererRegistry.register(VOLTARC, VoltArcEntityRenderer::new);
+
+		//BLOOD
+		EntityRendererRegistry.register(BLOODSHOT, BloodShotEntityRenderer::new);
 	}
 
 	private static void onClientJoin(ClientPlayNetworkHandler clientPlayNetworkHandler, PacketSender packetSender, MinecraftClient client) {

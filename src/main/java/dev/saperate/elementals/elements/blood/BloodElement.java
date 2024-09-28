@@ -32,6 +32,8 @@ public class BloodElement extends Element {
         addAbility(new AbilityBloodPush());
         addAbility(new AbilityBloodControl());
         addAbility(new AbilityBloodShield());
+        addAbility(new AbilityBlood2(), true);
+        addAbility(new AbilityBloodShot());
     }
 
     public static Element get() {

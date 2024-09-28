@@ -2,6 +2,7 @@ package dev.saperate.elementals.entities;
 
 
 
+import dev.saperate.elementals.entities.blood.BloodShotEntity;
 import dev.saperate.elementals.entities.common.BoomerangEntity;
 import dev.saperate.elementals.entities.common.DecoyPlayerEntity;
 import dev.saperate.elementals.entities.air.*;
@@ -154,6 +155,12 @@ public class ElementalEntities {
             FabricEntityTypeBuilder.<VoltArcEntity>create(SpawnGroup.MISC, VoltArcEntity::new)
                     .dimensions(EntityDimensions.changing(0.125f, 0.125f)).build());
 
+    //BLOOD
+    public static final EntityType<BloodShotEntity> BLOODSHOT = Registry.register(
+            Registries.ENTITY_TYPE,
+            new Identifier("elementals", "blood_shot"),
+            FabricEntityTypeBuilder.<BloodShotEntity>create(SpawnGroup.MISC, BloodShotEntity::new)
+                    .dimensions(EntityDimensions.changing(0.125f, 0.125f)).build());
 
     //Common
     public static final EntityType<DecoyPlayerEntity> DECOYPLAYER = Registry.register(
