@@ -27,7 +27,12 @@ public class BloodElement extends Element {
 
 
     public BloodElement() {
-        super("Blood");
+        super("Blood", new Upgrade("Blood", new Upgrade[]{
+                new Upgrade("blood1", 1),
+                new Upgrade("blood2", 1),
+                new Upgrade("blood3", 1),
+                new Upgrade("bloodBag", 1)
+        },0));
         addAbility(new AbilityBlood1(), true);
         addAbility(new AbilityBloodPush());
         addAbility(new AbilityBloodControl());

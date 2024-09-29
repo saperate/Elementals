@@ -27,6 +27,11 @@ public class AbilityWaterShield implements Ability {
         }
         PlayerEntity player = bender.player;
 
+        if(WaterElement.canBend(player,true) == null){
+            bender.setCurrAbility( null);
+            return;
+        }
+
         WaterShieldEntity entity = new WaterShieldEntity(player.getWorld(), player, player.getX(), player.getY(), player.getZ());
         bender.abilityData = entity;
         player.getWorld().spawnEntity(entity);

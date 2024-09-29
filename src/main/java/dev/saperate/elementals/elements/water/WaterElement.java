@@ -8,6 +8,8 @@ import dev.saperate.elementals.items.ElementalItems;
 import dev.saperate.elementals.items.WaterPouchItem;
 import net.minecraft.block.*;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.entity.damage.DamageTypes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.item.Items;
@@ -166,6 +168,10 @@ public class WaterElement extends Element {
             return getEntityLookVector(player, 2.5f).toVector3f();
         }
 
+        if(plrData.canUseUpgrade("bloodBag")){
+            player.damage(player.getDamageSources().dryOut(),2);
+            return getEntityLookVector(player, 2.5f).toVector3f();
+        }
         return null;
     }
 
