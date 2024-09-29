@@ -31,7 +31,7 @@ public class OverchargedStatusEffect extends StatusEffect{
 
     @Override
     public void onRemoved(LivingEntity entity, AttributeContainer attributes, int amplifier) {
-        entity.addStatusEffect(new StatusEffectInstance(BURNOUT_EFFECT, 200, 0, false, false, true));
+        entity.addStatusEffect(new StatusEffectInstance(BURNOUT_EFFECT, 200 * (amplifier+1), amplifier, false, false, true));
     }
 
 
