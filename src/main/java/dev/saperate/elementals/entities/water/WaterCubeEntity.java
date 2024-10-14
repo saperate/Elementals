@@ -1,5 +1,6 @@
 package dev.saperate.elementals.entities.water;
 
+import dev.saperate.elementals.elements.water.WaterElement;
 import dev.saperate.elementals.entities.common.AbstractElementalsEntity;
 import dev.saperate.elementals.utils.SapsUtils;
 import net.minecraft.block.Blocks;
@@ -80,9 +81,7 @@ public class WaterCubeEntity extends AbstractElementalsEntity<PlayerEntity> {
 
     @Override
     public void collidesWithGround() {
-        if (!getEntityWorld().getRegistryKey().equals(World.NETHER) && getWorld().getGameRules().getBoolean(BENDING_GRIEFING)) {
-            getWorld().setBlockState(getBlockPos(), Blocks.WATER.getDefaultState());
-        }
+        WaterElement.placeWater(getBlockPos(),getWorld());
         discard();
     }
 

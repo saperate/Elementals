@@ -12,6 +12,8 @@ import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.damage.DamageTypes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
+import net.minecraft.fluid.Fluids;
+import net.minecraft.fluid.WaterFluid;
 import net.minecraft.item.Items;
 import net.minecraft.item.PotionItem;
 import net.minecraft.potion.PotionUtil;
@@ -245,6 +247,35 @@ public class WaterElement extends Element {
             }
             return false;
         });
+    }
+
+    /**
+     * Tries to place water at the given position.
+     * <br>1) If the position can be bucket placed, it will break the block and place water
+     * <br>2) If the position is filled with a water-loggable block, it will simply water-log it
+     * <br>Otherwise, it will refuse to place water and return false
+     *
+     * @param pos the position where water will try to be placed
+     * @return whether water was placed
+     */
+    public static boolean placeWater(BlockPos pos, World world){
+        if(world.getRegistryKey().equals(World.NETHER) || !world.getGameRules().getBoolean(BENDING_GRIEFING)){
+            //TODO add smoke particles or smth
+            return true;
+        }
+        BlockState bState = world.getBlockState(pos);
+
+        if(bState.getBlock() instanceof FluidFillable fillable){
+            boolean success = fillable.tryFillWithFluid(world,pos,bState, Fluids.WATER.getDefaultState());
+            if(success){
+                return true;
+            }
+        }
+
+        if(bState.canBucketPlace(Fluids.WATER)){
+            return world.setBlockState(pos, Blocks.WATER.getDefaultState());
+        }
+        return false;
     }
 
     public static Element get() {
