@@ -6,6 +6,7 @@ import dev.saperate.elementals.elements.Ability;
 import dev.saperate.elementals.entities.earth.EarthBlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
 
 import java.util.LinkedList;
 
@@ -23,8 +24,9 @@ public class AbilityEarthMine implements Ability {
             bender.setCurrAbility(null);
             return;
         }
+        float dS = Math.min(4, (float) deltaT / 1000);
 
-        if (!bender.reduceChi(2.5f)) {
+        if (!bender.reduceChi(1.5f * (deltaT > 500 ? dS * dS * dS : 1 ))) {
             if (bender.abilityData == null) {
                 bender.setCurrAbility(null);
             } else {
@@ -33,7 +35,15 @@ public class AbilityEarthMine implements Ability {
             return;
         }
         BlockPos pos = (BlockPos) vars[2];
-        player.getWorld().breakBlock(pos,true);
+        Direction dir = ((Direction) vars[3]).getOpposite();
+
+        int numBlocks = (int) (Math.floor(dS * 2)) + 1;
+        System.out.println(dS);
+        System.out.println(numBlocks);
+        for (int i = 0; i < numBlocks; i++) {
+            player.getWorld().breakBlock(pos.offset(dir,i),true);
+        }
+
         bender.setCurrAbility(null);
     }
 

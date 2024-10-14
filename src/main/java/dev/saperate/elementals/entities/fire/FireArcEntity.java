@@ -122,6 +122,9 @@ public class FireArcEntity extends AbstractElementalsEntity<PlayerEntity> {
             damage += 2;
         }
 
+        if(SapsUtils.isBeingRainedOn(this)){
+            damage /= 2;
+        }
 
         if (!entity.isFireImmune()) {
             entity.setOnFireFor(8);

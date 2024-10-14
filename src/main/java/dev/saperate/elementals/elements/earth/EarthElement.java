@@ -4,18 +4,25 @@ import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.elements.Element;
 import dev.saperate.elementals.elements.Upgrade;
+import dev.saperate.elementals.items.DirtBottleItem;
+import dev.saperate.elementals.items.ElementalItems;
+import dev.saperate.elementals.items.WaterPouchItem;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Items;
+import net.minecraft.potion.PotionUtil;
+import net.minecraft.potion.Potions;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
+import org.joml.Vector3f;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -130,6 +137,8 @@ public class EarthElement extends Element {
             }
             return new Object[]{hit.getPos(), blockState, hit.getBlockPos(), hit.getSide()};
         }
+
+
         return null;
     }
 
@@ -151,6 +160,8 @@ public class EarthElement extends Element {
         }
         return raycastCollidableBlocks(bHit.getPos(),end,origin, depth + 1);
     }
+
+    
 
     public static boolean isBlockBendable(BlockPos pos, World world) {
         BlockState bState = world.getBlockState(pos);

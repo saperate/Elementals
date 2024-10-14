@@ -98,6 +98,7 @@ public class ElementalsClient implements ClientModInitializer {
 		ClientPlayNetworking.registerGlobalReceiver(SYNC_UPGRADE_LIST_PACKET_ID, SyncUpgradeListS2CPacket::receive);
 		ClientPlayNetworking.registerGlobalReceiver(SYNC_CHI_PACKET_ID, SyncChiS2CPacket::receive);
 		ClientPlayNetworking.registerGlobalReceiver(SYNC_LEVEL_PACKET_ID, SyncLevelS2CPacket::receive);
+		ClientPlayNetworking.registerGlobalReceiver(UPDATE_PLAYER_STEP_HEIGHT, UpdatePlayerStepHeightS2CPacket::receive);
 	}
 
 	public void registerEntityRenderers(){

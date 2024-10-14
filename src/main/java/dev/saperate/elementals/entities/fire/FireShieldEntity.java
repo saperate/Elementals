@@ -1,6 +1,7 @@
 package dev.saperate.elementals.entities.fire;
 
 import dev.saperate.elementals.entities.common.AbstractElementalsEntity;
+import dev.saperate.elementals.utils.SapsUtils;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.*;
 import net.minecraft.entity.data.DataTracker;
@@ -89,7 +90,11 @@ public class FireShieldEntity extends AbstractElementalsEntity<PlayerEntity> {
                 && Math.abs(entity.getPos().subtract(getPos()).length()) > 2) {
             if (!entity.isFireImmune()) {
                 entity.setOnFireFor(8);
-                entity.damage(getDamageSources().inFire(), isBlue() ? 2.5f : 1.5f);
+                float damage = isBlue() ? 2.5f : 1.5f;
+                if(SapsUtils.isBeingRainedOn(this)){
+                    damage /= 2;
+                }
+                entity.damage(getDamageSources().inFire(), damage);
             }
 
             Vec3d direction = entity.getPos().add(0, 1.5f, 0).subtract(getPos()).multiply(0.1f);

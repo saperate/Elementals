@@ -5,6 +5,7 @@
   "mixins": [
     "ActiveTargetGoalMixin",
     "ElementalsLivingEntityAccessor",
+    "EnchantmentHelperMixin",
     "FurnaceBlockEntityAccessor",
     "ItemEntityMixin",
     "LivingEntityMixin",

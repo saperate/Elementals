@@ -29,6 +29,7 @@ import org.joml.Vector3f;
 
 import static dev.saperate.elementals.Elementals.BENDING_GRIEFING;
 import static dev.saperate.elementals.utils.SapsUtils.getEntityLookVector;
+import static dev.saperate.elementals.utils.SapsUtils.isBeingRainedOn;
 
 public class WaterElement extends Element {
 
@@ -204,10 +205,6 @@ public class WaterElement extends Element {
         return (bState.contains(Properties.WATERLOGGED) && bState.get(Properties.WATERLOGGED) && !requireFullBlock);
     }
 
-    public static boolean isBeingRainedOn(Entity entity) {
-        BlockPos blockPos = entity.getBlockPos();
-        return entity.getWorld().hasRain(blockPos) || entity.getWorld().hasRain(BlockPos.ofFloored((double) blockPos.getX(), entity.getBoundingBox().maxY, (double) blockPos.getZ()));
-    }
 
     /**
      * Places a single unit of water in the player's inventory.

@@ -21,7 +21,7 @@ public class ModMessages {
     public static final Identifier SYNC_LEVEL_PACKET_ID = new Identifier(MODID,"sync_level");
     public static final Identifier CYCLE_BENDING_PACKET_ID = new Identifier(MODID,"cycle_bending");
     public static final Identifier GET_MOD_VERSION_PACKET_ID = new Identifier(MODID,"get_mod_version");
-    public static final Identifier SEND_MOD_VERSION_PACKET_ID = new Identifier(MODID,"send_mod_version");
+    public static final Identifier UPDATE_PLAYER_STEP_HEIGHT = new Identifier(MODID,"update_player_step_height");
 
 
     public static void registerC2SPackets(){

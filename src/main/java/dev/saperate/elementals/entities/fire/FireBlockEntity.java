@@ -1,6 +1,7 @@
 package dev.saperate.elementals.entities.fire;
 
 import dev.saperate.elementals.entities.common.AbstractElementalsEntity;
+import dev.saperate.elementals.utils.SapsUtils;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.*;
 import net.minecraft.entity.damage.DamageSource;
@@ -93,7 +94,11 @@ public class FireBlockEntity extends AbstractElementalsEntity<PlayerEntity> {
     public void onTouchEntity(Entity entity) {
         if (!entity.isFireImmune() && entity.getY() - getY() < getFireHeight()) {
             entity.setOnFireFor(8);
-            entity.damage(getDamageSources().inFire(), isBlue() ? 2.5f : 1.5f);
+            float damage = isBlue() ? 2.5f : 1.5f;
+            if(SapsUtils.isBeingRainedOn(this)){
+                damage /= 2;
+            }
+            entity.damage(getDamageSources().inFire(), damage);
         }
     }
 

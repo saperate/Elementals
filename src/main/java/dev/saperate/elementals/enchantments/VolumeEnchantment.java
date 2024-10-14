@@ -9,8 +9,11 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
 public class VolumeEnchantment extends Enchantment{
+
+
     public VolumeEnchantment(){
-        super(Rarity.COMMON, EnchantmentTarget.BREAKABLE, new EquipmentSlot[]{EquipmentSlot.MAINHAND});
+        super(Rarity.COMMON, EnchantmentTarget.BREAKABLE
+        , new EquipmentSlot[]{EquipmentSlot.MAINHAND});
     }
 
     @Override

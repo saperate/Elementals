@@ -520,4 +520,9 @@ public final class SapsUtils {
         }
         return effects;
     }
+
+    public static boolean isBeingRainedOn(Entity entity) {
+        BlockPos blockPos = entity.getBlockPos();
+        return entity.getWorld().hasRain(blockPos) || entity.getWorld().hasRain(BlockPos.ofFloored((double) blockPos.getX(), entity.getBoundingBox().maxY, (double) blockPos.getZ()));
+    }
 }
