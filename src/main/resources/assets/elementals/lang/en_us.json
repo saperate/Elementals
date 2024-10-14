@@ -22,6 +22,9 @@
   "item.elementals.water_pouch" : "Water Pouch",
   "item.elementals.water_pouch.tooltip" : "Water level: %d",
 
+  "entity.elementals.boomerang" : "Boomerang",
+  "entity.elementals.dirt_bottle" : "Dirt Bottle",
+
   "enchantment.elementals.volume" : "Volume",
 
   "key.elementals.Ability1" : "Ability 1",

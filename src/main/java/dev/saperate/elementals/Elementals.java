@@ -1,5 +1,6 @@
 package dev.saperate.elementals;
 
+import com.mojang.brigadier.CommandDispatcher;
 import dev.saperate.elementals.advancements.HasElementCriterion;
 import dev.saperate.elementals.advancements.UsedAbilityCriterion;
 import dev.saperate.elementals.blocks.LitAir;
@@ -36,6 +37,7 @@ import net.fabricmc.fabric.api.particle.v1.FabricParticleTypes;
 import net.minecraft.advancement.criterion.Criteria;
 import net.minecraft.block.DispenserBlock;
 import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.command.argument.serialize.ConstantArgumentSerializer;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.Enchantments;
@@ -52,6 +54,9 @@ import net.minecraft.particle.DefaultParticleType;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.command.CommandManager;
+import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.server.command.SummonCommand;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundEvent;
@@ -173,13 +178,13 @@ public class Elementals implements ModInitializer {
         CommandRegistrationCallback.EVENT.register(BendingCommand::register);
         CommandRegistrationCallback.EVENT.register(ElementalsCommand::register);
 
-
         ArgumentTypeRegistry.registerArgumentType(
                 new Identifier(MODID, "bending"),
                 ElementArgumentType.class,
                 ConstantArgumentSerializer.of(ElementArgumentType::element)
         );
     }
+
 
     public static void onPlayReady(ServerPlayNetworkHandler handler, PacketSender sender, MinecraftServer server) {
         Bender.getBender(handler.player).syncElements();

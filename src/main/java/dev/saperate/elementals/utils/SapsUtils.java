@@ -450,9 +450,13 @@ public final class SapsUtils {
     }
 
     public static void launchEntity(Entity entity, float power) {
+        launchEntity(entity,power,true);
+    }
+
+    public static void launchEntity(Entity entity, float power, boolean reduceYVelocity) {
         Vector3f velocity = getEntityLookVector(entity, 1)
                 .subtract(entity.getEyePos())
-                .normalize().multiply(power, power * 0.5f, power).toVector3f();
+                .normalize().multiply(power, reduceYVelocity ? Math.sqrt(power * 0.5) : power * 0.5f, power).toVector3f();
         //returns the root vehicle or itself if there are none
         Entity vehicle = entity.getRootVehicle();
 

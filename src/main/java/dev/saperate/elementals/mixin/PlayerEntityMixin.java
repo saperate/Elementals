@@ -13,10 +13,12 @@ import dev.saperate.elementals.elements.earth.AbilityEarthArmor;
 import dev.saperate.elementals.elements.fire.AbilityFireIgnite;
 import dev.saperate.elementals.elements.fire.AbilityFireShield;
 import dev.saperate.elementals.elements.water.AbilityWaterShield;
+import dev.saperate.elementals.entities.earth.EarthBlockEntity;
 import dev.saperate.elementals.items.ElementalItems;
 import dev.saperate.elementals.utils.SapsUtils;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.damage.DamageType;
 import net.minecraft.entity.damage.DamageTypes;
@@ -43,6 +45,8 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import java.util.List;
+
 import static dev.saperate.elementals.blocks.LitAir.LIT_AIR;
 import static dev.saperate.elementals.effects.SpiritProjectionStatusEffect.SPIRIT_PROJECTION_EFFECT;
 import static dev.saperate.elementals.utils.SapsUtils.safeHasStatusEffect;
@@ -51,6 +55,19 @@ import static dev.saperate.elementals.utils.SapsUtils.safeHasStatusEffect;
 public abstract class PlayerEntityMixin {
     @Shadow
     public abstract void remove(Entity.RemovalReason reason);
+
+    @Inject(at = @At("HEAD"), method = "handleFallDamage", cancellable = true)
+    private void fall(float fallDistance, float damageMultiplier, DamageSource damageSource, CallbackInfoReturnable<Boolean> cir) {
+        PlayerEntity player = ((PlayerEntity) (Object) this);
+        List<EarthBlockEntity> entities = player.getWorld().getEntitiesByClass(EarthBlockEntity.class,
+                player.getBoundingBox().expand(0.1f),
+                EarthBlockEntity::isCollidable);
+
+        if(entities.size() > 1){
+            cir.setReturnValue(false);
+            cir.cancel();
+        }
+    }
 
     @Inject(at = @At("TAIL"), method = "tick")
     private void tick(CallbackInfo ci) {

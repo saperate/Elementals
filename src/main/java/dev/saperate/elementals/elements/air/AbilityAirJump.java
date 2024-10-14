@@ -33,12 +33,12 @@ public class AbilityAirJump implements Ability {
         float power = 2;
 
         if (plrData.canUseUpgrade("airJumpRangeII")) {
-            power = 3;
+            power = 5;
         } else if (plrData.canUseUpgrade("airJumpRangeI")) {
-            power = 2.5f;
+            power = 3;
         }
 
-        launchEntity(player,power);
+        launchEntity(player,power, false);
         player.fallDistance = 0;
 
         serverSummonParticles((ServerWorld) player.getWorld(),

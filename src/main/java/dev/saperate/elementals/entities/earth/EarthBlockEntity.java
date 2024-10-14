@@ -158,6 +158,8 @@ public class EarthBlockEntity extends AbstractElementalsEntity<PlayerEntity> {
         LivingEntity owner = getOwner();
         if (!entity.equals(owner)) {
             entity.damage(this.getDamageSources().playerAttack((PlayerEntity) owner), getDamage());
+        }else {
+            entity.fallDistance = 0;
         }
         entity.setVelocity(this.getVelocity().multiply(1.2f));
         entity.velocityModified = true;
@@ -166,6 +168,7 @@ public class EarthBlockEntity extends AbstractElementalsEntity<PlayerEntity> {
 
     @Override
     public void onHitEntity(Entity entity) {
+        entity.fallDistance = 0;
         entity.damage(this.getDamageSources().playerAttack((PlayerEntity) getOwner()), getDamage());
         entity.setVelocity(this.getVelocity().multiply(1.2f));
         entity.move(MovementType.SELF, entity.getVelocity());
