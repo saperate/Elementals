@@ -1,5 +1,6 @@
 package dev.saperate.elementals.entities.fire;
 
+import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.entities.common.AbstractElementalsEntity;
 import dev.saperate.elementals.utils.SapsUtils;
 import net.minecraft.block.Blocks;
@@ -84,9 +85,8 @@ public class FireBlockEntity extends AbstractElementalsEntity<PlayerEntity> {
             heightAdjustSpeed = 5;
         }
 
-        if (getWorld().getBlockState(getBlockPos()).getBlock().equals(Blocks.WATER)
-                || getWorld().getBlockState(getBlockPos().down()).isAir()) {
-            this.discard();
+        if (touchingWater) {
+            discard();
         }
     }
 

@@ -1,5 +1,6 @@
 package dev.saperate.elementals.entities.fire;
 
+import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.misc.FireExplosion;
 import dev.saperate.elementals.entities.common.AbstractElementalsEntity;
 import net.minecraft.block.AbstractFireBlock;
@@ -48,6 +49,20 @@ public class FireBallEntity extends AbstractElementalsEntity<PlayerEntity> {
     @Override
     public void tick() {
         super.tick();
+
+        if (touchingWater) {
+            discard();
+
+            PlayerEntity owner = getOwner();
+            if(owner != null){
+                Bender bender = Bender.getBender(owner);
+                if(bender.currAbility != null){
+                    bender.currAbility.onRemove(bender);
+                }
+            }
+            return;
+        }
+
         if (random.nextBetween(0, 20) == 6) {
             summonParticles(this, random,
                     isBlue() ? ParticleTypes.SOUL_FIRE_FLAME : ParticleTypes.FLAME,

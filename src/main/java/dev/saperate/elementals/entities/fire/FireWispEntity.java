@@ -1,6 +1,10 @@
 package dev.saperate.elementals.entities.fire;
 
 import dev.saperate.elementals.blocks.blockEntities.LitAirBlockEntity;
+import dev.saperate.elementals.data.Bender;
+import dev.saperate.elementals.elements.Ability;
+import dev.saperate.elementals.elements.fire.AbilityFireWisp;
+import dev.saperate.elementals.elements.fire.FireElement;
 import dev.saperate.elementals.entities.common.AbstractElementalsEntity;
 import dev.saperate.elementals.misc.FireExplosion;
 import net.minecraft.block.AbstractFireBlock;
@@ -8,6 +12,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.MovementType;
+import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
@@ -53,6 +58,12 @@ public class FireWispEntity extends AbstractElementalsEntity<PlayerEntity> {
     @Override
     public void tick() {
         super.tick();
+
+        if (touchingWater) {
+            remove();
+            return;
+        }
+
         if (random.nextBetween(0, 20) == 6) {
             summonParticles(this, random,
                     isBlue() ? ParticleTypes.SOUL_FIRE_FLAME : ParticleTypes.FLAME,
@@ -79,6 +90,24 @@ public class FireWispEntity extends AbstractElementalsEntity<PlayerEntity> {
 
     }
 
+    @Override
+    public boolean canHit() {
+        return true;
+    }
+
+    @Override
+    public boolean damage(DamageSource source, float amount) {
+        discard();
+
+        PlayerEntity owner = getOwner();
+        if(owner != null){
+            Bender bender = Bender.getBender(owner);
+            bender.removeAbilityFromBackground(FireElement.get().getAbility(11));
+        }
+        return true;
+    }
+
+
     private void moveEntity() {
         if (getIsControlled() ) {
             float yaw = getOwner().getHeadYaw() % 360;
@@ -92,6 +121,16 @@ public class FireWispEntity extends AbstractElementalsEntity<PlayerEntity> {
         }
 
         this.move(MovementType.SELF, this.getVelocity());
+    }
+
+    public void remove(){
+        discard();
+
+        PlayerEntity owner = getOwner();
+        if(owner != null){
+            Bender bender = Bender.getBender(owner);
+            bender.removeAbilityFromBackground(FireElement.get().getAbility(11));
+        }
     }
 
     @Override

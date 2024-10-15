@@ -1,5 +1,8 @@
 package dev.saperate.elementals.entities.water;
 
+import dev.saperate.elementals.data.Bender;
+import dev.saperate.elementals.elements.water.AbilityWaterTower;
+import dev.saperate.elementals.elements.water.WaterElement;
 import dev.saperate.elementals.entities.common.AbstractElementalsEntity;
 import net.minecraft.entity.*;
 import net.minecraft.entity.data.DataTracker;
@@ -23,6 +26,7 @@ public class WaterTowerEntity extends AbstractElementalsEntity<PlayerEntity> {
     public static final int heightLimit = 10;
     private static final TrackedData<Float> TOWER_HEIGHT = DataTracker.registerData(WaterTowerEntity.class, TrackedDataHandlerRegistry.FLOAT);
     private static final TrackedData<Float> MAX_TOWER_HEIGHT = DataTracker.registerData(WaterTowerEntity.class, TrackedDataHandlerRegistry.FLOAT);
+    private static final TrackedData<Boolean> OWNER_COULD_FLY = DataTracker.registerData(WaterTowerEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
 
     public WaterTowerEntity(EntityType<WaterTowerEntity> type, World world) {
         super(type, world, PlayerEntity.class);
@@ -46,6 +50,7 @@ public class WaterTowerEntity extends AbstractElementalsEntity<PlayerEntity> {
         super.initDataTracker();
         this.getDataTracker().startTracking(TOWER_HEIGHT, 1f);
         this.getDataTracker().startTracking(MAX_TOWER_HEIGHT, 1f);
+        this.getDataTracker().startTracking(OWNER_COULD_FLY, false);
     }
 
     @Override
@@ -95,12 +100,12 @@ public class WaterTowerEntity extends AbstractElementalsEntity<PlayerEntity> {
     }
 
     public void resetOwner(){
-        //TODO add values that store what it was before so that we dont mess things up
         PlayerEntity owner = (PlayerEntity) getOwner();
         if (owner == null) {
             return;
         }
-        owner.getAbilities().allowFlying = false;
+
+        owner.getAbilities().allowFlying = getOwnerCouldFly();
         owner.getAbilities().flying = false;
         owner.getAbilities().setFlySpeed(0.05f);
     }
@@ -120,6 +125,14 @@ public class WaterTowerEntity extends AbstractElementalsEntity<PlayerEntity> {
 
     public float getMaxTowerHeight(){
         return this.getDataTracker().get(MAX_TOWER_HEIGHT);
+    }
+
+    public void setOwnerCouldFly(boolean val){
+        this.getDataTracker().set(OWNER_COULD_FLY,val);
+    }
+
+    public boolean getOwnerCouldFly(){
+        return this.getDataTracker().get(OWNER_COULD_FLY);
     }
 
     @Override

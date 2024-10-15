@@ -1,5 +1,6 @@
 package dev.saperate.elementals.entities.fire;
 
+import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.entities.common.AbstractElementalsEntity;
 import dev.saperate.elementals.entities.water.WaterArcEntity;
@@ -81,6 +82,20 @@ public class FireArcEntity extends AbstractElementalsEntity<PlayerEntity> {
     @Override
     public void tick() {
         super.tick();
+
+        if (touchingWater && getParent() == null) {
+            remove();
+
+            PlayerEntity owner = getOwner();
+            if(owner != null){
+                Bender bender = Bender.getBender(owner);
+                if(bender.currAbility != null){
+                    bender.currAbility.onRemove(bender);
+                }
+            }
+            return;
+        }
+
         if (random.nextBetween(0, 20) == 6) {
             summonParticles(this, random,
                     isBlue() ? ParticleTypes.SOUL_FIRE_FLAME : ParticleTypes.FLAME,
@@ -109,7 +124,7 @@ public class FireArcEntity extends AbstractElementalsEntity<PlayerEntity> {
 
     @Override
     public void onHitEntity(Entity entity) {
-        if(entity == getOwner() || getParent() != null){
+        if (entity == getOwner() || getParent() != null) {
             return;
         }
         entity.addVelocity(this.getVelocity().multiply(0.2f));
@@ -122,7 +137,7 @@ public class FireArcEntity extends AbstractElementalsEntity<PlayerEntity> {
             damage += 2;
         }
 
-        if(SapsUtils.isBeingRainedOn(this)){
+        if (SapsUtils.isBeingRainedOn(this)) {
             damage /= 2;
         }
 
@@ -136,7 +151,7 @@ public class FireArcEntity extends AbstractElementalsEntity<PlayerEntity> {
     private void moveEntity(Entity owner, Entity parent) {
 
         if (getIsControlled()) {
-            moveEntityTowardsGoal(getEntityLookVector(owner, 3).add(0,0.5,0).toVector3f());
+            moveEntityTowardsGoal(getEntityLookVector(owner, 3).add(0, 0.5, 0).toVector3f());
         } else {
             if (parent != null) {
                 Vec3d direction = parent.getPos().subtract(getPos());

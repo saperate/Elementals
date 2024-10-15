@@ -35,45 +35,38 @@ public class AbilityWaterTower implements Ability {
             }
             return;
         }
-        PlayerEntity player = bender.player;
 
-        if(player.isTouchingWaterOrRain()) {
-            player.addVelocity(0, 1, 0);
-            player.velocityModified = true;
-            player.move(MovementType.PLAYER, player.getVelocity());
+
+        if (bender.isAbilityInBackground(this)) {
+            onRemove(bender);
+        } else {
+            bender.setCurrAbility(null);
+            PlayerEntity player = bender.player;
+
+            if (player.isTouchingWaterOrRain()) {
+                player.addVelocity(0, 1, 0);
+                player.velocityModified = true;
+                player.move(MovementType.PLAYER, player.getVelocity());
+            }
+
+            WaterTowerEntity entity = new WaterTowerEntity(player.getWorld(), player);
+            entity.setOwnerCouldFly(player.getAbilities().allowFlying);
+            bender.abilityData = entity;
+            bender.addBackgroundAbility(this, makeAbilityData(entity, player.getAbilities().allowFlying));
+
+            int height = 10;
+            PlayerData plrData = PlayerData.get(player);
+            if (plrData.canUseUpgrade("waterTowerRangeI")) {
+                height = 15;
+            }
+            entity.setMaxTowerHeight(height);
+
+            player.getWorld().spawnEntity(entity);
         }
-
-        WaterTowerEntity entity = new WaterTowerEntity(player.getWorld(), player);
-        bender.abilityData = entity;
-
-        int height = 10;
-        PlayerData plrData = PlayerData.get(player);
-        if (plrData.canUseUpgrade("waterTowerRangeI")) {
-            height = 15;
-        }
-        entity.setMaxTowerHeight(height);
-
-        player.getWorld().spawnEntity(entity);
-        bender.setCurrAbility(this);
     }
 
     @Override
-    public void onLeftClick(Bender bender, boolean started) {
-
-    }
-
-    @Override
-    public void onMiddleClick(Bender bender, boolean started) {
-
-    }
-
-    @Override
-    public void onRightClick(Bender bender, boolean started) {
-
-    }
-
-    @Override
-    public void onTick(Bender bender) {
+    public void onBackgroundTick(Bender bender, Object data) {
         if (!bender.reduceChi(0.1f)) {
             if (bender.abilityData == null) {
                 bender.setCurrAbility(null);
@@ -82,7 +75,9 @@ public class AbilityWaterTower implements Ability {
             }
             return;
         }
+
         PlayerEntity player = bender.player;
+        WaterTowerEntity entity = getEntity(bender);
 
         int height = 10;
         PlayerData plrData = PlayerData.get(player);
@@ -95,12 +90,12 @@ public class AbilityWaterTower implements Ability {
         boolean isAir = hit == null;
 
         if (!player.isSubmergedInWater() && (player.isOnGround()
-                || ((WaterTowerEntity) bender.abilityData).getY() - 0.25f > player.getY()
+                || entity.getY() - 0.25f > player.getY()
                 || (!isAir && !WaterElement.isBlockBendable(hit.getBlockPos(), player.getWorld(), false, plrData.canUseUpgrade("waterPickupEfficiencyI"))))) {
             onRemove(bender);
             return;
         }
-        WaterTowerEntity entity = (WaterTowerEntity) bender.abilityData;
+
         if (entity == null) {
             return;
         }
@@ -109,13 +104,23 @@ public class AbilityWaterTower implements Ability {
 
     @Override
     public void onRemove(Bender bender) {
-        WaterTowerEntity entity = (WaterTowerEntity) bender.abilityData;
-        bender.setCurrAbility(null);
-        bender.abilityData = null;
+        WaterTowerEntity entity = getEntity(bender);
+        bender.removeAbilityFromBackground(this);
         if (entity == null) {
             return;
         }
         entity.discard();
     }
 
+    public WaterTowerEntity getEntity(Bender bender) {
+        return ((WaterTowerEntity) ((Object[]) bender.getBackgroundAbilityData(this))[0]);
+    }
+
+    public boolean getFlyAbility(Bender bender) {
+        return ((boolean) ((Object[]) bender.getBackgroundAbilityData(this))[1]);
+    }
+
+    public Object[] makeAbilityData(WaterTowerEntity entity, boolean flyAbility) {
+        return new Object[]{entity, flyAbility};
+    }
 }
