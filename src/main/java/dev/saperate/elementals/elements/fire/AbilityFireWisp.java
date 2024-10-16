@@ -5,15 +5,27 @@ import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.elements.Ability;
 import dev.saperate.elementals.entities.fire.FireBallEntity;
 import dev.saperate.elementals.entities.fire.FireWispEntity;
+import dev.saperate.elementals.utils.SapsUtils;
 import net.minecraft.entity.player.PlayerEntity;
 import org.joml.Vector3f;
 
 import static dev.saperate.elementals.utils.SapsUtils.getEntityLookVector;
+import static dev.saperate.elementals.utils.SapsUtils.raycastFull;
 
 public class AbilityFireWisp implements Ability {
     @Override
-    public void onCall(Bender bender, long deltaT) {
-        bender.setCurrAbility(null);
+    public void onCall(Bender originalBender, long deltaT) {
+        Bender bender = originalBender;
+        originalBender.setCurrAbility(null);
+
+        if(originalBender.player.isSneaking()){
+            PlayerEntity other = (PlayerEntity) SapsUtils.entityFromHitResult(
+                    raycastFull(originalBender.player,5,true, entity -> entity instanceof PlayerEntity));
+            if(other != null){
+                bender = Bender.getBender(other);
+            }
+        }
+
 
         if(bender.isAbilityInBackground(this)){
             ((FireWispEntity) bender.getBackgroundAbilityData(this)).discard();
@@ -21,7 +33,7 @@ public class AbilityFireWisp implements Ability {
             return;
         }
 
-        if (!bender.reduceChi(10)) {
+        if (!originalBender.reduceChi(10)) {
             return;
         }
         PlayerEntity player = bender.player;
@@ -58,7 +70,7 @@ public class AbilityFireWisp implements Ability {
     @Override
     public void onBackgroundTick(Bender bender, Object data) {
         FireWispEntity wisp = (FireWispEntity) data;
-        if(!bender.reduceChi(0.075f) || wisp.isTouchingWater()){
+        if(!bender.reduceChi(0.075f, false) || wisp.isTouchingWater()){
             wisp.discard();
             bender.removeAbilityFromBackground(this);
         }

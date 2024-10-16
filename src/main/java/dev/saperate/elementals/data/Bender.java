@@ -309,6 +309,20 @@ public class Bender {
      * @return True if we were able to reduce the chi without going in the negatives, false if not.
      */
     public boolean reduceChi(float val) {
+        return reduceChi(val,true);
+    }
+
+    /**
+     * This method also adds xp proportional to the amount of chi used
+     * <br>ex:
+     * <br>  5 chi -> 0.5
+     * <br> 15 chi -> 1.5
+     * <br> 30 chi -> 3
+     * @param val The amount by which we should reduce the chi level
+     * @param giveXP Whether we give the player xp for this
+     * @return True if we were able to reduce the chi without going in the negatives, false if not.
+     */
+    public boolean reduceChi(float val, boolean giveXP) {
         ServerPlayerEntity serverPlayer = ((ServerPlayerEntity) player);
         if (serverPlayer.interactionManager.getGameMode().equals(GameMode.CREATIVE)) {
             return true;
@@ -330,6 +344,7 @@ public class Bender {
         syncChi();
         return true;
     }
+
 
     public void syncChi() {
         PacketByteBuf buf = PacketByteBufs.create();

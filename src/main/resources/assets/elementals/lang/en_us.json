@@ -326,7 +326,7 @@
 
   "upgrade.elementals.fireWisp": "Fire Wisp",
   "upgrade.elementals.fireWisp.description": " Creates a ball of fire that follows you around and lights up the surrounding area",
-  "upgrade.elementals.fireWisp.use": " Use: %d",
+  "upgrade.elementals.fireWisp.use": " Use: %d (press shift to place on someone else)",
   "upgrade.elementals.fireWisp.icon": "fire",
 
   "upgrade.elementals.earthBlock": "Earth Pickup",
