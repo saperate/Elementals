@@ -25,7 +25,7 @@ public class AbilityLightningEMP implements Ability {
         PlayerEntity player = bender.player;
         SapsUtils.serverSummonParticles((ServerWorld) player.getWorld(),
                 LIGHTNING_PARTICLE_TYPE, player, player.getRandom(), -0.5,-0.5,-0.5,0.75f,100,0,0,0,1);
-        StunExplosion explosion = new StunExplosion(player.getWorld(), player, player.getX(), player.getY(), player.getZ(), 2.5f, true, Explosion.DestructionType.KEEP, 4,0, player);
+        StunExplosion explosion = new StunExplosion(player.getWorld(), player, player.getX(), player.getY(), player.getZ(), 2.5f, false, Explosion.DestructionType.KEEP, 4,0, player);
         explosion.collectBlocksAndDamageEntities();
         explosion.affectWorld(true);
     }

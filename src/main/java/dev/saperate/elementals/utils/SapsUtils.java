@@ -1,5 +1,6 @@
 package dev.saperate.elementals.utils;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import dev.saperate.elementals.elements.Element;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
@@ -525,4 +526,28 @@ public final class SapsUtils {
         BlockPos blockPos = entity.getBlockPos();
         return entity.getWorld().hasRain(blockPos) || entity.getWorld().hasRain(BlockPos.ofFloored((double) blockPos.getX(), entity.getBoundingBox().maxY, (double) blockPos.getZ()));
     }
+
+    /**
+     * Finds entities in a given radius. This method does not take into account walls.
+     * The shape of the thing is a square.
+     */
+    public static List<LivingEntity> getEntitiesInRadius(Vec3d origin, float radius, World world, Entity except){
+        return Lists.transform(
+                getEntitiesInRadius(origin,radius,world,except, entity -> entity instanceof LivingEntity),
+                entity -> (LivingEntity) entity
+        );
+    }
+
+    /**
+     * Finds entities in a given radius. This method does not take into account walls.
+     * The shape of the thing is a square.
+     */
+    public static List<Entity> getEntitiesInRadius(Vec3d origin, float radius, World world, Entity except, Predicate<Entity> pred){
+        return world.getOtherEntities(
+                except,
+                new Box(origin.subtract(radius,radius,radius),origin.add(radius,radius,radius)),
+                pred
+        );
+    }
+
 }

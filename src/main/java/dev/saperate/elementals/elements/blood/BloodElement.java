@@ -40,6 +40,7 @@ public class BloodElement extends Element {
         addAbility(new AbilityBlood2(), true);
         addAbility(new AbilityBloodShot());
         addAbility(new AbilityBlood3(), true);
+        addAbility(new AbilityBlood4(), true);
     }
 
     public static Element get() {
@@ -59,7 +60,11 @@ public class BloodElement extends Element {
     @Override
     public boolean isSkillTreeComplete(Bender bender) {
         PlayerData plrData = bender.plrData;
-        return bender.hasElement(this)
-                ;
+        return bender.hasElement(this);
+    }
+
+    public static boolean isNight(World world){
+        long time = world.getTimeOfDay() % 24000;
+        return time >= 13500 && time <= 22750;
     }
 }
