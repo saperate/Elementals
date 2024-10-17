@@ -23,9 +23,6 @@ public class StunnedStatusEffect extends StatusEffect {
 
     @Override
     public void applyUpdateEffect(LivingEntity entity, int amplifier) {
-        if(amplifier>=1){
-            System.out.println("even more slwoed");
-        }
         if(entity.age % (amplifier >= 1 ? 3 : 4) == 0){
             entity.slowMovement(Blocks.AIR.getDefaultState(), new Vec3d(0.00001f,1,0.00001f));
         }

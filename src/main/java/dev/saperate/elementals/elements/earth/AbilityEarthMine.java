@@ -7,6 +7,8 @@ import dev.saperate.elementals.entities.earth.EarthBlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.World;
 
 import java.util.LinkedList;
 
@@ -26,7 +28,7 @@ public class AbilityEarthMine implements Ability {
         }
         float dS = Math.min(4, (float) deltaT / 1000);
 
-        if (!bender.reduceChi(1.5f * (deltaT > 500 ? dS * dS * dS : 1 ))) {
+        if (!bender.reduceChi(1.5f * (deltaT > 500 ? dS * dS : 1 ))) {
             if (bender.abilityData == null) {
                 bender.setCurrAbility(null);
             } else {
@@ -38,33 +40,34 @@ public class AbilityEarthMine implements Ability {
         Direction dir = ((Direction) vars[3]).getOpposite();
 
         int numBlocks = (int) (Math.floor(dS * 2)) + 1;
-        System.out.println(dS);
-        System.out.println(numBlocks);
-        for (int i = 0; i < numBlocks; i++) {
-            player.getWorld().breakBlock(pos.offset(dir,i),true);
+
+        if(dS == 4){
+            for (int i = -1; i <= 1; i++) {
+                for (int j = -1; j <= 1; j++) {
+                    if((i == j || -i == j) && i != 0){
+                        continue;
+                    }
+                    BlockPos offset = switch (dir) {
+                        case SOUTH, NORTH ->
+                                pos.add(i, j, 0);
+                        case WEST, EAST ->
+                                pos.add(0, i, j);
+                        default -> pos.add(i, 0, j);
+                    };
+                    minePillar(offset, dir,numBlocks,player.getWorld());
+                }
+            }
+        }else {
+            minePillar(pos,dir,numBlocks,player.getWorld());
         }
 
         bender.setCurrAbility(null);
     }
 
-    @Override
-    public void onLeftClick(Bender bender, boolean started) {
-
-    }
-
-    @Override
-    public void onMiddleClick(Bender bender, boolean started) {
-
-    }
-
-    @Override
-    public void onRightClick(Bender bender, boolean started) {
-
-    }
-
-    @Override
-    public void onTick(Bender bender) {
-
+    public void minePillar(BlockPos pos, Direction dir, int amount, World world){
+        for (int i = 0; i < amount; i++) {
+            world.breakBlock(pos.offset(dir,i),true);
+        }
     }
 
     @Override

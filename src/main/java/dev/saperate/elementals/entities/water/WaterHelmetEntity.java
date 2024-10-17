@@ -83,7 +83,6 @@ public class WaterHelmetEntity extends AbstractElementalsEntity<LivingEntity> {
         // if you change any part of this check the renderer because it also modifies the entity pos
         Vec3d eyePos = getOwner().getEyePos();
         moveEntityTowardsGoal(new Vector3f((float) eyePos.x, (float) (eyePos.y - 0.5), (float) eyePos.z));
-        System.out.println(eyePos);
 
         if (!suffocate) {
             if (isStealthy() && owner.isSneaking() && owner.getVelocity().lengthSquared() <= 0.5) {

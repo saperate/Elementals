@@ -17,6 +17,5 @@ public class UpdatePlayerStepHeightS2CPacket {
         }
 
         client.player.setStepHeight(buf.readFloat());
-        System.out.println(client.player.getStepHeight());
     }
 }
