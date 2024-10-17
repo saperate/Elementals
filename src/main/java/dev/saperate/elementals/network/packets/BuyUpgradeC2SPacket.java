@@ -2,6 +2,7 @@ package dev.saperate.elementals.network.packets;
 
 import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.data.PlayerData;
+import dev.saperate.elementals.data.StateDataSaverAndLoader;
 import dev.saperate.elementals.elements.Element;
 import dev.saperate.elementals.elements.Upgrade;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
@@ -26,6 +27,7 @@ public class BuyUpgradeC2SPacket {
             if(name.startsWith("bending")){
                 bender.addElement(Element.getElementByName(name.replace("bending", "")), true);
                 bender.bindDefaultAbilities();
+                StateDataSaverAndLoader.getServerState(server).markDirty();
                 return;
             }
 

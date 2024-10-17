@@ -17,6 +17,7 @@ import net.minecraft.entity.projectile.ProjectileUtil;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.predicate.entity.EntityPredicates;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.TypeFilter;
@@ -88,7 +89,7 @@ public class FireArcEntity extends AbstractElementalsEntity<PlayerEntity> {
 
             PlayerEntity owner = getOwner();
             if(owner != null){
-                Bender bender = Bender.getBender(owner);
+                Bender bender = Bender.getBender((ServerPlayerEntity) owner);
                 if(bender.currAbility != null){
                     bender.currAbility.onRemove(bender);
                 }

@@ -10,6 +10,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -59,7 +60,7 @@ public class WaterShieldEntity extends AbstractElementalsEntity<PlayerEntity> {
     public void onRemoved() {
         summonParticles( this,random, ParticleTypes.SPLASH, 10,100);
         if(!this.getWorld().isClient){
-            Bender bender = Bender.getBender((PlayerEntity) getOwner());
+            Bender bender = Bender.getBender((ServerPlayerEntity) getOwner());
             if(bender != null && bender.currAbility != null){//Clean up the mess
                 bender.abilityData = null;
                 bender.currAbility.onRemove(bender);

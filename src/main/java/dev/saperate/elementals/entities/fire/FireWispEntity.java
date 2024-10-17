@@ -18,6 +18,7 @@ import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.BlockPos;
@@ -101,7 +102,7 @@ public class FireWispEntity extends AbstractElementalsEntity<PlayerEntity> {
 
         PlayerEntity owner = getOwner();
         if(owner != null){
-            Bender bender = Bender.getBender(owner);
+            Bender bender = Bender.getBender((ServerPlayerEntity) owner);
             bender.removeAbilityFromBackground(FireElement.get().getAbility(11));
         }
         return true;
@@ -128,7 +129,7 @@ public class FireWispEntity extends AbstractElementalsEntity<PlayerEntity> {
 
         PlayerEntity owner = getOwner();
         if(owner != null){
-            Bender bender = Bender.getBender(owner);
+            Bender bender = Bender.getBender((ServerPlayerEntity) owner);
             bender.removeAbilityFromBackground(FireElement.get().getAbility(11));
         }
     }

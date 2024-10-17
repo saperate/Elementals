@@ -25,6 +25,7 @@ public class StateDataSaverAndLoader extends PersistentState {
 
     @Override
     public NbtCompound writeNbt(NbtCompound nbt) {
+        System.out.println("saving benders");
         NbtCompound playersNbt = new NbtCompound();
         players.forEach(((uuid, playerData) -> {
             NbtCompound playerNbt = new NbtCompound();

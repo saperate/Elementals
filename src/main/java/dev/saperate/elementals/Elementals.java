@@ -12,6 +12,7 @@ import dev.saperate.elementals.commands.ElementalsCommand;
 import dev.saperate.elementals.commands.ElementArgumentType;
 import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.data.PlayerData;
+import dev.saperate.elementals.data.StateDataSaverAndLoader;
 import dev.saperate.elementals.elements.NoneElement;
 import dev.saperate.elementals.elements.air.AirElement;
 import dev.saperate.elementals.elements.blood.BloodElement;
@@ -28,6 +29,7 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.ArgumentTypeRegistry;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.gamerule.v1.GameRuleFactory;
 import net.fabricmc.fabric.api.gamerule.v1.GameRuleRegistry;
 import net.fabricmc.fabric.api.loot.v2.LootTableEvents;
@@ -138,7 +140,7 @@ public class Elementals implements ModInitializer {
         registerC2SPackets();
 
         ServerPlayConnectionEvents.JOIN.register(Elementals::onPlayReady);
-        ServerPlayConnectionEvents.DISCONNECT.register(Elementals::onPlayEnd);
+        ServerLifecycleEvents.SERVER_STOPPING.register(Elementals::onPlayEnd);
         ServerPlayerEvents.AFTER_RESPAWN.register(Elementals::onPlayerRespawn);
 
         Registry.register(Registries.BANNER_PATTERN, "air", AIR_PATTERN);
@@ -191,8 +193,9 @@ public class Elementals implements ModInitializer {
         Bender.getBender(handler.player).syncElements();
     }
 
-    private static void onPlayEnd(ServerPlayNetworkHandler serverPlayNetworkHandler, MinecraftServer minecraftServer) {
+    private static void onPlayEnd(MinecraftServer minecraftServer) {
         Bender.benders.clear();
+        System.out.println("clearing benders");
     }
 
     private static void onPlayerRespawn(ServerPlayerEntity oldPlayer, ServerPlayerEntity newPlayer, boolean b) {

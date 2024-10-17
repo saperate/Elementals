@@ -10,6 +10,7 @@ import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.world.World;
 
@@ -94,7 +95,7 @@ public class AirScooterEntity extends AbstractElementalsEntity<PlayerEntity> {
         this.getWorld().playSound(getX(), getY(), getZ(), WIND_BURST_SOUND_EVENT, SoundCategory.BLOCKS, 1, (1.0f + (this.getWorld().random.nextFloat() - this.getWorld().random.nextFloat()) * 0.2f) * 0.7f, true);
         if(!getWorld().isClient && getOwner() != null){
             PlayerEntity owner = (PlayerEntity) getOwner();
-            Bender.getBender(owner).currAbility.onRemove(Bender.getBender(owner));
+            Bender.getBender((ServerPlayerEntity) owner).currAbility.onRemove(Bender.getBender((ServerPlayerEntity) owner));
         }
     }
 

@@ -31,6 +31,7 @@ import net.minecraft.item.WrittenBookItem;
 import net.minecraft.network.packet.s2c.play.OpenWrittenBookS2CPacket;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.command.CommandManager;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Hand;
 import net.minecraft.util.function.BooleanBiFunction;
 import net.minecraft.util.math.BlockPos;
@@ -82,10 +83,10 @@ public abstract class PlayerEntityMixin {
                 player.addStatusEffect(new StatusEffectInstance(StatusEffects.BLINDNESS, 21, 0, false, false, false));
             }
         }
-        Bender bender = Bender.getBender(player);
-        if (bender == null || player.getWorld().isClient) {
+        if(player.getWorld().isClient){
             return;
         }
+        Bender bender = Bender.getBender((ServerPlayerEntity) player);
         bender.tick();
         if (bender.castTime != null) {
             return;

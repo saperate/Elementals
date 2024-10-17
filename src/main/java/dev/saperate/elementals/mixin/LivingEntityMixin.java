@@ -7,6 +7,7 @@ import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.damage.DamageTypes;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.server.network.ServerPlayerEntity;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -44,7 +45,7 @@ public abstract class LivingEntityMixin {
 
 
         if(source.isOf(DamageTypes.LIGHTNING_BOLT) && !safeHasStatusEffect(STATIC_AURA_EFFECT, living)
-         && living instanceof PlayerEntity player && Bender.getBender(player).hasElement(LightningElement.get())){
+         && living instanceof PlayerEntity player && Bender.getBender((ServerPlayerEntity) player).hasElement(LightningElement.get())){
             float dmg = 0;
             if(safeHasStatusEffect(SHOCKED_EFFECT,living)){
                 dmg = (float) living.getStatusEffect(SHOCKED_EFFECT).getAmplifier() / 10;

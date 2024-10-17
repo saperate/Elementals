@@ -10,6 +10,7 @@ import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.world.World;
@@ -55,7 +56,7 @@ public class FireBallEntity extends AbstractElementalsEntity<PlayerEntity> {
 
             PlayerEntity owner = getOwner();
             if(owner != null){
-                Bender bender = Bender.getBender(owner);
+                Bender bender = Bender.getBender((ServerPlayerEntity) owner);
                 if(bender.currAbility != null){
                     bender.currAbility.onRemove(bender);
                 }

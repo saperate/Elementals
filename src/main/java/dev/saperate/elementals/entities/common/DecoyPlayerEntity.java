@@ -23,6 +23,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.registry.tag.FluidTags;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Arm;
 import net.minecraft.util.Util;
 import net.minecraft.util.collection.DefaultedList;
@@ -170,7 +171,7 @@ public class DecoyPlayerEntity extends PathAwareEntity {
                 discard();
                 return false;
             }
-            Bender.getBender(owner).currAbility.onRemove(Bender.getBender(owner));
+            Bender.getBender((ServerPlayerEntity) owner).currAbility.onRemove(Bender.getBender((ServerPlayerEntity) owner));
             owner.damage(source,amount);
         }
         return super.damage(source, amount);

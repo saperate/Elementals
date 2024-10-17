@@ -25,7 +25,7 @@ public class GetUpgradeListC2SPacket {
     }
 
     public static void send(PlayerEntity player){
-        Bender bender = Bender.getBender(player);
+        Bender bender = Bender.getBender((ServerPlayerEntity) player);
         NbtCompound data = bender.getElement().onSave(PlayerData.get(player).upgrades);
         PacketByteBuf out = PacketByteBufs.create();
         out.writeNbt(data);

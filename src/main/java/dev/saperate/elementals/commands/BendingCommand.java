@@ -19,6 +19,7 @@ import net.minecraft.command.argument.GameProfileArgumentType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 
 import java.util.function.Supplier;
@@ -361,7 +362,7 @@ public class BendingCommand {
             return 1;
         }
 
-        Bender bender = Bender.getBender(plr);
+        Bender bender = Bender.getBender((ServerPlayerEntity) plr);
         bender.abilityData = null;
         bender.setCurrAbility(null);
         PlayerData.get(plr).chi = 100;
@@ -379,7 +380,7 @@ public class BendingCommand {
             return 1;
         }
 
-        Bender bender = Bender.getBender(plr);
+        Bender bender = Bender.getBender((ServerPlayerEntity) plr);
         bender.abilityData = null;
         bender.setCurrAbility(null);
         PlayerData.get(plr).chi = 100;

@@ -34,7 +34,7 @@ public class SpiritProjectionStatusEffect extends StatusEffect {
             return;
         }
         if(entity instanceof PlayerEntity player){
-            Bender bender = Bender.getBender(player);
+            Bender bender = Bender.getBender((ServerPlayerEntity) player);
             if(!(bender.currAbility instanceof AbilityAir4)){
                 //this is true when the world was closed before spirit projection could finish
                 ((ServerPlayerEntity) bender.player).changeGameMode(convertAmplifierToGameMode(amplifier));

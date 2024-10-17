@@ -7,6 +7,7 @@ import dev.saperate.elementals.entities.fire.FireBallEntity;
 import dev.saperate.elementals.entities.fire.FireWispEntity;
 import dev.saperate.elementals.utils.SapsUtils;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.server.network.ServerPlayerEntity;
 import org.joml.Vector3f;
 
 import static dev.saperate.elementals.utils.SapsUtils.getEntityLookVector;
@@ -22,7 +23,7 @@ public class AbilityFireWisp implements Ability {
             PlayerEntity other = (PlayerEntity) SapsUtils.entityFromHitResult(
                     raycastFull(originalBender.player,5,true, entity -> entity instanceof PlayerEntity));
             if(other != null){
-                bender = Bender.getBender(other);
+                bender = Bender.getBender((ServerPlayerEntity) other);
             }
         }
 

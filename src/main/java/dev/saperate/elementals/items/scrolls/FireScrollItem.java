@@ -9,6 +9,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.stat.Stats;
@@ -32,7 +33,7 @@ public class FireScrollItem extends Item {
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         if (!user.getWorld().isClient) {
-            Bender bender = Bender.getBender(user);
+            Bender bender = Bender.getBender((ServerPlayerEntity) user);
             if(bender.addElement(FireElement.get(), true)){
                 user.getInventory().removeOne(user.getStackInHand(hand));
             }

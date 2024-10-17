@@ -33,7 +33,7 @@ import static dev.saperate.elementals.utils.SapsUtils.safeHasStatusEffect;
 public class Bender {
     public static final float CHI_REGENERATION_RATE = 0.1f;//this is per tick (1/20 of a second)
     public static Map<UUID, Bender> benders = new HashMap<>();
-    public PlayerEntity player;
+    public PlayerEntity player; //TODO change this to ServerPlayerEntity
     public PlayerData plrData;
     public final ConcurrentHashMap<Ability, Object> backgroundAbilities = new ConcurrentHashMap<>();
     @Nullable
@@ -77,7 +77,7 @@ public class Bender {
         }
     }
 
-    public static Bender getBender(PlayerEntity player) {
+    public static Bender getBender(ServerPlayerEntity player) {
         if(benders.containsKey(player.getUuid())){
             return benders.get(player.getUuid());
         }
@@ -384,7 +384,7 @@ public class Bender {
 
     public PlayerData getData() {
         this.plrData = PlayerData.get(player);
-        return PlayerData.get(player);
+        return plrData;
     }
 
     @Override

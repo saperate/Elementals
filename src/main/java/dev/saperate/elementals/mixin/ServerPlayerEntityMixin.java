@@ -31,11 +31,7 @@ public abstract class ServerPlayerEntityMixin {
         if(player instanceof FakePlayer){
             return;
         }
-        if (Bender.getBender(player) == null) {
-            new Bender(player);
-        } else {
-            Bender.getBender(player).player = player;
-        }
+        Bender.getBender((ServerPlayerEntity) player);//Also initialises the bender if it doesn't exist
     }
 
     @Inject(at = @At("HEAD"), method = "onDeath")
@@ -48,11 +44,7 @@ public abstract class ServerPlayerEntityMixin {
     private void onDamage(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
         PlayerEntity player = ((PlayerEntity) (Object) this);
         if (!player.getWorld().isClient) {
-            Bender bender = Bender.getBender(player);
-            if(bender == null){
-                System.err.println("bender was null and player too damage. Either something went wrong, or the player hasn't been initialized yet!");
-                return;
-            }
+            Bender bender = Bender.getBender((ServerPlayerEntity) player);
             if (bender.currAbility instanceof AbilityAirShield   //damage canceler
                     || bender.currAbility instanceof AbilityWaterShield
                     || bender.currAbility instanceof AbilityFireShield
