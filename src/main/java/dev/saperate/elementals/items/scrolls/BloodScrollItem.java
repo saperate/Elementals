@@ -39,7 +39,7 @@ public class BloodScrollItem extends Item {
 
     @Override
     public void appendTooltip(ItemStack itemStack, World world, List<Text> tooltip, TooltipContext tooltipContext) {
-        tooltip.add(Text.translatable("item.elementals.lightning_scroll.tooltip"));
+        tooltip.add(Text.translatable("item.elementals.blood_scroll.tooltip"));
     }
 
 }
