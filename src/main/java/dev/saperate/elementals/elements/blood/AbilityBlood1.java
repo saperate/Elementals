@@ -10,37 +10,21 @@ public class AbilityBlood1 implements Ability {
     @Override
     public void onCall(Bender bender, long deltaT) {
         PlayerData playerData = PlayerData.get(bender.player);
-
-        if(bender.player.isSneaking() && deltaT >= 1500){
-            BloodElement.get().abilityList.get(2).onCall(bender,deltaT);
+        if (!playerData.canUseUpgrade("bloodPush")) {
+            bender.setCurrAbility(null);
             return;
-        } else if (bender.player.isSneaking()) {
-            BloodElement.get().abilityList.get(3).onCall(bender,deltaT);
+        }
+        if (bender.player.isSneaking() && deltaT >= 1500 && playerData.canUseUpgrade("bloodControl")) {
+            BloodElement.get().abilityList.get(2).onCall(bender, deltaT);
+            return;
+        } else if (bender.player.isSneaking() && playerData.canUseUpgrade("bloodShield")) {
+            BloodElement.get().abilityList.get(3).onCall(bender, deltaT);
             return;
         }
 
-        BloodElement.get().abilityList.get(1).onCall(bender,deltaT);
+        BloodElement.get().abilityList.get(1).onCall(bender, deltaT);
     }
 
-    @Override
-    public void onLeftClick(Bender bender, boolean started) {
-
-    }
-
-    @Override
-    public void onMiddleClick(Bender bender, boolean started) {
-
-    }
-
-    @Override
-    public void onRightClick(Bender bender, boolean started) {
-
-    }
-
-    @Override
-    public void onTick(Bender bender) {
-
-    }
 
     @Override
     public void onRemove(Bender bender) {

@@ -31,7 +31,10 @@ public class AbilityBloodPush implements Ability {
         LivingEntity living = (LivingEntity) SapsUtils.entityFromHitResult(hit);
         if (living != null) {
             double x = (double) deltaT / 1000;
-            int power = (int) Math.min(3, x * x + x + 1);
+            int power = (int) Math.min(
+                    bender.plrData.canUseUpgrade("bloodPushPowerI") ? 4 : 2.5f,
+                    x * x + x + 1
+            );
 
             Vector3f velocity = getEntityLookVector(player, 1)
                     .subtract(player.getEyePos())
@@ -49,25 +52,6 @@ public class AbilityBloodPush implements Ability {
 
     }
 
-    @Override
-    public void onLeftClick(Bender bender, boolean started) {
-
-    }
-
-    @Override
-    public void onMiddleClick(Bender bender, boolean started) {
-
-    }
-
-    @Override
-    public void onRightClick(Bender bender, boolean started) {
-
-    }
-
-    @Override
-    public void onTick(Bender bender) {
-
-    }
 
     @Override
     public void onRemove(Bender bender) {

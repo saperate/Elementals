@@ -28,7 +28,15 @@ public class BloodElement extends Element {
 
     public BloodElement() {
         super("Blood", new Upgrade("Blood", new Upgrade[]{
-                new Upgrade("blood1", 1),
+                new Upgrade("bloodPush", new Upgrade[]{
+                        new Upgrade("bloodPushPowerI", new Upgrade[]{
+                                new Upgrade("bloodControl", new Upgrade[]{
+                                        new Upgrade("bloodControlPrecision",4),
+                                        new Upgrade("bloodControlPower", 4)
+                                } ,true,4),
+                                new Upgrade("bloodShield", 4)
+                        }, 1)
+                },2),
                 new Upgrade("blood2", 1),
                 new Upgrade("blood3", 1),
                 new Upgrade("bloodBag", 1)
@@ -49,17 +57,16 @@ public class BloodElement extends Element {
 
     @Override
     public int getColor() {
-        return 0xFF40BEFF;
+        return 0xFF7d0b0b;
     }
 
     @Override
     public int getAccentColor() {
-        return 0xFF0053F3;
+        return 0xFF400303;
     }
 
     @Override
     public boolean isSkillTreeComplete(Bender bender) {
-        PlayerData plrData = bender.plrData;
         return bender.hasElement(this);
     }
 

@@ -17,10 +17,14 @@ public class AbilityBloodControl implements Ability {
     @Override
     public void onCall(Bender bender, long deltaT) {
         PlayerEntity player = bender.player;
+        if(!BloodElement.isNight(player.getWorld()) && !bender.plrData.canUseUpgrade("bloodControlPrecision")){
+            bender.setCurrAbility(null);
+            return;
+        }
 
         HitResult hit = SapsUtils.raycastFull(
                 player,
-                20,
+                bender.plrData.canUseUpgrade("bloodControlPower") ? 40 : 20,
                 false,
                 (entity -> entity instanceof LivingEntity)
         );
@@ -42,7 +46,10 @@ public class AbilityBloodControl implements Ability {
             bender.setCurrAbility(null);
             return;
         }
-        int power = player.isSneaking() ? -3 : 3;
+        float power = player.isSneaking() ? -3 : 3;
+        if(bender.plrData.canUseUpgrade("bloodControlPower")){
+            power *= 1.5f;
+        }
 
         Vector3f velocity = getEntityLookVector(player, 1)
                 .subtract(player.getEyePos())
