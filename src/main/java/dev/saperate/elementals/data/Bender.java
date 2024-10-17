@@ -78,12 +78,12 @@ public class Bender {
     }
 
     public static Bender getBender(PlayerEntity player) {
-        return benders.get(player.getUuid());
+        if(benders.containsKey(player.getUuid())){
+            return benders.get(player.getUuid());
+        }
+        return new Bender(player);
     }
 
-    public static Bender getBender(UUID player) {
-        return benders.get(player);
-    }
 
     public void tick() {
         plrData.chi = Math.min(100,
