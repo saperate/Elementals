@@ -60,7 +60,7 @@ public class FireWispEntity extends AbstractElementalsEntity<PlayerEntity> {
     public void tick() {
         super.tick();
 
-        if (touchingWater) {
+        if (touchingWater && !getWorld().isClient) {
             remove();
             return;
         }

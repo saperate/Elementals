@@ -51,7 +51,7 @@ public class FireBallEntity extends AbstractElementalsEntity<PlayerEntity> {
     public void tick() {
         super.tick();
 
-        if (touchingWater) {
+        if (touchingWater && !getWorld().isClient) {
             discard();
 
             PlayerEntity owner = getOwner();

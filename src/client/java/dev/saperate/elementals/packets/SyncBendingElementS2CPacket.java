@@ -12,7 +12,7 @@ import net.minecraft.network.PacketByteBuf;
 public class SyncBendingElementS2CPacket {
     public static void receive(MinecraftClient client, ClientPlayNetworkHandler handler,
                                PacketByteBuf buf, PacketSender responseSender) {
-
+        System.out.println("received");
         ClientBender bender = ClientBender.get();
         String elements = buf.readString();
         int activeElementIndex = buf.readInt();

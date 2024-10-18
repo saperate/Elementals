@@ -140,6 +140,7 @@ public class Elementals implements ModInitializer {
         registerC2SPackets();
 
         ServerPlayConnectionEvents.JOIN.register(Elementals::onPlayReady);
+        ServerPlayConnectionEvents.DISCONNECT.register(Elementals::onPlayerDisconnect);
         ServerLifecycleEvents.SERVER_STOPPING.register(Elementals::onPlayEnd);
         ServerPlayerEvents.AFTER_RESPAWN.register(Elementals::onPlayerRespawn);
 
@@ -189,6 +190,7 @@ public class Elementals implements ModInitializer {
     }
 
 
+
     public static void onPlayReady(ServerPlayNetworkHandler handler, PacketSender sender, MinecraftServer server) {
         Bender.getBender(handler.player).syncElements();
     }
@@ -211,4 +213,9 @@ public class Elementals implements ModInitializer {
         PlayerData.get(newPlayer).chi = 100;
         bender.syncChi();
     }
+
+    private static void onPlayerDisconnect(ServerPlayNetworkHandler handler, MinecraftServer server) {
+        Bender.benders.remove(handler.player.getUuid());
+    }
+
 }

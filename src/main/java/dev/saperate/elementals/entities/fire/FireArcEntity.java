@@ -84,7 +84,7 @@ public class FireArcEntity extends AbstractElementalsEntity<PlayerEntity> {
     public void tick() {
         super.tick();
 
-        if (touchingWater && getParent() == null) {
+        if (touchingWater && getParent() == null && !getWorld().isClient) {
             remove();
 
             PlayerEntity owner = getOwner();
