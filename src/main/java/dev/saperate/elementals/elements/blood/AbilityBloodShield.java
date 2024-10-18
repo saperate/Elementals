@@ -9,12 +9,14 @@ import net.minecraft.entity.MovementType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.particle.ParticleEffect;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.hit.HitResult;
 import org.joml.Vector3f;
 
 import java.util.List;
 
-import static dev.saperate.elementals.utils.SapsUtils.getEntityLookVector;
+import static dev.saperate.elementals.utils.SapsUtils.*;
 
 
 public class AbilityBloodShield implements Ability {
@@ -22,10 +24,10 @@ public class AbilityBloodShield implements Ability {
     public void onCall(Bender bender, long deltaT) {
         bender.setCurrAbility(null);
 
-        if(bender.isAbilityInBackground(this)){
+        if (bender.isAbilityInBackground(this)) {
             bender.removeAbilityFromBackground(this);
-        }else {
-            bender.addBackgroundAbility(this,0);
+        } else if (bender.reduceChi(15)) {
+            bender.addBackgroundAbility(this, 0);
         }
     }
 
@@ -43,10 +45,15 @@ public class AbilityBloodShield implements Ability {
                 entity -> entity instanceof LivingEntity
         );
 
-        for(Entity entity : hits){//TODO make it so the more entities there are the more it takes chi
+        if (!bender.reduceChi(0.125f + hits.size() * 0.1f)) {
+            bender.removeAbilityFromBackground(this);
+            return;
+        }
+
+        for (Entity entity : hits) {
 
             double distance = player.getPos().distanceTo(entity.getPos());
-            double power = 1/(distance - 0.3d);
+            double power = 1 / (distance - 0.3d);
 
             Vector3f velocity = entity.getPos()
                     .subtract(player.getPos())

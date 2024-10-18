@@ -1,5 +1,6 @@
 package dev.saperate.elementals.elements.earth;
 
+import dev.saperate.elementals.Elementals;
 import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.elements.Ability;
@@ -8,9 +9,12 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.GameRules;
 import org.joml.Vector3f;
 
 import java.util.LinkedList;
+
+import static dev.saperate.elementals.Elementals.BENDING_GRIEFING;
 
 public class AbilityEarthChunkPickup implements Ability {
     @Override
@@ -42,7 +46,9 @@ public class AbilityEarthChunkPickup implements Ability {
                     BlockPos bPos = pos.add(x,-y,z);
                     BlockState state = player.getWorld().getBlockState(bPos);
                     if(EarthElement.isBlockBendable(state)){
-                        player.getWorld().setBlockState(bPos, Blocks.AIR.getDefaultState());
+                        if(player.getWorld().getGameRules().getBoolean(BENDING_GRIEFING)){
+                            player.getWorld().setBlockState(bPos, Blocks.AIR.getDefaultState());
+                        }
 
                         EarthBlockEntity entity = new EarthBlockEntity(player.getWorld(), player, bPos.getX() + 0.5f, bPos.getY(), bPos.getZ() + 0.5f);
                         entity.setBlockState(state);
@@ -80,10 +86,6 @@ public class AbilityEarthChunkPickup implements Ability {
         }
     }
 
-    @Override
-    public void onMiddleClick(Bender bender, boolean started) {
-
-    }
 
     @Override
     public void onRightClick(Bender bender, boolean started) {
@@ -101,10 +103,6 @@ public class AbilityEarthChunkPickup implements Ability {
         }
     }
 
-    @Override
-    public void onTick(Bender bender) {
-
-    }
 
     @Override
     public void onRemove(Bender bender) {

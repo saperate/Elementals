@@ -4,6 +4,7 @@ import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.elements.Ability;
 import dev.saperate.elementals.elements.air.AirElement;
+import net.minecraft.entity.player.PlayerEntity;
 
 
 public class AbilityLightning1 implements Ability {
@@ -49,7 +50,7 @@ public class AbilityLightning1 implements Ability {
     }
 
     @Override
-    public boolean shouldImmobilizePlayer() {
+    public boolean shouldImmobilizePlayer(PlayerEntity player) {
         return true;
     }
 

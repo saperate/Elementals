@@ -94,8 +94,8 @@ public class Bender {
 
         backgroundAbilities.forEach((Ability ability, Object data) -> ability.onBackgroundTick(this, data));
 
-        if(currAbility != null && currAbility.shouldImmobilizePlayer()){
-            player.addStatusEffect(new StatusEffectInstance(STATIONARY_EFFECT,1,0,false,false,true));
+        if(player.age % 20 == 0 && currAbility != null && currAbility.shouldImmobilizePlayer(player)){
+            player.addStatusEffect(new StatusEffectInstance(STATIONARY_EFFECT,20,0,false,false,true));
         }
 
         Elementals.HAS_ELEMENT.trigger((ServerPlayerEntity) player);

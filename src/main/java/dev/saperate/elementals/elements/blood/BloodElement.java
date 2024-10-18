@@ -31,16 +31,37 @@ public class BloodElement extends Element {
                 new Upgrade("bloodPush", new Upgrade[]{
                         new Upgrade("bloodPushPowerI", new Upgrade[]{
                                 new Upgrade("bloodControl", new Upgrade[]{
-                                        new Upgrade("bloodControlPrecision",4),
-                                        new Upgrade("bloodControlPower", 4)
-                                } ,true,4),
+                                        new Upgrade("bloodControlPrecisionI", new Upgrade[]{
+                                                new Upgrade("bloodControlPrecisionII", 2),
+                                                new Upgrade("bloodControlPower", 2)
+                                        }, true, 2)
+                                }, 4),
                                 new Upgrade("bloodShield", 4)
                         }, 1)
-                },2),
-                new Upgrade("blood2", 1),
-                new Upgrade("blood3", 1),
-                new Upgrade("bloodBag", 1)
-        },0));
+                }, 4),
+                new Upgrade("bloodShot", new Upgrade[]{
+                        new Upgrade("bloodShotEfficiencyI", new Upgrade[]{
+                                new Upgrade("bloodShotEfficiencyII", 2),
+                                new Upgrade("bloodShotPrecisionI", 2)
+                        }, 2)
+                }, 4),
+                new Upgrade("bloodStep", new Upgrade[]{
+                        new Upgrade("bloodStepRangeI", new Upgrade[]{
+                                new Upgrade("bloodStepRangeII", 2),
+                                new Upgrade("bloodOvercharge", new Upgrade[]{
+                                        new Upgrade("bloodOverchargeStrengthI", 2)
+                                }, 4)
+                        }, 2)
+                }, 4),
+                new Upgrade("bloodBag", new Upgrade[]{
+                        new Upgrade("bloodParalysis", new Upgrade[]{
+                                new Upgrade("bloodParalysisEfficiencyI", new Upgrade[]{
+                                        new Upgrade("bloodParalysisEfficiencyII", 2)
+                                },2),
+                                new Upgrade("bloodParalysisRangeI", 2)
+                        }, 4)
+                }, 4)
+        }, 0));
         addAbility(new AbilityBlood1(), true);
         addAbility(new AbilityBloodPush());
         addAbility(new AbilityBloodControl());
@@ -70,7 +91,7 @@ public class BloodElement extends Element {
         return bender.hasElement(this);
     }
 
-    public static boolean isNight(World world){
+    public static boolean isNight(World world) {
         long time = world.getTimeOfDay() % 24000;
         return time >= 13500 && time <= 22750;
     }

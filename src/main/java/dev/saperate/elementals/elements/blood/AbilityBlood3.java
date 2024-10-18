@@ -17,37 +17,30 @@ public class AbilityBlood3 implements Ability {
     public void onCall(Bender bender, long deltaT) {
         PlayerEntity player = bender.player;
         PlayerData playerData = PlayerData.get(player);
+        bender.setCurrAbility(null);
 
+        if(!playerData.canUseUpgrade("bloodStep")){
+            return;
+        }
 
-        if (deltaT >= 500 && !safeHasStatusEffect(OVERCHARGED_EFFECT, player) && !safeHasStatusEffect(BURNOUT_EFFECT, player) ) {
+        if (playerData.canUseUpgrade("bloodOvercharge") && deltaT >= 500 && !safeHasStatusEffect(OVERCHARGED_EFFECT, player) && !safeHasStatusEffect(BURNOUT_EFFECT, player) ) {
             if (!bender.reduceChi(15)) {
                 return;
             }
-            player.addStatusEffect(new StatusEffectInstance(OVERCHARGED_EFFECT, 400, 1, false, false, true));
+            player.addStatusEffect(new StatusEffectInstance(OVERCHARGED_EFFECT, playerData.canUseUpgrade("bloodOverchargeStrengthI") ? 600 : 400, 1, false, false, true));
         }else if(player.isOnGround()){
-            SapsUtils.launchEntity(player,2);
+            if (!bender.reduceChi(10)) {
+                return;
+            }
+            float power = 1.5f;
+
+            if (playerData.canUseUpgrade("bloodStepRangeII")) {
+                power = 3;
+            } else if (playerData.canUseUpgrade("bloodStepRangeI")) {
+                power = 2;
+            }
+            SapsUtils.launchEntity(player,power);
         }
-        bender.setCurrAbility(null);
-    }
-
-    @Override
-    public void onLeftClick(Bender bender, boolean started) {
-
-    }
-
-    @Override
-    public void onMiddleClick(Bender bender, boolean started) {
-
-    }
-
-    @Override
-    public void onRightClick(Bender bender, boolean started) {
-
-    }
-
-    @Override
-    public void onTick(Bender bender) {
-
     }
 
     @Override

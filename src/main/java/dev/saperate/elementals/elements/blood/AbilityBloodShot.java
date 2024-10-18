@@ -13,7 +13,15 @@ public class AbilityBloodShot implements Ability {
     @Override
     public void onCall(Bender bender, long deltaT) {
         PlayerEntity player = bender.player;
-        if (!bender.reduceChi(10)) {//TODO tweak this
+
+        float cost = 20;
+        if (bender.getData().canUseUpgrade("bloodShotEfficiencyII")) {
+            cost = 10;
+        } else if (bender.getData().canUseUpgrade("bloodShotEfficiencyI")) {
+            cost = 15;
+        }
+
+        if (!bender.reduceChi(cost)) {
             bender.setCurrAbility(null);
             return;
         }
@@ -34,19 +42,11 @@ public class AbilityBloodShot implements Ability {
         player.getWorld().spawnEntity(entity);
         entity.setVelocity(0.001f, 0.001f, 0.001f);
 
+        player.damage(player.getDamageSources().dryOut(),2);
 
         bender.setCurrAbility(this);
     }
 
-    @Override
-    public void onLeftClick(Bender bender, boolean started) {
-
-    }
-
-    @Override
-    public void onMiddleClick(Bender bender, boolean started) {
-
-    }
 
     @Override
     public void onRightClick(Bender bender, boolean started) {

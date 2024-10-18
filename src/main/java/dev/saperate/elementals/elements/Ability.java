@@ -15,7 +15,7 @@ public interface Ability {
     default void onTick(Bender bender){};
 
     default void onBackgroundTick(Bender bender, Object data){}
-    default boolean shouldImmobilizePlayer(){
+    default boolean shouldImmobilizePlayer(PlayerEntity player){
         return false;
     }
 

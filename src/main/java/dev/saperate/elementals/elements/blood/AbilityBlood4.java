@@ -22,19 +22,28 @@ public class AbilityBlood4 implements Ability {
     @Override
     public void onCall(Bender bender, long deltaT) {
         bender.setCurrAbility(null);
-        if (deltaT < 1500) {
+
+        float cost = 50;
+        if (bender.getData().canUseUpgrade("bloodParalysisEfficiencyII")) {
+            cost = 25;
+        } else if (bender.getData().canUseUpgrade("bloodParalysisEfficiencyI")) {
+            cost = 35;
+        }
+        if (deltaT < 1500 || !bender.reduceChi(cost)) {
             return;
         }
         PlayerEntity player = bender.player;
         boolean isNight = BloodElement.isNight(player.getWorld());
 
-        List<LivingEntity> entities = SapsUtils.getEntitiesInRadius(player.getEyePos(), isNight ? 7 : 3, player.getWorld(), player);
-        for (LivingEntity living : entities){
-            if(living instanceof PlayerEntity && !isNight){
-                living.addStatusEffect(new StatusEffectInstance(STUNNED_EFFECT,100,0,false,false,true));
+        int baseRange = bender.getData().canUseUpgrade("bloodParalysisRangeI") ? 5 : 3;
+        List<LivingEntity> entities = SapsUtils.getEntitiesInRadius(player.getEyePos(), isNight ? baseRange + 5 : baseRange, player.getWorld(), player);
+
+        for (LivingEntity living : entities) {
+            if (living instanceof PlayerEntity && !isNight) {
+                living.addStatusEffect(new StatusEffectInstance(STUNNED_EFFECT, 100, 0, false, false, true));
                 continue;
             }
-            living.addStatusEffect(new StatusEffectInstance(STATIONARY_EFFECT,120,2,true,false,true));
+            living.addStatusEffect(new StatusEffectInstance(STATIONARY_EFFECT, 120, 2, true, false, true));
         }
     }
 

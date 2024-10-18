@@ -7,6 +7,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MovementType;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.hit.HitResult;
 import org.joml.Vector3f;
 
@@ -17,7 +18,7 @@ public class AbilityBloodControl implements Ability {
     @Override
     public void onCall(Bender bender, long deltaT) {
         PlayerEntity player = bender.player;
-        if(!BloodElement.isNight(player.getWorld()) && !bender.plrData.canUseUpgrade("bloodControlPrecision")){
+        if(!BloodElement.isNight(player.getWorld()) && !bender.plrData.canUseUpgrade("bloodControlPrecisionII")){
             bender.setCurrAbility(null);
             return;
         }
@@ -30,7 +31,8 @@ public class AbilityBloodControl implements Ability {
         );
 
         LivingEntity living = (LivingEntity) SapsUtils.entityFromHitResult(hit);
-        if (living != null) {
+        if (living != null && bender.reduceChi(25)) {
+
             bender.setCurrAbility(this);
             setAbilityData(bender,living,10);
             return;
@@ -81,6 +83,10 @@ public class AbilityBloodControl implements Ability {
 
     @Override
     public void onTick(Bender bender) {
+        if (!bender.reduceChi(0.25f)) {
+            bender.setCurrAbility(null);
+            return;
+        }
         LivingEntity living = getVictim(bender);
         if(living == null || living.isRemoved()){
             bender.setCurrAbility(null);
@@ -99,7 +105,7 @@ public class AbilityBloodControl implements Ability {
                 .mul(1,1,1)
                 ;
 
-        if(!SapsUtils.isLookingAt(bender.player,living,-1,0.675f)){
+        if(!SapsUtils.isLookingAt(bender.player,living,-1,0.775f)){
             onRemove(bender);
         }
 
@@ -114,8 +120,8 @@ public class AbilityBloodControl implements Ability {
     }
 
     @Override
-    public boolean shouldImmobilizePlayer() {
-        return true;
+    public boolean shouldImmobilizePlayer(PlayerEntity player) {
+        return !Bender.getBender((ServerPlayerEntity) player).getData().canUseUpgrade("bloodControlPrecisionI");
     }
 
     public LivingEntity getVictim(Bender bender){
@@ -130,11 +136,11 @@ public class AbilityBloodControl implements Ability {
     }
 
     public void incrementDistance(Bender bender){
-        setAbilityData(bender,getVictim(bender),Math.min(getDistance(bender) + 5, 20));
+        setAbilityData(bender,getVictim(bender),Math.min(getDistance(bender) + 5, bender.plrData.canUseUpgrade("bloodControlPower") ? 40 : 20));
     }
 
     public void decrementDistance(Bender bender){
-        setAbilityData(bender,getVictim(bender),Math.max(getDistance(bender) - 5, 0));
+        setAbilityData(bender,getVictim(bender),Math.max(getDistance(bender) - 5, 5));
     }
 
     public void setAbilityData(Bender bender, LivingEntity victim, int distance){
