@@ -1,8 +1,25 @@
 package dev.saperate.elementals.utils;
 
+import net.minecraft.util.math.Vec3d;
+
 public abstract class MathHelper {
 
+    public static Vec3d clampVector(Vec3d vec, double min, double max){
+        return new Vec3d(
+                clamp(vec.x,min,max),
+                clamp(vec.y,min,max),
+                clamp(vec.z,min,max)
+        );
+    }
 
+    public static double clamp(double u, double min, double max){
+        if(u < min){
+            u = min;
+        }else if(u > max){
+            u = max;
+        }
+        return u;
+    }
 
     public static float clamp(float u, float min, float max){
         if(u < min){

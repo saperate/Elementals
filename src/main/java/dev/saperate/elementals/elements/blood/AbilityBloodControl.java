@@ -25,7 +25,7 @@ public class AbilityBloodControl implements Ability {
 
         HitResult hit = SapsUtils.raycastFull(
                 player,
-                bender.plrData.canUseUpgrade("bloodControlPower") ? 40 : 20,
+                bender.plrData.canUseUpgrade("bloodControlPowerI") ? 40 : 20,
                 false,
                 (entity -> entity instanceof LivingEntity)
         );
@@ -49,7 +49,7 @@ public class AbilityBloodControl implements Ability {
             return;
         }
         float power = player.isSneaking() ? -3 : 3;
-        if(bender.plrData.canUseUpgrade("bloodControlPower")){
+        if(bender.plrData.canUseUpgrade("bloodControlPowerI")){
             power *= 1.5f;
         }
 
@@ -136,7 +136,7 @@ public class AbilityBloodControl implements Ability {
     }
 
     public void incrementDistance(Bender bender){
-        setAbilityData(bender,getVictim(bender),Math.min(getDistance(bender) + 5, bender.plrData.canUseUpgrade("bloodControlPower") ? 40 : 20));
+        setAbilityData(bender,getVictim(bender),Math.min(getDistance(bender) + 5, bender.plrData.canUseUpgrade("bloodControlPowerI") ? 40 : 20));
     }
 
     public void decrementDistance(Bender bender){

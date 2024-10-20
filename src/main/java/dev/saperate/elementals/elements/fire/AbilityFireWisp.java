@@ -48,25 +48,6 @@ public class AbilityFireWisp implements Ability {
         bender.addBackgroundAbility(this,entity);
     }
 
-    @Override
-    public void onLeftClick(Bender bender, boolean started) {
-
-    }
-
-    @Override
-    public void onMiddleClick(Bender bender, boolean started) {
-
-    }
-
-    @Override
-    public void onRightClick(Bender bender, boolean started) {
-
-    }
-
-    @Override
-    public void onTick(Bender bender) {
-
-    }
 
     @Override
     public void onBackgroundTick(Bender bender, Object data) {

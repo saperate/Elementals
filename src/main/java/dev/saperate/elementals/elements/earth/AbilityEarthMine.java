@@ -66,7 +66,9 @@ public class AbilityEarthMine implements Ability {
 
     public void minePillar(BlockPos pos, Direction dir, int amount, World world){
         for (int i = 0; i < amount; i++) {
-            world.breakBlock(pos.offset(dir,i),true);
+            if(EarthElement.isBlockBendable(pos.offset(dir,i),world)){
+                world.breakBlock(pos.offset(dir,i),true);
+            }
         }
     }
 

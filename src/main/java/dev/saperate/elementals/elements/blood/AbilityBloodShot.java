@@ -35,7 +35,10 @@ public class AbilityBloodShot implements Ability {
                 pos.x, pos.y, pos.z,
                 player.getActiveStatusEffects()
         );
-        entity.effects.addAll(SapsUtils.getEffectsFromHands(player));
+        if(bender.getData().canUseUpgrade("bloodShotPrecisionI")){
+            entity.effects.addAll(SapsUtils.getEffectsFromHands(player));
+        }
+
 
 
         bender.abilityData = entity;

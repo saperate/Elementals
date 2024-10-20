@@ -294,7 +294,7 @@
 
   "upgrade.elementals.flameThrower": "Flamethrower",
   "upgrade.elementals.flameThrower.description": " Makes a stream of fire to incinerate enemies in front of you.",
-  "upgrade.elementals.flameThrower.use": " Use: %d + sneak",
+  "upgrade.elementals.flameThrower.use": " Use: %d + sneak -> then r-click",
   "upgrade.elementals.flameThrower.icon": "fire",
 
   "upgrade.elementals.fireShield": "Fire Shield",
@@ -449,7 +449,7 @@
 
   "upgrade.elementals.airGust": "Gust",
   "upgrade.elementals.airGust.description": " Makes a stream of air to knock back enemies in front of you.",
-  "upgrade.elementals.airGust.use": " Use: %d then r-click",
+  "upgrade.elementals.airGust.use": " Use: %d -> then r-click",
   "upgrade.elementals.airGust.icon": "air_gust",
 
   "upgrade.elementals.airShield": "Air Shield ",
@@ -636,5 +636,82 @@
   "upgrade.elementals.lightningStorm.icon": "lightning",
 
   "upgrade.elementals.lightningStormDurationI": "Duration I",
-  "upgrade.elementals.lightningStormDurationI.description": " Makes your storm last longer"
+  "upgrade.elementals.lightningStormDurationI.description": " Makes your storm last longer",
+
+  "upgrade.elementals.bloodPush": "Blood push",
+  "upgrade.elementals.bloodPush.description": " By using the blood inside your target, you can push them away from yourself.",
+  "upgrade.elementals.bloodPush.use": " Use: %d + look at the enemy + hold (optional)",
+  "upgrade.elementals.bloodPush.icon": "blood",
+
+  "upgrade.elementals.bloodPushPowerI": "Power I",
+  "upgrade.elementals.bloodPushPowerI.description": " Push enemies farther away.",
+
+  "upgrade.elementals.bloodShield": "Blood shield",
+  "upgrade.elementals.bloodShield.description": " By pushing away anything that gets close to you, you can create a shield that no living being can enter.",
+  "upgrade.elementals.bloodShield.use": " Use: %d + shift",
+  "upgrade.elementals.bloodShield.icon": "blood",
+
+  "upgrade.elementals.bloodControl": "Blood control",
+  "upgrade.elementals.bloodControl.description": " By controlling the blood in your enemies, you can move them as you please.",
+  "upgrade.elementals.bloodControl.use": " Use: %d + shift + hold (1.5s) + look at enemy",
+  "upgrade.elementals.bloodControl.icon": "blood",
+
+  "upgrade.elementals.bloodControlPrecisionI": "Precision I",
+  "upgrade.elementals.bloodControlPrecisionI.description": " Gain better control of your blood bending which allows you to move while using Blood control.",
+
+  "upgrade.elementals.bloodControlPrecisionII": "Precision II",
+  "upgrade.elementals.bloodControlPrecisionII.description": " Gain precision high enough that you can use Blood control during the day.",
+
+  "upgrade.elementals.bloodControlPowerI": "Power I",
+  "upgrade.elementals.bloodControlPowerI.description": " Makes your Blood control powerful enough to keep controlled entities far and push them farther away.",
+
+  "upgrade.elementals.bloodShot": "Blood shot",
+  "upgrade.elementals.bloodShot.description": " You can share your status effects with enemies (or allies) by taking a sample of your blood and sending it in others.",
+  "upgrade.elementals.bloodShot.use": " Use: %d",
+  "upgrade.elementals.bloodShot.icon": "blood",
+
+  "upgrade.elementals.bloodShotEfficiencyI": "Efficiency I",
+  "upgrade.elementals.bloodShotEfficiencyI.description": " Use Blood shot for less chi.",
+
+  "upgrade.elementals.bloodShotEfficiencyII": "Efficiency II",
+  "upgrade.elementals.bloodShotEfficiencyII.description": " Use Blood shot for even less chi.",
+
+  "upgrade.elementals.bloodShotPrecisionI": "Precision I",
+  "upgrade.elementals.bloodShotPrecisionI.description": " Greater precision allows you to use potions in your hands for Blood shot.",
+
+  "upgrade.elementals.bloodStep": "Blood step",
+  "upgrade.elementals.bloodStep.description": " By rushing blood to your legs, you can make a powerful jump without needing any water.",
+  "upgrade.elementals.bloodStep.use": " Use: %d + on ground",
+  "upgrade.elementals.bloodStep.icon": "blood",
+
+  "upgrade.elementals.bloodStepRangeI": "Range I",
+  "upgrade.elementals.bloodStepRangeI.description": " Jump farther.",
+
+  "upgrade.elementals.bloodStepRangeII": "Range II",
+  "upgrade.elementals.bloodStepRangeII.description": " Jump even farther",
+
+  "upgrade.elementals.bloodOvercharge": "Blood overcharge",
+  "upgrade.elementals.bloodOvercharge.description": " By making your blood flow faster, you can make them function at a higher capacity than normal. However, your body will be burnt out afterwards.",
+  "upgrade.elementals.bloodOvercharge.use": " Use: %d + hold (0.5s)",
+  "upgrade.elementals.bloodOvercharge.icon": "blood",
+
+  "upgrade.elementals.bloodOverchargeStrengthI": "Strength I",
+  "upgrade.elementals.bloodOverchargeStrengthI.description": " Overcharge for longer before burning out.",
+
+  "upgrade.elementals.bloodBag": "Blood bag",
+  "upgrade.elementals.bloodBag.description": " By sacrificing some of your blood, you are able to water bend anywhere.",
+
+  "upgrade.elementals.bloodParalysis": "Paralysis",
+  "upgrade.elementals.bloodParalysis.description": " This forbidden ability allows you to stop every living thing in a radius allowing you to escape or attack.",
+  "upgrade.elementals.bloodParalysis.use": " Use: %d + hold (1.5s)",
+  "upgrade.elementals.bloodParalysis.icon": "blood",
+
+  "upgrade.elementals.bloodParalysisRangeI": "Range I",
+  "upgrade.elementals.bloodParalysisRangeI.description": " Allows you to paralyse from farther away.",
+
+  "upgrade.elementals.bloodParalysisEfficiencyI": "Efficiency I",
+  "upgrade.elementals.bloodParalysisEfficiencyI.description": " Use Paralysis using less chi.",
+
+  "upgrade.elementals.bloodParalysisEfficiencyII": "Efficiency II",
+  "upgrade.elementals.bloodParalysisEfficiencyII.description": " Use Paralysis using even less chi."
 }

@@ -43,6 +43,7 @@ import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.command.argument.serialize.ConstantArgumentSerializer;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.Enchantments;
+import net.minecraft.entity.mob.WitchEntity;
 import net.minecraft.item.Items;
 import net.minecraft.loot.LootPool;
 import net.minecraft.loot.LootTable;
@@ -158,6 +159,12 @@ public class Elementals implements ModInitializer {
 
                 LootPool.Builder pool = LootPool.builder().with(entries);
                 return LootTable.builder().pool(pool).build();
+            }if(id.equals(LootTables.FISHING_TREASURE_GAMEPLAY)){
+                List<LootPoolEntry> entries = new ArrayList<>(Arrays.asList(tableBuilder.pools[0].entries));
+                entries.add(ItemEntry.builder(BLOOD_SCROLL_ITEM).build());
+
+                LootPool.Builder pool = LootPool.builder().with(entries);
+                return LootTable.builder().pool(pool).build();
             }
 
             return null;
@@ -197,7 +204,6 @@ public class Elementals implements ModInitializer {
 
     private static void onPlayEnd(MinecraftServer minecraftServer) {
         Bender.benders.clear();
-        System.out.println("clearing benders");
     }
 
     private static void onPlayerRespawn(ServerPlayerEntity oldPlayer, ServerPlayerEntity newPlayer, boolean b) {

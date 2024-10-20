@@ -98,13 +98,7 @@ public class FireWispEntity extends AbstractElementalsEntity<PlayerEntity> {
 
     @Override
     public boolean damage(DamageSource source, float amount) {
-        discard();
-
-        PlayerEntity owner = getOwner();
-        if(owner != null){
-            Bender bender = Bender.getBender((ServerPlayerEntity) owner);
-            bender.removeAbilityFromBackground(FireElement.get().getAbility(11));
-        }
+        remove();
         return true;
     }
 
@@ -128,7 +122,7 @@ public class FireWispEntity extends AbstractElementalsEntity<PlayerEntity> {
         discard();
 
         PlayerEntity owner = getOwner();
-        if(owner != null){
+        if(owner != null && !getWorld().isClient){
             Bender bender = Bender.getBender((ServerPlayerEntity) owner);
             bender.removeAbilityFromBackground(FireElement.get().getAbility(11));
         }

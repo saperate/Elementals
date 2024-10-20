@@ -8,6 +8,7 @@ import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.server.network.ServerPlayerEntity;
 
 import static dev.saperate.elementals.effects.SeismicSenseStatusEffect.SEISMIC_SENSE_EFFECT;
+import static dev.saperate.elementals.items.ElementalItems.EARTH_ARMOR_SET;
 
 public class AbilityEarth4 implements Ability {
     @Override
@@ -20,6 +21,10 @@ public class AbilityEarth4 implements Ability {
 
         if (deltaT > 1000 && plrData.canUseUpgrade("earthArmor")) {
             EarthElement.get().abilityList.get(13).onCall(bender, deltaT);
+            return;
+        }
+
+        if(bender.player.getInventory().containsAny(EARTH_ARMOR_SET)){
             return;
         }
 

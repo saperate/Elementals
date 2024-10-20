@@ -339,7 +339,10 @@ public class Bender {
             }
         }
 
-        addXp(xpAddedByChi(val));
+        if(giveXP){
+            addXp(xpAddedByChi(val));
+        }
+
         plrData.chi = newChi;
         syncChi();
         return true;

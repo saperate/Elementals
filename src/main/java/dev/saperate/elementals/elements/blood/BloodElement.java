@@ -33,11 +33,11 @@ public class BloodElement extends Element {
                                 new Upgrade("bloodControl", new Upgrade[]{
                                         new Upgrade("bloodControlPrecisionI", new Upgrade[]{
                                                 new Upgrade("bloodControlPrecisionII", 2),
-                                                new Upgrade("bloodControlPower", 2)
+                                                new Upgrade("bloodControlPowerI", 2)
                                         }, true, 2)
                                 }, 4),
                                 new Upgrade("bloodShield", 4)
-                        }, 1)
+                        }, 2)
                 }, 4),
                 new Upgrade("bloodShot", new Upgrade[]{
                         new Upgrade("bloodShotEfficiencyI", new Upgrade[]{

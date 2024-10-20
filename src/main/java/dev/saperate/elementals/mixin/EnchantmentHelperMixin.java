@@ -9,6 +9,7 @@ import net.minecraft.enchantment.EnchantmentLevelEntry;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.damage.DamageTypes;
+import net.minecraft.item.BookItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import org.spongepowered.asm.mixin.Debug;
@@ -26,6 +27,10 @@ public abstract class EnchantmentHelperMixin {
 
     @Inject(at = @At(value = "RETURN"), method = "getPossibleEntries", cancellable = true)
     private static void fixAcceptableItem(int power, ItemStack stack, boolean treasureAllowed, CallbackInfoReturnable<List<EnchantmentLevelEntry>> cir) {
+        if(stack.getItem() instanceof BookItem){
+            return;
+        }
+
         List<EnchantmentLevelEntry> enchants = new ArrayList<>();
         //We have to recheck all the enchantments because getPossibleEntries
         //check the right method to see if it is an acceptable item.

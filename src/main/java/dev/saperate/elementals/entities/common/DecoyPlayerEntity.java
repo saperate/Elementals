@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import dev.saperate.elementals.commands.BendingCommand;
 import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.entities.air.AirBallEntity;
+import dev.saperate.elementals.utils.MathHelper;
 import dev.saperate.elementals.utils.SapsUtils;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.LookAroundGoal;
@@ -28,7 +29,6 @@ import net.minecraft.util.Arm;
 import net.minecraft.util.Util;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.Box;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.GameRules;
@@ -139,10 +139,11 @@ public class DecoyPlayerEntity extends PathAwareEntity {
             direction = direction.multiply(distance - max).multiply(0.1f);
 
 
-            double damping = 0.1f + (0.3f - 0.1f) * (1 - Math.min(1, distance / max));
-            direction = direction.multiply(damping);
+            double damping =  0.1f + (0.3f - 0.1f) * (1 - Math.min(1, distance / max));
+            direction = MathHelper.clampVector(direction.multiply(damping),-10,10);
 
-            getOwner().addVelocity(direction.x, direction.y, direction.z);
+
+            getOwner().addVelocity(direction.x,direction.y,direction.z);
 
             getOwner().move(MovementType.SELF, getOwner().getVelocity());
         }
