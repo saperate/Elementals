@@ -340,7 +340,7 @@ public class BendingCommand {
             return 1;
         }
         context.getSource().sendFeedback((() -> Text.of(
-                plr.getEntityName() + "'s level is: " + PlayerData.get(plr))
+                plr.getEntityName() + "'s level is: " + PlayerData.get(plr).level)
         ), false);
         return 1;
     }
@@ -351,7 +351,7 @@ public class BendingCommand {
             return 1;
         }
         context.getSource().sendFeedback((() -> Text.of(
-                "Your level is: " + PlayerData.get(plr))
+                "Your level is: " + PlayerData.get(plr).level)
         ), false);
         return 1;
     }
