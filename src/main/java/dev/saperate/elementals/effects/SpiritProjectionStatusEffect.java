@@ -15,7 +15,6 @@ import static dev.saperate.elementals.effects.StationaryStatusEffect.STATIONARY_
 import static net.minecraft.world.GameMode.*;
 
 public class SpiritProjectionStatusEffect extends StatusEffect {
-    public static SpiritProjectionStatusEffect SPIRIT_PROJECTION_EFFECT = new SpiritProjectionStatusEffect();
 
     public SpiritProjectionStatusEffect() {
         super(

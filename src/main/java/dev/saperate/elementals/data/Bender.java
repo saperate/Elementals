@@ -3,10 +3,12 @@ package dev.saperate.elementals.data;
 import dev.saperate.elementals.Elementals;
 import dev.saperate.elementals.advancements.HasElementCriterion;
 import dev.saperate.elementals.commands.BendingCommand;
+import dev.saperate.elementals.effects.ElementalsStatusEffects;
 import dev.saperate.elementals.elements.Ability;
 import dev.saperate.elementals.elements.Element;
 import dev.saperate.elementals.elements.NoneElement;
 import dev.saperate.elementals.elements.water.WaterElement;
+import dev.saperate.elementals.network.payload.SyncChiPayload;
 import dev.saperate.elementals.utils.SapsUtils;
 import net.fabricmc.fabric.api.entity.FakePlayer;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
@@ -16,6 +18,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.network.packet.CustomPayload;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.world.GameMode;
 import org.jetbrains.annotations.NotNull;
@@ -24,9 +27,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static dev.saperate.elementals.effects.BurnoutStatusEffect.BURNOUT_EFFECT;
-import static dev.saperate.elementals.effects.OverchargedStatusEffect.OVERCHARGED_EFFECT;
-import static dev.saperate.elementals.effects.StationaryStatusEffect.STATIONARY_EFFECT;
 import static dev.saperate.elementals.network.ModMessages.*;
 import static dev.saperate.elementals.utils.SapsUtils.safeHasStatusEffect;
 
@@ -88,14 +88,14 @@ public class Bender {
     public void tick() {
         plrData.chi = Math.min(100,
                 plrData.chi + (Bender.CHI_REGENERATION_RATE
-                        * (safeHasStatusEffect(OVERCHARGED_EFFECT, player) ? 4 : 1)
-                        * (safeHasStatusEffect(BURNOUT_EFFECT, player) ? 0.25f : 1)
+                        * (safeHasStatusEffect(ElementalsStatusEffects.OVERCHARGED, player) ? 4 : 1)
+                        * (safeHasStatusEffect(ElementalsStatusEffects.BURNOUT, player) ? 0.25f : 1)
                 ));
 
         backgroundAbilities.forEach((Ability ability, Object data) -> ability.onBackgroundTick(this, data));
 
         if(player.age % 20 == 0 && currAbility != null && currAbility.shouldImmobilizePlayer(player)){
-            player.addStatusEffect(new StatusEffectInstance(STATIONARY_EFFECT,20,0,false,false,true));
+            player.addStatusEffect(new StatusEffectInstance(ElementalsStatusEffects.STATIONARY,20,0,false,false,true));
         }
 
         Elementals.HAS_ELEMENT.trigger((ServerPlayerEntity) player);
@@ -257,7 +257,7 @@ public class Bender {
     /**
      * This collects necessary information and outputs it in a stylised manner, the brakets
      * are not yet closed which makes it easy to add more information if necessary, when you are done
-     * modifying the builder, simply append "\n}" and it will look good
+     * modifying the builder, simply append "n" and it will look good
      *
      * @return A stylised string builder of the information present
      */
@@ -331,9 +331,9 @@ public class Bender {
 
         float newChi = plrData.chi - val;
         if (newChi < 0) {
-            if(newChi >= -10 && !safeHasStatusEffect(BURNOUT_EFFECT,player)){
+            if(newChi >= -10 && !safeHasStatusEffect(ElementalsStatusEffects.BURNOUT,player)){
                 newChi = 0;
-                player.addStatusEffect(new StatusEffectInstance(BURNOUT_EFFECT,200,0,false,false,true));
+                player.addStatusEffect(new StatusEffectInstance(ElementalsStatusEffects.BURNOUT,200,0,false,false,true));
             }else {
                 return false;
             }
@@ -350,9 +350,7 @@ public class Bender {
 
 
     public void syncChi() {
-        PacketByteBuf buf = PacketByteBufs.create();
-        buf.writeFloat(plrData.chi);
-        ServerPlayNetworking.send((ServerPlayerEntity) player, SYNC_CHI_PACKET_ID, buf);
+        ServerPlayNetworking.send((ServerPlayerEntity) player, new SyncChiPayload(plrData.chi));
     }
 
     public float xpAddedByChi(float chi) {

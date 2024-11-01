@@ -10,7 +10,6 @@ import net.minecraft.entity.effect.StatusEffects;
 import static dev.saperate.elementals.effects.BurnoutStatusEffect.BURNOUT_EFFECT;
 
 public class OverchargedStatusEffect extends StatusEffect{
-    public static OverchargedStatusEffect OVERCHARGED_EFFECT = new OverchargedStatusEffect();
 
     public OverchargedStatusEffect() {
         super(

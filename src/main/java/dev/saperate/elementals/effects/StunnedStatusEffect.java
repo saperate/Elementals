@@ -8,7 +8,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.Vec3d;
 
 public class StunnedStatusEffect extends StatusEffect {
-    public static StunnedStatusEffect STUNNED_EFFECT = new StunnedStatusEffect();
 
     public StunnedStatusEffect() {
         super(

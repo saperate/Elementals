@@ -18,6 +18,6 @@ public class SoulFireCore extends Block {
     }
 
     public static Block registerBlock(){
-        return Registry.register(Registries.BLOCK,new Identifier(MODID,"soulfirecore"), new SoulFireCore(FabricBlockSettings.create().strength(1f)));
+        return Registry.register(Registries.BLOCK, Identifier.of(MODID,"soulfirecore"), new SoulFireCore(FabricBlockSettings.create().strength(1f)));
     }
 }

@@ -22,8 +22,6 @@ import net.minecraft.util.math.Vec3d;
 import static dev.saperate.elementals.effects.StationaryStatusEffect.STATIONARY_EFFECT;
 
 public class SeismicSenseStatusEffect extends StatusEffect {
-    public static SeismicSenseStatusEffect SEISMIC_SENSE_EFFECT = new SeismicSenseStatusEffect();
-
     public SeismicSenseStatusEffect() {
         super(
                 StatusEffectCategory.NEUTRAL,

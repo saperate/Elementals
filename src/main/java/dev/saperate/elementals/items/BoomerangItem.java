@@ -19,7 +19,7 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 
 
-public class BoomerangItem extends Item implements Vanishable, DispenserBehavior {
+public class BoomerangItem extends Item implements DispenserBehavior {
 
     public BoomerangItem(Settings settings) {
         super(settings);
@@ -50,12 +50,12 @@ public class BoomerangItem extends Item implements Vanishable, DispenserBehavior
     @Override
     public ItemStack dispense(BlockPointer pointer, ItemStack stack) {
         stack.decrement(1);
-        World world = pointer.getWorld();
-        world.playSound(null, pointer.getPos(), SoundEvents.ENTITY_ENDER_PEARL_THROW,
+        World world = pointer.world();
+        world.playSound(null, pointer.pos(), SoundEvents.ENTITY_ENDER_PEARL_THROW,
                 SoundCategory.NEUTRAL, 0.5f, 0.4f / (world.getRandom().nextFloat() * 0.4f + 0.8f));
 
         if (!world.isClient) {
-            Direction direction = pointer.getBlockState().get(DispenserBlock.FACING);
+            Direction direction = pointer.state().get(DispenserBlock.FACING);
             BoomerangEntity boomerangEntity = getBoomerangEntity(pointer, world, direction);
             world.spawnEntity(boomerangEntity);
         }
@@ -66,9 +66,9 @@ public class BoomerangItem extends Item implements Vanishable, DispenserBehavior
     private static BoomerangEntity getBoomerangEntity(BlockPointer pointer, World world, Direction direction) {
         BoomerangEntity boomerangEntity = new BoomerangEntity(world,
                 new Vec3d(
-                        pointer.getPos().getX() + direction.getOffsetX() + 0.5,
-                        pointer.getPos().getY() + direction.getOffsetY() + 0.5,
-                        pointer.getPos().getZ() + direction.getOffsetZ() + 0.5
+                        pointer.pos().getX() + direction.getOffsetX() + 0.5,
+                        pointer.pos().getY() + direction.getOffsetY() + 0.5,
+                        pointer.pos().getZ() + direction.getOffsetZ() + 0.5
                 )
         );
 

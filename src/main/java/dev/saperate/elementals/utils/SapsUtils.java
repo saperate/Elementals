@@ -21,6 +21,7 @@ import net.minecraft.item.Items;
 import net.minecraft.particle.ParticleEffect;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.potion.PotionUtil;
+import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
@@ -394,7 +395,7 @@ public final class SapsUtils {
      * @param entity The entity that we check
      * @return true if the entity has the status effect
      */
-    public static boolean safeHasStatusEffect(StatusEffect effect, LivingEntity entity) {
+    public static boolean safeHasStatusEffect(RegistryEntry<StatusEffect> effect, LivingEntity entity) {
         boolean hasEffect = false;
         try {
             if (entity != null) {

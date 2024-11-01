@@ -2,6 +2,7 @@ package dev.saperate.elementals.elements.earth;
 
 import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.data.PlayerData;
+import dev.saperate.elementals.effects.ElementalsStatusEffects;
 import dev.saperate.elementals.elements.Element;
 import dev.saperate.elementals.elements.Upgrade;
 import dev.saperate.elementals.items.DirtBottleItem;
@@ -13,9 +14,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Items;
-import net.minecraft.potion.PotionUtil;
-import net.minecraft.potion.Potions;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
@@ -28,7 +26,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static dev.saperate.elementals.Elementals.BENDING_GRIEFING;
-import static dev.saperate.elementals.effects.StunnedStatusEffect.STUNNED_EFFECT;
 import static dev.saperate.elementals.entities.ElementalEntities.EARTHBLOCK;
 import static dev.saperate.elementals.misc.ElementalsCustomTags.EARTH_BENDABLE_BLOCKS;
 import static dev.saperate.elementals.utils.SapsUtils.getEntityLookVector;
@@ -224,7 +221,7 @@ public class EarthElement extends Element {
             }
             damagedEntities.add(entity);
             entity.damage(player.getDamageSources().playerAttack(player), 2.5f);
-            entity.addStatusEffect(new StatusEffectInstance(STUNNED_EFFECT, 200, 1, false,false,true));
+            entity.addStatusEffect(new StatusEffectInstance(ElementalsStatusEffects.STUNNED, 200, 1, false,false,true));
         }
     }
 

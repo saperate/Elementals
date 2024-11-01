@@ -7,9 +7,6 @@ import dev.saperate.elementals.entities.water.WaterArcEntity;
 import dev.saperate.elementals.entities.water.WaterBladeEntity;
 import dev.saperate.elementals.entities.water.WaterCubeEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Items;
-import net.minecraft.potion.PotionUtil;
-import net.minecraft.potion.Potions;
 import org.joml.Vector3f;
 
 public class AbilityWaterBlade implements Ability {

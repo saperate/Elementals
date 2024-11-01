@@ -23,6 +23,7 @@ import dev.saperate.elementals.keys.abilities.KeyAbility2;
 import dev.saperate.elementals.keys.abilities.KeyAbility3;
 import dev.saperate.elementals.keys.abilities.KeyAbility4;
 import dev.saperate.elementals.keys.gui.GuiKey;
+import dev.saperate.elementals.network.payload.SyncChiPayload;
 import dev.saperate.elementals.packets.*;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
@@ -96,7 +97,13 @@ public class ElementalsClient implements ClientModInitializer {
 		ClientPlayNetworking.registerGlobalReceiver(SYNC_CURR_ABILITY_PACKET_ID, SyncCurrAbilityS2CPacket::receive);
 		ClientPlayNetworking.registerGlobalReceiver(SYNC_ELEMENT_PACKET_ID, SyncBendingElementS2CPacket::receive);
 		ClientPlayNetworking.registerGlobalReceiver(SYNC_UPGRADE_LIST_PACKET_ID, SyncUpgradeListS2CPacket::receive);
-		ClientPlayNetworking.registerGlobalReceiver(SYNC_CHI_PACKET_ID, SyncChiS2CPacket::receive);
+
+		ClientPlayNetworking.registerGlobalReceiver(SyncChiPayload.ID, (payload, context) -> {
+			context.client().execute(() -> {
+				SyncChiS2CPacket.receive(context.client(), payload.chi());
+			});
+		});
+
 		ClientPlayNetworking.registerGlobalReceiver(SYNC_LEVEL_PACKET_ID, SyncLevelS2CPacket::receive);
 		ClientPlayNetworking.registerGlobalReceiver(UPDATE_PLAYER_STEP_HEIGHT, UpdatePlayerStepHeightS2CPacket::receive);
 	}

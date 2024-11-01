@@ -3,19 +3,15 @@ package dev.saperate.elementals.commands;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
-import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.data.StateDataSaverAndLoader;
-import dev.saperate.elementals.elements.Ability;
 import dev.saperate.elementals.elements.Element;
 import dev.saperate.elementals.elements.Upgrade;
 import net.minecraft.command.CommandRegistryAccess;
-import net.minecraft.command.argument.ArgumentTypes;
 import net.minecraft.command.argument.EntityArgumentType;
-import net.minecraft.command.argument.GameProfileArgumentType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
@@ -122,7 +118,7 @@ public class BendingCommand {
         bender.addElement(element, true);
 
         context.getSource().sendFeedback((() -> Text.of(
-                bender.player.getEntityName() + " can now bend: " + element.name)
+                bender.player.getName() + " can now bend: " + element.name)
         ), true);
         return 1;
     }
@@ -144,7 +140,7 @@ public class BendingCommand {
         bender.addElement(element, true);
 
         context.getSource().sendFeedback((() -> Text.of(
-                bender.player.getEntityName() + " can now bend: " + element.name)
+                bender.player.getName() + " can now bend: " + element.name)
         ), true);
         return 1;
     }
@@ -166,7 +162,7 @@ public class BendingCommand {
         bender.removeElement(element, true);
 
         context.getSource().sendFeedback((() -> Text.of(
-                bender.player.getEntityName() + " can no longer bend: " + element.name)
+                bender.player.getName() + " can no longer bend: " + element.name)
         ), true);
         return 1;
     }
@@ -189,7 +185,7 @@ public class BendingCommand {
         bender.removeElement(element, true);
 
         context.getSource().sendFeedback((() -> Text.of(
-                bender.player.getEntityName() + " can no longer bend: " + element.name)
+                bender.player.getName() + " can no longer bend: " + element.name)
         ), true);
         return 1;
     }
@@ -199,7 +195,7 @@ public class BendingCommand {
         PlayerData plrData = StateDataSaverAndLoader.getPlayerState(bender.player);
 
         context.getSource().sendFeedback((() -> Text.of(
-                "Upgrades owned by " + bender.player.getEntityName() + ":")
+                "Upgrades owned by " + bender.player.getName() + ":")
         ), false);
         for (Upgrade upgrade : plrData.upgrades.keySet()) {
             context.getSource().sendFeedback((() -> Text.of(
@@ -215,7 +211,7 @@ public class BendingCommand {
         PlayerData plrData = StateDataSaverAndLoader.getPlayerState(bender.player);
 
         context.getSource().sendFeedback((() -> Text.of(
-                "Upgrades owned by " + bender.player.getEntityName() + ":")
+                "Upgrades owned by " + bender.player.getName() + ":")
         ), false);
         for (Upgrade upgrade : plrData.upgrades.keySet()) {
             context.getSource().sendFeedback((() -> Text.of(
@@ -233,7 +229,7 @@ public class BendingCommand {
         plrData.upgrades.clear();
 
         context.getSource().sendFeedback((() -> Text.of(
-                bender.player.getEntityName() + " no longer has any upgrades!")
+                bender.player.getName() + " no longer has any upgrades!")
         ), true);
         return 1;
     }
@@ -259,12 +255,12 @@ public class BendingCommand {
         Upgrade temp = new Upgrade(upgradeName, -1);
         if (plrData.upgrades.remove(temp) == null) {//true if the player didn't have the specified upgrade
             context.getSource().sendFeedback((() -> Text.of(
-                    bender.player.getEntityName() + " did not have the specified upgrade (" + upgradeName + ")!")
+                    bender.player.getName() + " did not have the specified upgrade (" + upgradeName + ")!")
             ), false);
             return -1;
         } else {
             context.getSource().sendFeedback((() -> Text.of(
-                    bender.player.getEntityName() + " no longer has upgrade " + upgradeName + "!")
+                    bender.player.getName() + " no longer has upgrade " + upgradeName + "!")
             ), true);
             return 1;
         }
@@ -279,12 +275,12 @@ public class BendingCommand {
         Upgrade temp = new Upgrade(upgradeName, -1);
         if (plrData.upgrades.remove(temp) == null) {//true if the player didn't have the specified upgrade
             context.getSource().sendFeedback((() -> Text.of(
-                    bender.player.getEntityName() + " did not have the specified upgrade (" + upgradeName + ")!")
+                    bender.player.getName() + " did not have the specified upgrade (" + upgradeName + ")!")
             ), false);
             return -1;
         } else {
             context.getSource().sendFeedback((() -> Text.of(
-                    bender.player.getEntityName() + " no longer has upgrade " + upgradeName + "!")
+                    bender.player.getName() + " no longer has upgrade " + upgradeName + "!")
             ), true);
             return 1;
         }
@@ -316,7 +312,7 @@ public class BendingCommand {
         int value = IntegerArgumentType.getInteger(context, "value");
         PlayerData.get(plr).level = value;
         context.getSource().sendFeedback((() -> Text.of(
-                plr.getEntityName() + "'s level is now: " + value)
+                plr.getName() + "'s level is now: " + value)
         ), true);
         return 1;
     }
@@ -329,7 +325,7 @@ public class BendingCommand {
         int value = IntegerArgumentType.getInteger(context, "value");
         PlayerData.get(plr).level = value;
         context.getSource().sendFeedback((() -> Text.of(
-                plr.getEntityName() + "'s level is now: " + value)
+                plr.getName() + "'s level is now: " + value)
         ), false);
         return 1;
     }
@@ -340,7 +336,7 @@ public class BendingCommand {
             return 1;
         }
         context.getSource().sendFeedback((() -> Text.of(
-                plr.getEntityName() + "'s level is: " + PlayerData.get(plr).level)
+                plr.getName() + "'s level is: " + PlayerData.get(plr).level)
         ), false);
         return 1;
     }
@@ -369,25 +365,25 @@ public class BendingCommand {
         bender.syncChi();
 
         context.getSource().sendFeedback((() -> Text.of(
-                plr.getEntityName() + " has been reset")
+                plr.getName() + " has been reset")
         ), true);
         return 1;
     }
 
     private static int reset(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
-        PlayerEntity plr = EntityArgumentType.getPlayer(context, "player");
+        ServerPlayerEntity plr = EntityArgumentType.getPlayer(context, "player");
         if (plr.getWorld().isClient) {
             return 1;
         }
 
-        Bender bender = Bender.getBender((ServerPlayerEntity) plr);
+        Bender bender = Bender.getBender(plr);
         bender.abilityData = null;
         bender.setCurrAbility(null);
         PlayerData.get(plr).chi = 100;
         bender.syncChi();
 
         context.getSource().sendFeedback((() -> Text.of(
-                plr.getEntityName() + " has been reset")
+                plr.getName() + " has been reset")
         ), true);
         return 1;
     }

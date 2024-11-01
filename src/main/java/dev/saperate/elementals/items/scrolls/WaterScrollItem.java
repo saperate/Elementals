@@ -4,10 +4,10 @@ import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.elements.fire.FireElement;
 import dev.saperate.elementals.elements.lightning.LightningElement;
 import dev.saperate.elementals.elements.water.WaterElement;
-import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.Hand;
@@ -35,7 +35,7 @@ public class WaterScrollItem extends Item {
     }
 
     @Override
-    public void appendTooltip(ItemStack itemStack, World world, List<Text> tooltip, TooltipContext tooltipContext) {
+    public void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType type) {
         tooltip.add(Text.translatable("item.elementals.water_scroll.tooltip"));
     }
 

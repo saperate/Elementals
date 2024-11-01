@@ -2,11 +2,10 @@ package dev.saperate.elementals.items.scrolls;
 
 import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.elements.earth.EarthElement;
-import dev.saperate.elementals.elements.fire.FireElement;
-import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.Hand;
@@ -34,7 +33,7 @@ public class EarthScrollItem extends Item {
     }
 
     @Override
-    public void appendTooltip(ItemStack itemStack, World world, List<Text> tooltip, TooltipContext tooltipContext) {
+    public void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType type) {
         tooltip.add(Text.translatable("item.elementals.earth_scroll.tooltip"));
     }
 }

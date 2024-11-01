@@ -7,9 +7,6 @@ import dev.saperate.elementals.entities.water.WaterArcEntity;
 import dev.saperate.elementals.entities.water.WaterCubeEntity;
 import dev.saperate.elementals.entities.water.WaterHealingEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Items;
-import net.minecraft.potion.PotionUtil;
-import net.minecraft.potion.Potions;
 import org.joml.Vector3f;
 
 public class AbilityWaterHealing implements Ability {

@@ -49,12 +49,12 @@ public class DirtBottleItem extends Item implements DispenserBehavior {
     @Override
     public ItemStack dispense(BlockPointer pointer, ItemStack stack) {
         stack.decrement(1);
-        World world = pointer.getWorld();
-        world.playSound(null, pointer.getPos(), SoundEvents.ENTITY_ENDER_PEARL_THROW,
+        World world = pointer.world();
+        world.playSound(null, pointer.pos(), SoundEvents.ENTITY_ENDER_PEARL_THROW,
                 SoundCategory.NEUTRAL, 0.5f, 0.4f / (world.getRandom().nextFloat() * 0.4f + 0.8f));
 
         if (!world.isClient) {
-            Direction direction = pointer.getBlockState().get(DispenserBlock.FACING);
+            Direction direction = pointer.state().get(DispenserBlock.FACING);
             DirtBottleEntity dirtBottle = getDirtBottleEntity(pointer, world, direction);
             world.spawnEntity(dirtBottle);
         }
@@ -65,9 +65,9 @@ public class DirtBottleItem extends Item implements DispenserBehavior {
     private static DirtBottleEntity getDirtBottleEntity(BlockPointer pointer, World world, Direction direction) {
         DirtBottleEntity dirtBottleEntity = new DirtBottleEntity(world,
                 new Vec3d(
-                        pointer.getPos().getX() + direction.getOffsetX() + 0.5,
-                        pointer.getPos().getY() + direction.getOffsetY() + 0.5,
-                        pointer.getPos().getZ() + direction.getOffsetZ() + 0.5
+                        pointer.pos().getX() + direction.getOffsetX() + 0.5,
+                        pointer.pos().getY() + direction.getOffsetY() + 0.5,
+                        pointer.pos().getZ() + direction.getOffsetZ() + 0.5
                 )
         );
 

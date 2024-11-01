@@ -13,11 +13,10 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import static dev.saperate.elementals.network.ModMessages.SYNC_CURR_ABILITY_PACKET_ID;
 
 public class SyncChiS2CPacket {
-    public static void receive(MinecraftClient client, ClientPlayNetworkHandler handler,
-                               PacketByteBuf buf, PacketSender responseSender) {
+    public static void receive(MinecraftClient client, float chi) {
         if (client.player == null) {
             return;
         }
-        ClientBender.get().chi = buf.readFloat();
+        ClientBender.get().chi = chi;
     }
 }

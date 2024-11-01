@@ -1,5 +1,6 @@
 package dev.saperate.elementals.blocks;
 
+import com.mojang.serialization.MapCodec;
 import dev.saperate.elementals.blocks.blockEntities.LitAirBlockEntity;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.*;
@@ -22,7 +23,8 @@ import static dev.saperate.elementals.Elementals.LIT_AIR_BLOCK_ENTITY;
 import static dev.saperate.elementals.Elementals.MODID;
 
 public class LitAir extends BlockWithEntity {
-    public static final Block LIT_AIR = Registry.register(Registries.BLOCK, new Identifier(MODID, "lit_air"), new LitAir(FabricBlockSettings.create()
+    //TODO fix deprecated stuff
+    public static final Block LIT_AIR = Registry.register(Registries.BLOCK, Identifier.of(MODID, "lit_air"), new LitAir(FabricBlockSettings.create()
             .strength(0f).luminance(15).nonOpaque().noCollision()
             .emissiveLighting(Blocks::always).blockVision(Blocks::never)
     ));
@@ -43,6 +45,11 @@ public class LitAir extends BlockWithEntity {
         super(settings);
     }
 
+    @Override
+    protected MapCodec<? extends BlockWithEntity> getCodec() {
+        return null;
+    }
+
     public static Block registerBlock() {
         return LIT_AIR;
     }
@@ -53,13 +60,15 @@ public class LitAir extends BlockWithEntity {
         return new LitAirBlockEntity(pos, state);
     }
 
+
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
-        return checkType(type, LIT_AIR_BLOCK_ENTITY, LitAirBlockEntity::tick);
+        return validateTicker(type, LIT_AIR_BLOCK_ENTITY, LitAirBlockEntity::tick);
     }
 
     @Override
-    public boolean canPathfindThrough(BlockState state, BlockView world, BlockPos pos, NavigationType type) {
+    protected boolean canPathfindThrough(BlockState state, NavigationType type) {
         return true;
     }
+
 }

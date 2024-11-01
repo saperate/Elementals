@@ -23,8 +23,6 @@ import java.util.Collection;
 import java.util.Map;
 
 public class DenseStatusEffect extends StatusEffect {
-    public static DenseStatusEffect DENSE_EFFECT = new DenseStatusEffect();
-
     public DenseStatusEffect() {
         super(
                 StatusEffectCategory.NEUTRAL,
@@ -37,19 +35,21 @@ public class DenseStatusEffect extends StatusEffect {
     }
 
     @Override
-    public void onApplied(LivingEntity entity, AttributeContainer attributes, int amplifier) {
-        if(entity.getStepHeight() < 1) {
+    public void onApplied(LivingEntity entity, int amplifier) {
+        if (entity.getStepHeight() < 1) {
             if (entity instanceof ServerPlayerEntity player) {
                 PacketByteBuf buf = PacketByteBufs.create();
                 buf.writeFloat(entity.getStepHeight() + 0.4f);
                 ServerPlayNetworking.send(player, ModMessages.UPDATE_PLAYER_STEP_HEIGHT, buf);
             }
-            entity.setStepHeight(entity.getStepHeight() + 0.4f);
+            //TODO restore step height, don't forget to fix the  remove step height
+            //entity.setStepHeight(entity.getStepHeight() + 0.4f);
         }
     }
 
+
     @Override
-    public void applyUpdateEffect(LivingEntity entity, int amplifier) {
+    public boolean applyUpdateEffect(LivingEntity entity, int amplifier) {
         entity.setSwimming(false);
         if (amplifier >= 10 && entity.isOnGround() && !entity.isSubmergedInWater()) {
             entity.slowMovement(Blocks.AIR.getDefaultState(), new Vec3d(1.25, 0.1, 1.25));
@@ -64,20 +64,10 @@ public class DenseStatusEffect extends StatusEffect {
         } else {
             currV = -0.25;
         }
-
+//TODO fix unnatural falling speed
 
         entity.setVelocity(new Vec3d(entity.getVelocity().x * 0.90, currV, entity.getVelocity().z * 0.90));
+        return true;
     }
 
-    @Override
-    public void onRemoved(LivingEntity entity, AttributeContainer attributes, int amplifier) {
-        if(entity.getStepHeight() >= 1){
-            if(entity instanceof ServerPlayerEntity player){
-                PacketByteBuf buf = PacketByteBufs.create();
-                buf.writeFloat(entity.getStepHeight() - 0.4f);
-                ServerPlayNetworking.send(player, ModMessages.UPDATE_PLAYER_STEP_HEIGHT, buf);
-            }
-            entity.setStepHeight(entity.getStepHeight() - 0.4f);
-        }
-    }
 }

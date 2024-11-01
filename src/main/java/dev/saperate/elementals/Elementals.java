@@ -13,6 +13,7 @@ import dev.saperate.elementals.commands.ElementArgumentType;
 import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.data.StateDataSaverAndLoader;
+import dev.saperate.elementals.effects.ElementalsStatusEffects;
 import dev.saperate.elementals.elements.NoneElement;
 import dev.saperate.elementals.elements.air.AirElement;
 import dev.saperate.elementals.elements.blood.BloodElement;
@@ -43,6 +44,7 @@ import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.command.argument.serialize.ConstantArgumentSerializer;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.Enchantments;
+import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.mob.WitchEntity;
 import net.minecraft.item.Items;
 import net.minecraft.loot.LootPool;
@@ -56,6 +58,7 @@ import net.minecraft.loot.provider.number.ConstantLootNumberProvider;
 import net.minecraft.particle.DefaultParticleType;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
+import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
@@ -93,10 +96,10 @@ public class Elementals implements ModInitializer {
     //TODO add config
     public static final String MODID = "elementals";
     public static final Logger LOGGER = LoggerFactory.getLogger(MODID);
-    public static HasElementCriterion HAS_ELEMENT = Criteria.register(new HasElementCriterion());
-    public static UsedAbilityCriterion USED_ABILITY = Criteria.register(new UsedAbilityCriterion());
-    private static final Identifier WIND_SOUND_ID = new Identifier(MODID, "wind");
-    private static final Identifier WIND_BURST_SOUND_ID = new Identifier(MODID, "wind_burst");
+    public static HasElementCriterion HAS_ELEMENT = Criteria.register("hasElement",new HasElementCriterion());
+    public static UsedAbilityCriterion USED_ABILITY = Criteria.register("used_ability",new UsedAbilityCriterion());
+    private static final Identifier WIND_SOUND_ID = Identifier.of(MODID, "wind");
+    private static final Identifier WIND_BURST_SOUND_ID = Identifier.of(MODID, "wind_burst");
     public static SoundEvent WIND_SOUND_EVENT = SoundEvent.of(WIND_SOUND_ID);
     public static SoundEvent WIND_BURST_SOUND_EVENT = SoundEvent.of(WIND_BURST_SOUND_ID);
     public static final DefaultParticleType LIGHTNING_PARTICLE_TYPE = FabricParticleTypes.simple();
@@ -106,7 +109,7 @@ public class Elementals implements ModInitializer {
 
     public static final BlockEntityType<LitAirBlockEntity> LIT_AIR_BLOCK_ENTITY = Registry.register(
             Registries.BLOCK_ENTITY_TYPE,
-            new Identifier(MODID, "lit_air_block_entity"),
+            Identifier.of(MODID, "lit_air_block_entity"),
             BlockEntityType.Builder.create(LitAirBlockEntity::new, LIT_AIR).build(null)
     );
 
@@ -117,7 +120,7 @@ public class Elementals implements ModInitializer {
         DispenserBlock.registerBehavior(BOOMERANG_ITEM,BOOMERANG_ITEM);
         DispenserBlock.registerBehavior(DIRT_BOTTLE_ITEM,DIRT_BOTTLE_ITEM);
 
-        Registry.register(Registries.ENCHANTMENT, new Identifier(MODID, "volume"), VOLUME_ENCHANTMENT);
+        Registry.register(Registries.ENCHANTMENT, Identifier.of(MODID, "volume"), VOLUME_ENCHANTMENT);
 
         ElementalEntities.register();
 
@@ -125,16 +128,7 @@ public class Elementals implements ModInitializer {
         WaterRapid.registerBlock();
         LitAir.registerBlock();
 
-        Registry.register(Registries.STATUS_EFFECT, new Identifier(MODID, "stationary"), STATIONARY_EFFECT);
-        Registry.register(Registries.STATUS_EFFECT, new Identifier(MODID, "dense"), DENSE_EFFECT);
-        Registry.register(Registries.STATUS_EFFECT, new Identifier(MODID, "drowning"), DROWNING_EFFECT);
-        Registry.register(Registries.STATUS_EFFECT, new Identifier(MODID, "seismic_sense"), SEISMIC_SENSE_EFFECT);
-        Registry.register(Registries.STATUS_EFFECT, new Identifier(MODID, "spirit_projection"), SPIRIT_PROJECTION_EFFECT);
-        Registry.register(Registries.STATUS_EFFECT, new Identifier(MODID, "shocked"), SHOCKED_EFFECT);
-        Registry.register(Registries.STATUS_EFFECT, new Identifier(MODID, "stunned"), STUNNED_EFFECT);
-        Registry.register(Registries.STATUS_EFFECT, new Identifier(MODID, "static_aura"), STATIC_AURA_EFFECT);
-        Registry.register(Registries.STATUS_EFFECT, new Identifier(MODID, "overcharged"), OVERCHARGED_EFFECT);
-        Registry.register(Registries.STATUS_EFFECT, new Identifier(MODID, "burnout"), BURNOUT_EFFECT);
+        ElementalsStatusEffects.registerEffects();
 
         registerElements();
         registerCommands();
@@ -144,8 +138,6 @@ public class Elementals implements ModInitializer {
         ServerPlayConnectionEvents.DISCONNECT.register(Elementals::onPlayerDisconnect);
         ServerLifecycleEvents.SERVER_STOPPING.register(Elementals::onPlayEnd);
         ServerPlayerEvents.AFTER_RESPAWN.register(Elementals::onPlayerRespawn);
-
-        Registry.register(Registries.BANNER_PATTERN, "air", AIR_PATTERN);
 
         Registry.register(Registries.SOUND_EVENT, WIND_SOUND_ID, WIND_SOUND_EVENT);
         Registry.register(Registries.SOUND_EVENT, WIND_BURST_SOUND_ID, WIND_BURST_SOUND_EVENT);
@@ -190,7 +182,7 @@ public class Elementals implements ModInitializer {
         CommandRegistrationCallback.EVENT.register(ElementalsCommand::register);
 
         ArgumentTypeRegistry.registerArgumentType(
-                new Identifier(MODID, "bending"),
+                Identifier.of(MODID, "bending"),
                 ElementArgumentType.class,
                 ConstantArgumentSerializer.of(ElementArgumentType::element)
         );

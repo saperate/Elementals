@@ -2,12 +2,9 @@ package dev.saperate.elementals.items;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
+import dev.saperate.elementals.effects.ElementalsStatusEffects;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
-import net.minecraft.block.GrassBlock;
-import net.minecraft.client.color.world.GrassColors;
-import net.minecraft.client.item.BundleTooltipData;
-import net.minecraft.client.item.TooltipData;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EquipmentSlot;
@@ -21,6 +18,7 @@ import net.minecraft.item.*;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtList;
+import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.world.World;
 
@@ -28,15 +26,13 @@ import java.util.HashMap;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import static dev.saperate.elementals.effects.DenseStatusEffect.DENSE_EFFECT;
-import static dev.saperate.elementals.effects.SeismicSenseStatusEffect.SEISMIC_SENSE_EFFECT;
 
-public class EarthArmorItem extends DyeableArmorItem {
+public class EarthArmorItem extends ArmorItem{
     private static final String ITEMS_KEY = "Items";
     public static final int MAX_STORAGE = 1;
 
 
-    public EarthArmorItem(ArmorMaterial armorMaterial, Type type, Settings settings) {
+    public EarthArmorItem(RegistryEntry<ArmorMaterial> armorMaterial, Type type, Settings settings) {
         super(armorMaterial, type, settings);
     }
 
@@ -46,37 +42,14 @@ public class EarthArmorItem extends DyeableArmorItem {
         if(slot != 0){
             return;
         }
-        if(entity instanceof LivingEntity living){//Not inlining since i might need that later
-            if(entity instanceof PlayerEntity player){
-                player.addStatusEffect(new StatusEffectInstance(SEISMIC_SENSE_EFFECT,60, 0, false, false, false));
-                player.addStatusEffect(new StatusEffectInstance(DENSE_EFFECT,120,10, false, false, false));
-            }
+        if(entity instanceof LivingEntity player){
+            player.addStatusEffect(new StatusEffectInstance(ElementalsStatusEffects.SEISMIC_SENSE,60, 0, false, false, false));
+            player.addStatusEffect(new StatusEffectInstance(ElementalsStatusEffects.DENSE,120,10, false, false, false));
+
             //TODO figure out how to add armor points
         }
     }
 
-
-
-
-    public static int getAdditionalProtection(ItemStack stack){
-        NbtCompound nbtCompound = stack.getOrCreateNbt();
-        return nbtCompound.getInt("additional_protection");
-    }
-
-    public static float getAdditionalToughness(ItemStack stack){
-        NbtCompound nbtCompound = stack.getOrCreateNbt();
-        return nbtCompound.getFloat("additional_toughness");
-    }
-
-    public static void setAdditionalProtection(ItemStack stack, int val){
-        NbtCompound nbtCompound = stack.getOrCreateNbt();
-        nbtCompound.putInt("additional_protection", val);
-    }
-
-    public static void setAdditionalToughness(ItemStack stack, float val){
-        NbtCompound nbtCompound = stack.getOrCreateNbt();
-        nbtCompound.putFloat("additional_toughness", val);
-    }
 
     /**
      * Stores the previous armor and colors the new one then returns the new armor
@@ -86,14 +59,11 @@ public class EarthArmorItem extends DyeableArmorItem {
      */
     public ItemStack getItemStack(ItemStack prevArmor, Block standingBlock) {
         ItemStack item = getDefaultStack();
+        ArmorMaterials.LEATHER
         item.addEnchantment(Enchantments.BINDING_CURSE, 1);
         item.addHideFlag(ItemStack.TooltipSection.ENCHANTMENTS);
         item.addHideFlag(ItemStack.TooltipSection.DYE);
 
-        if(prevArmor.getItem() instanceof ArmorItem armorItem){
-            setAdditionalProtection(item, armorItem.getProtection());
-            setAdditionalToughness(item, armorItem.getToughness());
-        }
 
         addToBundle(item,prevArmor);
 
@@ -102,7 +72,6 @@ public class EarthArmorItem extends DyeableArmorItem {
         if(standingBlock.equals(Blocks.GRASS_BLOCK)){
             color = Blocks.DIRT.getDefaultMapColor().color;
         }
-
         setColor(item, darkenColor(color,4));
 
         return item;
@@ -172,10 +141,6 @@ public class EarthArmorItem extends DyeableArmorItem {
     }
 
 
-    @Override
-    public boolean hasGlint(ItemStack stack) {
-        return false;
-    }
 
 
     static int darkenColor(int col, int amt) {

@@ -5,7 +5,6 @@ import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectCategory;
 
 public class ShockedStatusEffect extends StatusEffect {
-    public static ShockedStatusEffect SHOCKED_EFFECT = new ShockedStatusEffect();
 
     public ShockedStatusEffect() {
         super(

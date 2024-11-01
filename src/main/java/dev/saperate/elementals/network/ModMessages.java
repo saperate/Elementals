@@ -1,6 +1,8 @@
 package dev.saperate.elementals.network;
 
 import dev.saperate.elementals.network.packets.*;
+import dev.saperate.elementals.network.payload.SyncChiPayload;
+import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.util.Identifier;
 
@@ -35,6 +37,8 @@ public class ModMessages {
         ServerPlayNetworking.registerGlobalReceiver(SYNC_LEVEL_PACKET_ID, SyncLevelC2SPacket::receive);
         ServerPlayNetworking.registerGlobalReceiver(CYCLE_BENDING_PACKET_ID, CycleBendingC2SPacket::receive);
         ServerPlayNetworking.registerGlobalReceiver(GET_MOD_VERSION_PACKET_ID, GetModVersionC2SPacket::receive);
+
+        PayloadTypeRegistry.playS2C().register(SyncChiPayload.ID, SyncChiPayload.CODEC);
 
     }
 

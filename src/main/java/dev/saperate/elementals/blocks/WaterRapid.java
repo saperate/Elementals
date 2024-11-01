@@ -16,6 +16,6 @@ public class WaterRapid extends Block {
     }
 
     public static Block registerBlock(){
-        return Registry.register(Registries.BLOCK,new Identifier(MODID,"waterrapid"), new WaterRapid(FabricBlockSettings.create().strength(1f)));
+        return Registry.register(Registries.BLOCK,Identifier.of(MODID,"waterrapid"), new WaterRapid(FabricBlockSettings.create().strength(1f)));
     }
 }

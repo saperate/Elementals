@@ -10,8 +10,6 @@ import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.util.math.Vec3d;
 
 public class StationaryStatusEffect extends StatusEffect {
-    public static StationaryStatusEffect STATIONARY_EFFECT = new StationaryStatusEffect();
-
     public StationaryStatusEffect() {
         super(
                 StatusEffectCategory.NEUTRAL,

@@ -9,7 +9,6 @@ import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 
 public class DrowningStatusEffect extends StatusEffect {
-    public static DrowningStatusEffect DROWNING_EFFECT = new DrowningStatusEffect();
     public DrowningStatusEffect() {
         super(
                 StatusEffectCategory.HARMFUL,
@@ -22,9 +21,9 @@ public class DrowningStatusEffect extends StatusEffect {
     }
 
     @Override
-    public void applyUpdateEffect(LivingEntity entity, int amplifier) {
+    public boolean applyUpdateEffect(LivingEntity entity, int amplifier) {
         if(entity.isSubmergedInWater()){
-            return;
+            return false;
         }
         entity.setAir(getNextAirUnderwater(entity.getAir(),entity));
         if(entity.getAir() <= -40) {
@@ -40,6 +39,7 @@ public class DrowningStatusEffect extends StatusEffect {
                 entity.damage(entity.getDamageSources().drown(), 1);
             }
         }
+        return true;
     }
 
     protected int getNextAirUnderwater(int air, LivingEntity entity) {
