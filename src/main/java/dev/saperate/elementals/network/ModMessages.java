@@ -2,6 +2,8 @@ package dev.saperate.elementals.network;
 
 import dev.saperate.elementals.network.packets.*;
 import dev.saperate.elementals.network.payload.SyncChiPayload;
+import dev.saperate.elementals.network.payload.SyncCurrAbilityPayload;
+import dev.saperate.elementals.network.payload.SyncElementsPayload;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.util.Identifier;
@@ -39,6 +41,8 @@ public class ModMessages {
         ServerPlayNetworking.registerGlobalReceiver(GET_MOD_VERSION_PACKET_ID, GetModVersionC2SPacket::receive);
 
         PayloadTypeRegistry.playS2C().register(SyncChiPayload.ID, SyncChiPayload.CODEC);
+        PayloadTypeRegistry.playS2C().register(SyncCurrAbilityPayload.ID, SyncCurrAbilityPayload.CODEC);
+        PayloadTypeRegistry.playS2C().register(SyncElementsPayload.ID, SyncElementsPayload.CODEC);
 
     }
 

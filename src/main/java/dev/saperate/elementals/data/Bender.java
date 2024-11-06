@@ -9,6 +9,8 @@ import dev.saperate.elementals.elements.Element;
 import dev.saperate.elementals.elements.NoneElement;
 import dev.saperate.elementals.elements.water.WaterElement;
 import dev.saperate.elementals.network.payload.SyncChiPayload;
+import dev.saperate.elementals.network.payload.SyncCurrAbilityPayload;
+import dev.saperate.elementals.network.payload.SyncElementsPayload;
 import dev.saperate.elementals.utils.SapsUtils;
 import net.fabricmc.fabric.api.entity.FakePlayer;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
@@ -17,6 +19,7 @@ import net.minecraft.advancement.Advancement;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.packet.CustomPayload;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -242,16 +245,19 @@ public class Bender {
         if (player.getWorld().isClient || player.getServer() == null) {
             return;
         }
-        PacketByteBuf buf = PacketByteBufs.create();
-        buf.writeString(packageElementsIntoString(plrData.elements));
-        buf.writeInt(plrData.activeElementIndex);
-        ServerPlayNetworking.send((ServerPlayerEntity) player, SYNC_ELEMENT_PACKET_ID, buf);
+        NbtCompound nbt = new NbtCompound();
+        nbt.putString("packedElements",packageElementsIntoString(plrData.elements));
+        nbt.putInt("activeElement",plrData.activeElementIndex);
+
+        ServerPlayNetworking.send((ServerPlayerEntity) player, new SyncElementsPayload(nbt));
     }
 
     public static void syncAbility(Bender bender) {
-        PacketByteBuf buf = PacketByteBufs.create();
-        buf.writeInt(bender.currAbility != null ? bender.getElement().abilityList.indexOf(bender.currAbility) : -1);
-        ServerPlayNetworking.send((ServerPlayerEntity) bender.player, SYNC_CURR_ABILITY_PACKET_ID, buf);
+        ServerPlayNetworking.send(
+                (ServerPlayerEntity) bender.player,
+                new SyncCurrAbilityPayload(
+                        bender.currAbility != null ? bender.getElement().abilityList.indexOf(bender.currAbility) : -1)
+        );
     }
 
     /**

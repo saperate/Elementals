@@ -15,7 +15,7 @@ import net.minecraft.util.math.RotationAxis;
 import net.minecraft.util.math.Vec3d;
 
 public class EarthBlockEntityRenderer extends EntityRenderer<EarthBlockEntity> {
-    private static final Identifier texture = new Identifier("minecraft", "textures/block/dirt.png");
+    private static final Identifier texture = Identifier.of("minecraft", "textures/block/dirt.png");
 
     public EarthBlockEntityRenderer(EntityRendererFactory.Context context) {
         super(context);
@@ -41,12 +41,7 @@ public class EarthBlockEntityRenderer extends EntityRenderer<EarthBlockEntity> {
                 matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees((float) Math.toDegrees(Math.asin(-dir.y))));
 
                 ShrapnelModel.getTexturedModelData().createModel().render(
-                        matrices, vertexConsumer, light, 0,
-                        1,
-                        1,
-                        1,
-                        1
-                );
+                        matrices, vertexConsumer, light, 0, 1);
             }
             case 2 -> {
                 VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderLayer.getItemEntityTranslucentCull(getTexture(entity)));
@@ -56,12 +51,7 @@ public class EarthBlockEntityRenderer extends EntityRenderer<EarthBlockEntity> {
                 matrices.translate(0.25f, -1.5f, -0.25f);
 
                 SpikeModel.getTexturedModelData().createModel().render(
-                        matrices, vertexConsumer, light, 0,
-                        1,
-                        1,
-                        1,
-                        1
-                );
+                        matrices, vertexConsumer, light, 0, 1);
             }
             default -> {
                 BlockState state = entity.getBlockState();
