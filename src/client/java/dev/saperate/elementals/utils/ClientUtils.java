@@ -2,6 +2,7 @@ package dev.saperate.elementals.utils;
 
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffect;
+import net.minecraft.registry.entry.RegistryEntry;
 
 public final class ClientUtils {
 
@@ -13,7 +14,7 @@ public final class ClientUtils {
      * @param entity The entity that we check
      * @return true if the entity has the status effect
      */
-    public static boolean safeHasStatusEffect(StatusEffect effect, LivingEntity entity){
+    public static boolean safeHasStatusEffect(RegistryEntry<StatusEffect> effect, LivingEntity entity){
         boolean hasEffect = false;
         try{
             if(entity != null){

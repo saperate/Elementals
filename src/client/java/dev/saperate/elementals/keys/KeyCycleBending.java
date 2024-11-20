@@ -3,6 +3,8 @@ package dev.saperate.elementals.keys;
 import dev.saperate.elementals.gui.UpgradeTreeScreen;
 import dev.saperate.elementals.keys.KeyInput;
 import dev.saperate.elementals.network.ModMessages;
+import dev.saperate.elementals.network.payload.C2S.AbilityPayload;
+import dev.saperate.elementals.network.payload.C2S.CycleBendingPayload;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -26,13 +28,9 @@ public class KeyCycleBending extends KeyInput {
                 "category.elementals"
         ));
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
-            if (keyBinding.isPressed() && !lastFrameWasHolding) {
-                lastFrameWasHolding = true;
-                //ClientPlayNetworking.send(packetID, PacketByteBufs.create());
-            }
             if (!keyBinding.isPressed() && lastFrameWasHolding) {
                 lastFrameWasHolding = false;
-                ClientPlayNetworking.send(CYCLE_BENDING_PACKET_ID, PacketByteBufs.create());
+                ClientPlayNetworking.send(new CycleBendingPayload(false));
             }
         });
     }

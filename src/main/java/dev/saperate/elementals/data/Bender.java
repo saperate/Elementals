@@ -1,27 +1,19 @@
 package dev.saperate.elementals.data;
 
 import dev.saperate.elementals.Elementals;
-import dev.saperate.elementals.advancements.HasElementCriterion;
 import dev.saperate.elementals.commands.BendingCommand;
 import dev.saperate.elementals.effects.ElementalsStatusEffects;
 import dev.saperate.elementals.elements.Ability;
 import dev.saperate.elementals.elements.Element;
 import dev.saperate.elementals.elements.NoneElement;
-import dev.saperate.elementals.elements.water.WaterElement;
-import dev.saperate.elementals.network.payload.SyncChiPayload;
-import dev.saperate.elementals.network.payload.SyncCurrAbilityPayload;
-import dev.saperate.elementals.network.payload.SyncElementsPayload;
+import dev.saperate.elementals.network.payload.S2C.SyncChiPayload;
+import dev.saperate.elementals.network.payload.S2C.SyncCurrAbilityPayload;
+import dev.saperate.elementals.network.payload.S2C.SyncElementsPayload;
 import dev.saperate.elementals.utils.SapsUtils;
-import net.fabricmc.fabric.api.entity.FakePlayer;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.advancement.Advancement;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.network.packet.CustomPayload;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.world.GameMode;
 import org.jetbrains.annotations.NotNull;
@@ -30,7 +22,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static dev.saperate.elementals.network.ModMessages.*;
 import static dev.saperate.elementals.utils.SapsUtils.safeHasStatusEffect;
 
 public class Bender {

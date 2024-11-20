@@ -1,15 +1,14 @@
 package dev.saperate.elementals.keys;
 
 import dev.saperate.elementals.data.ClientBender;
-import dev.saperate.elementals.packets.SyncUpgradeListS2CPacket;
+import dev.saperate.elementals.network.payload.C2S.AbilityPayload;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
 
@@ -26,7 +25,7 @@ public abstract class KeyInput {
         keyInputs.add(this);
     }
 
-    public void registerKeyInput(int GLFWKey, Identifier packetID, String translationKey, String category) {
+    public void registerAbilityInput(int GLFWKey, int abilityIndex, String translationKey, String category) {
         keyBinding = KeyBindingHelper.registerKeyBinding(new KeyBinding(
                 translationKey,
                 InputUtil.Type.KEYSYM,
@@ -39,27 +38,35 @@ public abstract class KeyInput {
             if (keyBinding.isPressed() && !lastFrameWasHolding && !ClientBender.get().isCasting()) {
                 ClientBender.get().startCasting();
                 lastFrameWasHolding = true;
-                onStartHolding(packetID);
+                onStartHolding(abilityIndex);
             }
             if (!keyBinding.isPressed() && lastFrameWasHolding) {
                 ClientBender.get().stopCasting();
                 lastFrameWasHolding = false;
-                onEndHolding(packetID);
+                onEndHolding(abilityIndex);
             }
         });
     }
 
 
-    public void onStartHolding(Identifier packetID) {
-        PacketByteBuf buf = PacketByteBufs.create();
-        buf.writeBoolean(true);//isStart
-        ClientPlayNetworking.send(packetID, buf);
+    public void onStartHolding(int abilityIndex) {
+        NbtCompound data = new NbtCompound();
+
+        data.putInt("index", abilityIndex);
+        data.putBoolean("isStart", true);
+
+        ClientPlayNetworking.send(new AbilityPayload(data));
+
+
     }
 
-    public void onEndHolding(Identifier packetID) {
-        PacketByteBuf buf = PacketByteBufs.create();
-        buf.writeBoolean(false);//isStart
-        ClientPlayNetworking.send(packetID, buf);
+    public void onEndHolding(int abilityIndex) {
+        NbtCompound data = new NbtCompound();
+
+        data.putInt("index", abilityIndex);
+        data.putBoolean("isStart", false);
+
+        ClientPlayNetworking.send(new AbilityPayload(data));
     }
 
 }

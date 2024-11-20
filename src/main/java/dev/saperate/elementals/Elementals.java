@@ -40,29 +40,16 @@ import net.fabricmc.fabric.api.particle.v1.FabricParticleTypes;
 import net.minecraft.advancement.criterion.Criteria;
 import net.minecraft.block.DispenserBlock;
 import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.command.argument.serialize.ConstantArgumentSerializer;
 import net.minecraft.enchantment.Enchantment;
-import net.minecraft.enchantment.Enchantments;
-import net.minecraft.entity.effect.StatusEffect;
-import net.minecraft.entity.mob.WitchEntity;
-import net.minecraft.item.Items;
 import net.minecraft.loot.LootPool;
 import net.minecraft.loot.LootTable;
 import net.minecraft.loot.LootTables;
 import net.minecraft.loot.entry.ItemEntry;
 import net.minecraft.loot.entry.LootPoolEntry;
-import net.minecraft.loot.function.SetContentsLootFunction;
-import net.minecraft.loot.function.SetLootTableLootFunction;
-import net.minecraft.loot.provider.number.ConstantLootNumberProvider;
-import net.minecraft.particle.DefaultParticleType;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
-import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.command.CommandManager;
-import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.server.command.SummonCommand;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundEvent;
@@ -76,20 +63,9 @@ import java.util.Arrays;
 import java.util.List;
 
 import static dev.saperate.elementals.blocks.LitAir.LIT_AIR;
-import static dev.saperate.elementals.effects.BurnoutStatusEffect.BURNOUT_EFFECT;
-import static dev.saperate.elementals.effects.DenseStatusEffect.DENSE_EFFECT;
-import static dev.saperate.elementals.effects.DrowningStatusEffect.DROWNING_EFFECT;
-import static dev.saperate.elementals.effects.OverchargedStatusEffect.OVERCHARGED_EFFECT;
-import static dev.saperate.elementals.effects.SeismicSenseStatusEffect.SEISMIC_SENSE_EFFECT;
-import static dev.saperate.elementals.effects.ShockedStatusEffect.SHOCKED_EFFECT;
-import static dev.saperate.elementals.effects.SpiritProjectionStatusEffect.SPIRIT_PROJECTION_EFFECT;
-import static dev.saperate.elementals.effects.StaticAuraStatusEffect.STATIC_AURA_EFFECT;
-import static dev.saperate.elementals.effects.StationaryStatusEffect.STATIONARY_EFFECT;
-import static dev.saperate.elementals.effects.StunnedStatusEffect.STUNNED_EFFECT;
 import static dev.saperate.elementals.items.ElementalItems.*;
-import static dev.saperate.elementals.misc.AirBannerPattern.AIR_PATTERN;
-import static dev.saperate.elementals.network.ModMessages.registerC2SPackets;
-//test
+import static dev.saperate.elementals.network.ModMessages.registerNetworking;
+
 public class Elementals implements ModInitializer {
     public static Enchantment VOLUME_ENCHANTMENT = new VolumeEnchantment();
 
@@ -132,7 +108,7 @@ public class Elementals implements ModInitializer {
 
         registerElements();
         registerCommands();
-        registerC2SPackets();
+        registerNetworking();
 
         ServerPlayConnectionEvents.JOIN.register(Elementals::onPlayReady);
         ServerPlayConnectionEvents.DISCONNECT.register(Elementals::onPlayerDisconnect);

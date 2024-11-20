@@ -7,9 +7,9 @@ import org.lwjgl.glfw.GLFW;
 public class KeyAbility3 extends KeyInput {
 
     public KeyAbility3(){
-        registerKeyInput(
+        registerAbilityInput(
                 GLFW.GLFW_KEY_V,
-                ModMessages.ABILITY3_PACKET_ID,
+                2,
                 "key.elementals.Ability3",
                 "category.elementals"
         );

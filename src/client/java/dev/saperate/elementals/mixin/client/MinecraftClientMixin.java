@@ -1,5 +1,6 @@
 package dev.saperate.elementals.mixin.client;
 
+import dev.saperate.elementals.effects.ElementalsStatusEffects;
 import dev.saperate.elementals.entities.common.DecoyPlayerEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
@@ -19,11 +20,9 @@ import static dev.saperate.elementals.utils.SapsUtils.safeHasStatusEffect;
 
 @Mixin(MinecraftClient.class)
 public abstract class MinecraftClientMixin {
-
-
     @Inject(at = @At("HEAD"), method = "hasOutline", cancellable = true)
     private void closeMenuIfFakeSpectatorMode(Entity entity, CallbackInfoReturnable<Boolean> cir) {
-        if (safeHasStatusEffect(SPIRIT_PROJECTION_EFFECT, MinecraftClient.getInstance().player)) {
+        if (safeHasStatusEffect(ElementalsStatusEffects.SPIRIT_PROJECTION, MinecraftClient.getInstance().player)) {
             cir.setReturnValue(entity.isGlowing()
                     || (entity instanceof DecoyPlayerEntity decoy
                     && decoy.getOwnerUUID().equals(MinecraftClient.getInstance().player.getUuid()))

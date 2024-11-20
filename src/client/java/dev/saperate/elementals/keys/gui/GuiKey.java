@@ -10,7 +10,7 @@ import net.minecraft.client.util.InputUtil;
 import org.lwjgl.glfw.GLFW;
 
 public class GuiKey extends KeyInput {
-    private KeyBinding keyBinding;
+    private final KeyBinding keyBinding;
     public boolean lastFrameWasHolding;
 
     public GuiKey() {

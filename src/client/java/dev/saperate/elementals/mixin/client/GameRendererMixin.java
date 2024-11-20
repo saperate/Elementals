@@ -1,5 +1,6 @@
 package dev.saperate.elementals.mixin.client;
 
+import dev.saperate.elementals.effects.ElementalsStatusEffects;
 import dev.saperate.elementals.entities.earth.EarthBlockEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.*;
@@ -15,7 +16,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import static dev.saperate.elementals.Elementals.MODID;
-import static dev.saperate.elementals.effects.SeismicSenseStatusEffect.SEISMIC_SENSE_EFFECT;
 import static dev.saperate.elementals.utils.ClientUtils.safeHasStatusEffect;
 
 
@@ -27,19 +27,19 @@ public abstract class GameRendererMixin {
     @Inject(at = @At("TAIL"), method = "onCameraEntitySet")
     private void onCamEntitySet(Entity entity, CallbackInfo ci) {
         if(entity instanceof EarthBlockEntity){
-            loadPostProcessor(new Identifier(MODID,"shaders/post/seismicsense.json"));
+            loadPostProcessor(Identifier.of(MODID,"shaders/post/seismicsense.json"));
         }
     }
 
 
     @Inject(at = @At("TAIL"), method = "render")
-    private void render(float tickDelta, long startTime, boolean tick, CallbackInfo ci) {
+    private void render(RenderTickCounter tickCounter, boolean tick, CallbackInfo ci) {
         PlayerEntity plr = MinecraftClient.getInstance().player;
         GameRenderer renderer = MinecraftClient.getInstance().gameRenderer;
 
 
 
-        boolean hasStatusEffect = safeHasStatusEffect(SEISMIC_SENSE_EFFECT,plr);
+        boolean hasStatusEffect = safeHasStatusEffect(ElementalsStatusEffects.SEISMIC_SENSE,plr);
         boolean customShaderEnabled = customPostProcessorEnabled(renderer,MODID + ":shaders/post/seismicsense.json");
 
         if(hasStatusEffect && !customShaderEnabled){

@@ -3,14 +3,9 @@ package dev.saperate.elementals.packets;
 import dev.saperate.elementals.ElementalsClient;
 import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.data.ClientBender;
-import dev.saperate.elementals.elements.Element;
 import dev.saperate.elementals.gui.UpgradeTreeScreen;
-import dev.saperate.elementals.network.payload.SyncCurrAbilityPayload;
-import dev.saperate.elementals.network.payload.SyncElementsPayload;
-import net.fabricmc.fabric.api.networking.v1.PacketSender;
+import dev.saperate.elementals.network.payload.S2C.SyncElementsPayload;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ClientPlayNetworkHandler;
-import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.packet.CustomPayload;
 
 public class SyncBendingElementS2CPacket implements ElementalsClient.ElementalPacket<SyncElementsPayload>{

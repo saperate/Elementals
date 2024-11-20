@@ -1,10 +1,13 @@
 package dev.saperate.elementals.mixin.client;
 
+import dev.saperate.elementals.network.payload.C2S.MousePayload;
+import dev.saperate.elementals.network.payload.C2S.RequestSyncUpgradeListPayload;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.Mouse;
 import net.minecraft.entity.Entity;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
 import org.lwjgl.glfw.GLFW;
 import org.spongepowered.asm.mixin.Final;
@@ -33,12 +36,12 @@ public abstract class MouseMixin {
             } else if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
                 right = action;
             }
-            PacketByteBuf packet = PacketByteBufs.create();
-            packet.writeInt(left);
-            packet.writeInt(mid);
-            packet.writeInt(right);
+            NbtCompound data = new NbtCompound();
+            data.putInt("left", left);
+            data.putInt("middle", mid);
+            data.putInt("right", right);
 
-            ClientPlayNetworking.send(MOUSE_PACKET_ID, packet);
+            ClientPlayNetworking.send(new MousePayload(data));
         }
     }
 }

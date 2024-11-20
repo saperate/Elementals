@@ -2,6 +2,7 @@ package dev.saperate.elementals.network.packets;
 
 import dev.saperate.elementals.Elementals;
 import dev.saperate.elementals.data.PlayerData;
+import dev.saperate.elementals.network.payload.C2S.SyncVersionPayload;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -22,24 +23,22 @@ import static dev.saperate.elementals.network.ModMessages.*;
 public class GetModVersionC2SPacket {
 
 
-    public static void receive(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler,
-                               PacketByteBuf buf, PacketSender responseSender) {
-        // Everything here happens ONLY on the Server!
-        String version = buf.readString();
+    public static void receive(ServerPlayerEntity player, SyncVersionPayload payload) {
+        String version = payload.version();
         Version serverVersion = getModVersion();
 
 
         if (serverVersion == null) {
-            handler.disconnect(Text.of("Unable to get server mod version"));
+            player.networkHandler.disconnect(Text.of("Unable to get server mod version"));
             return;
         }
 
         if (!version.equals(serverVersion.getFriendlyString())) {
             if (version.equals("No ModContainer found")) {
-                handler.disconnect(Text.of("Unable to get client mod version"));
+                player.networkHandler.disconnect(Text.of("Unable to get client mod version"));
                 return;
             }
-            handler.disconnect(Text.of("Version mismatch! Client (" + version + ") != Server (" + serverVersion.getFriendlyString() + ")"));
+            player.networkHandler.disconnect(Text.of("Version mismatch! Client (" + version + ") != Server (" + serverVersion.getFriendlyString() + ")"));
         }
     }
 

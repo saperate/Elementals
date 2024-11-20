@@ -1,8 +1,8 @@
 package dev.saperate.elementals.mixin.client;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.data.ClientBender;
+import dev.saperate.elementals.effects.ElementalsStatusEffects;
 import dev.saperate.elementals.elements.water.AbilityWaterShield;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.hud.InGameOverlayRenderer;
@@ -18,8 +18,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import static dev.saperate.elementals.effects.DrowningStatusEffect.DROWNING_EFFECT;
-
 @Mixin(InGameOverlayRenderer.class)
 public class OverlayMixin {
     @Shadow
@@ -31,8 +29,8 @@ public class OverlayMixin {
         if (bender != null && bender.player != null) {
             if (bender.currAbility instanceof AbilityWaterShield) {
                 renderUnderwaterOverlay(client, matrices);
-            } else if (bender.player.hasStatusEffect(DROWNING_EFFECT)) {
-                int colorId = bender.player.getStatusEffect(DROWNING_EFFECT).getAmplifier();
+            } else if (bender.player.hasStatusEffect(ElementalsStatusEffects.DROWNING)) {
+                int colorId = bender.player.getStatusEffect(ElementalsStatusEffects.DROWNING).getAmplifier();
                 if(colorId == 100){
                     return;
                 }

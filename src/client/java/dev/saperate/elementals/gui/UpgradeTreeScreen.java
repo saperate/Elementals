@@ -9,6 +9,8 @@ import dev.saperate.elementals.elements.Element;
 import dev.saperate.elementals.elements.Upgrade;
 import dev.saperate.elementals.keys.KeyInput;
 import dev.saperate.elementals.keys.abilities.KeyAbility1;
+import dev.saperate.elementals.network.payload.C2S.BuyUpgradePayload;
+import dev.saperate.elementals.network.payload.C2S.RequestSyncUpgradeListPayload;
 import dev.saperate.elementals.packets.SyncLevelS2CPacket;
 import dev.saperate.elementals.packets.SyncUpgradeListS2CPacket;
 import dev.saperate.elementals.utils.SapsUtils;
@@ -78,9 +80,10 @@ public class UpgradeTreeScreen extends Screen {
         super.render(context, mouseX, mouseY, delta);
         int oX = MathHelper.floor(originX);
         int oY = MathHelper.floor(originY);
-        context.drawTexture(CreateWorldScreen.LIGHT_DIRT_BACKGROUND_TEXTURE, 0, 0, -5, -oX, -oY, width, height, 32, 32);
+        //fixme: Was previously dirt background, change it if this isnt right
+        context.drawTexture(CreateWorldScreen.MENU_BACKGROUND_TEXTURE, 0, 0, -5, -oX, -oY, width, height, 32, 32);
 
-        context.drawTexture(new Identifier(MODID, "textures/gui/" + ClientBender.get().getElement().getName().toLowerCase() + "_upgrade_button.png"),
+        context.drawTexture(Identifier.of(MODID, "textures/gui/" + ClientBender.get().getElement().getName().toLowerCase() + "_upgrade_button.png"),
                 oX - 2, oY - 2, 0, 0, tileSize + 4, tileSize + 4, tileSize + 4, tileSize + 4);
 
 
@@ -162,9 +165,7 @@ public class UpgradeTreeScreen extends Screen {
         if (button == 0) {
             Upgrade upgrade = mouseOnUpgrade(mouseX, mouseY);
             if (upgrade != null && PlayerData.canBuyUpgrade(bender.upgrades, bender.getElement(), upgrade.name, new AtomicInteger(ClientBender.get().level))) {
-                PacketByteBuf buf = PacketByteBufs.create();
-                buf.writeString(upgrade.name);
-                ClientPlayNetworking.send(BUY_UPGRADE_PACKET_ID, buf);
+                ClientPlayNetworking.send(new BuyUpgradePayload(upgrade.name));
             }
         }
         return super.mouseClicked(mouseX, mouseY, button);
@@ -216,7 +217,7 @@ public class UpgradeTreeScreen extends Screen {
      * @author Mojang
      */
     public void renderExperienceBar(DrawContext context) {
-        Identifier ICONS = new Identifier(MODID, "textures/gui/icons.png");
+        Identifier ICONS = Identifier.of(MODID, "textures/gui/icons.png");
 
         int scaledWidth = context.getScaledWindowWidth();
 
@@ -250,13 +251,13 @@ public class UpgradeTreeScreen extends Screen {
         float color = bender.upgrades.containsKey(upgrade) ? 1 : 0.25f;
         boolean isUpgrade = !icon.equals("upgrade.elementals." + upgrade.name + ".icon");
 
-        drawTexturedQuad(context, new Identifier(MODID, "textures/gui/" + ClientBender.get().getElement().getName().toLowerCase() + "_" + (isUpgrade ? "" : "plain_") + "upgrade_button.png"),
+        drawTexturedQuad(context, Identifier.of(MODID, "textures/gui/" + ClientBender.get().getElement().getName().toLowerCase() + "_" + (isUpgrade ? "" : "plain_") + "upgrade_button.png"),
                 x1, y1, (int) textureSize, (int) textureSize, (float) 0, (float) 0, (int) textureSize, color, color, color, 1
                 , 0);
 
         if (isUpgrade) {
 
-            drawTexturedQuad(context, new Identifier(MODID, "textures/gui/" + icon + "_icon.png"),
+            drawTexturedQuad(context, Identifier.of(MODID, "textures/gui/" + icon + "_icon.png"),
                     x1, y1, (int) textureSize, (int) textureSize, (float) 0, (float) 0, (int) textureSize, color, color, color, 1
                     , 0);
 

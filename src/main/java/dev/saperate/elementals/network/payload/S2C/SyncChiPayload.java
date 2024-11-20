@@ -1,4 +1,4 @@
-package dev.saperate.elementals.network.payload;
+package dev.saperate.elementals.network.payload.S2C;
 
 import dev.saperate.elementals.network.ModMessages;
 import net.minecraft.network.RegistryByteBuf;
