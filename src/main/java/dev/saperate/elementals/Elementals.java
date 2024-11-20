@@ -89,7 +89,7 @@ import static dev.saperate.elementals.effects.StunnedStatusEffect.STUNNED_EFFECT
 import static dev.saperate.elementals.items.ElementalItems.*;
 import static dev.saperate.elementals.misc.AirBannerPattern.AIR_PATTERN;
 import static dev.saperate.elementals.network.ModMessages.registerC2SPackets;
-
+//test
 public class Elementals implements ModInitializer {
     public static Enchantment VOLUME_ENCHANTMENT = new VolumeEnchantment();
 
