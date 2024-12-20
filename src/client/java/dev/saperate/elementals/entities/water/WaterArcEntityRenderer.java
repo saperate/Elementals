@@ -18,7 +18,7 @@ import static dev.saperate.elementals.entities.utils.RenderUtils.drawCube;
 
 
 public class WaterArcEntityRenderer extends EntityRenderer<WaterArcEntity> {
-    private static final Identifier texture = new Identifier("minecraft", "block/water_still");
+    private static final Identifier texture = Identifier.of("minecraft", "block/water_still");
 
     public WaterArcEntityRenderer(EntityRendererFactory.Context context) {
         super(context);

@@ -14,8 +14,8 @@ import static dev.saperate.elementals.entities.utils.RenderUtils.drawCube;
 public class AirBallEntityRenderer extends EntityRenderer<AirBallEntity> {
     public static long firstTime = -1;
 
-    private static final Identifier texture = new Identifier("elementals", "block/air_block");
-    private static final Identifier topTexture = new Identifier("elementals", "block/air_block_top");
+    private static final Identifier texture = Identifier.of("elementals", "block/air_block");
+    private static final Identifier topTexture = Identifier.of("elementals", "block/air_block_top");
 
     public AirBallEntityRenderer(EntityRendererFactory.Context context) {
         super(context);

@@ -404,15 +404,14 @@ public class UpgradeTreeScreen extends Screen {
         float v2 = (v1 + height) / textureSize;
 
         RenderSystem.setShaderTexture(0, texture);
-        RenderSystem.setShader(GameRenderer::getPositionColorTexProgram);
+        RenderSystem.setShader(GameRenderer::getPositionTexColorProgram);
         RenderSystem.enableBlend();
         Matrix4f matrix4f = context.getMatrices().peek().getPositionMatrix();
-        BufferBuilder bufferBuilder = Tessellator.getInstance().getBuffer();
-        bufferBuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR_TEXTURE);
-        bufferBuilder.vertex(matrix4f, (float) x, (float) y, (float) z).color(red, green, blue, alpha).texture(u1, v1).next();
-        bufferBuilder.vertex(matrix4f, (float) x, (float) y + height, (float) z).color(red, green, blue, alpha).texture(u1, v2).next();
-        bufferBuilder.vertex(matrix4f, (float) x + width, (float) y + height, (float) z).color(red, green, blue, alpha).texture(u2, v2).next();
-        bufferBuilder.vertex(matrix4f, (float) x + width, (float) y, (float) z).color(red, green, blue, alpha).texture(u2, v1).next();
+        BufferBuilder bufferBuilder = Tessellator.getInstance().begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_TEXTURE_COLOR);
+        bufferBuilder.vertex(matrix4f, (float) x, (float) y, (float) z).color(red, green, blue, alpha).texture(u1, v1);//fixme removed next() here too
+        bufferBuilder.vertex(matrix4f, (float) x, (float) y + height, (float) z).color(red, green, blue, alpha).texture(u1, v2);
+        bufferBuilder.vertex(matrix4f, (float) x + width, (float) y + height, (float) z).color(red, green, blue, alpha).texture(u2, v2);
+        bufferBuilder.vertex(matrix4f, (float) x + width, (float) y, (float) z).color(red, green, blue, alpha).texture(u2, v1);
         BufferRenderer.drawWithGlobalProgram(bufferBuilder.end());
         RenderSystem.disableBlend();
     }

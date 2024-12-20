@@ -18,7 +18,7 @@ import static dev.saperate.elementals.entities.utils.RenderUtils.drawCube;
 
 
 public class VoltArcEntityRenderer extends EntityRenderer<VoltArcEntity> {
-    private static final Identifier fireTex = new Identifier(MODID, "block/lightning_block");//"block/fire_0");
+    private static final Identifier fireTex = Identifier.of(MODID, "block/lightning_block");//"block/fire_0");
 
     public VoltArcEntityRenderer(EntityRendererFactory.Context context) {
         super(context);

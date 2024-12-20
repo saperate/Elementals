@@ -17,10 +17,10 @@ import static dev.saperate.elementals.entities.utils.RenderUtils.drawCube;
 
 
 public class FireArcEntityRenderer extends EntityRenderer<FireArcEntity> {
-    private static final Identifier fireTex = new Identifier("minecraft", "block/fire_0");//"block/fire_0");
-    private static final Identifier blueFireTex = new Identifier("minecraft", "block/soul_fire_0");//"block/fire_0");
-    private static final Identifier fireCoreTex = new Identifier("minecraft", "block/shroomlight");
-    private static final Identifier blueFireCoreTex = new Identifier("elementals", "block/bluefire_core");
+    private static final Identifier fireTex = Identifier.of("minecraft", "block/fire_0");//"block/fire_0");
+    private static final Identifier blueFireTex = Identifier.of("minecraft", "block/soul_fire_0");//"block/fire_0");
+    private static final Identifier fireCoreTex = Identifier.of("minecraft", "block/shroomlight");
+    private static final Identifier blueFireCoreTex = Identifier.of("elementals", "block/bluefire_core");
 
     public FireArcEntityRenderer(EntityRendererFactory.Context context) {
         super(context);

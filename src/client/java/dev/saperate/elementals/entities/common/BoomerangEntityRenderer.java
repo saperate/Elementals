@@ -44,7 +44,7 @@ public class BoomerangEntityRenderer extends EntityRenderer<BoomerangEntity> {
 
     @Override
     public Identifier getTexture(BoomerangEntity entity) {
-        return new Identifier(MODID, "textures/item/boomerang.png");
+        return Identifier.of(MODID, "textures/item/boomerang.png");
     }
 
 }

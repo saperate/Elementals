@@ -29,7 +29,7 @@ public abstract class RenderUtils {
                                 float r, float g, float b, float a, Identifier tex, Identifier topTex, float height, Matrix4f rot,
                                 boolean doubleSided, boolean renderTop, boolean renderBottom) {
 
-        Function<Identifier, Sprite> func = MinecraftClient.getInstance().getSpriteAtlas(new Identifier("minecraft", "textures/atlas/blocks.png"));
+        Function<Identifier, Sprite> func = MinecraftClient.getInstance().getSpriteAtlas(Identifier.of("minecraft", "textures/atlas/blocks.png"));
 
 
         Sprite sprite = func.apply(tex);
@@ -37,7 +37,7 @@ public abstract class RenderUtils {
         float vMin = sprite.getMinV(), vMax = sprite.getMaxV();
 
         if (tex != topTex) {
-            Function<Identifier, Sprite> topFunc = MinecraftClient.getInstance().getSpriteAtlas(new Identifier("minecraft", "textures/atlas/blocks.png"));
+            Function<Identifier, Sprite> topFunc = MinecraftClient.getInstance().getSpriteAtlas(Identifier.of("minecraft", "textures/atlas/blocks.png"));
             Sprite topSprite = func.apply(tex);
             float topUMin = sprite.getMinU(), topUMax = sprite.getMaxU();
             float topVMin = sprite.getMinV(), topVMax = sprite.getMaxV();
@@ -94,7 +94,7 @@ public abstract class RenderUtils {
         );
 
         if (tex != topTex) {
-            Function<Identifier, Sprite> topFunc = MinecraftClient.getInstance().getSpriteAtlas(new Identifier("minecraft", "textures/atlas/blocks.png"));
+            Function<Identifier, Sprite> topFunc = MinecraftClient.getInstance().getSpriteAtlas(Identifier.of("minecraft", "textures/atlas/blocks.png"));
             Sprite topSprite = topFunc.apply(topTex);
             uMin = topSprite.getMinU();
             uMax = topSprite.getMaxU();
@@ -139,7 +139,7 @@ public abstract class RenderUtils {
                                         boolean renderTop, boolean renderBottom) {
 
 
-        Function<Identifier, Sprite> func = MinecraftClient.getInstance().getSpriteAtlas(new Identifier("minecraft", "textures/atlas/blocks.png"));
+        Function<Identifier, Sprite> func = MinecraftClient.getInstance().getSpriteAtlas(Identifier.of("minecraft", "textures/atlas/blocks.png"));
 
         Sprite sprite = func.apply(tex);
         float uMin = sprite.getMinU(), uMax = sprite.getMaxU();
@@ -191,7 +191,7 @@ public abstract class RenderUtils {
 
 
         if (tex != topTex) {
-            Function<Identifier, Sprite> topFunc = MinecraftClient.getInstance().getSpriteAtlas(new Identifier("minecraft", "textures/atlas/blocks.png"));
+            Function<Identifier, Sprite> topFunc = MinecraftClient.getInstance().getSpriteAtlas(Identifier.of("minecraft", "textures/atlas/blocks.png"));
             Sprite topSprite = topFunc.apply(topTex);
             uMin = topSprite.getMinU();
             uMax = topSprite.getMaxU();
@@ -230,10 +230,10 @@ public abstract class RenderUtils {
                                 float x3, float y3, float z3,
                                 float x4, float y4, float z4) {
 
-        vertexConsumer.vertex(matrices.peek().getPositionMatrix(), x1, y1, z1).color(r, g, b, a).texture(uMin, vMin).overlay(OverlayTexture.DEFAULT_UV).light(light).normal(nx, ny, nz).next();
-        vertexConsumer.vertex(matrices.peek().getPositionMatrix(), x2, y2, z2).color(r, g, b, a).texture(uMin, vMax).overlay(OverlayTexture.DEFAULT_UV).light(light).normal(nx, ny, nz).next();
-        vertexConsumer.vertex(matrices.peek().getPositionMatrix(), x3, y3, z3).color(r, g, b, a).texture(uMax, vMax).overlay(OverlayTexture.DEFAULT_UV).light(light).normal(nx, ny, nz).next();
-        vertexConsumer.vertex(matrices.peek().getPositionMatrix(), x4, y4, z4).color(r, g, b, a).texture(uMax, vMin).overlay(OverlayTexture.DEFAULT_UV).light(light).normal(nx, ny, nz).next();
+        vertexConsumer.vertex(matrices.peek().getPositionMatrix(), x1, y1, z1).color(r, g, b, a).texture(uMin, vMin).overlay(OverlayTexture.DEFAULT_UV).light(light).normal(nx, ny, nz);//TODO removed next(), maybe that did something?
+        vertexConsumer.vertex(matrices.peek().getPositionMatrix(), x2, y2, z2).color(r, g, b, a).texture(uMin, vMax).overlay(OverlayTexture.DEFAULT_UV).light(light).normal(nx, ny, nz);
+        vertexConsumer.vertex(matrices.peek().getPositionMatrix(), x3, y3, z3).color(r, g, b, a).texture(uMax, vMax).overlay(OverlayTexture.DEFAULT_UV).light(light).normal(nx, ny, nz);
+        vertexConsumer.vertex(matrices.peek().getPositionMatrix(), x4, y4, z4).color(r, g, b, a).texture(uMax, vMin).overlay(OverlayTexture.DEFAULT_UV).light(light).normal(nx, ny, nz);
     }
 
     public static void drawQuad(VertexConsumer vertexConsumer, MatrixStack matrices, int light,

@@ -20,8 +20,8 @@ import static dev.saperate.elementals.entities.utils.RenderUtils.drawCube;
 public class FireWispEntityRenderer extends EntityRenderer<FireWispEntity> {
     public static long firstTime = -1;
 
-    private static final Identifier fireCoreTex = new Identifier("minecraft", "block/shroomlight");
-    private static final Identifier blueFireCoreTex = new Identifier("elementals", "block/bluefire_core");
+    private static final Identifier fireCoreTex = Identifier.of("minecraft", "block/shroomlight");
+    private static final Identifier blueFireCoreTex = Identifier.of("elementals", "block/bluefire_core");
 
     public FireWispEntityRenderer(EntityRendererFactory.Context context) {
         super(context);

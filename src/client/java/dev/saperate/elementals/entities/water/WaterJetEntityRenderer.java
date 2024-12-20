@@ -20,7 +20,7 @@ import static dev.saperate.elementals.utils.SapsUtils.getEntityLookVector;
 
 
 public class WaterJetEntityRenderer extends EntityRenderer<WaterJetEntity> {
-    private static final Identifier texture = new Identifier("minecraft", "block/water_still");
+    private static final Identifier texture = Identifier.of("minecraft", "block/water_still");
     public static long firstTime = -1;
 
 

@@ -1,23 +1,11 @@
 package dev.saperate.elementals.entities.features;
 
 import dev.saperate.elementals.entities.common.DecoyPlayerEntity;
-import net.minecraft.client.network.AbstractClientPlayerEntity;
-import net.minecraft.client.render.OverlayTexture;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.entity.PlayerModelPart;
 import net.minecraft.client.render.entity.feature.FeatureRenderer;
 import net.minecraft.client.render.entity.feature.FeatureRendererContext;
 import net.minecraft.client.render.entity.model.PlayerEntityModel;
-import net.minecraft.client.util.DefaultSkinHelper;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.RotationAxis;
 
 public class ElementalsCapeFeatureRenderer extends FeatureRenderer<DecoyPlayerEntity, PlayerEntityModel<DecoyPlayerEntity>> {
     public ElementalsCapeFeatureRenderer(FeatureRendererContext<DecoyPlayerEntity, PlayerEntityModel<DecoyPlayerEntity>> featureRendererContext) {
@@ -30,7 +18,7 @@ public class ElementalsCapeFeatureRenderer extends FeatureRenderer<DecoyPlayerEn
         if (entity.isInvisible()) {
             return;
         }
-        return;
+        return;//TODO add this back so decoys have capes and elytras
         /*Identifier skinTextures = ((AbstractClientPlayerEntity) entity.getOwner()).getCapeTexture()
         if (skinTextures.capeTexture() == null) {
             return;

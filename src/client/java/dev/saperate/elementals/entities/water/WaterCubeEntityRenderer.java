@@ -12,7 +12,7 @@ import org.joml.Matrix4f;
 import static dev.saperate.elementals.entities.utils.RenderUtils.drawCube;
 
 public class WaterCubeEntityRenderer extends EntityRenderer<WaterCubeEntity> {
-    private static final Identifier texture = new Identifier("minecraft", "block/water_flow");
+    private static final Identifier texture = Identifier.of("minecraft", "block/water_flow");
 
     public WaterCubeEntityRenderer(EntityRendererFactory.Context context) {
         super(context);

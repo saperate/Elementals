@@ -19,7 +19,7 @@ import static dev.saperate.elementals.entities.utils.RenderUtils.drawCube;
 
 
 public class BloodShotEntityRenderer extends EntityRenderer<BloodShotEntity> {
-    private static final Identifier texture = new Identifier("minecraft", "block/water_still");
+    private static final Identifier texture = Identifier.of("minecraft", "block/water_still");
 
     public BloodShotEntityRenderer(EntityRendererFactory.Context context) {
         super(context);

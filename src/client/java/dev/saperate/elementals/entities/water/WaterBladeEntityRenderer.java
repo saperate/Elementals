@@ -18,7 +18,7 @@ import static dev.saperate.elementals.Elementals.MODID;
 import static dev.saperate.elementals.ElementalsClient.MODEL_WATER_BLADE_LAYER;
 
 public class WaterBladeEntityRenderer extends EntityRenderer<WaterBladeEntity> implements FeatureRendererContext<WaterBladeEntity, WaterBladeModel> {
-    private static final Identifier texture = new Identifier(MODID, "textures/entity/water.png");
+    private static final Identifier texture = Identifier.of(MODID, "textures/entity/water.png");
     private final WaterBladeModel model;
     public static long firstTime = -1;
 
@@ -49,11 +49,8 @@ public class WaterBladeEntityRenderer extends EntityRenderer<WaterBladeEntity> i
 
         WaterBladeModel.getTexturedModelData().createModel().render(
                 matrices,vertexConsumer,light,0,
-                (color >> 16 & 255) / 255.0f,
-                (color >> 8 & 255) / 255.0f,
-                (color & 255) / 255.0f,
-                0.5f
-        );
+                color
+        );//fixme used to have transparency of .5, find a way to add it back
 
 
 

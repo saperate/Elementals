@@ -15,10 +15,10 @@ import org.joml.Matrix4f;
 import static dev.saperate.elementals.entities.utils.RenderUtils.drawCube;
 
 public class WaterHelmetEntityRenderer extends EntityRenderer<WaterHelmetEntity> {
-    private static final Identifier texture = new Identifier("minecraft", "block/water_flow");
+    private static final Identifier texture = Identifier.of("minecraft", "block/water_flow");
 
-    private static final Identifier airTexture = new Identifier("elementals", "block/air_block");
-    private static final Identifier airTopTexture = new Identifier("elementals", "block/air_block_top");
+    private static final Identifier airTexture = Identifier.of("elementals", "block/air_block");
+    private static final Identifier airTopTexture = Identifier.of("elementals", "block/air_block_top");
 
     public WaterHelmetEntityRenderer(EntityRendererFactory.Context context) {
         super(context);

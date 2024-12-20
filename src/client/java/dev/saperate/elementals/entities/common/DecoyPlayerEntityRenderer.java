@@ -56,6 +56,6 @@ public class DecoyPlayerEntityRenderer extends LivingEntityRenderer<DecoyPlayerE
         if(entry == null){
             return DefaultSkinHelper.getTexture();
         }
-        return entry.getSkinTexture();
+        return entry.getSkinTextures().texture();
     }
 }

@@ -19,10 +19,10 @@ public class FireShieldEntityRenderer extends EntityRenderer<FireShieldEntity> {
     public static float x = 0, y = 0, z = 0.5f;
     public static long firstTime = -1;
 
-    private static final Identifier fireTex = new Identifier("minecraft", "block/fire_0");//"block/fire_0");
-    private static final Identifier blueFireTex = new Identifier("minecraft", "block/soul_fire_0");//"block/fire_0");
-    private static final Identifier fireCoreTex = new Identifier("minecraft", "block/shroomlight");
-    private static final Identifier blueFireCoreTex = new Identifier("elementals", "block/bluefire_core");
+    private static final Identifier fireTex = Identifier.of("minecraft", "block/fire_0");//"block/fire_0");
+    private static final Identifier blueFireTex = Identifier.of("minecraft", "block/soul_fire_0");//"block/fire_0");
+    private static final Identifier fireCoreTex = Identifier.of("minecraft", "block/shroomlight");
+    private static final Identifier blueFireCoreTex = Identifier.of("elementals", "block/bluefire_core");
 
     public FireShieldEntityRenderer(EntityRendererFactory.Context context) {
         super(context);

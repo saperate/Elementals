@@ -16,7 +16,7 @@ import org.joml.Matrix4f;
 import static dev.saperate.elementals.entities.utils.RenderUtils.drawCube;
 
 public class WaterTowerEntityRenderer extends EntityRenderer<WaterTowerEntity> {
-    private static final Identifier texture = new Identifier("minecraft", "block/water_flow");
+    private static final Identifier texture = Identifier.of("minecraft", "block/water_flow");
     public static long firstTime = -1;
 
     public WaterTowerEntityRenderer(EntityRendererFactory.Context context) {
