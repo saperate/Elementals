@@ -18,11 +18,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import static dev.saperate.elementals.effects.OverchargedStatusEffect.OVERCHARGED_EFFECT;
-import static dev.saperate.elementals.effects.ShockedStatusEffect.SHOCKED_EFFECT;
-import static dev.saperate.elementals.effects.StaticAuraStatusEffect.STATIC_AURA_EFFECT;
-import static dev.saperate.elementals.effects.StunnedStatusEffect.STUNNED_EFFECT;
-import static dev.saperate.elementals.utils.SapsUtils.safeHasStatusEffect;
 
 @Mixin(ItemEntity.class)
 public abstract class ItemEntityMixin {

@@ -1,38 +1,31 @@
 package dev.saperate.elementals.items;
 
 import dev.saperate.elementals.Elementals;
+import dev.saperate.elementals.enchantments.ElementalsEnchantments;
 import dev.saperate.elementals.entities.common.DirtBottleEntity;
 import dev.saperate.elementals.utils.SapsUtils;
 import net.minecraft.block.Blocks;
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.NbtComponent;
+import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.enchantment.Enchantments;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
 import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
-import net.minecraft.nbt.NbtList;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.stat.Stats;
+import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.JsonHelper;
-import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.BlockPointer;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Iterator;
 import java.util.List;
 
 
-public class WaterPouchItem extends Item implements DyeableItem {
+public class WaterPouchItem extends Item {
     public WaterPouchItem(Settings settings) {
         super(settings);
     }
@@ -60,15 +53,28 @@ public class WaterPouchItem extends Item implements DyeableItem {
     }
 
     public int getWaterLevel(ItemStack itemStack){
-        NbtCompound tag = itemStack.getOrCreateNbt();
-        int count = tag.getInt("custom_model_data");
-        setWaterLevel(itemStack,count);
-        return count;
+        NbtComponent data = itemStack.get(DataComponentTypes.CUSTOM_DATA);
+        if (data != null) {
+            int count = data.copyNbt().getInt("custom_model_data");
+            setWaterLevel(itemStack,count);
+            return count;
+        }
+        return 0;
     }
 
     public void setWaterLevel(ItemStack itemStack, int val){
-        NbtCompound tag = itemStack.getOrCreateNbt();
-        tag.putInt("custom_model_data",val);
+        NbtComponent component = itemStack.get(DataComponentTypes.CUSTOM_DATA);
+
+        NbtCompound data;
+        if(component != null){
+            data = component.copyNbt();
+            data.putInt("custom_model_data", val);
+        }else {
+            data = new NbtCompound();
+            data.putInt("custom_model_data", val);
+        }
+
+        itemStack.set(DataComponentTypes.CUSTOM_DATA, NbtComponent.of(data));
     }
 
     /**
@@ -112,7 +118,14 @@ public class WaterPouchItem extends Item implements DyeableItem {
     }
 
     public int getMaxWaterLevel(ItemStack itemStack){
-        return 3 + EnchantmentHelper.getLevel(Elementals.VOLUME_ENCHANTMENT,itemStack);
+        int level = 0;
+        for (RegistryEntry<Enchantment> enchant : EnchantmentHelper.getEnchantments(itemStack).getEnchantments()){
+            if(enchant.getKey().isPresent() && enchant.getKey().get().equals(ElementalsEnchantments.VOLUME)){
+                level = EnchantmentHelper.getLevel(enchant, itemStack);
+            }
+        }
+
+        return 3 + level;
     }
 
     @Override

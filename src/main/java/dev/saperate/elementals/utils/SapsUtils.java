@@ -8,6 +8,8 @@ import net.fabricmc.loader.impl.lib.sat4j.core.Vec;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.FluidBlock;
+import net.minecraft.component.ComponentType;
+import net.minecraft.component.DataComponentTypes;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MovementType;
@@ -19,8 +21,6 @@ import net.minecraft.fluid.FluidState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.particle.ParticleEffect;
-import net.minecraft.particle.ParticleTypes;
-import net.minecraft.potion.PotionUtil;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
@@ -512,14 +512,12 @@ public final class SapsUtils {
     public static List<StatusEffectInstance> getEffectsFromHands(PlayerEntity player){
         ArrayList<StatusEffectInstance> effects = new ArrayList<>();
 
-        for (ItemStack stack : player.getHandItems()) {
-            List<StatusEffectInstance> effectInstances = PotionUtil.getPotionEffects(stack);
-            if(!effectInstances.isEmpty()){
-                effects.addAll(effectInstances);
+        for (ItemStack stack : player.getHandItems()) {//fixme
+            for (StatusEffectInstance statusEffectInstance : stack.get(DataComponentTypes.POTION_CONTENTS).getEffects()) {
+                effects.add(statusEffectInstance);
                 player.getInventory().removeOne(stack);
                 player.getInventory().insertStack(Items.GLASS_BOTTLE.getDefaultStack());
             }
-
         }
         return effects;
     }

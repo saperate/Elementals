@@ -1,6 +1,7 @@
 package dev.saperate.elementals.items;
 
 import dev.saperate.elementals.armors.materials.ElementalsArmorMaterial;
+import dev.saperate.elementals.effects.ElementalsStatusEffects;
 import dev.saperate.elementals.items.scrolls.*;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.minecraft.component.type.FoodComponent;
@@ -22,7 +23,7 @@ public class ElementalItems {
             .alwaysEdible()
             .saturationModifier(-1.2f)
             .nutrition(-6)
-            .statusEffect(new StatusEffectInstance(,400,0,false,false,true), 1)
+            .statusEffect(new StatusEffectInstance(ElementalsStatusEffects.OVERCHARGED,400,0,false,false,true), 1)
             .build();
 
 

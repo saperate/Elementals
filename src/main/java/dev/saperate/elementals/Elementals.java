@@ -19,6 +19,7 @@ import dev.saperate.elementals.elements.earth.EarthElement;
 import dev.saperate.elementals.elements.fire.FireElement;
 import dev.saperate.elementals.elements.lightning.LightningElement;
 import dev.saperate.elementals.elements.water.WaterElement;
+import dev.saperate.elementals.enchantments.ElementalsEnchantments;
 import dev.saperate.elementals.entities.ElementalEntities;
 import dev.saperate.elementals.items.ElementalItems;
 import net.fabricmc.api.ModInitializer;
@@ -65,7 +66,6 @@ import static dev.saperate.elementals.items.ElementalItems.*;
 import static dev.saperate.elementals.network.ModMessages.registerNetworking;
 
 public class Elementals implements ModInitializer {
-    public static Enchantment VOLUME_ENCHANTMENT = new VolumeEnchantment();
 
     //TODO add config
     public static final String MODID = "elementals";
@@ -94,7 +94,7 @@ public class Elementals implements ModInitializer {
         DispenserBlock.registerBehavior(BOOMERANG_ITEM,BOOMERANG_ITEM);
         DispenserBlock.registerBehavior(DIRT_BOTTLE_ITEM,DIRT_BOTTLE_ITEM);
 
-        Registry.register(Registries.ENCHANTMENT, Identifier.of(MODID, "volume"), VOLUME_ENCHANTMENT);
+        ElementalsEnchantments.init();
 
         ElementalEntities.register();
 

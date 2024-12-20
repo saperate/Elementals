@@ -2,10 +2,10 @@ package dev.saperate.elementals.misc;
 
 import com.google.common.collect.Sets;
 import net.minecraft.block.BlockState;
-import net.minecraft.enchantment.ProtectionEnchantment;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.TntEntity;
+import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
@@ -23,10 +23,7 @@ import net.minecraft.world.explosion.Explosion;
 import net.minecraft.world.explosion.ExplosionBehavior;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 public class FireExplosion extends Explosion {
     private static final ExplosionBehavior DEFAULT_BEHAVIOR = new ExplosionBehavior();
@@ -58,89 +55,124 @@ public class FireExplosion extends Explosion {
 
     @Override
     public void collectBlocksAndDamageEntities() {
-        int l;
+        this.world.emitGameEvent(getEntity(), GameEvent.EXPLODE, new Vec3d(this.x, this.y, this.z));
+        Set<BlockPos> set = Sets.newHashSet();
+
         int k;
-        this.world.emitGameEvent(this.getEntity(), GameEvent.EXPLODE, new Vec3d(this.x, this.y, this.z));
-        HashSet<BlockPos> set = Sets.newHashSet();
-        int i = 16;
-        for (int j = 0; j < 16; ++j) {
-            for (k = 0; k < 16; ++k) {
-                block2:
-                for (l = 0; l < 16; ++l) {
-                    if (j != 0 && j != 15 && k != 0 && k != 15 && l != 0 && l != 15) continue;
-                    double d = (float) j / 15.0f * 2.0f - 1.0f;
-                    double e = (float) k / 15.0f * 2.0f - 1.0f;
-                    double f = (float) l / 15.0f * 2.0f - 1.0f;
-                    double g = Math.sqrt(d * d + e * e + f * f);
-                    d /= g;
-                    e /= g;
-                    f /= g;
-                    double m = this.x;
-                    double n = this.y;
-                    double o = this.z;
-                    float p = 0.3f;
-                    for (float h = this.power * (0.7f + this.world.random.nextFloat() * 0.6f); h > 0.0f; h -= 0.22500001f) {
-                        BlockPos blockPos = BlockPos.ofFloored(m, n, o);
-                        BlockState blockState = this.world.getBlockState(blockPos);
-                        FluidState fluidState = this.world.getFluidState(blockPos);
-                        if (!this.world.isInBuildLimit(blockPos)) continue block2;
-                        Optional<Float> optional = this.behavior.getBlastResistance(this, this.world, blockPos, blockState, fluidState);
-                        if (optional.isPresent()) {
-                            h -= (optional.get().floatValue() + 0.3f) * 0.3f;
+        int l;
+        for(int j = 0; j < 16; ++j) {
+            for(k = 0; k < 16; ++k) {
+                for(l = 0; l < 16; ++l) {
+                    if (j == 0 || j == 15 || k == 0 || k == 15 || l == 0 || l == 15) {
+                        double d = (double)((float)j / 15.0F * 2.0F - 1.0F);
+                        double e = (double)((float)k / 15.0F * 2.0F - 1.0F);
+                        double f = (double)((float)l / 15.0F * 2.0F - 1.0F);
+                        double g = Math.sqrt(d * d + e * e + f * f);
+                        d /= g;
+                        e /= g;
+                        f /= g;
+                        float h = this.power * (0.7F + this.world.random.nextFloat() * 0.6F);
+                        double m = this.x;
+                        double n = this.y;
+                        double o = this.z;
+
+                        for(float p = 0.3F; h > 0.0F; h -= 0.22500001F) {
+                            BlockPos blockPos = BlockPos.ofFloored(m, n, o);
+                            BlockState blockState = this.world.getBlockState(blockPos);
+                            FluidState fluidState = this.world.getFluidState(blockPos);
+                            if (!this.world.isInBuildLimit(blockPos)) {
+                                break;
+                            }
+
+                            Optional<Float> optional = this.behavior.getBlastResistance(this, this.world, blockPos, blockState, fluidState);
+                            if (optional.isPresent()) {
+                                h -= ((Float)optional.get() + 0.3F) * 0.3F;
+                            }
+
+                            if (h > 0.0F && this.behavior.canDestroyBlock(this, this.world, blockPos, blockState, h)) {
+                                set.add(blockPos);
+                            }
+
+                            m += d * 0.30000001192092896;
+                            n += e * 0.30000001192092896;
+                            o += f * 0.30000001192092896;
                         }
-                        if (h > 0.0f && this.behavior.canDestroyBlock(this, this.world, blockPos, blockState, h)) {
-                            set.add(blockPos);
-                        }
-                        m += d * (double) 0.3f;
-                        n += e * (double) 0.3f;
-                        o += f * (double) 0.3f;
                     }
                 }
             }
         }
-        this.getAffectedBlocks().addAll((Collection<BlockPos>) set);
-        float q = this.power * 2.0f;
-        k = MathHelper.floor(this.x - (double) q - 1.0);
-        l = MathHelper.floor(this.x + (double) q + 1.0);
-        int r = MathHelper.floor(this.y - (double) q - 1.0);
-        int s = MathHelper.floor(this.y + (double) q + 1.0);
-        int t = MathHelper.floor(this.z - (double) q - 1.0);
-        int u = MathHelper.floor(this.z + (double) q + 1.0);
-        List<Entity> list = this.world.getOtherEntities(null, new Box(k, r, t, l, s, u));
+
+        getAffectedBlocks().addAll(set);
+        float q = this.power * 2.0F;
+        k = MathHelper.floor(this.x - (double)q - 1.0);
+        l = MathHelper.floor(this.x + (double)q + 1.0);
+        int r = MathHelper.floor(this.y - (double)q - 1.0);
+        int s = MathHelper.floor(this.y + (double)q + 1.0);
+        int t = MathHelper.floor(this.z - (double)q - 1.0);
+        int u = MathHelper.floor(this.z + (double)q + 1.0);
+        List<Entity> list = this.world.getOtherEntities(getEntity(), new Box((double)k, (double)r, (double)t, (double)l, (double)s, (double)u));
         Vec3d vec3d = new Vec3d(this.x, this.y, this.z);
-        for (Entity entity : list) {
-            PlayerEntity playerEntity;
-            double ab;
-            double y;
-            double x;
+        Iterator var34 = list.iterator();
+
+        while(true) {
+            Entity entity;
             double w;
-            double z;
+            double x;
+            double y;
             double v;
-            if (entity.isImmuneToExplosion() || !((v = Math.sqrt(entity.squaredDistanceTo(vec3d)) / (double) q) <= 1.0) || (z = Math.sqrt((w = entity.getX() - this.x) * w + (x = (entity instanceof TntEntity ? entity.getY() : entity.getEyeY()) - this.y) * x + (y = entity.getZ() - this.z) * y)) == 0.0)
-                continue;
+            double z;
+            do {
+                do {
+                    do {
+                        if (!var34.hasNext()) {
+                            return;
+                        }
+
+                        entity = (Entity)var34.next();
+                    } while(entity.isImmuneToExplosion(this));
+
+                    v = Math.sqrt(entity.squaredDistanceTo(vec3d)) / (double)q;
+                } while(!(v <= 1.0));
+
+                w = entity.getX() - this.x;
+                x = (entity instanceof TntEntity ? entity.getY() : entity.getEyeY()) - this.y;
+                y = entity.getZ() - this.z;
+                z = Math.sqrt(w * w + x * x + y * y);
+            } while(z == 0.0);
+
             w /= z;
             x /= z;
             y /= z;
-            ab = (double) getExposure(vec3d, entity);
-            double ac = (1.0 - w) * ab;
-            if (entity != owner) {
-                entity.damage(this.getDamageSource(), Math.min(maxDamage, (float) ((int) ((ac * ac + ac) / 2.0 * 7.0 * (double) q + 1.0))));
+            if (this.behavior.shouldDamage(this, entity)) {
+                entity.damage(this.damageSource, Math.min(maxDamage, this.behavior.calculateDamage(this, entity)));
             }
-            double aa = (1.0 - v) * (double) Explosion.getExposure(vec3d, entity);
-            if (entity instanceof LivingEntity) {
-                LivingEntity livingEntity = (LivingEntity) entity;
-                ab = ProtectionEnchantment.transformExplosionKnockback(livingEntity, aa);
+
+            double aa = (1.0 - v) * (double)getExposure(vec3d, entity) * (double)this.behavior.getKnockbackModifier(entity);
+            double ab;
+            if (entity instanceof LivingEntity livingEntity) {
+                ab = aa * (1.0 - livingEntity.getAttributeValue(EntityAttributes.GENERIC_EXPLOSION_KNOCKBACK_RESISTANCE));
             } else {
                 ab = aa;
             }
-            Vec3d vec3d2 = new Vec3d(w *= ab, x *= ab, y *= ab).multiply(velocityMultiplier);
-            entity.setVelocity(entity.getVelocity().add(vec3d2));
-            if (!(entity instanceof PlayerEntity) || (playerEntity = (PlayerEntity) entity).isSpectator() || playerEntity.isCreative() && playerEntity.getAbilities().flying)
-                continue;
-            playerEntity.velocityModified = true;
-            getAffectedPlayers().put(playerEntity, vec3d2);
-        }
 
+            w *= ab;
+            x *= ab;
+            y *= ab;
+            Vec3d vec3d2 = new Vec3d(w, x, y);
+            entity.setVelocity(entity.getVelocity().add(vec3d2));
+            if (entity instanceof PlayerEntity playerEntity) {
+                if (!playerEntity.isSpectator() && (!playerEntity.isCreative() || !playerEntity.getAbilities().flying)) {
+                    getAffectedPlayers().put(playerEntity, vec3d2);
+                }
+            }
+
+            //entity.onExplodedBy(getEntity()); fixme
+            entity.setVelocity(entity.getVelocity().add(vec3d2));
+            if (!(entity instanceof PlayerEntity playerEntity) || (playerEntity = (PlayerEntity) entity).isSpectator() || playerEntity.isCreative() && playerEntity.getAbilities().flying){
+                continue;
+            }
+            playerEntity.velocityModified = true;
+        }
     }
 
     private ExplosionBehavior chooseBehavior(@Nullable Entity entity) {

@@ -1,6 +1,7 @@
 package dev.saperate.elementals.mixin;
 
 import dev.saperate.elementals.data.Bender;
+import dev.saperate.elementals.effects.ElementalsStatusEffects;
 import dev.saperate.elementals.elements.lightning.LightningElement;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
@@ -15,10 +16,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import static dev.saperate.elementals.effects.OverchargedStatusEffect.OVERCHARGED_EFFECT;
-import static dev.saperate.elementals.effects.ShockedStatusEffect.SHOCKED_EFFECT;
-import static dev.saperate.elementals.effects.StaticAuraStatusEffect.STATIC_AURA_EFFECT;
-import static dev.saperate.elementals.effects.StunnedStatusEffect.STUNNED_EFFECT;
 import static dev.saperate.elementals.utils.SapsUtils.safeHasStatusEffect;
 
 @Mixin(LivingEntity.class)
@@ -38,23 +35,23 @@ public abstract class LivingEntityMixin {
         if(source.isOf(DamageTypes.MOB_ATTACK)
                 || source.isOf(DamageTypes.MOB_ATTACK_NO_AGGRO)
                 || source.isOf(DamageTypes.PLAYER_ATTACK)){
-            if(safeHasStatusEffect(STATIC_AURA_EFFECT,living) && source.getAttacker() instanceof LivingEntity dmgSource){
-                dmgSource.addStatusEffect(new StatusEffectInstance(STUNNED_EFFECT,100, 1, false, true,true));
+            if(safeHasStatusEffect(ElementalsStatusEffects.STATIC_AURA,living) && source.getAttacker() instanceof LivingEntity dmgSource){
+                dmgSource.addStatusEffect(new StatusEffectInstance(ElementalsStatusEffects.STUNNED,100, 1, false, true,true));
             }
         }
 
 
-        if(source.isOf(DamageTypes.LIGHTNING_BOLT) && !safeHasStatusEffect(STATIC_AURA_EFFECT, living)
+        if(source.isOf(DamageTypes.LIGHTNING_BOLT) && !safeHasStatusEffect(ElementalsStatusEffects.STATIC_AURA, living)
          && living instanceof PlayerEntity player && Bender.getBender((ServerPlayerEntity) player).hasElement(LightningElement.get())){
             float dmg = 0;
-            if(safeHasStatusEffect(SHOCKED_EFFECT,living)){
-                dmg = (float) living.getStatusEffect(SHOCKED_EFFECT).getAmplifier() / 10;
-                living.removeStatusEffect(SHOCKED_EFFECT);
+            if(safeHasStatusEffect(ElementalsStatusEffects.SHOCKED,living)){
+                dmg = (float) living.getStatusEffect(ElementalsStatusEffects.SHOCKED).getAmplifier() / 10;
+                living.removeStatusEffect(ElementalsStatusEffects.SHOCKED);
             }
             if(lastDamageSource != null && lastDamageSource.isOf(DamageTypes.LIGHTNING_BOLT)){
                 dmg += lastDamageTaken;
             }
-            living.addStatusEffect(new StatusEffectInstance(SHOCKED_EFFECT,60,(int)(dmg * 10),false,true,true));
+            living.addStatusEffect(new StatusEffectInstance(ElementalsStatusEffects.SHOCKED,60,(int)(dmg * 10),false,true,true));
         }
     }
 
@@ -70,7 +67,7 @@ public abstract class LivingEntityMixin {
     @Inject(at = @At(value = "HEAD"), method = "modifyAppliedDamage", cancellable = true)
     private void bypassesEnchantsAndEffect(DamageSource source, float amount, CallbackInfoReturnable<Float> cir) {
         if(source.isOf(DamageTypes.LIGHTNING_BOLT)){
-            if(safeHasStatusEffect(STATIC_AURA_EFFECT,((LivingEntity) (Object) this))){
+            if(safeHasStatusEffect(ElementalsStatusEffects.STATIC_AURA,((LivingEntity) (Object) this))){
                 cir.setReturnValue(amount/2);
             }else{
                 cir.setReturnValue(amount);
@@ -85,8 +82,8 @@ public abstract class LivingEntityMixin {
         //This is here because overcharged adds a status effect when it is removed.
         //If we allow it to do that while the method iterates through status effects,
         //it crashes because we are concurrently accessing it
-        if(living.hasStatusEffect(OVERCHARGED_EFFECT)){
-            living.removeStatusEffect(OVERCHARGED_EFFECT);
+        if(living.hasStatusEffect(ElementalsStatusEffects.OVERCHARGED)){
+            living.removeStatusEffect(ElementalsStatusEffects.OVERCHARGED);
         }
     }
 }
