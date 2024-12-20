@@ -37,7 +37,7 @@ public class DirtBottleEntityRenderer extends EntityRenderer<DirtBottleEntity> {
 
     @Override
     public Identifier getTexture(DirtBottleEntity entity) {
-        return new Identifier(MODID, "textures/item/dirt_bottle.png");
+        return Identifier.of(MODID, "textures/item/dirt_bottle.png");
     }
 
 }

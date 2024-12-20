@@ -19,7 +19,7 @@ import static dev.saperate.elementals.entities.utils.RenderUtils.drawCube;
 
 
 public class LightningArcEntityRenderer extends EntityRenderer<LightningArcEntity> {
-    private static final Identifier fireTex = new Identifier(MODID, "block/lightning_block");//"block/fire_0");
+    private static final Identifier fireTex = Identifier.of(MODID, "block/lightning_block");//"block/fire_0");
 
     public LightningArcEntityRenderer(EntityRendererFactory.Context context) {
         super(context);
