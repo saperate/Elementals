@@ -121,4 +121,7 @@ public class WaterPouchItem extends Item implements DyeableItem {
     }
 
 
+    public int getColor(ItemStack stack) {
+        return 0xFFFFFFFF;
+    }
 }

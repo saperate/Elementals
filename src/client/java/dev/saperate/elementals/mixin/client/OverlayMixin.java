@@ -48,7 +48,6 @@ public class OverlayMixin {
     private static void renderUnderwaterOverlay(MinecraftClient client, MatrixStack matrices, int blueMultiplier) {
         RenderSystem.setShader(GameRenderer::getPositionTexProgram);
         RenderSystem.setShaderTexture(0, UNDERWATER_TEXTURE);
-        BufferBuilder bufferBuilder = Tessellator.getInstance().getBuffer();
         BlockPos blockPos = BlockPos.ofFloored((double) client.player.getX(), (double) client.player.getEyeY(), (double) client.player.getZ());
         float f = LightmapTextureManager.getBrightness(client.player.getWorld().getDimension(), client.player.getWorld().getLightLevel(blockPos));
         RenderSystem.enableBlend();
@@ -57,11 +56,12 @@ public class OverlayMixin {
         float m = -client.player.getYaw() / 64.0f;
         float n = client.player.getPitch() / 64.0f;
         Matrix4f matrix4f = matrices.peek().getPositionMatrix();
-        bufferBuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_TEXTURE);
-        bufferBuilder.vertex(matrix4f, -1.0f, -1.0f, -0.5f).texture(4.0f + m, 4.0f + n).next();
-        bufferBuilder.vertex(matrix4f, 1.0f, -1.0f, -0.5f).texture(0.0f + m, 4.0f + n).next();
-        bufferBuilder.vertex(matrix4f, 1.0f, 1.0f, -0.5f).texture(0.0f + m, 0.0f + n).next();
-        bufferBuilder.vertex(matrix4f, -1.0f, 1.0f, -0.5f).texture(4.0f + m, 0.0f + n).next();
+
+        BufferBuilder bufferBuilder = Tessellator.getInstance().begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_TEXTURE);
+        bufferBuilder.vertex(matrix4f, -1.0f, -1.0f, -0.5f).texture(4.0f + m, 4.0f + n);//fixme removed next()
+        bufferBuilder.vertex(matrix4f, 1.0f, -1.0f, -0.5f).texture(0.0f + m, 4.0f + n);
+        bufferBuilder.vertex(matrix4f, 1.0f, 1.0f, -0.5f).texture(0.0f + m, 0.0f + n);
+        bufferBuilder.vertex(matrix4f, -1.0f, 1.0f, -0.5f).texture(4.0f + m, 0.0f + n);
         BufferRenderer.drawWithGlobalProgram(bufferBuilder.end());
         RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         RenderSystem.disableBlend();
