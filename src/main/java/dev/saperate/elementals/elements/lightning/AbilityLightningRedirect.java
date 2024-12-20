@@ -2,6 +2,7 @@ package dev.saperate.elementals.elements.lightning;
 
 import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.data.PlayerData;
+import dev.saperate.elementals.effects.ElementalsStatusEffects;
 import dev.saperate.elementals.elements.Ability;
 import dev.saperate.elementals.utils.SapsUtils;
 import net.minecraft.entity.EntityType;
@@ -9,7 +10,6 @@ import net.minecraft.entity.LightningEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.Vec3d;
 
-import static dev.saperate.elementals.effects.ShockedStatusEffect.SHOCKED_EFFECT;
 
 public class AbilityLightningRedirect implements Ability {
     @Override
@@ -29,7 +29,7 @@ public class AbilityLightningRedirect implements Ability {
         }
 
 
-        if(!SapsUtils.safeHasStatusEffect(SHOCKED_EFFECT,player)){
+        if(!SapsUtils.safeHasStatusEffect(ElementalsStatusEffects.SHOCKED,player)){
             return;
         }
 
@@ -38,28 +38,10 @@ public class AbilityLightningRedirect implements Ability {
         lightning.setPos(pos.x,pos.y,pos.z);
         player.getWorld().spawnEntity(lightning);
 
-        player.heal((float) player.getStatusEffect(SHOCKED_EFFECT).getAmplifier() / 10);
-        player.removeStatusEffect(SHOCKED_EFFECT);
+        player.heal((float) player.getStatusEffect(ElementalsStatusEffects.SHOCKED).getAmplifier() / 10);
+        player.removeStatusEffect(ElementalsStatusEffects.SHOCKED);
     }
 
-    @Override
-    public void onLeftClick(Bender bender, boolean started) {
-
-    }
-
-    @Override
-    public void onMiddleClick(Bender bender, boolean started) {
-
-    }
-
-    @Override
-    public void onRightClick(Bender bender, boolean started) {
-    }
-
-    @Override
-    public void onTick(Bender bender) {
-
-    }
 
     @Override
     public void onRemove(Bender bender) {

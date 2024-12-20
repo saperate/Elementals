@@ -2,13 +2,12 @@ package dev.saperate.elementals.elements.blood;
 
 import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.data.PlayerData;
+import dev.saperate.elementals.effects.ElementalsStatusEffects;
 import dev.saperate.elementals.elements.Ability;
 import dev.saperate.elementals.utils.SapsUtils;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.player.PlayerEntity;
 
-import static dev.saperate.elementals.effects.BurnoutStatusEffect.BURNOUT_EFFECT;
-import static dev.saperate.elementals.effects.OverchargedStatusEffect.OVERCHARGED_EFFECT;
 import static dev.saperate.elementals.utils.SapsUtils.safeHasStatusEffect;
 
 
@@ -23,11 +22,11 @@ public class AbilityBlood3 implements Ability {
             return;
         }
 
-        if (playerData.canUseUpgrade("bloodOvercharge") && deltaT >= 500 && !safeHasStatusEffect(OVERCHARGED_EFFECT, player) && !safeHasStatusEffect(BURNOUT_EFFECT, player) ) {
+        if (playerData.canUseUpgrade("bloodOvercharge") && deltaT >= 500 && !safeHasStatusEffect(ElementalsStatusEffects.OVERCHARGED, player) && !safeHasStatusEffect(ElementalsStatusEffects.BURNOUT, player) ) {
             if (!bender.reduceChi(15)) {
                 return;
             }
-            player.addStatusEffect(new StatusEffectInstance(OVERCHARGED_EFFECT, playerData.canUseUpgrade("bloodOverchargeStrengthI") ? 600 : 400, 1, false, false, true));
+            player.addStatusEffect(new StatusEffectInstance(ElementalsStatusEffects.OVERCHARGED, playerData.canUseUpgrade("bloodOverchargeStrengthI") ? 600 : 400, 1, false, false, true));
         }else if(player.isOnGround()){
             if (!bender.reduceChi(10)) {
                 return;

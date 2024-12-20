@@ -2,6 +2,7 @@ package dev.saperate.elementals.elements.blood;
 
 import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.data.PlayerData;
+import dev.saperate.elementals.effects.ElementalsStatusEffects;
 import dev.saperate.elementals.elements.Ability;
 import dev.saperate.elementals.utils.SapsUtils;
 import net.minecraft.entity.Entity;
@@ -40,10 +41,10 @@ public class AbilityBlood4 implements Ability {
 
         for (LivingEntity living : entities) {
             if (living instanceof PlayerEntity && !isNight) {
-                living.addStatusEffect(new StatusEffectInstance(STUNNED_EFFECT, 100, 0, false, false, true));
+                living.addStatusEffect(new StatusEffectInstance(ElementalsStatusEffects.STUNNED, 100, 0, false, false, true));
                 continue;
             }
-            living.addStatusEffect(new StatusEffectInstance(STATIONARY_EFFECT, 120, 2, true, false, true));
+            living.addStatusEffect(new StatusEffectInstance(ElementalsStatusEffects.STATIONARY, 120, 2, true, false, true));
         }
     }
 

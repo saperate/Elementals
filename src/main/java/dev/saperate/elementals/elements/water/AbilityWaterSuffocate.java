@@ -10,7 +10,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
 
-import static dev.saperate.elementals.effects.StationaryStatusEffect.STATIONARY_EFFECT;
 import static dev.saperate.elementals.utils.SapsUtils.*;
 
 public class AbilityWaterSuffocate implements Ability {
@@ -57,20 +56,6 @@ public class AbilityWaterSuffocate implements Ability {
         bender.setCurrAbility(null);
     }
 
-    @Override
-    public void onLeftClick(Bender bender, boolean started) {
-
-    }
-
-    @Override
-    public void onMiddleClick(Bender bender, boolean started) {
-
-    }
-
-    @Override
-    public void onRightClick(Bender bender, boolean started) {
-
-    }
 
     @Override
     public void onTick(Bender bender) {

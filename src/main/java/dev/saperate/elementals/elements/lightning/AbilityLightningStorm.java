@@ -2,6 +2,7 @@ package dev.saperate.elementals.elements.lightning;
 
 import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.data.PlayerData;
+import dev.saperate.elementals.effects.ElementalsStatusEffects;
 import dev.saperate.elementals.elements.Ability;
 import dev.saperate.elementals.misc.StunExplosion;
 import dev.saperate.elementals.utils.SapsUtils;
@@ -20,9 +21,6 @@ import net.minecraft.world.explosion.Explosion;
 
 import java.util.List;
 
-import static dev.saperate.elementals.Elementals.LIGHTNING_PARTICLE_TYPE;
-import static dev.saperate.elementals.effects.BurnoutStatusEffect.BURNOUT_EFFECT;
-import static dev.saperate.elementals.effects.StunnedStatusEffect.STUNNED_EFFECT;
 
 public class AbilityLightningStorm implements Ability {
     @Override
@@ -35,27 +33,9 @@ public class AbilityLightningStorm implements Ability {
             return;
         }
         bender.addBackgroundAbility(this, new Object[]{0, bender.player.getPos()});
-        bender.player.addStatusEffect(new StatusEffectInstance(BURNOUT_EFFECT,200,0,false,false,true));
+        bender.player.addStatusEffect(new StatusEffectInstance(ElementalsStatusEffects.BURNOUT,200,0,false,false,true));
     }
 
-    @Override
-    public void onLeftClick(Bender bender, boolean started) {
-
-    }
-
-    @Override
-    public void onMiddleClick(Bender bender, boolean started) {
-
-    }
-
-    @Override
-    public void onRightClick(Bender bender, boolean started) {
-    }
-
-    @Override
-    public void onTick(Bender bender) {
-
-    }
 
     @Override
     public void onBackgroundTick(Bender bender, Object data) {

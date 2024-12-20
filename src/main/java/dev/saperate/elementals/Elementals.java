@@ -47,6 +47,8 @@ import net.minecraft.loot.LootTable;
 import net.minecraft.loot.LootTables;
 import net.minecraft.loot.entry.ItemEntry;
 import net.minecraft.loot.entry.LootPoolEntry;
+import net.minecraft.particle.ParticleEffect;
+import net.minecraft.particle.ParticleType;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.server.MinecraftServer;
@@ -78,7 +80,7 @@ public class Elementals implements ModInitializer {
     private static final Identifier WIND_BURST_SOUND_ID = Identifier.of(MODID, "wind_burst");
     public static SoundEvent WIND_SOUND_EVENT = SoundEvent.of(WIND_SOUND_ID);
     public static SoundEvent WIND_BURST_SOUND_EVENT = SoundEvent.of(WIND_BURST_SOUND_ID);
-    public static final DefaultParticleType LIGHTNING_PARTICLE_TYPE = FabricParticleTypes.simple();
+    public static final ParticleEffect LIGHTNING_PARTICLE_TYPE = FabricParticleTypes.simple();
 
     public static final GameRules.Key<GameRules.BooleanRule> BENDING_GRIEFING =
             GameRuleRegistry.register("bendingGriefing", GameRules.Category.MISC, GameRuleFactory.createBooleanRule(true));

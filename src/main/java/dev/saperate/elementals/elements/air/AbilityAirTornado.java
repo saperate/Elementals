@@ -9,7 +9,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.player.PlayerEntity;
 
-import static dev.saperate.elementals.effects.StationaryStatusEffect.STATIONARY_EFFECT;
+
 
 public class AbilityAirTornado implements Ability {
     @Override
@@ -84,6 +84,6 @@ public class AbilityAirTornado implements Ability {
         entity.setVelocity(bender.player, bender.player.getPitch(), bender.player.getYaw(), 0, 0.2f, 0);
         entity.setVelocity(entity.getVelocity().multiply(1, 0, 1));//We can't fling tornadoes upwards
         entity.maxLifeTime = 120;
-        entity.setStepHeight(1f);
+        //entity.setStepHeight(1f); fixme
     }
 }

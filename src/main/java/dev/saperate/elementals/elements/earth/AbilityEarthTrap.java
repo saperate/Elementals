@@ -1,6 +1,7 @@
 package dev.saperate.elementals.elements.earth;
 
 import dev.saperate.elementals.data.Bender;
+import dev.saperate.elementals.effects.ElementalsStatusEffects;
 import dev.saperate.elementals.elements.Ability;
 import dev.saperate.elementals.entities.earth.EarthBlockEntity;
 import net.minecraft.block.BlockState;
@@ -10,7 +11,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
 
-import static dev.saperate.elementals.effects.StationaryStatusEffect.STATIONARY_EFFECT;
+
 import static dev.saperate.elementals.utils.SapsUtils.raycastFull;
 
 public class AbilityEarthTrap implements Ability {
@@ -91,8 +92,8 @@ public class AbilityEarthTrap implements Ability {
                 .getPos().subtract(bender.player.getPos()).length();
 
         block.setTargetPosition(victim.getPos().toVector3f());
-        bender.player.addStatusEffect(new StatusEffectInstance(STATIONARY_EFFECT, 5, 1, false, false, false));
-        victim.addStatusEffect(new StatusEffectInstance(STATIONARY_EFFECT, 60, 1, false, true, false));
+        bender.player.addStatusEffect(new StatusEffectInstance(ElementalsStatusEffects.STATIONARY, 5, 1, false, false, false));
+        victim.addStatusEffect(new StatusEffectInstance(ElementalsStatusEffects.STATIONARY, 60, 1, false, true, false));
 
 
 

@@ -2,11 +2,11 @@ package dev.saperate.elementals.elements.lightning;
 
 import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.data.PlayerData;
+import dev.saperate.elementals.effects.ElementalsStatusEffects;
 import dev.saperate.elementals.elements.Ability;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.player.PlayerEntity;
 
-import static dev.saperate.elementals.effects.StaticAuraStatusEffect.STATIC_AURA_EFFECT;
 import static dev.saperate.elementals.utils.SapsUtils.safeHasStatusEffect;
 
 
@@ -26,8 +26,8 @@ public class AbilityLightning2 implements Ability {
             return;
         }
         if (player.isSneaking() && playerData.canUseUpgrade("lightningStaticAura")) {
-            if (safeHasStatusEffect(STATIC_AURA_EFFECT, player)) {
-                player.removeStatusEffect(STATIC_AURA_EFFECT);
+            if (safeHasStatusEffect(ElementalsStatusEffects.STATIC_AURA, player)) {
+                player.removeStatusEffect(ElementalsStatusEffects.STATIC_AURA);
             } else {
                 int duration = 200;
                 PlayerData plrData = PlayerData.get(player);
@@ -36,33 +36,13 @@ public class AbilityLightning2 implements Ability {
                 } else if (plrData.canUseUpgrade("lightningStaticAuraStrengthI")) {
                     duration = 400;
                 }
-                player.addStatusEffect(new StatusEffectInstance(STATIC_AURA_EFFECT, duration, 0, false, false, true));
+                player.addStatusEffect(new StatusEffectInstance(ElementalsStatusEffects.STATIC_AURA, duration, 0, false, false, true));
             }
             bender.setCurrAbility(null);
             return;
         }
 
         LightningElement.get().abilityList.get(4).onCall(bender, deltaT);
-    }
-
-    @Override
-    public void onLeftClick(Bender bender, boolean started) {
-
-    }
-
-    @Override
-    public void onMiddleClick(Bender bender, boolean started) {
-
-    }
-
-    @Override
-    public void onRightClick(Bender bender, boolean started) {
-
-    }
-
-    @Override
-    public void onTick(Bender bender) {
-
     }
 
     @Override

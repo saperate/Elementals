@@ -8,7 +8,6 @@ import dev.saperate.elementals.entities.water.WaterHelmetEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.player.PlayerEntity;
 
-import static dev.saperate.elementals.effects.StationaryStatusEffect.STATIONARY_EFFECT;
 
 public class AbilityWaterHelmet implements Ability {
     @Override
@@ -42,25 +41,6 @@ public class AbilityWaterHelmet implements Ability {
         }
     }
 
-    @Override
-    public void onLeftClick(Bender bender, boolean started) {
-
-    }
-
-    @Override
-    public void onMiddleClick(Bender bender, boolean started) {
-
-    }
-
-    @Override
-    public void onRightClick(Bender bender, boolean started) {
-
-    }
-
-    @Override
-    public void onTick(Bender bender) {
-
-    }
 
     @Override
     public void onRemove(Bender bender) {

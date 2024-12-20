@@ -2,6 +2,7 @@ package dev.saperate.elementals.elements.air;
 
 import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.data.PlayerData;
+import dev.saperate.elementals.effects.ElementalsStatusEffects;
 import dev.saperate.elementals.effects.SpiritProjectionStatusEffect;
 import dev.saperate.elementals.elements.Ability;
 import dev.saperate.elementals.entities.common.DecoyPlayerEntity;
@@ -17,7 +18,6 @@ import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.GameMode;
 
-import static dev.saperate.elementals.effects.SpiritProjectionStatusEffect.SPIRIT_PROJECTION_EFFECT;
 
 public class AbilityAir4 implements Ability {
     @Override
@@ -80,7 +80,7 @@ public class AbilityAir4 implements Ability {
         bender.abilityData = new Object[]{plr.interactionManager.getGameMode(), decoy};
 
         bender.player.addStatusEffect(
-                new StatusEffectInstance(SPIRIT_PROJECTION_EFFECT,
+                new StatusEffectInstance(ElementalsStatusEffects.SPIRIT_PROJECTION,
                         -1,
                         SpiritProjectionStatusEffect.convertGameModeToAmplifier(plr.interactionManager.getGameMode()),
                         false, false, false)
@@ -128,7 +128,7 @@ public class AbilityAir4 implements Ability {
 
         DecoyPlayerEntity decoy = (DecoyPlayerEntity) data[1];
         if (decoy != null) {
-            bender.player.teleport(decoy.getX(), decoy.getY(), decoy.getZ());
+            bender.player.teleport(decoy.getX(), decoy.getY(), decoy.getZ(), false);
             bender.player.setHealth(decoy.getHealth());
             bender.player.setAir(decoy.getAir());
             bender.player.setFireTicks(decoy.getFireTicks());
@@ -140,7 +140,7 @@ public class AbilityAir4 implements Ability {
             decoy.discard();
         }
 
-        bender.player.removeStatusEffect(SPIRIT_PROJECTION_EFFECT);
+        bender.player.removeStatusEffect(ElementalsStatusEffects.SPIRIT_PROJECTION);
         bender.setCurrAbility(null);
         bender.abilityData = null;
     }

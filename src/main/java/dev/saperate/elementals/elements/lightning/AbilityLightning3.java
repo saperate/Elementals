@@ -2,14 +2,12 @@ package dev.saperate.elementals.elements.lightning;
 
 import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.data.PlayerData;
+import dev.saperate.elementals.effects.ElementalsStatusEffects;
 import dev.saperate.elementals.elements.Ability;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
 
-import static dev.saperate.elementals.effects.BurnoutStatusEffect.BURNOUT_EFFECT;
-import static dev.saperate.elementals.effects.OverchargedStatusEffect.OVERCHARGED_EFFECT;
-import static dev.saperate.elementals.effects.StaticAuraStatusEffect.STATIC_AURA_EFFECT;
 import static dev.saperate.elementals.utils.SapsUtils.safeHasStatusEffect;
 
 
@@ -31,11 +29,11 @@ public class AbilityLightning3 implements Ability {
         } else if (plrData.canUseUpgrade("lightningOverchargeStrengthI")) {
             duration = 600;
         }
-        if (!safeHasStatusEffect(OVERCHARGED_EFFECT, player) && !safeHasStatusEffect(BURNOUT_EFFECT, player) ) {
+        if (!safeHasStatusEffect(ElementalsStatusEffects.OVERCHARGED, player) && !safeHasStatusEffect(ElementalsStatusEffects.BURNOUT, player) ) {
             if (!bender.reduceChi(15)) {
                 return;
             }
-            player.addStatusEffect(new StatusEffectInstance(OVERCHARGED_EFFECT, duration, 0, false, false, true));
+            player.addStatusEffect(new StatusEffectInstance(ElementalsStatusEffects.OVERCHARGED, duration, 0, false, false, true));
         }
         bender.setCurrAbility(null);
     }

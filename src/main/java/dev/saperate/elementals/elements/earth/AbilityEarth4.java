@@ -3,11 +3,12 @@ package dev.saperate.elementals.elements.earth;
 import dev.saperate.elementals.Elementals;
 import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.data.PlayerData;
+import dev.saperate.elementals.effects.ElementalsStatusEffects;
 import dev.saperate.elementals.elements.Ability;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.server.network.ServerPlayerEntity;
 
-import static dev.saperate.elementals.effects.SeismicSenseStatusEffect.SEISMIC_SENSE_EFFECT;
+
 import static dev.saperate.elementals.items.ElementalItems.EARTH_ARMOR_SET;
 
 public class AbilityEarth4 implements Ability {
@@ -28,8 +29,8 @@ public class AbilityEarth4 implements Ability {
             return;
         }
 
-        if (bender.player.hasStatusEffect(SEISMIC_SENSE_EFFECT)) {
-            bender.player.removeStatusEffect(SEISMIC_SENSE_EFFECT);
+        if (bender.player.hasStatusEffect(ElementalsStatusEffects.SEISMIC_SENSE)) {
+            bender.player.removeStatusEffect(ElementalsStatusEffects.SEISMIC_SENSE);
         } else {
             if (!bender.reduceChi(15)) {
                 if (bender.abilityData == null) {
@@ -40,7 +41,7 @@ public class AbilityEarth4 implements Ability {
                 return;
             }
             Elementals.USED_ABILITY.trigger((ServerPlayerEntity) bender.player, "seismic_sense");
-            bender.player.addStatusEffect(new StatusEffectInstance(SEISMIC_SENSE_EFFECT, 2400));
+            bender.player.addStatusEffect(new StatusEffectInstance(ElementalsStatusEffects.SEISMIC_SENSE, 2400));
         }
     }
 

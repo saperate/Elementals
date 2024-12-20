@@ -2,6 +2,7 @@ package dev.saperate.elementals.elements.lightning;
 
 import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.data.PlayerData;
+import dev.saperate.elementals.effects.ElementalsStatusEffects;
 import dev.saperate.elementals.effects.StationaryStatusEffect;
 import dev.saperate.elementals.elements.Ability;
 import dev.saperate.elementals.entities.fire.FireArcEntity;
@@ -16,7 +17,6 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.Vec3d;
 import org.joml.Vector3f;
 
-import static dev.saperate.elementals.effects.StationaryStatusEffect.STATIONARY_EFFECT;
 import static dev.saperate.elementals.utils.SapsUtils.getEntityLookVector;
 import static dev.saperate.elementals.utils.SapsUtils.serverSummonParticles;
 
@@ -76,7 +76,7 @@ public class AbilityLightningBolt implements Ability {
         if(!bender.player.isSneaking()){
             onRemove(bender);
         }
-        bender.player.addStatusEffect(new StatusEffectInstance(STATIONARY_EFFECT,20, 0, false, false, false));
+        bender.player.addStatusEffect(new StatusEffectInstance(ElementalsStatusEffects.STATIONARY,20, 0, false, false, false));
     }
 
     @Override

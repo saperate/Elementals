@@ -2,6 +2,7 @@ package dev.saperate.elementals.elements.water;
 
 import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.data.PlayerData;
+import dev.saperate.elementals.effects.ElementalsStatusEffects;
 import dev.saperate.elementals.elements.Ability;
 import dev.saperate.elementals.entities.water.WaterJetEntity;
 import dev.saperate.elementals.utils.MathHelper;
@@ -12,7 +13,6 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.Vec3d;
 import org.joml.Vector3f;
 
-import static dev.saperate.elementals.effects.StationaryStatusEffect.STATIONARY_EFFECT;
 import static dev.saperate.elementals.utils.SapsUtils.getEntityLookVector;
 import static dev.saperate.elementals.utils.SapsUtils.serverSummonParticles;
 
@@ -100,7 +100,7 @@ public class AbilityWaterCannon implements Ability {
             entity.setStreamSize(newSize);
             entity.getChild().setStreamSize(newSize);
         }
-        bender.player.addStatusEffect(new StatusEffectInstance(STATIONARY_EFFECT, 1, 1, false, false, false));
+        bender.player.addStatusEffect(new StatusEffectInstance(ElementalsStatusEffects.STATIONARY, 1, 1, false, false, false));
     }
 
     @Override

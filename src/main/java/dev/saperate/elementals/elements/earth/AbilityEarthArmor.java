@@ -1,31 +1,19 @@
 package dev.saperate.elementals.elements.earth;
 
 import dev.saperate.elementals.data.Bender;
+import dev.saperate.elementals.effects.ElementalsStatusEffects;
 import dev.saperate.elementals.elements.Ability;
 import dev.saperate.elementals.items.EarthArmorItem;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.MovementType;
-import net.minecraft.entity.attribute.EntityAttributeModifier;
-import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.item.ArmorItem;
 import net.minecraft.item.ItemStack;
-import net.minecraft.screen.slot.Slot;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.Vec3d;
-import org.joml.Vector3f;
 
-import java.util.HashSet;
-
-import static dev.saperate.elementals.effects.DenseStatusEffect.DENSE_EFFECT;
-import static dev.saperate.elementals.effects.SeismicSenseStatusEffect.SEISMIC_SENSE_EFFECT;
 import static dev.saperate.elementals.items.ElementalItems.*;
-import static dev.saperate.elementals.utils.SapsUtils.getEntityLookVector;
 import static dev.saperate.elementals.utils.SapsUtils.raycastBlockCustomRotation;
 
 public class AbilityEarthArmor implements Ability {
@@ -39,8 +27,8 @@ public class AbilityEarthArmor implements Ability {
         if (player.getInventory().containsAny(EARTH_ARMOR_SET)) {
             removeArmorSet(inv);
 
-            player.removeStatusEffect(SEISMIC_SENSE_EFFECT);
-            player.removeStatusEffect(DENSE_EFFECT);
+            player.removeStatusEffect(ElementalsStatusEffects.SEISMIC_SENSE);
+            player.removeStatusEffect(ElementalsStatusEffects.DENSE);
             player.removeStatusEffect(StatusEffects.NIGHT_VISION);
             player.removeStatusEffect(StatusEffects.BLINDNESS);
             return;
@@ -95,25 +83,6 @@ public class AbilityEarthArmor implements Ability {
         };
     }
 
-    @Override
-    public void onLeftClick(Bender bender, boolean started) {
-
-    }
-
-    @Override
-    public void onMiddleClick(Bender bender, boolean started) {
-
-    }
-
-    @Override
-    public void onRightClick(Bender bender, boolean started) {
-
-    }
-
-    @Override
-    public void onTick(Bender bender) {
-
-    }
 
     @Override
     public void onRemove(Bender bender) {

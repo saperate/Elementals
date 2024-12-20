@@ -1,12 +1,13 @@
 package dev.saperate.elementals.elements.air;
 
 import dev.saperate.elementals.data.Bender;
+import dev.saperate.elementals.effects.ElementalsStatusEffects;
 import dev.saperate.elementals.elements.Ability;
 import dev.saperate.elementals.entities.air.AirShieldEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.player.PlayerEntity;
 
-import static dev.saperate.elementals.effects.StationaryStatusEffect.STATIONARY_EFFECT;
+
 
 public class AbilityAirShield implements Ability {
     @Override
@@ -55,7 +56,7 @@ public class AbilityAirShield implements Ability {
             }
             return;
         }
-        bender.player.addStatusEffect(new StatusEffectInstance(STATIONARY_EFFECT,1,1,false,false,false));
+        bender.player.addStatusEffect(new StatusEffectInstance(ElementalsStatusEffects.SEISMIC_SENSE,1,1,false,false,false));
         if(!bender.player.isSneaking()){
             onRemove(bender);
         }

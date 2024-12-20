@@ -2,6 +2,7 @@ package dev.saperate.elementals.elements.fire;
 
 import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.data.PlayerData;
+import dev.saperate.elementals.effects.ElementalsStatusEffects;
 import dev.saperate.elementals.elements.Ability;
 import dev.saperate.elementals.entities.fire.FireArcEntity;
 import dev.saperate.elementals.entities.fire.FireShieldEntity;
@@ -63,7 +64,7 @@ public class AbilityFireShield implements Ability {
             }
             return;
         }
-        bender.player.addStatusEffect(new StatusEffectInstance(STATIONARY_EFFECT,1,1,false,false,false));
+        bender.player.addStatusEffect(new StatusEffectInstance(ElementalsStatusEffects.STATIONARY,1,1,false,false,false));
         if(!bender.player.isSneaking()){
             onRemove(bender);
         }

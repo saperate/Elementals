@@ -214,7 +214,8 @@ public class EarthElement extends Element {
      */
     public static void damageEntityAboveBlock(PlayerEntity player, BlockPos pos, ArrayList<LivingEntity> damagedEntities, float amount) {
         List<LivingEntity> hits = player.getWorld().getEntitiesByClass(LivingEntity.class,
-                EARTHBLOCK.createSimpleBoundingBox(pos.getX() + 0.5f, pos.getY() + 1, pos.getZ() + 0.5f), LivingEntity::isOnGround);
+                EARTHBLOCK.getSpawnBox(pos.getX(), pos.getY() + 1, pos.getZ()), LivingEntity::isOnGround);
+        //fixme this might be broken cause i changed to .getSpawnBox()
         for (LivingEntity entity : hits) {
             if (entity == player) {
                 continue;

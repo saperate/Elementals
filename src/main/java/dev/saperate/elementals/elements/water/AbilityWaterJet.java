@@ -2,6 +2,7 @@ package dev.saperate.elementals.elements.water;
 
 import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.data.PlayerData;
+import dev.saperate.elementals.effects.ElementalsStatusEffects;
 import dev.saperate.elementals.elements.Ability;
 import dev.saperate.elementals.entities.water.WaterArcEntity;
 import dev.saperate.elementals.entities.water.WaterJetEntity;
@@ -12,7 +13,6 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.Vec3d;
 import org.joml.Vector3f;
 
-import static dev.saperate.elementals.effects.StationaryStatusEffect.STATIONARY_EFFECT;
 import static dev.saperate.elementals.utils.SapsUtils.getEntityLookVector;
 import static dev.saperate.elementals.utils.SapsUtils.serverSummonParticles;
 
@@ -38,15 +38,6 @@ public class AbilityWaterJet implements Ability {
         }
     }
 
-    @Override
-    public void onLeftClick(Bender bender, boolean started) {
-
-    }
-
-    @Override
-    public void onMiddleClick(Bender bender, boolean started) {
-
-    }
 
     @Override
     public void onRightClick(Bender bender, boolean started) {
@@ -88,7 +79,7 @@ public class AbilityWaterJet implements Ability {
                     0.1f, 1,
                     0, 0, 0, 0);
         } else {
-            bender.player.addStatusEffect(new StatusEffectInstance(STATIONARY_EFFECT, 1, 1, false, false, false));
+            bender.player.addStatusEffect(new StatusEffectInstance(ElementalsStatusEffects.STATIONARY, 1, 1, false, false, false));
             if (!bender.reduceChi(0.2f)) {
                 if (bender.abilityData == null) {
                     bender.setCurrAbility(null);

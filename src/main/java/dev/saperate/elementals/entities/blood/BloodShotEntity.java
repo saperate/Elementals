@@ -12,6 +12,7 @@ import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.world.World;
@@ -34,7 +35,7 @@ public class BloodShotEntity extends AbstractElementalsEntity<PlayerEntity> {
     }
 
 
-    public BloodShotEntity(World world, PlayerEntity owner, double x, double y, double z, Map<StatusEffect, StatusEffectInstance> ownerEffects) {
+    public BloodShotEntity(World world, PlayerEntity owner, double x, double y, double z, Map<RegistryEntry<StatusEffect>, StatusEffectInstance> ownerEffects) {
         super(BLOODSHOT, world, PlayerEntity.class);
         setOwner(owner);
         setPos(x, y, z);
@@ -44,6 +45,7 @@ public class BloodShotEntity extends AbstractElementalsEntity<PlayerEntity> {
             effects.add(new StatusEffectInstance(instance));
         }
     }
+
 
 
     @Override
