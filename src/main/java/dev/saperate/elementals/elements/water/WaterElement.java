@@ -7,19 +7,13 @@ import dev.saperate.elementals.elements.Upgrade;
 import dev.saperate.elementals.items.ElementalItems;
 import dev.saperate.elementals.items.WaterPouchItem;
 import net.minecraft.block.*;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.damage.DamageTypes;
+import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
-import net.minecraft.fluid.WaterFluid;
 import net.minecraft.item.Items;
 import net.minecraft.item.PotionItem;
-import net.minecraft.potion.PotionUtil;
+import net.minecraft.potion.Potion;
 import net.minecraft.potion.Potions;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.state.property.IntProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
@@ -192,7 +186,8 @@ public class WaterElement extends Element {
                                 || block.equals(Blocks.POWDER_SNOW_CAULDRON)
                                 || block.equals(Blocks.SNOW)
                                 || block.equals(Blocks.SNOW_BLOCK)
-                                || block.equals(Blocks.GRASS)
+                                || block.equals(Blocks.SHORT_GRASS)
+                                || block.equals(Blocks.TALL_GRASS)
                                 || block.equals(Blocks.CACTUS)
                                 || block instanceof LeavesBlock
                                 || block instanceof PlantBlock
@@ -216,7 +211,7 @@ public class WaterElement extends Element {
         return player.getInventory().containsAny((stack) -> {
             if(stack.getItem().equals(Items.GLASS_BOTTLE)){
                 stack.decrement(1);
-                player.getInventory().insertStack(PotionUtil.setPotion(Items.POTION.getDefaultStack(), Potions.WATER));
+                player.getInventory().insertStack(Items.POTION.getDefaultStack());//TODO verify this gives a water bottle
                 return true;
             } else if (stack.getItem().equals(ElementalItems.WATER_POUCH_ITEM)) {
                 WaterPouchItem item = (WaterPouchItem) stack.getItem();

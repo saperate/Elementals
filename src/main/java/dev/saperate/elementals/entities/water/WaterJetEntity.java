@@ -45,11 +45,11 @@ public class WaterJetEntity extends AbstractElementalsEntity<PlayerEntity> {
 
 
     @Override
-    protected void initDataTracker() {
-        super.initDataTracker();
-        this.getDataTracker().startTracking(STREAM_SIZE, 1f);
-        this.getDataTracker().startTracking(RANGE, 10f);
-        this.getDataTracker().startTracking(CHILD_ID, 0);
+    protected void initDataTracker(DataTracker.Builder builder) {
+        super.initDataTracker(builder);
+        builder.add(STREAM_SIZE, 1f);
+        builder.add(RANGE, 10f);
+        builder.add(CHILD_ID, 0);
     }
 
     @Override
@@ -75,7 +75,7 @@ public class WaterJetEntity extends AbstractElementalsEntity<PlayerEntity> {
             if (hit instanceof BlockHitResult bHit) {
                 BlockState bState = getWorld().getBlockState(bHit.getBlockPos());
                 Block bBlock = bState.getBlock();
-                if (bBlock.equals(Blocks.TALL_GRASS) || bBlock.equals(Blocks.GRASS)) {
+                if (bBlock.equals(Blocks.TALL_GRASS) || bBlock.equals(Blocks.SHORT_GRASS)) {
                     getWorld().setBlockState(bHit.getBlockPos(),Blocks.AIR.getDefaultState());
                 }
             } else if (hit instanceof EntityHitResult eHit) {

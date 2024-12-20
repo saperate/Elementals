@@ -56,6 +56,7 @@ public class WaterShieldEntity extends AbstractElementalsEntity<PlayerEntity> {
         moveEntityTowardsGoal(owner.getPos().toVector3f());
     }
 
+
     @Override
     public void onRemoved() {
         summonParticles( this,random, ParticleTypes.SPLASH, 10,100);

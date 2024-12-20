@@ -56,9 +56,9 @@ public class WaterBladeEntity extends AbstractElementalsEntity<PlayerEntity> {
     }
 
     @Override
-    protected void initDataTracker() {
-        super.initDataTracker();
-        this.getDataTracker().startTracking(DAMAGE, 1.5f);
+    protected void initDataTracker(DataTracker.Builder builder) {
+        super.initDataTracker(builder);
+        builder.add(DAMAGE, 1.5f);
     }
 
     @Override

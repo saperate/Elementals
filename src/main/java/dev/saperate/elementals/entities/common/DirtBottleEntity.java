@@ -1,6 +1,8 @@
 package dev.saperate.elementals.entities.common;
 
 import net.minecraft.block.Blocks;
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.NbtComponent;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.FallingBlockEntity;
@@ -80,7 +82,7 @@ public class DirtBottleEntity extends ThrownItemEntity {
         ItemStack stack = new ItemStack(DIRT_BOTTLE_ITEM);
         NbtCompound tag = new NbtCompound();
         tag.putUuid("EntityUUID", this.getUuid());
-        stack.setNbt(tag);
+        stack.set(DataComponentTypes.CUSTOM_DATA, NbtComponent.of(tag));
         return stack;
     }
 }

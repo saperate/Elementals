@@ -47,16 +47,16 @@ public class AirTornadoEntity extends AbstractElementalsEntity<PlayerEntity> {
         setOwner(owner);
         setPos(x, y, z);
         setNoGravity(true);
-        setStepHeight(2f);
+        //setStepHeight(2f); fixme
         maxLifeTime = 100;
     }
 
 
     @Override
-    protected void initDataTracker() {
-        super.initDataTracker();
-        this.getDataTracker().startTracking(RANGE, 20f);
-        this.getDataTracker().startTracking(SPEED, 0.001f);
+    protected void initDataTracker(DataTracker.Builder builder) {
+        super.initDataTracker(builder);
+        builder.add(RANGE, 20f);
+        builder.add(SPEED, 0.001f);
     }
 
     @Override

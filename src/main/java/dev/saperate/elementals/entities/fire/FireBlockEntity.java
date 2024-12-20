@@ -59,11 +59,11 @@ public class FireBlockEntity extends AbstractElementalsEntity<PlayerEntity> {
     }
 
     @Override
-    protected void initDataTracker() {
-        this.getDataTracker().startTracking(HEIGHT, 1f);
-        this.getDataTracker().startTracking(FINAL_HEIGHT, 1.5f);
-        this.getDataTracker().startTracking(IS_BLUE, false);
-        super.initDataTracker();
+    protected void initDataTracker(DataTracker.Builder builder) {
+        builder.add(HEIGHT, 1f);
+        builder.add(FINAL_HEIGHT, 1.5f);
+        builder.add(IS_BLUE, false);
+        super.initDataTracker(builder);
     }
 
     @Override

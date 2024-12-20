@@ -1,0 +1,22 @@
+{
+  "anvil_cost": 2,
+  "description": {
+    "translate": "enchantment.elementals.volume"
+  },
+  "effects": {
+  },
+  "max_cost": {
+    "base": 11,
+    "per_level_above_first": 6
+  },
+  "max_level": 4,
+  "min_cost": {
+    "base": 5,
+    "per_level_above_first": 6
+  },
+  "slots": [
+    "any"
+  ],
+  "supported_items": "#elementals:enchantable/pouches",
+  "weight": 5
+}

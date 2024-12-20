@@ -1,5 +1,6 @@
 package dev.saperate.elementals.entities.lightning;
 
+import dev.saperate.elementals.effects.ElementalsStatusEffects;
 import dev.saperate.elementals.entities.common.AbstractElementalsEntity;
 import dev.saperate.elementals.entities.fire.FireArcEntity;
 import net.minecraft.entity.*;
@@ -15,7 +16,6 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 import static dev.saperate.elementals.Elementals.LIGHTNING_PARTICLE_TYPE;
-import static dev.saperate.elementals.effects.StunnedStatusEffect.STUNNED_EFFECT;
 import static dev.saperate.elementals.entities.ElementalEntities.LIGHTNINGARC;
 import static dev.saperate.elementals.entities.ElementalEntities.VOLTARC;
 import static dev.saperate.elementals.utils.SapsUtils.*;
@@ -44,10 +44,10 @@ public class VoltArcEntity extends AbstractElementalsEntity<PlayerEntity> {
     }
 
     @Override
-    protected void initDataTracker() {
-        super.initDataTracker();
-        this.getDataTracker().startTracking(PARENT_ID, 0);
-        this.getDataTracker().startTracking(CHILD_ID, 0);
+    protected void initDataTracker(DataTracker.Builder builder) {
+        super.initDataTracker(builder);
+        builder.add(PARENT_ID, 0);
+        builder.add(CHILD_ID, 0);
     }
 
 
@@ -92,7 +92,7 @@ public class VoltArcEntity extends AbstractElementalsEntity<PlayerEntity> {
         if(entity instanceof LivingEntity living){
             //TODO make a custom sound
             playSound(SoundEvents.ENTITY_LIGHTNING_BOLT_THUNDER,1,1);
-            living.addStatusEffect(new StatusEffectInstance(STUNNED_EFFECT,duration, 0, false,false,true));
+            living.addStatusEffect(new StatusEffectInstance(ElementalsStatusEffects.STUNNED,duration, 0, false,false,true));
             living.damage(this.getDamageSources().playerAttack(getOwner()),1);
             remove();
         }

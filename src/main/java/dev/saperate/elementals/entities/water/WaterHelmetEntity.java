@@ -1,5 +1,6 @@
 package dev.saperate.elementals.entities.water;
 
+import dev.saperate.elementals.effects.ElementalsStatusEffects;
 import dev.saperate.elementals.entities.common.AbstractElementalsEntity;
 import net.minecraft.entity.*;
 import net.minecraft.entity.data.DataTracker;
@@ -14,7 +15,6 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.joml.Vector3f;
 
-import static dev.saperate.elementals.effects.DrowningStatusEffect.DROWNING_EFFECT;
 import static dev.saperate.elementals.entities.ElementalEntities.WATERHELMET;
 import static dev.saperate.elementals.utils.SapsUtils.summonParticles;
 
@@ -50,12 +50,12 @@ public class WaterHelmetEntity extends AbstractElementalsEntity<LivingEntity> {
     }
 
     @Override
-    protected void initDataTracker() {
-        super.initDataTracker();
-        this.getDataTracker().startTracking(CASTER_ID, 0);
-        this.getDataTracker().startTracking(MODEL_ID, 0);
-        this.getDataTracker().startTracking(STEALTHY, false);
-        this.getDataTracker().startTracking(RANGE, 10);
+    protected void initDataTracker(DataTracker.Builder builder) {
+        super.initDataTracker(builder);
+        builder.add(CASTER_ID, 0);
+        builder.add(MODEL_ID, 0);
+        builder.add(STEALTHY, false);
+        builder.add(RANGE, 10);
 
     }
 
@@ -95,7 +95,7 @@ public class WaterHelmetEntity extends AbstractElementalsEntity<LivingEntity> {
             if (caster == null) {
                 return;
             }
-            owner.addStatusEffect(new StatusEffectInstance(DROWNING_EFFECT, 10, 1, false, false, false));
+            owner.addStatusEffect(new StatusEffectInstance(ElementalsStatusEffects.DROWNING, 10, 1, false, false, false));
             Vec3d direction = caster.getPos().subtract(owner.getPos());
             double distance = direction.length();
             if (distance > range) {

@@ -97,6 +97,7 @@ public class WaterCubeEntity extends AbstractElementalsEntity<PlayerEntity> {
         return true;
     }
 
+
     @Override
     public void onRemoved() {
         summonParticles(this, random, ParticleTypes.SPLASH, 0, 10);

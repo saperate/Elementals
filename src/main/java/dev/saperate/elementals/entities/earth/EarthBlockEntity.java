@@ -64,16 +64,16 @@ public class EarthBlockEntity extends AbstractElementalsEntity<PlayerEntity> {
     }
 
     @Override
-    protected void initDataTracker() {
-        super.initDataTracker();
-        this.getDataTracker().startTracking(MODEL_SHAPE_ID, 0);
-        this.getDataTracker().startTracking(BLOCK_STATE, Blocks.AIR.getDefaultState());
-        this.getDataTracker().startTracking(TARGET_POSITION, new Vector3f(0, -50, 0));
-        this.getDataTracker().startTracking(USES_OFFSET, false);
-        this.getDataTracker().startTracking(IS_COLLIDABLE, true);
-        this.getDataTracker().startTracking(MOVEMENT_SPEED, 0.1f);
-        this.getDataTracker().startTracking(DAMAGE, 2f);
-        this.getDataTracker().startTracking(SHIFT_FREEZE, true);
+    protected void initDataTracker(DataTracker.Builder builder) {
+        super.initDataTracker(builder);
+        builder.add(MODEL_SHAPE_ID, 0);
+        builder.add(BLOCK_STATE, Blocks.AIR.getDefaultState());
+        builder.add(TARGET_POSITION, new Vector3f(0, -50, 0));
+        builder.add(USES_OFFSET, false);
+        builder.add(IS_COLLIDABLE, true);
+        builder.add(MOVEMENT_SPEED, 0.1f);
+        builder.add(DAMAGE, 2f);
+        builder.add(SHIFT_FREEZE, true);
     }
 
     @Override

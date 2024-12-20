@@ -225,9 +225,9 @@ public abstract class AbstractElementalsEntity<OwnerType extends Entity> extends
 
 
     @Override
-    protected void initDataTracker() {
-        this.getDataTracker().startTracking(OWNER_ID, 0);
-        this.getDataTracker().startTracking(IS_CONTROLLED, false);
+    protected void initDataTracker(DataTracker.Builder builder) {
+        builder.add(OWNER_ID, 0);
+        builder.add(IS_CONTROLLED, false);
     }
 
     @Override

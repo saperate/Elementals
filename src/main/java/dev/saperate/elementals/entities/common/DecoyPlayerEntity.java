@@ -58,11 +58,11 @@ public class DecoyPlayerEntity extends PathAwareEntity {
     }
 
     @Override
-    protected void initDataTracker() {
-        super.initDataTracker();
-        this.getDataTracker().startTracking(OWNER_ID, Optional.empty());
-        this.getDataTracker().startTracking(OWNER_NAME, "");
-        this.getDataTracker().startTracking(RANGE,5);
+    protected void initDataTracker(DataTracker.Builder builder) {
+        super.initDataTracker(builder);
+        builder.add(OWNER_ID, Optional.empty());
+        builder.add(OWNER_NAME, "");
+        builder.add(RANGE,5);
     }
 
 
@@ -132,7 +132,7 @@ public class DecoyPlayerEntity extends PathAwareEntity {
         double distance = direction.length();
         if (distance > max) {
             if (distance > max * 10 && !getWorld().isClient) {
-                getOwner().teleport(getX(), getY(), getZ());
+                getOwner().teleport(getX(), getY(), getZ(), false);
             }
 
 
@@ -227,7 +227,7 @@ public class DecoyPlayerEntity extends PathAwareEntity {
     }
 
     private void setOwnerName(PlayerEntity owner) {
-        this.getDataTracker().set(OWNER_NAME, owner.getEntityName());
+        this.getDataTracker().set(OWNER_NAME, owner.getNameForScoreboard());//todo check if works
     }
 
     public void equipItemStack() {

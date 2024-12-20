@@ -56,20 +56,20 @@ public class BoomerangItem extends Item implements DispenserBehavior {
 
         if (!world.isClient) {
             Direction direction = pointer.state().get(DispenserBlock.FACING);
-            BoomerangEntity boomerangEntity = getBoomerangEntity(pointer, world, direction);
+            BoomerangEntity boomerangEntity = getBoomerangEntity(pointer, world, direction, stack);
             world.spawnEntity(boomerangEntity);
         }
         return stack;
     }
 
     @NotNull
-    private static BoomerangEntity getBoomerangEntity(BlockPointer pointer, World world, Direction direction) {
+    private static BoomerangEntity getBoomerangEntity(BlockPointer pointer, World world, Direction direction, ItemStack stack) {
         BoomerangEntity boomerangEntity = new BoomerangEntity(world,
                 new Vec3d(
                         pointer.pos().getX() + direction.getOffsetX() + 0.5,
                         pointer.pos().getY() + direction.getOffsetY() + 0.5,
                         pointer.pos().getZ() + direction.getOffsetZ() + 0.5
-                )
+                ), stack
         );
 
         boomerangEntity.setVelocity(

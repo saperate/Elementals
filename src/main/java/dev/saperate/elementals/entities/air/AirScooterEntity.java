@@ -34,14 +34,14 @@ public class AirScooterEntity extends AbstractElementalsEntity<PlayerEntity> {
         super(AIRSCOOTER, world, PlayerEntity.class);
         setPos(x, y, z);
         setOwner(owner);
-        setStepHeight(1.1f);
+        //setStepHeight(1.1f); fixme
         setNoGravity(true);
     }
 
     @Override
-    protected void initDataTracker() {
-        super.initDataTracker();
-        this.getDataTracker().startTracking(SPEED, 0.5f);
+    protected void initDataTracker(DataTracker.Builder builder) {
+        super.initDataTracker(builder);
+        builder.add(SPEED, 0.5f);
     }
 
     @Override

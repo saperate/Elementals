@@ -1,13 +1,13 @@
 package dev.saperate.elementals.elements;
 
-import dev.saperate.elementals.data.PlayerData;
+
 import net.minecraft.nbt.NbtCompound;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
+
 
 /**
  * This serves as a node to make an upgrade tree, each node <b>MUST</b> have a different name, otherwise it can break stuff

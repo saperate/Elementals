@@ -47,10 +47,10 @@ public class WaterBulletEntity extends AbstractElementalsEntity<PlayerEntity> {
     }
 
     @Override
-    protected void initDataTracker() {
-        super.initDataTracker();
-        this.getDataTracker().startTracking(ARRAY_ID, 0);
-        this.getDataTracker().startTracking(ARRAY_SIZE, 1);
+    protected void initDataTracker(DataTracker.Builder builder) {
+        super.initDataTracker(builder);
+        builder.add(ARRAY_ID, 0);
+        builder.add(ARRAY_SIZE, 1);
     }
 
     @Override

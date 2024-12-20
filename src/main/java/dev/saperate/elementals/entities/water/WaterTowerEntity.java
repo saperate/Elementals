@@ -46,11 +46,11 @@ public class WaterTowerEntity extends AbstractElementalsEntity<PlayerEntity> {
     }
 
     @Override
-    protected void initDataTracker() {
-        super.initDataTracker();
-        this.getDataTracker().startTracking(TOWER_HEIGHT, 1f);
-        this.getDataTracker().startTracking(MAX_TOWER_HEIGHT, 1f);
-        this.getDataTracker().startTracking(OWNER_COULD_FLY, false);
+    protected void initDataTracker(DataTracker.Builder builder) {
+        super.initDataTracker(builder);
+        builder.add(TOWER_HEIGHT, 1f);
+        builder.add(MAX_TOWER_HEIGHT, 1f);
+        builder.add(OWNER_COULD_FLY, false);
     }
 
     @Override
@@ -86,6 +86,7 @@ public class WaterTowerEntity extends AbstractElementalsEntity<PlayerEntity> {
             owner.setPosition(owner.getPos().multiply(1,0,1).add(0, getY() + getMaxTowerHeight() - 0.25f, 0));
         }
     }
+    
 
     @Override
     public void remove(RemovalReason reason) {

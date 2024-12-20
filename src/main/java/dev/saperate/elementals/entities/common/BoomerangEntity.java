@@ -3,6 +3,9 @@ package dev.saperate.elementals.entities.common;
 import dev.saperate.elementals.utils.SapsUtils;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.component.ComponentType;
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.NbtComponent;
 import net.minecraft.entity.*;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.damage.DamageTypes;
@@ -34,14 +37,15 @@ public class BoomerangEntity extends PersistentProjectileEntity {
     }
 
     public BoomerangEntity(World world, PlayerEntity owner, Vec3d startingPos) {
-        super(BOOMERANGENTITY, owner, world);
+        super(BOOMERANGENTITY, world);
+        setOwner(owner);
         this.startingPos = startingPos;
         setNoGravity(true);
         setSilent(true);
     }
 
-    public BoomerangEntity(World world, Vec3d startingPos) {
-        super(BOOMERANGENTITY, startingPos.x, startingPos.y, startingPos.z, world);
+    public BoomerangEntity(World world, Vec3d startingPos, ItemStack stack) {
+        super(BOOMERANGENTITY, startingPos.x, startingPos.y, startingPos.z, world, stack, null);
         this.startingPos = startingPos;
         setNoGravity(true);
         setSilent(true);
@@ -143,8 +147,13 @@ public class BoomerangEntity extends PersistentProjectileEntity {
         ItemStack stack = new ItemStack(BOOMERANG_ITEM);
         NbtCompound tag = new NbtCompound();
         tag.putUuid("EntityUUID", this.getUuid());
-        stack.setNbt(tag);
+        stack.set(DataComponentTypes.CUSTOM_DATA, NbtComponent.of(tag));
         return stack;
+    }
+
+    @Override
+    protected ItemStack getDefaultItemStack() {
+        return new ItemStack(BOOMERANG_ITEM);
     }
 
 

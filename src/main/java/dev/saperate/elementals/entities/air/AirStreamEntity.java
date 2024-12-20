@@ -73,10 +73,10 @@ public class AirStreamEntity extends AbstractElementalsEntity<PlayerEntity> {
     }
 
     @Override
-    protected void initDataTracker() {
-        super.initDataTracker();
-        this.getDataTracker().startTracking(PARENT_ID, 0);
-        this.getDataTracker().startTracking(CHILD_ID, 0);
+    protected void initDataTracker(DataTracker.Builder builder) {
+        super.initDataTracker(builder);
+        builder.add(PARENT_ID, 0);
+        builder.add(CHILD_ID, 0);
     }
 
     @Override
