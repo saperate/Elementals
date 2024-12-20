@@ -2,6 +2,8 @@ package dev.saperate.elementals.effects;
 
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.attribute.EntityAttributeInstance;
+import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectCategory;
 import net.minecraft.entity.effect.StatusEffects;
@@ -43,13 +45,14 @@ public class DrowningStatusEffect extends StatusEffect {
     }
 
     protected int getNextAirUnderwater(int air, LivingEntity entity) {
-        if(entity.hasStatusEffect(StatusEffects.WATER_BREATHING)){
-            return air;
+        EntityAttributeInstance entityAttributeInstance = entity.getAttributeInstance(EntityAttributes.GENERIC_OXYGEN_BONUS);
+        double d;
+        if (entityAttributeInstance != null) {
+            d = entityAttributeInstance.getValue();
+        } else {
+            d = 0.0;
         }
-        int i = EnchantmentHelper.getRespiration(entity);
-        if (i > 0 && entity.getRandom().nextInt(i + 1) > 0) {
-            return (air - 4);
-        }
-        return (air - 10);
+
+        return d > 0.0 && entity.getRandom().nextDouble() >= 1.0 / (d + 1.0) ? air : air - 4;//TODO tweak this value
     }
 }

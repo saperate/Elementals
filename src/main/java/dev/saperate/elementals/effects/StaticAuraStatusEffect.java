@@ -18,10 +18,11 @@ public class StaticAuraStatusEffect extends StatusEffect {
     }
 
     @Override
-    public void applyUpdateEffect(LivingEntity entity, int amplifier) {
+    public boolean applyUpdateEffect(LivingEntity entity, int amplifier) {
         if(entity.isTouchingWaterOrRain()){
-            entity.removeStatusEffect(STATIC_AURA_EFFECT);
+            entity.removeStatusEffect(ElementalsStatusEffects.STATIC_AURA);
         }
+        return true;
     }
 
 }

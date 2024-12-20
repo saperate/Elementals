@@ -7,6 +7,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.world.PersistentState;
@@ -20,53 +21,15 @@ import java.util.UUID;
 import static dev.saperate.elementals.Elementals.MODID;
 
 public class StateDataSaverAndLoader extends PersistentState {
+    private static Type<StateDataSaverAndLoader> type = new Type<>(
+            StateDataSaverAndLoader::new,
+            StateDataSaverAndLoader::createFromNbt,
+            null
+    );
     public HashMap<UUID, PlayerData> players = new HashMap<>();
 
 
-    @Override
-    public NbtCompound writeNbt(NbtCompound nbt) {
-        System.out.println("saving benders");
-        NbtCompound playersNbt = new NbtCompound();
-        players.forEach(((uuid, playerData) -> {
-            NbtCompound playerNbt = new NbtCompound();
-
-            playerNbt.putString("element", Bender.packageElementsIntoString(playerData.elements));
-            playerNbt.putInt("elementIndex", playerData.activeElementIndex);
-
-            playerNbt.putInt("bind1", playerData.getElement().bindableAbilities.indexOf(playerData.boundAbilities[0]));
-            playerNbt.putInt("bind2", playerData.getElement().bindableAbilities.indexOf(playerData.boundAbilities[1]));
-            playerNbt.putInt("bind3", playerData.getElement().bindableAbilities.indexOf(playerData.boundAbilities[2]));
-            playerNbt.putInt("bind4", playerData.getElement().bindableAbilities.indexOf(playerData.boundAbilities[3]));
-
-
-            NbtCompound upgradesNbt = new NbtCompound();
-            upgradesNbt.putInt("upgradesCount", playerData.upgrades.size());
-
-            int i = 0;
-            for (Map.Entry<Upgrade, Boolean> entry : playerData.upgrades.entrySet()) {
-                NbtCompound upgradeNbt = new NbtCompound();
-                upgradeNbt.putString("name", entry.getKey().name);
-                upgradeNbt.putBoolean("active", entry.getValue());
-                upgradesNbt.put("upgrade" + i, upgradeNbt);
-                i++;
-            }
-            playerNbt.put("upgradeList", upgradesNbt);
-
-
-            playerNbt.putFloat("chi", playerData.chi);
-
-            playerNbt.putFloat("xp", playerData.xp);
-            playerNbt.putInt("level", playerData.level);
-
-            playersNbt.put(uuid.toString(), playerNbt);
-        }));
-        nbt.put("players", playersNbt);
-
-
-        return nbt;
-    }
-
-    public static StateDataSaverAndLoader createFromNbt(NbtCompound tag) {
+    public static StateDataSaverAndLoader createFromNbt(NbtCompound tag, RegistryWrapper.WrapperLookup registryLookup) {
         StateDataSaverAndLoader state = new StateDataSaverAndLoader();
 
         NbtCompound playersNbt = tag.getCompound("players");
@@ -115,11 +78,7 @@ public class StateDataSaverAndLoader extends PersistentState {
         assert world != null;
         PersistentStateManager persistentStateManager = world.getPersistentStateManager();
 
-        StateDataSaverAndLoader state = persistentStateManager.getOrCreate(
-                StateDataSaverAndLoader::createFromNbt,
-                StateDataSaverAndLoader::new,
-                MODID
-        );
+        StateDataSaverAndLoader state = persistentStateManager.getOrCreate(type, MODID);
         state.markDirty();
         return state;
     }
@@ -129,5 +88,47 @@ public class StateDataSaverAndLoader extends PersistentState {
 
         PlayerData playerState = serverState.players.computeIfAbsent(player.getUuid(), uuid -> new PlayerData());
         return playerState;
+    }
+
+    @Override
+    public NbtCompound writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
+        NbtCompound playersNbt = new NbtCompound();
+        players.forEach(((uuid, playerData) -> {
+            NbtCompound playerNbt = new NbtCompound();
+
+            playerNbt.putString("element", Bender.packageElementsIntoString(playerData.elements));
+            playerNbt.putInt("elementIndex", playerData.activeElementIndex);
+
+            playerNbt.putInt("bind1", playerData.getElement().bindableAbilities.indexOf(playerData.boundAbilities[0]));
+            playerNbt.putInt("bind2", playerData.getElement().bindableAbilities.indexOf(playerData.boundAbilities[1]));
+            playerNbt.putInt("bind3", playerData.getElement().bindableAbilities.indexOf(playerData.boundAbilities[2]));
+            playerNbt.putInt("bind4", playerData.getElement().bindableAbilities.indexOf(playerData.boundAbilities[3]));
+
+
+            NbtCompound upgradesNbt = new NbtCompound();
+            upgradesNbt.putInt("upgradesCount", playerData.upgrades.size());
+
+            int i = 0;
+            for (Map.Entry<Upgrade, Boolean> entry : playerData.upgrades.entrySet()) {
+                NbtCompound upgradeNbt = new NbtCompound();
+                upgradeNbt.putString("name", entry.getKey().name);
+                upgradeNbt.putBoolean("active", entry.getValue());
+                upgradesNbt.put("upgrade" + i, upgradeNbt);
+                i++;
+            }
+            playerNbt.put("upgradeList", upgradesNbt);
+
+
+            playerNbt.putFloat("chi", playerData.chi);
+
+            playerNbt.putFloat("xp", playerData.xp);
+            playerNbt.putInt("level", playerData.level);
+
+            playersNbt.put(uuid.toString(), playerNbt);
+        }));
+        nbt.put("players", playersNbt);
+
+
+        return nbt;
     }
 }

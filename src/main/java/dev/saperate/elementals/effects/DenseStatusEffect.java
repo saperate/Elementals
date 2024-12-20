@@ -36,15 +36,15 @@ public class DenseStatusEffect extends StatusEffect {
 
     @Override
     public void onApplied(LivingEntity entity, int amplifier) {
-        if (entity.getStepHeight() < 1) {
-            if (entity instanceof ServerPlayerEntity player) {
-                PacketByteBuf buf = PacketByteBufs.create();
-                buf.writeFloat(entity.getStepHeight() + 0.4f);
-                ServerPlayNetworking.send(player, ModMessages.UPDATE_PLAYER_STEP_HEIGHT, buf);
-            }
-            //TODO restore step height, don't forget to fix the  remove step height
-            //entity.setStepHeight(entity.getStepHeight() + 0.4f);
-        }
+        // if (entity.getStepHeight() < 1) {
+        //     if (entity instanceof ServerPlayerEntity player) {
+        //         PacketByteBuf buf = PacketByteBufs.create();
+        //         buf.writeFloat(entity.getStepHeight() + 0.4f);
+        //         ServerPlayNetworking.send(player, ModMessages.UPDATE_PLAYER_STEP_HEIGHT, buf);
+        //     }
+        //     //TODO restore step height, don't forget to fix the  remove step height
+        //     //entity.setStepHeight(entity.getStepHeight() + 0.4f);
+        // }
     }
 
 

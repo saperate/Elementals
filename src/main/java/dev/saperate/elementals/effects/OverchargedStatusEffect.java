@@ -7,9 +7,8 @@ import net.minecraft.entity.effect.StatusEffectCategory;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 
-import static dev.saperate.elementals.effects.BurnoutStatusEffect.BURNOUT_EFFECT;
 
-public class OverchargedStatusEffect extends StatusEffect{
+public class OverchargedStatusEffect extends StatusEffect {
 
     public OverchargedStatusEffect() {
         super(
@@ -22,15 +21,18 @@ public class OverchargedStatusEffect extends StatusEffect{
         return true;
     }
 
+
     @Override
-    public void applyUpdateEffect(LivingEntity entity, int amplifier) {
+    public boolean applyUpdateEffect(LivingEntity entity, int amplifier) {
         entity.addStatusEffect(new StatusEffectInstance(StatusEffects.SPEED, 4, 0, false, false, false));
         entity.addStatusEffect(new StatusEffectInstance(StatusEffects.JUMP_BOOST, 4, 0, false, false, false));
+        return true;
     }
 
     @Override
-    public void onRemoved(LivingEntity entity, AttributeContainer attributes, int amplifier) {
-        entity.addStatusEffect(new StatusEffectInstance(BURNOUT_EFFECT, 200 * (amplifier+1), amplifier, false, false, true));
+    public void onRemoved(AttributeContainer attributeContainer) {
+        //TODO add a mixin that will do this
+        //entity.addStatusEffect(new StatusEffectInstance(ElementalsStatusEffects.BURNOUT, 200 * (amplifier+1), amplifier, false, false, true));
     }
 
 

@@ -11,7 +11,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.world.GameMode;
 
-import static dev.saperate.elementals.effects.StationaryStatusEffect.STATIONARY_EFFECT;
 import static net.minecraft.world.GameMode.*;
 
 public class SpiritProjectionStatusEffect extends StatusEffect {
@@ -28,18 +27,19 @@ public class SpiritProjectionStatusEffect extends StatusEffect {
     }
 
     @Override
-    public void applyUpdateEffect(LivingEntity entity, int amplifier) {
+    public boolean applyUpdateEffect(LivingEntity entity, int amplifier) {
         if(entity.getWorld().isClient){
-            return;
+            return false;
         }
         if(entity instanceof PlayerEntity player){
             Bender bender = Bender.getBender((ServerPlayerEntity) player);
             if(!(bender.currAbility instanceof AbilityAir4)){
                 //this is true when the world was closed before spirit projection could finish
                 ((ServerPlayerEntity) bender.player).changeGameMode(convertAmplifierToGameMode(amplifier));
-                player.removeStatusEffect(SPIRIT_PROJECTION_EFFECT);
+                player.removeStatusEffect(ElementalsStatusEffects.SPIRIT_PROJECTION);
             }
         }
+        return true;
     }
 
     public static GameMode convertAmplifierToGameMode(int amplifier){
