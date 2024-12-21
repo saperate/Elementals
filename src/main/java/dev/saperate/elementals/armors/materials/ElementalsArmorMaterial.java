@@ -17,7 +17,6 @@ import java.util.function.Supplier;
 
 public class ElementalsArmorMaterial {
     public static final RegistryEntry<ArmorMaterial> EARTH_ARMOR = registerMaterial("earth_armor",
-            // Defense (protection) point values for each armor piece.
             Map.of(
                     ArmorItem.Type.HELMET, 5,
                     ArmorItem.Type.CHESTPLATE, 10,

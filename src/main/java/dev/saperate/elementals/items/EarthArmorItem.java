@@ -5,6 +5,9 @@ import com.google.common.collect.Multimap;
 import dev.saperate.elementals.effects.ElementalsStatusEffects;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
+import net.minecraft.component.ComponentType;
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.DyedColorComponent;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EquipmentSlot;
@@ -59,10 +62,8 @@ public class EarthArmorItem extends ArmorItem{
      */
     public ItemStack getItemStack(ItemStack prevArmor, Block standingBlock) {
         ItemStack item = getDefaultStack();
-        ArmorMaterials.LEATHER
         item.addEnchantment(Enchantments.BINDING_CURSE, 1);
         item.addHideFlag(ItemStack.TooltipSection.ENCHANTMENTS);
-        item.addHideFlag(ItemStack.TooltipSection.DYE);
 
 
         addToBundle(item,prevArmor);
@@ -72,7 +73,7 @@ public class EarthArmorItem extends ArmorItem{
         if(standingBlock.equals(Blocks.GRASS_BLOCK)){
             color = Blocks.DIRT.getDefaultMapColor().color;
         }
-        setColor(item, darkenColor(color,4));
+        item.set(DataComponentTypes.DYED_COLOR, new DyedColorComponent(darkenColor(color,4), false));
 
         return item;
     }

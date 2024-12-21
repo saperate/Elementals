@@ -29,7 +29,7 @@ public class ElementalItems {
 
     public static final Set<Item> EARTH_ARMOR_SET = new HashSet<>();
     public static final EarthArmorItem EARTH_HELMET = (EarthArmorItem) registerItem("earth_helmet",
-            new EarthArmorItem(ElementalsArmorMaterial.EARTH_ARMOR, ArmorItem.Type.HELMET, new Item.Settings()));
+            new EarthArmorItem(ElementalsArmorMaterial.EARTH_ARMOR, ArmorItem.Type.HELMET, new Item.Settings()), new Item.Settings());
     public static final EarthArmorItem EARTH_CHESTPLATE = (EarthArmorItem) registerItem("earth_chestplate",
             new EarthArmorItem(ElementalsArmorMaterial.EARTH_ARMOR, ArmorItem.Type.CHESTPLATE, new Item.Settings()));
     public static final EarthArmorItem EARTH_LEGGINGS = (EarthArmorItem) registerItem("earth_leggings",
