@@ -8,7 +8,7 @@ import net.minecraft.network.codec.PacketCodecs;
 import net.minecraft.network.packet.CustomPayload;
 
 public record RequestSyncLevelPayload (int level) implements CustomPayload {
-    public static final Id<RequestSyncLevelPayload> ID = new Id<>(ModMessages.SYNC_LEVEL_PACKET_ID);
+    public static final Id<RequestSyncLevelPayload> ID = new Id<>(ModMessages.REQUEST_SYNC_LEVEL_PACKET_ID);
     public static final PacketCodec<RegistryByteBuf, RequestSyncLevelPayload> CODEC = PacketCodec.tuple(PacketCodecs.INTEGER, RequestSyncLevelPayload::level, RequestSyncLevelPayload::new);
 
     @Override

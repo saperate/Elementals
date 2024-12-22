@@ -22,14 +22,7 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.StringHelper;
-import net.minecraft.util.Uuids;
 
-import java.io.File;
-import java.util.Locale;
-
-import static dev.saperate.elementals.ElementalsClient.MODEL_DECOY_PLAYER;
-import static dev.saperate.elementals.network.ModMessages.SYNC_ELEMENT_PACKET_ID;
 
 public class DecoyPlayerEntityRenderer extends LivingEntityRenderer<DecoyPlayerEntity, PlayerEntityModel<DecoyPlayerEntity>> {
     public DecoyPlayerEntityRenderer(EntityRendererFactory.Context ctx, boolean slimArms) {

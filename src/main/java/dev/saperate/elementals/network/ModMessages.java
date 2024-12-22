@@ -10,18 +10,21 @@ import net.minecraft.util.Identifier;
 import static dev.saperate.elementals.Elementals.MODID;
 
 public class ModMessages {
-    public static final Identifier MOUSE_PACKET_ID = Identifier.of(MODID, "mouse");
-    public static final Identifier ABILITY_PACKET_ID = Identifier.of(MODID, "ability");
+    //S2C
+    public static final Identifier SYNC_CHI_PACKET_ID = Identifier.of(MODID, "sync_chi");
     public static final Identifier SYNC_CURR_ABILITY_PACKET_ID = Identifier.of(MODID, "curr_ability");
     public static final Identifier SYNC_ELEMENT_PACKET_ID = Identifier.of(MODID, "element");
+    public static final Identifier SYNC_LEVEL_PACKET_ID = Identifier.of(MODID, "sync_level");
     public static final Identifier SYNC_UPGRADE_LIST_PACKET_ID = Identifier.of(MODID, "sync_upgrades");
+
+    //C2S
+    public static final Identifier MOUSE_PACKET_ID = Identifier.of(MODID, "mouse");
+    public static final Identifier ABILITY_PACKET_ID = Identifier.of(MODID, "ability");
     public static final Identifier GET_UPGRADE_LIST_PACKET_ID = Identifier.of(MODID, "get_upgrades");
     public static final Identifier BUY_UPGRADE_PACKET_ID = Identifier.of(MODID, "buy_upgrade");
-    public static final Identifier SYNC_CHI_PACKET_ID = Identifier.of(MODID, "sync_chi");
-    public static final Identifier SYNC_LEVEL_PACKET_ID = Identifier.of(MODID, "sync_level");
     public static final Identifier CYCLE_BENDING_PACKET_ID = Identifier.of(MODID, "cycle_bending");
+    public static final Identifier REQUEST_SYNC_LEVEL_PACKET_ID = Identifier.of(MODID, "request_sync_level");
     public static final Identifier GET_MOD_VERSION_PACKET_ID = Identifier.of(MODID, "get_mod_version");
-    public static final Identifier UPDATE_PLAYER_STEP_HEIGHT = Identifier.of(MODID, "update_player_step_height");
 
 
     public static void registerNetworking() {

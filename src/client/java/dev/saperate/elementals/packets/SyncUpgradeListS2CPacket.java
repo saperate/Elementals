@@ -16,10 +16,7 @@ import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.packet.CustomPayload;
-import net.minecraft.server.network.ServerPlayerEntity;
 
-import static dev.saperate.elementals.network.ModMessages.GET_UPGRADE_LIST_PACKET_ID;
-import static dev.saperate.elementals.network.ModMessages.SYNC_CURR_ABILITY_PACKET_ID;
 
 public class SyncUpgradeListS2CPacket implements ElementalsClient.ElementalPacket<SyncUpgradeListPayload>  {
     @Override

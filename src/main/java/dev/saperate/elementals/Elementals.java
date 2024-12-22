@@ -73,7 +73,7 @@ public class Elementals implements ModInitializer {
     //TODO add config
     public static final String MODID = "elementals";
     public static final Logger LOGGER = LoggerFactory.getLogger(MODID);
-    public static HasElementCriterion HAS_ELEMENT = Criteria.register("hasElement",new HasElementCriterion());
+    public static HasElementCriterion HAS_ELEMENT = Criteria.register("has_element",new HasElementCriterion());
     public static UsedAbilityCriterion USED_ABILITY = Criteria.register("used_ability",new UsedAbilityCriterion());
     private static final Identifier WIND_SOUND_ID = Identifier.of(MODID, "wind");
     private static final Identifier WIND_BURST_SOUND_ID = Identifier.of(MODID, "wind_burst");
@@ -93,19 +93,18 @@ public class Elementals implements ModInitializer {
     @Override
     public void onInitialize() {
         LOGGER.info("Initialising the cool stuff...");
+        ElementalsStatusEffects.registerEffects();
         ElementalItems.register();
         DispenserBlock.registerBehavior(BOOMERANG_ITEM,BOOMERANG_ITEM);
         DispenserBlock.registerBehavior(DIRT_BOTTLE_ITEM,DIRT_BOTTLE_ITEM);
 
         ElementalsEnchantments.init();
-
         ElementalEntities.register();
 
         SoulFireCore.registerBlock();
         WaterRapid.registerBlock();
         LitAir.registerBlock();
 
-        ElementalsStatusEffects.registerEffects();
 
         registerElements();
         registerCommands();

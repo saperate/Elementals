@@ -8,7 +8,7 @@ import net.minecraft.network.codec.PacketCodecs;
 import net.minecraft.network.packet.CustomPayload;
 
 public record RequestSyncUpgradeListPayload(boolean unused) implements CustomPayload {
-    public static final Id<RequestSyncUpgradeListPayload> ID = new Id<>(ModMessages.SYNC_UPGRADE_LIST_PACKET_ID);
+    public static final Id<RequestSyncUpgradeListPayload> ID = new Id<>(ModMessages.GET_UPGRADE_LIST_PACKET_ID);
     public static final PacketCodec<RegistryByteBuf, RequestSyncUpgradeListPayload> CODEC = PacketCodec.tuple(PacketCodecs.BOOL, RequestSyncUpgradeListPayload::unused, RequestSyncUpgradeListPayload::new);
 
     @Override

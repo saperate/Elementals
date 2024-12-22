@@ -8,7 +8,7 @@ import net.minecraft.network.codec.PacketCodecs;
 import net.minecraft.network.packet.CustomPayload;
 
 public record SyncElementsPayload(NbtCompound data) implements CustomPayload {
-    public static final Id<SyncElementsPayload> ID = new Id<>(ModMessages.SYNC_CURR_ABILITY_PACKET_ID);
+    public static final Id<SyncElementsPayload> ID = new Id<>(ModMessages.SYNC_ELEMENT_PACKET_ID);
     public static final PacketCodec<RegistryByteBuf, SyncElementsPayload> CODEC = PacketCodec.tuple(PacketCodecs.NBT_COMPOUND, SyncElementsPayload::data, SyncElementsPayload::new);
 
     @Override

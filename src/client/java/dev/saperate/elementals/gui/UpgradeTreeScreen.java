@@ -39,8 +39,6 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static dev.saperate.elementals.Elementals.MODID;
-import static dev.saperate.elementals.network.ModMessages.BUY_UPGRADE_PACKET_ID;
-import static dev.saperate.elementals.network.ModMessages.GET_UPGRADE_LIST_PACKET_ID;
 
 public class UpgradeTreeScreen extends Screen {
     private ClientBender bender;
