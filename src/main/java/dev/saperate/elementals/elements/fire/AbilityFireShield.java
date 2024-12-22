@@ -10,12 +10,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityPose;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.player.PlayerEntity;
-import org.joml.Vector3f;
 
-import java.time.Duration;
-
-import static dev.saperate.elementals.effects.StationaryStatusEffect.STATIONARY_EFFECT;
-import static dev.saperate.elementals.utils.SapsUtils.getEntityLookVector;
 
 public class AbilityFireShield implements Ability {
     @Override

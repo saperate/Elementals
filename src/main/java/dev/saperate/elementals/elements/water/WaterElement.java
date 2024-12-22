@@ -229,7 +229,7 @@ public class WaterElement extends Element {
      */
     public static boolean tryRetrieveWater(PlayerEntity player){
         return player.getInventory().containsAny((stack) -> {
-            if (PotionUtil.getPotion(stack).equals(Potions.WATER)) {
+            if (stack.getItem().equals(Potions.WATER)) {//TODO check if this works
                 player.getInventory().removeOne(stack);
                 player.getInventory().insertStack(Items.GLASS_BOTTLE.getDefaultStack());
                 return true;

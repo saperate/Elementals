@@ -12,6 +12,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.World;
 
 import static dev.saperate.elementals.items.ElementalItems.*;
 import static dev.saperate.elementals.utils.SapsUtils.raycastBlockCustomRotation;
@@ -49,11 +50,12 @@ public class AbilityEarthArmor implements Ability {
         }
 
         Block standingBlock = player.getWorld().getBlockState(hit.getBlockPos()).getBlock();
+        World world = player.getWorld();
 
-        inv.set(EquipmentSlot.HEAD.getEntitySlotId(), EARTH_HELMET.getItemStack(inv.get(3), standingBlock));
-        inv.set(EquipmentSlot.CHEST.getEntitySlotId(), EARTH_CHESTPLATE.getItemStack(inv.get(2), standingBlock));
-        inv.set(EquipmentSlot.LEGS.getEntitySlotId(), EARTH_LEGGINGS.getItemStack(inv.get(1), standingBlock));
-        inv.set(EquipmentSlot.FEET.getEntitySlotId(), EARTH_BOOTS.getItemStack(inv.get(0), standingBlock));
+        inv.set(EquipmentSlot.HEAD.getEntitySlotId(), EARTH_HELMET.getItemStack(inv.get(3), standingBlock, world));
+        inv.set(EquipmentSlot.CHEST.getEntitySlotId(), EARTH_CHESTPLATE.getItemStack(inv.get(2), standingBlock, world));
+        inv.set(EquipmentSlot.LEGS.getEntitySlotId(), EARTH_LEGGINGS.getItemStack(inv.get(1), standingBlock, world));
+        inv.set(EquipmentSlot.FEET.getEntitySlotId(), EARTH_BOOTS.getItemStack(inv.get(0), standingBlock, world));
 
 
     }
@@ -69,7 +71,7 @@ public class AbilityEarthArmor implements Ability {
 
     public static void removeArmor(EquipmentSlot slot, ItemStack stack, DefaultedList<ItemStack> inv) {
         if (!stack.isEmpty() && stack.getItem() instanceof EarthArmorItem) {
-            ItemStack item = EarthArmorItem.getBundledStacks(stack).findFirst().orElse(ItemStack.EMPTY);
+            ItemStack item = EarthArmorItem.getItem(stack);
             inv.set(slot.getEntitySlotId(), item);
         }
     }

@@ -7,7 +7,13 @@ import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.component.ComponentType;
 import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.BundleContentsComponent;
 import net.minecraft.component.type.DyedColorComponent;
+import net.minecraft.component.type.ItemEnchantmentsComponent;
+import net.minecraft.component.type.NbtComponent;
+import net.minecraft.enchantment.Enchantment;
+import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.enchantment.EnchantmentLevelEntry;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EquipmentSlot;
@@ -21,10 +27,13 @@ import net.minecraft.item.*;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtList;
+import net.minecraft.registry.Registry;
+import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.world.World;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -60,13 +69,16 @@ public class EarthArmorItem extends ArmorItem{
      * @param standingBlock The block the player is standing on
      * @return the new armor as an item stack
      */
-    public ItemStack getItemStack(ItemStack prevArmor, Block standingBlock) {
+    public ItemStack getItemStack(ItemStack prevArmor, Block standingBlock, World world) {
         ItemStack item = getDefaultStack();
-        item.addEnchantment(Enchantments.BINDING_CURSE, 1);
-        item.addHideFlag(ItemStack.TooltipSection.ENCHANTMENTS);
+
+        //Fuck you for making this so painful
+        RegistryEntry<Enchantment> enchant = world.getRegistryManager().get(RegistryKeys.ENCHANTMENT).entryOf(Enchantments.BINDING_CURSE);
+
+        item.addEnchantment(enchant, 1);//TODO figure out a way to hide enchants in tooltips
 
 
-        addToBundle(item,prevArmor);
+        putItem(item,prevArmor);
 
 
         int color = standingBlock.getDefaultMapColor().color;
@@ -78,70 +90,34 @@ public class EarthArmorItem extends ArmorItem{
         return item;
     }
 
-    //Taken from vanilla bundle code
-    private static int addToBundle(ItemStack bundle, ItemStack stack) {
-        if (stack.isEmpty() || !stack.getItem().canBeNested()) {
-            return 0;
-        }
-        NbtCompound nbtCompound = bundle.getOrCreateNbt();
-        if (!nbtCompound.contains(ITEMS_KEY)) {
-            nbtCompound.put(ITEMS_KEY, new NbtList());
-        }
-        int i = getBundleOccupancy(bundle);
-        int j = getItemOccupancy(stack);
-        int k = Math.min(stack.getCount(), (MAX_STORAGE - i) / j);
-        if (k == 0) {
-            return 0;
-        }
-        NbtList nbtList = nbtCompound.getList(ITEMS_KEY, NbtElement.COMPOUND_TYPE);
-        Optional<NbtCompound> optional = canMergeStack(stack, nbtList);
-        if (optional.isPresent()) {
-            NbtCompound nbtCompound2 = optional.get();
-            ItemStack itemStack = ItemStack.fromNbt(nbtCompound2);
-            itemStack.increment(k);
-            itemStack.writeNbt(nbtCompound2);
-            nbtList.remove(nbtCompound2);
-            nbtList.add(0, nbtCompound2);
-        } else {
-            ItemStack itemStack2 = stack.copyWithCount(k);
-            NbtCompound nbtCompound3 = new NbtCompound();
-            itemStack2.writeNbt(nbtCompound3);
-            nbtList.add(0, nbtCompound3);
-        }
-        return k;
+    /**
+     * Puts an {@link ItemStack} in another by mimicking how the {@link BundleItem} stores other {@link ItemStack}.
+     * This will only store a single item though, and it will override anything already in it.
+     * @param armor where the stack will be held
+     * @param stack the stack to add
+     */
+    private static void putItem(ItemStack armor, ItemStack stack) {
+        //TODO handle when there is already items in armor
+        ArrayList<ItemStack> items = new ArrayList<>();
+        items.add(stack);
+
+        BundleContentsComponent contents = new BundleContentsComponent(items);
+        armor.set(DataComponentTypes.BUNDLE_CONTENTS, contents);
     }
 
-    private static Optional<NbtCompound> canMergeStack(ItemStack stack, NbtList items) {
-        if (stack.isOf(Items.BUNDLE)) {
-            return Optional.empty();
+    /**
+     * Retrieves an {@link ItemStack} stored in another. This will only get the first one, so if there is multiple
+     * they will be ignored.
+     * @param armor where we retrieve the item
+     * @return the stack previously added with {@link #putItem(ItemStack, ItemStack)} or {@link ItemStack#EMPTY}
+     */
+    public static ItemStack getItem(ItemStack armor){
+        BundleContentsComponent contents = armor.get(DataComponentTypes.BUNDLE_CONTENTS);
+        if(contents == null){
+            return ItemStack.EMPTY;
         }
-        return items.stream().filter(NbtCompound.class::isInstance).map(NbtCompound.class::cast).filter(item -> ItemStack.canCombine(ItemStack.fromNbt(item), stack)).findFirst();
+        return contents.get(0);
     }
-
-    private static int getItemOccupancy(ItemStack stack) {
-        NbtCompound nbtCompound;
-        if (stack.isOf(Items.BUNDLE)) {
-            return 4 + getBundleOccupancy(stack);
-        }
-        if ((stack.isOf(Items.BEEHIVE) || stack.isOf(Items.BEE_NEST)) && stack.hasNbt() && (nbtCompound = BlockItem.getBlockEntityNbt(stack)) != null && !nbtCompound.getList("Bees", NbtElement.COMPOUND_TYPE).isEmpty()) {
-            return MAX_STORAGE;
-        }
-        return MAX_STORAGE / stack.getMaxCount();
-    }
-
-    private static int getBundleOccupancy(ItemStack stack) {
-        return getBundledStacks(stack).mapToInt(itemStack -> getItemOccupancy(itemStack) * itemStack.getCount()).sum();
-    }
-    public static Stream<ItemStack> getBundledStacks(ItemStack stack) {
-        NbtCompound nbtCompound = stack.getNbt();
-        if (nbtCompound == null) {
-            return Stream.empty();
-        }
-        NbtList nbtList = nbtCompound.getList(ITEMS_KEY, NbtElement.COMPOUND_TYPE);
-        return nbtList.stream().map(NbtCompound.class::cast).map(ItemStack::fromNbt);
-    }
-
-
 
 
     static int darkenColor(int col, int amt) {

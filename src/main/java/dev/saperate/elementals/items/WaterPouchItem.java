@@ -119,6 +119,8 @@ public class WaterPouchItem extends Item {
 
     public int getMaxWaterLevel(ItemStack itemStack){
         int level = 0;
+
+
         for (RegistryEntry<Enchantment> enchant : EnchantmentHelper.getEnchantments(itemStack).getEnchantments()){
             if(enchant.getKey().isPresent() && enchant.getKey().get().equals(ElementalsEnchantments.VOLUME)){
                 level = EnchantmentHelper.getLevel(enchant, itemStack);

@@ -12,11 +12,6 @@ import net.minecraft.entity.player.PlayerEntity;
 
 import java.util.List;
 
-import static dev.saperate.elementals.effects.BurnoutStatusEffect.BURNOUT_EFFECT;
-import static dev.saperate.elementals.effects.OverchargedStatusEffect.OVERCHARGED_EFFECT;
-import static dev.saperate.elementals.effects.StationaryStatusEffect.STATIONARY_EFFECT;
-import static dev.saperate.elementals.effects.StunnedStatusEffect.STUNNED_EFFECT;
-import static dev.saperate.elementals.utils.SapsUtils.safeHasStatusEffect;
 
 
 public class AbilityBlood4 implements Ability {
