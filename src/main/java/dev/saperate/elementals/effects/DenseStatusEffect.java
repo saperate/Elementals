@@ -42,7 +42,7 @@ public class DenseStatusEffect extends StatusEffect {
         //         buf.writeFloat(entity.getStepHeight() + 0.4f);
         //         ServerPlayNetworking.send(player, ModMessages.UPDATE_PLAYER_STEP_HEIGHT, buf);
         //     }
-        //     //TODO restore step height, don't forget to fix the  remove step height
+        //     //TODO restore step height, don't forget to fix the remove step height method
         //     //entity.setStepHeight(entity.getStepHeight() + 0.4f);
         // }
     }

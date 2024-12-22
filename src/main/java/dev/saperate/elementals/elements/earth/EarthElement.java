@@ -14,6 +14,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
@@ -215,7 +216,6 @@ public class EarthElement extends Element {
     public static void damageEntityAboveBlock(PlayerEntity player, BlockPos pos, ArrayList<LivingEntity> damagedEntities, float amount) {
         List<LivingEntity> hits = player.getWorld().getEntitiesByClass(LivingEntity.class,
                 EARTHBLOCK.getSpawnBox(pos.getX(), pos.getY() + 1, pos.getZ()), LivingEntity::isOnGround);
-        //fixme this might be broken cause i changed to .getSpawnBox()
         for (LivingEntity entity : hits) {
             if (entity == player) {
                 continue;
@@ -235,6 +235,8 @@ public class EarthElement extends Element {
     public int getAccentColor() {
         return 0xFF17711B;
     }
+
+
 
     @Override
     public boolean isSkillTreeComplete(Bender bender) {

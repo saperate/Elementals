@@ -51,7 +51,7 @@ public class AbilityAir4 implements Ability {
         }
         decoy.setRange(range);
 
-        decoy.setCustomName(plr.getName());
+        decoy.setCustomName(plr.getDisplayName());
 
         decoy.equipStack(EquipmentSlot.HEAD, plr.getEquippedStack(EquipmentSlot.HEAD));
         decoy.equipStack(EquipmentSlot.CHEST, plr.getEquippedStack(EquipmentSlot.CHEST));

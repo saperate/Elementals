@@ -7,6 +7,8 @@ import dev.saperate.elementals.elements.Upgrade;
 import dev.saperate.elementals.items.ElementalItems;
 import dev.saperate.elementals.items.WaterPouchItem;
 import net.minecraft.block.*;
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.PotionContentsComponent;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluids;
@@ -15,6 +17,7 @@ import net.minecraft.item.PotionItem;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.Potions;
 import net.minecraft.state.property.Properties;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
@@ -211,7 +214,7 @@ public class WaterElement extends Element {
         return player.getInventory().containsAny((stack) -> {
             if(stack.getItem().equals(Items.GLASS_BOTTLE)){
                 stack.decrement(1);
-                player.getInventory().insertStack(Items.POTION.getDefaultStack());//TODO verify this gives a water bottle
+                player.getInventory().insertStack(Items.POTION.getDefaultStack());
                 return true;
             } else if (stack.getItem().equals(ElementalItems.WATER_POUCH_ITEM)) {
                 WaterPouchItem item = (WaterPouchItem) stack.getItem();
@@ -229,7 +232,9 @@ public class WaterElement extends Element {
      */
     public static boolean tryRetrieveWater(PlayerEntity player){
         return player.getInventory().containsAny((stack) -> {
-            if (stack.getItem().equals(Potions.WATER)) {//TODO check if this works
+            PotionContentsComponent contents = stack.get(DataComponentTypes.POTION_CONTENTS);
+
+            if (contents != null && !contents.hasEffects()) {
                 player.getInventory().removeOne(stack);
                 player.getInventory().insertStack(Items.GLASS_BOTTLE.getDefaultStack());
                 return true;
@@ -283,6 +288,7 @@ public class WaterElement extends Element {
     public int getAccentColor() {
         return 0xFF0053F3;
     }
+
 
     @Override
     public boolean isSkillTreeComplete(Bender bender) {

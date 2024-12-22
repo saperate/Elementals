@@ -75,7 +75,6 @@ public class BendingCommand {
                                                                 .executes(BendingCommand::removeElement))
                                                         .executes(BendingCommand::removeSelfElement))
                                         )
-                                //.then(CommandManager.literal("set").then()) TODO add this command
                         )
                 .then(CommandManager.literal("debug").executes(BendingCommand::debug)).requires(source -> source.hasPermissionLevel(2))
 
@@ -118,7 +117,7 @@ public class BendingCommand {
         bender.addElement(element, true);
 
         context.getSource().sendFeedback((() -> Text.of(
-                bender.player.getName() + " can now bend: " + element.name)
+                bender.player.getNameForScoreboard() + " can now bend: " + element.name)
         ), true);
         return 1;
     }
@@ -140,7 +139,7 @@ public class BendingCommand {
         bender.addElement(element, true);
 
         context.getSource().sendFeedback((() -> Text.of(
-                bender.player.getName() + " can now bend: " + element.name)
+                bender.player.getNameForScoreboard() + " can now bend: " + element.name)
         ), true);
         return 1;
     }
@@ -162,7 +161,7 @@ public class BendingCommand {
         bender.removeElement(element, true);
 
         context.getSource().sendFeedback((() -> Text.of(
-                bender.player.getName() + " can no longer bend: " + element.name)
+                bender.player.getNameForScoreboard() + " can no longer bend: " + element.name)
         ), true);
         return 1;
     }
@@ -185,7 +184,7 @@ public class BendingCommand {
         bender.removeElement(element, true);
 
         context.getSource().sendFeedback((() -> Text.of(
-                bender.player.getName() + " can no longer bend: " + element.name)
+                bender.player.getNameForScoreboard() + " can no longer bend: " + element.name)
         ), true);
         return 1;
     }
@@ -195,7 +194,7 @@ public class BendingCommand {
         PlayerData plrData = StateDataSaverAndLoader.getPlayerState(bender.player);
 
         context.getSource().sendFeedback((() -> Text.of(
-                "Upgrades owned by " + bender.player.getName() + ":")
+                "Upgrades owned by " + bender.player.getNameForScoreboard() + ":")
         ), false);
         for (Upgrade upgrade : plrData.upgrades.keySet()) {
             context.getSource().sendFeedback((() -> Text.of(
@@ -211,7 +210,7 @@ public class BendingCommand {
         PlayerData plrData = StateDataSaverAndLoader.getPlayerState(bender.player);
 
         context.getSource().sendFeedback((() -> Text.of(
-                "Upgrades owned by " + bender.player.getName() + ":")
+                "Upgrades owned by " + bender.player.getNameForScoreboard() + ":")
         ), false);
         for (Upgrade upgrade : plrData.upgrades.keySet()) {
             context.getSource().sendFeedback((() -> Text.of(
@@ -229,7 +228,7 @@ public class BendingCommand {
         plrData.upgrades.clear();
 
         context.getSource().sendFeedback((() -> Text.of(
-                bender.player.getName() + " no longer has any upgrades!")
+                bender.player.getNameForScoreboard() + " no longer has any upgrades!")
         ), true);
         return 1;
     }
@@ -255,12 +254,12 @@ public class BendingCommand {
         Upgrade temp = new Upgrade(upgradeName, -1);
         if (plrData.upgrades.remove(temp) == null) {//true if the player didn't have the specified upgrade
             context.getSource().sendFeedback((() -> Text.of(
-                    bender.player.getName() + " did not have the specified upgrade (" + upgradeName + ")!")
+                    bender.player.getNameForScoreboard() + " did not have the specified upgrade (" + upgradeName + ")!")
             ), false);
             return -1;
         } else {
             context.getSource().sendFeedback((() -> Text.of(
-                    bender.player.getName() + " no longer has upgrade " + upgradeName + "!")
+                    bender.player.getNameForScoreboard() + " no longer has upgrade " + upgradeName + "!")
             ), true);
             return 1;
         }
@@ -275,12 +274,12 @@ public class BendingCommand {
         Upgrade temp = new Upgrade(upgradeName, -1);
         if (plrData.upgrades.remove(temp) == null) {//true if the player didn't have the specified upgrade
             context.getSource().sendFeedback((() -> Text.of(
-                    bender.player.getName() + " did not have the specified upgrade (" + upgradeName + ")!")
+                    bender.player.getNameForScoreboard() + " did not have the specified upgrade (" + upgradeName + ")!")
             ), false);
             return -1;
         } else {
             context.getSource().sendFeedback((() -> Text.of(
-                    bender.player.getName() + " no longer has upgrade " + upgradeName + "!")
+                    bender.player.getNameForScoreboard() + " no longer has upgrade " + upgradeName + "!")
             ), true);
             return 1;
         }
@@ -312,7 +311,7 @@ public class BendingCommand {
         int value = IntegerArgumentType.getInteger(context, "value");
         PlayerData.get(plr).level = value;
         context.getSource().sendFeedback((() -> Text.of(
-                plr.getName() + "'s level is now: " + value)
+                plr.getNameForScoreboard() + "'s level is now: " + value)
         ), true);
         return 1;
     }
@@ -325,7 +324,7 @@ public class BendingCommand {
         int value = IntegerArgumentType.getInteger(context, "value");
         PlayerData.get(plr).level = value;
         context.getSource().sendFeedback((() -> Text.of(
-                plr.getName() + "'s level is now: " + value)
+                plr.getNameForScoreboard() + "'s level is now: " + value)
         ), false);
         return 1;
     }
@@ -336,7 +335,7 @@ public class BendingCommand {
             return 1;
         }
         context.getSource().sendFeedback((() -> Text.of(
-                plr.getName() + "'s level is: " + PlayerData.get(plr).level)
+                plr.getNameForScoreboard() + "'s level is: " + PlayerData.get(plr).level)
         ), false);
         return 1;
     }
@@ -365,7 +364,7 @@ public class BendingCommand {
         bender.syncChi();
 
         context.getSource().sendFeedback((() -> Text.of(
-                plr.getName() + " has been reset")
+                plr.getNameForScoreboard() + " has been reset")
         ), true);
         return 1;
     }
@@ -383,7 +382,7 @@ public class BendingCommand {
         bender.syncChi();
 
         context.getSource().sendFeedback((() -> Text.of(
-                plr.getName() + " has been reset")
+                plr.getNameForScoreboard() + " has been reset")
         ), true);
         return 1;
     }

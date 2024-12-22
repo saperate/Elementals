@@ -4,9 +4,11 @@ import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.utils.SapsUtils;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.util.Identifier;
 
 import java.util.*;
 
+import static dev.saperate.elementals.Elementals.MODID;
 import static dev.saperate.elementals.utils.SapsUtils.extractBits;
 
 public abstract class Element{
@@ -106,6 +108,10 @@ public abstract class Element{
 
     public int getAccentColor(){
         return 0xFF13AEA9;
+    }
+
+    public Identifier getGuiBackgroundIdentifier(){
+        return Identifier.of(MODID,"textures/gui/default_gui_background.png");
     }
 
     @Override

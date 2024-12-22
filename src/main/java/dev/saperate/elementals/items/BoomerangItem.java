@@ -33,7 +33,8 @@ public class BoomerangItem extends Item implements DispenserBehavior {
                 SoundCategory.NEUTRAL, 0.5f, 0.4f / (world.getRandom().nextFloat() * 0.4f + 0.8f));
 
         if (!world.isClient) {
-            BoomerangEntity entity = new BoomerangEntity(world, user, user.getEyePos());
+            BoomerangEntity entity = new BoomerangEntity(world, user.getEyePos(), handStack);
+            entity.setOwner(user);
             entity.setVelocity(user, user.getPitch(), user.getYaw(), 0.0f, .75f, 0f);
             world.spawnEntity(entity);
             user.getInventory().removeOne(handStack);
@@ -49,7 +50,6 @@ public class BoomerangItem extends Item implements DispenserBehavior {
 
     @Override
     public ItemStack dispense(BlockPointer pointer, ItemStack stack) {
-        stack.decrement(1);
         World world = pointer.world();
         world.playSound(null, pointer.pos(), SoundEvents.ENTITY_ENDER_PEARL_THROW,
                 SoundCategory.NEUTRAL, 0.5f, 0.4f / (world.getRandom().nextFloat() * 0.4f + 0.8f));
@@ -59,6 +59,7 @@ public class BoomerangItem extends Item implements DispenserBehavior {
             BoomerangEntity boomerangEntity = getBoomerangEntity(pointer, world, direction, stack);
             world.spawnEntity(boomerangEntity);
         }
+        stack.decrement(1);
         return stack;
     }
 

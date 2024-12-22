@@ -3,6 +3,7 @@ package dev.saperate.elementals.elements.blood;
 import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.elements.Element;
 import dev.saperate.elementals.elements.Upgrade;
+import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
 
 public class BloodElement extends Element {
@@ -67,6 +68,8 @@ public class BloodElement extends Element {
     public int getAccentColor() {
         return 0xFF400303;
     }
+
+
 
     @Override
     public boolean isSkillTreeComplete(Bender bender) {

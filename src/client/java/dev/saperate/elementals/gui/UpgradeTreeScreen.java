@@ -78,8 +78,8 @@ public class UpgradeTreeScreen extends Screen {
         super.render(context, mouseX, mouseY, delta);
         int oX = MathHelper.floor(originX);
         int oY = MathHelper.floor(originY);
-        //fixme: Was previously dirt background, change it if this isnt right
-        context.drawTexture(CreateWorldScreen.MENU_BACKGROUND_TEXTURE, 0, 0, -5, -oX, -oY, width, height, 32, 32);
+
+        context.drawTexture(bender.getElement().getGuiBackgroundIdentifier(), 0, 0, -5, -oX, -oY, width, height, 32, 32);
 
         context.drawTexture(Identifier.of(MODID, "textures/gui/" + ClientBender.get().getElement().getName().toLowerCase() + "_upgrade_button.png"),
                 oX - 2, oY - 2, 0, 0, tileSize + 4, tileSize + 4, tileSize + 4, tileSize + 4);
@@ -406,7 +406,7 @@ public class UpgradeTreeScreen extends Screen {
         RenderSystem.enableBlend();
         Matrix4f matrix4f = context.getMatrices().peek().getPositionMatrix();
         BufferBuilder bufferBuilder = Tessellator.getInstance().begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_TEXTURE_COLOR);
-        bufferBuilder.vertex(matrix4f, (float) x, (float) y, (float) z).color(red, green, blue, alpha).texture(u1, v1);//fixme removed next() here too
+        bufferBuilder.vertex(matrix4f, (float) x, (float) y, (float) z).color(red, green, blue, alpha).texture(u1, v1);
         bufferBuilder.vertex(matrix4f, (float) x, (float) y + height, (float) z).color(red, green, blue, alpha).texture(u1, v2);
         bufferBuilder.vertex(matrix4f, (float) x + width, (float) y + height, (float) z).color(red, green, blue, alpha).texture(u2, v2);
         bufferBuilder.vertex(matrix4f, (float) x + width, (float) y, (float) z).color(red, green, blue, alpha).texture(u2, v1);

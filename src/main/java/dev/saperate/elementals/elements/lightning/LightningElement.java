@@ -4,6 +4,7 @@ import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.elements.Element;
 import dev.saperate.elementals.elements.Upgrade;
+import net.minecraft.util.Identifier;
 
 public class LightningElement extends Element {
     public LightningElement() {

@@ -56,8 +56,6 @@ public class AbilityEarthArmor implements Ability {
         inv.set(EquipmentSlot.CHEST.getEntitySlotId(), EARTH_CHESTPLATE.getItemStack(inv.get(2), standingBlock, world));
         inv.set(EquipmentSlot.LEGS.getEntitySlotId(), EARTH_LEGGINGS.getItemStack(inv.get(1), standingBlock, world));
         inv.set(EquipmentSlot.FEET.getEntitySlotId(), EARTH_BOOTS.getItemStack(inv.get(0), standingBlock, world));
-
-
     }
 
     public static void removeArmorSet(DefaultedList<ItemStack> inv) {

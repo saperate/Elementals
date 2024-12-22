@@ -28,9 +28,11 @@ public class KeyCycleBending extends KeyInput {
                 "category.elementals"
         ));
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
-            if (!keyBinding.isPressed() && lastFrameWasHolding) {
-                lastFrameWasHolding = false;
+            if (keyBinding.isPressed() && !lastFrameWasHolding) {
+                lastFrameWasHolding = true;
                 ClientPlayNetworking.send(new CycleBendingPayload(false));
+            } else if (!keyBinding.isPressed() && lastFrameWasHolding) {
+                lastFrameWasHolding = false;
             }
         });
     }

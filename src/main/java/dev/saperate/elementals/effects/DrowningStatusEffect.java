@@ -53,6 +53,6 @@ public class DrowningStatusEffect extends StatusEffect {
             d = 0.0;
         }
 
-        return d > 0.0 && entity.getRandom().nextDouble() >= 1.0 / (d + 1.0) ? air : air - 4;//TODO tweak this value
+        return d > 0.0 && entity.getRandom().nextDouble() >= 1.0 / (d + 1.0) ? air : air - 5;
     }
 }

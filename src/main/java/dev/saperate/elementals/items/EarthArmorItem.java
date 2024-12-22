@@ -95,14 +95,19 @@ public class EarthArmorItem extends ArmorItem{
      * This will only store a single item though, and it will override anything already in it.
      * @param armor where the stack will be held
      * @param stack the stack to add
+     * @return True if item was added
      */
-    private static void putItem(ItemStack armor, ItemStack stack) {
+    private static boolean putItem(ItemStack armor, ItemStack stack) {
+        if(stack == ItemStack.EMPTY){//nothing to do
+            return false;
+        }
         //TODO handle when there is already items in armor
         ArrayList<ItemStack> items = new ArrayList<>();
         items.add(stack);
 
         BundleContentsComponent contents = new BundleContentsComponent(items);
         armor.set(DataComponentTypes.BUNDLE_CONTENTS, contents);
+        return true;
     }
 
     /**

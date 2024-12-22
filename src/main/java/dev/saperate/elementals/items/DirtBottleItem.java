@@ -48,7 +48,6 @@ public class DirtBottleItem extends Item implements DispenserBehavior {
 
     @Override
     public ItemStack dispense(BlockPointer pointer, ItemStack stack) {
-        stack.decrement(1);
         World world = pointer.world();
         world.playSound(null, pointer.pos(), SoundEvents.ENTITY_ENDER_PEARL_THROW,
                 SoundCategory.NEUTRAL, 0.5f, 0.4f / (world.getRandom().nextFloat() * 0.4f + 0.8f));
@@ -58,6 +57,7 @@ public class DirtBottleItem extends Item implements DispenserBehavior {
             DirtBottleEntity dirtBottle = getDirtBottleEntity(pointer, world, direction);
             world.spawnEntity(dirtBottle);
         }
+        stack.decrement(1);
         return stack;
     }
 

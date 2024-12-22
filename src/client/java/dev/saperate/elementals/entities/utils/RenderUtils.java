@@ -230,7 +230,7 @@ public abstract class RenderUtils {
                                 float x3, float y3, float z3,
                                 float x4, float y4, float z4) {
 
-        vertexConsumer.vertex(matrices.peek().getPositionMatrix(), x1, y1, z1).color(r, g, b, a).texture(uMin, vMin).overlay(OverlayTexture.DEFAULT_UV).light(light).normal(nx, ny, nz);//TODO removed next(), maybe that did something?
+        vertexConsumer.vertex(matrices.peek().getPositionMatrix(), x1, y1, z1).color(r, g, b, a).texture(uMin, vMin).overlay(OverlayTexture.DEFAULT_UV).light(light).normal(nx, ny, nz);
         vertexConsumer.vertex(matrices.peek().getPositionMatrix(), x2, y2, z2).color(r, g, b, a).texture(uMin, vMax).overlay(OverlayTexture.DEFAULT_UV).light(light).normal(nx, ny, nz);
         vertexConsumer.vertex(matrices.peek().getPositionMatrix(), x3, y3, z3).color(r, g, b, a).texture(uMax, vMax).overlay(OverlayTexture.DEFAULT_UV).light(light).normal(nx, ny, nz);
         vertexConsumer.vertex(matrices.peek().getPositionMatrix(), x4, y4, z4).color(r, g, b, a).texture(uMax, vMin).overlay(OverlayTexture.DEFAULT_UV).light(light).normal(nx, ny, nz);
