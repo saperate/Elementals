@@ -34,7 +34,6 @@ public class AirScooterEntity extends AbstractElementalsEntity<PlayerEntity> {
         super(AIRSCOOTER, world, PlayerEntity.class);
         setPos(x, y, z);
         setOwner(owner);
-        //setStepHeight(1.1f); fixme
         setNoGravity(true);
     }
 
@@ -111,5 +110,9 @@ public class AirScooterEntity extends AbstractElementalsEntity<PlayerEntity> {
     @Override
     public boolean discardsOnNullOwner() {
         return true;
+    }
+    @Override
+    public float getStepHeight() {
+        return 1.1f;
     }
 }

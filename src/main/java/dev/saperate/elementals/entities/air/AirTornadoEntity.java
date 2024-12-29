@@ -47,7 +47,6 @@ public class AirTornadoEntity extends AbstractElementalsEntity<PlayerEntity> {
         setOwner(owner);
         setPos(x, y, z);
         setNoGravity(true);
-        //setStepHeight(2f); fixme
         maxLifeTime = 100;
     }
 
@@ -142,4 +141,8 @@ public class AirTornadoEntity extends AbstractElementalsEntity<PlayerEntity> {
         return true;
     }
 
+    @Override
+    public float getStepHeight() {
+        return 2;
+    }
 }
