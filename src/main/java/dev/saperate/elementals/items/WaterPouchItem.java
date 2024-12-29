@@ -6,6 +6,7 @@ import dev.saperate.elementals.entities.common.DirtBottleEntity;
 import dev.saperate.elementals.utils.SapsUtils;
 import net.minecraft.block.Blocks;
 import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.DyedColorComponent;
 import net.minecraft.component.type.NbtComponent;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -20,6 +21,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
+import net.minecraft.util.math.ColorHelper;
 
 import java.util.Iterator;
 import java.util.List;
@@ -137,6 +139,8 @@ public class WaterPouchItem extends Item {
 
 
     public int getColor(ItemStack stack) {
-        return 0xFFFFFFFF;
+        return ColorHelper.Argb.fullAlpha(
+                stack.getOrDefault(DataComponentTypes.DYED_COLOR,new DyedColorComponent(0xFFFFFFFF,false)).rgb()
+        );
     }
 }

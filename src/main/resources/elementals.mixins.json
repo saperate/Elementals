@@ -9,7 +9,8 @@
     "ItemEntityMixin",
     "LivingEntityMixin",
     "PlayerEntityMixin",
-    "ServerPlayerEntityMixin"
+    "ServerPlayerEntityMixin",
+    "StatusEffectInstanceAccessor"
   ],
   "injectors": {
     "defaultRequire": 1

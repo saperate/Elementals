@@ -28,7 +28,8 @@ public class ElementalsArmorMaterial {
             Ingredient::ofItems,
             4,
             25,
-            true);
+            true
+    );
 
 
     public static RegistryEntry<ArmorMaterial> registerMaterial(String id, Map<ArmorItem.Type, Integer> defensePoints, int enchantability, RegistryEntry<SoundEvent> equipSound, Supplier<Ingredient> repairIngredientSupplier, float toughness, float knockbackResistance, boolean dyeable) {

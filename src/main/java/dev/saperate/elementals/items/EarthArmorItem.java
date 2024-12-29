@@ -56,9 +56,7 @@ public class EarthArmorItem extends ArmorItem{
         }
         if(entity instanceof LivingEntity player){
             player.addStatusEffect(new StatusEffectInstance(ElementalsStatusEffects.SEISMIC_SENSE,60, 0, false, false, false));
-            player.addStatusEffect(new StatusEffectInstance(ElementalsStatusEffects.DENSE,120,10, false, false, false));
-
-            //TODO figure out how to add armor points
+            player.addStatusEffect(new StatusEffectInstance(ElementalsStatusEffects.DENSE,120,0, false, false, false));
         }
     }
 
@@ -75,8 +73,7 @@ public class EarthArmorItem extends ArmorItem{
         //Fuck you for making this so painful
         RegistryEntry<Enchantment> enchant = world.getRegistryManager().get(RegistryKeys.ENCHANTMENT).entryOf(Enchantments.BINDING_CURSE);
 
-        item.addEnchantment(enchant, 1);//TODO figure out a way to hide enchants in tooltips
-
+        item.addEnchantment(enchant, 1);
 
         putItem(item,prevArmor);
 
@@ -130,5 +127,10 @@ public class EarthArmorItem extends ArmorItem{
         int b = Math.max(((col >> 8) & 0x00FF), amt);
         int g = Math.max((col & 0x0000FF), amt);
         return g | (b << 8) | (r << 16);
+    }
+
+    @Override
+    public boolean hasGlint(ItemStack stack) {
+        return false;
     }
 }

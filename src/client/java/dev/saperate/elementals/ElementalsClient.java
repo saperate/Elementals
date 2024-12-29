@@ -84,7 +84,7 @@ public class ElementalsClient implements ClientModInitializer {
         ClientPlayConnectionEvents.JOIN.register(ElementalsClient::onClientJoin);
 
         ColorProviderRegistry.ITEM.register(
-                (stack, tintIndex) -> tintIndex == 0 ? ((WaterPouchItem) stack.getItem()).getColor(stack) : 0xFFFFFF,
+                (stack, tintIndex) -> tintIndex == 0 ? ((WaterPouchItem) stack.getItem()).getColor(stack) : 0xFFFFFFFF,
                 ElementalItems.WATER_POUCH_ITEM
         );
     }

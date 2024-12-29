@@ -1,5 +1,6 @@
 package dev.saperate.elementals.effects;
 
+import dev.saperate.elementals.mixin.StatusEffectInstanceAccessor;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectCategory;
@@ -27,7 +28,8 @@ public class BurnoutStatusEffect extends StatusEffect {
         }
         if(!entity.hasStatusEffect(ElementalsStatusEffects.DENSE)){
             entity.addStatusEffect(new StatusEffectInstance(ElementalsStatusEffects.DENSE, 8, 1, false, false, false));
-
+        }else {
+            ((StatusEffectInstanceAccessor) entity.getStatusEffect(ElementalsStatusEffects.DENSE)).setDuration(8);
         }
         return true;
     }

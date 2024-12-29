@@ -91,6 +91,9 @@ public abstract class LivingEntityMixin {
     @Inject(at = @At(value = "TAIL"), method = "onStatusEffectRemoved")
     private void removeEffect(StatusEffectInstance effect, CallbackInfo ci){
         LivingEntity living = ((LivingEntity) (Object) this);
-        living.addStatusEffect(new StatusEffectInstance(ElementalsStatusEffects.BURNOUT, 200 * (effect.getAmplifier()+1), effect.getAmplifier(), false, false, true));
+
+        if(effect.getEffectType().equals(ElementalsStatusEffects.OVERCHARGED)){
+            living.addStatusEffect(new StatusEffectInstance(ElementalsStatusEffects.BURNOUT, 200 * (effect.getAmplifier()+1), effect.getAmplifier(), false, false, true));
+        }
     }
 }
