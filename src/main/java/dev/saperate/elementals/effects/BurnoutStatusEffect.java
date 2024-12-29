@@ -21,11 +21,14 @@ public class BurnoutStatusEffect extends StatusEffect {
 
     @Override
     public boolean applyUpdateEffect(LivingEntity entity, int amplifier) {
+        entity.setSprinting(false);
         if(entity.hasStatusEffect(ElementalsStatusEffects.OVERCHARGED)){
             entity.removeStatusEffect(ElementalsStatusEffects.OVERCHARGED);
         }
-        entity.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, 8, amplifier, false, false, false));
-        entity.addStatusEffect(new StatusEffectInstance(ElementalsStatusEffects.DENSE, 4, 1, false, false, false));
+        if(!entity.hasStatusEffect(ElementalsStatusEffects.DENSE)){
+            entity.addStatusEffect(new StatusEffectInstance(ElementalsStatusEffects.DENSE, 8, 1, false, false, false));
+
+        }
         return true;
     }
 
