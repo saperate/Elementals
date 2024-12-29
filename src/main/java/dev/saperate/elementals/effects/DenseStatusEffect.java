@@ -32,7 +32,7 @@ public class DenseStatusEffect extends StatusEffect {
                 StatusEffectCategory.NEUTRAL,
                 0x454545);
         addAttributeModifier(EntityAttributes.GENERIC_STEP_HEIGHT, Identifier.of(MODID,"dense_step"),0.4f, EntityAttributeModifier.Operation.ADD_VALUE);
-        addAttributeModifier(EntityAttributes.GENERIC_MOVEMENT_SPEED, Identifier.of(MODID,"dense_speed"),-0.1f, EntityAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
+        addAttributeModifier(EntityAttributes.GENERIC_MOVEMENT_SPEED, Identifier.of(MODID,"dense_speed"),-0.20f, EntityAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
         addAttributeModifier(EntityAttributes.GENERIC_JUMP_STRENGTH, Identifier.of(MODID,"dense_jump"),-0.5f, EntityAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
 
     }
@@ -48,6 +48,13 @@ public class DenseStatusEffect extends StatusEffect {
         entity.setSwimming(false);
         entity.setSprinting(false);
         //TODO make it so you can't jump in 1.20 either
+
+        double currV = entity.getVelocity().y;
+        if(entity.isTouchingWater()){
+            currV -= 0.25f;
+        }
+
+        entity.setVelocity(new Vec3d(entity.getVelocity().x, currV, entity.getVelocity().z));
         return true;
     }
 

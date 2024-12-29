@@ -14,6 +14,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import static dev.saperate.elementals.utils.SapsUtils.safeHasStatusEffect;
@@ -85,5 +86,11 @@ public abstract class LivingEntityMixin {
         if(living.hasStatusEffect(ElementalsStatusEffects.OVERCHARGED)){
             living.removeStatusEffect(ElementalsStatusEffects.OVERCHARGED);
         }
+    }
+
+    @Inject(at = @At(value = "TAIL"), method = "onStatusEffectRemoved")
+    private void removeEffect(StatusEffectInstance effect, CallbackInfo ci){
+        LivingEntity living = ((LivingEntity) (Object) this);
+        living.addStatusEffect(new StatusEffectInstance(ElementalsStatusEffects.BURNOUT, 200 * (effect.getAmplifier()+1), effect.getAmplifier(), false, false, true));
     }
 }
