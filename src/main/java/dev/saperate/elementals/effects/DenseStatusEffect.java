@@ -15,18 +15,26 @@ import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectCategory;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.potion.Potion;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Vec3d;
 import org.spongepowered.include.com.google.common.collect.Multimap;
 
 import java.util.Collection;
 import java.util.Map;
 
+import static dev.saperate.elementals.Elementals.MODID;
+
 public class DenseStatusEffect extends StatusEffect {
     public DenseStatusEffect() {
         super(
                 StatusEffectCategory.NEUTRAL,
                 0x454545);
+        addAttributeModifier(EntityAttributes.GENERIC_STEP_HEIGHT, Identifier.of(MODID,"dense_step"),0.4f, EntityAttributeModifier.Operation.ADD_VALUE);
+        addAttributeModifier(EntityAttributes.GENERIC_MOVEMENT_SPEED, Identifier.of(MODID,"dense_speed"),-0.1f, EntityAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
+        addAttributeModifier(EntityAttributes.GENERIC_JUMP_STRENGTH, Identifier.of(MODID,"dense_jump"),-0.5f, EntityAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
+
     }
 
     @Override
@@ -34,39 +42,12 @@ public class DenseStatusEffect extends StatusEffect {
         return true;
     }
 
-    @Override
-    public void onApplied(LivingEntity entity, int amplifier) {
-        // if (entity.getStepHeight() < 1) {
-        //     if (entity instanceof ServerPlayerEntity player) {
-        //         PacketByteBuf buf = PacketByteBufs.create();
-        //         buf.writeFloat(entity.getStepHeight() + 0.4f);
-        //         ServerPlayNetworking.send(player, ModMessages.UPDATE_PLAYER_STEP_HEIGHT, buf);
-        //     }
-        //     //TODO restore step height, don't forget to fix the remove step height method
-        //     //entity.setStepHeight(entity.getStepHeight() + 0.4f);
-        // }
-    }
-
 
     @Override
     public boolean applyUpdateEffect(LivingEntity entity, int amplifier) {
         entity.setSwimming(false);
-        if (amplifier >= 10 && entity.isOnGround() && !entity.isSubmergedInWater()) {
-            entity.slowMovement(Blocks.AIR.getDefaultState(), new Vec3d(1.25, 0.1, 1.25));
-        }
-
-        entity.setSwimming(false);
-
-
-        double currV = entity.getVelocity().y;
-        if (((ElementalsLivingEntityAccessor) entity).isJumping() && entity.isOnGround() && entity.isSubmergedInWater()) {
-            currV += 2;
-        } else {
-            currV = -0.25;
-        }
-//TODO fix unnatural falling speed
-
-        entity.setVelocity(new Vec3d(entity.getVelocity().x * 0.90, currV, entity.getVelocity().z * 0.90));
+        entity.setSprinting(false);
+        //TODO make it so you can't jump in 1.20 either
         return true;
     }
 
