@@ -1,7 +1,8 @@
 {
   "display": {
     "icon": {
-      "item": "minecraft:furnace"
+      "count": 1,
+      "id": "minecraft:sculk_sensor"
     },
     "title": "A blind bandit's secret weapon",
     "description": "Use the seismic sense ability",
@@ -10,12 +11,17 @@
     "announce_to_chat": true
   },
   "criteria": {
-    "requirement": {
+    "ability_used": {
       "conditions": {
-        "ability" : "seismic_sense"
+        "abilityName" : "seismic_sense"
       },
       "trigger": "minecraft:elementals/used_ability"
     }
   },
+  "requirements": [
+    [
+      "ability_used"
+    ]
+  ],
   "parent": "elementals:earthbending"
 }

@@ -1,21 +1,27 @@
 {
   "display": {
     "icon": {
-      "item": "elementals:fire_scroll"
+      "count": 1,
+      "id": "elementals:air_scroll"
     },
-    "title": "Fiery Stuff",
-    "description": "Have the element of fire",
+    "title": "No Stuff",
+    "description": "Have the element of air",
     "frame": "task",
     "show_toast": true,
     "announce_to_chat": true
   },
   "criteria": {
-    "requirement": {
+    "element": {
       "conditions": {
-        "element" : "fire"
+        "element": "air"
       },
       "trigger": "minecraft:elementals/has_element"
     }
   },
+  "requirements": [
+    [
+      "element"
+    ]
+  ],
   "parent": "elementals:root"
 }

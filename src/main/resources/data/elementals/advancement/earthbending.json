@@ -1,21 +1,27 @@
 {
   "display": {
     "icon": {
-      "item": "elementals:air_scroll"
+      "count": 1,
+      "id": "elementals:earth_scroll"
     },
-    "title": "No Stuff",
-    "description": "Have the element of air",
+    "title": "Dirty Stuff",
+    "description": "Have the element of earth",
     "frame": "task",
     "show_toast": true,
     "announce_to_chat": true
   },
   "criteria": {
-    "requirement": {
+    "element": {
       "conditions": {
-        "element" : "air"
+        "element" : "earth"
       },
       "trigger": "minecraft:elementals/has_element"
     }
   },
+  "requirements": [
+    [
+      "element"
+    ]
+  ],
   "parent": "elementals:root"
 }

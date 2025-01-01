@@ -1,7 +1,8 @@
 {
   "display": {
     "icon": {
-      "item": "elementals:water_scroll"
+      "count": 1,
+      "id": "elementals:water_scroll"
     },
     "title": "Wet Stuff",
     "description": "Have the element of water",
@@ -10,12 +11,17 @@
     "announce_to_chat": true
   },
   "criteria": {
-    "requirement": {
+    "element": {
       "conditions": {
         "element" : "water"
       },
       "trigger": "minecraft:elementals/has_element"
     }
   },
+  "requirements": [
+    [
+      "element"
+    ]
+  ],
   "parent": "elementals:root"
 }

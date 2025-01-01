@@ -1,7 +1,8 @@
 {
   "display": {
     "icon": {
-      "item": "elementals:lightning_bottle"
+      "count": 1,
+      "id": "elementals:lightning_bottle"
     },
     "title": "Why would you do that",
     "description": " Drink some lightning",
@@ -11,7 +12,7 @@
     "hidden": true
   },
   "criteria": {
-    "example": {
+    "item_used": {
       "trigger": "minecraft:consume_item",
       "conditions": {
         "item": {
@@ -22,5 +23,10 @@
       }
     }
   },
+  "requirements": [
+    [
+      "item_used"
+    ]
+  ],
   "parent": "elementals:lightning_bottle"
 }

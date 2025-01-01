@@ -73,8 +73,8 @@ public class Elementals implements ModInitializer {
     //TODO add config
     public static final String MODID = "elementals";
     public static final Logger LOGGER = LoggerFactory.getLogger(MODID);
-    public static HasElementCriterion HAS_ELEMENT = Criteria.register("has_element",new HasElementCriterion());
-    public static UsedAbilityCriterion USED_ABILITY = Criteria.register("used_ability",new UsedAbilityCriterion());
+    public static HasElementCriterion HAS_ELEMENT = Criteria.register("elementals/has_element",new HasElementCriterion());
+    public static UsedAbilityCriterion USED_ABILITY = Criteria.register("elementals/used_ability",new UsedAbilityCriterion());
     private static final Identifier WIND_SOUND_ID = Identifier.of(MODID, "wind");
     private static final Identifier WIND_BURST_SOUND_ID = Identifier.of(MODID, "wind_burst");
     public static SoundEvent WIND_SOUND_EVENT = SoundEvent.of(WIND_SOUND_ID);

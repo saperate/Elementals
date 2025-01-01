@@ -1,21 +1,22 @@
 {
   "display": {
     "icon": {
-      "item": "elementals:lightning_bottle"
+      "count": 1,
+      "id": "elementals:dirt_bottle"
     },
-    "title": "Lightning in a bottle",
-    "description": " Acquire a lightning bottle",
+    "title": "Pocket sand",
+    "description": " Acquire a dirt bottle",
     "frame": "goal",
     "show_toast": true,
     "announce_to_chat": true
   },
   "criteria": {
-    "lava_bucket": {
+    "item_used": {
       "conditions": {
         "items": [
           {
             "items": [
-              "elementals:lightning_bottle"
+              "elementals:dirt_bottle"
             ]
           }
         ]
@@ -23,5 +24,10 @@
       "trigger": "minecraft:inventory_changed"
     }
   },
-  "parent": "elementals:lightningbending"
+  "requirements": [
+    [
+      "item_used"
+    ]
+  ],
+  "parent": "elementals:earthbending"
 }

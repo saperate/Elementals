@@ -1,7 +1,8 @@
 {
   "display": {
     "icon": {
-      "item": "elementals:scroll"
+      "count": 1,
+      "id": "elementals:scroll"
     },
     "title": "Elementals",
     "description": "The power of the four elements!",
@@ -11,8 +12,13 @@
     "background": "minecraft:textures/block/white_terracotta.png"
   },
   "criteria": {
-    "requirement": {
+    "trigger": {
       "trigger": "minecraft:tick"
     }
-  }
+  },
+  "requirements": [
+    [
+      "trigger"
+    ]
+  ]
 }

@@ -30,7 +30,6 @@ import java.util.Optional;
 
 import static dev.saperate.elementals.Elementals.MODID;
 
-//TODO make sure this works
 public class HasElementCriterion extends AbstractCriterion<HasElementCriterion.Conditions> {
 
     public HasElementCriterion(){
@@ -60,7 +59,7 @@ public class HasElementCriterion extends AbstractCriterion<HasElementCriterion.C
             this.elementName = elementName;
         }
 
-        public static AdvancementCriterion<HasElementCriterion.Conditions> any() {//T
+        public static AdvancementCriterion<HasElementCriterion.Conditions> any() {
             return Elementals.HAS_ELEMENT.create(new HasElementCriterion.Conditions(Optional.empty(), Optional.empty()));
         }
 

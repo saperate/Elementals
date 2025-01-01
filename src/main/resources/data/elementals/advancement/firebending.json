@@ -1,21 +1,27 @@
 {
   "display": {
     "icon": {
-      "item": "elementals:earth_scroll"
+      "count": 1,
+      "id": "elementals:fire_scroll"
     },
-    "title": "Dirty Stuff",
-    "description": "Have the element of earth",
+    "title": "Fiery Stuff",
+    "description": "Have the element of fire",
     "frame": "task",
     "show_toast": true,
     "announce_to_chat": true
   },
   "criteria": {
-    "requirement": {
+    "element": {
       "conditions": {
-        "element" : "earth"
+        "element" : "fire"
       },
       "trigger": "minecraft:elementals/has_element"
     }
   },
+  "requirements": [
+    [
+      "element"
+    ]
+  ],
   "parent": "elementals:root"
 }

@@ -1,7 +1,8 @@
 {
   "display": {
     "icon": {
-      "item": "elementals:boomerang"
+      "count": 1,
+      "id": "elementals:boomerang"
     },
     "title": "Sokka's trusty boomerang",
     "description": "Craft a boomerang",
@@ -10,18 +11,21 @@
     "announce_to_chat": true
   },
   "criteria": {
-    "lava_bucket": {
+    "item_used": {
       "conditions": {
         "items": [
           {
-            "items": [
-              "elementals:boomerang"
-            ]
+            "items": "elementals:boomerang"
           }
         ]
       },
       "trigger": "minecraft:inventory_changed"
     }
   },
+  "requirements": [
+    [
+      "item_used"
+    ]
+  ],
   "parent": "elementals:root"
 }
