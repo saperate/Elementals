@@ -54,7 +54,7 @@ public class LightningElement extends Element {
     }
 
     public static Element get() {
-        return elementList.get(5);
+        return getElementByName("Lightning");
     }
 
     @Override
