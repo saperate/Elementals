@@ -92,7 +92,7 @@ public class FireElement extends Element {
     }
 
     public static Element get(){
-        return elementList.get(2);
+        return getElementByName("Fire");
     }
 
     @Override

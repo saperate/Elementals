@@ -13,7 +13,7 @@ public class NoneElement extends Element{
     }
 
     public static Element get(){
-        return elementList.get(0);
+        return getElementByName("None");//TODO make a hashmap
     }
 
 

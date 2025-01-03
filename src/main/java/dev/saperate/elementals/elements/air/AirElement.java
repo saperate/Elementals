@@ -92,7 +92,7 @@ public class AirElement extends Element {
     }
 
     public static Element get() {
-        return elementList.get(4);
+        return getElementByName("Air");
     }
 
     @Override

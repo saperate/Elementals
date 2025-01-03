@@ -73,7 +73,7 @@ public class BloodElement extends Element {
     }
 
     public static Element get() {
-        return elementList.get(6);
+        return getElementByName("Blood");
     }
 
     @Override
