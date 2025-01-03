@@ -29,6 +29,9 @@ public class PlayerData {
     public float chi = 100, xp = 0;
     public int level = 2;
 
+    public PlayerData() {
+        elements.add(NoneElement.get());
+    }
 
     /**
      * Checks if the player both has the upgrade AND has it enabled.
