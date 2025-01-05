@@ -1,5 +1,5 @@
 ## License
-### Sap's Common Sense License (SCSL) v2.0
+### Sap's Common Sense License (SCSL) v3.0
 
 *By using this work, you agree to adhere to the terms of the Sap's Common Sense License.*
 
@@ -10,6 +10,7 @@
 
 1. **Usage Rights:**
    - You have the right to use this work to learn from it. You also have the right to take parts of this work (At most 20% of your project can      be taken directly from this work without having to give any attribution). Past 40%, you will need permission from the owner of this work to      continue taking parts from it. You may *not* repackage, fork, modify or republish this work without the explicit consent of the owner of         this work.
+   - Any derivatives of this work (If your work includes more than 40% of this one) must have the same license along with the same version as         the original work.
 
 2. **Permitted Actions:**
    - You are permitted to:
@@ -20,7 +21,7 @@
 3. **Prohibited Actions:**
    - You may NOT use this work for:
      - Criminal/morally dubious activities (e.g., hacking, phishing, scamming)
-     - Claiming this work entirely as your own when you have integrated more than 20% of this work into your own (credit must be given with a           link to this repository)
+     - Claiming this work entirely as your own when you have integrated more than 20% of this work into your own (credit must be given along            with a link to the original work)
      - Training any AI model without explicit, written consent
      - Implementing paywalls, microtransactions, pay-to-win, or pay-to-play models; this work and its derivatives MUST remain free and without          advertisements, advertisements *may* be on the platform where this work is published, but you may *not* put any inside of the work itself        or any of its derivatives. Donations are acceptable, as long as they do not have an impact on gameplay.
 
