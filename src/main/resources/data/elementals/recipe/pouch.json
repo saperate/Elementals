@@ -15,7 +15,8 @@
         " ##"
     ],
     "result": {
-        "item": "elementals:water_pouch"
+        "count": 1,
+        "id": "elementals:water_pouch"
     },
     "show_notification": true
 }

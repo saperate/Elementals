@@ -9,7 +9,7 @@
         }
     ],
     "result": {
-        "item": "elementals:dirt_bottle",
+        "id": "elementals:dirt_bottle",
         "count": 1
     }
 }
