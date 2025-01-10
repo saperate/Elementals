@@ -48,7 +48,7 @@ public class PlayerArgumentType implements ArgumentType<PlayerEntity> {
         final String remaining = builder.getRemaining();
         if (context.getSource() instanceof ClientCommandSource source) {
             return CommandSource.suggestMatching(
-                    Lists.transform(Element.elementList, Element::getName),
+                    Lists.transform(Element.getElementList(), Element::getName),
                     builder
             );
         }

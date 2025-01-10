@@ -68,7 +68,7 @@ public class AbilityEarthWall implements Ability {
                     startPos.getZ());
             BlockState state = player.getWorld().getBlockState(bPos);
 
-            if(!EarthElement.isBlockBendable(state)){
+            if(!EarthElement.isBlockBendable(state, bender)){
                 return;
             }
             if(player.getWorld().getGameRules().getBoolean(BENDING_GRIEFING)){

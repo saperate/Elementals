@@ -4,6 +4,7 @@ import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.elements.Element;
 import dev.saperate.elementals.elements.Upgrade;
+import dev.saperate.elementals.elements.metal.MetalElement;
 import dev.saperate.elementals.items.DirtBottleItem;
 import dev.saperate.elementals.items.ElementalItems;
 import dev.saperate.elementals.items.WaterPouchItem;
@@ -16,6 +17,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Items;
 import net.minecraft.potion.PotionUtil;
 import net.minecraft.potion.Potions;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
@@ -31,6 +33,7 @@ import static dev.saperate.elementals.Elementals.BENDING_GRIEFING;
 import static dev.saperate.elementals.effects.StunnedStatusEffect.STUNNED_EFFECT;
 import static dev.saperate.elementals.entities.ElementalEntities.EARTHBLOCK;
 import static dev.saperate.elementals.misc.ElementalsCustomTags.EARTH_BENDABLE_BLOCKS;
+import static dev.saperate.elementals.misc.ElementalsCustomTags.METAL_BENDABLE_BLOCKS;
 import static dev.saperate.elementals.utils.SapsUtils.getEntityLookVector;
 
 
@@ -130,7 +133,7 @@ public class EarthElement extends Element {
             return null;
         }
 
-        if (isBlockBendable(hit.getBlockPos(), player.getWorld())) {
+        if (isBlockBendable(hit.getBlockPos(), Bender.getBender((ServerPlayerEntity) player))) {
             BlockState blockState = player.getEntityWorld().getBlockState(hit.getBlockPos());
             if (consumeBlock && player.getWorld().getGameRules().getBoolean(BENDING_GRIEFING)) {
                 player.getWorld().setBlockState(hit.getBlockPos(), Blocks.AIR.getDefaultState());
@@ -163,13 +166,14 @@ public class EarthElement extends Element {
 
     
 
-    public static boolean isBlockBendable(BlockPos pos, World world) {
-        BlockState bState = world.getBlockState(pos);
-        return bState.isIn(EARTH_BENDABLE_BLOCKS);
+    public static boolean isBlockBendable(BlockPos pos, Bender bender) {
+        BlockState bState = bender.player.getWorld().getBlockState(pos);
+        return isBlockBendable(bState,bender);
     }
 
-    public static boolean isBlockBendable(BlockState bState) {
-        return bState.isIn(EARTH_BENDABLE_BLOCKS);
+    //TODO check for netherite and ancient debris and make it more expensive
+    public static boolean isBlockBendable(BlockState bState, Bender bender) {
+        return bState.isIn(EARTH_BENDABLE_BLOCKS) || (bender.hasElement(MetalElement.get()) && bState.isIn(METAL_BENDABLE_BLOCKS));
     }
 
     /**
@@ -186,7 +190,7 @@ public class EarthElement extends Element {
         }
         for (int y = 0; y < depth; y++) {
             BlockPos bPos = pos.down(y);
-            if (EarthElement.isBlockBendable(bPos, bender.player.getWorld())) {
+            if (EarthElement.isBlockBendable(bPos, bender)) {
                 bender.player.getWorld().breakBlock(bPos, false);
             }
         }

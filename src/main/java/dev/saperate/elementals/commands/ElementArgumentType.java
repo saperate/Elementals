@@ -50,7 +50,7 @@ public class ElementArgumentType implements ArgumentType<Element> {
         final String remaining = builder.getRemaining();
         if (context.getSource() instanceof ServerCommandSource source) {
             return CommandSource.suggestMatching(
-                    Lists.transform(Element.elementList, Element::getName),
+                    Lists.transform(Element.getElementList(), Element::getName),
                     builder
             );
         }

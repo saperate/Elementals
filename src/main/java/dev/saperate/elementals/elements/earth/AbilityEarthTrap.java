@@ -27,7 +27,7 @@ public class AbilityEarthTrap implements Ability {
 
         EntityHitResult eHit = (EntityHitResult) hit;
         BlockState state = player.getWorld().getBlockState(eHit.getEntity().getBlockPos().down());
-        if (eHit.getEntity() instanceof LivingEntity victim && EarthElement.isBlockBendable(state)) {
+        if (eHit.getEntity() instanceof LivingEntity victim && EarthElement.isBlockBendable(state, bender)) {
             EarthBlockEntity block = new EarthBlockEntity(player.getWorld(), player, victim.getX(), victim.getY(), victim.getZ());
             bender.abilityData = block;
             block.setBlockState(state);

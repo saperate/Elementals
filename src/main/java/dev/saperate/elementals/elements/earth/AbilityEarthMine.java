@@ -54,20 +54,20 @@ public class AbilityEarthMine implements Ability {
                                 pos.add(0, i, j);
                         default -> pos.add(i, 0, j);
                     };
-                    minePillar(offset, dir,numBlocks,player.getWorld());
+                    minePillar(offset, dir,numBlocks,bender);
                 }
             }
         }else {
-            minePillar(pos,dir,numBlocks,player.getWorld());
+            minePillar(pos,dir,numBlocks,bender);
         }
 
         bender.setCurrAbility(null);
     }
 
-    public void minePillar(BlockPos pos, Direction dir, int amount, World world){
+    public void minePillar(BlockPos pos, Direction dir, int amount, Bender bender){
         for (int i = 0; i < amount; i++) {
-            if(EarthElement.isBlockBendable(pos.offset(dir,i),world)){
-                world.breakBlock(pos.offset(dir,i),true);
+            if(EarthElement.isBlockBendable(pos.offset(dir,i), bender)){
+                bender.player.getWorld().breakBlock(pos.offset(dir,i),true);
             }
         }
     }

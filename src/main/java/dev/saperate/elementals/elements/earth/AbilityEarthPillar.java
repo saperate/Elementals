@@ -8,6 +8,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.FallingBlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
@@ -48,7 +49,7 @@ public class AbilityEarthPillar implements Ability {
                 BlockPos bPos = startPos.offset(dir,i);
                 BlockState state = player.getWorld().getBlockState(bPos);
 
-                if(!EarthElement.isBlockBendable(state)){
+                if(!EarthElement.isBlockBendable(state, bender)){
                     return;
                 }
                 FallingBlockEntity.spawnFromBlock(player.getWorld(),bPos,state);
@@ -66,7 +67,7 @@ public class AbilityEarthPillar implements Ability {
     public static void placeBlock(BlockPos startPos, Vec3d endPos, PlayerEntity player){
             BlockState state = player.getWorld().getBlockState(startPos);
 
-            if(!EarthElement.isBlockBendable(state)){
+            if(!EarthElement.isBlockBendable(state, Bender.getBender((ServerPlayerEntity) player))){
                 return;
             }
             if(player.getWorld().getGameRules().getBoolean(BENDING_GRIEFING)){
