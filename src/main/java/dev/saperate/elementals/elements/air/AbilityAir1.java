@@ -17,15 +17,15 @@ public class AbilityAir1 implements Ability {
 
         if (bender.player.isSneaking()) {
             if(playerData.canUseUpgrade("airShield")){
-                AirElement.get().abilityList.get(2).onCall(bender,deltaT);
+                AirElement.get().getAbility(2).onCall(bender,deltaT);
                 return;
             } else if (playerData.canUseUpgrade("airTornado")) {
-                AirElement.get().abilityList.get(3).onCall(bender,deltaT);
+                AirElement.get().getAbility(3).onCall(bender,deltaT);
                 return;
             }
         }
 
-        AirElement.get().abilityList.get(1).onCall(bender,deltaT);
+        AirElement.get().getAbility(1).onCall(bender,deltaT);
     }
 
     @Override

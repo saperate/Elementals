@@ -19,15 +19,15 @@ public class AbilityWater3 implements Ability {
 
         if (player.isSprinting() && playerData.canUseUpgrade("waterSurf")
                 && player.isSubmergedInWater()) {
-            WaterElement.get().abilityList.get(13).onCall(bender, deltaT);
+            WaterElement.get().getAbility(13).onCall(bender, deltaT);
             return;
 
         }else if (deltaT >= 200 && !player.isOnGround() && PlayerData.get(player).canUseUpgrade("waterTower")){
-            WaterElement.get().abilityList.get(16).onCall(bender, deltaT);
+            WaterElement.get().getAbility(16).onCall(bender, deltaT);
             return;
 
         } else if (player.getRootVehicle().isTouchingWaterOrRain() && playerData.canUseUpgrade("waterJump") || WaterElement.canBend(player,true) != null) {
-            WaterElement.get().abilityList.get(17).onCall(bender, deltaT);
+            WaterElement.get().getAbility(17).onCall(bender, deltaT);
             return;
         }
 

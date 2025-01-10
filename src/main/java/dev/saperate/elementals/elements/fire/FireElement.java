@@ -93,7 +93,7 @@ public class FireElement extends Element {
     }
 
     public static Element get(){
-        return getElementByName("Fire");
+        return getElement("Fire");
     }
 
     @Override

@@ -20,7 +20,7 @@ public class AbilityLightning4 implements Ability {
         }
 
         if (deltaT >= 3000 && player.isSneaking()) {
-            LightningElement.get().abilityList.get(8).onCall(bender, deltaT);
+            LightningElement.get().getAbility(8).onCall(bender, deltaT);
             return;
         }
         bender.setCurrAbility(null);

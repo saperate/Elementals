@@ -93,7 +93,7 @@ public class AirElement extends Element {
     }
 
     public static Element get() {
-        return getElementByName("Air");
+        return getElement("Air");
     }
 
 

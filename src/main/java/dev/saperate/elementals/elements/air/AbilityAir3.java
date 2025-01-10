@@ -16,10 +16,10 @@ public class AbilityAir3 implements Ability {
 
         if (deltaT >= 500 && !bender.player.hasVehicle() //0.5 seconds
                 && playerData.canUseUpgrade("airScooter")) {
-            AirElement.get().abilityList.get(10).onCall(bender, deltaT);
+            AirElement.get().getAbility(10).onCall(bender, deltaT);
             return;
         }
-        AirElement.get().abilityList.get(11).onCall(bender, deltaT);
+        AirElement.get().getAbility(11).onCall(bender, deltaT);
 
     }
 

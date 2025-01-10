@@ -73,10 +73,6 @@ public class FireShieldEntity extends AbstractElementalsEntity<PlayerEntity> {
             setFireHeight(getFinalFireHeight());
             heightAdjustSpeed = 5;
         }
-
-        if (getWorld().getBlockState(getBlockPos().down()).isAir()) {
-            this.discard();
-        }
     }
 
     @Override

@@ -68,7 +68,7 @@ public class HasElementCriterion extends AbstractCriterion<HasElementCriterion.C
                 return false;
             }
             WritableBookContentPredicate.RawStringPredicate element = elementName.get();
-            return bender.hasElement(Element.getElementByName(element.contents()));
+            return bender.hasElement(Element.getElement(element.contents()));
         }
     }
 }

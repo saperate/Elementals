@@ -276,7 +276,7 @@ public class WaterElement extends Element {
     }
 
     public static Element get() {
-        return getElementByName("Water");
+        return getElement("Water");
     }
 
     @Override

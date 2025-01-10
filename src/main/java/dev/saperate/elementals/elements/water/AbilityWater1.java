@@ -19,19 +19,19 @@ public class AbilityWater1 implements Ability {
         if (bender.player.isSneaking()) {
             if ((playerData.canUseUpgrade("waterShieldHelmetPath")
                     || playerData.canUseUpgrade("waterShieldSuffocatePath"))  && deltaT >= 1000) {
-                WaterElement.get().abilityList.get(5).onCall(bender, deltaT);
+                WaterElement.get().getAbility(5).onCall(bender, deltaT);
                 return;
             } else if (playerData.canUseUpgrade("waterHelmet") && bender.player.isSubmergedInWater()
                     && !bender.player.hasStatusEffect(StatusEffects.WATER_BREATHING)) {
-                WaterElement.get().abilityList.get(4).onCall(bender, deltaT);
+                WaterElement.get().getAbility(4).onCall(bender, deltaT);
                 return;
             } else if (playerData.canUseUpgrade("waterSuffocate")) {
-                WaterElement.get().abilityList.get(6).onCall(bender, deltaT);
+                WaterElement.get().getAbility(6).onCall(bender, deltaT);
                 return;
             }
         }
 
-        WaterElement.get().abilityList.get(1).onCall(bender, deltaT);
+        WaterElement.get().getAbility(1).onCall(bender, deltaT);
     }
 
     @Override

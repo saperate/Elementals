@@ -14,7 +14,7 @@ public class AbilityBlood2 implements Ability {
             return;
         }
 
-        BloodElement.get().abilityList.get(5).onCall(bender, deltaT);
+        BloodElement.get().getAbility(5).onCall(bender, deltaT);
     }
 
     @Override

@@ -74,7 +74,9 @@ public class WaterHelmetEntity extends AbstractElementalsEntity<LivingEntity> {
             summonParticles(owner, this.random, getModelId() == 0 ? ParticleTypes.SPLASH : ParticleTypes.POOF, 0, 10);
         }
 
-        if (owner.isOnFire() || (maxLifeTime == -1 && !owner.isSubmergedInWater() && !suffocate && !this.getWorld().isClient)) {
+        if (owner.isOnFire() ||
+                ((maxLifeTime == -1 && !owner.isSubmergedInWater())
+                && !suffocate && !this.getWorld().isClient)) {
             discard();
             return;
         }

@@ -16,20 +16,20 @@ public class AbilityAir2 implements Ability {
 
 
         if (playerData.canUseUpgrade("airBall") && deltaT > 1000) {
-            AirElement.get().abilityList.get(6).onCall(bender, deltaT);
+            AirElement.get().getAbility(6).onCall(bender, deltaT);
             return;
         }
         if (bender.player.isSneaking()) {
             if (playerData.canUseUpgrade("airBullets")) {
-                AirElement.get().abilityList.get(7).onCall(bender, deltaT);
+                AirElement.get().getAbility(7).onCall(bender, deltaT);
                 return;
             } else if (playerData.canUseUpgrade("airSuffocate")) {
-                AirElement.get().abilityList.get(8).onCall(bender, deltaT);
+                AirElement.get().getAbility(8).onCall(bender, deltaT);
                 return;
             }
         }
 
-        AirElement.get().abilityList.get(5).onCall(bender, deltaT);
+        AirElement.get().getAbility(5).onCall(bender, deltaT);
     }
 
     @Override
