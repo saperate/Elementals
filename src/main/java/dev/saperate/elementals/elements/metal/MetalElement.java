@@ -9,6 +9,7 @@ public class MetalElement extends Element {
         super("Metal", new Upgrade("Metal", new  Upgrade[]{
 
         },0));
+        addAbility(new AbilityMetal1(), true);
     }
 
     public static Element get() {

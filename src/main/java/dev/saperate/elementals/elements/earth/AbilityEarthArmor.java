@@ -37,7 +37,7 @@ public class AbilityEarthArmor implements Ability {
 
         BlockHitResult hit = raycastBlockCustomRotation(player, 4, true, new Vec3d(0, -1, 0));
 
-        if (!EarthElement.isBlockBendable(player.getWorld().getBlockState(hit.getBlockPos())) || !player.isOnGround()) {
+        if (!EarthElement.isBlockBendable(player.getWorld().getBlockState(hit.getBlockPos()), bender) || !player.isOnGround()) {
             return;
         }
         if (!bender.reduceChi(30)) {

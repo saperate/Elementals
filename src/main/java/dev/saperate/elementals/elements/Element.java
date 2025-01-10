@@ -116,4 +116,8 @@ public abstract class Element{
     public String toString() {
         return name;
     }
+
+    public static List<Element> getElementList(){
+        return elements.values().stream().toList();
+    }
 }

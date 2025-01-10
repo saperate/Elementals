@@ -45,7 +45,7 @@ public class AbilityEarthChunkPickup implements Ability {
                 for (int z = (int) -Math.floor(size); z < size; z++) {
                     BlockPos bPos = pos.add(x,-y,z);
                     BlockState state = player.getWorld().getBlockState(bPos);
-                    if(EarthElement.isBlockBendable(state)){
+                    if(EarthElement.isBlockBendable(state, bender)){
                         if(player.getWorld().getGameRules().getBoolean(BENDING_GRIEFING)){
                             player.getWorld().setBlockState(bPos, Blocks.AIR.getDefaultState());
                         }
