@@ -73,7 +73,7 @@ public class BloodElement extends Element {
     }
 
     public static Element get() {
-        return getElementByName("Blood");
+        return getElement("Blood");
     }
 
     @Override
@@ -89,7 +89,7 @@ public class BloodElement extends Element {
     @Override
     public boolean isSkillTreeComplete(Bender bender) {
         return bender.hasElement(this);
-    }
+    }//TODO this
 
     public static boolean isNight(World world) {
         long time = world.getTimeOfDay() % 24000;

@@ -15,15 +15,15 @@ public class AbilityEarth1 implements Ability {
 
         if (bender.player.isSneaking()) {
             if (playerData.canUseUpgrade("earthWall")) {
-                EarthElement.get().abilityList.get(2).onCall(bender,deltaT);
+                EarthElement.get().getAbility(2).onCall(bender,deltaT);
                 return;
             } else if (playerData.canUseUpgrade("earthChunk")) {
-                EarthElement.get().abilityList.get(3).onCall(bender,deltaT);
+                EarthElement.get().getAbility(3).onCall(bender,deltaT);
                 return;
             }
         }
 
-        EarthElement.get().abilityList.get(1).onCall(bender,deltaT);
+        EarthElement.get().getAbility(1).onCall(bender,deltaT);
     }
 
     @Override

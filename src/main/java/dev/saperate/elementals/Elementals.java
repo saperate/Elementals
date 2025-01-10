@@ -19,6 +19,7 @@ import dev.saperate.elementals.elements.blood.BloodElement;
 import dev.saperate.elementals.elements.earth.EarthElement;
 import dev.saperate.elementals.elements.fire.FireElement;
 import dev.saperate.elementals.elements.lightning.LightningElement;
+import dev.saperate.elementals.elements.metal.MetalElement;
 import dev.saperate.elementals.elements.water.WaterElement;
 import dev.saperate.elementals.enchantments.VolumeEnchantment;
 import dev.saperate.elementals.entities.ElementalEntities;
@@ -182,6 +183,7 @@ public class Elementals implements ModInitializer {
         new AirElement();
         new LightningElement();
         new BloodElement();
+        new MetalElement();
     }
 
     private void registerCommands() {

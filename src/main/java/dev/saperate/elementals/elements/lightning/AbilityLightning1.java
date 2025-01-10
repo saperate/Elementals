@@ -18,10 +18,10 @@ public class AbilityLightning1 implements Ability {
         }
 
         if (bender.player.isSneaking() && playerData.canUseUpgrade("lightningBolt") && deltaT >= 2000) {
-            LightningElement.get().abilityList.get(1).onCall(bender,deltaT);
+            LightningElement.get().getAbility(1).onCall(bender,deltaT);
             return;
         }
-        LightningElement.get().abilityList.get(2).onCall(bender,deltaT);
+        LightningElement.get().getAbility(2).onCall(bender,deltaT);
     }
 
     @Override

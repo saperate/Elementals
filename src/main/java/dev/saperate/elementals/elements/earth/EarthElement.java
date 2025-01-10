@@ -106,7 +106,7 @@ public class EarthElement extends Element {
     }
 
     public static Element get() {
-        return getElementByName("Earth");
+        return getElement("Earth");
     }
 
     /**

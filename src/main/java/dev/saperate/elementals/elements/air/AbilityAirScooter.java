@@ -68,6 +68,9 @@ public class AbilityAirScooter implements Ability {
 
     @Override
     public void onRemove(Bender bender) {
-
+        if (bender.abilityData != null) {
+            ((AirScooterEntity)bender.abilityData).discard();
+        }
+        bender.setCurrAbility(null);
     }
 }

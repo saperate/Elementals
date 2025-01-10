@@ -20,7 +20,7 @@ public class AbilityEarth4 implements Ability {
         }
 
         if (deltaT > 1000 && plrData.canUseUpgrade("earthArmor")) {
-            EarthElement.get().abilityList.get(13).onCall(bender, deltaT);
+            EarthElement.get().getAbility(13).onCall(bender, deltaT);
             return;
         }
 

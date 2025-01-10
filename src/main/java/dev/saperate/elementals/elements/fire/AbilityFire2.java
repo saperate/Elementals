@@ -11,22 +11,22 @@ public class AbilityFire2 implements Ability {
 
 
         if(deltaT >= 1000 && playerData.canUseUpgrade("fireBall")){
-            FireElement.get().abilityList.get(6).onCall(bender,deltaT);
+            FireElement.get().getAbility(6).onCall(bender,deltaT);
             return;
         }
 
         if (bender.player.isSneaking()) {
             if(playerData.canUseUpgrade("fireShield")){
-                FireElement.get().abilityList.get(7).onCall(bender,deltaT);
+                FireElement.get().getAbility(7).onCall(bender,deltaT);
                 return;
             } else if (playerData.canUseUpgrade("flameThrower")) {
-                FireElement.get().abilityList.get(8).onCall(bender,deltaT);
+                FireElement.get().getAbility(8).onCall(bender,deltaT);
                 return;
             }
         }
 
         if(playerData.canUseUpgrade("fireArc")){
-            FireElement.get().abilityList.get(5).onCall(bender,deltaT);
+            FireElement.get().getAbility(5).onCall(bender,deltaT);
             return;
         }
         bender.setCurrAbility(null);

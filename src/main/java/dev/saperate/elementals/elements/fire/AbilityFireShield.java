@@ -39,21 +39,6 @@ public class AbilityFireShield implements Ability {
     }
 
     @Override
-    public void onLeftClick(Bender bender, boolean started) {
-
-    }
-
-    @Override
-    public void onMiddleClick(Bender bender, boolean started) {
-
-    }
-
-    @Override
-    public void onRightClick(Bender bender, boolean started) {
-
-    }
-
-    @Override
     public void onTick(Bender bender) {
         if (!bender.reduceChi(0.15f)) {
             if (bender.abilityData == null) {

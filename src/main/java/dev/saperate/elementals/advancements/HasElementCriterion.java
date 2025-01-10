@@ -37,7 +37,7 @@ public class HasElementCriterion extends AbstractCriterion<HasElementCriterion.C
         }
 
         boolean requirementsMet(Bender bender) {
-            return bender.hasElement(Element.getElementByName(elementName));
+            return bender.hasElement(Element.getElement(elementName));
         }
     }
 }

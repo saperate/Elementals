@@ -96,6 +96,12 @@ public class AbilityAirBullets implements Ability {
 
     @Override
     public void onRemove(Bender bender) {
+        AirBulletEntity[] bullets = (AirBulletEntity[]) bender.abilityData;
+        if(bullets != null){
+            for (AirBulletEntity bullet : bullets){
+                bullet.kill();
+            }
+        }
         bender.setCurrAbility(null);
     }
 

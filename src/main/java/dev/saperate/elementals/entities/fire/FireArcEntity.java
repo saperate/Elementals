@@ -38,7 +38,7 @@ public class FireArcEntity extends AbstractElementalsEntity<PlayerEntity> {
     private static final TrackedData<Boolean> IS_BLUE = DataTracker.registerData(FireArcEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
 
     public static final float chainDistance = 0.75f;
-    private static final int MAX_CHAIN_LENGTH = 3;
+    private static final int MAX_CHAIN_LENGTH = 6;
     public int chainLength = 0;
 
 

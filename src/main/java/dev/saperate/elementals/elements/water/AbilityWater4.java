@@ -21,7 +21,7 @@ public class AbilityWater4 implements Ability {
             bender.setCurrAbility(null);
             return;
         }
-        WaterElement.get().abilityList.get(15).onCall(bender, deltaT);
+        WaterElement.get().getAbility(15).onCall(bender, deltaT);
     }
 
     @Override

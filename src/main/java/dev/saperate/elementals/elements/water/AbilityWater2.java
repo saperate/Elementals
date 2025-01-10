@@ -15,19 +15,19 @@ public class AbilityWater2 implements Ability {
         }
 
         if (deltaT >= 1000 && playerData.canUseUpgrade("waterJet")) {
-            WaterElement.get().abilityList.get(7).onCall(bender, deltaT);
+            WaterElement.get().getAbility(7).onCall(bender, deltaT);
             return;
         }
         if (bender.player.isSneaking()) {
             if (playerData.canUseUpgrade("waterBlade")) {
-                WaterElement.get().abilityList.get(9).onCall(bender, deltaT);
+                WaterElement.get().getAbility(9).onCall(bender, deltaT);
                 return;
             } else if (playerData.canUseUpgrade("waterCannon")) {
-                WaterElement.get().abilityList.get(11).onCall(bender, deltaT);
+                WaterElement.get().getAbility(11).onCall(bender, deltaT);
                 return;
             }
         }
-        WaterElement.get().abilityList.get(3).onCall(bender, deltaT);
+        WaterElement.get().getAbility(3).onCall(bender, deltaT);
     }
 
     @Override

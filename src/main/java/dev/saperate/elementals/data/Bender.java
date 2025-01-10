@@ -171,7 +171,7 @@ public class Bender {
     }
 
     /**
-     * Sets the active element to the one passed,
+     * Sets the active element to the one passed, this also removes whatever ability is cast
      * @param elementIndex The index of the element we want to be active
      * @param sync Whether we send the client this change
      */
@@ -250,7 +250,7 @@ public class Bender {
 
     public static void syncAbility(Bender bender) {
         PacketByteBuf buf = PacketByteBufs.create();
-        buf.writeInt(bender.currAbility != null ? bender.getElement().abilityList.indexOf(bender.currAbility) : -1);
+        buf.writeInt(bender.currAbility != null ? bender.getElement().getIndexOfAbility(bender.currAbility) : -1);
         ServerPlayNetworking.send((ServerPlayerEntity) bender.player, SYNC_CURR_ABILITY_PACKET_ID, buf);
     }
 
@@ -422,7 +422,7 @@ public class Bender {
         }
 
         for (String eName : eNames) {
-            Element element = Element.getElementByName(eName);
+            Element element = Element.getElement(eName);
             if (!elements.contains(element)) {
                 elements.add(element);
             }

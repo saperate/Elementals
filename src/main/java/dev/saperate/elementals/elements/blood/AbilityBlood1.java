@@ -15,14 +15,14 @@ public class AbilityBlood1 implements Ability {
             return;
         }
         if (bender.player.isSneaking() && deltaT >= 1500 && playerData.canUseUpgrade("bloodControl")) {
-            BloodElement.get().abilityList.get(2).onCall(bender, deltaT);
+            BloodElement.get().getAbility(2).onCall(bender, deltaT);
             return;
         } else if (bender.player.isSneaking() && playerData.canUseUpgrade("bloodShield")) {
-            BloodElement.get().abilityList.get(3).onCall(bender, deltaT);
+            BloodElement.get().getAbility(3).onCall(bender, deltaT);
             return;
         }
 
-        BloodElement.get().abilityList.get(1).onCall(bender, deltaT);
+        BloodElement.get().getAbility(1).onCall(bender, deltaT);
     }
 
 

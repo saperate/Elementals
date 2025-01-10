@@ -22,7 +22,7 @@ public class AbilityLightning2 implements Ability {
         }
 
         if (deltaT >= 1000 && playerData.canUseUpgrade("lightningEMP")) {
-            LightningElement.get().abilityList.get(5).onCall(bender, deltaT);
+            LightningElement.get().getAbility(5).onCall(bender, deltaT);
             return;
         }
         if (player.isSneaking() && playerData.canUseUpgrade("lightningStaticAura")) {
@@ -42,7 +42,7 @@ public class AbilityLightning2 implements Ability {
             return;
         }
 
-        LightningElement.get().abilityList.get(4).onCall(bender, deltaT);
+        LightningElement.get().getAbility(4).onCall(bender, deltaT);
     }
 
     @Override

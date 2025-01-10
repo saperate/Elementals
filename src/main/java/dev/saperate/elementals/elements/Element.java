@@ -10,14 +10,17 @@ import java.util.*;
 import static dev.saperate.elementals.utils.SapsUtils.extractBits;
 
 public abstract class Element{
-    public static final List<Element> elementList = new ArrayList<>();
-    public final List<Ability> abilityList = new ArrayList<>();
+    private static final HashMap<String,Element> elements = new HashMap<>();
+    private final List<Ability> abilityList = new ArrayList<>();
     public final List<Ability> bindableAbilities = new ArrayList<>();
     public final String name;
     public Upgrade root;
 
     public Element(String name, Upgrade root){
-        elementList.add(this);
+        if(elements.containsKey(name.toLowerCase())){
+            throw new RuntimeException("Element \""+name+"\" was already registered!");
+        }
+        elements.put(name.toLowerCase(),this);
         this.name = name;
         this.root = root;
     }
@@ -54,29 +57,19 @@ public abstract class Element{
         return abilityList.get(index);
     }
 
-    public void removeAbility(Ability a){
-        abilityList.remove(a);
+    public int getIndexOfAbility(Ability obj){
+        return abilityList.indexOf(obj);
     }
 
     public boolean contains(Ability ability){
         return abilityList.contains(ability);
     }
 
-    public static Element getElementByName(String name){
-        Element e  = getElementByNameNull(name);
-        if(e == null){
-            e = elementList.get(0);
-        }
-        return e;
-    }
-
-    public static Element getElementByNameNull(String name){
-        for(Element e : elementList){
-            if(e.name.equalsIgnoreCase(name)){
-                return e;
-            }
-        }
-        return null;
+    /**
+     * Gets an element using its name. If it is not found, returns a reference to {@link NoneElement}
+     */
+    public static Element getElement(String name){
+        return elements.getOrDefault(name.toLowerCase(),elements.get("None"));
     }
 
 
@@ -117,5 +110,4 @@ public abstract class Element{
     public String toString() {
         return name;
     }
-
 }
