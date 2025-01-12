@@ -41,7 +41,7 @@ public class EarthBlockEntityRenderer extends EntityRenderer<EarthBlockEntity> {
                 matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees((float) Math.toDegrees(Math.asin(-dir.y))));
 
                 ShrapnelModel.getTexturedModelData().createModel().render(
-                        matrices, vertexConsumer, light, 0, 1);
+                        matrices, vertexConsumer, light, 0, 0xFFFFFFFF);
             }
             case 2 -> {
                 VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderLayer.getItemEntityTranslucentCull(getTexture(entity)));
@@ -51,7 +51,7 @@ public class EarthBlockEntityRenderer extends EntityRenderer<EarthBlockEntity> {
                 matrices.translate(0.25f, -1.5f, -0.25f);
 
                 SpikeModel.getTexturedModelData().createModel().render(
-                        matrices, vertexConsumer, light, 0, 1);
+                        matrices, vertexConsumer, light, 0, 0xFFFFFFFF);
             }
             default -> {
                 BlockState state = entity.getBlockState();

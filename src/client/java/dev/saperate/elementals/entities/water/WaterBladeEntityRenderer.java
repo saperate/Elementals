@@ -49,8 +49,8 @@ public class WaterBladeEntityRenderer extends EntityRenderer<WaterBladeEntity> i
 
         WaterBladeModel.getTexturedModelData().createModel().render(
                 matrices,vertexConsumer,light,0,
-                color
-        );//fixme used to have transparency of .5, find a way to add it back
+                0x88000000 | color
+        );
 
 
 

@@ -19,13 +19,13 @@ public class ShrapnelModel extends EntityModel<EarthBlockEntity> {
 		ModelPartData modelPartData = modelData.getRoot();
 		ModelPartData bb_main = modelPartData.addChild("bb_main", ModelPartBuilder.create().uv(-7, -7).cuboid(-1.0F, -2.0F, -8.0F, 2.0F, 2.0F, 9.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, 24.0F, 0.0F));
 
-		ModelPartData cube_r1 = bb_main.addChild("cube_r1", ModelPartBuilder.create().uv(-7, -7).cuboid(-1.0F, -2.0F, -9.0F, 2.0F, 2.0F, 9.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.2182F, 0.0F, 0.0F));
+		bb_main.addChild("cube_r1", ModelPartBuilder.create().uv(-7, -7).cuboid(-1.0F, -2.0F, -9.0F, 2.0F, 2.0F, 9.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.2182F, 0.0F, 0.0F));
 
-		ModelPartData cube_r2 = bb_main.addChild("cube_r2", ModelPartBuilder.create().uv(-7, -7).cuboid(-1.0F, -2.0F, -9.0F, 2.0F, 2.0F, 9.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, -0.2182F, 0.0F, 0.0F));
+		bb_main.addChild("cube_r2", ModelPartBuilder.create().uv(-7, -7).cuboid(-1.0F, -2.0F, -9.0F, 2.0F, 2.0F, 9.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, -0.2182F, 0.0F, 0.0F));
 
-		ModelPartData cube_r3 = bb_main.addChild("cube_r3", ModelPartBuilder.create().uv(-7, -7).cuboid(-1.0F, -2.0F, -9.0F, 2.0F, 2.0F, 9.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, -0.2618F, 0.0F));
+		bb_main.addChild("cube_r3", ModelPartBuilder.create().uv(-7, -7).cuboid(-1.0F, -2.0F, -9.0F, 2.0F, 2.0F, 9.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, -0.2618F, 0.0F));
 
-		ModelPartData cube_r4 = bb_main.addChild("cube_r4", ModelPartBuilder.create().uv(-7, -7).cuboid(-1.0F, -2.0F, -9.0F, 2.0F, 2.0F, 9.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, 0.2618F, 0.0F));
+		bb_main.addChild("cube_r4", ModelPartBuilder.create().uv(-7, -7).cuboid(-1.0F, -2.0F, -9.0F, 2.0F, 2.0F, 9.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, 0.2618F, 0.0F));
 		return TexturedModelData.of(modelData, 16, 16);
 	}
 	@Override
