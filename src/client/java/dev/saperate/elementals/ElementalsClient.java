@@ -8,6 +8,7 @@ import dev.saperate.elementals.entities.common.DirtBottleEntityRenderer;
 import dev.saperate.elementals.entities.fire.*;
 import dev.saperate.elementals.entities.lightning.LightningArcEntityRenderer;
 import dev.saperate.elementals.entities.lightning.VoltArcEntityRenderer;
+import dev.saperate.elementals.entities.metal.MetalCableEntityRenderer;
 import dev.saperate.elementals.entities.water.*;
 import dev.saperate.elementals.entities.common.DecoyPlayerEntityRenderer;
 import dev.saperate.elementals.entities.earth.EarthBlockEntityRenderer;
@@ -143,6 +144,9 @@ public class ElementalsClient implements ClientModInitializer {
 
 		//BLOOD
 		EntityRendererRegistry.register(BLOODSHOT, BloodShotEntityRenderer::new);
+
+		//METAL
+		EntityRendererRegistry.register(METALCABLE, MetalCableEntityRenderer::new);
 	}
 
 	private static void onClientJoin(ClientPlayNetworkHandler clientPlayNetworkHandler, PacketSender packetSender, MinecraftClient client) {

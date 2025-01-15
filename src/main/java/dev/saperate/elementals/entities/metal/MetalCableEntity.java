@@ -1,45 +1,38 @@
-package dev.saperate.elementals.entities.lightning;
+package dev.saperate.elementals.entities.metal;
 
-import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.entities.common.AbstractElementalsEntity;
 import dev.saperate.elementals.entities.fire.FireArcEntity;
-import dev.saperate.elementals.utils.SapsUtils;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LightningEntity;
 import net.minecraft.entity.MovementType;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.particle.ParticleTypes;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 import static dev.saperate.elementals.Elementals.LIGHTNING_PARTICLE_TYPE;
-import static dev.saperate.elementals.entities.ElementalEntities.FIREARC;
 import static dev.saperate.elementals.entities.ElementalEntities.LIGHTNINGARC;
+import static dev.saperate.elementals.entities.ElementalEntities.METALCABLE;
 import static dev.saperate.elementals.utils.SapsUtils.getEntityLookVector;
 import static dev.saperate.elementals.utils.SapsUtils.summonParticles;
 
-public class LightningArcEntity extends AbstractElementalsEntity<PlayerEntity> {
+public class MetalCableEntity extends AbstractElementalsEntity<PlayerEntity> {
 
-    private static final TrackedData<Integer> PARENT_ID = DataTracker.registerData(LightningArcEntity.class, TrackedDataHandlerRegistry.INTEGER);
-    private static final TrackedData<Integer> CHILD_ID = DataTracker.registerData(LightningArcEntity.class, TrackedDataHandlerRegistry.INTEGER);
-    public static final float chainDistance = 0.75f;
-    public static final int MAX_CHAIN_LENGTH = 7;
+    private static final TrackedData<Integer> PARENT_ID = DataTracker.registerData(MetalCableEntity.class, TrackedDataHandlerRegistry.INTEGER);
+    private static final TrackedData<Integer> CHILD_ID = DataTracker.registerData(MetalCableEntity.class, TrackedDataHandlerRegistry.INTEGER);
+    public static final float chainDistance = 2;
+    public static final int MAX_CHAIN_LENGTH = 10;
     public int chainLength = 0;
 
 
-    public LightningArcEntity(EntityType<LightningArcEntity> type, World world) {
+    public MetalCableEntity(EntityType<MetalCableEntity> type, World world) {
         super(type, world, PlayerEntity.class);
     }
 
-    public LightningArcEntity(World world, PlayerEntity owner, double x, double y, double z) {
-        super(LIGHTNINGARC, world, PlayerEntity.class);
+    public MetalCableEntity(World world, PlayerEntity owner, double x, double y, double z) {
+        super(METALCABLE, world, PlayerEntity.class);
         setOwner(owner);
         setPos(x, y, z);
 
@@ -53,10 +46,22 @@ public class LightningArcEntity extends AbstractElementalsEntity<PlayerEntity> {
         this.getDataTracker().startTracking(CHILD_ID, 0);
     }
 
+    public void createChain(PlayerEntity owner) {
+        if (chainLength < MAX_CHAIN_LENGTH) {
+            MetalCableEntity newArc = new MetalCableEntity(getWorld(), owner, getX(), getY(), getZ());
+            newArc.setParent(this);
+            setChild(newArc);
+            newArc.setControlled(false);
+            getWorld().spawnEntity(newArc);
+            chainLength++;
+            newArc.chainLength = chainLength;
+            newArc.createChain(owner);
+        }
+    }
 
-    public void makeChild(){
-        LightningArcEntity parent = getTail();
-        LightningArcEntity newArc = new LightningArcEntity(getWorld(), getOwner(), getX(), getY(), getZ());
+    public void makeChild() {
+        MetalCableEntity parent = getTail();
+        MetalCableEntity newArc = new MetalCableEntity(getWorld(), getOwner(), getX(), getY(), getZ());
 
         newArc.setParent(parent);
         parent.setChild(newArc);
@@ -71,56 +76,59 @@ public class LightningArcEntity extends AbstractElementalsEntity<PlayerEntity> {
     public void tick() {
         super.tick();
 
-        if (random.nextBetween(0, 20) == 6) {
-            summonParticles(this, random,
-                    LIGHTNING_PARTICLE_TYPE,
-                    0, 1, 0);
-            if (getParent() == null) {
-                //playSound(SoundEvents.BLOCK_FIRE_AMBIENT, 1, 0);
-            }
-        }
-
         PlayerEntity owner = getOwner();
         if (owner == null && isRemoved()) {
             return;
         }
 
-        moveEntity(owner, getParent());
+        MetalCableEntity parent = getParent();
+
+        moveEntity(owner, parent);
     }
 
     @Override
     public void collidesWithGround() {
-        if (getParent() == null) {
-            remove();
-        }
     }
 
     @Override
     public void onHitEntity(Entity entity) {
-        if(entity == getOwner() || getParent() != null){
+        if (entity == getOwner() || getParent() != null) {
             return;
         }
         remove();
     }
 
     private void moveEntity(Entity owner, Entity parent) {
-
-        if (getIsControlled()) {
-            moveEntityTowardsGoal(getEntityLookVector(owner, 3).add(0,0.5,0).toVector3f());
-        } else if (getParent() != null) {
-            setVelocity(0,0,0);
-            Vec3d direction = parent.getPos().subtract(getPos());
-            double distance = direction.length();
-
-            if (distance > chainDistance && (getChild() != null || chainLength == MAX_CHAIN_LENGTH)) {
-                direction = direction.normalize().multiply(distance - chainDistance).add(getPos());
-                setPos(direction.x, direction.y, direction.z);
-            }
-            if(getChild() == null && chainLength != MAX_CHAIN_LENGTH && distance > chainDistance * 1.25f){ //If we are at the tail of the arc
-                makeChild();
-            }
+        if (getChild() == null) {
+            return;
         }
 
+        if (getParent() == null) {
+            moveEntityTowardsGoal(getOwner().getPos().toVector3f());
+        } else {
+            Vec3d finalPos = getPos();
+
+            Vec3d directionToParent = parent.getPos().subtract(getPos());
+            double distanceToParent = directionToParent.length();
+
+            if (distanceToParent >= chainDistance) {
+                finalPos = directionToParent.normalize()
+                        .multiply(distanceToParent - chainDistance)
+                        .add(getPos());
+            }
+
+            Vec3d childPos = getChild().getPos();
+            Vec3d directionToChild = childPos.subtract(getPos());
+            double distanceToChild = directionToChild.length();
+
+            if (distanceToChild >= chainDistance + 1) {
+                finalPos = finalPos.add(directionToChild.normalize()
+                        .multiply(distanceToChild - chainDistance));
+            }
+
+            moveEntityTowardsGoal(finalPos.toVector3f());
+
+        }
 
         this.move(MovementType.SELF, this.getVelocity());
     }
@@ -128,7 +136,7 @@ public class LightningArcEntity extends AbstractElementalsEntity<PlayerEntity> {
 
     @Override
     public void onRemoved() {
-        if(getIsControlled()){
+        if (getIsControlled()) {
             return;
         }
         summonParticles(this, random,
@@ -146,16 +154,16 @@ public class LightningArcEntity extends AbstractElementalsEntity<PlayerEntity> {
         getHead().remove();
     }
 
-    public LightningArcEntity getHead() {
-        LightningArcEntity parent = getParent();
+    public MetalCableEntity getHead() {
+        MetalCableEntity parent = getParent();
         if (parent == null) {
             return this;
         }
         return parent.getHead();
     }
 
-    public LightningArcEntity getTail() {
-        LightningArcEntity child = getChild();
+    public MetalCableEntity getTail() {
+        MetalCableEntity child = getChild();
         if (child == null) {
             return this;
         }
@@ -166,7 +174,7 @@ public class LightningArcEntity extends AbstractElementalsEntity<PlayerEntity> {
      * remove a specific link from the chain. it also kills its children
      */
     public void remove() {
-        LightningArcEntity child = getChild();
+        MetalCableEntity child = getChild();
         if (child == null) {
             if (getParent() == null) {
                 this.discard();
@@ -177,7 +185,7 @@ public class LightningArcEntity extends AbstractElementalsEntity<PlayerEntity> {
             return;
         }
         child.remove();
-        LightningArcEntity parent = getParent();
+        MetalCableEntity parent = getParent();
         if (parent != null) {
             getParent().setChild(null);
         }
@@ -185,29 +193,29 @@ public class LightningArcEntity extends AbstractElementalsEntity<PlayerEntity> {
     }
 
 
-    public LightningArcEntity getParent() {
+    public MetalCableEntity getParent() {
         int parentId = this.getDataTracker().get(PARENT_ID);
         Entity parent = this.getWorld().getEntityById(parentId);
-        return parent instanceof LightningArcEntity ? (LightningArcEntity) this.getWorld().getEntityById(parentId) : null;
+        return parent instanceof MetalCableEntity ? (MetalCableEntity) this.getWorld().getEntityById(parentId) : null;
     }
 
-    public void setParent(LightningArcEntity parent) {
+    public void setParent(MetalCableEntity parent) {
         this.getDataTracker().set(PARENT_ID, parent != null ? parent.getId() : 0);
     }
 
-    public LightningArcEntity getChild() {
+    public MetalCableEntity getChild() {
         int childId = this.getDataTracker().get(CHILD_ID);
         Entity child = this.getWorld().getEntityById(childId);
-        return child instanceof LightningArcEntity ? (LightningArcEntity) this.getWorld().getEntityById(childId) : null;
+        return child instanceof MetalCableEntity ? (MetalCableEntity) this.getWorld().getEntityById(childId) : null;
     }
 
-    public void setChild(LightningArcEntity child) {
+    public void setChild(MetalCableEntity child) {
         this.getDataTracker().set(CHILD_ID, child != null ? child.getId() : 0);
     }
 
     @Override
     public boolean hasNoGravity() {
-        return super.hasNoGravity() || getParent() != null;
+        return false;
     }
 
     @Override
