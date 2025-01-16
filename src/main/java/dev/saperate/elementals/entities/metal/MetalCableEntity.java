@@ -11,6 +11,7 @@ import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import org.joml.Vector3f;
 
 import static dev.saperate.elementals.Elementals.LIGHTNING_PARTICLE_TYPE;
 import static dev.saperate.elementals.entities.ElementalEntities.LIGHTNINGARC;
@@ -22,7 +23,7 @@ public class MetalCableEntity extends AbstractElementalsEntity<PlayerEntity> {
 
     private static final TrackedData<Integer> PARENT_ID = DataTracker.registerData(MetalCableEntity.class, TrackedDataHandlerRegistry.INTEGER);
     private static final TrackedData<Integer> CHILD_ID = DataTracker.registerData(MetalCableEntity.class, TrackedDataHandlerRegistry.INTEGER);
-    public static final float chainDistance = 2;
+    public float chainDistance = 0.5f;
     public static final int MAX_CHAIN_LENGTH = 10;
     public int chainLength = 0;
 
@@ -104,7 +105,20 @@ public class MetalCableEntity extends AbstractElementalsEntity<PlayerEntity> {
         }
 
         if (getParent() == null) {
-            moveEntityTowardsGoal(getOwner().getPos().toVector3f());
+            Vec3d direction = getOwner().getPos()
+                    .add(0, 1, 0)
+                    .subtract(getPos())
+                    .multiply(getMovementSpeed() * 4);
+            this.setVelocity(direction.x, direction.y, direction.z);
+
+            Vec3d dirCenter = owner.getPos().subtract(getTail().getPos()).multiply(-1).normalize();
+            Vec3d velocity = owner.getVelocity().multiply(1.05);
+
+            Vec3d tangent = velocity.subtract(dirCenter.multiply(
+                    ((velocity.dotProduct(dirCenter)) / dirCenter.dotProduct(dirCenter))));
+            owner.setVelocity(tangent.add(0,0,0));
+            owner.move(MovementType.PLAYER, owner.getVelocity());
+            owner.fallDistance = 0;
         } else {
             Vec3d finalPos = getPos();
 
@@ -123,6 +137,7 @@ public class MetalCableEntity extends AbstractElementalsEntity<PlayerEntity> {
 
             if (distanceToChild >= chainDistance + 1) {
                 finalPos = finalPos.add(directionToChild.normalize()
+                        .multiply(2)
                         .multiply(distanceToChild - chainDistance));
             }
 
@@ -170,6 +185,13 @@ public class MetalCableEntity extends AbstractElementalsEntity<PlayerEntity> {
         return child.getTail();
     }
 
+    public void setChainDistance(float val) {
+        chainDistance = val;
+        if (getChild() != null) {
+            getChild().setChainDistance(val);
+        }
+    }
+
     /**
      * remove a specific link from the chain. it also kills its children
      */
@@ -215,7 +237,7 @@ public class MetalCableEntity extends AbstractElementalsEntity<PlayerEntity> {
 
     @Override
     public boolean hasNoGravity() {
-        return false;
+        return getParent() == null;
     }
 
     @Override

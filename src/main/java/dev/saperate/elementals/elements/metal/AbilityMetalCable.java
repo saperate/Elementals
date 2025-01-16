@@ -14,14 +14,15 @@ public class AbilityMetalCable implements Ability {
     public void onCall(Bender bender, long deltaT) {
         bender.setCurrAbility(this);
         PlayerEntity player = bender.player;
-        HitResult hitResult = SapsUtils.raycastFull(player,25,false);
+        HitResult hitResult = SapsUtils.raycastFull(player, 25, false);
 
-        if(!hitResult.getType().equals(HitResult.Type.BLOCK)){
+        if (!hitResult.getType().equals(HitResult.Type.BLOCK)) {
             bender.setCurrAbility(null);
             return;
         }
 
         MetalCableEntity entity = new MetalCableEntity(player.getWorld(), player, hitResult.getPos().x, hitResult.getPos().y, hitResult.getPos().z);
+        entity.setControlled(false);
         entity.createChain(player);
 
         bender.abilityData = entity;
@@ -31,8 +32,14 @@ public class AbilityMetalCable implements Ability {
     public void onTick(Bender bender) {
         PlayerEntity player = bender.player;
         MetalCableEntity head = getAbilityData(bender.abilityData);
-        if(player.isSneaking()){
-            //onRemove(bender);
+        if (player.isSneaking()) {
+            MetalCableEntity tail = head.getTail();
+            if(tail.getParent() != head.getChild()){
+                tail.getParent().setPos(tail.getX(),tail.getY(),tail.getZ());
+                tail.remove();
+            }else {
+                onRemove(bender);
+            }
         }
     }
 
