@@ -124,15 +124,15 @@ public class Elementals implements ModInitializer {
 
 
 
-        LootTableEvents.MODIFY.register((key, tableBuilder, source, lookup) -> {//TODO check if works
+        LootTableEvents.MODIFY.register((key, tableBuilder, source, lookup) -> {
             if(source.isBuiltin() && (LootTables.DESERT_PYRAMID_ARCHAEOLOGY.equals(key))){
-                LootPool.Builder builder = LootPool.builder();
-                builder.with(ItemEntry.builder(LIGHTNING_SCROLL_ITEM).build());
-                tableBuilder.pool(builder);
+                tableBuilder.modifyPools((builder)->{
+                    builder.with(ItemEntry.builder(LIGHTNING_SCROLL_ITEM).build());
+                });
             }else if(source.isBuiltin() && (LootTables.FISHING_TREASURE_GAMEPLAY.equals(key))){
-                LootPool.Builder builder = LootPool.builder();
-                builder.with(ItemEntry.builder(BLOOD_SCROLL_ITEM).build());
-                tableBuilder.pool(builder);
+                tableBuilder.modifyPools((builder)->{
+                    builder.with(ItemEntry.builder(BLOOD_SCROLL_ITEM).build());
+                });
             }
         });
 
