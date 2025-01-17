@@ -10,6 +10,7 @@ import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.particle.ParticleTypes;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.joml.Vector3f;
@@ -24,7 +25,7 @@ public class MetalCableEntity extends AbstractElementalsEntity<LivingEntity> {
 
     private static final TrackedData<Integer> PARENT_ID = DataTracker.registerData(MetalCableEntity.class, TrackedDataHandlerRegistry.INTEGER);
     private static final TrackedData<Integer> CHILD_ID = DataTracker.registerData(MetalCableEntity.class, TrackedDataHandlerRegistry.INTEGER);
-    public float chainDistance = 0.5f;
+    public static final float chainDistance = 0.5f;
     public static final int MAX_CHAIN_LENGTH = 10;
     public int chainLength = 0;
 
@@ -61,19 +62,6 @@ public class MetalCableEntity extends AbstractElementalsEntity<LivingEntity> {
         }
     }
 
-    public void makeChild() {
-        MetalCableEntity parent = getTail();
-        MetalCableEntity newArc = new MetalCableEntity(getWorld(), getOwner(), getX(), getY(), getZ());
-
-        newArc.setParent(parent);
-        parent.setChild(newArc);
-        newArc.setControlled(false);
-        getWorld().spawnEntity(newArc);
-
-        chainLength++;
-        newArc.chainLength = chainLength;
-    }
-
     @Override
     public void tick() {
         super.tick();
@@ -84,21 +72,9 @@ public class MetalCableEntity extends AbstractElementalsEntity<LivingEntity> {
         }
 
         MetalCableEntity parent = getParent();
-
         moveEntity(owner, parent);
     }
 
-    @Override
-    public void collidesWithGround() {
-    }
-
-    @Override
-    public void onHitEntity(Entity entity) {
-        if (entity == getOwner() || getParent() != null) {
-            return;
-        }
-        remove();
-    }
 
     private void moveEntity(Entity owner, Entity parent) {
         if (getChild() == null) {
@@ -132,9 +108,8 @@ public class MetalCableEntity extends AbstractElementalsEntity<LivingEntity> {
             double distanceToParent = directionToParent.length();
 
             if (distanceToParent >= chainDistance) {
-                finalPos = directionToParent.normalize()
-                        .multiply(distanceToParent - chainDistance)
-                        .add(getPos());
+                finalPos = finalPos.add(directionToParent.normalize()
+                        .multiply(distanceToParent - chainDistance));
             }
 
             Vec3d childPos = getChild().getPos();
@@ -147,8 +122,11 @@ public class MetalCableEntity extends AbstractElementalsEntity<LivingEntity> {
                         .multiply(distanceToChild - chainDistance));
             }
 
-            moveEntityTowardsGoal(finalPos.toVector3f());
-
+            if (finalPos.distanceTo(getPos()) >= 4){
+                setPosition(finalPos.subtract(getPos()).multiply(0.1).add(getPos()));
+            }else{
+                moveEntityTowardsGoal(finalPos.toVector3f());
+            }
         }
 
         this.move(MovementType.SELF, this.getVelocity());
@@ -161,8 +139,8 @@ public class MetalCableEntity extends AbstractElementalsEntity<LivingEntity> {
             return;
         }
         summonParticles(this, random,
-                LIGHTNING_PARTICLE_TYPE,
-                0.05f, 2);
+                ParticleTypes.ASH,
+                0.01f, 10);
     }
 
     /**
@@ -191,12 +169,6 @@ public class MetalCableEntity extends AbstractElementalsEntity<LivingEntity> {
         return child.getTail();
     }
 
-    public void setChainDistance(float val) {
-        chainDistance = val;
-        if (getChild() != null) {
-            getChild().setChainDistance(val);
-        }
-    }
 
     /**
      * remove a specific link from the chain. it also kills its children

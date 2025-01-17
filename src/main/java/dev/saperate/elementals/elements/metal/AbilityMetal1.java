@@ -6,7 +6,7 @@ import dev.saperate.elementals.elements.Ability;
 public class AbilityMetal1 implements Ability {
     @Override
     public void onCall(Bender bender, long deltaT) {
-        System.out.println("yo");
+        System.out.println("Nothing yet");
         bender.setCurrAbility(null);
     }
 
