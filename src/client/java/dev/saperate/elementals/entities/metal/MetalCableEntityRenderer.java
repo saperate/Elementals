@@ -18,7 +18,7 @@ import static dev.saperate.elementals.entities.utils.RenderUtils.drawCube;
 
 
 public class MetalCableEntityRenderer extends EntityRenderer<MetalCableEntity> {
-    private static final Identifier fireTex = Identifier.of("minecraft", "block/chain");//"block/fire_0");
+    private static final Identifier fireTex = Identifier.of("minecraft", "block/iron_block");//"block/fire_0");
     public MetalCableEntityRenderer(EntityRendererFactory.Context context) {
         super(context);
     }
@@ -27,11 +27,16 @@ public class MetalCableEntityRenderer extends EntityRenderer<MetalCableEntity> {
     public void render(MetalCableEntity entity, float yaw, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light) {
         MetalCableEntity child = entity.getChild();
         if (child == null) {
+            entity.setPosition(entity.getOwner().getPos().add(0,1,0));
             return;
         }
 
+        if(entity.getParent() == null){
+            entity.setPosition(entity.getOwner().getPos().add(0,1,0));
+        }
+
         matrices.push();
-        matrices.scale(0.25f, 0.25f, 0.25f);
+        matrices.scale(0.125f, 0.125f, 0.125f);
         //matrices.translate(0, 0.5f, 0);
 
 
@@ -42,11 +47,11 @@ public class MetalCableEntityRenderer extends EntityRenderer<MetalCableEntity> {
 
         VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderLayer.getCutout());
 
-        int color = 0xFFFFFF;
+        int color = 0xFF303030;
 
 
         Vec3d dir = child.getPos().subtract(entity.getPos());
-        float d = (float) dir.length() * 4;
+        float d = (float) dir.length() * 8;
         dir = dir.normalize();
 
 
@@ -60,11 +65,11 @@ public class MetalCableEntityRenderer extends EntityRenderer<MetalCableEntity> {
                 (color >> 8 & 255) / 255.0f,
                 (color & 255) / 255.0f,
                 1,
-                 fireTex,
-                d, mat,
+                Identifier.of("minecraft", "block/iron_block"),
+                d * 1.05f, mat,
                 false,
-                false,
-                false
+                true,
+                true
         );
 
 

@@ -4,6 +4,7 @@ import dev.saperate.elementals.entities.common.AbstractElementalsEntity;
 import dev.saperate.elementals.entities.fire.FireArcEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MovementType;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
@@ -19,7 +20,7 @@ import static dev.saperate.elementals.entities.ElementalEntities.METALCABLE;
 import static dev.saperate.elementals.utils.SapsUtils.getEntityLookVector;
 import static dev.saperate.elementals.utils.SapsUtils.summonParticles;
 
-public class MetalCableEntity extends AbstractElementalsEntity<PlayerEntity> {
+public class MetalCableEntity extends AbstractElementalsEntity<LivingEntity> {
 
     private static final TrackedData<Integer> PARENT_ID = DataTracker.registerData(MetalCableEntity.class, TrackedDataHandlerRegistry.INTEGER);
     private static final TrackedData<Integer> CHILD_ID = DataTracker.registerData(MetalCableEntity.class, TrackedDataHandlerRegistry.INTEGER);
@@ -29,11 +30,11 @@ public class MetalCableEntity extends AbstractElementalsEntity<PlayerEntity> {
 
 
     public MetalCableEntity(EntityType<MetalCableEntity> type, World world) {
-        super(type, world, PlayerEntity.class);
+        super(type, world, LivingEntity.class);
     }
 
-    public MetalCableEntity(World world, PlayerEntity owner, double x, double y, double z) {
-        super(METALCABLE, world, PlayerEntity.class);
+    public MetalCableEntity(World world, LivingEntity owner, double x, double y, double z) {
+        super(METALCABLE, world, LivingEntity.class);
         setOwner(owner);
         setPos(x, y, z);
 
@@ -47,7 +48,7 @@ public class MetalCableEntity extends AbstractElementalsEntity<PlayerEntity> {
         this.getDataTracker().startTracking(CHILD_ID, 0);
     }
 
-    public void createChain(PlayerEntity owner) {
+    public void createChain(LivingEntity owner) {
         if (chainLength < MAX_CHAIN_LENGTH) {
             MetalCableEntity newArc = new MetalCableEntity(getWorld(), owner, getX(), getY(), getZ());
             newArc.setParent(this);
@@ -77,7 +78,7 @@ public class MetalCableEntity extends AbstractElementalsEntity<PlayerEntity> {
     public void tick() {
         super.tick();
 
-        PlayerEntity owner = getOwner();
+        LivingEntity owner = getOwner();
         if (owner == null && isRemoved()) {
             return;
         }
@@ -101,24 +102,29 @@ public class MetalCableEntity extends AbstractElementalsEntity<PlayerEntity> {
 
     private void moveEntity(Entity owner, Entity parent) {
         if (getChild() == null) {
+            setPosition(owner.getPos().add(0,1,0));
             return;
         }
 
         if (getParent() == null) {
+            owner.dismountVehicle();
             Vec3d direction = getOwner().getPos()
                     .add(0, 1, 0)
                     .subtract(getPos())
                     .multiply(getMovementSpeed() * 4);
             this.setVelocity(direction.x, direction.y, direction.z);
 
-            Vec3d dirCenter = owner.getPos().subtract(getTail().getPos()).multiply(-1).normalize();
-            Vec3d velocity = owner.getVelocity().multiply(1.05);
+            double distanceToOwner = getOwner().getPos().distanceTo(getTail().getPos());
+            if(distanceToOwner >= 18){
+                Vec3d dirCenter = owner.getPos().subtract(getTail().getPos()).multiply(-1).normalize();
+                Vec3d velocity = owner.getVelocity().multiply(1.05);
 
-            Vec3d tangent = velocity.subtract(dirCenter.multiply(
-                    ((velocity.dotProduct(dirCenter)) / dirCenter.dotProduct(dirCenter))));
-            owner.setVelocity(tangent.add(0,0,0));
-            owner.move(MovementType.PLAYER, owner.getVelocity());
-            owner.fallDistance = 0;
+                Vec3d tangent = velocity.subtract(dirCenter.multiply(
+                        ((velocity.dotProduct(dirCenter)) / dirCenter.dotProduct(dirCenter))));
+                owner.setVelocity(tangent.add(dirCenter.multiply(distanceToOwner - 18)));
+                owner.move(MovementType.PLAYER, owner.getVelocity());
+                owner.fallDistance = 0;
+            }
         } else {
             Vec3d finalPos = getPos();
 
@@ -243,5 +249,10 @@ public class MetalCableEntity extends AbstractElementalsEntity<PlayerEntity> {
     @Override
     public boolean pushesEntitiesAway() {
         return false;
+    }
+
+    @Override
+    public boolean discardsOnNullOwner() {
+        return true;
     }
 }

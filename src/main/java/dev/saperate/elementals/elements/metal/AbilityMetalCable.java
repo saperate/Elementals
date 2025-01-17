@@ -4,8 +4,10 @@ import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.elements.Ability;
 import dev.saperate.elementals.entities.metal.MetalCableEntity;
 import dev.saperate.elementals.utils.SapsUtils;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MovementType;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.Vec3d;
 
@@ -16,14 +18,19 @@ public class AbilityMetalCable implements Ability {
         PlayerEntity player = bender.player;
         HitResult hitResult = SapsUtils.raycastFull(player, 25, false);
 
-        if (!hitResult.getType().equals(HitResult.Type.BLOCK)) {
+        if (!hitResult.getType().equals(HitResult.Type.ENTITY)) {
             bender.setCurrAbility(null);
             return;
         }
 
-        MetalCableEntity entity = new MetalCableEntity(player.getWorld(), player, hitResult.getPos().x, hitResult.getPos().y, hitResult.getPos().z);
+        MetalCableEntity entity = new MetalCableEntity(
+                player.getWorld(),
+                (LivingEntity) ((EntityHitResult) hitResult).getEntity(),
+                player.getX(), player.getY(), player.getZ()
+        );
         entity.setControlled(false);
-        entity.createChain(player);
+        entity.createChain((LivingEntity) ((EntityHitResult) hitResult).getEntity());
+        entity.getTail().setOwner(player);
 
         bender.abilityData = entity;
     }
@@ -31,9 +38,10 @@ public class AbilityMetalCable implements Ability {
     @Override
     public void onTick(Bender bender) {
         PlayerEntity player = bender.player;
-        MetalCableEntity head = getAbilityData(bender.abilityData);
+        MetalCableEntity head = getCableEntity(bender.abilityData);
+        MetalCableEntity tail = head.getTail();
+
         if (player.isSneaking()) {
-            MetalCableEntity tail = head.getTail();
             if(tail.getParent() != head.getChild()){
                 tail.getParent().setPos(tail.getX(),tail.getY(),tail.getZ());
                 tail.remove();
@@ -45,11 +53,13 @@ public class AbilityMetalCable implements Ability {
 
     @Override
     public void onRemove(Bender bender) {
-        getAbilityData(bender.abilityData).despawn();
+        getCableEntity(bender.abilityData).despawn();
         bender.setCurrAbility(null);
     }
 
-    public MetalCableEntity getAbilityData(Object object) {
-        return (MetalCableEntity) object;
+
+    public MetalCableEntity getCableEntity(Object abilityData) {
+        return (MetalCableEntity) abilityData;
     }
+
 }
