@@ -26,7 +26,7 @@ public class MetalCableEntity extends AbstractElementalsEntity<LivingEntity> {
     private static final TrackedData<Integer> PARENT_ID = DataTracker.registerData(MetalCableEntity.class, TrackedDataHandlerRegistry.INTEGER);
     private static final TrackedData<Integer> CHILD_ID = DataTracker.registerData(MetalCableEntity.class, TrackedDataHandlerRegistry.INTEGER);
     public static final float chainDistance = 0.5f;
-    public static final int MAX_CHAIN_LENGTH = 10;
+    public static final int MAX_CHAIN_LENGTH = 2;
     public int chainLength = 0;
 
 
@@ -78,7 +78,8 @@ public class MetalCableEntity extends AbstractElementalsEntity<LivingEntity> {
 
     private void moveEntity(Entity owner, Entity parent) {
         if (getChild() == null) {
-            setPosition(owner.getPos().add(0,1,0));
+                moveEntityTowardsGoal(owner.getEyePos().toVector3f(),getMovementSpeed()*4);
+                this.move(MovementType.SELF, this.getVelocity());
             return;
         }
 

@@ -48,5 +48,6 @@ public class AbilityMetalBind implements Ability {
     public void onBackgroundTick(Bender bender, Object data) {
         PlayerEntity player = bender.player;
         player.stopFallFlying();
+
     }
 }
