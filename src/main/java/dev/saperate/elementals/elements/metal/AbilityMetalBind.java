@@ -28,7 +28,7 @@ public class AbilityMetalBind implements Ability {
                     player.getX(), player.getY(), player.getZ()
             );
             entity.setControlled(false);
-            entity.createChain((LivingEntity) ((EntityHitResult) hitResult).getEntity());
+            entity.createChain((LivingEntity) ((EntityHitResult) hitResult).getEntity(),2);
             entity.getTail().setOwner(player);
             bender.addBackgroundAbility(this,entity);
 

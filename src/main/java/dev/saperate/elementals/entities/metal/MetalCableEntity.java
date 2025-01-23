@@ -22,11 +22,10 @@ import static dev.saperate.elementals.utils.SapsUtils.getEntityLookVector;
 import static dev.saperate.elementals.utils.SapsUtils.summonParticles;
 
 public class MetalCableEntity extends AbstractElementalsEntity<LivingEntity> {
-
+    private static final TrackedData<Boolean> FROZEN = DataTracker.registerData(MetalCableEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
+    private static final TrackedData<Float> DISTANCE = DataTracker.registerData(MetalCableEntity.class, TrackedDataHandlerRegistry.FLOAT);
     private static final TrackedData<Integer> PARENT_ID = DataTracker.registerData(MetalCableEntity.class, TrackedDataHandlerRegistry.INTEGER);
     private static final TrackedData<Integer> CHILD_ID = DataTracker.registerData(MetalCableEntity.class, TrackedDataHandlerRegistry.INTEGER);
-    public static final float chainDistance = 0.5f;
-    public static final int MAX_CHAIN_LENGTH = 2;
     public int chainLength = 0;
 
 
@@ -45,11 +44,13 @@ public class MetalCableEntity extends AbstractElementalsEntity<LivingEntity> {
     @Override
     protected void initDataTracker() {
         super.initDataTracker();
+        this.getDataTracker().startTracking(FROZEN, false);
+        this.getDataTracker().startTracking(DISTANCE, 18f);
         this.getDataTracker().startTracking(PARENT_ID, 0);
         this.getDataTracker().startTracking(CHILD_ID, 0);
     }
 
-    public void createChain(LivingEntity owner) {
+    public void createChain(LivingEntity owner, int MAX_CHAIN_LENGTH) {
         if (chainLength < MAX_CHAIN_LENGTH) {
             MetalCableEntity newArc = new MetalCableEntity(getWorld(), owner, getX(), getY(), getZ());
             newArc.setParent(this);
@@ -58,7 +59,7 @@ public class MetalCableEntity extends AbstractElementalsEntity<LivingEntity> {
             getWorld().spawnEntity(newArc);
             chainLength++;
             newArc.chainLength = chainLength;
-            newArc.createChain(owner);
+            newArc.createChain(owner, MAX_CHAIN_LENGTH);
         }
     }
 
@@ -78,59 +79,32 @@ public class MetalCableEntity extends AbstractElementalsEntity<LivingEntity> {
 
     private void moveEntity(Entity owner, Entity parent) {
         if (getChild() == null) {
-                moveEntityTowardsGoal(owner.getEyePos().toVector3f(),getMovementSpeed()*4);
+            moveEntityTowardsGoal(owner.getEyePos().toVector3f(), getMovementSpeed() * 4);
+            if (!getFrozen()) {
                 this.move(MovementType.SELF, this.getVelocity());
+            }
             return;
         }
 
-        if (getParent() == null) {
-            owner.dismountVehicle();
-            Vec3d direction = getOwner().getPos()
-                    .add(0, 1, 0)
-                    .subtract(getPos())
-                    .multiply(getMovementSpeed() * 4);
-            this.setVelocity(direction.x, direction.y, direction.z);
+        if (parent == null) {
+            setPosition(owner.getLeashPos(0));
 
-            double distanceToOwner = getOwner().getPos().distanceTo(getTail().getPos());
-            if(distanceToOwner >= 18){
+            double distanceToOwner = owner.getPos().distanceTo(getTail().getPos());
+            owner.dismountVehicle();
+            if (distanceToOwner >= getDistance()) {
                 Vec3d dirCenter = owner.getPos().subtract(getTail().getPos()).multiply(-1).normalize();
                 Vec3d velocity = owner.getVelocity().multiply(1.05);
 
                 Vec3d tangent = velocity.subtract(dirCenter.multiply(
                         ((velocity.dotProduct(dirCenter)) / dirCenter.dotProduct(dirCenter))));
-                owner.setVelocity(tangent.add(dirCenter.multiply(distanceToOwner - 18)));
+                owner.setVelocity(tangent.add(dirCenter.multiply(Math.min(distanceToOwner - getDistance(),1))));
                 owner.move(MovementType.PLAYER, owner.getVelocity());
                 owner.fallDistance = 0;
             }
-        } else {
-            Vec3d finalPos = getPos();
-
-            Vec3d directionToParent = parent.getPos().subtract(getPos());
-            double distanceToParent = directionToParent.length();
-
-            if (distanceToParent >= chainDistance) {
-                finalPos = finalPos.add(directionToParent.normalize()
-                        .multiply(distanceToParent - chainDistance));
-            }
-
-            Vec3d childPos = getChild().getPos();
-            Vec3d directionToChild = childPos.subtract(getPos());
-            double distanceToChild = directionToChild.length();
-
-            if (distanceToChild >= chainDistance + 1) {
-                finalPos = finalPos.add(directionToChild.normalize()
-                        .multiply(2)
-                        .multiply(distanceToChild - chainDistance));
-            }
-
-            if (finalPos.distanceTo(getPos()) >= 4){
-                setPosition(finalPos.subtract(getPos()).multiply(0.1).add(getPos()));
-            }else{
-                moveEntityTowardsGoal(finalPos.toVector3f());
-            }
         }
-
-        this.move(MovementType.SELF, this.getVelocity());
+        if (!getFrozen()) {
+            this.move(MovementType.SELF, this.getVelocity());
+        }
     }
 
 
@@ -212,6 +186,22 @@ public class MetalCableEntity extends AbstractElementalsEntity<LivingEntity> {
 
     public void setChild(MetalCableEntity child) {
         this.getDataTracker().set(CHILD_ID, child != null ? child.getId() : 0);
+    }
+
+    public boolean getFrozen() {
+        return this.getDataTracker().get(FROZEN);
+    }
+
+    public void setFrozen(boolean val) {
+        this.getDataTracker().set(FROZEN, val);
+    }
+
+    public float getDistance() {
+        return this.getDataTracker().get(DISTANCE);
+    }
+
+    public void setDistance(float val) {
+        this.getDataTracker().set(DISTANCE, val);
     }
 
     @Override
