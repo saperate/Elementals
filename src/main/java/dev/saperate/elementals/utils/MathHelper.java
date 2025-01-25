@@ -65,7 +65,6 @@ public abstract class MathHelper {
     //Easing functions
 
     public static float linear(float first, float last, float progress){
-        //I tried really hard to use Math.clamp, but for some godforsaken reason that shit didn't work
         return first + (last - first) * MathHelper.clamp(progress, 0f, 1f);
     }
 
