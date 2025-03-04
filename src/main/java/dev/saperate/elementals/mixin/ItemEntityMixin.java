@@ -21,23 +21,29 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(ItemEntity.class)
 public abstract class ItemEntityMixin {
-    @Shadow public abstract ItemStack getStack();
+    @Shadow
+    public abstract ItemStack getStack();
 
     @Inject(at = @At("HEAD"), method = "damage", cancellable = true)
     private void onDamage(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
         ItemEntity entity = ((ItemEntity) (Object) this);
         ItemStack stack = getStack();
-
-        if(source.isOf(DamageTypes.LIGHTNING_BOLT) && stack.getItem().equals(Items.GLASS_BOTTLE)){
-            stack.decrement(1);
-            ItemEntity lightningBottleEntity = new ItemEntity(
-                    entity.getWorld(),
-                    entity.getX(),entity.getY(),entity.getZ(),
-                    ElementalItems.LIGHTNING_BOTTLE_ITEM.getDefaultStack()
-            );
-            entity.getWorld().spawnEntity(lightningBottleEntity);
-            cir.setReturnValue(true);
-            cir.cancel();
+        if (source.isOf(DamageTypes.LIGHTNING_BOLT)) {
+            if (stack.getItem().equals(Items.GLASS_BOTTLE)) {
+                stack.decrement(1);
+                ItemEntity lightningBottleEntity = new ItemEntity(
+                        entity.getWorld(),
+                        entity.getX(), entity.getY(), entity.getZ(),
+                        ElementalItems.LIGHTNING_BOTTLE_ITEM.getDefaultStack()
+                );
+                entity.getWorld().spawnEntity(lightningBottleEntity);
+                cir.setReturnValue(true);
+                cir.cancel();
+            } else if (stack.getItem().equals(ElementalItems.LIGHTNING_BOTTLE_ITEM)) {
+                cir.setReturnValue(false);
+                cir.cancel();
+            }
         }
     }
+
 }

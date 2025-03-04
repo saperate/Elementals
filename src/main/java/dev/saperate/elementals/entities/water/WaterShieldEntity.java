@@ -22,8 +22,6 @@ import static dev.saperate.elementals.utils.SapsUtils.summonParticles;
 
 
 public class WaterShieldEntity extends AbstractElementalsEntity<PlayerEntity> {
-    private static final TrackedData<Integer> OWNER_ID = DataTracker.registerData(WaterShieldEntity.class, TrackedDataHandlerRegistry.INTEGER);
-
 
     public WaterShieldEntity(EntityType<WaterShieldEntity> type, World world) {
         super(type, world, PlayerEntity.class);
