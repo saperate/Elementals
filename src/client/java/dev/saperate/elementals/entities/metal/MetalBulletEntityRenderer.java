@@ -15,8 +15,8 @@ import org.joml.Matrix4f;
 import static dev.saperate.elementals.entities.utils.RenderUtils.drawCube;
 
 public class MetalBulletEntityRenderer extends EntityRenderer<MetalBulletEntity> {
-    private static final Identifier texture = new Identifier("minecraft", "block/iron_block");
-    private static final Identifier topTexture = new Identifier("elementals", "block/air_block_top");
+    private static final Identifier texture = Identifier.of("minecraft", "block/iron_block");
+    private static final Identifier topTexture = Identifier.of("elementals", "block/air_block_top");
 
     public MetalBulletEntityRenderer(EntityRendererFactory.Context context) {
         super(context);

@@ -198,7 +198,7 @@ public class ElementalEntities {
                     .dimensions(EntityDimensions.changing(0.25f, 0.25f)).build());
     public static final EntityType<MetalBulletEntity> METALBULLET = Registry.register(
             Registries.ENTITY_TYPE,
-            new Identifier("elementals", "metal_bullet"),
+            Identifier.of("elementals", "metal_bullet"),
             FabricEntityTypeBuilder.<MetalBulletEntity>create(SpawnGroup.MISC, MetalBulletEntity::new)
                     .disableSummon()
                     .dimensions(EntityDimensions.fixed(0.25f, 0.25f)).build());

@@ -30,21 +30,6 @@ public class AbilityAirShield implements Ability {
         bender.setCurrAbility(this);
     }
 
-    @Override
-    public void onLeftClick(Bender bender, boolean started) {
-
-
-    }
-
-    @Override
-    public void onMiddleClick(Bender bender, boolean started) {
-
-    }
-
-    @Override
-    public void onRightClick(Bender bender, boolean started) {
-
-    }
 
     @Override
     public void onTick(Bender bender) {

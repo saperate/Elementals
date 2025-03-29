@@ -97,17 +97,15 @@ public class MetalCableEntityRenderer extends EntityRenderer<MetalCableEntity> {
                 )
                 : (g * m * m);
         float w = h * m;
-        vertexConsumer.vertex(positionMatrix, u - k, v + j, w + l).color(r, s, t, 1.0F).light(p).next();
-        vertexConsumer.vertex(positionMatrix, u + k, v + i - j, w - l).color(r, s, t, 1.0F).light(p).next();
+        vertexConsumer.vertex(positionMatrix, u - k, v + j, w + l).color(r, s, t, 1.0F).light(p);
+        vertexConsumer.vertex(positionMatrix, u + k, v + i - j, w - l).color(r, s, t, 1.0F).light(p);
     }
 
     @Override
     public Identifier getTexture(MetalCableEntity entity) {
         return null;
     }
+    
 
-    @Override
-    public boolean shouldRender(MetalCableEntity entity, Frustum frustum, double x, double y, double z) {
-        return true;
-    }
+
 }
