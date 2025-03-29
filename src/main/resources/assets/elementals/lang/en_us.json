@@ -630,7 +630,7 @@
   "upgrade.elementals.lightningOverchargeStrengthII": "Strength II",
   "upgrade.elementals.lightningOverchargeStrengthII.description": " Makes the overcharge last even longer",
 
-  "upgrade.elementals.lightningStorm": "Localised storm",
+  "upgrade.elementals.lightningStorm": "Lightning storm",
   "upgrade.elementals.lightningStorm.description": " This is the pinnacle of lightning bending, by precisely producing lightning in the clouds, you can create a localised storm that will smite any enemies you might be fighting.",
   "upgrade.elementals.lightningStorm.use": " Use: %d + hold (3s) + shift + unlock lightning bolt",
   "upgrade.elementals.lightningStorm.icon": "lightning",
