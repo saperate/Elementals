@@ -10,6 +10,7 @@ import net.minecraft.block.Blocks;
 import net.minecraft.block.FluidBlock;
 import net.minecraft.component.ComponentType;
 import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.PotionContentsComponent;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MovementType;
@@ -512,8 +513,12 @@ public final class SapsUtils {
     public static List<StatusEffectInstance> getEffectsFromHands(PlayerEntity player){
         ArrayList<StatusEffectInstance> effects = new ArrayList<>();
 
-        for (ItemStack stack : player.getHandItems()) {//fixme
-            for (StatusEffectInstance statusEffectInstance : stack.get(DataComponentTypes.POTION_CONTENTS).getEffects()) {
+        for (ItemStack stack : player.getHandItems()) {
+            PotionContentsComponent potionContents = stack.get(DataComponentTypes.POTION_CONTENTS);
+            if (potionContents == null) {
+                continue;
+            }
+            for (StatusEffectInstance statusEffectInstance : potionContents.getEffects()) {
                 effects.add(statusEffectInstance);
                 player.getInventory().removeOne(stack);
                 player.getInventory().insertStack(Items.GLASS_BOTTLE.getDefaultStack());
