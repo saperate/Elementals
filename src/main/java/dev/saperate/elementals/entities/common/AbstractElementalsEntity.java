@@ -189,13 +189,17 @@ public abstract class AbstractElementalsEntity<OwnerType extends Entity> extends
     }
 
     public void moveEntityTowardsGoal(Vector3f goal) {
+       moveEntityTowardsGoal(goal,getMovementSpeed());
+    }
+
+    public void moveEntityTowardsGoal(Vector3f goal, float speed) {
         if (teleportsToGoal()) {
             this.setPos(goal.x, goal.y, goal.z);
             return;
         }
         Vector3f direction = goal.sub(0, 0.5f, 0)
                 .sub(getPos().toVector3f())
-                .mul(getMovementSpeed());
+                .mul(speed);
         this.setVelocity(direction.x, direction.y, direction.z);
     }
 

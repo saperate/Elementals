@@ -10,6 +10,11 @@ public class MetalElement extends Element {
 
         },0));
         addAbility(new AbilityMetal1(), true);
+        addAbility(new AbilityMetalBullets());
+        addAbility(new AbilityMetal2(), true);
+        addAbility(new AbilityMetalBind());//TODO move stuff once you add abilities above it
+        addAbility(new AbilityMetal3(),true);
+        addAbility(new AbilityMetalCable());
     }
 
     public static Element get() {

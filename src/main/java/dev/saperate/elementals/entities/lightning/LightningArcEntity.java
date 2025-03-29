@@ -80,8 +80,6 @@ public class LightningArcEntity extends AbstractElementalsEntity<PlayerEntity> {
             }
         }
 
-        super.tick();
-
         PlayerEntity owner = getOwner();
         if (owner == null && isRemoved()) {
             return;

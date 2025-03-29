@@ -11,6 +11,8 @@ import dev.saperate.elementals.entities.earth.EarthBlockEntity;
 import dev.saperate.elementals.entities.fire.*;
 import dev.saperate.elementals.entities.lightning.LightningArcEntity;
 import dev.saperate.elementals.entities.lightning.VoltArcEntity;
+import dev.saperate.elementals.entities.metal.MetalBulletEntity;
+import dev.saperate.elementals.entities.metal.MetalCableEntity;
 import dev.saperate.elementals.entities.water.*;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
@@ -186,6 +188,20 @@ public class ElementalEntities {
             FabricEntityTypeBuilder.<BloodShotEntity>create(SpawnGroup.MISC, BloodShotEntity::new)
                     .disableSummon()
                     .dimensions(EntityDimensions.changing(0.125f, 0.125f)).build());
+
+    //METAL
+    public static final EntityType<MetalCableEntity> METALCABLE = Registry.register(
+            Registries.ENTITY_TYPE,
+            Identifier.of("elementals", "metal_cable"),
+            FabricEntityTypeBuilder.<MetalCableEntity>create(SpawnGroup.MISC, MetalCableEntity::new)
+                    .disableSummon()
+                    .dimensions(EntityDimensions.changing(0.25f, 0.25f)).build());
+    public static final EntityType<MetalBulletEntity> METALBULLET = Registry.register(
+            Registries.ENTITY_TYPE,
+            new Identifier("elementals", "metal_bullet"),
+            FabricEntityTypeBuilder.<MetalBulletEntity>create(SpawnGroup.MISC, MetalBulletEntity::new)
+                    .disableSummon()
+                    .dimensions(EntityDimensions.fixed(0.25f, 0.25f)).build());
 
     //Common
     public static final EntityType<DecoyPlayerEntity> DECOYPLAYER = Registry.register(
