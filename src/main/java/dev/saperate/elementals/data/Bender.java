@@ -82,8 +82,8 @@ public class Bender {
     public void tick() {
         plrData.chi = Math.min(ElementalConfig.get().MAX_CHI,
                 plrData.chi + (ElementalConfig.get().CHI_REGENERATION_RATE
-                        * (safeHasStatusEffect(OVERCHARGED_EFFECT, player) ? 4 : 1)
-                        * (safeHasStatusEffect(BURNOUT_EFFECT, player) ? 0.25f : 1)
+                        * (safeHasStatusEffect(ElementalsStatusEffects.OVERCHARGED, player) ? 4 : 1)
+                        * (safeHasStatusEffect(ElementalsStatusEffects.BURNOUT, player) ? 0.25f : 1)
                 ));
 
         backgroundAbilities.forEach((Ability ability, Object data) -> ability.onBackgroundTick(this, data));

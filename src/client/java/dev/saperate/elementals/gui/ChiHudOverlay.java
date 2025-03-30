@@ -1,6 +1,7 @@
 package dev.saperate.elementals.gui;
 
 import dev.saperate.elementals.data.ClientBender;
+import dev.saperate.elementals.data.ElementalConfig;
 import dev.saperate.elementals.utils.MathHelper;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.client.MinecraftClient;
@@ -14,7 +15,7 @@ import static dev.saperate.elementals.Elementals.MODID;
 public class ChiHudOverlay implements HudRenderCallback {
 
     @Override
-    public void onHudRender(DrawContext drawContext, float tickDelta) {
+    public void onHudRender(DrawContext drawContext, RenderTickCounter counter) {
         if (ClientBender.get().chi >= ElementalConfig.get().CHI_OVERLAY_THRESHOLD) {
             return;
         }
@@ -42,4 +43,5 @@ public class ChiHudOverlay implements HudRenderCallback {
             drawContext.drawCenteredTextWithShadow(client.textRenderer, String.format("%.2f", chi), x - 24, y - 25, 0xFFFFFFFF);
         }
     }
+
 }
