@@ -6,6 +6,7 @@ import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.render.RenderTickCounter;
+import net.minecraft.client.render.RenderTickCounter;
 import net.minecraft.util.Identifier;
 
 import static dev.saperate.elementals.Elementals.MODID;
@@ -13,8 +14,8 @@ import static dev.saperate.elementals.Elementals.MODID;
 public class ChiHudOverlay implements HudRenderCallback {
 
     @Override
-    public void onHudRender(DrawContext drawContext, RenderTickCounter renderTickCounter) {
-        if (ClientBender.get().chi >= 115) {
+    public void onHudRender(DrawContext drawContext, float tickDelta) {
+        if (ClientBender.get().chi >= ElementalConfig.get().CHI_OVERLAY_THRESHOLD) {
             return;
         }
         MinecraftClient client = MinecraftClient.getInstance();
@@ -25,7 +26,7 @@ public class ChiHudOverlay implements HudRenderCallback {
         drawContext.drawTexture(buttonID, x - 40, y - 18, 0, 0, 32, 32, 32, 32);
 
 
-        float chi = MathHelper.clamp(ClientBender.get().chi, 0, 100);
+        float chi = MathHelper.clamp(ClientBender.get().chi/ElementalConfig.get().MAX_CHI * 100, 0, 100);
 
         int height = (int) Math.floor(chi) / 2;
         int maxHeight = 50;
@@ -37,7 +38,8 @@ public class ChiHudOverlay implements HudRenderCallback {
         drawContext.drawTexture(Identifier.of(MODID, "textures/gui/chi_frame.png"), x, y - maxHeight + 5, 0, 0, 22, maxHeight + 6, 32, 56);
 
         //TODO add config that toggles between number and bar
-        //drawContext.drawCenteredTextWithShadow(client.textRenderer, String.format("%.2f", chi), x, y - 10, 0xFFFFFFFF);
-
+        if(ElementalConfig.get().CHI_OVERLAY_TEXT){
+            drawContext.drawCenteredTextWithShadow(client.textRenderer, String.format("%.2f", chi), x - 24, y - 25, 0xFFFFFFFF);
+        }
     }
 }

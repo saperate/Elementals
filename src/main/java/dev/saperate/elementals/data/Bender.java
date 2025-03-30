@@ -1,6 +1,7 @@
 package dev.saperate.elementals.data;
 
 import dev.saperate.elementals.Elementals;
+import dev.saperate.elementals.advancements.HasElementCriterion;
 import dev.saperate.elementals.commands.BendingCommand;
 import dev.saperate.elementals.effects.ElementalsStatusEffects;
 import dev.saperate.elementals.elements.Ability;
@@ -25,7 +26,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import static dev.saperate.elementals.utils.SapsUtils.safeHasStatusEffect;
 
 public class Bender {
-    public static final float CHI_REGENERATION_RATE = 0.1f;//this is per tick (1/20 of a second)
     public static Map<UUID, Bender> benders = new HashMap<>();
     public PlayerEntity player; //TODO change this to ServerPlayerEntity
     public PlayerData plrData;
@@ -80,10 +80,10 @@ public class Bender {
 
 
     public void tick() {
-        plrData.chi = Math.min(100,
-                plrData.chi + (Bender.CHI_REGENERATION_RATE
-                        * (safeHasStatusEffect(ElementalsStatusEffects.OVERCHARGED, player) ? 4 : 1)
-                        * (safeHasStatusEffect(ElementalsStatusEffects.BURNOUT, player) ? 0.25f : 1)
+        plrData.chi = Math.min(ElementalConfig.get().MAX_CHI,
+                plrData.chi + (ElementalConfig.get().CHI_REGENERATION_RATE
+                        * (safeHasStatusEffect(OVERCHARGED_EFFECT, player) ? 4 : 1)
+                        * (safeHasStatusEffect(BURNOUT_EFFECT, player) ? 0.25f : 1)
                 ));
 
         backgroundAbilities.forEach((Ability ability, Object data) -> ability.onBackgroundTick(this, data));
@@ -351,7 +351,7 @@ public class Bender {
     }
 
     public float xpAddedByChi(float chi) {
-        return 0.1f * chi; //y = ax + b
+        return ElementalConfig.get().XP_MULTIPLIER * chi; //y = ax + b
     }
 
     /**
@@ -367,7 +367,7 @@ public class Bender {
             float remainder = plrData.xp - maxXp;
 
             if (remainder < maxXp) {
-                plrData.chi = 100;
+                plrData.chi = ElementalConfig.get().MAX_CHI;
                 syncChi();
             }
 

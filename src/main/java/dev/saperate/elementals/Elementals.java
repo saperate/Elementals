@@ -94,6 +94,8 @@ public class Elementals implements ModInitializer {
     @Override
     public void onInitialize() {
         LOGGER.info("Initialising the cool stuff...");
+        ElementalConfig.get().loadConfig();
+
         ElementalsStatusEffects.registerEffects();
         ElementalItems.register();
         DispenserBlock.registerBehavior(BOOMERANG_ITEM,BOOMERANG_ITEM);
