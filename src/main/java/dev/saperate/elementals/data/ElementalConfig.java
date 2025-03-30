@@ -55,7 +55,7 @@ public final class ElementalConfig {
             JsonObject root = new JsonObject();
             root.addProperty("XP_MULTIPLIER", 0.1f);
             root.addProperty("MAX_CHI", 100);
-            root.addProperty("CHI_REGENERATION_RATE", 100);
+            root.addProperty("CHI_REGENERATION_RATE", 0.1f);
             root.addProperty("CHI_OVERLAY_THRESHOLD", 115);
             root.addProperty("CHI_OVERLAY_TEXT", false);
 
