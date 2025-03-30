@@ -11,6 +11,7 @@ import dev.saperate.elementals.commands.BendingCommand;
 import dev.saperate.elementals.commands.ElementalsCommand;
 import dev.saperate.elementals.commands.ElementArgumentType;
 import dev.saperate.elementals.data.Bender;
+import dev.saperate.elementals.data.ElementalConfig;
 import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.data.StateDataSaverAndLoader;
 import dev.saperate.elementals.elements.NoneElement;
@@ -114,6 +115,8 @@ public class Elementals implements ModInitializer {
     @Override
     public void onInitialize() {
         LOGGER.info("Initialising the cool stuff...");
+        ElementalConfig.get().loadConfig();
+
         ElementalItems.register();
         DispenserBlock.registerBehavior(BOOMERANG_ITEM,BOOMERANG_ITEM);
         DispenserBlock.registerBehavior(DIRT_BOTTLE_ITEM,DIRT_BOTTLE_ITEM);

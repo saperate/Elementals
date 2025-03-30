@@ -49,7 +49,7 @@ public class ClientBender {
         }
         //We don't cap chi to 100 here since we also want to know when we last used a move
         //so when it gets higher than 100 we can use that as a countdown for when we will not display the chi counter anymore
-        chi += Bender.CHI_REGENERATION_RATE
+        chi += ElementalConfig.get().CHI_REGENERATION_RATE
                 * (safeHasStatusEffect(OVERCHARGED_EFFECT, player) ? 4 : 1)
                 * (safeHasStatusEffect(BURNOUT_EFFECT, player) ? 0.25f : 1);
     }
