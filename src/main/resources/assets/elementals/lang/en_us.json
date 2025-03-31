@@ -492,7 +492,7 @@
   "upgrade.elementals.airBall": "Air Ball",
   "upgrade.elementals.airBall.description": " By compressing a lot of air in a tight space, you can create an air ball with devastating power.",
   "upgrade.elementals.airBall.use": " Use: %d + hold (1s)",
-  "upgrade.elementals.airBall.icon": "air",
+  "upgrade.elementals.airBall.icon": "air_ball",
 
   "upgrade.elementals.airBallSpeedI": "Speed I",
   "upgrade.elementals.airBallSpeedI.description": " Makes air ball faster, allowing you to get more range",
