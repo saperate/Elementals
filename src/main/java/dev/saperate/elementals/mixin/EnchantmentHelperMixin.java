@@ -2,6 +2,7 @@ package dev.saperate.elementals.mixin;
 
 import com.llamalad7.mixinextras.sugar.Local;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
+import dev.saperate.elementals.Elementals;
 import dev.saperate.elementals.items.ElementalItems;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -35,7 +36,9 @@ public abstract class EnchantmentHelperMixin {
         //We have to recheck all the enchantments because getPossibleEntries
         //check the right method to see if it is an acceptable item.
         for (EnchantmentLevelEntry entry : cir.getReturnValue()){
-            if(entry.enchantment.isAcceptableItem(stack)) {
+            boolean isVolume = entry.enchantment.equals(Elementals.VOLUME_ENCHANTMENT);
+            if((entry.enchantment.isAcceptableItem(stack) && !isVolume) ||
+                    (isVolume && stack.getItem().equals(ElementalItems.WATER_POUCH_ITEM))) {
                 enchants.add(entry);
             }
         }

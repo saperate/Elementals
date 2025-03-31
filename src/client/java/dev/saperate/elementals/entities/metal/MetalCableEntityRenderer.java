@@ -31,7 +31,7 @@ public class MetalCableEntityRenderer extends EntityRenderer<MetalCableEntity> {
             return;
         }
 
-        if (entity.getParent() == null) {
+        if (entity.getParent() == null) {//todo figure out why its so jittery, 99% sure its cause of some fuckery like this
             entity.setPosition(entity.getOwner().getLeashPos(tickDelta));
         }
 
@@ -90,12 +90,10 @@ public class MetalCableEntityRenderer extends EntityRenderer<MetalCableEntity> {
         float s = 0.4F * q * q2;
         float t = 0.4F * q * q2;
         float u = f * m;
-        float v = g > 5 ?
-                ((float) (g -
-                        g * (1.0F - m) * (1.0F - m)
-                        - (Math.sin(pieceIndex * Math.PI / 24) * Math.min(Math.max(24 - distance, 0), 1)))
-                )
-                : (g * m * m);
+        float v = ((float) (g -
+                g * (1.0F - m) * (1.0F - m)
+                - (Math.sin(pieceIndex * Math.PI / 24) * Math.min(Math.max(24 - distance, 0), 1)))
+        );
         float w = h * m;
         vertexConsumer.vertex(positionMatrix, u - k, v + j, w + l).color(r, s, t, 1.0F).light(p).next();
         vertexConsumer.vertex(positionMatrix, u + k, v + i - j, w - l).color(r, s, t, 1.0F).light(p).next();
