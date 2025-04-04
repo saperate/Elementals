@@ -79,26 +79,25 @@ public class MetalCableEntityRenderer extends EntityRenderer<MetalCableEntity> {
     }
 
 
-    private static void renderLeashPiece(VertexConsumer vertexConsumer, Matrix4f positionMatrix, float f, float g, float h, int leashedEntityBlockLight, int holdingEntityBlockLight, int leashedEntitySkyLight, int holdingEntitySkyLight, float i, float j, float k, float l, int pieceIndex, boolean isLeashKnot, float distance) {
+    private static void renderLeashPiece(VertexConsumer vertexConsumer, Matrix4f positionMatrix, float f, float deltaHeight, float h, int leashedEntityBlockLight, int holdingEntityBlockLight, int leashedEntitySkyLight, int holdingEntitySkyLight, float i, float j, float k, float l, int pieceIndex, boolean isLeashKnot, float distance) {
         float m = (float) pieceIndex / 24;
-        int n = (int) MathHelper.lerp(m, (float) leashedEntityBlockLight, (float) holdingEntityBlockLight);
-        int o = (int) MathHelper.lerp(m, (float) leashedEntitySkyLight, (float) holdingEntitySkyLight);
-        int p = LightmapTextureManager.pack(n, o);
+
         float q = pieceIndex % 2 == (isLeashKnot ? 1 : 0) ? 0.9F : 1.0F;
         float q2 = pieceIndex % 3 == (isLeashKnot ? 0 : 1) ? 0.8F : 1.0F;
         float r = 0.4F * q * q2;
-        float s = 0.4F * q * q2;
-        float t = 0.4F * q * q2;
+        float g = 0.4F * q * q2;
+        float b = 0.4F * q * q2;
+        
         float u = f * m;
-        float v = g > 5 ?
+        float v = deltaHeight > 5 ?
                 ((float) (g -
-                        g * (1.0F - m) * (1.0F - m)
+                        deltaHeight * (1.0F - m) * (1.0F - m)
                         - (Math.sin(pieceIndex * Math.PI / 24) * Math.min(Math.max(24 - distance, 0), 1)))
                 )
-                : (g * m * m);
+                : (deltaHeight * m);
         float w = h * m;
-        vertexConsumer.vertex(positionMatrix, u - k, v + j, w + l).color(r, s, t, 1.0F).light(p);
-        vertexConsumer.vertex(positionMatrix, u + k, v + i - j, w - l).color(r, s, t, 1.0F).light(p);
+        vertexConsumer.vertex(positionMatrix, u - k, v + j, w + l).color(r, g, b, 1.0F).light(15728640);
+        vertexConsumer.vertex(positionMatrix, u + k, v + i - j, w - l).color(r, g, b, 1.0F).light(15728640);
     }
 
     @Override
