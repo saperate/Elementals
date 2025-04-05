@@ -16,6 +16,7 @@ import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.joml.Matrix3f;
+import org.joml.Matrix4f;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
@@ -76,33 +77,27 @@ public class MetalBulletEntity extends AbstractElementalsEntity<PlayerEntity> {
     }
 
     private void controlEntity(Entity owner) {
-        float radius = 1.15f;
-        Vec3d lookPos = getEntityLookVector(owner, 3);
-        Vec3d dirLook = lookPos.normalize().subtract(owner.getPos());
 
-        //Pitch
-        float cosAngleX = (float) Math.cos(Math.toRadians(owner.getPitch()));
-        float sinAngleX = (float) Math.sin(Math.toRadians(owner.getPitch()));
 
-        //Roll
-        float cosAngleY = (float) Math.cos(Math.toRadians(90));
-        float sinAngleY = (float) Math.sin(Math.toRadians(90));
 
-        //Yaw
-        float cosAngleZ = (float) Math.cos(Math.toRadians(90));
-        float sinAngleZ = (float) Math.sin(Math.toRadians(90));
-
-        //https://en.wikipedia.org/wiki/Rotation_matrix#General_3D_rotations
-        Matrix3f rot = new Matrix3f(
-                cosAngleY * cosAngleZ, sinAngleX * sinAngleY * cosAngleZ - cosAngleX * sinAngleZ, cosAngleX * sinAngleY * cosAngleZ + sinAngleX * sinAngleZ,
-                cosAngleY * sinAngleZ, sinAngleX * sinAngleY * cosAngleZ + cosAngleX * sinAngleZ, cosAngleX * sinAngleY * cosAngleZ - sinAngleX * sinAngleZ,
-                -sinAngleY, sinAngleX * cosAngleY, cosAngleX * cosAngleY
+        float angle = (float) ((2 * Math.PI) / getArraySize() * getArrayId());
+        Vector3f vDir = new Vector3f(
+                (float) Math.cos(angle),
+                (float) Math.sin(angle),
+                0//Forwards
         );
 
-        float po = (float) ((2 * Math.PI) / getArraySize() * getArrayId());
-        Vector3f v = new Vector3f((float) Math.cos(po) * radius, 0, (float) Math.sin(po) * radius);
+        float pitchCorrection = dot > 1.5 ? -1 : 1;
+
+        Quaternionf rotation = new Quaternionf()
+                .rotationXYZ(
+                        (float) Math.toRadians(owner.getPitch() * pitchCorrection),
+                        (float) Math.toRadians(-owner.getYaw()),
+                        0//Roll
+                );
+
         moveEntityTowardsGoal(
-                v.mul(rot).add(lookPos.toVector3f())
+                vDir.rotate(rotation).add(lookPos.toVector3f())
         );
     }
 

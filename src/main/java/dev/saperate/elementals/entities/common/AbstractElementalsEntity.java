@@ -189,7 +189,6 @@ public abstract class AbstractElementalsEntity<OwnerType extends Entity> extends
     }
 
     public void moveEntityTowardsGoal(Vector3f goal) {
-        System.out.println(goal);
        moveEntityTowardsGoal(goal,getMovementSpeed());
     }
 
