@@ -3,6 +3,7 @@ package dev.saperate.elementals.entities.metal;
 import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.entities.common.AbstractElementalsEntity;
 import dev.saperate.elementals.utils.MathHelper;
+import dev.saperate.elementals.utils.SapsUtils;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -77,9 +78,6 @@ public class MetalBulletEntity extends AbstractElementalsEntity<PlayerEntity> {
     }
 
     private void controlEntity(Entity owner) {
-
-
-
         float angle = (float) ((2 * Math.PI) / getArraySize() * getArrayId());
         Vector3f vDir = new Vector3f(
                 (float) Math.cos(angle),
@@ -87,8 +85,8 @@ public class MetalBulletEntity extends AbstractElementalsEntity<PlayerEntity> {
                 0//Forwards
         );
 
-        float pitchCorrection = dot > 1.5 ? -1 : 1;
-
+        Vec3d lookPos = getEntityLookVector(owner, 3);
+        float pitchCorrection = SapsUtils.isLookingForwards(lookPos.subtract(owner.getPos()).toVector3f()) ? -1 : 1;
         Quaternionf rotation = new Quaternionf()
                 .rotationXYZ(
                         (float) Math.toRadians(owner.getPitch() * pitchCorrection),
