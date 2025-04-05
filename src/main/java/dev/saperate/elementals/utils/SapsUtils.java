@@ -555,4 +555,10 @@ public final class SapsUtils {
         );
     }
 
+    public static boolean isLookingForwards(){
+        Vec3d lookPos = getEntityLookVector(owner, 3);
+        Vector3f lookDir = lookPos.subtract(owner.getPos()).toVector3f();
+        double dot = Math.acos(new Vector3f(0,0,1).dot(lookDir)/lookDir.length());
+    }
+
 }
