@@ -76,39 +76,31 @@ public class MetalBulletEntity extends AbstractElementalsEntity<PlayerEntity> {
     }
 
     private void controlEntity(Entity owner) {
-
-        double yaw = Math.toRadians(owner.getYaw());
-
-        float radius = 2;
-        double angle = ((2 * Math.PI) / getArraySize()) * getArrayId() + Math.toRadians(age * 20);
+        float radius = 1.15f;
         Vec3d lookPos = getEntityLookVector(owner, 3);
         Vec3d dirLook = lookPos.normalize().subtract(owner.getPos());
 
+        //Pitch
         float cosAngleX = (float) Math.cos(Math.toRadians(owner.getPitch()));
         float sinAngleX = (float) Math.sin(Math.toRadians(owner.getPitch()));
 
-        float cosAngleY = (float) Math.cos(yaw);
-        float sinAngleY = (float) Math.sin(yaw);
+        //Roll
+        float cosAngleY = (float) Math.cos(Math.toRadians(90));
+        float sinAngleY = (float) Math.sin(Math.toRadians(90));
 
-        float cosAngleZ = (float) Math.cos(0);
-        float sinAngleZ = (float) Math.sin(0);
+        //Yaw
+        float cosAngleZ = (float) Math.cos(Math.toRadians(90));
+        float sinAngleZ = (float) Math.sin(Math.toRadians(90));
+
+        //https://en.wikipedia.org/wiki/Rotation_matrix#General_3D_rotations
         Matrix3f rot = new Matrix3f(
                 cosAngleY * cosAngleZ, sinAngleX * sinAngleY * cosAngleZ - cosAngleX * sinAngleZ, cosAngleX * sinAngleY * cosAngleZ + sinAngleX * sinAngleZ,
-                cosAngleY * cosAngleZ, sinAngleX * sinAngleY * cosAngleZ + cosAngleX * sinAngleZ, cosAngleX * sinAngleY * cosAngleZ - sinAngleX * sinAngleZ,
+                cosAngleY * sinAngleZ, sinAngleX * sinAngleY * cosAngleZ + cosAngleX * sinAngleZ, cosAngleX * sinAngleY * cosAngleZ - sinAngleX * sinAngleZ,
                 -sinAngleY, sinAngleX * cosAngleY, cosAngleX * cosAngleY
         );
 
-        Vector3f v = new Vector3f(getArrayId(),0,-getArrayId());//new Vector3f((float) Math.cos(angle), 0, (float) Math.sin(angle));
-
-        float theta = v.angle(lookPos.toVector3f());
-//        moveEntityTowardsGoal(
-//                v.mul((float) Math.cos(theta))
-//                .add(lookPos.toVector3f().cross(v)).mul((float) Math.sin(theta))
-//                        .add(lookPos.toVector3f().mul(lookPos.toVector3f().dot(v))).mul((float) (1-Math.cos(theta)))
-//                        .add(lookPos.toVector3f())
-//        );
-
-
+        float po = (float) ((2 * Math.PI) / getArraySize() * getArrayId());
+        Vector3f v = new Vector3f((float) Math.cos(po) * radius, 0, (float) Math.sin(po) * radius);
         moveEntityTowardsGoal(
                 v.mul(rot).add(lookPos.toVector3f())
         );
