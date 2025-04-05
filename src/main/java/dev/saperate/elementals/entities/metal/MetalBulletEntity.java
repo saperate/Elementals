@@ -15,6 +15,8 @@ import net.minecraft.particle.ParticleTypes;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import org.joml.Matrix3f;
+import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
 import static dev.saperate.elementals.Elementals.WIND_BURST_SOUND_EVENT;
@@ -76,32 +78,41 @@ public class MetalBulletEntity extends AbstractElementalsEntity<PlayerEntity> {
     }
 
     private void controlEntity(Entity owner) {
+
+        double yaw = Math.toRadians(owner.getYaw());
+
         float radius = 2;
         double angle = ((2 * Math.PI) / getArraySize()) * getArrayId() + Math.toRadians(age * 20);
+        Vec3d lookPos = getEntityLookVector(owner, 3);
+        Vec3d dirLook = lookPos.normalize().subtract(owner.getPos());
 
-        double yaw = Math.abs(owner.getYaw() % 360);
-        if (yaw > 180) {
-            yaw = 360 - yaw;
-        }
-        yaw -= 90;
-        Vec3d dirLook = getEntityLookVector(owner, 1).subtract(owner.getPos());
-        if (dirLook.x < 0) {
-            yaw *= -1;
-        }
+        float cosAngleX = (float) Math.cos(Math.toRadians(owner.getPitch()));
+        float sinAngleX = (float) Math.sin(Math.toRadians(owner.getPitch()));
 
-        moveEntityTowardsGoal(getEntityLookVector(owner, 3).toVector3f().add(0, 0.5f, 0)
-                .add(new Vector3f().add(radius, 0, 0)
-                        .mul((float) (Math.cos(angle) * MathHelper.linear(1, (float) yaw/90, 1 - Math.abs(owner.getPitch()/ 90))))
-                )
-                .add(new Vector3f().add(0, radius, 0)
-                        .mul((float) Math.sin(angle) * (1 - Math.abs(owner.getPitch() / 90)))
-                )
-                .add(new Vector3f().add(0, 0, radius)
-                        .mul((float) Math.sin(angle) * (owner.getPitch() / 90))
-                )
-                .add(new Vector3f().add(0, 0, radius)
-                        .mul((float) (Math.cos(angle) * (1 - Math.abs(yaw / 90))))
-                )
+        float cosAngleY = (float) Math.cos(yaw);
+        float sinAngleY = (float) Math.sin(yaw);
+
+        float cosAngleZ = (float) Math.cos(0);
+        float sinAngleZ = (float) Math.sin(0);
+        Matrix3f rot = new Matrix3f(
+                cosAngleY * cosAngleZ, sinAngleX * sinAngleY * cosAngleZ - cosAngleX * sinAngleZ, cosAngleX * sinAngleY * cosAngleZ + sinAngleX * sinAngleZ,
+                cosAngleY * cosAngleZ, sinAngleX * sinAngleY * cosAngleZ + cosAngleX * sinAngleZ, cosAngleX * sinAngleY * cosAngleZ - sinAngleX * sinAngleZ,
+                -sinAngleY, sinAngleX * cosAngleY, cosAngleX * cosAngleY
+        );
+
+        Vector3f v = new Vector3f(getArrayId(),0,-getArrayId());//new Vector3f((float) Math.cos(angle), 0, (float) Math.sin(angle));
+
+        float theta = v.angle(lookPos.toVector3f());
+//        moveEntityTowardsGoal(
+//                v.mul((float) Math.cos(theta))
+//                .add(lookPos.toVector3f().cross(v)).mul((float) Math.sin(theta))
+//                        .add(lookPos.toVector3f().mul(lookPos.toVector3f().dot(v))).mul((float) (1-Math.cos(theta)))
+//                        .add(lookPos.toVector3f())
+//        );
+
+
+        moveEntityTowardsGoal(
+                v.mul(rot).add(lookPos.toVector3f())
         );
     }
 

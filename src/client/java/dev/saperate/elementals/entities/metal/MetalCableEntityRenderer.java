@@ -87,7 +87,7 @@ public class MetalCableEntityRenderer extends EntityRenderer<MetalCableEntity> {
         float r = 0.4F * q * q2;
         float g = 0.4F * q * q2;
         float b = 0.4F * q * q2;
-        
+
         float u = f * m;
         float v = deltaHeight > 5 ?
                 ((float) (g -
