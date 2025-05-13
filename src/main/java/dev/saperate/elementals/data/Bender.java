@@ -1,18 +1,13 @@
 package dev.saperate.elementals.data;
 
 import dev.saperate.elementals.Elementals;
-import dev.saperate.elementals.advancements.HasElementCriterion;
 import dev.saperate.elementals.commands.BendingCommand;
 import dev.saperate.elementals.elements.Ability;
 import dev.saperate.elementals.elements.Element;
 import dev.saperate.elementals.elements.NoneElement;
-import dev.saperate.elementals.elements.water.WaterElement;
 import dev.saperate.elementals.utils.SapsUtils;
-import net.fabricmc.fabric.api.entity.FakePlayer;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.advancement.Advancement;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.PacketByteBuf;
@@ -41,6 +36,12 @@ public class Bender {
     public Ability currAbility;
     @Nullable
     public Object abilityData;
+    private final boolean[] isHolding = new boolean[3];
+    /**
+     * How much time we have been holding any mouse button in ticks
+     * <br\> -1 when we are not holding
+     */
+    private int holdTime = -1;
 
 
     public Bender(PlayerEntity player) {
@@ -98,6 +99,10 @@ public class Bender {
         }
 
         Elementals.HAS_ELEMENT.trigger((ServerPlayerEntity) player);
+
+        if(holdTime >= 0){
+            holdTime++;
+        }
     }
 
     public void setCurrAbility(Ability ability) {
@@ -387,6 +392,35 @@ public class Bender {
     public PlayerData getData() {
         this.plrData = PlayerData.get(player);
         return plrData;
+    }
+
+    public void setHolding(int button, boolean value){
+        isHolding[button] = value;
+        if(value){
+            holdTime = 0;
+        }else{
+            holdTime = -1;
+        }
+    }
+
+    /**
+     * Checks if the given mouse button is held.
+     * <br\>Left = 0, Middle = 1, Right = 2
+     * @param button Which mouse button should be held
+     */
+    public boolean isHolding(int button){
+        return isHolding[button];
+    }
+
+    /**
+     * Checks if the given mouse button is held.
+     * Also checks for a minimum amount of time
+     * you need to hold any button before something happens (in ticks)
+     * <br\>Left = 0, Middle = 1, Right = 2
+     * @param button Which mouse button should be held
+     */
+    public boolean isHolding(int button, int minimumHoldTime){
+        return isHolding[button] && holdTime >= minimumHoldTime;
     }
 
     @Override
