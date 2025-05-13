@@ -8,6 +8,7 @@ import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
+import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.network.PlayerListEntry;
 import net.minecraft.client.render.VertexConsumerProvider;
@@ -45,7 +46,11 @@ public class DecoyPlayerEntityRenderer extends LivingEntityRenderer<DecoyPlayerE
 
     @Override
     public Identifier getTexture(DecoyPlayerEntity decoy) {
-        PlayerListEntry entry = MinecraftClient.getInstance().getNetworkHandler().getPlayerListEntry(decoy.getOwnerUUID());
+       ClientPlayNetworkHandler handler = MinecraftClient.getInstance().getNetworkHandler();
+       if(handler == null){
+           return DefaultSkinHelper.getTexture();
+       }
+        PlayerListEntry entry = handler.getPlayerListEntry(decoy.getOwnerUUID());
         if(entry == null){
             return DefaultSkinHelper.getTexture();
         }
