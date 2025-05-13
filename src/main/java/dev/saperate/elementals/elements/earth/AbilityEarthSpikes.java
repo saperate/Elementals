@@ -38,13 +38,13 @@ public class AbilityEarthSpikes implements Ability {
         int dz = (int) Math.round(Math.cos(Math.toRadians(player.getYaw())));
         int a = 0;
 
-        int range = plrData.canUseUpgrade("earthSpikesRangeI") ? 8 : 5;
+        int range = plrData.canUseUpgrade("earthSpikesRangeI") ? 8 : 4;
         placeSpike(bPos, bender,damagedEntities);
         for (int i = 1; i <= range; i++) {
             placeSpike(bPos.add(dx * i, 0 , dz * i), bender, damagedEntities);
 
 
-            int spread = Math.min(i,plrData.canUseUpgrade("earthSpikesSpreadI") ? 6 : 3);
+            int spread = plrData.canUseUpgrade("earthSpikesSpreadI") ? 6 : 2;
             for (int j = -spread; j < spread; j++) {
                 if(rnd.nextBetween(0,3) != 1 || j == 0){
                     a++;
