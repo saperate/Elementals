@@ -55,6 +55,13 @@ public class BendingCommand {
                                                 .executes(BendingCommand::levelSetSelf)
                                         )
                                 )
+                                .then(CommandManager.literal("add")
+                                        .then(CommandManager.argument("amount", IntegerArgumentType.integer())
+                                                .then(CommandManager.argument("player", EntityArgumentType.player())
+                                                        .executes(BendingCommand::levelAdd)
+                                                )
+                                        )
+                                )
                                 .then(CommandManager.literal("get").then(
                                         CommandManager.argument("player", EntityArgumentType.player()).executes(BendingCommand::levelGet)
                                 ).executes(BendingCommand::levelSelfGet))
@@ -331,6 +338,16 @@ public class BendingCommand {
         context.getSource().sendFeedback((() -> Text.of(
                 plr.getEntityName() + "'s level is now: " + value)
         ), false);
+        return 1;
+    }
+
+    private static int levelAdd(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
+        PlayerEntity plr = EntityArgumentType.getPlayer(context, "player");
+        if (plr.getWorld().isClient) {
+            return 1;
+        }
+        int amount = IntegerArgumentType.getInteger(context, "amount");
+        PlayerData.get(plr).level += amount;
         return 1;
     }
 
