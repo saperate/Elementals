@@ -18,17 +18,23 @@ public class MouseC2SPacket {
 
 
         Bender bender = Bender.getBender(player);
-        if (bender.currAbility == null || bender.castTime != null) {
-            return;
-        }
         if (left != -1) {
-            bender.currAbility.onLeftClick(bender, left == 1);
+            if (bender.currAbility != null && bender.castTime == null) {
+                bender.currAbility.onLeftClick(bender, left == 1);
+            }
+            bender.setHolding(0, left == 1);
         }
         if (mid != -1) {
-            bender.currAbility.onMiddleClick(bender, mid == 1);
+            if (bender.currAbility != null && bender.castTime == null) {
+                bender.currAbility.onMiddleClick(bender, mid == 1);
+            }
+            bender.setHolding(1, mid == 1);
         }
         if (right != -1) {
-            bender.currAbility.onRightClick(bender, right == 1);
+            if (bender.currAbility != null && bender.castTime == null) {
+                bender.currAbility.onRightClick(bender, right == 1);
+            }
+            bender.setHolding(2, right == 1);
         }
     }
 

@@ -26,7 +26,7 @@ public class AbilityMetalBullets implements Ability {//TODO make it so you can h
         Vec3d pos = getEntityLookVector(player, 2);
         PlayerData plrData = PlayerData.get(bender.player);
 
-        int bulletCount = 5;//TODO basic count w/out metal (standing on earth), enhanced by sacrificing ingots
+        int bulletCount = 20;//TODO basic count w/out metal (standing on earth), enhanced by sacrificing ingots
         if (plrData.canUseUpgrade("airBulletsCountII")) {//fixme
             bulletCount = 20;
         } else if (plrData.canUseUpgrade("airBulletsCountI")) {
@@ -52,6 +52,28 @@ public class AbilityMetalBullets implements Ability {//TODO make it so you can h
         if (started) {
             return;
         }
+        FireBullet(bender);
+    }
+
+    @Override
+    public void onTick(Bender bender) {
+        if(bender.isHolding(0,4) && bender.player.age % 3 == 0){
+            FireBullet(bender);
+        }
+    }
+
+    @Override
+    public void onRemove(Bender bender) {
+        MetalBulletEntity[] bullets = (MetalBulletEntity[]) bender.abilityData;
+        if(bullets != null){
+            for (MetalBulletEntity bullet : bullets){
+                bullet.kill();
+            }
+        }
+        bender.setCurrAbility(null);
+    }
+
+    private void FireBullet(Bender bender) {
         MetalBulletEntity[] bullets = (MetalBulletEntity[]) bender.abilityData;
 
         if (bullets.length == 1) {
@@ -77,16 +99,4 @@ public class AbilityMetalBullets implements Ability {//TODO make it so you can h
         }
         bender.abilityData = newArray;
     }
-
-    @Override
-    public void onRemove(Bender bender) {
-        MetalBulletEntity[] bullets = (MetalBulletEntity[]) bender.abilityData;
-        if(bullets != null){
-            for (MetalBulletEntity bullet : bullets){
-                bullet.kill();
-            }
-        }
-        bender.setCurrAbility(null);
-    }
-
 }

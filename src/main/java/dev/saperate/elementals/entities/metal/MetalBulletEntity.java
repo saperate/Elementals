@@ -80,7 +80,7 @@ public class MetalBulletEntity extends AbstractElementalsEntity<PlayerEntity> {
     }
 
     private void controlEntity(Entity owner) {
-        float angle = (float) ((2 * Math.PI) / getArraySize() * getArrayId());
+        float angle = (float) ((2 * Math.PI ) / getArraySize() * getArrayId()) + age * 0.025f;
         Vector3f vDir = new Vector3f(
                 (float) Math.cos(angle),
                 (float) Math.sin(angle),
