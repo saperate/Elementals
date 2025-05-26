@@ -25,6 +25,8 @@ public class ElementalsCapeFeatureRenderer extends FeatureRenderer<DecoyPlayerEn
 
     @Override
     public void render(MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i, DecoyPlayerEntity entity, float f, float g, float h, float j, float k, float l) {
+        if(entity.getOwner() == null)
+            return;
         if (!entity.isInvisible() && entity.getOwner().isPartVisible(PlayerModelPart.CAPE)) {
             SkinTextures skinTextures = ((AbstractClientPlayerEntity)entity.getOwner()).getSkinTextures();
             if (skinTextures.capeTexture() != null) {
