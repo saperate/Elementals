@@ -63,16 +63,6 @@ tasks.withType(JavaCompile).configureEach {
 	it.options.release = 21
 }
 
-tasks.withType(Jar).configureEach {
-	from sourceSets.main.allSource
-	duplicatesStrategy = DuplicatesStrategy.INCLUDE
-}
-/*
-tasks.withType(Jar).configureEach {
-	from sourceSets.main.allSource
-	duplicatesStrategy = DuplicatesStrategy.INCLUDE
-}
- */
 java {
 	// Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
 	// if it is present.
