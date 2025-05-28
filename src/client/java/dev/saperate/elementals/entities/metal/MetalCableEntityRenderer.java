@@ -89,12 +89,7 @@ public class MetalCableEntityRenderer extends EntityRenderer<MetalCableEntity> {
         float b = 0.4F * q * q2;
 
         float u = f * m;
-        float v = deltaHeight > 5 ?
-                ((float) (g -
-                        deltaHeight * (1.0F - m) * (1.0F - m)
-                        - (Math.sin(pieceIndex * Math.PI / 24) * Math.min(Math.max(24 - distance, 0), 1)))
-                )
-                : (deltaHeight * m);
+        float v = (deltaHeight * m);
         float w = h * m;
         vertexConsumer.vertex(positionMatrix, u - k, v + j, w + l).color(r, g, b, 1.0F).light(15728640);
         vertexConsumer.vertex(positionMatrix, u + k, v + i - j, w - l).color(r, g, b, 1.0F).light(15728640);
