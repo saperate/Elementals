@@ -31,6 +31,7 @@ import static dev.saperate.elementals.utils.SapsUtils.summonParticles;
 public class MetalBulletEntity extends AbstractElementalsEntity<PlayerEntity> {
     private static final TrackedData<Integer> ARRAY_ID = DataTracker.registerData(MetalBulletEntity.class, TrackedDataHandlerRegistry.INTEGER);
     private static final TrackedData<Integer> ARRAY_SIZE = DataTracker.registerData(MetalBulletEntity.class, TrackedDataHandlerRegistry.INTEGER);
+    private static final TrackedData<Float> DAMAGE_MULTIPLIER = DataTracker.registerData(MetalBulletEntity.class, TrackedDataHandlerRegistry.FLOAT);
 
     public MetalBulletEntity(EntityType<MetalBulletEntity> type, World world) {
         super(type, world, PlayerEntity.class);
@@ -55,6 +56,7 @@ public class MetalBulletEntity extends AbstractElementalsEntity<PlayerEntity> {
         super.initDataTracker();
         this.getDataTracker().startTracking(ARRAY_ID, 0);
         this.getDataTracker().startTracking(ARRAY_SIZE, 1);
+        this.getDataTracker().startTracking(DAMAGE_MULTIPLIER,1f);
     }
 
     @Override
@@ -80,12 +82,12 @@ public class MetalBulletEntity extends AbstractElementalsEntity<PlayerEntity> {
     private void controlEntity(Entity owner) {
         float angle = (float) ((2 * Math.PI ) / getArraySize() * getArrayId()) + age * 0.025f;
         Vector3f vDir = new Vector3f(
-                (float) Math.cos(angle),
-                (float) Math.sin(angle),
+                (float) Math.cos(angle) * 0.75f,
+                (float) Math.sin(angle) * 0.75f,
                 0//Forwards
         );
 
-        Vec3d lookPos = getEntityLookVector(owner, 3);
+        Vec3d lookPos = getEntityLookVector(owner, 2);
         float pitchCorrection = SapsUtils.isLookingForwards(lookPos.subtract(owner.getPos()).toVector3f()) ? -1 : 1;
         Quaternionf rotation = new Quaternionf()
                 .rotationXYZ(
@@ -109,7 +111,7 @@ public class MetalBulletEntity extends AbstractElementalsEntity<PlayerEntity> {
         PlayerEntity owner = (PlayerEntity) getOwner();
         PlayerData plrData = PlayerData.get(owner);
 
-        float damage = 1;
+        float damage = 4;
         if (plrData.canUseUpgrade("airBulletsMastery")) {
             damage = 4;
         } else if (plrData.canUseUpgrade("airBulletsDamageI")) {
@@ -117,7 +119,7 @@ public class MetalBulletEntity extends AbstractElementalsEntity<PlayerEntity> {
         }
         entity.damage(this.getDamageSources().playerAttack(owner), damage);
         if (!getIsControlled()) {
-            entity.addVelocity(this.getVelocity().multiply(1.2f));
+            entity.addVelocity(this.getVelocity().multiply(0));
             discard();
         }
     }
@@ -147,6 +149,14 @@ public class MetalBulletEntity extends AbstractElementalsEntity<PlayerEntity> {
 
     public int getArraySize() {
         return this.getDataTracker().get(ARRAY_SIZE);
+    }
+
+    public void setDamageMultiplier(float val) {
+        this.getDataTracker().set(DAMAGE_MULTIPLIER, val);
+    }
+
+    public float getDamageMultiplier() {
+        return this.getDataTracker().get(DAMAGE_MULTIPLIER);
     }
 
 }

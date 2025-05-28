@@ -56,6 +56,23 @@ public class AbilityMetalBullets implements Ability {//TODO make it so you can h
     }
 
     @Override
+    public void onMiddleClick(Bender bender, boolean started) {//Buckshot
+        MetalBulletEntity[] bullets = (MetalBulletEntity[]) bender.abilityData;
+        if(started || bullets == null){
+            return;
+        }
+
+        for (MetalBulletEntity bullet : bullets) {
+            float speed = getBulletSpeed(bender.plrData) * 2;
+            bullet.setControlled(false);
+            bullet.setVelocity(bender.player, bender.player.getPitch(), bender.player.getYaw(), 0, speed, 10);
+            bullet.setDamageMultiplier(2.5f);
+        }
+        bender.abilityData = null;
+        onRemove(bender);
+    }
+
+    @Override
     public void onTick(Bender bender) {
         if(bender.isHolding(0,4) && bender.player.age % 3 == 0){
             FireBullet(bender);
@@ -84,12 +101,7 @@ public class AbilityMetalBullets implements Ability {//TODO make it so you can h
         bullet.setControlled(false);
         PlayerData plrData = PlayerData.get(bender.player);
 
-        float speed = 1;
-        if (plrData.canUseUpgrade("airBulletsSpeedII")) {//fixme
-            speed = 2;
-        } else if (plrData.canUseUpgrade("airBulletsSpeedI")) {
-            speed = 1.5f;
-        }
+        float speed = getBulletSpeed(plrData);
         bullet.setVelocity(bender.player, bender.player.getPitch(), bender.player.getYaw(), 0, speed, 0);
 
         MetalBulletEntity[] newArray = new MetalBulletEntity[bullets.length - 1];
@@ -98,5 +110,15 @@ public class AbilityMetalBullets implements Ability {//TODO make it so you can h
             newArray[i] = bullets[i];
         }
         bender.abilityData = newArray;
+    }
+
+    private static float getBulletSpeed(PlayerData plrData) {
+        float speed = 1;
+        if (plrData.canUseUpgrade("airBulletsSpeedII")) {//fixme
+            speed = 2;
+        } else if (plrData.canUseUpgrade("airBulletsSpeedI")) {
+            speed = 1.5f;
+        }
+        return speed;
     }
 }
