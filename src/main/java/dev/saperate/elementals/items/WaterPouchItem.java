@@ -129,7 +129,7 @@ public class WaterPouchItem extends Item {
             }
         }
 
-        return 3 + level;
+        return 9 + level * 4;
     }
 
     @Override
