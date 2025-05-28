@@ -1,5 +1,4 @@
-package dev.saperate.elementals.entities.water;
-
+package dev.saperate.elementals.entities.water; 
 import dev.saperate.elementals.entities.common.AbstractElementalsEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -21,75 +20,75 @@ import net.minecraft.world.World;
 
 import static dev.saperate.elementals.entities.ElementalEntities.WATERJET;
 import static dev.saperate.elementals.utils.SapsUtils.*;
-
 public class WaterJetEntity extends AbstractElementalsEntity<PlayerEntity> {
     private static final TrackedData<Float> STREAM_SIZE = DataTracker.registerData(WaterJetEntity.class, TrackedDataHandlerRegistry.FLOAT);
     private static final TrackedData<Float> RANGE = DataTracker.registerData(WaterJetEntity.class, TrackedDataHandlerRegistry.FLOAT);
-    private static final TrackedData<Integer> CHILD_ID = DataTracker.registerData(WaterJetEntity.class, TrackedDataHandlerRegistry.INTEGER);
-
-
-    public WaterJetEntity(EntityType<WaterJetEntity> type, World world) {
+    private static final TrackedData<Integer> CHILD_ID =  DataTracker.registerData(WaterJetEntity.class, TrackedDataHandlerRegistry.INTEGER);
+    public WaterJetEntity(EntityType<WaterJetEntity> type, World world)  {
         super(type, world, PlayerEntity.class);
-    }
-
-    public WaterJetEntity(World world, PlayerEntity owner) {
-        this(world, owner, owner.getX(), owner.getY(), owner.getZ());
-    }
-
-    public WaterJetEntity(World world, PlayerEntity owner, double x, double y, double z) {
-        super(WATERJET, world, PlayerEntity.class);
-        setOwner(owner);
-        setPos(x, y, z);
-        setNoGravity(true);
-    }
-
-
-    @Override
-    protected void initDataTracker() {
+    } 
+    public WaterJetEntity(World world, PlayerEntity owner)  {
+        this(world, owner, owner.getX(), owner.getY(), owner.getZ()); 
+    } 
+    public WaterJetEntity(World world, PlayerEntity owner, double x, double y, double z)  {
+        super(WATERJET, world, PlayerEntity.class); 
+        setOwner(owner); 
+        setPos(x, y, z); 
+        setNoGravity(true); 
+    } 
+    @Override 
+    protected void initDataTracker()  {
         super.initDataTracker();
         this.getDataTracker().startTracking(STREAM_SIZE, 1f);
         this.getDataTracker().startTracking(RANGE, 10f);
-        this.getDataTracker().startTracking(CHILD_ID, 0);
-    }
-
-    @Override
-    public void tick() {
-        super.tick();
+        this.getDataTracker().startTracking(CHILD_ID, 00);
+    } 
+ 
+    @Override 
+    public void tick()  {
         if (random.nextBetween(0, 20) == 6) {
             playSound(SoundEvents.ENTITY_PLAYER_SPLASH,0.25f,0);
         }
 
-        Entity owner = getOwner();
-        if (owner == null) {
-            return;
-        }
-
-        if (getChild() != null) {
+        super.tick();
+        
+        Entity owner  = getOwner();
+        if (owner == null) {return;}
+        if (getChild() != null)  {
             setPosition(getEntityLookVector(owner, 0.5f).subtract(0,0.5f,0));
-        } else {
-            if(getWorld().isClient){
-                summonParticles(this, random, ParticleTypes.SPLASH, 0, 10);
-                summonParticles(this, random, ParticleTypes.CLOUD, 0, 1);
-            }
+        } else  {
+            if(getWorld().isClient) {
+                summonParticles(this, random, ParticleTypes.SPLASH, 0, 10); 
+                summonParticles(this, random, ParticleTypes.CLOUD, 0, 1); 
+            } 
             HitResult hit = raycastFull(owner, getRange(), true);
-            if (hit instanceof BlockHitResult bHit) {
-                BlockState bState = getWorld().getBlockState(bHit.getBlockPos());
-                Block bBlock = bState.getBlock();
+            if (hit instanceof BlockHitResult blockHit) {
+                BlockState blockState = getWorld().getBlockState(blockHit.getBlockPos());
+                Block bBlock = blockState.getBlock();
                 if (bBlock.equals(Blocks.TALL_GRASS) || bBlock.equals(Blocks.GRASS)) {
-                    getWorld().setBlockState(bHit.getBlockPos(),Blocks.AIR.getDefaultState());
-                }
-            } else if (hit instanceof EntityHitResult eHit) {
-                Entity victim = eHit.getEntity();
-                Vec3d direction = getOwner().getEyePos().subtract(victim.getPos()).normalize().multiply(-0.075f);
-                victim.addVelocity(direction);
+                    getWorld().setBlockState(blockHit.getBlockPos(),Blocks.AIR.getDefaultState());}
+            } else if (hit instanceof EntityHitResult entityHit) {
+                Entity victim = entityHit.getEntity();
+                Vec3d direction = getOwner().getEyePos().subtract(victim.getPos())
+                        .normalize().multiply(-0.075f);
+                victim.addVelocity(direction); 
+                victim.damage(getDamageSources().playerAttack(getOwner()), 1.5f * getStreamSize()); 
+            } 
+            setPosition(hit.getPos()); 
+        } 
+        this.move(MovementType.SELF, this.getVelocity()); 
+    } 
+    @Override
+    public boolean discardsOnNullOwner() {
+        return true;
+    } 
+    
+    public float getStreamSize()  {
+        return getDataTracker().get(STREAM_SIZE);
+    }
 
-                victim.damage(getDamageSources().playerAttack(getOwner()), 1.5f * getStreamSize());
-
-            }
-            setPosition(hit.getPos());
-        }
-
-        this.move(MovementType.SELF, this.getVelocity());
+    public void setStreamSize(float val) {
+        this.getDataTracker().set(STREAM_SIZE, val);
     }
 
     public WaterJetEntity getChild() {
@@ -97,16 +96,8 @@ public class WaterJetEntity extends AbstractElementalsEntity<PlayerEntity> {
         return (child instanceof WaterJetEntity) ? (WaterJetEntity) child : null;
     }
 
-    public void setChild(WaterJetEntity child) {
+    public void setChild(WaterJetEntity child)  {
         this.getDataTracker().set(CHILD_ID, child.getId());
-    }
-
-    public float getStreamSize() {
-        return getDataTracker().get(STREAM_SIZE);
-    }
-
-    public void setStreamSize(float val) {
-        this.getDataTracker().set(STREAM_SIZE, val);
     }
 
     public float getRange() {
@@ -117,9 +108,5 @@ public class WaterJetEntity extends AbstractElementalsEntity<PlayerEntity> {
         this.getDataTracker().set(RANGE, val);
     }
 
-    @Override
-    public boolean discardsOnNullOwner() {
-        return true;
-    }
 
-}
+};

@@ -8,10 +8,10 @@ import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.entity.model.EntityModel;
 import net.minecraft.client.util.math.MatrixStack;
 
-public class ShrapnelModel extends EntityModel<EarthBlockEntity> {
+public class ShrapnelModel extends EntityModel<EarthBlockEntity>{
 	private final ModelPart bb_main;
 
-	public ShrapnelModel(ModelPart root) {
+	public ShrapnelModel(ModelPart root){
 		this.bb_main = root.getChild("bb_main");
 	}
 	public static TexturedModelData getTexturedModelData() {

@@ -105,17 +105,16 @@ public class ElementalsClient implements ClientModInitializer {
 
 	public void registerEntityRenderers(){
 		//WATER
-		EntityRendererRegistry.register(WATERCUBE, WaterCubeEntityRenderer::new);
 		EntityRendererRegistry.register(WATERHELMET, WaterHelmetEntityRenderer::new);
+		EntityRendererRegistry.register(WATERCUBE, WaterCubeEntityRenderer::new);
 		EntityRendererRegistry.register(WATERSHIELD, WaterShieldEntityRenderer::new);
 		EntityRendererRegistry.register(WATERARC, WaterArcEntityRenderer::new);
-		EntityRendererRegistry.register(WATERJET, WaterJetEntityRenderer::new);
-		EntityRendererRegistry.register(WATERARM, WaterArmEntityRenderer::new);
 		EntityRendererRegistry.register(WATERBLADE, WaterBladeEntityRenderer::new);
+		EntityRendererRegistry.register(WATERARM, WaterArmEntityRenderer::new);
 		EntityRendererRegistry.register(WATERBULLET, WaterBulletEntityRenderer::new);
 		EntityRendererRegistry.register(WATERHEALING, WaterHealingEntityRenderer::new);
+		EntityRendererRegistry.register(WATERJET, WaterJetEntityRenderer::new);
 		EntityRendererRegistry.register(WATERTOWER, WaterTowerEntityRenderer::new);
-
 		//FIRE
 		EntityRendererRegistry.register(FIREBLOCK, FireBlockEntityRenderer::new);
 		EntityRendererRegistry.register(FIREARC, FireArcEntityRenderer::new);

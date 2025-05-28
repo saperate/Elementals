@@ -1,5 +1,4 @@
-package dev.saperate.elementals.entities.water;
-
+package dev.saperate.elementals.entities.water; 
 import dev.saperate.elementals.entities.common.AbstractElementalsEntity;
 import net.minecraft.entity.*;
 import net.minecraft.entity.data.DataTracker;
@@ -17,7 +16,6 @@ import org.joml.Vector3f;
 import static dev.saperate.elementals.effects.DrowningStatusEffect.DROWNING_EFFECT;
 import static dev.saperate.elementals.entities.ElementalEntities.WATERHELMET;
 import static dev.saperate.elementals.utils.SapsUtils.summonParticles;
-
 /**
  * <b>IMPORTANT NOTICE</b> this entity also handles air bending's suffocate. To modify the air suffocate model,
  * go to the water helmet renderer
@@ -27,43 +25,36 @@ public class WaterHelmetEntity extends AbstractElementalsEntity<LivingEntity> {
     private static final TrackedData<Integer> CASTER_ID = DataTracker.registerData(WaterHelmetEntity.class, TrackedDataHandlerRegistry.INTEGER);
     private static final TrackedData<Boolean> STEALTHY = DataTracker.registerData(WaterHelmetEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
     private static final TrackedData<Integer> MODEL_ID = DataTracker.registerData(WaterHelmetEntity.class, TrackedDataHandlerRegistry.INTEGER);
-
     public boolean isOwnerBiped = false, suffocate = false;
+    public WaterHelmetEntity(EntityType<WaterHelmetEntity> type, World world){
+        super(type, world, LivingEntity.class); 
+    } 
+    public WaterHelmetEntity(World world, LivingEntity owner){
+        this(world, owner, owner.getX(), owner.getY(), owner.getZ()); 
+    } 
+    public WaterHelmetEntity(World world, LivingEntity owner, double x, double y, double z){
+        this(world, owner, x, y, z, false); 
+    } 
 
-    public WaterHelmetEntity(EntityType<WaterHelmetEntity> type, World world) {
-        super(type, world, LivingEntity.class);
-    }
-
-    public WaterHelmetEntity(World world, LivingEntity owner) {
-        this(world, owner, owner.getX(), owner.getY(), owner.getZ());
-    }
-
-    public WaterHelmetEntity(World world, LivingEntity owner, double x, double y, double z) {
-        this(world, owner, x, y, z, false);
-    }
-
-    public WaterHelmetEntity(World world, LivingEntity owner, double x, double y, double z, boolean suffocate) {
-        super(WATERHELMET, world, LivingEntity.class);
-        setPos(x, owner.getEyeY(), z);
-        setOwner(owner);
-        this.suffocate = suffocate;
-    }
-
-    @Override
-    protected void initDataTracker() {
+    public WaterHelmetEntity(World world, LivingEntity owner, double x, double y, double z, boolean suffocate){
+        super(WATERHELMET, world, LivingEntity.class); 
+        setPos(x, owner.getEyeY(), z); 
+        setOwner(owner); 
+        this.suffocate = suffocate; 
+    } 
+    @Override 
+    protected void initDataTracker(){
         super.initDataTracker();
         this.getDataTracker().startTracking(CASTER_ID, 0);
         this.getDataTracker().startTracking(MODEL_ID, 0);
         this.getDataTracker().startTracking(STEALTHY, false);
         this.getDataTracker().startTracking(RANGE, 10);
 
-    }
-
-    @Override
-    public void tick() {
-        super.tick();
-
-        LivingEntity owner = getOwner();
+    } 
+    @Override 
+    public void tick()  {
+        super.tick(); 
+        LivingEntity owner  = getOwner();
         if (owner == null || isRemoved() || owner.isRemoved()) {
             return;
         }
@@ -80,8 +71,6 @@ public class WaterHelmetEntity extends AbstractElementalsEntity<LivingEntity> {
             discard();
             return;
         }
-
-
         // if you change any part of this check the renderer because it also modifies the entity pos
         Vec3d eyePos = getOwner().getEyePos();
         moveEntityTowardsGoal(new Vector3f((float) eyePos.x, (float) (eyePos.y - 0.5), (float) eyePos.z));
@@ -90,13 +79,14 @@ public class WaterHelmetEntity extends AbstractElementalsEntity<LivingEntity> {
             if (isStealthy() && owner.isSneaking() && owner.getVelocity().lengthSquared() <= 0.5) {
                 owner.addStatusEffect(new StatusEffectInstance(StatusEffects.INVISIBILITY, 10, 1, false, false, false));
             }
-            owner.addStatusEffect(new StatusEffectInstance(StatusEffects.WATER_BREATHING, 10, 1, false, false, false));
+            owner.addStatusEffect(new StatusEffectInstance(StatusEffects.WATER_BREATHING, 10, 1, 
+                    false, false, false));
         } else {
             int range = getRange();
             LivingEntity caster = getCaster();
-            if (caster == null) {
+            if (caster == null)
                 return;
-            }
+            
             owner.addStatusEffect(new StatusEffectInstance(DROWNING_EFFECT, 10, 1, false, false, false));
             Vec3d direction = caster.getPos().subtract(owner.getPos());
             double distance = direction.length();
@@ -106,19 +96,16 @@ public class WaterHelmetEntity extends AbstractElementalsEntity<LivingEntity> {
 
                 double damping = 0.1f + (0.3f - 0.1f) * (1 - Math.min(1, distance / range));
                 direction = direction.multiply(damping);
-
                 owner.addVelocity(direction.x, direction.y, direction.z);
 
                 owner.move(MovementType.SELF, owner.getVelocity());
             }
         }
     }
-
     @Override
     public void onRemoved() {
         super.onRemoved();
     }
-
     public LivingEntity getCaster() {
         Entity owner = this.getWorld().getEntityById(this.getDataTracker().get(CASTER_ID));
         return (owner instanceof LivingEntity) ? (LivingEntity) owner : null;
@@ -167,13 +154,13 @@ public class WaterHelmetEntity extends AbstractElementalsEntity<LivingEntity> {
     }
 
     @Override
-    public int getLifeTimeIncrement() {
-        if (suffocate) {
-            return 0;
-        } else if (!getOwner().isSubmergedInWater()) {
-            return 50;
-        } else {
-            return 1;
-        }
-    }
-}
+    public int getLifeTimeIncrement(){
+        if (suffocate) { 
+            return 0; 
+        } else if (!getOwner().isSubmergedInWater()) { 
+            return 50; 
+        } else { 
+            return 1; 
+        } 
+    } 
+} 

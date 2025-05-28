@@ -13,11 +13,11 @@ public class AbilityWater2 implements Ability {
             bender.setCurrAbility(null);
             return;
         }
-
-        if (deltaT >= 1000 && playerData.canUseUpgrade("waterJet")) {
-            WaterElement.get().getAbility(7).onCall(bender, deltaT);
-            return;
-        }
+        if (deltaT >= 1000 && playerData.canUseUpgrade("waterJet")) { 
+            WaterElement.get().getAbility(7).onCall(bender, deltaT); 
+            return; 
+        }  
+        
         if (bender.player.isSneaking()) {
             if (playerData.canUseUpgrade("waterBlade")) {
                 WaterElement.get().getAbility(9).onCall(bender, deltaT);
@@ -29,26 +29,7 @@ public class AbilityWater2 implements Ability {
         }
         WaterElement.get().getAbility(3).onCall(bender, deltaT);
     }
-
-    @Override
-    public void onLeftClick(Bender bender, boolean started) {
-
-    }
-
-    @Override
-    public void onMiddleClick(Bender bender, boolean started) {
-
-    }
-
-    @Override
-    public void onRightClick(Bender bender, boolean started) {
-
-    }
-
-    @Override
-    public void onTick(Bender bender) {
-
-    }
+    
 
     @Override
     public void onRemove(Bender bender) {

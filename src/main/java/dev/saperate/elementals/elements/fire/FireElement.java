@@ -73,8 +73,8 @@ public class FireElement extends Element {
         addAbility(new AbilityFireBall());
         addAbility(new AbilityFireShield());
         addAbility(new AbilityFlameThrower());
-        addAbility(new AbilityFire3(), true);
-        addAbility(new AbilityFire4(), true);
+        addAbility(new AbilityFire3(),true);
+        addAbility(new AbilityFire4(),true);
         addAbility(new AbilityFireWisp());
     }
 

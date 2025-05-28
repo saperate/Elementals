@@ -106,9 +106,8 @@ public class Bender {
     }
 
     public void setCurrAbility(Ability ability) {
-        if (ability == null) {
-            castTime = null;
-        }
+        if (ability == null) 
+            castTime = null; 
         this.currAbility = ability;
         syncAbility(this);
     }
