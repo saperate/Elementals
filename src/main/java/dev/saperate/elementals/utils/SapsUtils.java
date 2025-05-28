@@ -383,7 +383,6 @@ public final class SapsUtils {
     public static Boolean isAboutEquals(double a, double b, double errorMargin) {
         return Math.abs(a - b) <= errorMargin;
     }
-
     public static Boolean isAboutEquals(Vec3d a, Vec3d b, double errorMargin) {
         return a.distanceTo(b) <= errorMargin;
     }

@@ -35,6 +35,7 @@ import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 
 import java.util.*;
+import java.util.function.Predicate;
 
 import static dev.saperate.elementals.entities.ElementalEntities.AIRBALL;
 import static dev.saperate.elementals.entities.ElementalEntities.DECOYPLAYER;
@@ -77,14 +78,12 @@ public class DecoyPlayerEntity extends PathAwareEntity {
             return;
         }
 
-        preventOwnerFromGoingFar(getRange());
-
         if(SapsUtils.checkBlockCollision(this,-0.1f,false) != null){//checks if we are INSIDE a block
             setVelocity(0,0,0);
         }
 
-        //I have no idea why, but this prevents the entity from floating and being stuck so it is staying
-        if (age <= 10) {
+        //I have no idea why, but this prevents the entity from floating and being stuck, so it is staying
+        if (age <= 10 || true) {
             this.prevX = this.getX();
             this.prevY = this.getY();
             this.prevZ = this.getZ();
@@ -125,30 +124,7 @@ public class DecoyPlayerEntity extends PathAwareEntity {
             }
         }
     }
-
-
-    public void preventOwnerFromGoingFar(int max) {
-        Vec3d direction = getPos().subtract(getOwner().getPos());
-        double distance = direction.length();
-        if (distance > max) {
-            if (distance > max * 10 && !getWorld().isClient) {
-                getOwner().teleport(getX(), getY(), getZ(), false);
-            }
-
-
-            direction = direction.multiply(distance - max).multiply(0.1f);
-
-
-            double damping =  0.1f + (0.3f - 0.1f) * (1 - Math.min(1, distance / max));
-            direction = MathHelper.clampVector(direction.multiply(damping),-10,10);
-
-
-            getOwner().addVelocity(direction.x,direction.y,direction.z);
-
-            getOwner().move(MovementType.SELF, getOwner().getVelocity());
-        }
-    }
-
+    
     @Override
     public void remove(RemovalReason reason) {
         super.remove(reason);
