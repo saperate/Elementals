@@ -21,10 +21,10 @@ public class AbilityEarthBlockPickup implements Ability {
             return;
         }
 
-        Object[] data = EarthElement.canBend(player, true);
-        if (data != null) {
-            Vec3d pos = (Vec3d) data[0];
-            BlockState state = (BlockState) data[1];
+        Object[] vars = EarthElement.canBend(player, true);
+        if (vars != null) {
+            Vec3d pos = (Vec3d) vars[0];
+            BlockState state = (BlockState) vars[1];
 
             EarthBlockEntity entity = new EarthBlockEntity(player.getWorld(), player, pos.x, pos.y, pos.z);
             bender.abilityData = entity;
@@ -56,18 +56,24 @@ public class AbilityEarthBlockPickup implements Ability {
         entity.setVelocity(bender.player, bender.player.getPitch(), bender.player.getYaw(), 0, speed, 0);
         entity.setDamage(plrData.canUseUpgrade("earthBlockDamageI") ? 8 : 4);
     }
-    
+
+    @Override
+    public void onMiddleClick(Bender bender, boolean started) {
+
+    }
 
     @Override
     public void onRightClick(Bender bender, boolean started) {
         if (started) {
             return;
         }
-        EarthBlockEntity blockEntity  = (EarthBlockEntity) bender.abilityData;
-        PlayerEntity player  = bender.player;
-        onRemove(bender); 
+        PlayerEntity player = bender.player;
+
+        EarthBlockEntity blockEntity = (EarthBlockEntity) bender.abilityData;
+        onRemove(bender);
         if (blockEntity == null || !PlayerData.get(player).canUseUpgrade("earthBlockShrapnel") || !player.isSneaking()) {
-            return;}
+            return;
+        }
         PlayerData plrData = PlayerData.get(bender.player);
 
         float speed = 1.5f;
@@ -80,6 +86,11 @@ public class AbilityEarthBlockPickup implements Ability {
         blockEntity.setModelShapeId(1);
         blockEntity.setDamage(plrData.canUseUpgrade("earthBlockDamageI") ? 12 : 8);
         blockEntity.setShiftToFreeze(false);
+    }
+
+    @Override
+    public void onTick(Bender bender) {
+
     }
 
     @Override

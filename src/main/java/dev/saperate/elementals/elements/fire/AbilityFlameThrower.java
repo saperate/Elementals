@@ -24,7 +24,7 @@ import static dev.saperate.elementals.Elementals.WIND_SOUND_EVENT;
 import static dev.saperate.elementals.utils.SapsUtils.*;
 
 public class AbilityFlameThrower implements Ability {
-    public static final Box boundingBox  = new Box(new Vec3d(-1, -1, -1), new Vec3d(1, 1, 1));
+    public static final Box boundingBox = new Box(new Vec3d(-1, -1, -1), new Vec3d(1, 1, 1));
 
     @Override
     public void onCall(Bender bender, long deltaT) {
@@ -83,7 +83,7 @@ public class AbilityFlameThrower implements Ability {
                     0.1f, 1,
                     0, 0, 0, 0);
         } else {
-            Vector3f pos = getEntityLookVector(player, 1).subtract(player.getPos()).normalize().multiply(3).toVector3f();
+            Vector3f pos = getEntityLookVector(player, 3).subtract(player.getPos()).normalize().multiply(3).toVector3f();
 
 
             serverSummonParticles((ServerWorld) player.getWorld(),
@@ -102,7 +102,8 @@ public class AbilityFlameThrower implements Ability {
 
             for (Entity e : hits) {
                 if (e.equals(player)  || e instanceof ItemEntity || e instanceof AbstractDecorationEntity) {
-                    continue;}
+                    continue;
+                }
                 if (SapsUtils.isLookingAt(bender.player,e,6,0.75f)) {
                     if (!e.isFireImmune()) {
                         e.setOnFireFor(8);

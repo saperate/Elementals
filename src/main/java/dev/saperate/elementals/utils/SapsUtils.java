@@ -314,37 +314,26 @@ public final class SapsUtils {
         );
     }
 
-    public static Vec3d getEntityLookVector(Entity entity, float distance) {
-        if(entity == null){
+    public static Vec3d getEntityLookVector(Entity e, float distance) {
+        if(e == null){
             return new Vec3d(0,0,0);
         }
-        double rYaw = Math.toRadians(entity.getYaw() + 90);
-        double rPitch = Math.toRadians(-entity.getPitch());
+        double rYaw = Math.toRadians(e.getYaw() + 90);
+        double rPitch = Math.toRadians(-e.getPitch());
 
         float x = (float) (Math.cos(rPitch) * Math.cos(rYaw));
         float y = (float) Math.sin(rPitch);
         float z = (float) (Math.cos(rPitch) * Math.sin(rYaw));
 
-        return new Vec3d(x, y, z).multiply(distance).add(entity.getEyePos());
-    } 
-    /**
-     * Checks if the hit result contains an entity.
-     * If it does contain an entity we return it, if it doesn't we return null.
-     * @return An entity or null
-     */
-    public static Entity entityFromHitResult(HitResult result){
-        if (result.getType().equals(HitResult.Type.ENTITY)) { 
-            return ((EntityHitResult) result).getEntity(); 
-        } else { 
-            return null; 
-        } 
-    } 
-    public static HitResult raycastEntity(Entity entityOrigin, double maxDistance, Predicate<Entity> predicate) {
-        Vec3d cameraPos = entityOrigin.getCameraPosVec(1.0f);
-        Vec3d rot = entityOrigin.getRotationVec(1.0f);
+        return new Vec3d(x, y, z).multiply(distance).add(e.getEyePos());
+    }
+
+    public static HitResult raycastEntity(Entity origin, double maxDistance, Predicate<Entity> predicate) {
+        Vec3d cameraPos = origin.getCameraPosVec(1.0f);
+        Vec3d rot = origin.getRotationVec(1.0f);
         Vec3d context = cameraPos.add(rot.x * maxDistance, rot.y * maxDistance, rot.z * maxDistance);
-        Box box = entityOrigin.getBoundingBox().stretch(rot.multiply(maxDistance)).expand(1d, 1d, 1d);
-        return ProjectileUtil.raycast(entityOrigin, entityOrigin.getEyePos(), context, box, predicate.and(entity -> entity instanceof LivingEntity && !entity.isSpectator() && entity.canHit()), maxDistance * maxDistance);
+        Box box = origin.getBoundingBox().stretch(rot.multiply(maxDistance)).expand(1d, 1d, 1d);
+        return ProjectileUtil.raycast(origin, origin.getEyePos(), context, box, predicate.and(entity -> entity instanceof LivingEntity && !entity.isSpectator() && entity.canHit()), maxDistance * maxDistance);
     }
 
     public static BlockHitResult raycastBlockCustomRotation(Entity origin, float maxDistance, boolean includeFluids, Vec3d rotation) {
@@ -353,27 +342,41 @@ public final class SapsUtils {
         return origin.getWorld().raycast(new RaycastContext(cameraPos, context, RaycastContext.ShapeType.OUTLINE, includeFluids ? RaycastContext.FluidHandling.ANY : RaycastContext.FluidHandling.NONE, origin));
 
     }
-   
-    public static HitResult raycastFull(Entity entityOrigin, double maxDistance, boolean includeFluids) {
-        return raycastFull(entityOrigin, maxDistance, includeFluids, Entity::isAlive);
+
+    //TODO maybe use a discard block list so that if we hit that and we got both and entity hit and a block hit we only keep the entity hit
+    public static HitResult raycastFull(Entity origin, double maxDistance, boolean includeFluids) {
+        return raycastFull(origin, maxDistance, includeFluids, Entity::isAlive);
     }
 
-    public static HitResult raycastFull(Entity entityOrigin, double maxDistance, boolean includeFluids, Predicate<Entity> entityPredicate) {
-        EntityHitResult entityHit = (EntityHitResult) raycastEntity(entityOrigin, maxDistance, entityPredicate);
-        BlockHitResult blockHit = (BlockHitResult) entityOrigin.raycast(maxDistance, 1.0f, includeFluids);
- 
-        if (entityHit == null) {
-            return blockHit;
-        } else if (blockHit == null) {
-            return entityHit;
-        } 
-        if (entityHit.squaredDistanceTo(entityOrigin) < blockHit.squaredDistanceTo(entityOrigin)) {
-            return entityHit;
-        } else { 
-            return blockHit;
-        } 
-    } 
- 
+    public static HitResult raycastFull(Entity origin, double maxDistance, boolean includeFluids, Predicate<Entity> entityPredicate) {
+        EntityHitResult eHit = (EntityHitResult) raycastEntity(origin, maxDistance, entityPredicate);
+        BlockHitResult bHit = (BlockHitResult) origin.raycast(maxDistance, 1.0f, includeFluids);
+
+        if (eHit == null) {
+            return bHit;
+        } else if (bHit == null) {
+            return eHit;
+        }
+
+        if (eHit.squaredDistanceTo(origin) < bHit.squaredDistanceTo(origin)) {
+            return eHit;
+        } else {
+            return bHit;
+        }
+    }
+
+    /**
+     * Checks if the hit result contains an entity.
+     * If it does contain an entity we return it, if it doesn't we return null.
+     * @return An entity or null
+     */
+    public static Entity entityFromHitResult(HitResult result) {
+        if (result.getType().equals(HitResult.Type.ENTITY)) {
+            return ((EntityHitResult) result).getEntity();
+        } else {
+            return null;
+        }
+    }
 
     public static Boolean isAboutEquals(double a, double b, double errorMargin) {
         return Math.abs(a - b) <= errorMargin;

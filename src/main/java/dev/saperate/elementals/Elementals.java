@@ -213,6 +213,7 @@ public class Elementals implements ModInitializer {
 
     private static void onPlayerRespawn(ServerPlayerEntity oldPlayer, ServerPlayerEntity newPlayer, boolean b) {
         Bender bender = Bender.getBender(oldPlayer);
+
         if (bender.currAbility != null) {
             bender.currAbility.onRemove(bender);
             bender.setCurrAbility(null);

@@ -19,7 +19,7 @@ public class AbilityFire2 implements Ability {
             if(playerData.canUseUpgrade("fireShield")){
                 FireElement.get().getAbility(7).onCall(bender,deltaT);
                 return;
-            } else if (playerData.canUseUpgrade("flameThrower"))  {
+            } else if (playerData.canUseUpgrade("flameThrower")) {
                 FireElement.get().getAbility(8).onCall(bender,deltaT);
                 return;
             }
@@ -30,6 +30,26 @@ public class AbilityFire2 implements Ability {
             return;
         }
         bender.setCurrAbility(null);
+    }
+
+    @Override
+    public void onLeftClick(Bender bender, boolean started) {
+
+    }
+
+    @Override
+    public void onMiddleClick(Bender bender, boolean started) {
+
+    }
+
+    @Override
+    public void onRightClick(Bender bender, boolean started) {
+
+    }
+
+    @Override
+    public void onTick(Bender bender) {
+
     }
 
     @Override
