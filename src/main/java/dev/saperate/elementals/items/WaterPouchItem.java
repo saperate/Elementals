@@ -116,7 +116,7 @@ public class WaterPouchItem extends Item implements DyeableItem {
     }
 
     public int getMaxWaterLevel(ItemStack itemStack){
-        return 3 + EnchantmentHelper.getLevel(Elementals.VOLUME_ENCHANTMENT,itemStack);
+        return 9 + EnchantmentHelper.getLevel(Elementals.VOLUME_ENCHANTMENT,itemStack)*4;
     }
 
     @Override
