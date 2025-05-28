@@ -17,10 +17,10 @@ public abstract class Element{
     public Upgrade root;
 
     public Element(String name, Upgrade root){
-        if(elements.containsKey(name.toLowerCase())){
+        if(elements.containsKey(name.toLowerCase(Locale.CANADA))){
             throw new RuntimeException("Element \""+name+"\" was already registered!");
         }
-        elements.put(name.toLowerCase(),this);
+        elements.put(name.toLowerCase(Locale.CANADA),this);
         this.name = name;
         this.root = root;
     }
@@ -69,7 +69,7 @@ public abstract class Element{
      * Gets an element using its name. If it is not found, returns a reference to {@link NoneElement}
      */
     public static Element getElement(String name){
-        return elements.getOrDefault(name.toLowerCase(),elements.get("None"));
+        return elements.getOrDefault(name.toLowerCase(Locale.CANADA),elements.get("None"));
     }
 
 

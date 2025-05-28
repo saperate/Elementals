@@ -33,6 +33,7 @@ import java.awt.*;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -80,7 +81,7 @@ public class UpgradeTreeScreen extends Screen {
         int oY = MathHelper.floor(originY);
         context.drawTexture(CreateWorldScreen.LIGHT_DIRT_BACKGROUND_TEXTURE, 0, 0, -5, -oX, -oY, width, height, 32, 32);
 
-        context.drawTexture(new Identifier(MODID, "textures/gui/" + ClientBender.get().getElement().getName().toLowerCase() + "_upgrade_button.png"),
+        context.drawTexture(new Identifier(MODID, "textures/gui/" + ClientBender.get().getElement().getName().toLowerCase(Locale.CANADA) + "_upgrade_button.png"),
                 oX - 2, oY - 2, 0, 0, tileSize + 4, tileSize + 4, tileSize + 4, tileSize + 4);
 
 
@@ -426,7 +427,7 @@ public class UpgradeTreeScreen extends Screen {
         }
 
         if(raw.contains("keyboard")){
-            return raw.split("\\.")[2].toUpperCase();
+            return raw.split("\\.")[2].toUpperCase(Locale.CANADA);
         } else if (raw.contains("mouse")) {
             return "Mouse " + raw.split("\\.")[2];
         }else {

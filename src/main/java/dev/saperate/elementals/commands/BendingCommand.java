@@ -22,6 +22,7 @@ import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 
+import java.util.Locale;
 import java.util.function.Supplier;
 
 public class BendingCommand {
@@ -107,7 +108,7 @@ public class BendingCommand {
         if (element.getName().equals("None")) {
             context.getSource().sendFeedback((() -> Text.of("You do not have any bending element!")), false);
         } else {
-            context.getSource().sendFeedback((() -> Text.of("You can bend " + bender.getElement().getName().toLowerCase() + "!")), false);
+            context.getSource().sendFeedback((() -> Text.of("You can bend " + bender.getElement().getName().toLowerCase(Locale.CANADA) + "!")), false);
         }
         return 1;
     }

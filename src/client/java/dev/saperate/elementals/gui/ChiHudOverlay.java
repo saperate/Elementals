@@ -8,6 +8,8 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.util.Identifier;
 
+import java.util.Locale;
+
 import static dev.saperate.elementals.Elementals.MODID;
 
 public class ChiHudOverlay implements HudRenderCallback {
@@ -22,7 +24,7 @@ public class ChiHudOverlay implements HudRenderCallback {
         int x = (int) (client.getWindow().getScaledWidth() - client.getWindow().getScaleFactor() * 16);
         int y = (int) (client.getWindow().getScaledHeight() - 8 * client.getWindow().getScaleFactor());
 
-        Identifier buttonID = new Identifier(MODID, "textures/gui/" + ClientBender.get().getElement().getName().toLowerCase() + "_upgrade_button.png");
+        Identifier buttonID = new Identifier(MODID, "textures/gui/" + ClientBender.get().getElement().getName().toLowerCase(Locale.CANADA) + "_upgrade_button.png");
         drawContext.drawTexture(buttonID, x - 40, y - 18, 0, 0, 32, 32, 32, 32);
 
 
