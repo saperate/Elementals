@@ -5,11 +5,15 @@ import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.effects.SpiritProjectionStatusEffect;
 import dev.saperate.elementals.elements.Ability;
 import dev.saperate.elementals.entities.common.DecoyPlayerEntity;
+import dev.saperate.elementals.utils.MathHelper;
 import dev.saperate.elementals.utils.SapsUtils;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.EquipmentSlot;
+import net.minecraft.entity.MovementType;
+import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.passive.PigEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.hit.EntityHitResult;
@@ -101,20 +105,36 @@ public class AbilityAir4 implements Ability {
         }
     }
 
-    @Override
-    public void onMiddleClick(Bender bender, boolean started) {
-
-    }
-
-    @Override
-    public void onRightClick(Bender bender, boolean started) {
-
-    }
 
     @Override
     public void onTick(Bender bender) {
+        Object[] data = (Object[]) bender.abilityData;
+        DecoyPlayerEntity decoy = (DecoyPlayerEntity) data[1];
 
+        preventOwnerFromGoingFar(bender, decoy, decoy.getRange());
     }
+
+    private static void preventOwnerFromGoingFar(Bender bender, DecoyPlayerEntity decoy, int range) {
+        Vec3d direction = decoy.getPos().subtract(bender.player.getPos());
+        double distance = direction.length();
+        if (distance > range) {
+            if (distance > range * 10) {
+                bender.player.teleport(decoy.getX(), decoy.getY(), decoy.getZ());
+            }
+
+
+            direction = direction.multiply(distance - range).multiply(0.1f);
+
+
+            double damping =  0.1f + (0.3f - 0.1f) * (1 - Math.min(1, distance / range));
+            direction = MathHelper.clampVector(direction.multiply(damping),-10,10);
+
+
+            bender.player.addVelocity(direction.x,direction.y,direction.z);
+            bender.player.move(MovementType.SELF, bender.player.getVelocity());
+        }
+    }
+
 
     @Override
     public void onRemove(Bender bender) {
@@ -144,4 +164,5 @@ public class AbilityAir4 implements Ability {
         bender.setCurrAbility(null);
         bender.abilityData = null;
     }
+
 }

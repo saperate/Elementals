@@ -25,6 +25,7 @@ public class AbilityMetalCable implements Ability {
             HitResult hitResult = SapsUtils.raycastFull(player, 100, false);
 
             if (!hitResult.getType().equals(HitResult.Type.BLOCK)) {
+                bender.setCurrAbility(null);
                 return;
             }
 

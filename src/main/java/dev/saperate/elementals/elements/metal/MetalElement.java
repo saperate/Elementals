@@ -13,6 +13,7 @@ public class MetalElement extends Element {
         addAbility(new AbilityMetalBullets());
         addAbility(new AbilityMetal2(), true);
         addAbility(new AbilityMetalBind());//TODO move stuff once you add abilities above it
+        addAbility(new AbilityMetalDecoy());
         addAbility(new AbilityMetal3(),true);
         addAbility(new AbilityMetalCable());
     }
@@ -34,5 +35,5 @@ public class MetalElement extends Element {
     @Override
     public boolean isSkillTreeComplete(Bender bender) {
         return bender.hasElement(this);
-    }//TODO this
+    }//TODO make an algorithm for this it's annoying to do by hand
 }
