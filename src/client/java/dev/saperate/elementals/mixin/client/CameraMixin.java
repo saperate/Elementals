@@ -1,6 +1,9 @@
 package dev.saperate.elementals.mixin.client;
 
 import dev.saperate.elementals.effects.ElementalsStatusEffects;
+import dev.saperate.elementals.data.ClientBender;
+import dev.saperate.elementals.elements.metal.AbilityMetalDecoy;
+import dev.saperate.elementals.entities.common.DecoyPlayerEntity;
 import dev.saperate.elementals.entities.earth.EarthBlockEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.Camera;
@@ -19,12 +22,31 @@ import static dev.saperate.elementals.utils.ClientUtils.safeHasStatusEffect;
 @Mixin(Camera.class)
 public abstract class CameraMixin {
 
-    @Shadow private boolean thirdPerson;
+    @Shadow
+    private boolean thirdPerson;
+
+    @Shadow
+    protected abstract void setPos(double x, double y, double z);
+
+
+    @Shadow protected abstract void moveBy(double x, double y, double z);
+
+    @Shadow protected abstract double clipToSpace(double desiredCameraDistance);
 
     @Inject(at = @At("TAIL"), method = "update")
     private void render(BlockView area, Entity focusedEntity, boolean thirdPerson, boolean inverseView, float tickDelta, CallbackInfo ci) {
         if(safeHasStatusEffect(ElementalsStatusEffects.SPIRIT_PROJECTION,MinecraftClient.getInstance().player)){
             this.thirdPerson = false;
         }
+        ClientBender bender = ClientBender.get();
+        if (bender.currAbility instanceof AbilityMetalDecoy) {
+            DecoyPlayerEntity decoy = ((DecoyPlayerEntity) bender.ClientAbilityData);
+            this.thirdPerson = true;
+            if (decoy != null) {
+                setPos(decoy.getX(), decoy.getEyeY(), decoy.getZ());
+                moveBy(-clipToSpace(2.0), -0, 0.0);
+            }
+        }
     }
+
 }

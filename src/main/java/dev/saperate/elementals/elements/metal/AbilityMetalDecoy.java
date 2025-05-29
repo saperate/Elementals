@@ -69,14 +69,15 @@ public class AbilityMetalDecoy implements Ability {
         decoy.equipStack(EquipmentSlot.FEET,  ElementalItems.EARTH_BOOTS.getDefaultStack());
         decoy.equipStack(EquipmentSlot.MAINHAND, ItemStack.EMPTY);
         decoy.equipStack(EquipmentSlot.OFFHAND,  ItemStack.EMPTY);
-
-        //TODO save player params so we can lock them and make the decoy mimic movements
+        
         decoy.setYaw(plr.getYaw());
         decoy.setHeadYaw(plr.getHeadYaw());
         decoy.setPitch(plr.getPitch());
 
         decoy.setHealth(20);
         decoy.setPos(plr.getX(),plr.getY(),plr.getZ());
+        decoy.setFocusCamera(true);
+        
         plr.getWorld().spawnEntity(decoy);
 
 
@@ -120,12 +121,13 @@ public class AbilityMetalDecoy implements Ability {
 
             Vec3d velocity = SapsUtils.getEntityLookVector(decoy, 1)
                     .subtract(decoy.getEyePos())
-                    .normalize().multiply(0.1,0,0.1);
+                    .normalize().multiply(0.1,0,0.1).add(0,decoy.getVelocity().y,0);
             decoy.setVelocity(velocity);
             decoy.move(MovementType.SELF, decoy.getVelocity());
+            
         }
-        if(player.isSneaking() ){
-            decoy.setVelocity(0,0.25,0);
+        if(player.isInSneakingPose() && decoy.isOnGround()){
+            decoy.setVelocity(0,0.5,0);
             decoy.move(MovementType.SELF, decoy.getVelocity());
         }
     }

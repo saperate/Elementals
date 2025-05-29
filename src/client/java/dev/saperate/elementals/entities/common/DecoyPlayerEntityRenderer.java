@@ -1,5 +1,6 @@
 package dev.saperate.elementals.entities.common;
 
+import dev.saperate.elementals.data.ClientBender;
 import dev.saperate.elementals.entities.models.common.DecoyPlayerModel;
 import dev.saperate.elementals.entities.features.ElementalsCapeFeatureRenderer;
 import dev.saperate.elementals.network.ModMessages;
@@ -42,6 +43,9 @@ public class DecoyPlayerEntityRenderer extends LivingEntityRenderer<DecoyPlayerE
     @Override
     public void render(DecoyPlayerEntity decoy, float f, float g, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i) {
         super.render(decoy, f, g, matrixStack, vertexConsumerProvider, i);
+        if(decoy.getFocusCamera()){
+            ClientBender.get().ClientAbilityData = decoy;
+        }
     }
 
     @Override

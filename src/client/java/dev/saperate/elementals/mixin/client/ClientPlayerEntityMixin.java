@@ -2,6 +2,7 @@ package dev.saperate.elementals.mixin.client;
 
 import dev.saperate.elementals.data.ClientBender;
 import dev.saperate.elementals.elements.air.AbilityAirScooter;
+import dev.saperate.elementals.elements.metal.AbilityMetalDecoy;
 import dev.saperate.elementals.items.ElementalItems;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.BookEditScreen;
@@ -46,4 +47,14 @@ public abstract class ClientPlayerEntityMixin {
         }
     }
 
+    @Inject(at = @At("RETURN"), method = "canStartSprinting", cancellable = true)
+    private void canStartSprinting(CallbackInfoReturnable<Boolean> cir) {
+        ClientBender bender = ClientBender.get();
+        PlayerEntity plr = ((PlayerEntity) (Object) this);
+        
+        if (bender.currAbility instanceof AbilityMetalDecoy) {
+            cir.setReturnValue(!plr.isSprinting());
+            cir.cancel();
+        }
+    }
 }

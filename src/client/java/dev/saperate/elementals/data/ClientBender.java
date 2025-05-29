@@ -18,6 +18,7 @@ public class ClientBender {
     private int activeElementIndex = 0;
     public Ability currAbility;
     public PlayerEntity player;
+    public Object ClientAbilityData;
     public HashMap<Upgrade, Boolean> upgrades = new HashMap<>();
     private double castTime = -1;
     public float chi = 100;
