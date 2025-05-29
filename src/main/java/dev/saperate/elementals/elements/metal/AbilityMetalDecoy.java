@@ -30,6 +30,8 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.stat.Stats;
 import net.minecraft.util.Hand;
+import net.minecraft.util.hit.EntityHitResult;
+import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.GameMode;
@@ -80,14 +82,23 @@ public class AbilityMetalDecoy implements Ability {
         plr.getWorld().spawnEntity(decoy);
 
 
-        bender.abilityData = packAbilityData(decoy, 0,0,0);
+        bender.abilityData = packAbilityData(decoy, 0,0,0,false);
 
         bender.setCurrAbility(this);
     }
 
     @Override
+    public void onLeftClick(Bender bender, boolean started) {
+        DecoyPlayerEntity decoy = getDecoy(bender);
+        HitResult hit = SapsUtils.raycastEntity(decoy,5,Entity::isAlive);
+        if(hit == null || !hit.getType().equals(HitResult.Type.ENTITY))
+            return;
+        attack(((EntityHitResult) hit).getEntity(), decoy);
+    }
+
+    @Override
     public void onRightClick(Bender bender, boolean started) {
-        SapsUtils.raycastEntity()
+        bender.abilityData = packAbilityData(getDecoy(bender),getDeltaYaw(bender),getDeltaHeadYaw(bender), getDeltaPitch(bender),started);
     }
 
     @Override
@@ -96,10 +107,14 @@ public class AbilityMetalDecoy implements Ability {
         DecoyPlayerEntity decoy = getDecoy(bender);
         PlayerEntity player = bender.player;
 
-        if(player.isSprinting()){
+        if(getShouldRotate(bender)){
             decoy.setYaw(player.getYaw() + getDeltaYaw(bender));
             decoy.setHeadYaw(player.getHeadYaw() + getDeltaHeadYaw(bender));
             decoy.setPitch(player.getPitch() + getDeltaPitch(bender));
+        }
+        
+        if(player.isSprinting()){
+
 
             Vec3d velocity = SapsUtils.getEntityLookVector(decoy, 1)
                     .subtract(decoy.getEyePos())
@@ -126,8 +141,8 @@ public class AbilityMetalDecoy implements Ability {
     }
 
     ///Ability data stuff, cleaner to put it all in their own methods
-    public Object packAbilityData(DecoyPlayerEntity decoy, float deltaYaw, float deltaHeadYaw, float deltaPitch){
-        return new Object[]{decoy,deltaYaw,deltaHeadYaw,deltaPitch};
+    public Object packAbilityData(DecoyPlayerEntity decoy, float deltaYaw, float deltaHeadYaw, float deltaPitch, boolean shouldRotate){
+        return new Object[]{decoy,deltaYaw,deltaHeadYaw,deltaPitch,shouldRotate};
     }
 
     public DecoyPlayerEntity getDecoy(Bender bender){
@@ -162,10 +177,18 @@ public class AbilityMetalDecoy implements Ability {
         return 0;
     }
 
+    public boolean getShouldRotate(Bender bender){
+        Object[] data = (Object[]) bender.abilityData;
+        if(data != null){
+            return (boolean) data[4];
+        }
+        return false;
+    }
+
     public void attack(Entity target, DecoyPlayerEntity decoy) {
         if (target.isAttackable()) {
             if (!target.handleAttack(decoy)) {
-                float f = (float) decoy.getAttributeValue(EntityAttributes.GENERIC_ATTACK_DAMAGE);
+                float f = (float) 1;
                 ItemStack itemStack = decoy.getEquippedStack(EquipmentSlot.MAINHAND);
                 DamageSource damageSource = decoy.getDamageSources().playerAttack(decoy.getOwner());
                 float g = f;
