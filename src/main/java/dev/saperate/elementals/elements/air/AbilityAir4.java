@@ -119,7 +119,7 @@ public class AbilityAir4 implements Ability {
         double distance = direction.length();
         if (distance > range) {
             if (distance > range * 10) {
-                bender.player.teleport(decoy.getX(), decoy.getY(), decoy.getZ());
+                bender.player.teleport(decoy.getX(), decoy.getY(), decoy.getZ(),false);
             }
 
 

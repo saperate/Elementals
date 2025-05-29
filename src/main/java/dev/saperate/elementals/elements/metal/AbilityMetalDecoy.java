@@ -30,6 +30,8 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.stat.Stats;
 import net.minecraft.util.Hand;
+import net.minecraft.util.hit.EntityHitResult;
+import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.GameMode;
@@ -38,8 +40,6 @@ import org.joml.Vector3f;
 
 import java.util.Iterator;
 import java.util.List;
-
-import static dev.saperate.elementals.effects.SpiritProjectionStatusEffect.SPIRIT_PROJECTION_EFFECT;
 
 public class AbilityMetalDecoy implements Ability {
     @Override
@@ -87,7 +87,11 @@ public class AbilityMetalDecoy implements Ability {
 
     @Override
     public void onRightClick(Bender bender, boolean started) {
-        SapsUtils.raycastEntity()
+        DecoyPlayerEntity decoy = getDecoy(bender);
+        HitResult hit = SapsUtils.raycastEntity(decoy,5,Entity::isAlive);
+        if(!hit.getType().equals(HitResult.Type.ENTITY))
+            return;
+        attack(((EntityHitResult) hit).getEntity(), decoy);
     }
 
     @Override
@@ -244,7 +248,7 @@ public class AbilityMetalDecoy implements Ability {
                                     World var24 = decoy.getWorld();
                                     if (var24 instanceof ServerWorld) {
                                         ServerWorld serverWorld = (ServerWorld)var24;
-                                        EnchantmentHelper.onTargetDamaged(decoy, livingEntity3);
+                                        EnchantmentHelper.onTargetDamaged(serverWorld ,livingEntity3, damageSource);
                                     }
                                 }
                             }
@@ -284,7 +288,7 @@ public class AbilityMetalDecoy implements Ability {
                                 itemStack.postHit(livingEntity3, decoy.getOwner());
                             }
 
-                            EnchantmentHelper.onTargetDamaged(decoy, target);
+                            EnchantmentHelper.onTargetDamaged((ServerWorld) decoy.getWorld() ,target, damageSource);
                         }
 
                         if (target instanceof LivingEntity) {
