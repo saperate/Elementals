@@ -150,7 +150,6 @@ public class DecoyPlayerEntity extends PathAwareEntity {
                 return false;
             }
             Bender.getBender((ServerPlayerEntity) owner).currAbility.onRemove(Bender.getBender((ServerPlayerEntity) owner));
-            owner.damage(source,amount);
         }
         return super.damage(source, amount);
     }

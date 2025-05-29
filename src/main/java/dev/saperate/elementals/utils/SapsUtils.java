@@ -2,6 +2,7 @@ package dev.saperate.elementals.utils;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.elements.Element;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.fabricmc.loader.impl.lib.sat4j.core.Vec;
@@ -40,6 +41,7 @@ import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3i;
 import net.minecraft.util.math.random.Random;
+import net.minecraft.world.BlockView;
 import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
 import net.minecraft.world.event.GameEvent;
@@ -557,6 +559,30 @@ public final class SapsUtils {
     public static boolean isLookingForwards(Vector3f direction){
         double dot = Math.acos(new Vector3f(0,0,1).dot(direction)/direction.length());
         return dot >= 1.5;
+    }
+
+    /**
+     *
+     * @return True if the block was broken
+     */
+    public static boolean mineBlock(BlockPos blockHit, World world, int entityId, int age, int startMiningAge, float miningSpeed) {
+        float progress = calcBlockBreakingDelta(world.getBlockState(blockHit), world, blockHit, miningSpeed)
+                * (age - startMiningAge + 1);
+        world.setBlockBreakingInfo(entityId, blockHit, (int) (progress * 10));
+
+        if (progress >= 1) {
+            world.breakBlock(blockHit, true);
+            return true;
+        }
+        return false;
+    }
+
+    private static float calcBlockBreakingDelta(BlockState state, BlockView world, BlockPos pos, float miningSpeed) {
+        float f = state.getHardness(world, pos);
+        if (f == -1.0f) {
+            return 0.0f;
+        }
+        return 1 / f / miningSpeed;
     }
 
 }

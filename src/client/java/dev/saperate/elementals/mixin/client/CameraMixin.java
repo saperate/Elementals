@@ -6,6 +6,7 @@ import dev.saperate.elementals.elements.metal.AbilityMetalDecoy;
 import dev.saperate.elementals.entities.common.DecoyPlayerEntity;
 import dev.saperate.elementals.entities.earth.EarthBlockEntity;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.option.Perspective;
 import net.minecraft.client.render.Camera;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.entity.Entity;
@@ -41,7 +42,7 @@ public abstract class CameraMixin {
         ClientBender bender = ClientBender.get();
         if (bender.currAbility instanceof AbilityMetalDecoy) {
             DecoyPlayerEntity decoy = ((DecoyPlayerEntity) bender.ClientAbilityData);
-            this.thirdPerson = true;
+            MinecraftClient.getInstance().options.setPerspective(Perspective.THIRD_PERSON_BACK);
             if (decoy != null) {
                 setPos(decoy.getX(), decoy.getEyeY(), decoy.getZ());
                 moveBy(-clipToSpace(2.0), -0, 0.0);

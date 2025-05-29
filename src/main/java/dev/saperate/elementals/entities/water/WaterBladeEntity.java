@@ -98,13 +98,14 @@ public class WaterBladeEntity extends AbstractElementalsEntity<PlayerEntity> {
             if (!getIsControlled()) {
                 collidesWithGround();
             } else if (blockHit.getY() == getBlockY()) {
-                float progress = calcBlockBreakingDelta(getWorld().getBlockState(blockHit), getWorld(), blockHit)
-                        * (age - startMiningAge + 1);
-                getWorld().setBlockBreakingInfo(getId(), blockHit, (int) (progress * 10));
-
-                if (progress >= 1) {
-                    getWorld().breakBlock(blockHit, true);
+                int miningSpeed = 100;
+                PlayerData plrData = PlayerData.get(getOwner());
+                if (plrData.canUseUpgrade("waterBladeMiningII")) {
+                    miningSpeed = 30;
+                } else if (plrData.canUseUpgrade("waterBladeMiningI")) {
+                    miningSpeed = 60;
                 }
+                SapsUtils.mineBlock(blockHit, getWorld(), getId(), age, startMiningAge, miningSpeed);
 
                 if (age % 5 == 0) {
                     summonParticles(this, random,
@@ -115,20 +116,7 @@ public class WaterBladeEntity extends AbstractElementalsEntity<PlayerEntity> {
         }
     }
 
-    public float calcBlockBreakingDelta(BlockState state, BlockView world, BlockPos pos) {
-        float f = state.getHardness(world, pos);
-        if (f == -1.0f) {
-            return 0.0f;
-        }
-        int miningSpeed = 100;
-        PlayerData plrData = PlayerData.get(getOwner());
-        if (plrData.canUseUpgrade("waterBladeMiningII")) {
-            miningSpeed = 30;
-        } else if (plrData.canUseUpgrade("waterBladeMiningI")) {
-            miningSpeed = 60;
-        }
-        return 1 / f / (float) miningSpeed;
-    }
+
 
 
     private void moveEntity(Entity owner) {
