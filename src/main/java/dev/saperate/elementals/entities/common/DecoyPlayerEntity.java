@@ -47,7 +47,7 @@ public class DecoyPlayerEntity extends PathAwareEntity {
     public static final TrackedData<String> OWNER_NAME = DataTracker.registerData(DecoyPlayerEntity.class, TrackedDataHandlerRegistry.STRING);
     private DefaultedList<ItemStack> items = DefaultedList.ofSize(6, ItemStack.EMPTY);
     public static final TrackedData<Integer> RANGE = DataTracker.registerData(DecoyPlayerEntity.class, TrackedDataHandlerRegistry.INTEGER);
-
+    public static final TrackedData<Boolean> FOCUS_CAMERA = DataTracker.registerData(DecoyPlayerEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
     public DecoyPlayerEntity(EntityType<? extends PathAwareEntity> entityType, World world) {
         super(entityType, world);
     }
@@ -56,6 +56,7 @@ public class DecoyPlayerEntity extends PathAwareEntity {
         super(DECOYPLAYER, world);
         setOwner(owner);
         setPos(owner.getX(), owner.getY(), owner.getZ());
+        setStepHeight(1.1f);
     }
 
     @Override
@@ -64,6 +65,7 @@ public class DecoyPlayerEntity extends PathAwareEntity {
         this.getDataTracker().startTracking(OWNER_ID, Optional.empty());
         this.getDataTracker().startTracking(OWNER_NAME, "");
         this.getDataTracker().startTracking(RANGE,5);
+        this.getDataTracker().startTracking(FOCUS_CAMERA,false);
     }
 
 
@@ -265,5 +267,13 @@ public class DecoyPlayerEntity extends PathAwareEntity {
 
     public int getRange() {
         return this.dataTracker.get(RANGE);
+    }
+
+    public void setFocusCamera(boolean val) {
+        this.dataTracker.set(FOCUS_CAMERA, val);
+    }
+
+    public boolean getFocusCamera() {
+        return this.dataTracker.get(FOCUS_CAMERA);
     }
 }
