@@ -30,9 +30,9 @@ public abstract class CameraMixin {
     protected abstract void setPos(double x, double y, double z);
 
 
-    @Shadow protected abstract void moveBy(double x, double y, double z);
+    @Shadow protected abstract void moveBy(float f, float g, float h);
 
-    @Shadow protected abstract double clipToSpace(double desiredCameraDistance);
+    @Shadow protected abstract float clipToSpace(float f);
 
     @Inject(at = @At("TAIL"), method = "update")
     private void render(BlockView area, Entity focusedEntity, boolean thirdPerson, boolean inverseView, float tickDelta, CallbackInfo ci) {
@@ -45,7 +45,7 @@ public abstract class CameraMixin {
             MinecraftClient.getInstance().options.setPerspective(Perspective.THIRD_PERSON_BACK);
             if (decoy != null) {
                 setPos(decoy.getX(), decoy.getEyeY(), decoy.getZ());
-                moveBy(-clipToSpace(2.0), -0, 0.0);
+                moveBy(-clipToSpace(2.0f), -0, 0.0f);
             }
         }
     }
