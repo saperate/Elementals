@@ -67,7 +67,7 @@ public class AbilityWaterTower implements Ability {
 
     @Override
     public void onBackgroundTick(Bender bender, Object data) {
-        if (!bender.reduceChi(0.1f)) {
+        if (!bender.reduceChi(0.15f)) {
             if (bender.abilityData == null) {
                 bender.setCurrAbility(null);
             } else {

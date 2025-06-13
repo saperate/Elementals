@@ -30,10 +30,9 @@ public class MetalCableEntityRenderer extends EntityRenderer<MetalCableEntity> {
         if (entity.getChild() == null) {
             return;
         }
-
-        if (entity.getParent() == null) {//todo figure out why its so jittery, 99% sure its cause of some fuckery like this
-            entity.setPosition(entity.getOwner().getLeashPos(tickDelta));
-        }
+        //todo figure out why its so jittery, 99% sure its cause of some fuckery like this
+           entity.setPosition(entity.getOwner().getEyePos().subtract(0,1,0));
+        
 
         Entity pointA = entity.getChild();
         Entity pointB = entity.getOwner();

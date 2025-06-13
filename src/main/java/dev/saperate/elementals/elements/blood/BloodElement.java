@@ -82,8 +82,13 @@ public class BloodElement extends Element {
     }
 
     @Override
-    public int getAccentColor() {
+    public int getSecondaryColor() {
         return 0xFF400303;
+    }
+
+    @Override
+    public int getTertiaryColor() {
+        return super.getTertiaryColor();
     }
 
     @Override

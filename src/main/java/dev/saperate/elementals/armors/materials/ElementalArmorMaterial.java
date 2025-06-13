@@ -10,8 +10,7 @@ import net.minecraft.sound.SoundEvents;
 import java.util.function.Supplier;
 
 public enum ElementalArmorMaterial implements ArmorMaterial {
-    EARTH("earth", 25, new int[]{5,10,8,5}, 0, SoundEvents.BLOCK_CALCITE_PLACE,  4f, 0.9f, () -> Ingredient.ofItems((ItemConvertible) null)),
-    ;
+    EARTH("earth", 25, new int[]{7,12,9,6}, 0, SoundEvents.BLOCK_CALCITE_PLACE,  6f, 0.9f, () -> Ingredient.ofItems((ItemConvertible) null)),;
 
     private final String name;
     private final int durabilityMult;

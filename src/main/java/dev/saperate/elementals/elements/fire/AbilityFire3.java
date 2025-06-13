@@ -20,7 +20,7 @@ import static dev.saperate.elementals.utils.SapsUtils.*;
 public class AbilityFire3 implements Ability {
     @Override
     public void onCall(Bender bender, long deltaT) {
-        if (PlayerData.get(bender.player).canUseUpgrade("fireJump")) {
+        if (PlayerData.get(bender.player).canUseUpgrade("fireJump") && !bender.player.isTouchingWater()) {
             bender.setCurrAbility(this);
             return;
         }
@@ -52,17 +52,7 @@ public class AbilityFire3 implements Ability {
             launchEntity(player, power);
         }
     }
-
-    @Override
-    public void onMiddleClick(Bender bender, boolean started) {
-
-    }
-
-    @Override
-    public void onRightClick(Bender bender, boolean started) {
-
-    }
-
+    
     @Override
     public void onTick(Bender bender) {
         PlayerEntity player = bender.player;

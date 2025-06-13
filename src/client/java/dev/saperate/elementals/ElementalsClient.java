@@ -10,6 +10,8 @@ import dev.saperate.elementals.entities.lightning.LightningArcEntityRenderer;
 import dev.saperate.elementals.entities.lightning.VoltArcEntityRenderer;
 import dev.saperate.elementals.entities.metal.MetalBulletEntityRenderer;
 import dev.saperate.elementals.entities.metal.MetalCableEntityRenderer;
+import dev.saperate.elementals.entities.metal.MetalLanceRenderer;
+import dev.saperate.elementals.entities.models.metal.MetalLanceModel;
 import dev.saperate.elementals.entities.water.*;
 import dev.saperate.elementals.entities.common.DecoyPlayerEntityRenderer;
 import dev.saperate.elementals.entities.earth.EarthBlockEntityRenderer;
@@ -63,6 +65,9 @@ public class ElementalsClient implements ClientModInitializer {
 	public static final EntityModelLayer MODEL_DECOY_PLAYER = new EntityModelLayer(new Identifier(MODID, "decoy_player"),"main");
 	public static final EntityModelLayer MODEL_WATER_BLADE_LAYER = (new EntityModelLayer(new Identifier(MODID, "water_blade"),"bb_main"));
 
+	public static final EntityModelLayer MODEL_METAL_LANCE_LAYER = (new EntityModelLayer(new Identifier(MODID, "metal_lance"),"bb_main"));
+
+
 	@Override
 	public void onInitializeClient() {
 		registerS2CPackets();
@@ -82,6 +87,7 @@ public class ElementalsClient implements ClientModInitializer {
 
 		EntityModelLayerRegistry.registerModelLayer(MODEL_WATER_BLADE_LAYER, WaterBladeModel::getTexturedModelData);
 		EntityModelLayerRegistry.registerModelLayer(MODEL_DECOY_PLAYER, DecoyPlayerModel::getTexturedModelData);
+		EntityModelLayerRegistry.registerModelLayer(MODEL_METAL_LANCE_LAYER, MetalLanceModel::getTexturedModelData);
 
 		ParticleFactoryRegistry.getInstance().register(LIGHTNING_PARTICLE_TYPE, FlameParticle.Factory::new);
 
@@ -149,6 +155,7 @@ public class ElementalsClient implements ClientModInitializer {
 		//METAL
 		EntityRendererRegistry.register(METALCABLE, MetalCableEntityRenderer::new);
 		EntityRendererRegistry.register(METALBULLET, MetalBulletEntityRenderer::new);
+		EntityRendererRegistry.register(METALLANCE, MetalLanceRenderer::new);
 	}
 
 	private static void onClientJoin(ClientPlayNetworkHandler clientPlayNetworkHandler, PacketSender packetSender, MinecraftClient client) {

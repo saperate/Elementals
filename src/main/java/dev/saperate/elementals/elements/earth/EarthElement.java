@@ -234,12 +234,17 @@ public class EarthElement extends Element {
 
     @Override
     public int getColor() {
-        return 0xFF77F963;
+        return 0xFF34a830;
     }
 
     @Override
-    public int getAccentColor() {
-        return 0xFF17711B;
+    public int getSecondaryColor() {
+        return 0xFF058901;
+    }
+
+    @Override
+    public int getTertiaryColor() {
+        return 0xFF025400;
     }
 
     @Override

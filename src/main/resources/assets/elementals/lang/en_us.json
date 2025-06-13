@@ -72,12 +72,12 @@
   "upgrade.elementals.waterBubble": "Water Bubble",
   "upgrade.elementals.waterBubble.description": " A basic move allowing you to transport water or attack enemies.",
   "upgrade.elementals.waterBubble.use": " Use: %d",
-  "upgrade.elementals.waterBubble.icon": "water",
+  "upgrade.elementals.waterBubble.icon": "water_bubble",
   
   "upgrade.elementals.waterHelmet": "Water Helmet",
   "upgrade.elementals.waterHelmet.description": " By making an air pocket with your water bending, you can allow yourself to breathe underwater just like a fish.",
   "upgrade.elementals.waterHelmet.use": " Use: %d + sneak submerged in water",
-  "upgrade.elementals.waterHelmet.icon": "water",
+  "upgrade.elementals.waterHelmet.icon": "water_helmet",
 
   "upgrade.elementals.waterHelmetDurationI": "Duration I",
   "upgrade.elementals.waterHelmetDurationI.description": " Stay underwater for up to 2 minutes.",
@@ -101,7 +101,7 @@
   "upgrade.elementals.waterSuffocate": "Suffocate",
   "upgrade.elementals.waterSuffocate.description": " By taking water and forcing it on the head of a living being, you can drown them, even on land.",
   "upgrade.elementals.waterSuffocate.use": " Use: %d sneak while looking at enemy",
-  "upgrade.elementals.waterSuffocate.icon": "water",
+  "upgrade.elementals.waterSuffocate.icon": "water_helmet",
 
   "upgrade.elementals.waterSuffocateRange": "Range I",
   "upgrade.elementals.waterSuffocateRange.description": " Reach mobs for up to 15 blocks away.",
@@ -109,16 +109,16 @@
   "upgrade.elementals.waterShieldSuffocatePath": "Shield",
   "upgrade.elementals.waterShieldSuffocatePath.description": " By rapidly spinning streams of water around you, you can deflect any projectile or enemy coming your way.",
   "upgrade.elementals.waterShieldSuffocatePath.use": " Use: %d sneak in water + hold (1s)",
-  "upgrade.elementals.waterShieldSuffocatePath.icon": "water",
+  "upgrade.elementals.waterShieldSuffocatePath.icon": "water_shield",
   "upgrade.elementals.waterShieldHelmetPath": "Shield",
   "upgrade.elementals.waterShieldHelmetPath.description": " By rapidly spinning streams of water around you, you can deflect any projectile or enemy coming your way.",
   "upgrade.elementals.waterShieldHelmetPath.use": " Use: %d sneak in water + hold (1s)",
-  "upgrade.elementals.waterShieldHelmetPath.icon": "water",
+  "upgrade.elementals.waterShieldHelmetPath.icon": "water_shield",
 
   "upgrade.elementals.waterArc": "Water Arc",
   "upgrade.elementals.waterArc.description": " A sweeping arc of water that can knock back enemies and damage them from a distance.",
   "upgrade.elementals.waterArc.use": " Use: %d",
-  "upgrade.elementals.waterArc.icon": "water",
+  "upgrade.elementals.waterArc.icon": "water_arc",
   
   "upgrade.elementals.waterArcDamageI": "Damage I",
   "upgrade.elementals.waterArcDamageI.description": " Allows you to deal a little bit more damage.",
@@ -138,7 +138,7 @@
   "upgrade.elementals.waterJet": "Water Jet",
   "upgrade.elementals.waterJet.description": " A concentrated stream of water that can be used to push objects or attack enemies.",
   "upgrade.elementals.waterJet.use": " Use: %d + hold (1s)",
-  "upgrade.elementals.waterJet.icon": "water",
+  "upgrade.elementals.waterJet.icon": "water_cannon",
 
   "upgrade.elementals.waterJetDamageI": "Damage I",
   "upgrade.elementals.waterJetDamageI.description": " Allows you to deal a little bit more damage.",
@@ -149,7 +149,7 @@
   "upgrade.elementals.waterBlade": "Blade",
   "upgrade.elementals.waterBlade.description": " A sharp blade formed from water, capable of cutting through most materials.",
   "upgrade.elementals.waterBlade.use": " Use: %d + sneak",
-  "upgrade.elementals.waterBlade.icon": "water",
+  "upgrade.elementals.waterBlade.icon": "water_blade",
 
   "upgrade.elementals.waterBladeDamageI": "Damage I",
   "upgrade.elementals.waterBladeDamageI.description": " Allows you to deal a little bit more damage.",
@@ -169,7 +169,7 @@
   "upgrade.elementals.waterCannon": "Water Cannon",
   "upgrade.elementals.waterCannon.description": " A powerful blast of water that can knock back enemies and break through obstacles.",
   "upgrade.elementals.waterCannon.use": " Use: %d + sneak",
-  "upgrade.elementals.waterCannon.icon": "water",
+  "upgrade.elementals.waterCannon.icon": "water_cannon",
 
   "upgrade.elementals.waterCannonRangeI": "Range I",
   "upgrade.elementals.waterCannonRangeI.description": " Reach mobs for up to 15 blocks away.",
@@ -180,7 +180,7 @@
   "upgrade.elementals.waterJump": "Water Jump",
   "upgrade.elementals.waterJump.description": " Use a burst of water to propel yourself high into the air.",
   "upgrade.elementals.waterJump.use": " Use: %d + touch water",
-  "upgrade.elementals.waterJump.icon": "water",
+  "upgrade.elementals.waterJump.icon": "water_jump",
 
   "upgrade.elementals.waterJumpRangeI": "Range I",
   "upgrade.elementals.waterJumpRangeI.description": " Jump farther away.",
@@ -191,7 +191,7 @@
   "upgrade.elementals.waterTower": "Water Tower",
   "upgrade.elementals.waterTower.description": " Create a towering column of water to elevate yourself.",
   "upgrade.elementals.waterTower.use": " Use: %d + not touching ground + water below + hold (0.2s)",
-  "upgrade.elementals.waterTower.icon": "water",
+  "upgrade.elementals.waterTower.icon": "water_tower",
 
   "upgrade.elementals.waterTowerRangeI": "Range I",
   "upgrade.elementals.waterTowerRangeI.description": " Makes a taller column of water.",
@@ -199,7 +199,7 @@
   "upgrade.elementals.waterSurf": "Surf",
   "upgrade.elementals.waterSurf.description": " Ride a wave of water to move swiftly across water.",
   "upgrade.elementals.waterSurf.use": " Use: %d + sprint + submerged in water",
-  "upgrade.elementals.waterSurf.icon": "water",
+  "upgrade.elementals.waterSurf.icon": "water_surf",
 
   "upgrade.elementals.waterSurfSpeedI": "Speed I",
   "upgrade.elementals.waterSurfSpeedI.description": " Move faster across water.",
@@ -219,7 +219,7 @@
   "upgrade.elementals.waterHealing": "Water Healing",
   "upgrade.elementals.waterHealing.description": " Using water to direct the flow of chi, it is possible to heal allies.",
   "upgrade.elementals.waterHealing.use": " Use: %d",
-  "upgrade.elementals.waterHealing.icon": "water",
+  "upgrade.elementals.waterHealing.icon": "water_healing",
 
   "upgrade.elementals.waterHealingEfficiencyI": "Efficiency I",
   "upgrade.elementals.waterHealingEfficiencyI.description": " Water healing is more potent.",
@@ -230,19 +230,19 @@
   "upgrade.elementals.fireIgnition": "Ignition",
   "upgrade.elementals.fireIgnition.description": " A basic move allowing you to set the ground on fire or fuel furnaces.",
   "upgrade.elementals.fireIgnition.use": " Use: %d",
-  "upgrade.elementals.fireIgnition.icon": "fire",
+  "upgrade.elementals.fireIgnition.icon": "fire_ignition",
 
   "upgrade.elementals.fireFlareUp": "Flare Up",
   "upgrade.elementals.fireFlareUp.description": " Upgrade your Ignition ability to be even more powerful.",
 
   "upgrade.elementals.blueFire": "Blue Fire",
   "upgrade.elementals.blueFire.description": " By more effectively controlling your fire, you can make your abilities burn hotter, giving them a blue hue.",
-  "upgrade.elementals.blueFire.icon": "fire",
+  "upgrade.elementals.blueFire.icon": "fire_blue",
 
   "upgrade.elementals.fireWall": "Fire Wall",
   "upgrade.elementals.fireWall.description": " Allows you to close off areas using fire, mostly effective defensively.",
   "upgrade.elementals.fireWall.use": " Use: %d + sneak",
-  "upgrade.elementals.fireWall.icon": "fire",
+  "upgrade.elementals.fireWall.icon": "fire_wall",
 
   "upgrade.elementals.fireWallWideI": "Wider Walls",
   "upgrade.elementals.fireWallWideI.description": " Your walls of fire are wider.",
@@ -253,7 +253,7 @@
   "upgrade.elementals.fireSpikes": "Fire Spikes",
   "upgrade.elementals.fireSpikes.description": " Create spikes of fire that erupt from the ground, mostly effective offensively.",
   "upgrade.elementals.fireSpikes.use": " Use: %d + sneak",
-  "upgrade.elementals.fireSpikes.icon": "fire",
+  "upgrade.elementals.fireSpikes.icon": "fire_spikes",
 
   "upgrade.elementals.fireSpikesCountI": "Count I",
   "upgrade.elementals.fireSpikesCountI.description": " Increases the amount of fire spikes spawned.",
@@ -264,7 +264,7 @@
   "upgrade.elementals.fireArc": "Fire Arc",
   "upgrade.elementals.fireArc.description": " A sweeping arc of fire that can knock back enemies, set them on fire and damage them from a distance.",
   "upgrade.elementals.fireArc.use": " Use: %d",
-  "upgrade.elementals.fireArc.icon": "fire",
+  "upgrade.elementals.fireArc.icon": "fire_arc",
 
   "upgrade.elementals.fireArcDamageI": "Damage I",
   "upgrade.elementals.fireArcDamageI.description": " Deal more damage using fire arc.",
@@ -284,7 +284,7 @@
   "upgrade.elementals.fireBall": "Fireball",
   "upgrade.elementals.fireBall.description": " By compressing a lot of fire in a tight space, you can create a fireball with devastating power.",
   "upgrade.elementals.fireBall.use": " Use: %d + hold (1s)",
-  "upgrade.elementals.fireBall.icon": "fire",
+  "upgrade.elementals.fireBall.icon": "fire_ball",
 
   "upgrade.elementals.fireBallSpeedI": "Speed I",
   "upgrade.elementals.fireBallSpeedI.description": " Makes fireball faster, allowing you to get more range",
@@ -295,17 +295,17 @@
   "upgrade.elementals.flameThrower": "Flamethrower",
   "upgrade.elementals.flameThrower.description": " Makes a stream of fire to incinerate enemies in front of you.",
   "upgrade.elementals.flameThrower.use": " Use: %d + sneak -> then r-click",
-  "upgrade.elementals.flameThrower.icon": "fire",
+  "upgrade.elementals.flameThrower.icon": "fire_flamethrower",
 
   "upgrade.elementals.fireShield": "Fire Shield",
   "upgrade.elementals.fireShield.description": " By rapidly spinning fire around you, you can incinerate any projectile or enemy coming your way.",
   "upgrade.elementals.fireShield.use": " Use: %d + sneak",
-  "upgrade.elementals.fireShield.icon": "fire",
+  "upgrade.elementals.fireShield.icon": "fire_shield",
 
   "upgrade.elementals.fireJump": "Fire Jump",
   "upgrade.elementals.fireJump.description": " Use a burst of fire to propel yourself high into the air.",
   "upgrade.elementals.fireJump.use": " Use: %d + l-click",
-  "upgrade.elementals.fireJump.icon": "fire",
+  "upgrade.elementals.fireJump.icon": "fire_jump",
 
   "upgrade.elementals.fireJumpRangeI": "Range I",
   "upgrade.elementals.fireJumpRangeI.description": " Jump farther away.",
@@ -316,7 +316,7 @@
   "upgrade.elementals.fireJet": "Fire Jet",
   "upgrade.elementals.fireJet.description": " Generate a powerful jet of fire to enable you to fly.",
   "upgrade.elementals.fireJet.use": " Use: %d + sprint + not touching ground",
-  "upgrade.elementals.fireJet.icon": "fire",
+  "upgrade.elementals.fireJet.icon": "fire_jet",
 
   "upgrade.elementals.fireJetSpeedI": "Speed I",
   "upgrade.elementals.fireJetSpeedI.description": " Allows you to fly faster using the jet ability.",
@@ -327,12 +327,12 @@
   "upgrade.elementals.fireWisp": "Fire Wisp",
   "upgrade.elementals.fireWisp.description": " Creates a ball of fire that follows you around and lights up the surrounding area",
   "upgrade.elementals.fireWisp.use": " Use: %d (press shift to place on someone else)",
-  "upgrade.elementals.fireWisp.icon": "fire",
+  "upgrade.elementals.fireWisp.icon": "fire_wisp",
 
   "upgrade.elementals.earthBlock": "Earth Pickup",
   "upgrade.elementals.earthBlock.description": " A simple move allowing you to lift earth from the ground and throw it at your enemies.",
   "upgrade.elementals.earthBlock.use": " Use: %d",
-  "upgrade.elementals.earthBlock.icon": "earth",
+  "upgrade.elementals.earthBlock.icon": "earth_pickup",
 
   "upgrade.elementals.earthBlockShrapnel": "Shrapnel",
   "upgrade.elementals.earthBlockShrapnel.description": " By compressing earth into a tight space, you can create a sharp projectile that deals more damage.",
@@ -383,7 +383,7 @@
   "upgrade.elementals.earthMine": "Mining",
   "upgrade.elementals.earthMine.description": " Allows you to mine earth bendable blocks as if you had a pickaxe.",
   "upgrade.elementals.earthMine.use": " Use: %d",
-  "upgrade.elementals.earthMine.icon": "earth",
+  "upgrade.elementals.earthMine.icon": "earth_mine",
 
   "upgrade.elementals.earthTrap": "Trap",
   "upgrade.elementals.earthTrap.description": " By engulfing your victim's feet in earth, you can effectively prevent them from moving for some time.",
@@ -415,7 +415,7 @@
   "upgrade.elementals.earthPillar": "Pillar",
   "upgrade.elementals.earthPillar.description": " Launch and damage enemies using a pillar made of earth.",
   "upgrade.elementals.earthPillar.use": " Use: %d",
-  "upgrade.elementals.earthPillar.icon": "earth",
+  "upgrade.elementals.earthPillar.icon": "earth_pillar",
 
   "upgrade.elementals.earthPillarTallI": "Taller Walls",
   "upgrade.elementals.earthPillarTallI.description": " Your pillars are taller.",
@@ -423,7 +423,7 @@
   "upgrade.elementals.earthJump": "Earth Jump",
   "upgrade.elementals.earthJump.description": " Launch yourself using earth to get high into the air.",
   "upgrade.elementals.earthJump.use": " Use: %d + not looking at the ground + standing on earth",
-  "upgrade.elementals.earthJump.icon": "earth",
+  "upgrade.elementals.earthJump.icon": "earth_jump",
 
   "upgrade.elementals.earthJumpRangeI": "Range I",
   "upgrade.elementals.earthJumpRangeI.description": " Jump farther away.",
@@ -455,7 +455,7 @@
   "upgrade.elementals.airShield": "Air Shield ",
   "upgrade.elementals.airShield.description": " By rapidly spinning air around you, you can knock back any projectile or enemy coming your way.",
   "upgrade.elementals.airShield.use": " Use: %d + sneak",
-  "upgrade.elementals.airShield.icon": "air",
+  "upgrade.elementals.airShield.icon": "air_shield",
 
 
   "upgrade.elementals.airTornado": "Tornado",
@@ -503,7 +503,7 @@
   "upgrade.elementals.airBullets": "Bullets",
   "upgrade.elementals.airBullets.description": " Compressing air into multiple little pellets allows you to unleash a barrage upon your enemies.",
   "upgrade.elementals.airBullets.use": " Use: %d + sneak",
-  "upgrade.elementals.airBullets.icon": "air",
+  "upgrade.elementals.airBullets.icon": "air_bullets",
 
   "upgrade.elementals.airBulletsDamageI": "Damage I",
   "upgrade.elementals.airBulletsDamageI.description": " Allows you to deal a little bit more damage.",
@@ -526,12 +526,12 @@
   "upgrade.elementals.airSuffocate": "Suffocate",
   "upgrade.elementals.airSuffocate.description": " By taking air and forcing it on the head of a living being, you can drown them, even on land.",
   "upgrade.elementals.airSuffocate.use": " Use: %d + sneak + looking at enemy",
-  "upgrade.elementals.airSuffocate.icon": "air",
+  "upgrade.elementals.airSuffocate.icon": "air_suffocate",
 
   "upgrade.elementals.airJump": "Air Jump",
   "upgrade.elementals.airJump.description": " Launch yourself with air to gain altitude or dodge blows.",
   "upgrade.elementals.airJump.use": " Use: %d",
-  "upgrade.elementals.airJump.icon": "air",
+  "upgrade.elementals.airJump.icon": "air_jump",
 
   "upgrade.elementals.airJumpRangeI": "Range I",
   "upgrade.elementals.airJumpRangeI.description": " Jump farther away.",
@@ -542,7 +542,7 @@
   "upgrade.elementals.airScooter": "Air Scooter",
   "upgrade.elementals.airScooter.description": " By creating a ball of air and riding it, you can breeze through distances in an instant.",
   "upgrade.elementals.airScooter.use": " Use: %d + hold (0.5s)",
-  "upgrade.elementals.airScooter.icon": "air",
+  "upgrade.elementals.airScooter.icon": "air_scooter",
 
   "upgrade.elementals.airScooterSpeedI": "Speed I",
   "upgrade.elementals.airScooterSpeedI.description": " Makes air scooter faster.",
@@ -553,7 +553,7 @@
   "upgrade.elementals.airSpiritProjection": "Spirit Projection",
   "upgrade.elementals.airSpiritProjection.description": " This technique allows air benders to leave their body and project their consciousness elsewhere.",
   "upgrade.elementals.airSpiritProjection.use": " Use: %d + l-click your body to go back.",
-  "upgrade.elementals.airSpiritProjection.icon": "air",
+  "upgrade.elementals.airSpiritProjection.icon": "air_spirit_projection",
 
   "upgrade.elementals.airSpiritProjectionRangeI": "Range I",
   "upgrade.elementals.airSpiritProjectionRangeI.description": " Go up to 10 blocks away from your body",

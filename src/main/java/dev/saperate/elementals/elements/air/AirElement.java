@@ -96,6 +96,21 @@ public class AirElement extends Element {
     }
 
     @Override
+    public int getColor() {
+        return 0xFFdeeaff;
+    }
+
+    @Override
+    public int getSecondaryColor() {
+        return 0xFFb9d3ff;
+    }
+
+    @Override
+    public int getTertiaryColor() {
+        return 0xf9fcfc;
+    }
+
+    @Override
     public boolean isSkillTreeComplete(Bender bender) {
         PlayerData plrData = bender.plrData;
         return bender.hasElement(this)

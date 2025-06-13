@@ -131,7 +131,7 @@ public class FireArcEntity extends AbstractElementalsEntity<PlayerEntity> {
         entity.addVelocity(this.getVelocity().multiply(0.2f));
         PlayerData plrData = PlayerData.get(getOwner());
 
-        float damage = isBlue() ? 3.5f : 2.5f;
+        float damage = isBlue() ? 3.5f : 2.5f;//TODO BUFF
         if (plrData.canUseUpgrade("fireArcMastery")) {
             damage += 4;
         } else if (plrData.canUseUpgrade("fireArcDamageI")) {

@@ -132,13 +132,18 @@ public class AbilityAir4 implements Ability {
 
             bender.player.addVelocity(direction.x,direction.y,direction.z);
             bender.player.move(MovementType.SELF, bender.player.getVelocity());
+            bender.player.velocityModified = true;
+            
         }
     }
 
-
+    @Override
+    public void onAbilityPress(Bender bender, int keyIndex) {
+        if(keyIndex == 3)
+            onRemove(bender);
+    }
     @Override
     public void onRemove(Bender bender) {
-
         Object[] data = (Object[]) bender.abilityData;
 
         GameMode gm = (GameMode) data[0];

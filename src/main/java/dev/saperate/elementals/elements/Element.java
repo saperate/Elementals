@@ -1,9 +1,11 @@
 package dev.saperate.elementals.elements;
 
+import dev.saperate.elementals.Elementals;
 import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.utils.SapsUtils;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.util.Identifier;
 
 import java.util.*;
 
@@ -91,16 +93,34 @@ public abstract class Element{
         }
     }
 
+    /**
+     * Returns a list of all the background textures for this specific element. Will only be used on the skill
+     * tree. The index of which each is placed determines what order it is placed on.
+     * 0 being the bottom (rendered first), n being the top (rendered last).
+     * When used in the skill tree, we will search Identifier.Of(MODID, "textures/gui/background/[this.name]/texName"
+     */
+    public String[] getBackgroundTextures(){
+        return new String[]{};
+    }
+
     public abstract boolean isSkillTreeComplete(Bender bender);
 
     public int getColor(){
         return 0xFFa0e8e6;
     }
 
-    public int getAccentColor(){
+    public int getSecondaryColor(){
         return 0xFF13AEA9;
     }
 
+    public int getTertiaryColor(){
+        return 0xFFffef00;
+    }
+    
+    public Identifier getOverlayTexture(){
+        return null;
+    }
+    
     @Override
     public int hashCode() {
         return name.hashCode();

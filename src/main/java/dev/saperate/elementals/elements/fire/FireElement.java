@@ -1,5 +1,6 @@
 package dev.saperate.elementals.elements.fire;
 
+import dev.saperate.elementals.Elementals;
 import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.elements.Element;
@@ -13,6 +14,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.state.property.Properties;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.event.GameEvent;
@@ -101,8 +103,18 @@ public class FireElement extends Element {
     }
 
     @Override
-    public int getAccentColor() {
+    public int getSecondaryColor() {
         return 0xFFB32616;
+    }
+
+    @Override
+    public int getTertiaryColor() {
+        return 0xFFB32616;
+    }
+
+    @Override
+    public Identifier getOverlayTexture() {
+        return new Identifier(Elementals.MODID,"textures/gui/background/fire/overlay.png");
     }
 
     @Override

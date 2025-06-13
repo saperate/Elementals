@@ -285,8 +285,18 @@ public class WaterElement extends Element {
     }
 
     @Override
-    public int getAccentColor() {
-        return 0xFF0053F3;
+    public int getSecondaryColor() {
+        return 0xFF006fa4;
+    }
+
+    @Override
+    public int getTertiaryColor() {
+        return 0xFF000b49;
+    }
+
+    @Override
+    public String[] getBackgroundTextures() {
+        return new String[]{"bottom.png"};
     }
 
     @Override
@@ -301,7 +311,6 @@ public class WaterElement extends Element {
                 && plrData.canUseUpgrade("waterJumpRangeII")
                 && plrData.canUseUpgrade("waterTowerRangeI")
                 && plrData.canUseUpgrade("waterSurfSpeedII")
-                && plrData.canUseUpgrade("waterHealingEfficiencyII")
-                ;
+                && plrData.canUseUpgrade("waterHealingEfficiencyII");
     }
 }

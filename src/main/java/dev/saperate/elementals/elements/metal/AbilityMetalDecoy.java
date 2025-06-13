@@ -8,6 +8,7 @@ import dev.saperate.elementals.entities.common.DecoyPlayerEntity;
 import dev.saperate.elementals.items.ElementalItems;
 import dev.saperate.elementals.utils.SapsUtils;
 import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
@@ -134,11 +135,20 @@ public class AbilityMetalDecoy implements Ability {
         }
 
         if (player.isSprinting()) {
-
-
+            
+            float speed = 0.1f;
             Vec3d velocity = SapsUtils.getEntityLookVector(decoy, 1)
                     .subtract(decoy.getEyePos())
-                    .normalize().multiply(0.1, 0, 0.1).add(0, decoy.getVelocity().y, 0);
+                    .normalize().multiply(speed, 0, speed).add(0, decoy.getVelocity().y, 0);
+
+            if(player.distanceTo(decoy) > 25){
+                Vec3d dirToPlayer = player.getPos().subtract(decoy.getPos());
+                if(dirToPlayer.dotProduct(velocity) < 1){
+                    velocity = Vec3d.ZERO;
+                }
+            }
+            
+            
             decoy.setVelocity(velocity);
             decoy.move(MovementType.SELF, decoy.getVelocity());
 
@@ -179,6 +189,12 @@ public class AbilityMetalDecoy implements Ability {
     }
 
     @Override
+    public void onAbilityPress(Bender bender, int keyIndex) {
+        if(keyIndex == 1)
+            onRemove(bender);
+    }
+
+    @Override
     public void onRemove(Bender bender) {
         getDecoy(bender).discard();
         bender.setCurrAbility(null);
@@ -189,6 +205,17 @@ public class AbilityMetalDecoy implements Ability {
     public boolean shouldImmobilizePlayer(PlayerEntity player) {
         return true;
     }
+    
+    
+    /* TODO put this in metal armor
+    public void equipArmorItem(Entity decoy, EquipmentSlot slot, ItemStack stack){
+        stack.addEnchantment(Enchantments.PROTECTION,4);
+        if(false) {//upgrade that adds spikes to your armor
+            stack.addEnchantment(Enchantments.THORNS, 1);
+        }
+        decoy.equipStack(slot, stack);
+    }
+     */
 
     ///Ability data stuff, cleaner to put it all in their own methods
     public Object packAbilityData(DecoyPlayerEntity decoy, int startMiningAge, BlockPos miningPos, boolean shouldRotate) {

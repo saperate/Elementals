@@ -24,9 +24,10 @@ public class ChiHudOverlay implements HudRenderCallback {
         int x = (int) (client.getWindow().getScaledWidth() - client.getWindow().getScaleFactor() * 16);
         int y = (int) (client.getWindow().getScaledHeight() - 8 * client.getWindow().getScaleFactor());
 
-        Identifier buttonID = new Identifier(MODID, "textures/gui/" + ClientBender.get().getElement().getName().toLowerCase(Locale.CANADA) + "_upgrade_button.png");
+        Identifier symbolID = new Identifier(MODID, "textures/gui/symbol/" + ClientBender.get().getElement().getName().toLowerCase(Locale.ROOT) + ".png");
+        Identifier buttonID = new Identifier(MODID, "textures/gui/" + ClientBender.get().getElement().getName().toLowerCase(Locale.ROOT) + "_upgrade_button.png");
         drawContext.drawTexture(buttonID, x - 40, y - 18, 0, 0, 32, 32, 32, 32);
-
+        drawContext.drawTexture(symbolID, x - 40, y - 18, 0, 0, 32, 32, 32, 32);
 
         float chi = MathHelper.clamp(ClientBender.get().chi/ElementalConfig.get().MAX_CHI * 100, 0, 100);
 

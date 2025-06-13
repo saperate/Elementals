@@ -36,13 +36,6 @@ public class MetalBulletEntity extends AbstractElementalsEntity<PlayerEntity> {
     public MetalBulletEntity(EntityType<MetalBulletEntity> type, World world) {
         super(type, world, PlayerEntity.class);
     }
-
-    public MetalBulletEntity(World world, PlayerEntity owner) {
-        super(METALBULLET, world, PlayerEntity.class);
-        setOwner(owner);
-        setPos(owner.getX(), owner.getY(), owner.getZ());
-    }
-
     public MetalBulletEntity(World world, PlayerEntity owner, double x, double y, double z) {
         super(METALBULLET, world, PlayerEntity.class);
         setOwner(owner);
