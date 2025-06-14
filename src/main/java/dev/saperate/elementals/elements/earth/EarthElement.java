@@ -248,6 +248,11 @@ public class EarthElement extends Element {
     }
 
     @Override
+    public String[] getBackgroundTextures() {
+        return new String[]{"bottom.png"};
+    }
+
+    @Override
     public boolean isSkillTreeComplete(Bender bender) {
         PlayerData plrData = bender.plrData;
         return bender.hasElement(this)

@@ -70,7 +70,11 @@ public class LightningElement extends Element {
     public int getTertiaryColor() {
         return 0xFF008696;
     }
-    
+
+    @Override
+    public String[] getBackgroundTextures() {
+        return super.getBackgroundTextures();
+    }
 
     @Override
     public boolean isSkillTreeComplete(Bender bender) {

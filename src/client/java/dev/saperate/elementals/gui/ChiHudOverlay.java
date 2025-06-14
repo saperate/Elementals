@@ -34,12 +34,15 @@ public class ChiHudOverlay implements HudRenderCallback {
         int height = (int) Math.floor(chi) / 2;
         int maxHeight = 50;
 
-        drawContext.drawTexture(new Identifier(MODID, "textures/gui/chi.png"), x + 3, y - height +8, 0, 0, 16, height, 32, 32);
+        drawContext.drawTexture(new Identifier(MODID, "textures/gui/chi.png"), x + 3, y - height + 7 + 3, 0, 0, 16, height, 16, 32);
+        
+        if(height > 5)
+            drawContext.drawTexture(new Identifier(MODID, "textures/gui/chi_foam.png"), x + 4, y - height + 10, 0, 0, 16, 16, 16, 16);
+        
+        drawContext.drawTexture(new Identifier(MODID, "textures/gui/chi_frame.png"), x, y - maxHeight + 7, 0, 0, 22, maxHeight + 6, 32, 56);
 
-        drawContext.drawTexture(new Identifier(MODID, "textures/gui/chi_frame.png"), x, y - maxHeight + 5, 0, 0, 22, maxHeight + 6, 32, 56);
 
-        drawContext.drawTexture(new Identifier(MODID, "textures/gui/chi_frame.png"), x, y - maxHeight + 5, 0, 0, 22, maxHeight + 6, 32, 56);
-
+        
         //TODO add config that toggles between number and bar
         if(ElementalConfig.get().CHI_OVERLAY_TEXT){
             drawContext.drawCenteredTextWithShadow(client.textRenderer, String.format("%.2f", chi), x - 24, y - 25, 0xFFFFFFFF);

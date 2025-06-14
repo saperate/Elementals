@@ -1,5 +1,6 @@
 package dev.saperate.elementals.elements.water;
 
+import dev.saperate.elementals.Elementals;
 import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.elements.Element;
@@ -21,6 +22,7 @@ import net.minecraft.potion.Potions;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.state.property.IntProperty;
 import net.minecraft.state.property.Properties;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
@@ -292,6 +294,11 @@ public class WaterElement extends Element {
     @Override
     public int getTertiaryColor() {
         return 0xFF000b49;
+    }
+
+    @Override
+    public Identifier getOverlayTexture() {
+        return null;
     }
 
     @Override

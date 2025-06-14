@@ -10,6 +10,7 @@ import net.minecraft.entity.MovementType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraft.world.explosion.Explosion;
@@ -38,9 +39,9 @@ public class MetalLanceEntity extends AbstractElementalsEntity<LivingEntity> {
             return;
         }
         Vec3d lookPos;
-
         if (!getIsControlled()) {
             //TODO rotate with velocity
+
 
             move(MovementType.SELF,getVelocity());
             return;

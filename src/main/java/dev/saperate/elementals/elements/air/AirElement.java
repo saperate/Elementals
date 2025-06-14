@@ -107,7 +107,12 @@ public class AirElement extends Element {
 
     @Override
     public int getTertiaryColor() {
-        return 0xf9fcfc;
+        return 0xFF485291;
+    }
+
+    @Override
+    public String[] getBackgroundTextures() {
+        return new String[]{"bottom.png"};
     }
 
     @Override

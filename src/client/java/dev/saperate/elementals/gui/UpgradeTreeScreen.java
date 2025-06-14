@@ -84,14 +84,14 @@ public class UpgradeTreeScreen extends Screen {
 
         Element element = bender.getElement();
         String[] backgroundTextures = element.getBackgroundTextures();
+        TextureManager texManager = MinecraftClient.getInstance().getTextureManager();
         for (String texName : backgroundTextures){
             Identifier identifier = new Identifier(MODID,"textures/gui/backgrounds/" + element.name.toLowerCase(Locale.ROOT) + "/" + texName);
-            context.drawTexture(identifier, 0, 0, -5, -oX, -oY, width, height, 16, 16);
+            context.drawTexture(identifier, 0, 0, -6, -oX, -oY, width, height, 16, 16);
         }
-        //TODO Overlay
-
-
-
+        if(element.getOverlayTexture() != null){
+            context.drawTexture(element.getOverlayTexture(), 0, 0, -4, 0, 0, width, height, context.getScaledWindowWidth() , context.getScaledWindowHeight());
+        }
 
         Upgrade root = element.root;
         int len = root.children.length;

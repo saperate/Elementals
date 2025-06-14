@@ -14,6 +14,7 @@ import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.render.entity.feature.FeatureRendererContext;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RotationAxis;
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;
@@ -49,9 +50,17 @@ public class MetalLanceRenderer extends EntityRenderer<MetalLanceEntity> impleme
 
         VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderLayer.getItemEntityTranslucentCull(getTexture(entity)));
 
-        if (entity.getOwner() != null) {
+        if (entity.getOwner() != null && entity.getIsControlled()) {
             matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(-entity.getOwner().getYaw()));
             matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(entity.getOwner().getPitch()));
+        }else{
+            double d = entity.getVelocity().horizontalLength();
+            float entityYaw = ((float)(MathHelper.atan2(entity.getVelocity().x, entity.getVelocity().z) * 57.2957763671875));
+            float pitch = ((float)(MathHelper.atan2(entity.getVelocity().y, d) * 57.2957763671875));
+            
+            
+            matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(entityYaw));
+            matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(-pitch));
         }
         matrices.translate(0, -1.325, 0);
 

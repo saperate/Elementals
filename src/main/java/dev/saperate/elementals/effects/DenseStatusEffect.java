@@ -3,6 +3,7 @@ package dev.saperate.elementals.effects;
 import dev.saperate.elementals.mixin.ElementalsLivingEntityAccessor;
 import dev.saperate.elementals.mixin.FurnaceBlockEntityAccessor;
 import dev.saperate.elementals.network.ModMessages;
+import dev.saperate.elementals.utils.SapsUtils;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.Blocks;
@@ -16,6 +17,7 @@ import net.minecraft.entity.effect.StatusEffectCategory;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.Vec3d;
 import org.spongepowered.include.com.google.common.collect.Multimap;
 
@@ -65,7 +67,12 @@ public class DenseStatusEffect extends StatusEffect {
             currV = -0.25;
         }
 
-        if(!entity.isOnGround())
+        
+        //Prevent slow fall when midair
+        HitResult hit = SapsUtils.raycastBlockCustomRotation(entity,2.5f,false,new Vec3d(0,-1,0));
+        if(!entity.isOnGround() && hit.getType().equals(HitResult.Type.MISS) && !entity.isTouchingWater()){
+            return;
+        }
 
         entity.setVelocity(new Vec3d(entity.getVelocity().x * 0.90, currV, entity.getVelocity().z * 0.90));
     }
