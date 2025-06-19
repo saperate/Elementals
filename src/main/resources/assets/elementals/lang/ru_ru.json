@@ -338,7 +338,7 @@
   "upgrade.elementals.earthBlockShrapnel": "Осколки",
   "upgrade.elementals.earthBlockShrapnel.description": "Сжимая землю в небольшое пространство, вы можете создать острый снаряд, наносящий больше урона.",
   "upgrade.elementals.earthBlockShrapnel.use": "Использование: Поднятие земли + правая кнопка мыши + присесть",
-  "upgrade.elementals.earthBlockShrapnel.icon": "earth",
+  "upgrade.elementals.earthBlockShrapnel.icon": "earth_shrapnel",
 
   "upgrade.elementals.earthBlockSpeedI": "Скорость I",
   "upgrade.elementals.earthBlockSpeedI.description": "Увеличивает скорость поднятия земли и осколков, позволяя увеличить дальность.",
@@ -388,7 +388,7 @@
   "upgrade.elementals.earthTrap": "Ловушка",
   "upgrade.elementals.earthTrap.description": "Погружая ноги жертвы в землю, вы можете эффективно не дать ей двигаться в течение некоторого времени.",
   "upgrade.elementals.earthTrap.use": "Использование: %d + присесть + удерживать (0.5с)",
-  "upgrade.elementals.earthTrap.icon": "earth",
+  "upgrade.elementals.earthTrap.icon": "earth_trap",
 
   "upgrade.elementals.earthRavine": "Овраг",
   "upgrade.elementals.earthRavine.description": "Разделяя землю на две части, вы можете создать овраг, в который упадут ваши враги.",
@@ -404,7 +404,7 @@
   "upgrade.elementals.earthSpikes": "Шипы",
   "upgrade.elementals.earthSpikes.description": "Приём, позволяющий формировать острые шипы, торчащие из земли. Они нанесут урон любому, кто их коснётся.",
   "upgrade.elementals.earthSpikes.use": "Использование: %d + присесть",
-  "upgrade.elementals.earthSpikes.icon": "earth",
+  "upgrade.elementals.earthSpikes.icon": "earth_spikes",
 
   "upgrade.elementals.earthSpikesRangeI": "Дальность I",
   "upgrade.elementals.earthSpikesRangeI.description": "Ваши шипы простираются дальше.",
@@ -440,7 +440,7 @@
   "upgrade.elementals.earthSeismicSense": "Сейсмическое чувство",
   "upgrade.elementals.earthSeismicSense.description": "Слушая землю и её вибрации, вы можете обнаружить живых существ, даже через стены.",
   "upgrade.elementals.earthSeismicSense.use": "Использование: %d",
-  "upgrade.elementals.earthSeismicSense.icon": "earth",
+  "upgrade.elementals.earthSeismicSense.icon": "earth_seismic_sense",
 
   "upgrade.elementals.earthArmor": "Броня",
   "upgrade.elementals.earthArmor.description": "Приём, позволяющий защитить себя от вреда, используя землю как броню. Так как в вашей броне нет отверстий для глаз, вам придётся использовать сейсмическое чувство, чтобы знать, где находятся враги.",
@@ -569,7 +569,7 @@
   "upgrade.elementals.lightningRedirection": "Перенаправление молнии",
   "upgrade.elementals.lightningRedirection.description": "Эта техника, заимствованная у магов воды, позволяет перенаправить удар молнии обратно на врагов.",
   "upgrade.elementals.lightningRedirection.use": "Использование: получить удар молнии + %d",
-  "upgrade.elementals.lightningRedirection.icon": "lightning",
+  "upgrade.elementals.lightningRedirection.icon": "lightning_redirection_icon",
 
   "upgrade.elementals.lightningRedirectionEfficiencyI": "Эффективность I",
   "upgrade.elementals.lightningRedirectionEfficiencyI.description": "Позволяет перенаправлять молнию с меньшими затратами энергии.",
@@ -580,7 +580,7 @@
   "upgrade.elementals.lightningBolt": "Удар молнии",
   "upgrade.elementals.lightningBolt.description": "Создавая дисбаланс между положительными и отрицательными зарядами, вы можете производить молнию.",
   "upgrade.elementals.lightningBolt.use": "Использование: %d + Shift + удерживать (2с) + полностью зарядить",
-  "upgrade.elementals.lightningBolt.icon": "lightning",
+  "upgrade.elementals.lightningBolt.icon": "lightning_bolt_icon",
 
   "upgrade.elementals.lightningBoltEfficiencyI": "Эффективность I",
   "upgrade.elementals.lightningBoltEfficiencyI.description": "Позволяет создавать молнию с меньшими затратами энергии.",
@@ -591,7 +591,7 @@
   "upgrade.elementals.lightningVoltArc": "Вольтовая дуга",
   "upgrade.elementals.lightningVoltArc.description": "Создаёт кратковременную способность, похожую на электрошокер, которая оглушает цель при попадании.",
   "upgrade.elementals.lightningVoltArc.use": "Использование: %d",
-  "upgrade.elementals.lightningVoltArc.icon": "lightning",
+  "upgrade.elementals.lightningVoltArc.icon": "lightning_volt_arc_icon",
 
   "upgrade.elementals.lightningVoltArcStrengthI": "Сила I",
   "upgrade.elementals.lightningVoltArcStrengthI.description": "Увеличивает длительность эффекта оглушения.",
@@ -602,7 +602,7 @@
   "upgrade.elementals.lightningEMP": "ЭМИ",
   "upgrade.elementals.lightningEMP.description": "Сжимая вольтовую дугу, вы можете создать взрыв, который оглушит все живые существа в радиусе.",
   "upgrade.elementals.lightningEMP.use": "Использование: %d + удерживать (1с)",
-  "upgrade.elementals.lightningEMP.icon": "lightning",
+  "upgrade.elementals.lightningEMP.icon": "lightning_emp_icon",
 
   "upgrade.elementals.lightningEMPSizeI": "Размер I",
   "upgrade.elementals.lightningEMPSizeI.description": "Увеличивает радиус взрыва.",
@@ -610,7 +610,7 @@
   "upgrade.elementals.lightningStaticAura": "Статическая аура",
   "upgrade.elementals.lightningStaticAura.description": "Усиливая вашу естественную статическую электроэнергию, вы создаёте пассивный щит, который оглушает любого, кто вас коснётся. Также снижает урон от молний.",
   "upgrade.elementals.lightningStaticAura.use": "Использование: %d + Shift",
-  "upgrade.elementals.lightningStaticAura.icon": "lightning",
+  "upgrade.elementals.lightningStaticAura.icon": "lightning_static_aura_icon",
 
   "upgrade.elementals.lightningStaticAuraStrengthI": "Сила I",
   "upgrade.elementals.lightningStaticAuraStrengthI.description": "Делает ауру более продолжительной.",
@@ -621,7 +621,7 @@
   "upgrade.elementals.lightningOvercharge": "Перезарядка",
   "upgrade.elementals.lightningOvercharge.description": "Перегружая ваши мышцы электричеством, вы можете заставить их работать на более высокой мощности. Однако ваше тело потом будет измотано.",
   "upgrade.elementals.lightningOvercharge.use": "Использование: %d + удерживать (0.5с)",
-  "upgrade.elementals.lightningOvercharge.icon": "lightning",
+  "upgrade.elementals.lightningOvercharge.icon": "lightning_overcharge_icon",
 
   "upgrade.elementals.lightningOverchargeStrengthI": "Сила I",
   "upgrade.elementals.lightningOverchargeStrengthI.description": "Увеличивает длительность эффекта перезарядки.",
@@ -632,7 +632,7 @@
   "upgrade.elementals.lightningStorm": "Локализованная буря",
   "upgrade.elementals.lightningStorm.description": "Это вершина управления молнией: вы можете создать локализованную бурю, которая поражает ваших врагов молниями.",
   "upgrade.elementals.lightningStorm.use": "Использование: %d + удерживать (3с) + Shift + разблокировать молнию",
-  "upgrade.elementals.lightningStorm.icon": "lightning",
+  "upgrade.elementals.lightningStorm.icon": "lightning_localised_storm_icon",
 
   "upgrade.elementals.lightningStormDurationI": "Длительность I",
   "upgrade.elementals.lightningStormDurationI.description": "Увеличивает длительность вашей бури.",

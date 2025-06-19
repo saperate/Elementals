@@ -277,18 +277,33 @@ public class UpgradeTreeScreen extends Screen {
     public void drawUpgradeButton(int x1, int y1, DrawContext context, Upgrade upgrade) {
         String icon = Text.translatable("upgrade.elementals." + upgrade.name + ".icon").getString();
         float color = bender.upgrades.containsKey(upgrade) ? 1 : 0.25f;
-        boolean isUpgrade = !icon.equals("upgrade.elementals." + upgrade.name + ".icon");
+        boolean hasIcon = !icon.equals("upgrade.elementals." + upgrade.name + ".icon");
 
-        drawTexturedQuad(context, new Identifier(MODID, "textures/gui/" + ClientBender.get().getElement().getName().toLowerCase() + "_" + (isUpgrade ? "" : "plain_") + "upgrade_button.png"),
+        drawTexturedQuad(context, new Identifier(MODID, "textures/gui/" + ClientBender.get().getElement().getName().toLowerCase() + "_" + (hasIcon ? "" : "plain_") + "upgrade_button.png"),
                 x1, y1, (int) textureSize, (int) textureSize, (float) 0, (float) 0, (int) textureSize, color, color, color, 1
                 , 0);
 
-        if (isUpgrade) {
+        if (hasIcon) {
 
             drawTexturedQuad(context, new Identifier(MODID, "textures/gui/" + icon + "_icon.png"),
                     x1, y1, (int) textureSize, (int) textureSize, (float) 0, (float) 0, (int) textureSize, color, color, color, 1
                     , 0);
 
+        } else if (upgrade.name.contains("IV")) {
+            drawTexturedQuad(context, new Identifier(MODID, "textures/gui/iv_icon.png"),
+                    x1, y1, (int) textureSize, (int) textureSize, (float) 0, (float) 0, (int) textureSize, color, color, color, 1, 0);
+        } else if (upgrade.name.contains("III")) {
+            drawTexturedQuad(context, new Identifier(MODID, "textures/gui/iii_icon.png"),
+                    x1, y1, (int) textureSize, (int) textureSize, (float) 0, (float) 0, (int) textureSize, color, color, color, 1
+                    , 0);
+        } else if (upgrade.name.contains("II")) {
+            drawTexturedQuad(context, new Identifier(MODID, "textures/gui/ii_icon.png"),
+                    x1, y1, (int) textureSize, (int) textureSize, (float) 0, (float) 0, (int) textureSize, color, color, color, 1
+                    , 0);
+        } else if (upgrade.name.contains("I")) {
+            drawTexturedQuad(context, new Identifier(MODID, "textures/gui/i_icon.png"),
+                    x1, y1, (int) textureSize, (int) textureSize, (float) 0, (float) 0, (int) textureSize, color, color, color, 1
+                    , 0);
         }
 
 
