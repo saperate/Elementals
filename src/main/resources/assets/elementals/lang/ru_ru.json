@@ -93,11 +93,13 @@
 
   "upgrade.elementals.waterHelmetMastery": "Мастерство водяного шлема",
   "upgrade.elementals.waterHelmetMastery.description": "Позволяет вам оставаться под водой бесконечно!",
-
+  "upgrade.elementals.waterHelmetMastery.icon": "v",
+  
   "upgrade.elementals.waterHelmetStealth": "Скрытность",
   "upgrade.elementals.waterHelmetStealth.description": "Используя преломление, вы можете стать невидимым при использовании водяного шлема и медленном движении.",
   "upgrade.elementals.waterHelmetStealth.use": "Использование: присесть",
-
+  "upgrade.elementals.waterHelmetStealth.icon": "iii",
+  
   "upgrade.elementals.waterSuffocate": "Удушение",
   "upgrade.elementals.waterSuffocate.description": "Забирая воду и накладывая её на голову живого существа, вы можете утопить его, даже на суше.",
   "upgrade.elementals.waterSuffocate.use": "Использование: %d присесть, глядя на врага",
@@ -105,7 +107,8 @@
 
   "upgrade.elementals.waterSuffocateRange": "Дальность I",
   "upgrade.elementals.waterSuffocateRange.description": "Достигайте врагов на расстоянии до 15 блоков.",
-
+  "upgrade.elementals.waterSuffocateRange.icon": "i",
+  
   "upgrade.elementals.waterShieldSuffocatePath": "Щит",
   "upgrade.elementals.waterShieldSuffocatePath.description": "Быстро вращая потоки воды вокруг себя, вы можете отражать любые снаряды или врагов.",
   "upgrade.elementals.waterShieldSuffocatePath.use": "Использование: %d присесть в воде + удерживать (1с)",
@@ -134,7 +137,8 @@
 
   "upgrade.elementals.waterArcMastery": "Мастерство водяной дуги",
   "upgrade.elementals.waterArcMastery.description": "Мастерство навыка водяной дуги позволяет наносить больше урона.",
-
+  "upgrade.elementals.waterArcMastery.icon": "iii",
+  
   "upgrade.elementals.waterJet": "Водяной струя",
   "upgrade.elementals.waterJet.description": "Концентрированный поток воды, который можно использовать для перемещения предметов или атаки врагов.",
   "upgrade.elementals.waterJet.use": "Использование: %d + удерживать (1с)",
@@ -234,7 +238,8 @@
 
   "upgrade.elementals.fireFlareUp": "Вспышка",
   "upgrade.elementals.fireFlareUp.description": "Улучшите способность воспламенения, сделав её ещё более мощной.",
-
+  "upgrade.elementals.fireFlareUp.icon": "i",
+  
   "upgrade.elementals.blueFire": "Синий огонь",
   "upgrade.elementals.blueFire.description": "Благодаря более эффективному контролю огня вы можете сделать ваши способности горячее, придав им синий оттенок.",
   "upgrade.elementals.blueFire.icon": "fire",
@@ -280,7 +285,8 @@
 
   "upgrade.elementals.fireArcMastery": "Мастерство огненной дуги",
   "upgrade.elementals.fireArcMastery.description": "Мастерство навыка огненной дуги позволяет наносить больше урона.",
-
+  "upgrade.elementals.fireArcMastery.icon": "iii",
+  
   "upgrade.elementals.fireBall": "Огненный шар",
   "upgrade.elementals.fireBall.description": "Сжимая много огня в небольшом пространстве, вы можете создать огненный шар с разрушительной силой.",
   "upgrade.elementals.fireBall.use": "Использование: %d + удерживать (1с)",
@@ -487,7 +493,8 @@
 
   "upgrade.elementals.airStreamMastery": "Мастерство воздушного потока",
   "upgrade.elementals.airStreamMastery.description": "Мастерство способности воздушного потока позволяет наносить больше урона.",
-
+  "upgrade.elementals.airStreamMastery.icon": "iii",
+  
   "upgrade.elementals.airBall": "Воздушный шар",
   "upgrade.elementals.airBall.description": "Сжимая много воздуха в ограниченном пространстве, вы можете создать воздушный шар с разрушительной мощью.",
   "upgrade.elementals.airBall.use": "Использование: %d + удерживать (1с)",
@@ -515,7 +522,8 @@
 
   "upgrade.elementals.airBulletsMastery": "Мастерство воздушных пуль",
   "upgrade.elementals.airBulletsMastery.description": "Мастерство способности воздушных пуль позволяет наносить больше урона.",
-
+  "upgrade.elementals.airBulletsMastery.icon": "ii",
+  
   "upgrade.elementals.airBulletsCountI": "Количество I",
   "upgrade.elementals.airBulletsCountI.description": "Увеличивает количество пуль, которые вы можете выпустить, до 10.",
 
