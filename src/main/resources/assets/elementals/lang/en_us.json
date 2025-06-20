@@ -93,10 +93,12 @@
 
   "upgrade.elementals.waterHelmetMastery": "Water Helmet Mastery",
   "upgrade.elementals.waterHelmetMastery.description": " Allows you to stay underwater indefinitely!",
-
+  "upgrade.elementals.waterHelmetMastery.icon": "v",
+  
   "upgrade.elementals.waterHelmetStealth": "Stealthy",
   "upgrade.elementals.waterHelmetStealth.description": " By using refraction, you can make it so you are invisible while using water helmet and barely moving.",
   "upgrade.elementals.waterHelmetStealth.use": " Use: sneak",
+  "upgrade.elementals.waterHelmetStealth.icon": "iii",
 
   "upgrade.elementals.waterSuffocate": "Suffocate",
   "upgrade.elementals.waterSuffocate.description": " By taking water and forcing it on the head of a living being, you can drown them, even on land.",
@@ -105,6 +107,7 @@
 
   "upgrade.elementals.waterSuffocateRange": "Range I",
   "upgrade.elementals.waterSuffocateRange.description": " Reach mobs for up to 15 blocks away.",
+  "upgrade.elementals.waterSuffocateRange.icon": "i",
 
   "upgrade.elementals.waterShieldSuffocatePath": "Shield",
   "upgrade.elementals.waterShieldSuffocatePath.description": " By rapidly spinning streams of water around you, you can deflect any projectile or enemy coming your way.",
@@ -134,7 +137,8 @@
 
   "upgrade.elementals.waterArcMastery": "Water Arc Mastery",
   "upgrade.elementals.waterArcMastery.description": " Mastery of the water arc ability allows you to deal more damage.",
-
+  "upgrade.elementals.waterArcMastery.icon": "iii",
+  
   "upgrade.elementals.waterJet": "Water Jet",
   "upgrade.elementals.waterJet.description": " A concentrated stream of water that can be used to push objects or attack enemies.",
   "upgrade.elementals.waterJet.use": " Use: %d + hold (1s)",
@@ -234,6 +238,8 @@
 
   "upgrade.elementals.fireFlareUp": "Flare Up",
   "upgrade.elementals.fireFlareUp.description": " Upgrade your Ignition ability to be even more powerful.",
+  "upgrade.elementals.fireFlareUp.icon": "i",
+
 
   "upgrade.elementals.blueFire": "Blue Fire",
   "upgrade.elementals.blueFire.description": " By more effectively controlling your fire, you can make your abilities burn hotter, giving them a blue hue.",
@@ -280,7 +286,8 @@
 
   "upgrade.elementals.fireArcMastery": "Fire Arc Mastery",
   "upgrade.elementals.fireArcMastery.description": " Mastery of the fire arc ability allows you to deal more damage.",
-
+  "upgrade.elementals.fireArcMastery.icon": "iii",
+  
   "upgrade.elementals.fireBall": "Fireball",
   "upgrade.elementals.fireBall.description": " By compressing a lot of fire in a tight space, you can create a fireball with devastating power.",
   "upgrade.elementals.fireBall.use": " Use: %d + hold (1s)",
@@ -371,7 +378,8 @@
 
   "upgrade.elementals.earthWallAutoTimer": "Auto Timer",
   "upgrade.elementals.earthWallAutoTimer.description": " Automatically dismisses walls when casting Earth Wall, allows you to cast walls in quick succession.",
-
+  "upgrade.elementals.earthWallAutoTimer.icon": "v",
+  
   "upgrade.elementals.earthChunk": "Chunk Pickup",
   "upgrade.elementals.earthChunk.description": " Pickup large amounts of earth to throw at your enemies or terraform the landscape.",
   "upgrade.elementals.earthChunk.use": " Use: %d + sneak",
@@ -488,7 +496,8 @@
 
   "upgrade.elementals.airStreamMastery": "Air Stream Mastery",
   "upgrade.elementals.airStreamMastery.description": " Mastery of the air stream ability allows you to deal more damage.",
-
+  "upgrade.elementals.airStreamMastery.icon": "iii",
+  
   "upgrade.elementals.airBall": "Air Ball",
   "upgrade.elementals.airBall.description": " By compressing a lot of air in a tight space, you can create an air ball with devastating power.",
   "upgrade.elementals.airBall.use": " Use: %d + hold (1s)",
@@ -516,7 +525,8 @@
 
   "upgrade.elementals.airBulletsMastery": "Air Bullets Mastery",
   "upgrade.elementals.airBulletsMastery.description": " Mastery of the air bullets ability allows you to deal more damage.",
-
+  "upgrade.elementals.airBulletsMastery.icon": "ii",
+  
   "upgrade.elementals.airBulletsCountI": "Count I",
   "upgrade.elementals.airBulletsCountI.description": " Increases the number of bullets you can throw to 10.",
 
