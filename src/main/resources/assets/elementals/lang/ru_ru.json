@@ -648,12 +648,12 @@
   "upgrade.elementals.bloodShield": "Кровавый щит",
   "upgrade.elementals.bloodShield.description": "Отталкивая всё, что приближается к вам, вы создаёте щит, который не может пересечь ни одно живое существо.",
   "upgrade.elementals.bloodShield.use": "Использование: %d + Shift",
-  "upgrade.elementals.bloodShield.icon": "blood",
+  "upgrade.elementals.bloodShield.icon": "blo9od_shield",
 
   "upgrade.elementals.bloodControl": "Управление кровью",
   "upgrade.elementals.bloodControl.description": "Управляя кровью в ваших врагах, вы можете двигать их по своему желанию.",
   "upgrade.elementals.bloodControl.use": "Использование: %d + Shift + удерживать (1.5с) + смотреть на врага",
-  "upgrade.elementals.bloodControl.icon": "blood",
+  "upgrade.elementals.bloodControl.icon": "blood_control",
 
   "upgrade.elementals.bloodControlPrecisionI": "Точность I",
   "upgrade.elementals.bloodControlPrecisionI.description": "Более точное управление кровью позволяет вам двигаться во время использования управления кровью.",
@@ -667,7 +667,7 @@
   "upgrade.elementals.bloodShot": "Кровавый выстрел",
   "upgrade.elementals.bloodShot.description": "Вы можете передать свои статусные эффекты врагам (или союзникам), взяв образец своей крови и отправив его другим.",
   "upgrade.elementals.bloodShot.use": "Использование: %d",
-  "upgrade.elementals.bloodShot.icon": "blood",
+  "upgrade.elementals.bloodShot.icon": "blood_shot",
 
   "upgrade.elementals.bloodShotEfficiencyI": "Эффективность I",
   "upgrade.elementals.bloodShotEfficiencyI.description": "Используйте кровавый выстрел с меньшими затратами чи.",
@@ -681,7 +681,7 @@
   "upgrade.elementals.bloodStep": "Кровавый шаг",
   "upgrade.elementals.bloodStep.description": "Ускоряя кровоток в ногах, вы можете сделать мощный прыжок без необходимости в воде.",
   "upgrade.elementals.bloodStep.use": "Использование: %d + на земле",
-  "upgrade.elementals.bloodStep.icon": "blood",
+  "upgrade.elementals.bloodStep.icon": "blood_step",
 
   "upgrade.elementals.bloodStepRangeI": "Дальность I",
   "upgrade.elementals.bloodStepRangeI.description": "Прыгайте дальше.",
@@ -692,18 +692,19 @@
   "upgrade.elementals.bloodOvercharge": "Кровавая перезарядка",
   "upgrade.elementals.bloodOvercharge.description": "Ускоряя кровоток, вы можете заставить своё тело работать на пределе возможностей. Однако ваше тело будет измотано после этого.",
   "upgrade.elementals.bloodOvercharge.use": "Использование: %d + удерживать (0.5с)",
-  "upgrade.elementals.bloodOvercharge.icon": "blood",
+  "upgrade.elementals.bloodOvercharge.icon": "blood_overcharge",
 
   "upgrade.elementals.bloodOverchargeStrengthI": "Сила I",
   "upgrade.elementals.bloodOverchargeStrengthI.description": "Перезарядка длится дольше перед износом.",
 
   "upgrade.elementals.bloodBag": "Кровяной мешок",
   "upgrade.elementals.bloodBag.description": "Жертвуя частью своей крови, вы можете использовать управление водой в любом месте.",
-
+  "upgrade.elementals.bloodBag.icon": "blood_bag",
+  
   "upgrade.elementals.bloodParalysis": "Паралич",
   "upgrade.elementals.bloodParalysis.description": "Эта запретная способность позволяет вам останавливать все живые существа в радиусе, давая возможность убежать или атаковать.",
   "upgrade.elementals.bloodParalysis.use": "Использование: %d + удерживать (1.5с)",
-  "upgrade.elementals.bloodParalysis.icon": "blood",
+  "upgrade.elementals.bloodParalysis.icon": "blood_paralysis",
 
   "upgrade.elementals.bloodParalysisRangeI": "Дальность I",
   "upgrade.elementals.bloodParalysisRangeI.description": "Позволяет парализовать с большего расстояния.",

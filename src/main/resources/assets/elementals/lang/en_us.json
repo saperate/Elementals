@@ -649,12 +649,12 @@
   "upgrade.elementals.bloodShield": "Blood shield",
   "upgrade.elementals.bloodShield.description": " By pushing away anything that gets close to you, you can create a shield that no living being can enter.",
   "upgrade.elementals.bloodShield.use": " Use: %d + shift",
-  "upgrade.elementals.bloodShield.icon": "blood",
+  "upgrade.elementals.bloodShield.icon": "blood_shield",
 
   "upgrade.elementals.bloodControl": "Blood control",
   "upgrade.elementals.bloodControl.description": " By controlling the blood in your enemies, you can move them as you please.",
   "upgrade.elementals.bloodControl.use": " Use: %d + shift + hold (1.5s) + look at enemy",
-  "upgrade.elementals.bloodControl.icon": "blood",
+  "upgrade.elementals.bloodControl.icon": "blood_control",
 
   "upgrade.elementals.bloodControlPrecisionI": "Precision I",
   "upgrade.elementals.bloodControlPrecisionI.description": " Gain better control of your blood bending which allows you to move while using Blood control.",
@@ -668,7 +668,7 @@
   "upgrade.elementals.bloodShot": "Blood shot",
   "upgrade.elementals.bloodShot.description": " You can share your status effects with enemies (or allies) by taking a sample of your blood and sending it in others.",
   "upgrade.elementals.bloodShot.use": " Use: %d",
-  "upgrade.elementals.bloodShot.icon": "blood",
+  "upgrade.elementals.bloodShot.icon": "blood_shot",
 
   "upgrade.elementals.bloodShotEfficiencyI": "Efficiency I",
   "upgrade.elementals.bloodShotEfficiencyI.description": " Use Blood shot for less chi.",
@@ -682,7 +682,7 @@
   "upgrade.elementals.bloodStep": "Blood step",
   "upgrade.elementals.bloodStep.description": " By rushing blood to your legs, you can make a powerful jump without needing any water.",
   "upgrade.elementals.bloodStep.use": " Use: %d + on ground",
-  "upgrade.elementals.bloodStep.icon": "blood",
+  "upgrade.elementals.bloodStep.icon": "blood_step",
 
   "upgrade.elementals.bloodStepRangeI": "Range I",
   "upgrade.elementals.bloodStepRangeI.description": " Jump farther.",
@@ -693,18 +693,19 @@
   "upgrade.elementals.bloodOvercharge": "Blood overcharge",
   "upgrade.elementals.bloodOvercharge.description": " By making your blood flow faster, you can make them function at a higher capacity than normal. However, your body will be burnt out afterwards.",
   "upgrade.elementals.bloodOvercharge.use": " Use: %d + hold (0.5s)",
-  "upgrade.elementals.bloodOvercharge.icon": "blood",
+  "upgrade.elementals.bloodOvercharge.icon": "blood_overcharge",
 
   "upgrade.elementals.bloodOverchargeStrengthI": "Strength I",
   "upgrade.elementals.bloodOverchargeStrengthI.description": " Overcharge for longer before burning out.",
 
   "upgrade.elementals.bloodBag": "Blood bag",
   "upgrade.elementals.bloodBag.description": " By sacrificing some of your blood, you are able to water bend anywhere.",
-
+  "upgrade.elementals.bloodBag.icon": "blood_bag",
+  
   "upgrade.elementals.bloodParalysis": "Paralysis",
   "upgrade.elementals.bloodParalysis.description": " This forbidden ability allows you to stop every living thing in a radius allowing you to escape or attack.",
   "upgrade.elementals.bloodParalysis.use": " Use: %d + hold (1.5s)",
-  "upgrade.elementals.bloodParalysis.icon": "blood",
+  "upgrade.elementals.bloodParalysis.icon": "blood_paralysis",
 
   "upgrade.elementals.bloodParalysisRangeI": "Range I",
   "upgrade.elementals.bloodParalysisRangeI.description": " Allows you to paralyse from farther away.",
