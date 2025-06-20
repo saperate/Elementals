@@ -1,5 +1,6 @@
 package dev.saperate.elementals.items;
 
+import dev.saperate.elementals.Elementals;
 import dev.saperate.elementals.armors.materials.ElementalArmorMaterial;
 import dev.saperate.elementals.items.scrolls.*;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
@@ -108,6 +109,6 @@ public class ElementalItems {
         EARTH_ARMOR_SET.add(EARTH_CHESTPLATE);
         EARTH_ARMOR_SET.add(EARTH_LEGGINGS);
         EARTH_ARMOR_SET.add(EARTH_BOOTS);
-        Registry.register(Registries.ITEM_GROUP, Identifier.of("tutorial", "test_group"), ELEMENTALS_GROUP);
+        Registry.register(Registries.ITEM_GROUP, Identifier.of(MODID, "base"), ELEMENTALS_GROUP);
     }
 }
