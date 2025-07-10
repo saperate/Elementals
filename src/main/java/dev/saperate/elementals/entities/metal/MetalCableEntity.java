@@ -88,7 +88,7 @@ public class MetalCableEntity extends AbstractElementalsEntity<LivingEntity> {
         }
 
         if (parent == null) {
-            setPosition(owner.getLeashPos(0));
+            setPosition(owner.getEyePos().subtract(0,1,0));
 
             double distanceToOwner = owner.getPos().distanceTo(getTail().getPos());
             owner.dismountVehicle();

@@ -54,7 +54,9 @@ public class DenseStatusEffect extends StatusEffect {
             currV -= 0.25f;
         }
 
-        entity.setVelocity(new Vec3d(entity.getVelocity().x, currV, entity.getVelocity().z));
+        if(!entity.isOnGround())
+
+        entity.setVelocity(new Vec3d(entity.getVelocity().x * 0.90, currV, entity.getVelocity().z * 0.90));
         return true;
     }
 

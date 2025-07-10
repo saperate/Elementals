@@ -58,6 +58,22 @@ public class LightningElement extends Element {
     }
 
     @Override
+    public int getColor() {
+        return 0xFFdef8fc;
+    }
+
+    @Override
+    public int getSecondaryColor() {
+        return 0xFF6defff;
+    }
+
+    @Override
+    public int getTertiaryColor() {
+        return 0xFF008696;
+    }
+    
+
+    @Override
     public boolean isSkillTreeComplete(Bender bender) {
         PlayerData plrData = bender.plrData;
         return bender.hasElement(this)

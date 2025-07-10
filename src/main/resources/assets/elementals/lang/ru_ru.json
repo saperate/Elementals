@@ -113,7 +113,7 @@
   "upgrade.elementals.waterShieldHelmetPath": "Щит",
   "upgrade.elementals.waterShieldHelmetPath.description": "Быстро вращая потоки воды вокруг себя, вы можете отражать любые снаряды или врагов.",
   "upgrade.elementals.waterShieldHelmetPath.use": "Использование: %d присесть в воде + удерживать (1с)",
-  "upgrade.elementals.waterShieldHelmetPath.icon": "water",
+  "upgrade.elementals.waterShieldHelmetPath.icon": "water_shield",
 
   "upgrade.elementals.waterArc": "Водяная дуга",
   "upgrade.elementals.waterArc.description": "Размашистая дуга воды, способная отбросить врагов и нанести им урон с расстояния.",
@@ -149,7 +149,7 @@
   "upgrade.elementals.waterBlade": "Лезвие",
   "upgrade.elementals.waterBlade.description": "Острое лезвие из воды, способное прорезать большинство материалов.",
   "upgrade.elementals.waterBlade.use": "Использование: %d + присесть",
-  "upgrade.elementals.waterBlade.icon": "water",
+  "upgrade.elementals.waterBlade.icon": "water_icon",
 
   "upgrade.elementals.waterBladeDamageI": "Урон I",
   "upgrade.elementals.waterBladeDamageI.description": "Позволяет наносить немного больше урона.",
@@ -295,17 +295,17 @@
   "upgrade.elementals.flameThrower": "Огнемёт",
   "upgrade.elementals.flameThrower.description": "Создаёт поток огня, чтобы сжигать врагов перед вами.",
   "upgrade.elementals.flameThrower.use": "Использование: %d + присесть -> затем правая кнопка мыши",
-  "upgrade.elementals.flameThrower.icon": "fire",
+  "upgrade.elementals.flameThrower.icon": "fire_flamethrower",
 
   "upgrade.elementals.fireShield": "Огненный щит",
   "upgrade.elementals.fireShield.description": "Быстро вращая огонь вокруг себя, вы можете сжигать любые снаряды или врагов, приближающихся к вам.",
   "upgrade.elementals.fireShield.use": "Использование: %d + присесть",
-  "upgrade.elementals.fireShield.icon": "fire",
+  "upgrade.elementals.fireShield.icon": "fire_shield",
 
   "upgrade.elementals.fireJump": "Огненный прыжок",
   "upgrade.elementals.fireJump.description": "Используйте всплеск огня, чтобы высоко подпрыгнуть в воздух.",
   "upgrade.elementals.fireJump.use": "Использование: %d + левая кнопка мыши",
-  "upgrade.elementals.fireJump.icon": "fire",
+  "upgrade.elementals.fireJump.icon": "fire_jump",
 
   "upgrade.elementals.fireJumpRangeI": "Дальность I",
   "upgrade.elementals.fireJumpRangeI.description": "Прыгайте дальше.",
@@ -316,7 +316,7 @@
   "upgrade.elementals.fireJet": "Огненный реактивный поток",
   "upgrade.elementals.fireJet.description": "Создайте мощный реактивный поток огня, чтобы летать.",
   "upgrade.elementals.fireJet.use": "Использование: %d + бег + не касаясь земли",
-  "upgrade.elementals.fireJet.icon": "fire",
+  "upgrade.elementals.fireJet.icon": "fire_jet",
 
   "upgrade.elementals.fireJetSpeedI": "Скорость I",
   "upgrade.elementals.fireJetSpeedI.description": "Позволяет вам летать быстрее с помощью способности реактивного потока.",
@@ -328,12 +328,12 @@
   "upgrade.elementals.fireWisp": "Огненная искра",
   "upgrade.elementals.fireWisp.description": "Создаёт шар огня, который следует за вами и освещает окружающую территорию.",
   "upgrade.elementals.fireWisp.use": "Использование: %d (нажмите Shift, чтобы поместить на другого)",
-  "upgrade.elementals.fireWisp.icon": "fire",
+  "upgrade.elementals.fireWisp.icon": "fire_wisp",
 
   "upgrade.elementals.earthBlock": "Поднятие земли",
   "upgrade.elementals.earthBlock.description": "Простое движение, позволяющее поднять землю с земли и бросить её во врагов.",
   "upgrade.elementals.earthBlock.use": "Использование: %d",
-  "upgrade.elementals.earthBlock.icon": "earth",
+  "upgrade.elementals.earthBlock.icon": "earth_pickup",
 
   "upgrade.elementals.earthBlockShrapnel": "Осколки",
   "upgrade.elementals.earthBlockShrapnel.description": "Сжимая землю в небольшое пространство, вы можете создать острый снаряд, наносящий больше урона.",
@@ -383,7 +383,7 @@
   "upgrade.elementals.earthMine": "Добыча",
   "upgrade.elementals.earthMine.description": "Позволяет добывать блоки земли, как если бы у вас была кирка.",
   "upgrade.elementals.earthMine.use": "Использование: %d",
-  "upgrade.elementals.earthMine.icon": "earth",
+  "upgrade.elementals.earthMine.icon": "earth_mine",
 
   "upgrade.elementals.earthTrap": "Ловушка",
   "upgrade.elementals.earthTrap.description": "Погружая ноги жертвы в землю, вы можете эффективно не дать ей двигаться в течение некоторого времени.",
@@ -415,7 +415,7 @@
   "upgrade.elementals.earthPillar": "Колонна",
   "upgrade.elementals.earthPillar.description": "Запускайте и наносите урон врагам с помощью колонны из земли.",
   "upgrade.elementals.earthPillar.use": "Использование: %d",
-  "upgrade.elementals.earthPillar.icon": "earth",
+  "upgrade.elementals.earthPillar.icon": "earth_pillar",
 
   "upgrade.elementals.earthPillarTallI": "Высокие колонны",
   "upgrade.elementals.earthPillarTallI.description": "Ваши колонны становятся выше.",
@@ -423,7 +423,7 @@
   "upgrade.elementals.earthJump": "Земной прыжок",
   "upgrade.elementals.earthJump.description": "Используйте землю, чтобы запустить себя высоко в воздух.",
   "upgrade.elementals.earthJump.use": "Использование: %d + не смотря на землю + стоя на земле",
-  "upgrade.elementals.earthJump.icon": "earth",
+  "upgrade.elementals.earthJump.icon": "earth_jump",
 
   "upgrade.elementals.earthJumpRangeI": "Дальность I",
   "upgrade.elementals.earthJumpRangeI.description": "Прыгайте дальше.",
@@ -530,7 +530,7 @@
   "upgrade.elementals.airJump": "Воздушный прыжок",
   "upgrade.elementals.airJump.description": "Запускайте себя с помощью воздуха, чтобы набрать высоту или уклониться от ударов.",
   "upgrade.elementals.airJump.use": "Использование: %d",
-  "upgrade.elementals.airJump.icon": "air",
+  "upgrade.elementals.airJump.icon": "air_jump",
 
   "upgrade.elementals.airJumpRangeI": "Дальность I",
   "upgrade.elementals.airJumpRangeI.description": "Прыгайте дальше.",
@@ -552,7 +552,7 @@
   "upgrade.elementals.airSpiritProjection": "Проекция духа",
   "upgrade.elementals.airSpiritProjection.description": "Эта техника позволяет воздушным магам покидать своё тело и проецировать сознание в другое место.",
   "upgrade.elementals.airSpiritProjection.use": "Использование: %d + левая кнопка мыши, чтобы вернуться к телу.",
-  "upgrade.elementals.airSpiritProjection.icon": "air",
+  "upgrade.elementals.airSpiritProjection.icon": "air_spirit_projection",
 
   "upgrade.elementals.airSpiritProjectionRangeI": "Дальность I",
   "upgrade.elementals.airSpiritProjectionRangeI.description": "Перемещайтесь на расстояние до 10 блоков от вашего тела.",

@@ -1,5 +1,6 @@
 package dev.saperate.elementals.elements.fire;
 
+import dev.saperate.elementals.Elementals;
 import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.elements.Element;
@@ -102,10 +103,20 @@ public class FireElement extends Element {
     }
 
     @Override
-    public int getAccentColor() {
+    public int getSecondaryColor() {
         return 0xFFB32616;
     }
 
+
+    @Override
+    public int getTertiaryColor() {
+        return 0xFFB32616;
+    }
+
+    @Override
+    public Identifier getOverlayTexture() {
+        return Identifier.of(Elementals.MODID,"textures/gui/background/fire/overlay.png");
+    }
 
     @Override
     public boolean isSkillTreeComplete(Bender bender) {

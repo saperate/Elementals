@@ -24,10 +24,12 @@ public class ChiHudOverlay implements HudRenderCallback {
         MinecraftClient client = MinecraftClient.getInstance();
         int x = (int) (client.getWindow().getScaledWidth() - client.getWindow().getScaleFactor() * 16);
         int y = (int) (client.getWindow().getScaledHeight() - 8 * client.getWindow().getScaleFactor());
-        
-        Identifier buttonID = Identifier.of(MODID, "textures/gui/" + ClientBender.get().getElement().getName().toLowerCase(Locale.CANADA) + "_upgrade_button.png");
-        drawContext.drawTexture(buttonID, x - 40, y - 18, 0, 0, 32, 32, 32, 32);
 
+        Identifier symbolID = Identifier.of(MODID, "textures/gui/symbol/" + ClientBender.get().getElement().getName().toLowerCase(Locale.ROOT) + ".png");
+        Identifier buttonID = Identifier.of(MODID, "textures/gui/" + ClientBender.get().getElement().getName().toLowerCase(Locale.CANADA) + "_upgrade_button.png");
+        
+        drawContext.drawTexture(buttonID, x - 40, y - 18, 0, 0, 32, 32, 32, 32);
+        drawContext.drawTexture(symbolID, x - 40, y - 18, 0, 0, 32, 32, 32, 32);
 
         float chi = MathHelper.clamp(ClientBender.get().chi/ElementalConfig.get().MAX_CHI * 100, 0, 100);
 

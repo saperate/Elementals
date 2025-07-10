@@ -101,5 +101,8 @@ public class MetalCableEntityRenderer extends EntityRenderer<MetalCableEntity> {
     }
     
 
-
+    @Override
+    public boolean shouldRender(MetalCableEntity entity, Frustum frustum, double x, double y, double z) {
+        return true;
+    }
 }

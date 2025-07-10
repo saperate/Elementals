@@ -72,6 +72,10 @@ public class Bender {
             if (currAbility != null && castTime != null && !isStart) {
                 currAbility.onCall(this, System.currentTimeMillis() - castTime);
                 castTime = null;
+                return;
+            }
+            if(currAbility != null){
+                currAbility.onAbilityPress(this, index);
             }
         }
     }

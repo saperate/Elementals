@@ -2,6 +2,7 @@ package dev.saperate.elementals.gui;
 
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import dev.saperate.elementals.Elementals;
 import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.data.ClientBender;
 import dev.saperate.elementals.data.PlayerData;
@@ -53,7 +54,7 @@ public class UpgradeTreeScreen extends Screen {
     public Upgrade hoveredUpgrade = null;
     public int keybindID = 0;
 
-    private int lineColor = 0xFFa0e8e6, outlineColor = 0xFF002E2C;
+    private int lineColor = 0xFFa0e8e6, secondaryColor = 0xFF002E2C, tertiaryColor = 0xFFffef00;
 
 
     public UpgradeTreeScreen(@Nullable Screen parent) {
@@ -71,7 +72,8 @@ public class UpgradeTreeScreen extends Screen {
         bender = ClientBender.get();
         bender.getElement().root.calculateXPos();
         lineColor = bender.getElement().getColor();
-        outlineColor = bender.getElement().getAccentColor();
+        secondaryColor = bender.getElement().getSecondaryColor();
+        tertiaryColor = bender.getElement().getTertiaryColor();
     }
 
     @Override
@@ -82,18 +84,28 @@ public class UpgradeTreeScreen extends Screen {
         
         context.drawTexture(bender.getElement().getGuiBackgroundIdentifier(), 0, 0, -5, -oX, -oY, width, height, 32, 32);
 
-        context.drawTexture(Identifier.of(MODID, "textures/gui/" + ClientBender.get().getElement().getName().toLowerCase(Locale.CANADA) + "_upgrade_button.png"),
-                oX - 2, oY - 2, 0, 0, tileSize + 4, tileSize + 4, tileSize + 4, tileSize + 4);
+        Element element = bender.getElement();
+        String[] backgroundTextures = element.getBackgroundTextures();
+        for (String texName : backgroundTextures){
+            Identifier identifier = Identifier.of(MODID,"textures/gui/backgrounds/" + element.name.toLowerCase(Locale.ROOT) + "/" + texName);
+            context.drawTexture(identifier, 0, 0, -5, -oX, -oY, width, height, 16, 16);
+        }
+        //TODO Overlay
 
 
-        Upgrade root = bender.getElement().root;
 
+
+        Upgrade root = element.root;
         int len = root.children.length;
         int halfSize = tileSize / 2;
         if (len >= 1) {
-            context.fill((oX + halfSize - pathSize) - 1, oY + tileSize - 2,
-                    oX + root.children[0].mod + halfSize + pathSize + 1, oY + spacing + 2,
-                    outlineColor
+            context.fill((oX + halfSize - pathSize) - 4, oY + tileSize - 2,
+                    oX + root.children[0].mod + halfSize + pathSize + 4, oY + spacing + 2,
+                    tertiaryColor
+            );
+            context.fill((oX + halfSize - pathSize) - 2, oY + tileSize - 2,
+                    oX + root.children[0].mod + halfSize + pathSize + 2, oY + spacing + 2,
+                    secondaryColor
             );
             context.fill(oX + halfSize - pathSize, oY + tileSize - 2,
                     oX + root.children[0].mod + halfSize + pathSize, oY + spacing,
@@ -103,9 +115,13 @@ public class UpgradeTreeScreen extends Screen {
             drawTree(root.children[0], context, oX + root.children[0].mod, oY + spacing, 1);
         }
         if (len >= 2) {
-            context.fill(oX + 4, oY + halfSize - pathSize - 1,
-                    oX - spacing + 2, oY + halfSize + pathSize + 1,
-                    outlineColor
+            context.fill(oX + 4, oY + halfSize - pathSize - 4,
+                    oX - spacing + 2, oY + halfSize + pathSize + 4,
+                    tertiaryColor
+            );
+            context.fill(oX + 4, oY + halfSize - pathSize - 2,
+                    oX - spacing + 2, oY + halfSize + pathSize + 2,
+                    secondaryColor
             );
             context.fill(oX + 4, oY + halfSize - pathSize,
                     oX - spacing + 2, oY + halfSize + pathSize,
@@ -114,9 +130,13 @@ public class UpgradeTreeScreen extends Screen {
             drawMirroredTree(root.children[1], context, oX - spacing, oY + root.children[1].mod, -1);
         }
         if (len >= 3) {
-            context.fill(oX + tileSize - 4, oY + halfSize - pathSize - 1,
-                    oX + tileSize + spacing - 2, oY + halfSize + pathSize + 1,
-                    outlineColor
+            context.fill(oX + tileSize - 4, oY + halfSize - pathSize - 4,
+                    oX + tileSize + spacing - 2, oY + halfSize + pathSize + 4,
+                    tertiaryColor
+            );
+            context.fill(oX + tileSize - 4, oY + halfSize - pathSize - 2,
+                    oX + tileSize + spacing - 2, oY + halfSize + pathSize + 2,
+                    secondaryColor
             );
             context.fill(oX + tileSize - 4, oY + halfSize - pathSize,
                     oX + tileSize + spacing - 2, oY + halfSize + pathSize,
@@ -125,9 +145,13 @@ public class UpgradeTreeScreen extends Screen {
             drawMirroredTree(root.children[2], context, oX + spacing, oY + root.children[2].mod, 1);
         }
         if (len == 4) {
-            context.fill(oX + halfSize - pathSize - 1, oY + 2,
-                    oX + root.children[0].mod + halfSize + pathSize + 1, oY - spacing + 1,
-                    outlineColor
+            context.fill(oX + halfSize - pathSize - 4, oY + 2,
+                    oX + root.children[0].mod + halfSize + pathSize + 4, oY - spacing + 1,
+                    tertiaryColor
+            );
+            context.fill(oX + halfSize - pathSize - 2, oY + 2,
+                    oX + root.children[0].mod + halfSize + pathSize + 2, oY - spacing + 1,
+                    secondaryColor
             );
             context.fill(oX + halfSize - pathSize, oY + 2,
                     oX + root.children[0].mod + halfSize + pathSize, oY - spacing,
@@ -136,6 +160,11 @@ public class UpgradeTreeScreen extends Screen {
             drawTree(root.children[3], context, oX + root.children[1].mod, oY - spacing, -1);
         }
 
+        context.drawTexture(Identifier.of(MODID, "textures/gui/" + ClientBender.get().getElement().getName().toLowerCase(Locale.ROOT) + "_upgrade_button.png"),
+                oX - 2, oY - 2, 0, 0, tileSize + 4, tileSize + 4, tileSize + 4, tileSize + 4);
+        Identifier symbolID = Identifier.of(MODID, "textures/gui/symbol/" + ClientBender.get().getElement().getName().toLowerCase(Locale.ROOT) + ".png");
+        context.drawTexture(symbolID,
+                oX - 2, oY - 2, 0, 0, tileSize + 4, tileSize + 4, tileSize + 4, tileSize + 4);
         renderExperienceBar(context);
         renderTitle(context, mouseX, mouseY, delta);
     }
@@ -270,8 +299,8 @@ public class UpgradeTreeScreen extends Screen {
     //BEWARE: beyond this point is shitty code that might be hard to understand, read at your own peril traveller
     public void drawTree(Upgrade parent, DrawContext context, int oX, int oY, int mult) {
         //Draw the node
-        drawUpgradeButton((int) ((oX + tileSize / 2) - textureSize / 2), oY - pathSize * 2, context, parent);
         if (parent.children.length == 0) {
+            drawUpgradeButton((int) ((oX + tileSize / 2) - textureSize / 2), oY - pathSize * 2, context, parent);
             return;
         }
 
@@ -282,9 +311,14 @@ public class UpgradeTreeScreen extends Screen {
                 -1, lineColor
         );
         context.fill(
-                oX + tileSize / 2 - pathSize - 1, oY + (mult > 0 ? tileSize : 0) - 1,
-                oX + tileSize / 2 + pathSize + 1, oY + (tileSize / 2 * mult) + (mult > 0 ? tileSize : 0) + 1,
-                -2, outlineColor
+                oX + tileSize / 2 - pathSize - 2, oY + (mult > 0 ? tileSize : 0) - 2,
+                oX + tileSize / 2 + pathSize + 2, oY + (tileSize / 2 * mult) + (mult > 0 ? tileSize : 0) + 2,
+                -2, secondaryColor
+        );
+        context.fill(
+                oX + tileSize / 2 - pathSize - 4, oY + (mult > 0 ? tileSize : 0) - 4,
+                oX + tileSize / 2 + pathSize + 4, oY + (tileSize / 2 * mult) + (mult > 0 ? tileSize : 0) + 4,
+                -3, tertiaryColor
         );
 
         int firstChildPosX = 0;
@@ -309,9 +343,14 @@ public class UpgradeTreeScreen extends Screen {
                     -1, lineColor
             );
             context.fill(
-                    pX + tileSize / 2 - pathSize - 1, oY + (mult > 0 ? spacing : -tileSize / 2) - 1,
-                    pX + tileSize - tileSize / 2 + pathSize + 1, oY + (mult > 0 ? spacing - tileSize / 2 : -tileSize) - pathSize / 2 + 1,
-                    -2, outlineColor
+                    pX + tileSize / 2 - pathSize - 2, oY + (mult > 0 ? spacing : -tileSize / 2) - 2,
+                    pX + tileSize - tileSize / 2 + pathSize + 2, oY + (mult > 0 ? spacing - tileSize / 2 : -tileSize) - pathSize / 2 + 2,
+                    -2, secondaryColor
+            );
+            context.fill(
+                    pX + tileSize / 2 - pathSize - 4, oY + (mult > 0 ? spacing : -tileSize / 2) - 2,
+                    pX + tileSize - tileSize / 2 + pathSize + 4, oY + (mult > 0 ? spacing - tileSize / 2 : -tileSize) - pathSize / 2 + 2,
+                    -3, tertiaryColor
             );
 
             drawTree(child, context, pX, oY + (spacing * mult), mult);
@@ -323,20 +362,25 @@ public class UpgradeTreeScreen extends Screen {
                 lastChildPosX + tileSize - tileSize / 2 + pathSize, oY + (mult > 0 ? spacing : 0) - tileSize / 2 + pathSize,
                 -1, lineColor
         );
-
         context.fill(
-                firstChildPosX + tileSize / 2 - pathSize - 1, oY + (mult > 0 ? spacing : 0) - tileSize / 2 - pathSize - 1,
-                lastChildPosX + tileSize - tileSize / 2 + pathSize + 1, oY + (mult > 0 ? spacing : 0) - tileSize / 2 + pathSize + 1,
-                -2, outlineColor
+                firstChildPosX + tileSize / 2 - pathSize - 2, oY + (mult > 0 ? spacing : 0) - tileSize / 2 - pathSize - 2,
+                lastChildPosX + tileSize - tileSize / 2 + pathSize + 2, oY + (mult > 0 ? spacing : 0) - tileSize / 2 + pathSize + 2,
+                -2, secondaryColor
+        );
+        context.fill(
+                firstChildPosX + tileSize / 2 - pathSize - 4, oY + (mult > 0 ? spacing : 0) - tileSize / 2 - pathSize - 4,
+                lastChildPosX + tileSize - tileSize / 2 + pathSize + 4, oY + (mult > 0 ? spacing : 0) - tileSize / 2 + pathSize + 4,
+                -3, tertiaryColor
         );
 
+        drawUpgradeButton((int) ((oX + tileSize / 2) - textureSize / 2), oY - pathSize * 2, context, parent);
     }
 
 
     public void drawMirroredTree(Upgrade parent, DrawContext context, int oX, int oY, int mult) {
         //Draw the node
-        drawUpgradeButton(oX - pathSize * 2, (int) ((oY + tileSize / 2) - textureSize / 2), context, parent);
         if (parent.children.length == 0) {
+            drawUpgradeButton(oX - pathSize * 2, (int) ((oY + tileSize / 2) - textureSize / 2), context, parent);
             return;
         }
 
@@ -348,9 +392,15 @@ public class UpgradeTreeScreen extends Screen {
                 -1, lineColor
         );
         context.fill(
-                oX + (mult > 0 ? tileSize - 1 : 0), oY + tileSize / 2 - pathSize - 1,
-                oX + (tileSize / 2 * mult) + (mult > 0 ? tileSize : 0) + 1, oY + tileSize / 2 + pathSize + 1,
-                -2, outlineColor
+                oX + (mult > 0 ? tileSize - 1 : 0), oY + tileSize / 2 - pathSize - 2,
+                oX + (tileSize / 2 * mult) + (mult > 0 ? tileSize : 0) + 2, oY + tileSize / 2 + pathSize + 2,
+                -2, secondaryColor
+        );
+
+        context.fill(
+                oX + (mult > 0 ? tileSize - 1 : 0), oY + tileSize / 2 - pathSize - 4,
+                oX + (tileSize / 2 * mult) + (mult > 0 ? tileSize : 0) + 4, oY + tileSize / 2 + pathSize + 4,
+                -3, tertiaryColor
         );
 
 
@@ -376,9 +426,15 @@ public class UpgradeTreeScreen extends Screen {
                     -1, lineColor
             );
             context.fill(
-                    oX + (mult > 0 ? spacing : -tileSize / 2 ) + 2, pY + tileSize / 2 - pathSize - 1,
-                    oX + (mult > 0 ? spacing - tileSize / 2 : -tileSize - 1) - pathSize / 2, pY + tileSize - tileSize / 2 + pathSize + 1,
-                    -2, outlineColor
+                    oX + (mult > 0 ? spacing : -tileSize / 2 ) + 2, pY + tileSize / 2 - pathSize - 2,
+                    oX + (mult > 0 ? spacing - tileSize / 2 : -tileSize - 2) - pathSize / 2, pY + tileSize - tileSize / 2 + pathSize + 2,
+                    -2, secondaryColor
+            );
+
+            context.fill(
+                    oX + (mult > 0 ? spacing : -tileSize / 2 ) + 4, pY + tileSize / 2 - pathSize - 4,
+                    oX + (mult > 0 ? spacing - tileSize / 2 : -tileSize - 4) - pathSize / 2, pY + tileSize - tileSize / 2 + pathSize + 4,
+                    -3, tertiaryColor
             );
 
             drawMirroredTree(child, context, oX + (spacing * mult), pY, mult);
@@ -391,11 +447,17 @@ public class UpgradeTreeScreen extends Screen {
                 -1, lineColor
         );
         context.fill(
-                oX + (mult > 0 ? spacing : 0) - tileSize / 2 - pathSize - 1, firstChildPosY + tileSize / 2 - pathSize - 1,
-                oX + (mult > 0 ? spacing : 0) - tileSize / 2 + pathSize + 1, lastChildPosY + tileSize - tileSize / 2 + pathSize + 1,
-                -2, outlineColor
+                oX + (mult > 0 ? spacing : 0) - tileSize / 2 - pathSize - 2, firstChildPosY + tileSize / 2 - pathSize - 2,
+                oX + (mult > 0 ? spacing : 0) - tileSize / 2 + pathSize + 2, lastChildPosY + tileSize - tileSize / 2 + pathSize + 2,
+                -2, secondaryColor
+        );
+        context.fill(
+                oX + (mult > 0 ? spacing : 0) - tileSize / 2 - pathSize - 4, firstChildPosY + tileSize / 2 - pathSize - 4,
+                oX + (mult > 0 ? spacing : 0) - tileSize / 2 + pathSize + 4, lastChildPosY + tileSize - tileSize / 2 + pathSize + 4,
+                -3, tertiaryColor
         );
 
+        drawUpgradeButton(oX - pathSize * 2, (int) ((oY + tileSize / 2) - textureSize / 2), context, parent);
     }
 
     public void drawTexturedQuad(DrawContext context, Identifier texture, int x, int y, int width, int height, float u1, float v1, int textureSize, float red, float green, float blue, float alpha, float z) {

@@ -11,6 +11,7 @@ public class MetalElement extends Element {
         },0));
         addAbility(new AbilityMetal1(), true);
         addAbility(new AbilityMetalBullets());
+        addAbility(new AbilityMetalLance());
         addAbility(new AbilityMetal2(), true);
         addAbility(new AbilityMetalBind());//TODO move stuff once you add abilities above it
         addAbility(new AbilityMetalDecoy());
@@ -28,7 +29,7 @@ public class MetalElement extends Element {
     }
 
     @Override
-    public int getAccentColor() {
+    public int getSecondaryColor() {
         return 0xFF919191;
     }
 
