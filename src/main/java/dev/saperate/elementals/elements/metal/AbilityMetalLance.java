@@ -7,6 +7,7 @@ import dev.saperate.elementals.elements.water.WaterElement;
 import dev.saperate.elementals.entities.metal.MetalLanceEntity;
 import dev.saperate.elementals.entities.water.WaterBladeEntity;
 import dev.saperate.elementals.utils.SapsUtils;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MovementType;
 import net.minecraft.entity.damage.DamageSources;
@@ -59,17 +60,17 @@ public class AbilityMetalLance implements Ability {
 
     @Override
     public void onRightClick(Bender bender, boolean started) {
-        //TODO be able to right click to dismiss accuracy, would remove little explosion and lower damage
+        MetalLanceEntity lance = getLanceEntity(bender);
+        if(lance.getIsControlled()){
+            lance.remove(Entity.RemovalReason.KILLED);//TODO make a synced data to transfer whether or not to explode
+        }
+        onRemove(bender);//TODO make it so no explosions
     }
 
     @Override
     public void onTick(Bender bender) {
         MetalLanceEntity lance = getLanceEntity(bender);
         Vec3d thrownPos = getThrownPos(bender);
-        
-        if(thrownPos != null){
-            System.out.println(lance.getPos().distanceTo(thrownPos));
-        }
         
         if(thrownPos != null && lance.getPos().distanceTo(thrownPos) < 2){
             lance.discard();

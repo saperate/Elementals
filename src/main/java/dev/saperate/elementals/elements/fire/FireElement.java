@@ -110,7 +110,12 @@ public class FireElement extends Element {
 
     @Override
     public int getTertiaryColor() {
-        return 0xFFB32616;
+        return 0xFF7a0845;
+    }
+
+    @Override
+    public String[] getBackgroundTextures() {
+        return new String[]{"bottom.png"};
     }
 
     @Override

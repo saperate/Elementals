@@ -1,5 +1,6 @@
 package dev.saperate.elementals.elements.water;
 
+import dev.saperate.elementals.Elementals;
 import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.elements.Element;
@@ -292,6 +293,11 @@ public class WaterElement extends Element {
     @Override
     public int getTertiaryColor() {
         return 0xFF000b49;
+    }
+
+    @Override
+    public Identifier getOverlayTexture() {
+        return null;
     }
 
     @Override
