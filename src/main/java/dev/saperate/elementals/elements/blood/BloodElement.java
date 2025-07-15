@@ -61,25 +61,26 @@ public class BloodElement extends Element {
 
     @Override
     public int getColor() {
-        return 0xFF7d0b0b;
+        return 0xFF910a0a;
     }
 
     @Override
     public int getSecondaryColor() {
-        return 0xFF400303;
+        return 0xFF6c0000;
     }
 
 
 
     @Override
     public int getTertiaryColor() {
-        return super.getTertiaryColor();
+        return 0xFF560000;
     }
 
     @Override
     public String[] getBackgroundTextures() {
         return new String[]{"bottom.png"};
     }
+    
     
     @Override
     public boolean isSkillTreeComplete(Bender bender) {

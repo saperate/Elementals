@@ -11,7 +11,6 @@ import dev.saperate.elementals.elements.Upgrade;
 import dev.saperate.elementals.keys.KeyInput;
 import dev.saperate.elementals.keys.abilities.KeyAbility1;
 import dev.saperate.elementals.network.payload.C2S.BuyUpgradePayload;
-import dev.saperate.elementals.network.payload.C2S.RequestSyncUpgradeListPayload;
 import dev.saperate.elementals.packets.SyncLevelS2CPacket;
 import dev.saperate.elementals.packets.SyncUpgradeListS2CPacket;
 import dev.saperate.elementals.utils.SapsUtils;
@@ -41,6 +40,8 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static dev.saperate.elementals.Elementals.MODID;
+import static dev.saperate.elementals.network.ModMessages.BUY_UPGRADE_PACKET_ID;
+import static dev.saperate.elementals.network.ModMessages.GET_UPGRADE_LIST_PACKET_ID;
 
 public class UpgradeTreeScreen extends Screen {
     private ClientBender bender;
@@ -81,13 +82,12 @@ public class UpgradeTreeScreen extends Screen {
         super.render(context, mouseX, mouseY, delta);
         int oX = MathHelper.floor(originX);
         int oY = MathHelper.floor(originY);
-        
-        context.drawTexture(bender.getElement().getGuiBackgroundIdentifier(), 0, 0, -5, -oX, -oY, width, height, 32, 32);
 
         Element element = bender.getElement();
         String[] backgroundTextures = element.getBackgroundTextures();
+        TextureManager texManager = MinecraftClient.getInstance().getTextureManager();
         for (String texName : backgroundTextures){
-            Identifier identifier = Identifier.of(MODID,"textures/gui/background/" + element.name.toLowerCase(Locale.ROOT) + "/" + texName);
+            Identifier identifier = Identifier.of(MODID,"textures/gui/backgrounds/" + element.name.toLowerCase(Locale.ROOT) + "/" + texName);
             context.drawTexture(identifier, 0, 0, -6, -oX, -oY, width, height, 16, 16);
         }
         if(element.getOverlayTexture() != null){
@@ -276,18 +276,33 @@ public class UpgradeTreeScreen extends Screen {
     public void drawUpgradeButton(int x1, int y1, DrawContext context, Upgrade upgrade) {
         String icon = Text.translatable("upgrade.elementals." + upgrade.name + ".icon").getString();
         float color = bender.upgrades.containsKey(upgrade) ? 1 : 0.25f;
-        boolean isUpgrade = !icon.equals("upgrade.elementals." + upgrade.name + ".icon");
+        boolean hasIcon = !icon.equals("upgrade.elementals." + upgrade.name + ".icon");
 
-        drawTexturedQuad(context, Identifier.of(MODID, "textures/gui/" + ClientBender.get().getElement().getName().toLowerCase() + "_" + (isUpgrade ? "" : "plain_") + "upgrade_button.png"),
+        drawTexturedQuad(context, Identifier.of(MODID, "textures/gui/" + ClientBender.get().getElement().getName().toLowerCase() + "_" + (hasIcon ? "" : "plain_") + "upgrade_button.png"),
                 x1, y1, (int) textureSize, (int) textureSize, (float) 0, (float) 0, (int) textureSize, color, color, color, 1
                 , 0);
 
-        if (isUpgrade) {
+        if (hasIcon) {
 
             drawTexturedQuad(context, Identifier.of(MODID, "textures/gui/" + icon + "_icon.png"),
                     x1, y1, (int) textureSize, (int) textureSize, (float) 0, (float) 0, (int) textureSize, color, color, color, 1
                     , 0);
 
+        } else if (upgrade.name.contains("IV")) {
+            drawTexturedQuad(context, Identifier.of(MODID, "textures/gui/iv_icon.png"),
+                    x1, y1, (int) textureSize, (int) textureSize, (float) 0, (float) 0, (int) textureSize, color, color, color, 1, 0);
+        } else if (upgrade.name.contains("III")) {
+            drawTexturedQuad(context, Identifier.of(MODID, "textures/gui/iii_icon.png"),
+                    x1, y1, (int) textureSize, (int) textureSize, (float) 0, (float) 0, (int) textureSize, color, color, color, 1
+                    , 0);
+        } else if (upgrade.name.contains("II")) {
+            drawTexturedQuad(context, Identifier.of(MODID, "textures/gui/ii_icon.png"),
+                    x1, y1, (int) textureSize, (int) textureSize, (float) 0, (float) 0, (int) textureSize, color, color, color, 1
+                    , 0);
+        } else if (upgrade.name.contains("I")) {
+            drawTexturedQuad(context, Identifier.of(MODID, "textures/gui/i_icon.png"),
+                    x1, y1, (int) textureSize, (int) textureSize, (float) 0, (float) 0, (int) textureSize, color, color, color, 1
+                    , 0);
         }
 
 
@@ -486,7 +501,7 @@ public class UpgradeTreeScreen extends Screen {
         }
 
         if(raw.contains("keyboard")){
-            return raw.split("\\.")[2].toUpperCase(Locale.CANADA);
+            return raw.split("\\.")[2].toUpperCase(Locale.ROOT);
         } else if (raw.contains("mouse")) {
             return "Mouse " + raw.split("\\.")[2];
         }else {

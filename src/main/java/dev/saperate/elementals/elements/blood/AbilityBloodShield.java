@@ -1,5 +1,6 @@
 package dev.saperate.elementals.elements.blood;
 
+import dev.saperate.elementals.Elementals;
 import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.elements.Ability;
 import dev.saperate.elementals.utils.SapsUtils;
@@ -12,6 +13,7 @@ import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.hit.HitResult;
+import net.minecraft.util.math.random.Random;
 import org.joml.Vector3f;
 
 import java.util.List;
@@ -39,6 +41,13 @@ public class AbilityBloodShield implements Ability {
     public void onBackgroundTick(Bender bender, Object data) {
         PlayerEntity player = bender.player;
 
+        Random rnd = player.getRandom();
+        SapsUtils.serverSummonParticles((ServerWorld) player.getWorld(), ParticleTypes.FISHING, player, player.getRandom(),
+                rnd.nextBetween(-1,1), rnd.nextBetween(-1,1), rnd.nextBetween(-1,1),
+                0.01,1,0f,(float) rnd.nextBetween(-25, (int) player.getHeight() * 100) / 100,0f,0f
+        );
+
+
         List<Entity> hits = player.getWorld().getOtherEntities(
                 player,
                 player.getBoundingBox().expand(2.5),
@@ -58,6 +67,12 @@ public class AbilityBloodShield implements Ability {
             Vector3f velocity = entity.getPos()
                     .subtract(player.getPos())
                     .normalize().multiply(power, power * 0.5f, power).toVector3f();
+
+            SapsUtils.serverSummonParticles((ServerWorld) player.getWorld(), ParticleTypes.FISHING, player, player.getRandom(),
+                    velocity.normalize().x,velocity.normalize().y,velocity.normalize().z,
+                    0.2,1,0f,player.getHeight()/5,0f,0f
+            );
+            
             //returns the root vehicle or itself if there are none
             Entity vehicle = entity.getRootVehicle();
 

@@ -337,7 +337,7 @@
   "upgrade.elementals.earthBlockShrapnel": "Shrapnel",
   "upgrade.elementals.earthBlockShrapnel.description": " By compressing earth into a tight space, you can create a sharp projectile that deals more damage.",
   "upgrade.elementals.earthBlockShrapnel.use": " Use: Earth Pickup + r-click + sneak",
-  "upgrade.elementals.earthBlockShrapnel.icon": "earth",
+  "upgrade.elementals.earthBlockShrapnel.icon": "earth_shrapnel",
 
   "upgrade.elementals.earthBlockSpeedI": "Speed I",
   "upgrade.elementals.earthBlockSpeedI.description": " Makes Earth Pickup and Shrapnel faster, allowing you to get more range.",
@@ -351,7 +351,7 @@
   "upgrade.elementals.earthWall": "Wall",
   "upgrade.elementals.earthWall.description": " Allows you to rise a wall of earth to protect yourself in combat.",
   "upgrade.elementals.earthWall.use": " Use: %d + sneak",
-  "upgrade.elementals.earthWall.icon": "earth",
+  "upgrade.elementals.earthWall.icon": "earth_wall",
 
   "upgrade.elementals.earthWallDurationI": "Duration I",
   "upgrade.elementals.earthWallDurationI.description": " Walls stay up for 5 seconds after you dismiss them.",
@@ -375,7 +375,7 @@
   "upgrade.elementals.earthChunk": "Chunk Pickup",
   "upgrade.elementals.earthChunk.description": " Pickup large amounts of earth to throw at your enemies or terraform the landscape.",
   "upgrade.elementals.earthChunk.use": " Use: %d + sneak",
-  "upgrade.elementals.earthChunk.icon": "earth",
+  "upgrade.elementals.earthChunk.icon": "earth_chunk",
 
   "upgrade.elementals.earthChunkSizeI": "Size I",
   "upgrade.elementals.earthChunkSizeI.description": " You can pickup larger amounts of earth.",
@@ -388,12 +388,12 @@
   "upgrade.elementals.earthTrap": "Trap",
   "upgrade.elementals.earthTrap.description": " By engulfing your victim's feet in earth, you can effectively prevent them from moving for some time.",
   "upgrade.elementals.earthTrap.use": " Use: %d + sneak + hold (0.5s)",
-  "upgrade.elementals.earthTrap.icon": "earth",
+  "upgrade.elementals.earthTrap.icon": "earth_trap",
 
   "upgrade.elementals.earthRavine": "Ravine",
   "upgrade.elementals.earthRavine.description": " By Splitting the earth in two, you can create a ravine for your enemies to fall into.",
   "upgrade.elementals.earthRavine.use": " Use: %d + sneak",
-  "upgrade.elementals.earthRavine.icon": "earth",
+  "upgrade.elementals.earthRavine.icon": "earth_ravine",
 
   "upgrade.elementals.earthRavineRangeI": "Range I",
   "upgrade.elementals.earthRavineRangeI.description": " Your ravine extends farther.",
@@ -404,7 +404,7 @@
   "upgrade.elementals.earthSpikes": "Spikes",
   "upgrade.elementals.earthSpikes.description": " A move allowing you to form sharp spikes that stick out of the ground, they will damage any entity that touches them.",
   "upgrade.elementals.earthSpikes.use": " Use: %d + sneak",
-  "upgrade.elementals.earthSpikes.icon": "earth",
+  "upgrade.elementals.earthSpikes.icon": "earth_spikes",
 
   "upgrade.elementals.earthSpikesRangeI": "Range I",
   "upgrade.elementals.earthSpikesRangeI.description": " Your spikes extends farther.",
@@ -440,12 +440,12 @@
   "upgrade.elementals.earthSeismicSense": "Seismic Sense",
   "upgrade.elementals.earthSeismicSense.description": " By listening to the earth and its vibration, you can detect living being, even across walls.",
   "upgrade.elementals.earthSeismicSense.use": " Use: %d",
-  "upgrade.elementals.earthSeismicSense.icon": "earth",
+  "upgrade.elementals.earthSeismicSense.icon": "earth_seismic_sense",
 
   "upgrade.elementals.earthArmor": "Armor",
   "upgrade.elementals.earthArmor.description": " A move allowing you to shield yourself from harm by using earth as armor. Since your armor lacks any eye holes, you will need to use seismic sense to know where your enemies are.",
   "upgrade.elementals.earthArmor.use": " Use: %d + hold (1s)",
-  "upgrade.elementals.earthArmor.icon": "earth",
+  "upgrade.elementals.earthArmor.icon": "earth_armor",
 
   "upgrade.elementals.airGust": "Gust",
   "upgrade.elementals.airGust.description": " Makes a stream of air to knock back enemies in front of you.",
@@ -570,7 +570,7 @@
   "upgrade.elementals.lightningRedirection": "Lightning redirection",
   "upgrade.elementals.lightningRedirection.description": " This technique is derived from water benders and it allows you to redirect a lightning bolt thrown at you back at your enemies.",
   "upgrade.elementals.lightningRedirection.use": " Use: get struck by lightning + %d",
-  "upgrade.elementals.lightningRedirection.icon": "lightning",
+  "upgrade.elementals.lightningRedirection.icon": "lightning_redirection",
 
   "upgrade.elementals.lightningRedirectionEfficiencyI": "Efficiency I",
   "upgrade.elementals.lightningRedirectionEfficiencyI.description": " Allows you to redirect lightning at a lower cost",
@@ -581,7 +581,7 @@
   "upgrade.elementals.lightningBolt": "Lightning bolt",
   "upgrade.elementals.lightningBolt.description": " By creating an imbalance between the positive and negative energies, you can produce lightning.",
   "upgrade.elementals.lightningBolt.use": " Use: %d + shift + hold (2s) + fully draw it out",
-  "upgrade.elementals.lightningBolt.icon": "lightning",
+  "upgrade.elementals.lightningBolt.icon": "lightning_bolt",
 
   "upgrade.elementals.lightningBoltEfficiencyI": "Efficiency I",
   "upgrade.elementals.lightningBoltEfficiencyI.description": " Allows you to produce lightning at a lower cost",
@@ -592,7 +592,7 @@
   "upgrade.elementals.lightningVoltArc": "Volt arc",
   "upgrade.elementals.lightningVoltArc.description": " Creates a short lived, taser-like ability that stuns whatever it hits.",
   "upgrade.elementals.lightningVoltArc.use": " Use: %d",
-  "upgrade.elementals.lightningVoltArc.icon": "lightning",
+  "upgrade.elementals.lightningVoltArc.icon": "lightning_volt_arc",
 
   "upgrade.elementals.lightningVoltArcStrengthI": "Strength I",
   "upgrade.elementals.lightningVoltArcStrengthI.description": " Makes the stun effect last longer",
@@ -603,7 +603,7 @@
   "upgrade.elementals.lightningEMP": "EMP",
   "upgrade.elementals.lightningEMP.description": " By compressing a volt arc, you can create a blast that stuns every living thing in a radius.",
   "upgrade.elementals.lightningEMP.use": " Use: %d + hold (1s)",
-  "upgrade.elementals.lightningEMP.icon": "lightning",
+  "upgrade.elementals.lightningEMP.icon": "lightning_emp",
 
   "upgrade.elementals.lightningEMPSizeI": "Size I",
   "upgrade.elementals.lightningEMPSizeI.description": " Makes the blast radius bigger",
@@ -611,7 +611,7 @@
   "upgrade.elementals.lightningStaticAura": "Static aura",
   "upgrade.elementals.lightningStaticAura.description": " By boosting your natural static electricity, you can make a passive shield on yourself that stuns whoever touches it. It also mitigates damage from lightning bolts.",
   "upgrade.elementals.lightningStaticAura.use": " Use: %d + shift",
-  "upgrade.elementals.lightningStaticAura.icon": "lightning",
+  "upgrade.elementals.lightningStaticAura.icon": "lightning_static_aura",
 
   "upgrade.elementals.lightningStaticAuraStrengthI": "Strength I",
   "upgrade.elementals.lightningStaticAuraStrengthI.description": " Makes the aura last longer",
@@ -622,7 +622,7 @@
   "upgrade.elementals.lightningOvercharge": "Overcharge",
   "upgrade.elementals.lightningOvercharge.description": " By overloading your muscles with electricity, you can make them function at a higher capacity than normal. However, your body will be burnt out afterwards.",
   "upgrade.elementals.lightningOvercharge.use": " Use: %d + hold (0.5s)",
-  "upgrade.elementals.lightningOvercharge.icon": "lightning",
+  "upgrade.elementals.lightningOvercharge.icon": "lightning_overcharge",
 
   "upgrade.elementals.lightningOverchargeStrengthI": "Strength I",
   "upgrade.elementals.lightningOverchargeStrengthI.description": " Makes the overcharge last longer",
@@ -633,7 +633,7 @@
   "upgrade.elementals.lightningStorm": "Lightning storm",
   "upgrade.elementals.lightningStorm.description": " This is the pinnacle of lightning bending, by precisely producing lightning in the clouds, you can create a localised storm that will smite any enemies you might be fighting.",
   "upgrade.elementals.lightningStorm.use": " Use: %d + hold (3s) + shift + unlock lightning bolt",
-  "upgrade.elementals.lightningStorm.icon": "lightning",
+  "upgrade.elementals.lightningStorm.icon": "lightning_localised_storm",
 
   "upgrade.elementals.lightningStormDurationI": "Duration I",
   "upgrade.elementals.lightningStormDurationI.description": " Makes your storm last longer",
