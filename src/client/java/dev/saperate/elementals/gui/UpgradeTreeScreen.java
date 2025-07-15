@@ -87,7 +87,7 @@ public class UpgradeTreeScreen extends Screen {
         Element element = bender.getElement();
         String[] backgroundTextures = element.getBackgroundTextures();
         for (String texName : backgroundTextures){
-            Identifier identifier = Identifier.of(MODID,"textures/gui/backgrounds/" + element.name.toLowerCase(Locale.ROOT) + "/" + texName);
+            Identifier identifier = Identifier.of(MODID,"textures/gui/background/" + element.name.toLowerCase(Locale.ROOT) + "/" + texName);
             context.drawTexture(identifier, 0, 0, -6, -oX, -oY, width, height, 16, 16);
         }
         if(element.getOverlayTexture() != null){

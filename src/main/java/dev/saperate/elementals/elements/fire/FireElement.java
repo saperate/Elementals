@@ -117,11 +117,7 @@ public class FireElement extends Element {
     public String[] getBackgroundTextures() {
         return new String[]{"bottom.png"};
     }
-
-    @Override
-    public Identifier getOverlayTexture() {
-        return Identifier.of(Elementals.MODID,"textures/gui/background/fire/overlay.png");
-    }
+    
 
     @Override
     public boolean isSkillTreeComplete(Bender bender) {

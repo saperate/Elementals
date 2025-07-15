@@ -77,6 +77,11 @@ public class BloodElement extends Element {
     }
 
     @Override
+    public String[] getBackgroundTextures() {
+        return new String[]{"bottom.png"};
+    }
+    
+    @Override
     public boolean isSkillTreeComplete(Bender bender) {
         return bender.hasElement(this);
     }//TODO this

@@ -74,7 +74,7 @@ public class LightningElement extends Element {
 
     @Override
     public String[] getBackgroundTextures() {
-        return super.getBackgroundTextures();
+        return new String[]{"bottom.png"};
     }
 
     @Override

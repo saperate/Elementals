@@ -294,11 +294,7 @@ public class WaterElement extends Element {
     public int getTertiaryColor() {
         return 0xFF000b49;
     }
-
-    @Override
-    public Identifier getOverlayTexture() {
-        return null;
-    }
+    
 
     @Override
     public String[] getBackgroundTextures() {
