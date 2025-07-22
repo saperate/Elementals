@@ -16,6 +16,20 @@ public class NoneElement extends Element{
         return getElement("None");
     }
 
+    @Override
+    public int getColor() {
+        return 0xFFcecece;
+    }
+
+    @Override
+    public int getSecondaryColor() {
+        return 0xFFafaeae;
+    }
+
+    @Override
+    public int getTertiaryColor() {
+        return 0xFF777777;
+    }
 
     @Override
     public boolean isSkillTreeComplete(Bender bender) {
