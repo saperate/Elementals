@@ -24,13 +24,14 @@ public final class ElementalConfig {
     //GUI
     public int CHI_OVERLAY_THRESHOLD = 115;
     public boolean CHI_OVERLAY_TEXT = false;
+    public boolean HIDE_TIMER = false;
 
     public void loadConfig() {
         JsonObject root;
         try {
             root = gson.fromJson(new FileReader(getConfigFile()), JsonElement.class).getAsJsonObject();
         } catch (FileNotFoundException fileE) {
-            System.err.println("Could not load elementals config, generating a new one!");
+            System.err.println("Could not find elementals config, generating a new one!");
             generateWriteConfig();
             return;
         }
@@ -40,7 +41,9 @@ public final class ElementalConfig {
             CHI_REGENERATION_RATE = root.get("CHI_REGENERATION_RATE").getAsFloat();
             CHI_OVERLAY_THRESHOLD = root.get("CHI_OVERLAY_THRESHOLD").getAsInt();
             CHI_OVERLAY_TEXT = root.get("CHI_OVERLAY_TEXT").getAsBoolean();
+            HIDE_TIMER = root.get("HIDE_TIMER").getAsBoolean();
         }catch (Exception e){
+            // This doesn't override the file, just makes it so we don't use what we loaded
             System.err.println("Elemental config was malformed! Reverting back to default values\n" + e);
             resetConfig();
         }
@@ -58,6 +61,7 @@ public final class ElementalConfig {
             root.addProperty("CHI_REGENERATION_RATE", 0.1f);
             root.addProperty("CHI_OVERLAY_THRESHOLD", 115);
             root.addProperty("CHI_OVERLAY_TEXT", false);
+            root.addProperty("HIDE_TIMER", false);
 
             writer.append(gson.toJson(root));
             writer.close();
