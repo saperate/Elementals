@@ -2,6 +2,7 @@ package dev.saperate.elementals.gui;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import dev.saperate.elementals.data.ClientBender;
+import dev.saperate.elementals.data.ElementalConfig;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
@@ -11,7 +12,7 @@ public class CastTimerHudOverlay implements HudRenderCallback {
 
     @Override
     public void onHudRender(DrawContext drawContext, float tickDelta) {
-        if(!ClientBender.get().isCasting()){
+        if(!ClientBender.get().isCasting() || ElementalConfig.get().HIDE_TIMER){
             return;
         }
         MinecraftClient client = MinecraftClient.getInstance();
