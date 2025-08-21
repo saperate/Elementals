@@ -572,6 +572,20 @@ public final class SapsUtils {
         }
         return false;
     }
+    
+    public static void keepOtherEntityNearEntity(Entity curr, Entity other, float maxDistance){
+        double distanceToOther = other.getPos().distanceTo(curr.getPos());
+        if (distanceToOther >= maxDistance) {
+            Vec3d dirCenter = other.getPos().subtract(curr.getPos()).multiply(-1).normalize();
+            Vec3d velocity = other.getVelocity().multiply(1.05);
+
+            Vec3d tangent = velocity.subtract(dirCenter.multiply(
+                    ((velocity.dotProduct(dirCenter)) / dirCenter.dotProduct(dirCenter))));
+            other.setVelocity(tangent.add(dirCenter.multiply(Math.min(distanceToOther - maxDistance,1))));
+            other.move(MovementType.SELF, other.getVelocity());
+            other.fallDistance = 0;
+        }
+    }
 
     private static float calcBlockBreakingDelta(BlockState state, BlockView world, BlockPos pos, float miningSpeed) {
         float f = state.getHardness(world, pos);

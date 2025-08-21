@@ -2,7 +2,8 @@ package dev.saperate.elementals.elements.metal;
 
 import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.elements.Ability;
-import dev.saperate.elementals.entities.metal.MetalCableEntity;
+import dev.saperate.elementals.entities.metal.MetalBindEntity;
+import dev.saperate.elementals.entities.metal.MetalBindEntity;
 import dev.saperate.elementals.utils.SapsUtils;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -13,6 +14,7 @@ public class AbilityMetalBind implements Ability {
     @Override
     public void onCall(Bender bender, long deltaT) {
         bender.setCurrAbility(null);
+        
 
         if(!bender.isAbilityInBackground(this)){
             PlayerEntity player = bender.player;
@@ -22,7 +24,7 @@ public class AbilityMetalBind implements Ability {
                 return;
             }
 
-            MetalCableEntity entity = new MetalCableEntity(
+            MetalBindEntity entity = new MetalBindEntity(
                     player.getWorld(),
                     (LivingEntity) ((EntityHitResult) hitResult).getEntity(),
                     player.getX(), player.getY(), player.getZ()
@@ -33,7 +35,7 @@ public class AbilityMetalBind implements Ability {
             bender.addBackgroundAbility(this,entity);
 
         }else{
-            ((MetalCableEntity) bender.getBackgroundAbilityData(this)).despawn();
+            ((MetalBindEntity) bender.getBackgroundAbilityData(this)).despawn();
             bender.removeAbilityFromBackground(this);
         }
     }

@@ -2,7 +2,6 @@ package dev.saperate.elementals.entities.metal;
 
 import dev.saperate.elementals.entities.common.AbstractElementalsEntity;
 import dev.saperate.elementals.entities.fire.FireArcEntity;
-import net.fabricmc.loader.impl.lib.sat4j.core.Vec;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -17,26 +16,24 @@ import net.minecraft.world.World;
 import org.joml.Vector3f;
 
 import static dev.saperate.elementals.Elementals.LIGHTNING_PARTICLE_TYPE;
-import static dev.saperate.elementals.entities.ElementalEntities.LIGHTNINGARC;
-import static dev.saperate.elementals.entities.ElementalEntities.METALCABLE;
+import static dev.saperate.elementals.entities.ElementalEntities.*;
 import static dev.saperate.elementals.utils.SapsUtils.getEntityLookVector;
 import static dev.saperate.elementals.utils.SapsUtils.summonParticles;
 
-public class MetalCableEntity extends AbstractElementalsEntity<LivingEntity> {
-    private static final TrackedData<Boolean> FROZEN = DataTracker.registerData(MetalCableEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
-    private static final TrackedData<Float> DISTANCE = DataTracker.registerData(MetalCableEntity.class, TrackedDataHandlerRegistry.FLOAT);
-    private static final TrackedData<Integer> PARENT_ID = DataTracker.registerData(MetalCableEntity.class, TrackedDataHandlerRegistry.INTEGER);
-    private static final TrackedData<Integer> CHILD_ID = DataTracker.registerData(MetalCableEntity.class, TrackedDataHandlerRegistry.INTEGER);
+public class MetalBindEntity extends AbstractElementalsEntity<LivingEntity> {
+    private static final TrackedData<Boolean> FROZEN = DataTracker.registerData(MetalBindEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
+    private static final TrackedData<Float> DISTANCE = DataTracker.registerData(MetalBindEntity.class, TrackedDataHandlerRegistry.FLOAT);
+    private static final TrackedData<Integer> PARENT_ID = DataTracker.registerData(MetalBindEntity.class, TrackedDataHandlerRegistry.INTEGER);
+    private static final TrackedData<Integer> CHILD_ID = DataTracker.registerData(MetalBindEntity.class, TrackedDataHandlerRegistry.INTEGER);
     public int chainLength = 0;
-    public Vec3d prevDir = Vec3d.ZERO;
 
 
-    public MetalCableEntity(EntityType<MetalCableEntity> type, World world) {
+    public MetalBindEntity(EntityType<MetalBindEntity> type, World world) {
         super(type, world, LivingEntity.class);
     }
 
-    public MetalCableEntity(World world, LivingEntity owner, double x, double y, double z) {
-        super(METALCABLE, world, LivingEntity.class);
+    public MetalBindEntity(World world, LivingEntity owner, double x, double y, double z) {
+        super(METALBIND, world, LivingEntity.class);
         setOwner(owner);
         setPos(x, y, z);
 
@@ -54,7 +51,7 @@ public class MetalCableEntity extends AbstractElementalsEntity<LivingEntity> {
 
     public void createChain(LivingEntity owner, int MAX_CHAIN_LENGTH) {
         if (chainLength < MAX_CHAIN_LENGTH) {
-            MetalCableEntity newArc = new MetalCableEntity(getWorld(), owner, getX(), getY(), getZ());
+            MetalBindEntity newArc = new MetalBindEntity(getWorld(), owner, getX(), getY(), getZ());
             newArc.setParent(this);
             setChild(newArc);
             newArc.setControlled(false);
@@ -74,14 +71,14 @@ public class MetalCableEntity extends AbstractElementalsEntity<LivingEntity> {
             return;
         }
 
-        MetalCableEntity parent = getParent();
+        MetalBindEntity parent = getParent();
         moveEntity(owner, parent);
     }
 
 
     private void moveEntity(Entity owner, Entity parent) {
         if (getChild() == null) {
-            moveEntityTowardsGoal(owner.getEyePos().toVector3f(), getMovementSpeed() * 4);
+            moveEntityTowardsGoal(owner.getEyePos().toVector3f(), getMovementSpeed());
             if (!getFrozen()) {
                 this.move(MovementType.SELF, this.getVelocity());
             }
@@ -89,8 +86,7 @@ public class MetalCableEntity extends AbstractElementalsEntity<LivingEntity> {
         }
 
         if (parent == null) {
-            setPosition(owner.getEyePos().subtract(0,1,0));
-
+            moveEntityTowardsGoal(owner.getEyePos().toVector3f(), getMovementSpeed());
             double distanceToOwner = owner.getPos().distanceTo(getTail().getPos());
             owner.dismountVehicle();
             if (distanceToOwner >= getDistance()) {
@@ -130,16 +126,16 @@ public class MetalCableEntity extends AbstractElementalsEntity<LivingEntity> {
         getHead().remove();
     }
 
-    public MetalCableEntity getHead() {
-        MetalCableEntity parent = getParent();
+    public MetalBindEntity getHead() {
+        MetalBindEntity parent = getParent();
         if (parent == null) {
             return this;
         }
         return parent.getHead();
     }
 
-    public MetalCableEntity getTail() {
-        MetalCableEntity child = getChild();
+    public MetalBindEntity getTail() {
+        MetalBindEntity child = getChild();
         if (child == null) {
             return this;
         }
@@ -151,7 +147,7 @@ public class MetalCableEntity extends AbstractElementalsEntity<LivingEntity> {
      * remove a specific link from the chain. it also kills its children
      */
     public void remove() {
-        MetalCableEntity child = getChild();
+        MetalBindEntity child = getChild();
         if (child == null) {
             if (getParent() == null) {
                 this.discard();
@@ -162,7 +158,7 @@ public class MetalCableEntity extends AbstractElementalsEntity<LivingEntity> {
             return;
         }
         child.remove();
-        MetalCableEntity parent = getParent();
+        MetalBindEntity parent = getParent();
         if (parent != null) {
             getParent().setChild(null);
         }
@@ -170,23 +166,23 @@ public class MetalCableEntity extends AbstractElementalsEntity<LivingEntity> {
     }
 
 
-    public MetalCableEntity getParent() {
+    public MetalBindEntity getParent() {
         int parentId = this.getDataTracker().get(PARENT_ID);
         Entity parent = this.getWorld().getEntityById(parentId);
-        return parent instanceof MetalCableEntity ? (MetalCableEntity) this.getWorld().getEntityById(parentId) : null;
+        return parent instanceof MetalBindEntity ? (MetalBindEntity) this.getWorld().getEntityById(parentId) : null;
     }
 
-    public void setParent(MetalCableEntity parent) {
+    public void setParent(MetalBindEntity parent) {
         this.getDataTracker().set(PARENT_ID, parent != null ? parent.getId() : 0);
     }
 
-    public MetalCableEntity getChild() {
+    public MetalBindEntity getChild() {
         int childId = this.getDataTracker().get(CHILD_ID);
         Entity child = this.getWorld().getEntityById(childId);
-        return child instanceof MetalCableEntity ? (MetalCableEntity) this.getWorld().getEntityById(childId) : null;
+        return child instanceof MetalBindEntity ? (MetalBindEntity) this.getWorld().getEntityById(childId) : null;
     }
 
-    public void setChild(MetalCableEntity child) {
+    public void setChild(MetalBindEntity child) {
         this.getDataTracker().set(CHILD_ID, child != null ? child.getId() : 0);
     }
 
