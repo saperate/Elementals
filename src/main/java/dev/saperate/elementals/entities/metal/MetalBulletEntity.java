@@ -41,7 +41,6 @@ public class MetalBulletEntity extends AbstractElementalsEntity<PlayerEntity> {
         setOwner(owner);
         setPos(x, y, z);
         setControlled(true);
-        setNoGravity(true);
     }
 
     @Override
@@ -106,13 +105,14 @@ public class MetalBulletEntity extends AbstractElementalsEntity<PlayerEntity> {
         PlayerEntity owner = (PlayerEntity) getOwner();
         PlayerData plrData = PlayerData.get(owner);
 
-        float damage = 4;
+        float damage = 2.5f;
         if (plrData.canUseUpgrade("airBulletsMastery")) {
-            damage = 4;
+            damage = 1;
         } else if (plrData.canUseUpgrade("airBulletsDamageI")) {
-            damage = 2;
+            damage = 1.75f;
         }
         entity.damage(this.getDamageSources().playerAttack(owner), damage);
+        entity.timeUntilRegen = 10;
         if (!getIsControlled()) {
             entity.addVelocity(this.getVelocity().multiply(0));
             discard();

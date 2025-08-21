@@ -96,4 +96,5 @@ public abstract class LivingEntityMixin {
             living.addStatusEffect(new StatusEffectInstance(ElementalsStatusEffects.BURNOUT, 200 * (effect.getAmplifier()+1), effect.getAmplifier(), false, false, true));
         }
     }
+    
 }
