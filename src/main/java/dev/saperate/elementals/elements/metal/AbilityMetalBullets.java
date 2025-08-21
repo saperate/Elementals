@@ -28,7 +28,7 @@ public class AbilityMetalBullets implements Ability {//TODO make it so you can h
 
         int bulletCount = 20;//TODO basic count w/out metal (standing on earth), enhanced by sacrificing ingots
         if (plrData.canUseUpgrade("airBulletsCountII")) {//fixme
-            bulletCount = 20;
+            bulletCount = 15;
         } else if (plrData.canUseUpgrade("airBulletsCountI")) {
             bulletCount = 10;
         }
@@ -93,10 +93,7 @@ public class AbilityMetalBullets implements Ability {//TODO make it so you can h
     private void FireBullet(Bender bender) {
         MetalBulletEntity[] bullets = (MetalBulletEntity[]) bender.abilityData;
 
-        if (bullets.length == 1) {
-            onRemove(bender);
-        }
-
+        assert bullets != null;
         MetalBulletEntity bullet = bullets[bullets.length - 1];
         bullet.setControlled(false);
         PlayerData plrData = PlayerData.get(bender.player);
@@ -104,6 +101,12 @@ public class AbilityMetalBullets implements Ability {//TODO make it so you can h
         float speed = getBulletSpeed(plrData);
         bullet.setVelocity(bender.player, bender.player.getPitch(), bender.player.getYaw(), 0, speed, 0);
 
+        if (bullets.length == 1) {
+            bender.abilityData = null; // Prevents onRemove from killing bullets
+            onRemove(bender);
+            return;
+        }
+        
         MetalBulletEntity[] newArray = new MetalBulletEntity[bullets.length - 1];
         for (int i = 0; i < bullets.length - 1; i++) {
             bullets[i].setArraySize(bullets.length - 1);
@@ -113,7 +116,7 @@ public class AbilityMetalBullets implements Ability {//TODO make it so you can h
     }
 
     private static float getBulletSpeed(PlayerData plrData) {
-        float speed = 1;
+        float speed = 2;
         if (plrData.canUseUpgrade("airBulletsSpeedII")) {//fixme
             speed = 2;
         } else if (plrData.canUseUpgrade("airBulletsSpeedI")) {

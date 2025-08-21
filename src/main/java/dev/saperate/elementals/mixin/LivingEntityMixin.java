@@ -89,4 +89,5 @@ public abstract class LivingEntityMixin {
             living.removeStatusEffect(OVERCHARGED_EFFECT);
         }
     }
+    
 }
