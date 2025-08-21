@@ -12,6 +12,7 @@ import dev.saperate.elementals.entities.earth.EarthBlockEntity;
 import dev.saperate.elementals.entities.fire.*;
 import dev.saperate.elementals.entities.lightning.LightningArcEntity;
 import dev.saperate.elementals.entities.lightning.VoltArcEntity;
+import dev.saperate.elementals.entities.metal.MetalBindEntity;
 import dev.saperate.elementals.entities.metal.MetalBulletEntity;
 import dev.saperate.elementals.entities.metal.MetalCableEntity;
 import dev.saperate.elementals.entities.metal.MetalLanceEntity;
@@ -196,6 +197,12 @@ public class ElementalEntities {
             Registries.ENTITY_TYPE,
             Identifier.of("elementals", "metal_cable"),
             FabricEntityTypeBuilder.<MetalCableEntity>create(SpawnGroup.MISC, MetalCableEntity::new)
+                    .disableSummon()
+                    .dimensions(EntityDimensions.changing(0.25f, 0.25f)).build());
+    public static final EntityType<MetalBindEntity> METALBIND = Registry.register(
+            Registries.ENTITY_TYPE,
+            Identifier.of("elementals", "metal_bind"),
+            FabricEntityTypeBuilder.<MetalBindEntity>create(SpawnGroup.MISC, MetalBindEntity::new)
                     .disableSummon()
                     .dimensions(EntityDimensions.changing(0.25f, 0.25f)).build());
     public static final EntityType<MetalBulletEntity> METALBULLET = Registry.register(
