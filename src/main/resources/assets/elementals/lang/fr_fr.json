@@ -162,7 +162,7 @@
   "upgrade.elementals.waterBladeSpeedI.description": " La vitesse du projectile est accrue",
 
   "upgrade.elementals.waterBladeSpeedII": "Speed II",
-  "upgrade.elementals.waterBladeSpeedII.description": " La vitesse du projectile est encore plus accrue",
+  "upgrade.elementals.waterBladeSpeedII.description": " La vitesse du projectile est encore plus rapide",
 
   "upgrade.elementals.waterCannon": "Cannon d'eau",
   "upgrade.elementals.waterCannon.description": " Un cannon puissant capable d'éliminer les ennemis que se trouvent sur sa trajectoire",
@@ -264,52 +264,52 @@
   "upgrade.elementals.fireArcSpeedI.description": " La vitesse du projectile est accrue",
 
   "upgrade.elementals.fireArcSpeedII": "Vitesse II",
-  "upgrade.elementals.fireArcSpeedII.description": " La vitesse du projectile est encore plus accrue",
+  "upgrade.elementals.fireArcSpeedII.description": " La vitesse du projectile est encore plus rapide",
 
   "upgrade.elementals.fireArcMastery": "Maitrise de l'arc de feu",
   "upgrade.elementals.fireArcMastery.description": " Faites encore plus de dégâts",
   
-  "upgrade.elementals.fireBall": "Fireball",
-  "upgrade.elementals.fireBall.description": " By compressing a lot of fire in a tight space, you can create a fireball with devastating power.",
+  "upgrade.elementals.fireBall": "Boule de feu",
+  "upgrade.elementals.fireBall.description": " En compressant du feu dans un petit espace, vous créez une boule de feu ayant une explosion dévastatrice.",
   "upgrade.elementals.fireBall.use": " Utilisation: %d + maintenir (1s)",
 
-  "upgrade.elementals.fireBallSpeedI": "Speed I",
-  "upgrade.elementals.fireBallSpeedI.description": " Makes fireball faster, allowing you to get more range",
+  "upgrade.elementals.fireBallSpeedI": "Vitesse I",
+  "upgrade.elementals.fireBallSpeedI.description": " La vitesse du projectile est accrue",
 
-  "upgrade.elementals.fireBallSpeedII": "Speed II",
-  "upgrade.elementals.fireBallSpeedII.description": " Makes fireball even faster, allowing you to get more range",
+  "upgrade.elementals.fireBallSpeedII": "Vitesse II",
+  "upgrade.elementals.fireBallSpeedII.description": " La vitesse du projectile est encore plus rapide",
 
-  "upgrade.elementals.flameThrower": "Flamethrower",
-  "upgrade.elementals.flameThrower.description": " Makes a stream of fire to incinerate enemies in front of you.",
-  "upgrade.elementals.flameThrower.use": " Utilisation: %d + accroupit -> then r-click",
+  "upgrade.elementals.flameThrower": "Lance-Flamme",
+  "upgrade.elementals.flameThrower.description": " Créez un lance flame pour incinérer tout ennemis qui se trouvent devant vous.",
+  "upgrade.elementals.flameThrower.use": " Utilisation: %d + accroupit + clique droit",
 
-  "upgrade.elementals.fireShield": "Fire Shield",
-  "upgrade.elementals.fireShield.description": " By rapidly spinning fire around you, you can incinerate any projectile or enemy coming your way.",
+  "upgrade.elementals.fireShield": "Bouclier de feu",
+  "upgrade.elementals.fireShield.description": " En faisant tourner du feu autour de vous même, vous arrivez à faire un bouclier qui brule tout ce qui approche.",
   "upgrade.elementals.fireShield.use": " Utilisation: %d + accroupit",
 
-  "upgrade.elementals.fireJump": "Fire Jump",
-  "upgrade.elementals.fireJump.description": " Utilisation a burst of fire to propel yourself high into the air.",
-  "upgrade.elementals.fireJump.use": " Utilisation: %d + l-click",
+  "upgrade.elementals.fireJump": "Saut de feu",
+  "upgrade.elementals.fireJump.description": " Utilisez du feu pour vous propulser dans les airs.",
+  "upgrade.elementals.fireJump.use": " Utilisation: %d + clique gauche",
 
-  "upgrade.elementals.fireJumpRangeI": "Range I",
-  "upgrade.elementals.fireJumpRangeI.description": " Jump farther away.",
+  "upgrade.elementals.fireJumpRangeI": "Portée I",
+  "upgrade.elementals.fireJumpRangeI.description": " Sautez plus loin.",
 
-  "upgrade.elementals.fireJumpRangeII": "Range II",
-  "upgrade.elementals.fireJumpRangeII.description": " Jump even farther away.",
+  "upgrade.elementals.fireJumpRangeII": "Portée II",
+  "upgrade.elementals.fireJumpRangeII.description": " Sautez encore plus loin.",
 
-  "upgrade.elementals.fireJet": "Fire Jet",
-  "upgrade.elementals.fireJet.description": " Generate a powerful jet of fire to enable you to fly.",
-  "upgrade.elementals.fireJet.use": " Utilisation: %d + sprint + not touching ground",
+  "upgrade.elementals.fireJet": "Jet de feu",
+  "upgrade.elementals.fireJet.description": " Générez un jet de feu, ce qui vous permet de voler.",
+  "upgrade.elementals.fireJet.use": " Utilisation: %d + courir + dans les airs",
 
-  "upgrade.elementals.fireJetSpeedI": "Speed I",
-  "upgrade.elementals.fireJetSpeedI.description": " Allows you to fly faster using the jet ability.",
+  "upgrade.elementals.fireJetSpeedI": "Vitesse I",
+  "upgrade.elementals.fireJetSpeedI.description": " Volez plus vite",
 
-  "upgrade.elementals.fireJetSpeedII": "Speed II",
-  "upgrade.elementals.fireJetSpeedII.description": " Allows you to fly even faster using the jet ability.",
+  "upgrade.elementals.fireJetSpeedII": "Vitesse II",
+  "upgrade.elementals.fireJetSpeedII.description": " Volez encore plus vite.",
 
-  "upgrade.elementals.fireWisp": "Fire Wisp",
-  "upgrade.elementals.fireWisp.description": " Creates a ball of fire that follows you around and lights up the surrounding area",
-  "upgrade.elementals.fireWisp.use": " Utilisation: %d (press shift to place on someone else)",
+  "upgrade.elementals.fireWisp": "Feu follet",
+  "upgrade.elementals.fireWisp.description": " Créez une boule de feu miniature qui vous suit et illumine vos environs.",
+  "upgrade.elementals.fireWisp.use": " Utilisation: %d (accroupis pour placer sur un autre personne)",
 
   "upgrade.elementals.earthBlock": "Earth Pickup",
   "upgrade.elementals.earthBlock.description": " A simple move allowing you to lift earth from the ground and throw it at your enemies.",
