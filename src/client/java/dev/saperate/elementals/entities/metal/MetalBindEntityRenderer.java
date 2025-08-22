@@ -33,15 +33,15 @@ public class MetalBindEntityRenderer extends EntityRenderer<MetalBindEntity> {
         
         VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderLayer.getCutout());
         
-        Vec3d pointA = entity.getOwner().getPos();//Other
-        Vec3d pointB = entity.getChild().getOwner().getPos();//Player
+        Vec3d pointA = entity.getOwner().getEyePos();//Other
+        Vec3d pointB = entity.getChild().getOwner().getLeashPos(tickDelta);//Player
         
         double distance = pointA.distanceTo(pointB);
         
-        int segmentCount = 24;
+        int segmentCount = (int) (distance*2) + 5;
         for (int i = 0; i < segmentCount; i++) {
-            Vec3d currentPos = getNodePos(i/segmentCount,pointA,pointB,distance);
-            Vec3d nextPos = getNodePos((i + 1)/segmentCount,pointA,pointB,distance);
+            Vec3d currentPos = getNodePos((float) i /segmentCount,pointA,pointB,distance);
+            Vec3d nextPos = getNodePos((float) (i + 1) /segmentCount,pointA,pointB,distance);
 
             
             renderCubeFromAToB(pointA,currentPos,nextPos,matrices,vertexConsumer,0.25f);
@@ -53,7 +53,6 @@ public class MetalBindEntityRenderer extends EntityRenderer<MetalBindEntity> {
     private static void renderCubeFromAToB(Vec3d origin, Vec3d pointA, Vec3d pointB,MatrixStack matrices, VertexConsumer vertexConsumer, float size){
         Matrix4f mat = new Matrix4f();
         matrices.push();
-        
         Vec3d dir = pointB.subtract(pointA).normalize();
         matrices.translate(pointA.x - origin.x, pointA.y - origin.y,pointA.z - origin.z);
         matrices.scale(size, size, size);
@@ -67,7 +66,7 @@ public class MetalBindEntityRenderer extends EntityRenderer<MetalBindEntity> {
                 0.4f,
                 1F,
                 fireTex,
-                (float) (pointA.distanceTo(pointB)/size), mat,
+                Math.max((float) (pointA.distanceTo(pointB) * 1/size),2), mat,
                 false,
                 true,
                 true
@@ -75,8 +74,8 @@ public class MetalBindEntityRenderer extends EntityRenderer<MetalBindEntity> {
         matrices.pop();
     }
     
-    private static Vec3d getNodePos(int delta, Vec3d pointA, Vec3d pointB, double distance){
-        return pointA.lerp(pointB, delta).subtract(0, (double) delta*delta+0.5f,0);
+    private static Vec3d getNodePos(float delta, Vec3d pointA, Vec3d pointB, double distance){
+        return pointA.lerp(pointB, delta).add(0,MathHelper.lerp(distance/18,Math.pow(delta,2),0.5) + 1,0);
     }
 
     @Override
