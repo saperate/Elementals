@@ -4,9 +4,8 @@ import com.mojang.brigadier.ParseResults;
 import dev.saperate.elementals.blocks.LitAir;
 import dev.saperate.elementals.blocks.blockEntities.LitAirBlockEntity;
 import dev.saperate.elementals.data.Bender;
-import dev.saperate.elementals.data.PlayerData;
-import dev.saperate.elementals.data.StateDataSaverAndLoader;
 import dev.saperate.elementals.effects.ElementalsStatusEffects;
+import dev.saperate.elementals.elements.metal.AbilityMetalDecoy;
 import dev.saperate.elementals.entities.earth.EarthBlockEntity;
 import dev.saperate.elementals.items.ElementalItems;
 import dev.saperate.elementals.utils.SapsUtils;
@@ -19,6 +18,15 @@ import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.math.Box;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.Hand;
+import net.minecraft.util.function.BooleanBiFunction;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Box;
+import net.minecraft.util.math.Direction;
+import net.minecraft.util.shape.VoxelShapes;
+import net.minecraft.world.GameMode;
+import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -76,5 +84,13 @@ public abstract class PlayerEntityMixin {
         }
     }
 
+    @Inject(at = @At("HEAD"), method = "isBlockBreakingRestricted", cancellable = true)
+    private void restrictBlockBreaking(World world, BlockPos pos, GameMode gameMode, CallbackInfoReturnable<Boolean> cir) {
+        PlayerEntity player = ((PlayerEntity) (Object) this);
+        if(player instanceof ServerPlayerEntity serverPlayer 
+                && Bender.getBender(serverPlayer).currAbility instanceof AbilityMetalDecoy){
+            cir.setReturnValue(true);
+        }
+    }
 
 }

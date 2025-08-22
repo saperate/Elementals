@@ -1,6 +1,5 @@
 package dev.saperate.elementals.mixin.client;
 
-import dev.saperate.elementals.effects.ElementalsStatusEffects;
 import dev.saperate.elementals.data.ClientBender;
 import dev.saperate.elementals.elements.metal.AbilityMetalDecoy;
 import dev.saperate.elementals.entities.common.DecoyPlayerEntity;
@@ -18,6 +17,9 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import static dev.saperate.elementals.Elementals.MODID;
+import static dev.saperate.elementals.effects.SeismicSenseStatusEffect.SEISMIC_SENSE_EFFECT;
+import static dev.saperate.elementals.effects.SpiritProjectionStatusEffect.SPIRIT_PROJECTION_EFFECT;
 import static dev.saperate.elementals.utils.ClientUtils.safeHasStatusEffect;
 
 @Mixin(Camera.class)
@@ -30,13 +32,13 @@ public abstract class CameraMixin {
     protected abstract void setPos(double x, double y, double z);
 
 
-    @Shadow protected abstract void moveBy(float f, float g, float h);
+    @Shadow protected abstract void moveBy(double x, double y, double z);
 
-    @Shadow protected abstract float clipToSpace(float f);
+    @Shadow protected abstract double clipToSpace(double desiredCameraDistance);
 
     @Inject(at = @At("TAIL"), method = "update")
     private void render(BlockView area, Entity focusedEntity, boolean thirdPerson, boolean inverseView, float tickDelta, CallbackInfo ci) {
-        if(safeHasStatusEffect(ElementalsStatusEffects.SPIRIT_PROJECTION,MinecraftClient.getInstance().player)){
+        if (safeHasStatusEffect(SPIRIT_PROJECTION_EFFECT, MinecraftClient.getInstance().player)) {
             this.thirdPerson = false;
         }
         ClientBender bender = ClientBender.get();
@@ -45,7 +47,7 @@ public abstract class CameraMixin {
             MinecraftClient.getInstance().options.setPerspective(Perspective.THIRD_PERSON_BACK);
             if (decoy != null) {
                 setPos(decoy.getX(), decoy.getEyeY(), decoy.getZ());
-                moveBy(-clipToSpace(2.0f), -0, 0.0f);
+                moveBy(-clipToSpace(3.0), -0, 0.0);
             }
         }
     }
