@@ -1,5 +1,6 @@
 package dev.saperate.elementals.mixin.client;
 
+import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.data.ClientBender;
 import dev.saperate.elementals.elements.air.AbilityAirScooter;
 import dev.saperate.elementals.elements.metal.AbilityMetalDecoy;
@@ -7,11 +8,18 @@ import dev.saperate.elementals.items.ElementalItems;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.BookEditScreen;
 import net.minecraft.client.network.ClientPlayerEntity;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.damage.DamageTypes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
+import net.minecraft.world.GameMode;
+import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -57,4 +65,5 @@ public abstract class ClientPlayerEntityMixin {
             cir.cancel();
         }
     }
+    
 }

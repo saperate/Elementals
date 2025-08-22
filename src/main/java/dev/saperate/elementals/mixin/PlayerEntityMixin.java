@@ -12,6 +12,7 @@ import dev.saperate.elementals.elements.air.AbilityAirShield;
 import dev.saperate.elementals.elements.earth.AbilityEarthArmor;
 import dev.saperate.elementals.elements.fire.AbilityFireIgnite;
 import dev.saperate.elementals.elements.fire.AbilityFireShield;
+import dev.saperate.elementals.elements.metal.AbilityMetalDecoy;
 import dev.saperate.elementals.elements.water.AbilityWaterShield;
 import dev.saperate.elementals.entities.earth.EarthBlockEntity;
 import dev.saperate.elementals.items.ElementalItems;
@@ -32,11 +33,14 @@ import net.minecraft.network.packet.s2c.play.OpenWrittenBookS2CPacket;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.function.BooleanBiFunction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShapes;
+import net.minecraft.world.GameMode;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Debug;
 import org.spongepowered.asm.mixin.Mixin;
@@ -97,5 +101,13 @@ public abstract class PlayerEntityMixin {
         }
     }
 
+    @Inject(at = @At("HEAD"), method = "isBlockBreakingRestricted", cancellable = true)
+    private void restrictBlockBreaking(World world, BlockPos pos, GameMode gameMode, CallbackInfoReturnable<Boolean> cir) {
+        PlayerEntity player = ((PlayerEntity) (Object) this);
+        if(player instanceof ServerPlayerEntity serverPlayer 
+                && Bender.getBender(serverPlayer).currAbility instanceof AbilityMetalDecoy){
+            cir.setReturnValue(true);
+        }
+    }
 
 }

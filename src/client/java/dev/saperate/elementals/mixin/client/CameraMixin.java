@@ -47,7 +47,7 @@ public abstract class CameraMixin {
             MinecraftClient.getInstance().options.setPerspective(Perspective.THIRD_PERSON_BACK);
             if (decoy != null) {
                 setPos(decoy.getX(), decoy.getEyeY(), decoy.getZ());
-                moveBy(-clipToSpace(2.0), -0, 0.0);
+                moveBy(-clipToSpace(3.0), -0, 0.0);
             }
         }
     }
