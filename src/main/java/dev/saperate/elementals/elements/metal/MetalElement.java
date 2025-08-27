@@ -17,6 +17,8 @@ public class MetalElement extends Element {
         addAbility(new AbilityMetalDecoy());
         addAbility(new AbilityMetal3(),true);
         addAbility(new AbilityMetalCable());
+        addAbility(new AbilityMetal4(),true);
+        addAbility(new AbilityMetalArmor());
     }
 
     public static Element get() {

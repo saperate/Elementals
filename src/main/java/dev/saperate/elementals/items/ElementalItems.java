@@ -39,6 +39,16 @@ public class ElementalItems {
     public static final EarthArmorItem EARTH_BOOTS = (EarthArmorItem) registerItem("earth_boots",
             new EarthArmorItem(ElementalArmorMaterial.EARTH, ArmorItem.Type.BOOTS, new FabricItemSettings()));
 
+    public static final Set<Item> METAL_ARMOR_SET = new HashSet<>();
+    public static final MetalArmorItem METAL_HELMET = (MetalArmorItem) registerItem("metal_helmet",
+            new MetalArmorItem(ElementalArmorMaterial.METAL, ArmorItem.Type.HELMET, new FabricItemSettings()));
+    public static final MetalArmorItem METAL_CHESTPLATE = (MetalArmorItem) registerItem("metal_chestplate",
+            new MetalArmorItem(ElementalArmorMaterial.METAL, ArmorItem.Type.CHESTPLATE, new FabricItemSettings()));
+    public static final MetalArmorItem METAL_LEGGINGS = (MetalArmorItem) registerItem("metal_leggings",
+            new MetalArmorItem(ElementalArmorMaterial.METAL, ArmorItem.Type.LEGGINGS, new FabricItemSettings()));
+    public static final MetalArmorItem METAL_BOOTS = (MetalArmorItem) registerItem("metal_boots",
+            new MetalArmorItem(ElementalArmorMaterial.METAL, ArmorItem.Type.BOOTS, new FabricItemSettings()));
+
     public static final ScrollItem SCROLL_ITEM = (ScrollItem) registerItem("scroll",
             new ScrollItem(new FabricItemSettings()
                     .maxCount(1)));
@@ -109,6 +119,12 @@ public class ElementalItems {
         EARTH_ARMOR_SET.add(EARTH_CHESTPLATE);
         EARTH_ARMOR_SET.add(EARTH_LEGGINGS);
         EARTH_ARMOR_SET.add(EARTH_BOOTS);
+        
+        METAL_ARMOR_SET.add(METAL_HELMET);
+        METAL_ARMOR_SET.add(METAL_CHESTPLATE);
+        METAL_ARMOR_SET.add(METAL_LEGGINGS);
+        METAL_ARMOR_SET.add(METAL_BOOTS);
+        
         Registry.register(Registries.ITEM_GROUP, Identifier.of(MODID, "base"), ELEMENTALS_GROUP);
     }
 }

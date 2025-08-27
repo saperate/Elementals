@@ -37,7 +37,7 @@ public class MetalCableEntityRenderer extends EntityRenderer<MetalCableEntity> {
 
 
         Vec3d pointA = entity.getChild().getPos();
-        Vec3d pointB = entity.getOwner().getPos();
+        Vec3d pointB = entity.getOwner().getPos().add(0,0.5,0);
         entity.prevDir = renderCubeFromAToB(pointA,pointB,matrices,vertexConsumer,0.125f,entity.prevDir);
         
         matrices.pop();
