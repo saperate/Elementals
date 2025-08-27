@@ -5,6 +5,7 @@ import dev.saperate.elementals.elements.air.AbilityAirScooter;
 import dev.saperate.elementals.elements.air.AbilityAirShield;
 import dev.saperate.elementals.elements.earth.AbilityEarthArmor;
 import dev.saperate.elementals.elements.fire.AbilityFireShield;
+import dev.saperate.elementals.elements.metal.AbilityMetalArmor;
 import dev.saperate.elementals.elements.water.AbilityWaterShield;
 import dev.saperate.elementals.items.ElementalItems;
 import net.fabricmc.fabric.api.entity.FakePlayer;
@@ -38,6 +39,7 @@ public abstract class ServerPlayerEntityMixin {
     private void onDeath(DamageSource damageSource, CallbackInfo ci) {
         PlayerEntity player = ((PlayerEntity) (Object) this);
         AbilityEarthArmor.removeArmorSet(player.getInventory().armor);
+        AbilityMetalArmor.removeArmorSet(player.getInventory().armor);
     }
 
     @Inject(at = @At("HEAD"), method = "damage", cancellable = true)
