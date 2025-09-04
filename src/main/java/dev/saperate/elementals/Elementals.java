@@ -1,6 +1,5 @@
 package dev.saperate.elementals;
 
-import com.mojang.brigadier.CommandDispatcher;
 import dev.saperate.elementals.advancements.HasElementCriterion;
 import dev.saperate.elementals.advancements.UsedAbilityCriterion;
 import dev.saperate.elementals.blocks.LitAir;
@@ -13,7 +12,6 @@ import dev.saperate.elementals.commands.ElementArgumentType;
 import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.data.ElementalConfig;
 import dev.saperate.elementals.data.PlayerData;
-import dev.saperate.elementals.data.StateDataSaverAndLoader;
 import dev.saperate.elementals.elements.NoneElement;
 import dev.saperate.elementals.elements.air.AirElement;
 import dev.saperate.elementals.elements.blood.BloodElement;
@@ -25,6 +23,7 @@ import dev.saperate.elementals.elements.water.WaterElement;
 import dev.saperate.elementals.enchantments.VolumeEnchantment;
 import dev.saperate.elementals.entities.ElementalEntities;
 import dev.saperate.elementals.items.ElementalItems;
+import dev.saperate.elementals.items.glider.IGliderItemRenderProvider;
 import net.fabricmc.api.ModInitializer;
 
 
@@ -41,27 +40,17 @@ import net.fabricmc.fabric.api.particle.v1.FabricParticleTypes;
 import net.minecraft.advancement.criterion.Criteria;
 import net.minecraft.block.DispenserBlock;
 import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.command.argument.serialize.ConstantArgumentSerializer;
 import net.minecraft.enchantment.Enchantment;
-import net.minecraft.enchantment.Enchantments;
-import net.minecraft.entity.mob.WitchEntity;
-import net.minecraft.item.Items;
 import net.minecraft.loot.LootPool;
 import net.minecraft.loot.LootTable;
 import net.minecraft.loot.LootTables;
 import net.minecraft.loot.entry.ItemEntry;
 import net.minecraft.loot.entry.LootPoolEntry;
-import net.minecraft.loot.function.SetContentsLootFunction;
-import net.minecraft.loot.function.SetLootTableLootFunction;
-import net.minecraft.loot.provider.number.ConstantLootNumberProvider;
 import net.minecraft.particle.DefaultParticleType;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.command.CommandManager;
-import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.server.command.SummonCommand;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundEvent;
@@ -102,6 +91,8 @@ public class Elementals implements ModInitializer {
     public static SoundEvent WIND_SOUND_EVENT = SoundEvent.of(WIND_SOUND_ID);
     public static SoundEvent WIND_BURST_SOUND_EVENT = SoundEvent.of(WIND_BURST_SOUND_ID);
     public static final DefaultParticleType LIGHTNING_PARTICLE_TYPE = FabricParticleTypes.simple();
+    
+    public static IGliderItemRenderProvider GLIDER_ITEM_RENDER_PROVIDER;
 
     public static final GameRules.Key<GameRules.BooleanRule> BENDING_GRIEFING =
             GameRuleRegistry.register("bendingGriefing", GameRules.Category.MISC, GameRuleFactory.createBooleanRule(true));

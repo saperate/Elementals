@@ -11,6 +11,8 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 
+import static dev.saperate.elementals.elements.fire.FireElement.placeFire;
+
 public class AbilityFireWall implements Ability {
     @Override
     public void onCall(Bender bender, long deltaT) {
@@ -48,6 +50,8 @@ public class AbilityFireWall implements Ability {
             FireBlockEntity entity = new FireBlockEntity(player.getWorld(), player, bPos.getX() + 0.5f, bPos.getY() + 1, bPos.getZ() + 0.5f);
             entity.setFinalFireHeight(plrData.canUseUpgrade("fireWallTallI") ? 2.5f : 1.5f );
             player.getWorld().spawnEntity(entity);
+            FireElement.placeFire(hit.getBlockPos(), hit.getSide(), player, player.getWorld().getBlockState(bPos));
+
         }
     }
 

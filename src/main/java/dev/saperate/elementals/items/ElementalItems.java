@@ -1,11 +1,10 @@
 package dev.saperate.elementals.items;
 
-import dev.saperate.elementals.Elementals;
 import dev.saperate.elementals.armors.materials.ElementalArmorMaterial;
+import dev.saperate.elementals.items.glider.GliderItem;
 import dev.saperate.elementals.items.scrolls.*;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
-import net.minecraft.block.DispenserBlock;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.item.*;
 import net.minecraft.registry.Registries;
@@ -91,6 +90,10 @@ public class ElementalItems {
             new WaterPouchItem(new FabricItemSettings()
                     .maxCount(1)));
 
+    public static final GliderItem GLIDER_ITEM = (GliderItem) registerItem("glider",
+            new GliderItem(new FabricItemSettings()
+                    .maxCount(1)));
+
     public static  final ItemGroup ELEMENTALS_GROUP = FabricItemGroup.builder()
             .icon(() -> new ItemStack(SCROLL_ITEM))
             .displayName(Text.of("Elementals"))
@@ -106,6 +109,7 @@ public class ElementalItems {
                 entries.add(LIGHTNING_BOTTLE_ITEM);
                 entries.add(BOOMERANG_ITEM);
                 entries.add(WATER_POUCH_ITEM);
+                entries.add(GLIDER_ITEM);
             }).build();
 
 

@@ -1,6 +1,5 @@
 package dev.saperate.elementals;
 
-import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.entities.air.*;
 import dev.saperate.elementals.entities.blood.BloodShotEntityRenderer;
 import dev.saperate.elementals.entities.common.BoomerangEntityRenderer;
@@ -21,7 +20,9 @@ import dev.saperate.elementals.entities.models.water.WaterBladeModel;
 import dev.saperate.elementals.gui.CastTimerHudOverlay;
 import dev.saperate.elementals.gui.ChiHudOverlay;
 import dev.saperate.elementals.items.ElementalItems;
+import dev.saperate.elementals.items.GliderItemRenderer;
 import dev.saperate.elementals.items.WaterPouchItem;
+import dev.saperate.elementals.items.glider.GliderItem;
 import dev.saperate.elementals.keys.KeyCycleBending;
 import dev.saperate.elementals.keys.abilities.KeyAbility1;
 import dev.saperate.elementals.keys.abilities.KeyAbility2;
@@ -44,16 +45,11 @@ import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.loader.api.Version;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
-import net.minecraft.client.particle.EndRodParticle;
 import net.minecraft.client.particle.FlameParticle;
 import net.minecraft.client.render.entity.model.EntityModelLayer;
 import net.minecraft.network.PacketByteBuf;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
-import net.minecraft.screen.PlayerScreenHandler;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.util.Identifier;
+import software.bernie.geckolib.animatable.client.RenderProvider;
 
 import java.util.Optional;
 
@@ -98,6 +94,14 @@ public class ElementalsClient implements ClientModInitializer {
 				(stack, tintIndex) -> tintIndex == 0 ? ((WaterPouchItem) stack.getItem()).getColor(stack) : 0xFFFFFF,
 				ElementalItems.WATER_POUCH_ITEM
 		);
+
+		Elementals.GLIDER_ITEM_RENDER_PROVIDER = () -> new RenderProvider(){
+			private final GliderItemRenderer renderer = new GliderItemRenderer();
+            @Override
+            public net.minecraft.client.render.item.BuiltinModelItemRenderer getCustomRenderer() {
+                return renderer;
+            }
+        };
 	}
 
 
