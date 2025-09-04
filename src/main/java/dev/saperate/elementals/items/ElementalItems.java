@@ -2,7 +2,8 @@ package dev.saperate.elementals.items;
 
 import dev.saperate.elementals.armors.materials.ElementalsArmorMaterial;
 import dev.saperate.elementals.effects.ElementalsStatusEffects;
-import dev.saperate.elementals.Elementals;
+import dev.saperate.elementals.armors.materials.ElementalArmorMaterial;
+import dev.saperate.elementals.items.glider.GliderItem;
 import dev.saperate.elementals.items.scrolls.*;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.minecraft.component.type.FoodComponent;
@@ -40,13 +41,13 @@ public class ElementalItems {
 
     public static final Set<Item> METAL_ARMOR_SET = new HashSet<>();
     public static final MetalArmorItem METAL_HELMET = (MetalArmorItem) registerItem("metal_helmet",
-            new MetalArmorItem(ElementalArmorMaterial.METAL, ArmorItem.Type.HELMET, new FabricItemSettings()));
+            new MetalArmorItem(ElementalArmorMaterial.METAL, ArmorItem.Type.HELMET, new Item.Settings()));
     public static final MetalArmorItem METAL_CHESTPLATE = (MetalArmorItem) registerItem("metal_chestplate",
-            new MetalArmorItem(ElementalArmorMaterial.METAL, ArmorItem.Type.CHESTPLATE, new FabricItemSettings()));
+            new MetalArmorItem(ElementalArmorMaterial.METAL, ArmorItem.Type.CHESTPLATE, new Item.Settings()));
     public static final MetalArmorItem METAL_LEGGINGS = (MetalArmorItem) registerItem("metal_leggings",
-            new MetalArmorItem(ElementalArmorMaterial.METAL, ArmorItem.Type.LEGGINGS, new FabricItemSettings()));
+            new MetalArmorItem(ElementalArmorMaterial.METAL, ArmorItem.Type.LEGGINGS, new Item.Settings()));
     public static final MetalArmorItem METAL_BOOTS = (MetalArmorItem) registerItem("metal_boots",
-            new MetalArmorItem(ElementalArmorMaterial.METAL, ArmorItem.Type.BOOTS, new FabricItemSettings()));
+            new MetalArmorItem(ElementalArmorMaterial.METAL, ArmorItem.Type.BOOTS, new Item.Settings()));
 
     public static final ScrollItem SCROLL_ITEM = (ScrollItem) registerItem("scroll",
             new ScrollItem(new Item.Settings()
@@ -91,6 +92,10 @@ public class ElementalItems {
                     .maxCount(1)
             ));
 
+    public static final GliderItem GLIDER_ITEM = (GliderItem) registerItem("glider",
+            new GliderItem(new Item.Settings()
+                    .maxCount(1)));
+
     public static  final ItemGroup ELEMENTALS_GROUP = FabricItemGroup.builder()
             .icon(() -> new ItemStack(SCROLL_ITEM))
             .displayName(Text.of("Elementals"))
@@ -106,6 +111,7 @@ public class ElementalItems {
                 entries.add(LIGHTNING_BOTTLE_ITEM);
                 entries.add(BOOMERANG_ITEM);
                 entries.add(WATER_POUCH_ITEM);
+                entries.add(GLIDER_ITEM);
             }).build();
 
 

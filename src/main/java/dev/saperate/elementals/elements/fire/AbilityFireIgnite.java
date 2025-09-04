@@ -79,9 +79,8 @@ public class AbilityFireIgnite implements Ability {
                     FireBlockEntity entity = new FireBlockEntity(player.getWorld(), player, bPos.getX() + 0.5f, bPos.getY() + 1, bPos.getZ() + 0.5f);
                     entity.setIsBlue(PlayerData.get(player).canUseUpgrade("blueFire"));
                     player.getWorld().spawnEntity(entity);
-                }else{
-                    placeFire(hit.getBlockPos(), hit.getSide(), player, blockState);
                 }
+                placeFire(hit.getBlockPos(), hit.getSide(), player, blockState);
             }
 
         }

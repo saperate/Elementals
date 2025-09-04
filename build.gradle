@@ -18,6 +18,15 @@ repositories {
 	// for more information about repositories.
 	maven { url = "https://api.modrinth.com/maven" }
 	mavenLocal()
+
+	maven {
+		name = 'GeckoLib'
+		url 'https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/'
+		content {
+			includeGroupByRegex("software\\.bernie.*")
+			includeGroup("com.eliotlash.mclib")
+		}
+	}
 }
 
 loom {
@@ -50,6 +59,8 @@ dependencies {
 
 	// modImplementation "net.fabricmc.fabric-api:fabric-api-deprecated:${project.fabric_version}"
 
+	modImplementation "software.bernie.geckolib:geckolib-fabric-${minecraft_version}:${geckolib_version}"
+	
 	modImplementation "maven.modrinth:patchouli:${project.patchouli_version}"
 	modImplementation "me.zeroeightsix:fiber:0.23.0-2"
 }

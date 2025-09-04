@@ -24,16 +24,15 @@ import dev.saperate.elementals.elements.water.WaterElement;
 import dev.saperate.elementals.enchantments.ElementalsEnchantments;
 import dev.saperate.elementals.entities.ElementalEntities;
 import dev.saperate.elementals.items.ElementalItems;
+import dev.saperate.elementals.items.glider.IGliderItemRenderProvider;
 import net.fabricmc.api.ModInitializer;
-
-
 import net.fabricmc.fabric.api.command.v2.ArgumentTypeRegistry;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.gamerule.v1.GameRuleFactory;
 import net.fabricmc.fabric.api.gamerule.v1.GameRuleRegistry;
-import net.fabricmc.fabric.api.loot.v3.LootTableEvents;
+import net.fabricmc.fabric.api.loot.v2.LootTableEvents;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.particle.v1.FabricParticleTypes;
@@ -41,15 +40,8 @@ import net.minecraft.advancement.criterion.Criteria;
 import net.minecraft.block.DispenserBlock;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.command.argument.serialize.ConstantArgumentSerializer;
-import net.minecraft.enchantment.Enchantment;
-import net.minecraft.loot.LootPool;
-import net.minecraft.loot.LootTable;
 import net.minecraft.loot.LootTables;
 import net.minecraft.loot.entry.ItemEntry;
-import net.minecraft.loot.entry.LootPoolEntry;
-import net.minecraft.loot.provider.number.ConstantLootNumberProvider;
-import net.minecraft.loot.provider.number.LootNumberProvider;
-import net.minecraft.particle.ParticleEffect;
 import net.minecraft.particle.SimpleParticleType;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
@@ -82,6 +74,7 @@ public class Elementals implements ModInitializer {
     public static SoundEvent WIND_SOUND_EVENT = SoundEvent.of(WIND_SOUND_ID);
     public static SoundEvent WIND_BURST_SOUND_EVENT = SoundEvent.of(WIND_BURST_SOUND_ID);
     public static final SimpleParticleType LIGHTNING_PARTICLE_TYPE = FabricParticleTypes.simple();
+    public static IGliderItemRenderProvider GLIDER_ITEM_RENDER_PROVIDER;
 
     public static final GameRules.Key<GameRules.BooleanRule> BENDING_GRIEFING =
             GameRuleRegistry.register("bendingGriefing", GameRules.Category.MISC, GameRuleFactory.createBooleanRule(true));

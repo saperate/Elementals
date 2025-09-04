@@ -58,6 +58,7 @@ public class AbilityFireSpikes implements Ability {
             FireBlockEntity entity = new FireBlockEntity(player.getWorld(), player, bPos.getX() + 0.5f, bPos.getY() + 1, bPos.getZ() + 0.5f);
             entity.setFinalFireHeight(1.5f);
             player.getWorld().spawnEntity(entity);
+            FireElement.placeFire(hit.getBlockPos(), hit.getSide(), player, player.getWorld().getBlockState(bPos));
         }
     }
 

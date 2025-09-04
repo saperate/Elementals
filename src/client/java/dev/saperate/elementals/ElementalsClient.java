@@ -20,7 +20,9 @@ import dev.saperate.elementals.entities.models.water.WaterBladeModel;
 import dev.saperate.elementals.gui.CastTimerHudOverlay;
 import dev.saperate.elementals.gui.ChiHudOverlay;
 import dev.saperate.elementals.items.ElementalItems;
+import dev.saperate.elementals.items.GliderItemRenderer;
 import dev.saperate.elementals.items.WaterPouchItem;
+import dev.saperate.elementals.items.glider.GliderItem;
 import dev.saperate.elementals.keys.KeyCycleBending;
 import dev.saperate.elementals.keys.abilities.KeyAbility1;
 import dev.saperate.elementals.keys.abilities.KeyAbility2;
@@ -49,9 +51,9 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.particle.FlameParticle;
 import net.minecraft.client.render.entity.model.EntityModelLayer;
-import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.packet.CustomPayload;
 import net.minecraft.util.Identifier;
+import software.bernie.geckolib.animatable.client.RenderProvider;
 
 import java.util.Optional;
 
@@ -90,11 +92,19 @@ public class ElementalsClient implements ClientModInitializer {
         ParticleFactoryRegistry.getInstance().register(LIGHTNING_PARTICLE_TYPE, FlameParticle.Factory::new);
 
         ClientPlayConnectionEvents.JOIN.register(ElementalsClient::onClientJoin);
-
+        
         ColorProviderRegistry.ITEM.register(
                 (stack, tintIndex) -> tintIndex == 0 ? ((WaterPouchItem) stack.getItem()).getColor(stack) : 0xFFFFFFFF,
                 ElementalItems.WATER_POUCH_ITEM
         );
+
+        Elementals.GLIDER_ITEM_RENDER_PROVIDER = () -> new RenderProvider(){
+            private final GliderItemRenderer renderer = new GliderItemRenderer();
+            @Override
+            public net.minecraft.client.render.item.BuiltinModelItemRenderer getCustomRenderer() {
+                return renderer;
+            }
+        };
     }
 
     public void registerS2CPackets() {
