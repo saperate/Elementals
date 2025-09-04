@@ -1,6 +1,7 @@
 package dev.saperate.elementals.items.glider;
 
 import dev.saperate.elementals.Elementals;
+import dev.saperate.elementals.utils.SapsUtils;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -26,16 +27,17 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 import software.bernie.geckolib.util.RenderUtils;
 import net.minecraft.item.DyeableItem;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.Locale;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 //TODO make colorable!!
 public class GliderItem extends Item implements Vanishable, GeoItem {
-    private static final RawAnimation OPENED_ANIM = RawAnimation.begin().thenPlayAndHold("opened.glider");
-    private static final RawAnimation OPENING_ANIM = RawAnimation.begin().thenPlay("open.glider").thenPlayAndHold("opened.glider");
-    private static final RawAnimation CLOSED_ANIM = RawAnimation.begin().thenPlayAndHold("closed.glider");
-    private static final RawAnimation CLOSING_ANIM = RawAnimation.begin().thenPlay("close.glider").thenPlayAndHold("closed.glider");
+    private static final RawAnimation OPENED_ANIM = RawAnimation.begin().thenPlayAndHold("open.glider");
+    private static final RawAnimation CLOSED_ANIM = RawAnimation.begin().thenPlayAndHold("close.glider");
     private final AnimatableInstanceCache animatableInstanceCache = GeckoLibUtil.createInstanceCache(this);
     private final  Supplier<Object> renderer = GeoItem.makeRenderer(this);
     
@@ -51,8 +53,8 @@ public class GliderItem extends Item implements Vanishable, GeoItem {
         
         user.getItemCooldownManager().set(this, 5);
         switch (getState(stack)){ //Handles the switch between open and closed.
-            case OPEN -> setState(stack,GliderStates.CLOSING);
-            case CLOSED -> setState(stack,GliderStates.OPENING);
+            case OPEN -> setState(stack,GliderStates.CLOSED);
+            case CLOSED -> setState(stack,GliderStates.OPEN);
             default -> {
                 return TypedActionResult.fail(stack);
             }
@@ -82,24 +84,10 @@ public class GliderItem extends Item implements Vanishable, GeoItem {
         ItemStack stack = animationState.getData(DataTickets.ITEMSTACK);
         GliderStates gliderState = getState(stack);
         AnimationController.State controllerState = animationState.getController().getAnimationState();
-        //animationState.getController().setAnimation(OPENED_ANIM);
 
         switch (gliderState){
             case OPEN -> animationState.getController().setAnimation(OPENED_ANIM);
             case CLOSED -> animationState.getController().setAnimation(CLOSED_ANIM);
-            
-            case OPENING -> {
-                animationState.getController().setAnimation(OPENING_ANIM);
-                if(controllerState.equals(AnimationController.State.PAUSED)){
-                    setState(stack,GliderStates.OPEN);
-                }
-            }
-            case CLOSING -> {
-                animationState.getController().setAnimation(CLOSING_ANIM);
-                if(controllerState.equals(AnimationController.State.PAUSED)){
-                    setState(stack,GliderStates.CLOSED);
-                }
-            }
         }
         return PlayState.CONTINUE;
     }
@@ -119,7 +107,7 @@ public class GliderItem extends Item implements Vanishable, GeoItem {
     }
 
     public GliderStates getState(ItemStack stack){
-        if(stack.getNbt() == null){
+        if(stack.getNbt() == null || !GliderStates.isValid(stack.getNbt().getString("state"))){
             NbtCompound nbt = new NbtCompound();
             nbt.putString("state", GliderStates.CLOSED.id);
             stack.setNbt(nbt);
@@ -133,18 +121,44 @@ public class GliderItem extends Item implements Vanishable, GeoItem {
             stack.setNbt(nbt);
         }
         stack.getNbt().putString("state", state.id);
+        updateStateChangeTick(stack);
     }
+
+    private void updateStateChangeTick(ItemStack stack){
+        if(stack.getNbt() == null ){
+            NbtCompound nbt = new NbtCompound();
+            stack.setNbt(nbt);
+        }
+        stack.getNbt().putDouble("tickAtStateChange",getTick(stack));
+    }
+    
+    public double timeSinceStateChange(ItemStack stack){
+        if(stack.getNbt() == null ){
+            NbtCompound nbt = new NbtCompound();
+            nbt.putDouble("tickAtStateChange", 0);
+            stack.setNbt(nbt);
+        }
+        return getTick(stack) - stack.getNbt().getDouble("tickAtStateChange");
+    }
+
     
     public enum GliderStates {
         OPEN("open"),
-        OPENING("opening"),
-        CLOSED("closed"),
-        CLOSING("closing");
+        CLOSED("closed");
         
         public final String id;
         
         GliderStates(String id){
             this.id = id;
+        }
+        
+        public static boolean isValid(String id){
+            for (GliderStates state : values()) {
+                if(state.id.equalsIgnoreCase(id)){
+                    return true;
+                }
+            }
+            return false;
         }
     }
 }

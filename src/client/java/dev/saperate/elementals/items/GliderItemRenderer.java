@@ -20,14 +20,17 @@ public class GliderItemRenderer extends GeoItemRenderer<GliderItem> {
 
     @Override
     public Identifier getTextureLocation(GliderItem animatable) {
-        GliderItem item = ((GliderItem) currentItemStack.getItem());
-        GliderItem.GliderStates state = item.getState(currentItemStack);
+        GliderItem.GliderStates state = animatable.getState(currentItemStack);
+        
         
         switch (state){
             case OPEN -> {
-                return textureOpen;
+                if(animatable.timeSinceStateChange(currentItemStack) > 10.5){
+                    return textureOpen;
+                }
+                return textureClosed;
             }
-            case OPENING, CLOSED, CLOSING -> {
+            case CLOSED-> {
                 return textureClosed;
             }
             default -> {
