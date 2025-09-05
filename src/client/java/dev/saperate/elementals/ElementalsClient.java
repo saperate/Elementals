@@ -4,6 +4,7 @@ import dev.saperate.elementals.entities.air.*;
 import dev.saperate.elementals.entities.blood.BloodShotEntityRenderer;
 import dev.saperate.elementals.entities.common.BoomerangEntityRenderer;
 import dev.saperate.elementals.entities.common.DirtBottleEntityRenderer;
+import dev.saperate.elementals.entities.common.SkyBisonEntityRenderer;
 import dev.saperate.elementals.entities.fire.*;
 import dev.saperate.elementals.entities.lightning.LightningArcEntityRenderer;
 import dev.saperate.elementals.entities.lightning.VoltArcEntityRenderer;
@@ -157,7 +158,8 @@ public class ElementalsClient implements ClientModInitializer {
         EntityRendererRegistry.register(DECOYPLAYER, (context) -> new DecoyPlayerEntityRenderer(context, true));
         EntityRendererRegistry.register(DIRTBOTTLEENTITY, DirtBottleEntityRenderer::new);
         EntityRendererRegistry.register(BOOMERANGENTITY, BoomerangEntityRenderer::new);
-
+		EntityRendererRegistry.register(SKYBISON, SkyBisonEntityRenderer::new);
+        
         //LIGHTNING
         EntityRendererRegistry.register(LIGHTNINGARC, LightningArcEntityRenderer::new);
         EntityRendererRegistry.register(VOLTARC, VoltArcEntityRenderer::new);
