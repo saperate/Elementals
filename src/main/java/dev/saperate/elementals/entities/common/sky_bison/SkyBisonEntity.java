@@ -26,8 +26,8 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 
 public class SkyBisonEntity extends AnimalEntity implements GeoEntity {
     private final AnimatableInstanceCache animatableInstanceCache = GeckoLibUtil.createInstanceCache(this);
-    private static final RawAnimation IDLE_ANIM = RawAnimation.begin().thenPlay("idle");
-    private static final RawAnimation WALK_ANIM = RawAnimation.begin().thenLoop("walk");
+    public static final RawAnimation IDLE_ANIM = RawAnimation.begin().thenPlay("idle");
+    public static final RawAnimation WALK_ANIM = RawAnimation.begin().thenLoop("walk");
 
     public SkyBisonEntity(EntityType<? extends AnimalEntity> entityType, World world) {
         super(entityType, world);

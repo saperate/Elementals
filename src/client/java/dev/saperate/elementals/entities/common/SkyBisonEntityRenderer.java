@@ -9,7 +9,7 @@ import software.bernie.geckolib.renderer.GeoEntityRenderer;
 public class SkyBisonEntityRenderer extends GeoEntityRenderer<SkyBisonEntity> {
     public SkyBisonEntityRenderer(EntityRendererFactory.Context renderManager) {
         super(renderManager, new SkyBisonModel());
-        this
+        addRenderLayer(new SkyBisonSaddleRenderLayer(this));
         withScale(5);
     }
 }
