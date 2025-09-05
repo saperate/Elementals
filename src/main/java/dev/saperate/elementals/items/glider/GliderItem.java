@@ -36,8 +36,8 @@ import java.util.function.Supplier;
 
 //TODO make colorable!!
 public class GliderItem extends Item implements Vanishable, GeoItem {
-    private static final RawAnimation OPENED_ANIM = RawAnimation.begin().thenPlayAndHold("open.glider");
-    private static final RawAnimation CLOSED_ANIM = RawAnimation.begin().thenPlayAndHold("close.glider");
+    private final RawAnimation OPENED_ANIM = RawAnimation.begin().thenPlayAndHold("open.glider");
+    private final RawAnimation CLOSED_ANIM = RawAnimation.begin().thenPlayAndHold("close.glider");
     private final AnimatableInstanceCache animatableInstanceCache = GeckoLibUtil.createInstanceCache(this);
     private final  Supplier<Object> renderer = GeoItem.makeRenderer(this);
     
