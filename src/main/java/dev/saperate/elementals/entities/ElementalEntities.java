@@ -8,6 +8,7 @@ import dev.saperate.elementals.entities.common.BoomerangEntity;
 import dev.saperate.elementals.entities.common.DecoyPlayerEntity;
 import dev.saperate.elementals.entities.air.*;
 import dev.saperate.elementals.entities.common.DirtBottleEntity;
+import dev.saperate.elementals.entities.common.sky_bison.SkyBisonEntity;
 import dev.saperate.elementals.entities.earth.EarthBlockEntity;
 import dev.saperate.elementals.entities.fire.*;
 import dev.saperate.elementals.entities.lightning.LightningArcEntity;
@@ -237,8 +238,17 @@ public class ElementalEntities {
             new Identifier("elementals", "boomerang"),
             FabricEntityTypeBuilder.<BoomerangEntity>create(SpawnGroup.MISC, BoomerangEntity::new)
                     .dimensions(EntityDimensions.fixed(.6f, .2f)).build());
+
+    public static final EntityType<SkyBisonEntity> SKYBISON = Registry.register(
+            Registries.ENTITY_TYPE,
+            new Identifier("elementals", "sky_bison"),
+            FabricEntityTypeBuilder.<SkyBisonEntity>create(SpawnGroup.MISC, SkyBisonEntity::new)
+                    .dimensions(EntityDimensions.fixed(3.25f, 3.25f)).build());
+    
     public static void register() {
         FabricDefaultAttributeRegistry.register(DECOYPLAYER, DecoyPlayerEntity.createMobAttributes());
+
+        FabricDefaultAttributeRegistry.register(SKYBISON, SkyBisonEntity.createAttributes());
     }
 
 }

@@ -5,6 +5,7 @@ import dev.saperate.elementals.data.ClientBender;
 import dev.saperate.elementals.elements.air.AbilityAirScooter;
 import dev.saperate.elementals.elements.metal.AbilityMetalDecoy;
 import dev.saperate.elementals.items.ElementalItems;
+import dev.saperate.elementals.items.glider.GliderItem;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.BookEditScreen;
 import net.minecraft.client.network.ClientPlayerEntity;
@@ -54,6 +55,8 @@ public abstract class ClientPlayerEntityMixin {
             cir.cancel();
         }
     }
+    
+
 
     @Inject(at = @At("RETURN"), method = "canStartSprinting", cancellable = true)
     private void canStartSprinting(CallbackInfoReturnable<Boolean> cir) {
