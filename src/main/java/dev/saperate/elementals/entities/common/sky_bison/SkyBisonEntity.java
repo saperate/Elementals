@@ -1,7 +1,10 @@
 package dev.saperate.elementals.entities.common.sky_bison;
 
+import dev.saperate.elementals.mixin.ElementalsLivingEntityAccessor;
 import dev.saperate.elementals.utils.SapsUtils;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MovementType;
 import net.minecraft.entity.ai.NoPenaltyTargeting;
 import net.minecraft.entity.ai.control.MoveControl;
@@ -11,6 +14,9 @@ import net.minecraft.entity.ai.pathing.MobNavigation;
 import net.minecraft.entity.ai.pathing.PathNodeNavigator;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
+import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.entity.damage.DamageSources;
+import net.minecraft.entity.damage.DamageTypes;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
@@ -25,11 +31,13 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec2f;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.trunk.BendingTrunkPlacer;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Vector2d;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
@@ -45,6 +53,7 @@ public class SkyBisonEntity extends AnimalEntity implements GeoEntity {
     private final AnimatableInstanceCache animatableInstanceCache = GeckoLibUtil.createInstanceCache(this);
     public static final RawAnimation IDLE_ANIM = RawAnimation.begin().thenPlay("idle");
     public static final RawAnimation WALK_ANIM = RawAnimation.begin().thenLoop("walk");
+    public static final RawAnimation FLY_ANIM = RawAnimation.begin().thenLoop("flying");
     public static final TrackedData<Boolean> FLYING = DataTracker.registerData(SkyBisonEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
 
     public SkyBisonEntity(EntityType<? extends AnimalEntity> entityType, World world) {
@@ -78,21 +87,99 @@ public class SkyBisonEntity extends AnimalEntity implements GeoEntity {
         } else if (!hasNoGravity() && isFlying()) {
             setNoGravity(true);
         }
-        if(getRandom().nextInt(9600) == 0){
+        
+        if(isOnGround()){
+            setFlying(false);
+        }
+        
+        if(getRandom().nextInt(480) == 0 && !getWorld().isClient && !hasControllingPassenger()){
             setFlying(!isFlying());
+            addVelocity(0,.1f,0);
+            move(MovementType.SELF,getVelocity());
         }
 
+        
         super.tick();
     }
 
     @Override
     public ActionResult interactMob(PlayerEntity player, Hand hand) {
-        setFlying(true);
-        addVelocity(0,.1f,0);
-        move(MovementType.SELF,getVelocity());
+        player.startRiding(this,true);
+
         return ActionResult.PASS;
     }
 
+    @Override
+    public boolean damage(DamageSource source, float amount) {
+        if(!source.isOf(DamageTypes.FALL)){
+            return super.damage(source,amount);
+        }
+        return false;
+    }
+
+    @Override
+    public double getMountedHeightOffset() {
+        return (double)getDimensions(getPose()).height * 1;
+    }
+
+    @Nullable
+    @Override
+    public LivingEntity getControllingPassenger() {
+        if(getFirstPassenger() instanceof LivingEntity living){
+            return living;
+        }
+        return null;
+    }
+
+    @Override
+    protected Vec3d getControlledMovementInput(PlayerEntity controllingPlayer, Vec3d movementInput) {
+        setBodyYaw(controllingPlayer.bodyYaw);
+        
+        Vec3d forward = SapsUtils.getEntityLookVectorIgnorePitch(controllingPlayer,1)
+                .subtract(controllingPlayer.getEyePos());
+        Vec3d sideways = forward.crossProduct(new Vec3d(0,1,0)).multiply(-controllingPlayer.sidewaysSpeed);
+        
+        //Can't inline it cause it's used to cross product sideways vector
+        forward = forward.multiply(controllingPlayer.forwardSpeed);
+        
+        float h = 0;
+
+        if(forward.length() != 0){
+            float i = MathHelper.sin(controllingPlayer.getPitch() * 0.017453292F);
+            if (controllingPlayer.forwardSpeed > 0.0F) {
+                i *= -0.5F;
+            }
+            h = i * 3;
+        }
+        
+        if (((ElementalsLivingEntityAccessor) controllingPlayer).isJumping()) {
+            h += 0.5F;
+            setFlying(true);
+        }
+        
+        if(!isFlying())
+            h = 0;
+
+        Vec3d movement = forward.add(sideways).add(0,h,0).normalize().multiply(3.9000000953674316 * 0.15f);
+        setVelocity(movement);
+        return movement;
+    }
+
+    protected Vec2f getRotation(LivingEntity controllingEntity) {
+        return new Vec2f(controllingEntity.getPitch() * 0.5F, controllingEntity.getYaw());
+    }
+
+    protected void tickControlled(PlayerEntity controllingPlayer, Vec3d movementInput) {
+        super.tickControlled(controllingPlayer, movementInput);
+        Vec2f vec2f = getRotation(controllingPlayer);
+        float f = this.getYaw();
+        float g = MathHelper.wrapDegrees(vec2f.y - f);
+        float h = 0.08F;
+        f += g * 0.08F;
+        this.setRotation(f, vec2f.x);
+        this.prevYaw = this.bodyYaw = this.headYaw = f;
+    }
+    
     @Override
     public void limitFallDistance() {
         this.fallDistance = 0;
@@ -114,7 +201,12 @@ public class SkyBisonEntity extends AnimalEntity implements GeoEntity {
     private PlayState animationPredicate(AnimationState<SkyBisonEntity> animationState) {
 
         if (animationState.isMoving()) {
-            animationState.getController().setAnimation(WALK_ANIM);
+            if(!animationState.getAnimatable().isOnGround() && false){
+                animationState.getController().setAnimation(FLY_ANIM);
+            }else{
+                animationState.getController().setAnimation(WALK_ANIM);
+            }
+           
         } else {
             animationState.getController().setAnimation(IDLE_ANIM);
         }
@@ -157,7 +249,7 @@ public class SkyBisonEntity extends AnimalEntity implements GeoEntity {
 
         public boolean canStart() {
             MoveControl moveControl = entity.getMoveControl();
-            if(!entity.isFlying()){
+            if(!entity.isFlying() || entity.hasPassengers()){
                 return false;
             }else {
                 if (!moveControl.isMoving()) {
@@ -234,6 +326,9 @@ public class SkyBisonEntity extends AnimalEntity implements GeoEntity {
 
 
         public void tick() {
+            if(entity.hasControllingPassenger()){
+                return;
+            }
             if (state == State.MOVE_TO) {
                 if (entity.isFlying()) {
                     if (this.collisionCheckCooldown-- <= 0) {

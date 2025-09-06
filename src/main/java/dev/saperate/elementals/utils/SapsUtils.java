@@ -329,6 +329,19 @@ public final class SapsUtils {
 
         return new Vec3d(x, y, z).multiply(distance).add(e.getEyePos());
     }
+    
+    public static Vec3d getEntityLookVectorIgnorePitch(Entity e, float distance) {
+        if(e == null){
+            return new Vec3d(0,0,0);
+        }
+        double rYaw = Math.toRadians(e.getYaw() + 90);
+        double rPitch = Math.toRadians(-e.getPitch());
+
+        float x = (float) (Math.cos(rYaw));
+        float z = (float) (Math.sin(rYaw));
+
+        return new Vec3d(x, 0, z).multiply(distance).add(e.getEyePos());
+    }
 
     public static HitResult raycastEntity(Entity origin, double maxDistance, Predicate<Entity> predicate) {
         Vec3d cameraPos = origin.getCameraPosVec(1.0f);
