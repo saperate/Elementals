@@ -16,8 +16,5 @@ public class SoulFireCore extends Block {
     public SoulFireCore(Settings settings) {
         super(settings);
     }
-
-    public static Block registerBlock(){
-        return Registry.register(Registries.BLOCK,new Identifier(MODID,"soulfirecore"), new SoulFireCore(FabricBlockSettings.create().strength(1f)));
-    }
+    
 }

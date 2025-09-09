@@ -1,5 +1,6 @@
 package dev.saperate.elementals.entities.common;
 
+import dev.saperate.elementals.blocks.ElementalsBlocks;
 import dev.saperate.elementals.blocks.blockEntities.LitAirBlockEntity;
 import dev.saperate.elementals.entities.earth.EarthBlockEntity;
 import dev.saperate.elementals.utils.SapsUtils;
@@ -30,7 +31,6 @@ import org.spongepowered.asm.mixin.Interface;
 
 import java.util.List;
 
-import static dev.saperate.elementals.blocks.LitAir.LIT_AIR;
 
 public abstract class AbstractElementalsEntity<OwnerType extends Entity> extends Entity {
     private static final TrackedData<Integer> OWNER_ID = DataTracker.registerData(AbstractElementalsEntity.class, TrackedDataHandlerRegistry.INTEGER);
@@ -52,11 +52,11 @@ public abstract class AbstractElementalsEntity<OwnerType extends Entity> extends
         if(emitsLight()){
             BlockPos pos = getBlockPos().up();
             BlockState state = getWorld().getBlockState(pos);
-            if (age % 2 == 0 && state.getBlock().equals(LIT_AIR)
+            if (age % 2 == 0 && state.getBlock().equals(ElementalsBlocks.LIT_AIR)
                     && getWorld().getBlockEntity(pos) instanceof LitAirBlockEntity litAirBlockEntity) {
                 litAirBlockEntity.resetTimer();
             } else if (state.isAir()) {
-                getWorld().setBlockState(pos, LIT_AIR.getDefaultState());
+                getWorld().setBlockState(pos, ElementalsBlocks.LIT_AIR.getDefaultState());
             }
         }
 

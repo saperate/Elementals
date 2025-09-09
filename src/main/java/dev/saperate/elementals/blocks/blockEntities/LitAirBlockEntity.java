@@ -8,8 +8,8 @@ import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-import static dev.saperate.elementals.Elementals.LIT_AIR_BLOCK_ENTITY;
-import static dev.saperate.elementals.blocks.LitAir.LIT_AIR;
+
+import static dev.saperate.elementals.blocks.ElementalsBlocks.LIT_AIR_BLOCK_ENTITY;
 
 public class LitAirBlockEntity extends BlockEntity{
     private int lifetime = 0;

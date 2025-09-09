@@ -2,6 +2,7 @@ package dev.saperate.elementals;
 
 import dev.saperate.elementals.advancements.HasElementCriterion;
 import dev.saperate.elementals.advancements.UsedAbilityCriterion;
+import dev.saperate.elementals.blocks.ElementalsBlocks;
 import dev.saperate.elementals.blocks.LitAir;
 import dev.saperate.elementals.blocks.SoulFireCore;
 import dev.saperate.elementals.blocks.WaterRapid;
@@ -63,7 +64,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static dev.saperate.elementals.blocks.LitAir.LIT_AIR;
+
 import static dev.saperate.elementals.effects.BurnoutStatusEffect.BURNOUT_EFFECT;
 import static dev.saperate.elementals.effects.DenseStatusEffect.DENSE_EFFECT;
 import static dev.saperate.elementals.effects.DrowningStatusEffect.DROWNING_EFFECT;
@@ -96,12 +97,7 @@ public class Elementals implements ModInitializer {
 
     public static final GameRules.Key<GameRules.BooleanRule> BENDING_GRIEFING =
             GameRuleRegistry.register("bendingGriefing", GameRules.Category.MISC, GameRuleFactory.createBooleanRule(true));
-
-    public static final BlockEntityType<LitAirBlockEntity> LIT_AIR_BLOCK_ENTITY = Registry.register(
-            Registries.BLOCK_ENTITY_TYPE,
-            new Identifier(MODID, "lit_air_block_entity"),
-            BlockEntityType.Builder.create(LitAirBlockEntity::new, LIT_AIR).build(null)
-    );
+    
 
     @Override
     public void onInitialize() {
@@ -109,16 +105,17 @@ public class Elementals implements ModInitializer {
         ElementalConfig.get().loadConfig();
 
         ElementalItems.register();
+        ElementalsBlocks.registerBlocks();
         DispenserBlock.registerBehavior(BOOMERANG_ITEM,BOOMERANG_ITEM);
         DispenserBlock.registerBehavior(DIRT_BOTTLE_ITEM,DIRT_BOTTLE_ITEM);
 
         Registry.register(Registries.ENCHANTMENT, new Identifier(MODID, "volume"), VOLUME_ENCHANTMENT);
 
         ElementalEntities.register();
-
-        SoulFireCore.registerBlock();
-        WaterRapid.registerBlock();
+        
+        
         LitAir.registerBlock();
+        
 
         Registry.register(Registries.STATUS_EFFECT, new Identifier(MODID, "stationary"), STATIONARY_EFFECT);
         Registry.register(Registries.STATUS_EFFECT, new Identifier(MODID, "dense"), DENSE_EFFECT);

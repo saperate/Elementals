@@ -52,7 +52,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.List;
 
-import static dev.saperate.elementals.blocks.LitAir.LIT_AIR;
 import static dev.saperate.elementals.effects.SpiritProjectionStatusEffect.SPIRIT_PROJECTION_EFFECT;
 import static dev.saperate.elementals.utils.SapsUtils.safeHasStatusEffect;
 

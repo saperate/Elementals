@@ -2,6 +2,7 @@ package dev.saperate.elementals.entities.common.sky_bison;
 
 import dev.saperate.elementals.mixin.ElementalsLivingEntityAccessor;
 import dev.saperate.elementals.utils.SapsUtils;
+import net.fabricmc.loader.impl.lib.sat4j.core.Vec;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -24,6 +25,7 @@ import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.entity.passive.PassiveEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemConvertible;
+import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.server.world.ServerWorld;
@@ -47,6 +49,8 @@ import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 public class SkyBisonEntity extends AnimalEntity implements GeoEntity {
@@ -55,7 +59,8 @@ public class SkyBisonEntity extends AnimalEntity implements GeoEntity {
     public static final RawAnimation WALK_ANIM = RawAnimation.begin().thenLoop("walk");
     public static final RawAnimation FLY_ANIM = RawAnimation.begin().thenLoop("flying");
     public static final TrackedData<Boolean> FLYING = DataTracker.registerData(SkyBisonEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
-
+    public static final TrackedData<ItemStack> SADDLE = DataTracker.registerData(SkyBisonEntity.class, TrackedDataHandlerRegistry.ITEM_STACK);
+    
     public SkyBisonEntity(EntityType<? extends AnimalEntity> entityType, World world) {
         super(entityType, world);
         this.moveControl = new SkyBisonMoveControl(this);
@@ -77,6 +82,7 @@ public class SkyBisonEntity extends AnimalEntity implements GeoEntity {
     protected void initDataTracker() {
         super.initDataTracker();
         this.getDataTracker().startTracking(FLYING, false);
+        this.getDataTracker().startTracking(SADDLE, ItemStack.EMPTY);
     }
 
 //TODO stamina system for flying?
@@ -90,8 +96,11 @@ public class SkyBisonEntity extends AnimalEntity implements GeoEntity {
         
         if(isOnGround()){
             setFlying(false);
+        } else if (hasControllingPassenger()) {
+            setFlying(true);
         }
-        
+
+
         if(getRandom().nextInt(480) == 0 && !getWorld().isClient && !hasControllingPassenger()){
             setFlying(!isFlying());
             addVelocity(0,.1f,0);
@@ -104,9 +113,12 @@ public class SkyBisonEntity extends AnimalEntity implements GeoEntity {
 
     @Override
     public ActionResult interactMob(PlayerEntity player, Hand hand) {
-        player.startRiding(this,true);
+        if(getPassengerList().size() < 8){
+            player.startRiding(this,true);
+            return ActionResult.PASS;
+        }
 
-        return ActionResult.PASS;
+        return ActionResult.FAIL;
     }
 
     @Override
@@ -156,13 +168,44 @@ public class SkyBisonEntity extends AnimalEntity implements GeoEntity {
             h += 0.5F;
             setFlying(true);
         }
-        
-        if(!isFlying())
-            h = 0;
 
         Vec3d movement = forward.add(sideways).add(0,h,0).normalize().multiply(3.9000000953674316 * 0.15f);
         setVelocity(movement);
         return movement;
+    }
+
+    //TODO require saddle only for multiple people 
+    @Override
+    protected void updatePassengerPosition(Entity passenger, PositionUpdater positionUpdater) {
+        if (this.hasPassenger(passenger)) {
+            int passengerIndex = getPassengerIndex(passenger);
+            Vec3d forward = SapsUtils.getEntityLookVectorIgnorePitch(this,1)
+                    .subtract(getEyePos());
+            Vec3d sideways = forward.crossProduct(new Vec3d(0,1,0))
+                    .multiply(0.75f); // less annoying than doing
+            double heightOffset = this.getY() + this.getMountedHeightOffset() + passenger.getHeightOffset();
+
+            Vec3d offset = switch (passengerIndex) {
+                case 0 -> forward.multiply(2f);
+                case 1 -> forward.add(sideways);
+                case 2 -> forward.add(sideways.multiply(-1));
+                case 3 -> sideways;
+                case 4 -> sideways.multiply(-1);
+                case 5 -> forward.multiply(-1.25f).add(sideways);
+                case 6 -> forward.multiply(1.25f).add(sideways).multiply(-1);
+                default -> Vec3d.ZERO;
+            };
+
+            positionUpdater.accept(passenger, this.getX() + offset.x, heightOffset, this.getZ() + offset.z);
+        }
+    }
+    
+    public int getPassengerIndex(Entity passenger){
+        List<Entity> passengers = getPassengerList();
+        if(passengers.contains(passenger)){
+            return passengers.indexOf(passenger);
+        }
+        return -1;
     }
 
     protected Vec2f getRotation(LivingEntity controllingEntity) {
@@ -231,6 +274,14 @@ public class SkyBisonEntity extends AnimalEntity implements GeoEntity {
 
     public boolean isFlying() {
         return this.dataTracker.get(FLYING);
+    }
+
+    public void setSaddle(ItemStack saddle) {
+        this.dataTracker.set(SADDLE, saddle);
+    }
+
+    public ItemStack getSaddle() {
+        return this.dataTracker.get(SADDLE);
     }
 
 
