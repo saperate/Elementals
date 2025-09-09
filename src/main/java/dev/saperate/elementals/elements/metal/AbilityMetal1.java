@@ -6,7 +6,7 @@ import dev.saperate.elementals.elements.Ability;
 public class AbilityMetal1 implements Ability {
     @Override
     public void onCall(Bender bender, long deltaT) {
-        MetalElement.get().getAbility(2).onCall(bender,deltaT);//fixme 1 also goes here
+        MetalElement.get().getAbility(1).onCall(bender,deltaT);//fixme 1 also goes here
     }
 
     @Override

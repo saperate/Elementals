@@ -3,14 +3,17 @@ package dev.saperate.elementals.items;
 import dev.saperate.elementals.armors.materials.ElementalsArmorMaterial;
 import dev.saperate.elementals.effects.ElementalsStatusEffects;
 import dev.saperate.elementals.armors.materials.ElementalArmorMaterial;
+import dev.saperate.elementals.blocks.ElementalsBlocks;
 import dev.saperate.elementals.items.glider.GliderItem;
 import dev.saperate.elementals.items.scrolls.*;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
-import net.minecraft.component.type.FoodComponent;
+import net.minecraft.block.entity.BannerPattern;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.item.*;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
+import net.minecraft.registry.RegistryKeys;
+import net.minecraft.registry.tag.TagKey;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
@@ -21,6 +24,8 @@ import static dev.saperate.elementals.Elementals.MODID;
 
 public class ElementalItems {
 
+    public static final TagKey<BannerPattern> AIR_BANNER_PATTERN_TAG = TagKey.of(RegistryKeys.BANNER_PATTERN,Identifier.of("minecraft","pattern_item/air"));
+    
     public static final FoodComponent LIGHTNING_BOTTLE_FOOD_COMPONENT = new FoodComponent.Builder()
             .alwaysEdible()
             .saturationModifier(-1.2f)
@@ -95,6 +100,26 @@ public class ElementalItems {
     public static final GliderItem GLIDER_ITEM = (GliderItem) registerItem("glider",
             new GliderItem(new Item.Settings()
                     .maxCount(1)));
+    public static final BannerPatternItem AIR_BANNER_PATTERN_ITEM = Registry.register(Registries.ITEM, 
+            new Identifier(MODID,"air_banner_pattern"), 
+            new BannerPatternItem(AIR_BANNER_PATTERN_TAG,new FabricItemSettings()
+                    .maxCount(1)));
+    public static final BannerPattern AIR_BANNER_PATTERN = new BannerPattern("elementals_air");
+            
+
+    //BLOCK ITEMS
+    public static final BlockItem MOON_PEACH_LEAVES_ITEM = Registry.register(Registries.ITEM,
+            new Identifier(MODID, "moon_peach_leaves"), 
+            new BlockItem(ElementalsBlocks.MOON_PEACH_LEAVES, new FabricItemSettings()));
+    public static final BlockItem MOON_LOG = Registry.register(Registries.ITEM,
+            new Identifier(MODID, "moon_log"),
+            new BlockItem(ElementalsBlocks.MOON_LOG, new FabricItemSettings()));
+    public static final BlockItem MOON_STRIPPED_LOG = Registry.register(Registries.ITEM,
+            new Identifier(MODID, "moon_stripped_log"),
+            new BlockItem(ElementalsBlocks.MOON_STRIPPED_LOG, new FabricItemSettings()));
+    public static final BlockItem MOON_PLANKS = Registry.register(Registries.ITEM,
+            new Identifier(MODID, "moon_planks"),
+            new BlockItem(ElementalsBlocks.MOON_PLANKS, new FabricItemSettings()));
 
     public static  final ItemGroup ELEMENTALS_GROUP = FabricItemGroup.builder()
             .icon(() -> new ItemStack(SCROLL_ITEM))
@@ -112,6 +137,11 @@ public class ElementalItems {
                 entries.add(BOOMERANG_ITEM);
                 entries.add(WATER_POUCH_ITEM);
                 entries.add(GLIDER_ITEM);
+                entries.add(AIR_BANNER_PATTERN_ITEM);
+                entries.add(MOON_LOG);
+                entries.add(MOON_STRIPPED_LOG);
+                entries.add(MOON_PLANKS);
+                entries.add(MOON_PEACH_LEAVES_ITEM);
             }).build();
 
 
@@ -130,6 +160,8 @@ public class ElementalItems {
         METAL_ARMOR_SET.add(METAL_CHESTPLATE);
         METAL_ARMOR_SET.add(METAL_LEGGINGS);
         METAL_ARMOR_SET.add(METAL_BOOTS);
+        
         Registry.register(Registries.ITEM_GROUP, Identifier.of(MODID, "elementals_group"), ELEMENTALS_GROUP);
+        Registry.register(Registries.BANNER_PATTERN,Identifier.of(MODID,"air"),AIR_BANNER_PATTERN);
     }
 }

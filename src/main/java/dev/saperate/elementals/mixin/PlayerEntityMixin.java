@@ -36,7 +36,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.List;
 
-
 import static dev.saperate.elementals.utils.SapsUtils.safeHasStatusEffect;
 
 @Mixin(PlayerEntity.class)

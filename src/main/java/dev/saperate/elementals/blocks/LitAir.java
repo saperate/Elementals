@@ -19,15 +19,10 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
-import static dev.saperate.elementals.Elementals.LIT_AIR_BLOCK_ENTITY;
 import static dev.saperate.elementals.Elementals.MODID;
+import static dev.saperate.elementals.blocks.ElementalsBlocks.LIT_AIR_BLOCK_ENTITY;
 
 public class LitAir extends BlockWithEntity {
-    //TODO fix deprecated stuff
-    public static final Block LIT_AIR = Registry.register(Registries.BLOCK, Identifier.of(MODID, "lit_air"), new LitAir(FabricBlockSettings.create()
-            .strength(0f).luminance(15).nonOpaque().noCollision()
-            .emissiveLighting(Blocks::always).blockVision(Blocks::never)
-    ));
 
     public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
         return VoxelShapes.empty();
@@ -51,7 +46,7 @@ public class LitAir extends BlockWithEntity {
     }
 
     public static Block registerBlock() {
-        return LIT_AIR;
+        return ElementalsBlocks.LIT_AIR;
     }
 
     @Nullable

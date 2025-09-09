@@ -1,5 +1,6 @@
 package dev.saperate.elementals;
 
+import dev.saperate.elementals.blocks.ElementalsBlocks;
 import dev.saperate.elementals.entities.air.*;
 import dev.saperate.elementals.entities.blood.BloodShotEntityRenderer;
 import dev.saperate.elementals.entities.common.BoomerangEntityRenderer;
@@ -35,6 +36,7 @@ import dev.saperate.elementals.network.payload.C2S.SyncVersionPayload;
 import dev.saperate.elementals.network.payload.S2C.SyncLevelPayload;
 import dev.saperate.elementals.packets.*;
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
@@ -49,8 +51,11 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.loader.api.Version;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.color.block.BlockColorProvider;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.particle.FlameParticle;
+import net.minecraft.client.render.RenderLayer;
+import net.minecraft.client.render.RenderLayers;
 import net.minecraft.client.render.entity.model.EntityModelLayer;
 import net.minecraft.network.packet.CustomPayload;
 import net.minecraft.util.Identifier;
@@ -106,6 +111,8 @@ public class ElementalsClient implements ClientModInitializer {
                 return renderer;
             }
         };
+        BlockRenderLayerMap.INSTANCE.putBlock(ElementalsBlocks.MOON_PEACH_LEAVES, RenderLayer.getCutout());
+        ColorProviderRegistry.BLOCK.register((state, view, pos, tintIndex) -> 0x4253ed, ElementalsBlocks.MOON_PEACH_LEAVES);
     }
 
     public void registerS2CPackets() {
@@ -121,6 +128,7 @@ public class ElementalsClient implements ClientModInitializer {
             context.client().execute(() -> t.receive(context.client(),payload));
         });
     }
+
 
 
     public void registerEntityRenderers() {

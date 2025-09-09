@@ -2,6 +2,7 @@ package dev.saperate.elementals;
 
 import dev.saperate.elementals.advancements.HasElementCriterion;
 import dev.saperate.elementals.advancements.UsedAbilityCriterion;
+import dev.saperate.elementals.blocks.ElementalsBlocks;
 import dev.saperate.elementals.blocks.LitAir;
 import dev.saperate.elementals.blocks.SoulFireCore;
 import dev.saperate.elementals.blocks.WaterRapid;
@@ -58,7 +59,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static dev.saperate.elementals.blocks.LitAir.LIT_AIR;
 import static dev.saperate.elementals.items.ElementalItems.*;
 import static dev.saperate.elementals.network.ModMessages.registerNetworking;
 
@@ -79,12 +79,6 @@ public class Elementals implements ModInitializer {
     public static final GameRules.Key<GameRules.BooleanRule> BENDING_GRIEFING =
             GameRuleRegistry.register("bendingGriefing", GameRules.Category.MISC, GameRuleFactory.createBooleanRule(true));
 
-    public static final BlockEntityType<LitAirBlockEntity> LIT_AIR_BLOCK_ENTITY = Registry.register(
-            Registries.BLOCK_ENTITY_TYPE,
-            Identifier.of(MODID, "lit_air_block_entity"),
-            BlockEntityType.Builder.create(LitAirBlockEntity::new, LIT_AIR).build(null)
-    );
-
     @Override
     public void onInitialize() {
         LOGGER.info("Initialising the cool stuff...");
@@ -92,15 +86,16 @@ public class Elementals implements ModInitializer {
 
         ElementalsStatusEffects.registerEffects();
         ElementalItems.register();
+        ElementalsBlocks.registerBlocks();
         DispenserBlock.registerBehavior(BOOMERANG_ITEM,BOOMERANG_ITEM);
         DispenserBlock.registerBehavior(DIRT_BOTTLE_ITEM,DIRT_BOTTLE_ITEM);
 
         ElementalsEnchantments.init();
         ElementalEntities.register();
-
-        SoulFireCore.registerBlock();
-        WaterRapid.registerBlock();
+        
+        
         LitAir.registerBlock();
+        
 
 
         registerElements();
