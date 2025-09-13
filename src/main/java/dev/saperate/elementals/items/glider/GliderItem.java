@@ -2,6 +2,9 @@ package dev.saperate.elementals.items.glider;
 
 import dev.saperate.elementals.Elementals;
 import dev.saperate.elementals.utils.SapsUtils;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.loader.api.FabricLoader;
+import net.fabricmc.loader.impl.game.minecraft.MinecraftGameProvider;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -9,10 +12,8 @@ import net.minecraft.item.Vanishable;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtInt;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.TypedActionResult;
-import net.minecraft.util.UseAction;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.*;
 import net.minecraft.world.World;
 import software.bernie.geckolib.animatable.GeoItem;
 import software.bernie.geckolib.animatable.SingletonGeoAnimatable;
@@ -39,29 +40,30 @@ public class GliderItem extends Item implements Vanishable, GeoItem {
     private final RawAnimation OPENED_ANIM = RawAnimation.begin().thenPlayAndHold("open.glider");
     private final RawAnimation CLOSED_ANIM = RawAnimation.begin().thenPlayAndHold("close.glider");
     private final AnimatableInstanceCache animatableInstanceCache = GeckoLibUtil.createInstanceCache(this);
-    private final  Supplier<Object> renderer = GeoItem.makeRenderer(this);
-    
+    private final Supplier<Object> renderer = GeoItem.makeRenderer(this);
+
     public GliderItem(Settings settings) {
         super(settings);
 
         SingletonGeoAnimatable.registerSyncedAnimatable(this);
     }
 
-    @Override 
+    @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         ItemStack stack = user.getStackInHand(hand); //TODO shift to change state, otherwise wear/unwear (to glide)
-        
+
         user.getItemCooldownManager().set(this, 5);
-        switch (getState(stack)){ //Handles the switch between open and closed.
-            case OPEN -> setState(stack,GliderStates.CLOSED);
-            case CLOSED -> setState(stack,GliderStates.OPEN);
-            default -> {
-                return TypedActionResult.fail(stack);
+        if(FabricLoader.getInstance().getEnvironmentType().equals(EnvType.SERVER)){
+            switch (getState(stack)) { //Handles the switch between open and closed.
+                case OPEN -> setState(stack, GliderStates.CLOSED);
+                case CLOSED -> setState(stack, GliderStates.OPEN);
+                default -> {
+                    return TypedActionResult.fail(stack);
+                }
             }
         }
         return TypedActionResult.success(stack);
     }
-
 
 
     @Override
@@ -73,14 +75,10 @@ public class GliderItem extends Item implements Vanishable, GeoItem {
     public Supplier<Object> getRenderProvider() {
         return renderer;
     }
-
-    @Override
-    public double getTick(Object itemStack) {
-        return RenderUtils.getCurrentTick();
-    }
+    
 
     //Chooses which animation to use
-    private PlayState animationPredicate(AnimationState<GliderItem> animationState){
+    private PlayState animationPredicate(AnimationState<GliderItem> animationState) {
         ItemStack stack = animationState.getData(DataTickets.ITEMSTACK);
         GliderStates gliderState = getState(stack);
 
@@ -88,10 +86,10 @@ public class GliderItem extends Item implements Vanishable, GeoItem {
             case OPEN -> animationState.getController().setAnimation(OPENED_ANIM);
             case CLOSED -> animationState.getController().setAnimation(CLOSED_ANIM);
         }
-        
+
         return PlayState.CONTINUE;
     }
-    
+
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
         controllerRegistrar.add(new AnimationController<>(
@@ -106,17 +104,15 @@ public class GliderItem extends Item implements Vanishable, GeoItem {
         return animatableInstanceCache;
     }
 
-    public GliderStates getState(ItemStack stack){
-        if(stack.getNbt() == null || !GliderStates.isValid(stack.getNbt().getString("state"))){
-            NbtCompound nbt = new NbtCompound();
-            nbt.putString("state", GliderStates.CLOSED.id);
-            stack.setNbt(nbt);
+    public GliderStates getState(ItemStack stack) {
+        if (stack.getNbt() == null || !GliderStates.isValid(stack.getNbt().getString("state"))) {
+            return GliderStates.CLOSED;
         }
-        return GliderStates.valueOf(stack.getNbt().getString("state").toUpperCase(Locale.getDefault()));
+        return GliderStates.valueOf(stack.getNbt().getString("state").toUpperCase(Locale.ROOT));
     }
 
-    public void setState(ItemStack stack, GliderStates state){
-        if(stack.getNbt() == null){
+    public void setState(ItemStack stack, GliderStates state) {
+        if (stack.getNbt() == null) {
             NbtCompound nbt = new NbtCompound();
             stack.setNbt(nbt);
         }
@@ -124,16 +120,16 @@ public class GliderItem extends Item implements Vanishable, GeoItem {
         updateStateChangeTick(stack);
     }
 
-    private void updateStateChangeTick(ItemStack stack){
-        if(stack.getNbt() == null ){
+    private void updateStateChangeTick(ItemStack stack) {
+        if (stack.getNbt() == null) {
             NbtCompound nbt = new NbtCompound();
             stack.setNbt(nbt);
         }
-        stack.getNbt().putDouble("tickAtStateChange",getTick(stack));
+        stack.getNbt().putDouble("tickAtStateChange", getTick(stack));
     }
-    
-    public double timeSinceStateChange(ItemStack stack){
-        if(stack.getNbt() == null ){
+
+    public double timeSinceStateChange(ItemStack stack) {
+        if (stack.getNbt() == null) {
             NbtCompound nbt = new NbtCompound();
             nbt.putDouble("tickAtStateChange", 0);
             stack.setNbt(nbt);
@@ -141,20 +137,20 @@ public class GliderItem extends Item implements Vanishable, GeoItem {
         return getTick(stack) - stack.getNbt().getDouble("tickAtStateChange");
     }
 
-    
+
     public enum GliderStates {
         OPEN("open"),
         CLOSED("closed");
-        
+
         public final String id;
-        
-        GliderStates(String id){
+
+        GliderStates(String id) {
             this.id = id;
         }
-        
-        public static boolean isValid(String id){
+
+        public static boolean isValid(String id) {
             for (GliderStates state : values()) {
-                if(state.id.equalsIgnoreCase(id)){
+                if (state.id.equalsIgnoreCase(id)) {
                     return true;
                 }
             }
