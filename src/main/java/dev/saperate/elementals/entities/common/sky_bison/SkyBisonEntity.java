@@ -113,14 +113,32 @@ public class SkyBisonEntity extends AnimalEntity implements GeoEntity {
 
     @Override
     public ActionResult interactMob(PlayerEntity player, Hand hand) {
-        if(getPassengerList().size() < 8){
+        ItemStack handStack = player.getStackInHand(hand);
+        if(player.isSneaking()) {
+            if(player.getActiveHand() != hand){
+                return ActionResult.FAIL;
+            }
+            if (handStack.getItem() == Items.SADDLE) {
+                setSaddle(handStack);
+                player.setStackInHand(hand, ItemStack.EMPTY);
+                return ActionResult.PASS;
+            } else if (handStack.isEmpty()) {
+                player.setStackInHand(hand, getSaddle());
+                setSaddle(ItemStack.EMPTY);
+                return ActionResult.PASS;
+            }
+        }
+        return tryRideMob(player);
+    }
+
+    public ActionResult tryRideMob(PlayerEntity player){
+        if((getPassengerList().size() < 8 && hasSaddle()) || getPassengerList().isEmpty()){
             player.startRiding(this,true);
             return ActionResult.PASS;
         }
-
         return ActionResult.FAIL;
     }
-
+    
     @Override
     public boolean damage(DamageSource source, float amount) {
         if(!source.isOf(DamageTypes.FALL)){
@@ -282,6 +300,10 @@ public class SkyBisonEntity extends AnimalEntity implements GeoEntity {
 
     public ItemStack getSaddle() {
         return this.dataTracker.get(SADDLE);
+    }
+    
+    public boolean hasSaddle(){
+        return !getSaddle().isEmpty();
     }
 
 
