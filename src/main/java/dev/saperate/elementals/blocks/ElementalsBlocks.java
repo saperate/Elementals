@@ -38,7 +38,7 @@ public class ElementalsBlocks {
             new LeavesBlock(FabricBlockSettings.create().strength(1f).nonOpaque()));
 
     public static final Block MOON_LOG = Registry.register(Registries.BLOCK,
-            new Identifier(MODID,"moon_log"), //FIXME does not turn for wtv reason
+            new Identifier(MODID,"moon_log"),
             new PillarBlock(FabricBlockSettings.create().strength(1f).nonOpaque().sounds(BlockSoundGroup.WOOD).burnable()));
 
     public static final Block MOON_STRIPPED_LOG = Registry.register(Registries.BLOCK,
@@ -46,7 +46,7 @@ public class ElementalsBlocks {
             new PillarBlock(FabricBlockSettings.create().strength(1f).nonOpaque().sounds(BlockSoundGroup.WOOD).burnable()));
 
     public static final Block MOON_PLANKS = Registry.register(Registries.BLOCK,
-            new Identifier(MODID,"moon_planks"), //TODO figure out datagen
+            new Identifier(MODID,"moon_planks"),
             new Block(FabricBlockSettings.create().strength(1f).nonOpaque()));
     
     

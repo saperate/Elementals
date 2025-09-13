@@ -83,12 +83,12 @@ public class GliderItem extends Item implements Vanishable, GeoItem {
     private PlayState animationPredicate(AnimationState<GliderItem> animationState){
         ItemStack stack = animationState.getData(DataTickets.ITEMSTACK);
         GliderStates gliderState = getState(stack);
-        AnimationController.State controllerState = animationState.getController().getAnimationState();
 
-        switch (gliderState){
+        switch (gliderState) {
             case OPEN -> animationState.getController().setAnimation(OPENED_ANIM);
             case CLOSED -> animationState.getController().setAnimation(CLOSED_ANIM);
         }
+        
         return PlayState.CONTINUE;
     }
     

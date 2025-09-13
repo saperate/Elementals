@@ -19,6 +19,7 @@ import dev.saperate.elementals.items.ElementalItems;
 import dev.saperate.elementals.utils.SapsUtils;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.damage.DamageType;
@@ -27,7 +28,9 @@ import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ElytraItem;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.item.WrittenBookItem;
 import net.minecraft.network.packet.s2c.play.OpenWrittenBookS2CPacket;
 import net.minecraft.server.MinecraftServer;
@@ -60,6 +63,11 @@ public abstract class PlayerEntityMixin {
     @Shadow
     public abstract void remove(Entity.RemovalReason reason);
 
+    @Shadow
+    public abstract void startFallFlying();
+
+    @Shadow public abstract void stopFallFlying();
+
     @Inject(at = @At("HEAD"), method = "handleFallDamage", cancellable = true)
     private void fall(float fallDistance, float damageMultiplier, DamageSource damageSource, CallbackInfoReturnable<Boolean> cir) {
         PlayerEntity player = ((PlayerEntity) (Object) this);
@@ -67,16 +75,34 @@ public abstract class PlayerEntityMixin {
                 player.getBoundingBox().expand(0.1f),
                 EarthBlockEntity::isCollidable);
 
-        if(entities.size() > 1){
+        if (entities.size() > 1) {
             cir.setReturnValue(false);
             cir.cancel();
+        }
+    }
+
+    @Inject(at = @At("HEAD"), method = "checkFallFlying", cancellable = true)
+    private void fall(CallbackInfoReturnable<Boolean> cir) {
+        PlayerEntity player = ((PlayerEntity) (Object) this);
+        if (player.getMainHandStack().isOf(ElementalItems.GLIDER_ITEM)
+                || player.getOffHandStack().isOf(ElementalItems.GLIDER_ITEM)) {
+
+            boolean shouldStartFlying = !player.isOnGround() && !player.isFallFlying() //Vanilla check
+                    && !player.isTouchingWater() && !player.hasStatusEffect(StatusEffects.LEVITATION);
+            if (shouldStartFlying) {
+                startFallFlying();
+                cir.cancel();
+            }else{
+                stopFallFlying();
+                cir.setReturnValue(false);
+                cir.cancel();
+            }
         }
     }
 
     @Inject(at = @At("TAIL"), method = "tick")
     private void tick(CallbackInfo ci) {
         PlayerEntity player = ((PlayerEntity) (Object) this);
-
         if (safeHasStatusEffect(SPIRIT_PROJECTION_EFFECT, player)) {
             //checks if we are inside a wall
             float f = player.getDimensions(player.getPose()).width * 0.8f;
@@ -86,7 +112,7 @@ public abstract class PlayerEntityMixin {
                 player.addStatusEffect(new StatusEffectInstance(StatusEffects.BLINDNESS, 21, 0, false, false, false));
             }
         }
-        if(player.getWorld().isClient){
+        if (player.getWorld().isClient) {
             return;
         }
         Bender bender = Bender.getBender((ServerPlayerEntity) player);
@@ -103,8 +129,8 @@ public abstract class PlayerEntityMixin {
     @Inject(at = @At("HEAD"), method = "isBlockBreakingRestricted", cancellable = true)
     private void restrictBlockBreaking(World world, BlockPos pos, GameMode gameMode, CallbackInfoReturnable<Boolean> cir) {
         PlayerEntity player = ((PlayerEntity) (Object) this);
-        if(player instanceof ServerPlayerEntity serverPlayer 
-                && Bender.getBender(serverPlayer).currAbility instanceof AbilityMetalDecoy){
+        if (player instanceof ServerPlayerEntity serverPlayer
+                && Bender.getBender(serverPlayer).currAbility instanceof AbilityMetalDecoy) {
             cir.setReturnValue(true);
         }
     }
