@@ -7,6 +7,7 @@
 	"authors": [
 		"Saperate",
 		"Cosmicnull",
+		"Furgus",
 		"_bec_. (Russian translation)"
 	],
 	"contact": {
@@ -27,7 +28,7 @@
 			"dev.saperate.elementals.server.ElementalsServer"
 		],
 		"fabric-datagen": [
-
+			"dev.saperate.elementals.datagen.ElementalsDataGenerator"
 		]
 	},
 	"mixins": [

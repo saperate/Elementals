@@ -24,12 +24,12 @@ import static dev.saperate.elementals.Elementals.MODID;
 
 public class ElementalItems {
 
-    public static final TagKey<BannerPattern> AIR_BANNER_PATTERN_TAG = TagKey.of(RegistryKeys.BANNER_PATTERN,Identifier.of("minecraft","pattern_item/air"));
+    public static final TagKey<BannerPattern> AIR_BANNER_PATTERN_TAG = TagKey.of(RegistryKeys.BANNER_PATTERN,Identifier.of("elementals","pattern_item/air_banner_pattern"));
     
     public static final FoodComponent LIGHTNING_BOTTLE_FOOD_COMPONENT = new FoodComponent.Builder()
             .alwaysEdible()
             .saturationModifier(-1.2f)
-            .nutrition(-6)
+            .hunger(-6)
             .statusEffect(new StatusEffectInstance(ElementalsStatusEffects.OVERCHARGED,400,0,false,false,true), 1)
             .build();
 
@@ -102,24 +102,23 @@ public class ElementalItems {
                     .maxCount(1)));
     public static final BannerPatternItem AIR_BANNER_PATTERN_ITEM = Registry.register(Registries.ITEM, 
             new Identifier(MODID,"air_banner_pattern"), 
-            new BannerPatternItem(AIR_BANNER_PATTERN_TAG,new FabricItemSettings()
+            new BannerPatternItem(AIR_BANNER_PATTERN_TAG,new Item.Settings()
                     .maxCount(1)));
-    public static final BannerPattern AIR_BANNER_PATTERN = new BannerPattern("elementals_air");
             
 
     //BLOCK ITEMS
     public static final BlockItem MOON_PEACH_LEAVES_ITEM = Registry.register(Registries.ITEM,
             new Identifier(MODID, "moon_peach_leaves"), 
-            new BlockItem(ElementalsBlocks.MOON_PEACH_LEAVES, new FabricItemSettings()));
+            new BlockItem(ElementalsBlocks.MOON_PEACH_LEAVES, new Item.Settings()));
     public static final BlockItem MOON_LOG = Registry.register(Registries.ITEM,
             new Identifier(MODID, "moon_log"),
-            new BlockItem(ElementalsBlocks.MOON_LOG, new FabricItemSettings()));
+            new BlockItem(ElementalsBlocks.MOON_LOG, new Item.Settings()));
     public static final BlockItem MOON_STRIPPED_LOG = Registry.register(Registries.ITEM,
             new Identifier(MODID, "moon_stripped_log"),
-            new BlockItem(ElementalsBlocks.MOON_STRIPPED_LOG, new FabricItemSettings()));
+            new BlockItem(ElementalsBlocks.MOON_STRIPPED_LOG, new Item.Settings()));
     public static final BlockItem MOON_PLANKS = Registry.register(Registries.ITEM,
             new Identifier(MODID, "moon_planks"),
-            new BlockItem(ElementalsBlocks.MOON_PLANKS, new FabricItemSettings()));
+            new BlockItem(ElementalsBlocks.MOON_PLANKS, new Item.Settings()));
 
     public static  final ItemGroup ELEMENTALS_GROUP = FabricItemGroup.builder()
             .icon(() -> new ItemStack(SCROLL_ITEM))
@@ -162,6 +161,6 @@ public class ElementalItems {
         METAL_ARMOR_SET.add(METAL_BOOTS);
         
         Registry.register(Registries.ITEM_GROUP, Identifier.of(MODID, "elementals_group"), ELEMENTALS_GROUP);
-        Registry.register(Registries.BANNER_PATTERN,Identifier.of(MODID,"air"),AIR_BANNER_PATTERN);
+        Registry.register(Registries.BANNER_PATTERN,Identifier.of(MODID,"air"),new BannerPattern("air"));
     }
 }
