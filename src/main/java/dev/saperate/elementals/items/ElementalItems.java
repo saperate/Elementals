@@ -25,7 +25,7 @@ import static dev.saperate.elementals.effects.OverchargedStatusEffect.OVERCHARGE
 
 public class ElementalItems {
 
-    public static final TagKey<BannerPattern> AIR_BANNER_PATTERN_TAG = TagKey.of(RegistryKeys.BANNER_PATTERN,Identifier.of("minecraft","pattern_item/air"));
+    public static final TagKey<BannerPattern> AIR_BANNER_PATTERN_TAG = TagKey.of(RegistryKeys.BANNER_PATTERN,Identifier.of("elementals","pattern_item/air_banner_pattern"));
     
     public static final FoodComponent LIGHTNING_BOTTLE_FOOD_COMPONENT = new FoodComponent.Builder()
             .alwaysEdible()
@@ -104,7 +104,6 @@ public class ElementalItems {
             new Identifier(MODID,"air_banner_pattern"), 
             new BannerPatternItem(AIR_BANNER_PATTERN_TAG,new FabricItemSettings()
                     .maxCount(1)));
-    public static final BannerPattern AIR_BANNER_PATTERN = new BannerPattern("elementals_air");
             
 
     //BLOCK ITEMS
@@ -162,6 +161,6 @@ public class ElementalItems {
         METAL_ARMOR_SET.add(METAL_BOOTS);
         
         Registry.register(Registries.ITEM_GROUP, Identifier.of(MODID, "base"), ELEMENTALS_GROUP);
-        Registry.register(Registries.BANNER_PATTERN,Identifier.of(MODID,"air"),AIR_BANNER_PATTERN);
+        Registry.register(Registries.BANNER_PATTERN,Identifier.of(MODID,"air"),new BannerPattern("air"));
     }
 }

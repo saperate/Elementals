@@ -137,8 +137,6 @@ public class Elementals implements ModInitializer {
         ServerLifecycleEvents.SERVER_STOPPING.register(Elementals::onPlayEnd);
         ServerPlayerEvents.AFTER_RESPAWN.register(Elementals::onPlayerRespawn);
 
-        Registry.register(Registries.BANNER_PATTERN, "air", AIR_PATTERN);
-
         Registry.register(Registries.SOUND_EVENT, WIND_SOUND_ID, WIND_SOUND_EVENT);
         Registry.register(Registries.SOUND_EVENT, WIND_BURST_SOUND_ID, WIND_BURST_SOUND_EVENT);
 
