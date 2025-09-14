@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.elements.Element;
+import dev.saperate.elementals.items.ElementalItems;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.fabricmc.loader.impl.lib.sat4j.core.Vec;
 import net.minecraft.block.BlockState;
@@ -17,6 +18,7 @@ import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ProjectileUtil;
 import net.minecraft.fluid.FluidState;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.particle.ParticleEffect;
@@ -36,6 +38,7 @@ import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3i;
 import net.minecraft.util.math.random.Random;
@@ -469,12 +472,17 @@ public final class SapsUtils {
     }
 
     public static void launchEntity(Entity entity, float power, boolean reduceYVelocity) {
+        if(entity instanceof PlayerEntity player && !player.isOnGround() 
+                && hasItemInEitherHands(player,ElementalItems.GLIDER_ITEM)){
+            power *= 0.5f;
+        }
+        
         Vector3f velocity = getEntityLookVector(entity, 1)
                 .subtract(entity.getEyePos())
                 .normalize().multiply(power, reduceYVelocity ? Math.sqrt(power * 0.5) : power * 0.5f, power).toVector3f();
         //returns the root vehicle or itself if there are none
         Entity vehicle = entity.getRootVehicle();
-
+        
         vehicle.setVelocity(velocity.x,
                 velocity.y,
                 velocity.z);
@@ -598,6 +606,11 @@ public final class SapsUtils {
             other.move(MovementType.SELF, other.getVelocity());
             other.fallDistance = 0;
         }
+    }
+    
+    public static boolean hasItemInEitherHands(PlayerEntity player, Item item){
+        return player.getStackInHand(Hand.MAIN_HAND).isOf(item)
+                || player.getStackInHand(Hand.OFF_HAND).isOf(item);
     }
 
     private static float calcBlockBreakingDelta(BlockState state, BlockView world, BlockPos pos, float miningSpeed) {

@@ -90,6 +90,7 @@ public class Bender {
 
 
     public void tick() {
+        
         plrData.chi = Math.min(ElementalConfig.get().MAX_CHI,
                 plrData.chi + (ElementalConfig.get().CHI_REGENERATION_RATE
                         * (safeHasStatusEffect(OVERCHARGED_EFFECT, player) ? 4 : 1)

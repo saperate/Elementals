@@ -139,18 +139,21 @@ public class GliderItem extends Item implements Vanishable, GeoItem {
     }
 
     private void updateStateChangeTick(ItemStack stack) {
+        if(stack.getHolder() == null){
+            return;
+        }
         if (stack.getNbt() == null) {
             NbtCompound nbt = new NbtCompound();
             stack.setNbt(nbt);
         }
-        stack.getNbt().putDouble("tickAtStateChange", getTick(stack));
+        stack.getNbt().putDouble("tickAtStateChange", stack.getHolder().age);
     }
 
     public double timeSinceStateChange(ItemStack stack) {
-        if (stack.getNbt() == null) {
-            return 0;
+        if (stack.getNbt() == null || stack.getHolder() == null) {
+            return Double.MAX_VALUE;
         }
-        return getTick(stack) - stack.getNbt().getDouble("tickAtStateChange");
+        return Math.max(stack.getHolder().age - stack.getNbt().getDouble("tickAtStateChange"), 0);
     }
 
 
