@@ -1,5 +1,6 @@
 package dev.saperate.elementals.mixin;
 
+import com.mojang.datafixers.util.Either;
 import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.effects.ElementalsStatusEffects;
 import dev.saperate.elementals.elements.metal.AbilityMetalDecoy;
@@ -14,6 +15,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.Unit;
 import net.minecraft.world.GameMode;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
@@ -29,6 +31,8 @@ import static dev.saperate.elementals.utils.SapsUtils.safeHasStatusEffect;
 
 @Mixin(PlayerEntity.class)
 public abstract class PlayerEntityMixin {
+    private boolean gliderStartedGlidingState = false; 
+    
     @Shadow
     public abstract void remove(Entity.RemovalReason reason);
 
@@ -36,6 +40,8 @@ public abstract class PlayerEntityMixin {
     public abstract void startFallFlying();
 
     @Shadow public abstract void stopFallFlying();
+
+    @Shadow public abstract Either<PlayerEntity.SleepFailureReason, Unit> trySleep(BlockPos pos);
 
     @Inject(at = @At("HEAD"), method = "handleFallDamage", cancellable = true)
     private void fall(float fallDistance, float damageMultiplier, DamageSource damageSource, CallbackInfoReturnable<Boolean> cir) {
@@ -51,7 +57,7 @@ public abstract class PlayerEntityMixin {
     }
 
     @Inject(at = @At("HEAD"), method = "checkFallFlying", cancellable = true)
-    private void fall(CallbackInfoReturnable<Boolean> cir) {
+    private void fallFlying(CallbackInfoReturnable<Boolean> cir) {
         PlayerEntity player = ((PlayerEntity) (Object) this);
         if (player.getMainHandStack().isOf(ElementalItems.GLIDER_ITEM)
                 || player.getOffHandStack().isOf(ElementalItems.GLIDER_ITEM)) {
@@ -60,12 +66,12 @@ public abstract class PlayerEntityMixin {
                     && !player.isTouchingWater() && !player.hasStatusEffect(StatusEffects.LEVITATION);
             if (shouldStartFlying) {
                 startFallFlying();
-                cir.cancel();
+                gliderStartedGlidingState = true;
             }else{
                 stopFallFlying();
-                cir.setReturnValue(false);
-                cir.cancel();
             }
+            cir.setReturnValue(shouldStartFlying);
+            cir.cancel();
         }
     }
 
@@ -81,9 +87,15 @@ public abstract class PlayerEntityMixin {
                 player.addStatusEffect(new StatusEffectInstance(StatusEffects.BLINDNESS, 21, 0, false, false, false));
             }
         }
-        if (player.getWorld().isClient) {
+        if (player.getWorld().isClient) { // Below is serverside only
             return;
         }
+
+        boolean shouldStartFlying = !player.isOnGround() && !player.isFallFlying() //Vanilla check
+                && !player.isTouchingWater() && !player.hasStatusEffect(StatusEffects.LEVITATION);
+
+
+        
         Bender bender = Bender.getBender((ServerPlayerEntity) player);
         bender.tick();
         if (bender.castTime != null) {
