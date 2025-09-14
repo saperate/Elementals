@@ -13,6 +13,7 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtInt;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.*;
 import net.minecraft.world.World;
 import software.bernie.geckolib.animatable.GeoItem;
@@ -37,8 +38,10 @@ import java.util.function.Supplier;
 
 //TODO make colorable!!
 public class GliderItem extends Item implements Vanishable, GeoItem {
-    private final RawAnimation OPENED_ANIM = RawAnimation.begin().thenPlayAndHold("open.glider");
-    private final RawAnimation CLOSED_ANIM = RawAnimation.begin().thenPlayAndHold("close.glider");
+    private final RawAnimation OPENED_ANIM = RawAnimation.begin().thenPlayAndHold("opened.glider");
+    private final RawAnimation CLOSED_ANIM = RawAnimation.begin().thenPlayAndHold("closed.glider");
+    private final RawAnimation OPEN_ANIM = RawAnimation.begin().thenPlay("open.glider");
+    private final RawAnimation CLOSE_ANIM = RawAnimation.begin().thenPlay("close.glider");
     private final AnimatableInstanceCache animatableInstanceCache = GeckoLibUtil.createInstanceCache(this);
     private final Supplier<Object> renderer = GeoItem.makeRenderer(this);
 
@@ -53,10 +56,22 @@ public class GliderItem extends Item implements Vanishable, GeoItem {
         ItemStack stack = user.getStackInHand(hand); //TODO shift to change state, otherwise wear/unwear (to glide)
 
         user.getItemCooldownManager().set(this, 5);
-        if(FabricLoader.getInstance().getEnvironmentType().equals(EnvType.SERVER)){
+        if (!world.isClient) {
             switch (getState(stack)) { //Handles the switch between open and closed.
-                case OPEN -> setState(stack, GliderStates.CLOSED);
-                case CLOSED -> setState(stack, GliderStates.OPEN);
+                case OPEN -> {
+                    setState(stack, GliderStates.CLOSED);
+                    
+                    triggerAnim(user,GeoItem.getOrAssignId(stack, (ServerWorld) world),
+                            "controller","close"
+                    );
+                }
+                case CLOSED -> {
+                    setState(stack, GliderStates.OPEN);
+
+                    triggerAnim(user,GeoItem.getOrAssignId(stack, (ServerWorld) world),
+                            "controller","open"
+                    );
+                }
                 default -> {
                     return TypedActionResult.fail(stack);
                 }
@@ -75,7 +90,7 @@ public class GliderItem extends Item implements Vanishable, GeoItem {
     public Supplier<Object> getRenderProvider() {
         return renderer;
     }
-    
+
 
     //Chooses which animation to use
     private PlayState animationPredicate(AnimationState<GliderItem> animationState) {
@@ -83,9 +98,10 @@ public class GliderItem extends Item implements Vanishable, GeoItem {
         GliderStates gliderState = getState(stack);
 
         switch (gliderState) {
-            case OPEN -> animationState.getController().setAnimation(OPENED_ANIM);
-            case CLOSED -> animationState.getController().setAnimation(CLOSED_ANIM);
+            case OPEN -> animationState.setAnimation(OPENED_ANIM);
+            case CLOSED -> animationState.setAnimation(CLOSED_ANIM);
         }
+
 
         return PlayState.CONTINUE;
     }
@@ -96,6 +112,8 @@ public class GliderItem extends Item implements Vanishable, GeoItem {
                 this,
                 "controller",
                 0, this::animationPredicate)
+                .triggerableAnim("open", OPEN_ANIM)
+                .triggerableAnim("close", CLOSE_ANIM)
         );
     }
 
@@ -130,9 +148,7 @@ public class GliderItem extends Item implements Vanishable, GeoItem {
 
     public double timeSinceStateChange(ItemStack stack) {
         if (stack.getNbt() == null) {
-            NbtCompound nbt = new NbtCompound();
-            nbt.putDouble("tickAtStateChange", 0);
-            stack.setNbt(nbt);
+            return 0;
         }
         return getTick(stack) - stack.getNbt().getDouble("tickAtStateChange");
     }
