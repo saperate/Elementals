@@ -3,12 +3,20 @@ package dev.saperate.elementals.mixin;
 import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.effects.ElementalsStatusEffects;
 import dev.saperate.elementals.elements.lightning.LightningElement;
+import dev.saperate.elementals.items.ElementalItems;
+import dev.saperate.elementals.utils.SapsUtils;
+import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.damage.DamageTypes;
 import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ElytraItem;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.world.event.GameEvent;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -95,6 +103,34 @@ public abstract class LivingEntityMixin {
         if(effect.getEffectType().equals(ElementalsStatusEffects.OVERCHARGED)){
             living.addStatusEffect(new StatusEffectInstance(ElementalsStatusEffects.BURNOUT, 200 * (effect.getAmplifier()+1), effect.getAmplifier(), false, false, true));
         }
+    }
+
+
+    @Inject(at = @At("HEAD"), method = "tickFallFlying", cancellable = true)
+    private void fallFlying(CallbackInfo ci) {
+        LivingEntity living = ((LivingEntity) (Object) this);
+        if(living instanceof PlayerEntity player && SapsUtils.hasItemInEitherHands(player,ElementalItems.GLIDER_ITEM)){
+            if (player.isFallFlying() && !player.isOnGround() && !player.hasVehicle() && !player.hasStatusEffect(StatusEffects.LEVITATION)) {
+                    int i = player.getRoll() + 1;
+                    if (!player.getWorld().isClient && i % 10 == 0) {
+//                        int j = i / 10;
+//                        if (j % 2 == 0) {
+//                            itemStack.damage(1, this, (player) -> {
+//                                player.sendEquipmentBreakStatus(EquipmentSlot.CHEST);
+//                            });
+//                        }
+
+                        player.emitGameEvent(GameEvent.ELYTRA_GLIDE);
+                    }
+                if (!player.getWorld().isClient) {
+                    player.startFallFlying();
+                }
+                    ci.cancel();
+            }
+
+            
+        }
+
     }
     
 }

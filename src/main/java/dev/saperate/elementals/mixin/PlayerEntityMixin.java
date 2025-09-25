@@ -67,13 +67,14 @@ public abstract class PlayerEntityMixin {
             if (shouldStartFlying) {
                 startFallFlying();
                 gliderStartedGlidingState = true;
-            }else{
+            }else {
                 stopFallFlying();
             }
             cir.setReturnValue(shouldStartFlying);
             cir.cancel();
         }
     }
+    
 
     @Inject(at = @At("TAIL"), method = "tick")
     private void tick(CallbackInfo ci) {
@@ -87,13 +88,13 @@ public abstract class PlayerEntityMixin {
                 player.addStatusEffect(new StatusEffectInstance(StatusEffects.BLINDNESS, 21, 0, false, false, false));
             }
         }
+        
         if (player.getWorld().isClient) { // Below is serverside only
             return;
         }
 
-        boolean shouldStartFlying = !player.isOnGround() && !player.isFallFlying() //Vanilla check
-                && !player.isTouchingWater() && !player.hasStatusEffect(StatusEffects.LEVITATION);
 
+        
 
         
         Bender bender = Bender.getBender((ServerPlayerEntity) player);
