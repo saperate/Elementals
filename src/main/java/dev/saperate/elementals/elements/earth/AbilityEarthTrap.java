@@ -59,7 +59,7 @@ public class AbilityEarthTrap implements Ability {
             return;
         }
 
-        if (!bender.reduceChi(0.25f)) {
+        if (!bender.reduceChi(bender.player.isSneaking() ? 0.25f : 0.75f)) {
             if (bender.abilityData == null) {
                 bender.setCurrAbility(null);
             } else {
@@ -82,8 +82,7 @@ public class AbilityEarthTrap implements Ability {
 //TODO remove particles in 1.20 too
 
 
-        if (!bender.player.isSneaking()
-                || distance > 15) {
+        if (distance > 15) {
             block.discard();
             onRemove(bender);
         }

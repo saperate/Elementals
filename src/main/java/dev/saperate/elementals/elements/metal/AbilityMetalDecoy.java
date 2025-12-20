@@ -68,10 +68,10 @@ public class AbilityMetalDecoy implements Ability {
 
         decoy.setCustomName(plr.getName());
 
-        decoy.equipStack(EquipmentSlot.HEAD, ElementalItems.EARTH_HELMET.getDefaultStack());
-        decoy.equipStack(EquipmentSlot.CHEST, ElementalItems.EARTH_CHESTPLATE.getDefaultStack());
-        decoy.equipStack(EquipmentSlot.LEGS, ElementalItems.EARTH_LEGGINGS.getDefaultStack());
-        decoy.equipStack(EquipmentSlot.FEET, ElementalItems.EARTH_BOOTS.getDefaultStack());
+        decoy.equipStack(EquipmentSlot.HEAD, ElementalItems.METAL_HELMET.getDefaultStack());
+        decoy.equipStack(EquipmentSlot.CHEST, ElementalItems.METAL_CHESTPLATE.getDefaultStack());
+        decoy.equipStack(EquipmentSlot.LEGS, ElementalItems.METAL_LEGGINGS.getDefaultStack());
+        decoy.equipStack(EquipmentSlot.FEET, ElementalItems.METAL_BOOTS.getDefaultStack());
         decoy.equipStack(EquipmentSlot.MAINHAND, ItemStack.EMPTY);
         decoy.equipStack(EquipmentSlot.OFFHAND, ItemStack.EMPTY);
 

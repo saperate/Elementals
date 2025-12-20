@@ -13,12 +13,12 @@ public class MetalElement extends Element {
         addAbility(new AbilityMetalBullets());
         addAbility(new AbilityMetalLance());
         addAbility(new AbilityMetal2(), true);
-        addAbility(new AbilityMetalBind());//TODO move stuff once you add abilities above it
-        addAbility(new AbilityMetalDecoy());
+        addAbility(new AbilityMetalBind());
         addAbility(new AbilityMetal3(),true);
         addAbility(new AbilityMetalCable());
         addAbility(new AbilityMetal4(),true);
         addAbility(new AbilityMetalArmor());
+        addAbility(new AbilityMetalDecoy());
     }
 
     public static Element get() {

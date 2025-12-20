@@ -390,7 +390,7 @@
 
   "upgrade.elementals.earthMine": "Mining",
   "upgrade.elementals.earthMine.description": " Allows you to mine earth bendable blocks as if you had a pickaxe.",
-  "upgrade.elementals.earthMine.use": " Use: %d",
+  "upgrade.elementals.earthMine.use": " Use: %d (Hold for 4 seconds to make a tunnel)",
   "upgrade.elementals.earthMine.icon": "earth_mine",
 
   "upgrade.elementals.earthTrap": "Trap",
