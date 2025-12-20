@@ -9,9 +9,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(PlayerEntityRenderer.class)
 public abstract class PlayerEntityRendererMixin {
-
-
-
+	
 	@Inject(at = @At("TAIL"), method = "setModelPose")
 	private void modelPose(AbstractClientPlayerEntity player, CallbackInfo ci) {
 		//Quick dirty bug fix

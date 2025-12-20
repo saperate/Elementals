@@ -617,6 +617,16 @@ public final class SapsUtils {
                 || player.getStackInHand(Hand.OFF_HAND).isOf(item);
     }
 
+    public static ItemStack getFirstItemOfTypeInHands(PlayerEntity player, Item type){
+        if(player.getStackInHand(Hand.MAIN_HAND).isOf(type)){
+            return player.getStackInHand(Hand.MAIN_HAND);
+        }
+        if(player.getStackInHand(Hand.OFF_HAND).isOf(type)){
+            return player.getStackInHand(Hand.OFF_HAND);
+        }
+        return ItemStack.EMPTY;
+    }
+    
     private static float calcBlockBreakingDelta(BlockState state, BlockView world, BlockPos pos, float miningSpeed) {
         float f = state.getHardness(world, pos);
         if (f == -1.0f) {
