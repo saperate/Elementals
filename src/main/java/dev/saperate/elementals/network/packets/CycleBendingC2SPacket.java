@@ -16,12 +16,14 @@ public class CycleBendingC2SPacket {
         Bender bender = Bender.getBender(player);
         PlayerData data = bender.getData();
 
-        if (data.activeElementIndex >= data.elements.size() - 1) {
-            bender.setElement(0, true);
-        } else {
-            int newIndex = (int) MathHelper.clamp(data.activeElementIndex + 1, 0, data.elements.size() - 1);
-            bender.setElement(newIndex, true);
+        int nextIndex = data.activeElementIndex + (player.isSneaking() ? -1 : 1);
+        if(nextIndex > data.elements.size() - 1){
+            nextIndex = 0;
+        } else if (nextIndex < 0) {
+            nextIndex = data.elements.size() - 1;
         }
+
+        bender.setElement(nextIndex, true);
     }
 
 }
