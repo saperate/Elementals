@@ -53,7 +53,7 @@ public class GliderItem extends Item implements Vanishable, GeoItem {
 
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
-        ItemStack stack = user.getStackInHand(hand); //TODO shift to change state, otherwise wear/unwear (to glide)
+        ItemStack stack = user.getStackInHand(hand);
 
         user.getItemCooldownManager().set(this, 5);
         if (!world.isClient) {
@@ -137,6 +137,7 @@ public class GliderItem extends Item implements Vanishable, GeoItem {
         stack.getNbt().putString("state", state.id);
         updateStateChangeTick(stack);
     }
+    
 
     private void updateStateChangeTick(ItemStack stack) {
         if(stack.getHolder() == null){

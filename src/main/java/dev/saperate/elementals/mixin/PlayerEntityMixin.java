@@ -17,6 +17,7 @@ import dev.saperate.elementals.elements.metal.AbilityMetalDecoy;
 import dev.saperate.elementals.elements.water.AbilityWaterShield;
 import dev.saperate.elementals.entities.earth.EarthBlockEntity;
 import dev.saperate.elementals.items.ElementalItems;
+import dev.saperate.elementals.items.glider.GliderItem;
 import dev.saperate.elementals.utils.SapsUtils;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
@@ -91,8 +92,8 @@ public abstract class PlayerEntityMixin {
     @Inject(at = @At("HEAD"), method = "checkFallFlying", cancellable = true)
     private void fallFlying(CallbackInfoReturnable<Boolean> cir) {
         PlayerEntity player = ((PlayerEntity) (Object) this);
-        if (player.getMainHandStack().isOf(ElementalItems.GLIDER_ITEM)
-                || player.getOffHandStack().isOf(ElementalItems.GLIDER_ITEM)) {
+        ItemStack stack = SapsUtils.getFirstItemOfTypeInHands(player, ElementalItems.GLIDER_ITEM);
+        if (!stack.isEmpty() && ElementalItems.GLIDER_ITEM.getState(stack) == GliderItem.GliderStates.OPEN) {
 
             boolean shouldStartFlying = !player.isOnGround() && !player.isFallFlying() //Vanilla check
                     && !player.isTouchingWater() && !player.hasStatusEffect(StatusEffects.LEVITATION);

@@ -3,6 +3,7 @@ package dev.saperate.elementals.mixin;
 import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.elements.lightning.LightningElement;
 import dev.saperate.elementals.items.ElementalItems;
+import dev.saperate.elementals.items.glider.GliderItem;
 import dev.saperate.elementals.utils.SapsUtils;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
@@ -103,17 +104,12 @@ public abstract class LivingEntityMixin {
     @Inject(at = @At("HEAD"), method = "tickFallFlying", cancellable = true)
     private void fallFlying(CallbackInfo ci) {
         LivingEntity living = ((LivingEntity) (Object) this);
-        if(living instanceof PlayerEntity player && SapsUtils.hasItemInEitherHands(player,ElementalItems.GLIDER_ITEM)){
-            if (player.isFallFlying() && !player.isOnGround() && !player.hasVehicle() && !player.hasStatusEffect(StatusEffects.LEVITATION)) {
+        if(living instanceof PlayerEntity player){
+            ItemStack stack = SapsUtils.getFirstItemOfTypeInHands(player, ElementalItems.GLIDER_ITEM);
+            if (!stack.isEmpty() && ElementalItems.GLIDER_ITEM.getState(stack) == GliderItem.GliderStates.OPEN 
+                    && player.isFallFlying() && !player.isOnGround() && !player.hasVehicle() && !player.hasStatusEffect(StatusEffects.LEVITATION)) {
                     int i = player.getRoll() + 1;
                     if (!player.getWorld().isClient && i % 10 == 0) {
-//                        int j = i / 10;
-//                        if (j % 2 == 0) {
-//                            itemStack.damage(1, this, (player) -> {
-//                                player.sendEquipmentBreakStatus(EquipmentSlot.CHEST);
-//                            });
-//                        }
-
                         player.emitGameEvent(GameEvent.ELYTRA_GLIDE);
                     }
                 if (!player.getWorld().isClient) {
@@ -121,8 +117,6 @@ public abstract class LivingEntityMixin {
                 }
                     ci.cancel();
             }
-
-            
         }
 
     }

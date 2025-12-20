@@ -4,6 +4,8 @@
   "compatibilityLevel": "JAVA_17",
   "client": [
     "CameraMixin",
+    "HeldItemRendererMixin",
+    "LivingEntityRendererMixin",
     "MinecraftClientMixin",
     "MouseMixin",
     "OverlayMixin",
@@ -14,8 +16,8 @@
     "defaultRequire": 1
   },
   "mixins": [
+    "ClientPlayerEntityMixin",
     "GameRendererMixin",
-    "GlowMixin",
-    "ClientPlayerEntityMixin"
+    "GlowMixin"
   ]
 }

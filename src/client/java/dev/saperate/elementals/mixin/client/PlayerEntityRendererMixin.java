@@ -7,7 +7,9 @@ import net.minecraft.client.render.Camera;
 import net.minecraft.client.render.CameraSubmersionType;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.render.entity.PlayerEntityRenderer;
+import net.minecraft.client.render.entity.feature.StuckStingersFeatureRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.EntityPose;
 import net.minecraft.entity.LivingEntity;
@@ -25,9 +27,7 @@ import static dev.saperate.elementals.utils.ClientUtils.safeHasStatusEffect;
 
 @Mixin(PlayerEntityRenderer.class)
 public abstract class PlayerEntityRendererMixin {
-
-
-
+	
 	@Inject(at = @At("TAIL"), method = "setModelPose")
 	private void modelPose(AbstractClientPlayerEntity player, CallbackInfo ci) {
 		//Quick dirty bug fix
