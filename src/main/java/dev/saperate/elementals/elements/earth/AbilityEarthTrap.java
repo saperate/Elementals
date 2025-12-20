@@ -50,21 +50,7 @@ public class AbilityEarthTrap implements Ability {
 
         bender.setCurrAbility(null);
     }
-
-    @Override
-    public void onLeftClick(Bender bender, boolean started) {
-
-    }
-
-    @Override
-    public void onMiddleClick(Bender bender, boolean started) {
-
-    }
-
-    @Override
-    public void onRightClick(Bender bender, boolean started) {
-
-    }
+    
 
     @Override
     public void onTick(Bender bender) {
@@ -73,7 +59,7 @@ public class AbilityEarthTrap implements Ability {
             return;
         }
 
-        if (!bender.reduceChi(0.25f)) {
+        if (!bender.reduceChi(bender.player.isSneaking() ? 0.25f : 0.75f)) {
             if (bender.abilityData == null) {
                 bender.setCurrAbility(null);
             } else {
@@ -96,8 +82,7 @@ public class AbilityEarthTrap implements Ability {
 
 
 
-        if (!bender.player.isSneaking()
-                || distance > 15) {
+        if (distance > 15) {
             block.discard();
             onRemove(bender);
         }

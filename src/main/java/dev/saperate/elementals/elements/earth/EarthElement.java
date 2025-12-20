@@ -27,7 +27,9 @@ import net.minecraft.world.World;
 import org.joml.Vector3f;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static dev.saperate.elementals.Elementals.BENDING_GRIEFING;
 import static dev.saperate.elementals.effects.StunnedStatusEffect.STUNNED_EFFECT;
@@ -196,8 +198,42 @@ public class EarthElement extends Element {
         }
 
         if (damagedEntities != null) {
-            damageEntityAboveBlock(bender.player, pos, damagedEntities, 1);
+            damageEntityAboveBlock(bender.player, pos, damagedEntities, 2);
         }
+    }
+
+    /**
+     * Makes a hole given a starting position and depth. It will not mine blocks that are not bendable nor does it drop them
+     * Can optionally damage entities standing on top of the block being broken
+     * @param pos  the starting y cord along with the x and z
+     * @param depth  How far down will the hole go
+     * @param bender  The bender that cast the ability
+     * @param damagedEntities  Entities that were already damaged, set to null to deal no damage
+     * @return brokenBlocks A Map of positions and the block that was broken at that place
+     */
+    public static HashMap<BlockPos, BlockState> makeHole(BlockPos pos, int depth, Bender bender, ArrayList<LivingEntity> damagedEntities, HashMap<BlockPos, BlockState> brokenBlocks) {
+        if(!bender.player.getWorld().getGameRules().getBoolean(BENDING_GRIEFING)){
+            return brokenBlocks;
+        }
+        for (int y = 0; y < depth; y++) {
+            BlockPos bPos = pos.down(y);
+            BlockState bState = bender.player.getWorld().getBlockState(bPos);
+            if (EarthElement.isBlockBendable(bState, bender)) {
+                boolean hasPosition = brokenBlocks.containsKey(bPos);
+                
+                //We can't have dupes, drop the blocks that come AFTER
+                bender.player.getWorld().breakBlock(bPos, hasPosition);
+                
+                if(!hasPosition){
+                    brokenBlocks.put(bPos,bState);
+                }
+            }
+        }
+
+        if (damagedEntities != null) {
+            damageEntityAboveBlock(bender.player, pos, damagedEntities, 2);
+        }
+        return brokenBlocks;
     }
 
     /**

@@ -125,10 +125,6 @@ public abstract class PlayerEntityMixin {
         if (player.getWorld().isClient) { // Below is serverside only
             return;
         }
-
-
-        
-
         
         Bender bender = Bender.getBender((ServerPlayerEntity) player);
         bender.tick();

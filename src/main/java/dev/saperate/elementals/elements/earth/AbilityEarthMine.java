@@ -40,7 +40,8 @@ public class AbilityEarthMine implements Ability {
         Direction dir = ((Direction) vars[3]).getOpposite();
 
         int numBlocks = (int) (Math.floor(dS * 2)) + 1;
-
+        
+        
         if(dS == 4){
             for (int i = -1; i <= 1; i++) {
                 for (int j = -1; j <= 1; j++) {
