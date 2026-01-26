@@ -4,7 +4,6 @@ import dev.saperate.elementals.armors.materials.ElementalsArmorMaterial;
 import dev.saperate.elementals.effects.ElementalsStatusEffects;
 import dev.saperate.elementals.armors.materials.ElementalArmorMaterial;
 import dev.saperate.elementals.blocks.ElementalsBlocks;
-import dev.saperate.elementals.items.glider.GliderItem;
 import dev.saperate.elementals.items.scrolls.*;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.minecraft.block.entity.BannerPattern;

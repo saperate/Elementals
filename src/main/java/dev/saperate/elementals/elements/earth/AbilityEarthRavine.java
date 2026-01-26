@@ -90,7 +90,7 @@ public class AbilityEarthRavine implements Ability {
                 if(!world.getBlockState(entryBlockPos).isAir()){
                     world.breakBlock(entryBlockPos,true);
                 }
-                world.setBlockState(entryBlockPos,entry.getValue());
+                world.setBlockState(entryBlockPos,entry.getValue());//TODO fix
                 try {
                     Thread.sleep(100);
                 } catch (InterruptedException e) {

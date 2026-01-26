@@ -7,5 +7,6 @@ public class ElementalsServer implements DedicatedServerModInitializer  {
     @Override
     public void onInitializeServer() {
         Elementals.GLIDER_ITEM_RENDER_PROVIDER = Object::new;
+        Elementals.METAL_ARMOR_RENDER_PROVIDER = Object::new;
     }
 }

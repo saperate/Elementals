@@ -6,7 +6,7 @@ import dev.saperate.elementals.effects.ElementalsStatusEffects;
 import dev.saperate.elementals.elements.metal.AbilityMetalDecoy;
 import dev.saperate.elementals.entities.earth.EarthBlockEntity;
 import dev.saperate.elementals.items.ElementalItems;
-import dev.saperate.elementals.items.glider.GliderItem;
+import dev.saperate.elementals.items.GliderItem;
 import dev.saperate.elementals.utils.SapsUtils;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.damage.DamageSource;
@@ -17,6 +17,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.Unit;
+import net.minecraft.item.ItemStack;
 import net.minecraft.world.GameMode;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
@@ -27,6 +28,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.List;
+import java.util.OptionalInt;
 
 import static dev.saperate.elementals.utils.SapsUtils.safeHasStatusEffect;
 
@@ -114,4 +116,5 @@ public abstract class PlayerEntityMixin {
         }
     }
 
+    
 }
