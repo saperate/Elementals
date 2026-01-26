@@ -84,6 +84,7 @@ public class AbilityMetalDecoy implements Ability {
         decoy.setHealth(20);
         decoy.setPos(plr.getX(), plr.getY(), plr.getZ());
         decoy.setFocusCamera(true);
+        decoy.addStatusEffect(new StatusEffectInstance(StatusEffects.INVISIBILITY,9999999, 0, false, false, false));
 
         plr.getWorld().spawnEntity(decoy);
 

@@ -1,10 +1,7 @@
 package dev.saperate.elementals.items;
 
 import dev.saperate.elementals.Elementals;
-import dev.saperate.elementals.elements.Element;
-import dev.saperate.elementals.items.glider.GliderItem;
 import net.minecraft.util.Identifier;
-import software.bernie.geckolib.core.animatable.GeoAnimatable;
 import software.bernie.geckolib.model.GeoModel;
 
 public class GliderGeoModel extends GeoModel<GliderItem> {

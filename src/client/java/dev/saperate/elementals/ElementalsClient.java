@@ -19,12 +19,12 @@ import dev.saperate.elementals.entities.common.DecoyPlayerEntityRenderer;
 import dev.saperate.elementals.entities.earth.EarthBlockEntityRenderer;
 import dev.saperate.elementals.entities.models.common.DecoyPlayerModel;
 import dev.saperate.elementals.entities.models.water.WaterBladeModel;
+import dev.saperate.elementals.features.MetalArmorRenderer;
 import dev.saperate.elementals.gui.CastTimerHudOverlay;
 import dev.saperate.elementals.gui.ChiHudOverlay;
 import dev.saperate.elementals.items.ElementalItems;
 import dev.saperate.elementals.items.GliderItemRenderer;
 import dev.saperate.elementals.items.WaterPouchItem;
-import dev.saperate.elementals.items.glider.GliderItem;
 import dev.saperate.elementals.keys.KeyCycleBending;
 import dev.saperate.elementals.keys.abilities.KeyAbility1;
 import dev.saperate.elementals.keys.abilities.KeyAbility2;
@@ -47,12 +47,14 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.loader.api.Version;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.color.block.BlockColorProvider;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.particle.FlameParticle;
 import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.RenderLayers;
+import net.minecraft.client.render.entity.model.BipedEntityModel;
 import net.minecraft.client.render.entity.model.EntityModelLayer;
+import net.minecraft.entity.EquipmentSlot;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
 import software.bernie.geckolib.animatable.client.RenderProvider;
@@ -108,7 +110,19 @@ public class ElementalsClient implements ClientModInitializer {
                 return renderer;
             }
         };
+		
+		Elementals.METAL_ARMOR_RENDER_PROVIDER = () -> new RenderProvider(){
+			private MetalArmorRenderer renderer;
+			@Override
+			public BipedEntityModel<LivingEntity> getHumanoidArmorModel(LivingEntity livingEntity, ItemStack itemStack, EquipmentSlot equipmentSlot, BipedEntityModel<LivingEntity> original) {
+				if(this.renderer == null)
+					this.renderer = new MetalArmorRenderer();
+				
+				this.renderer.prepForRender(livingEntity, itemStack, equipmentSlot, original);
 
+				return renderer;
+			}
+		};
 
 
 		BlockRenderLayerMap.INSTANCE.putBlock(ElementalsBlocks.MOON_PEACH_LEAVES, RenderLayer.getCutout());

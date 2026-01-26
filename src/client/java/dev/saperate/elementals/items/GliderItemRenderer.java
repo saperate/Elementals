@@ -1,23 +1,11 @@
 package dev.saperate.elementals.items;
 
 import dev.saperate.elementals.Elementals;
-import dev.saperate.elementals.entities.utils.RenderUtils;
-import dev.saperate.elementals.items.glider.GliderItem;
-import dev.saperate.elementals.utils.SapsUtils;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.render.model.json.ModelTransformationMode;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.Vec3d;
-import org.joml.Matrix4f;
-import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.renderer.GeoItemRenderer;
 
 import static dev.saperate.elementals.entities.utils.RenderUtils.drawCube;

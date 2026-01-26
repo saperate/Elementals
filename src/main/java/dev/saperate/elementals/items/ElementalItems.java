@@ -1,9 +1,7 @@
 package dev.saperate.elementals.items;
 
-import dev.saperate.elementals.Elementals;
 import dev.saperate.elementals.armors.materials.ElementalArmorMaterial;
 import dev.saperate.elementals.blocks.ElementalsBlocks;
-import dev.saperate.elementals.items.glider.GliderItem;
 import dev.saperate.elementals.items.scrolls.*;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;

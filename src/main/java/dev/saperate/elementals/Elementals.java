@@ -4,9 +4,6 @@ import dev.saperate.elementals.advancements.HasElementCriterion;
 import dev.saperate.elementals.advancements.UsedAbilityCriterion;
 import dev.saperate.elementals.blocks.ElementalsBlocks;
 import dev.saperate.elementals.blocks.LitAir;
-import dev.saperate.elementals.blocks.SoulFireCore;
-import dev.saperate.elementals.blocks.WaterRapid;
-import dev.saperate.elementals.blocks.blockEntities.LitAirBlockEntity;
 import dev.saperate.elementals.commands.BendingCommand;
 import dev.saperate.elementals.commands.ElementalsCommand;
 import dev.saperate.elementals.commands.ElementArgumentType;
@@ -24,7 +21,7 @@ import dev.saperate.elementals.elements.water.WaterElement;
 import dev.saperate.elementals.enchantments.VolumeEnchantment;
 import dev.saperate.elementals.entities.ElementalEntities;
 import dev.saperate.elementals.items.ElementalItems;
-import dev.saperate.elementals.items.glider.IGliderItemRenderProvider;
+import dev.saperate.elementals.misc.IItemRenderProvider;
 import net.fabricmc.api.ModInitializer;
 
 
@@ -40,7 +37,6 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.particle.v1.FabricParticleTypes;
 import net.minecraft.advancement.criterion.Criteria;
 import net.minecraft.block.DispenserBlock;
-import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.command.argument.serialize.ConstantArgumentSerializer;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.loot.LootPool;
@@ -76,7 +72,6 @@ import static dev.saperate.elementals.effects.StaticAuraStatusEffect.STATIC_AURA
 import static dev.saperate.elementals.effects.StationaryStatusEffect.STATIONARY_EFFECT;
 import static dev.saperate.elementals.effects.StunnedStatusEffect.STUNNED_EFFECT;
 import static dev.saperate.elementals.items.ElementalItems.*;
-import static dev.saperate.elementals.misc.AirBannerPattern.AIR_PATTERN;
 import static dev.saperate.elementals.network.ModMessages.registerC2SPackets;
 
 public class Elementals implements ModInitializer {
@@ -92,8 +87,8 @@ public class Elementals implements ModInitializer {
     public static SoundEvent WIND_SOUND_EVENT = SoundEvent.of(WIND_SOUND_ID);
     public static SoundEvent WIND_BURST_SOUND_EVENT = SoundEvent.of(WIND_BURST_SOUND_ID);
     public static final DefaultParticleType LIGHTNING_PARTICLE_TYPE = FabricParticleTypes.simple();
-    
-    public static IGliderItemRenderProvider GLIDER_ITEM_RENDER_PROVIDER;
+    public static IItemRenderProvider GLIDER_ITEM_RENDER_PROVIDER; //TODO use correct way
+    public static IItemRenderProvider METAL_ARMOR_RENDER_PROVIDER;
 
     public static final GameRules.Key<GameRules.BooleanRule> BENDING_GRIEFING =
             GameRuleRegistry.register("bendingGriefing", GameRules.Category.MISC, GameRuleFactory.createBooleanRule(true));

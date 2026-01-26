@@ -6,6 +6,7 @@ import dev.saperate.elementals.elements.air.AbilityAirShield;
 import dev.saperate.elementals.elements.earth.AbilityEarthArmor;
 import dev.saperate.elementals.elements.fire.AbilityFireShield;
 import dev.saperate.elementals.elements.metal.AbilityMetalArmor;
+import dev.saperate.elementals.elements.metal.AbilityMetalDecoy;
 import dev.saperate.elementals.elements.water.AbilityWaterShield;
 import dev.saperate.elementals.items.ElementalItems;
 import net.fabricmc.fabric.api.entity.FakePlayer;
@@ -15,6 +16,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.WrittenBookItem;
 import net.minecraft.network.packet.s2c.play.OpenWrittenBookS2CPacket;
+import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Hand;
 import org.spongepowered.asm.mixin.Mixin;
@@ -22,6 +24,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+
+import java.util.OptionalInt;
 
 @Mixin(ServerPlayerEntity.class)
 public abstract class ServerPlayerEntityMixin {
@@ -75,4 +79,14 @@ public abstract class ServerPlayerEntityMixin {
     }
 
 
+    @Inject(at = @At("HEAD"), method = "openHandledScreen", cancellable = true)
+    private void init(NamedScreenHandlerFactory factory, CallbackInfoReturnable<OptionalInt> cir) {
+        PlayerEntity player = ((PlayerEntity) (Object) this);
+        if(player instanceof FakePlayer){
+            return;
+        }
+        Bender bender = Bender.getBender((ServerPlayerEntity) player);
+        if(bender.currAbility instanceof AbilityMetalDecoy)
+            cir.cancel();
+    }
 }
