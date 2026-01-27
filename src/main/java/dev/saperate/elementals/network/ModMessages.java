@@ -17,6 +17,7 @@ public class ModMessages {
     public static final Identifier SYNC_UPGRADE_LIST_PACKET_ID = new Identifier(MODID,"sync_upgrades");
     public static final Identifier GET_UPGRADE_LIST_PACKET_ID = new Identifier(MODID,"get_upgrades");
     public static final Identifier BUY_UPGRADE_PACKET_ID = new Identifier(MODID,"buy_upgrade");
+    public static final Identifier TOGGLE_UPGRADE_PACKET_ID = new Identifier(MODID,"buy_upgrade");
     public static final Identifier SYNC_CHI_PACKET_ID = new Identifier(MODID,"sync_chi");
     public static final Identifier SYNC_LEVEL_PACKET_ID = new Identifier(MODID,"sync_level");
     public static final Identifier CYCLE_BENDING_PACKET_ID = new Identifier(MODID,"cycle_bending");
@@ -32,6 +33,7 @@ public class ModMessages {
         ServerPlayNetworking.registerGlobalReceiver(ABILITY4_PACKET_ID, Ability4C2SPacket::receive);
         ServerPlayNetworking.registerGlobalReceiver(GET_UPGRADE_LIST_PACKET_ID, GetUpgradeListC2SPacket::receive);
         ServerPlayNetworking.registerGlobalReceiver(BUY_UPGRADE_PACKET_ID, BuyUpgradeC2SPacket::receive);
+        ServerPlayNetworking.registerGlobalReceiver(TOGGLE_UPGRADE_PACKET_ID, BuyUpgradeC2SPacket::receive);
         ServerPlayNetworking.registerGlobalReceiver(SYNC_LEVEL_PACKET_ID, SyncLevelC2SPacket::receive);
         ServerPlayNetworking.registerGlobalReceiver(CYCLE_BENDING_PACKET_ID, CycleBendingC2SPacket::receive);
         ServerPlayNetworking.registerGlobalReceiver(GET_MOD_VERSION_PACKET_ID, GetModVersionC2SPacket::receive);
