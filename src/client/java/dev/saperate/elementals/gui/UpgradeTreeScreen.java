@@ -40,8 +40,7 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static dev.saperate.elementals.Elementals.MODID;
-import static dev.saperate.elementals.network.ModMessages.BUY_UPGRADE_PACKET_ID;
-import static dev.saperate.elementals.network.ModMessages.GET_UPGRADE_LIST_PACKET_ID;
+import static dev.saperate.elementals.network.ModMessages.*;
 
 public class UpgradeTreeScreen extends Screen {
     private ClientBender bender;
@@ -189,12 +188,20 @@ public class UpgradeTreeScreen extends Screen {
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (button == 0) {
-            Upgrade upgrade = mouseOnUpgrade(mouseX, mouseY);
-            if (upgrade != null && PlayerData.canBuyUpgrade(bender.upgrades, bender.getElement(), upgrade.name, new AtomicInteger(ClientBender.get().level))) {
+        Upgrade upgrade = mouseOnUpgrade(mouseX, mouseY);
+        if (upgrade != null) {
+            PacketByteBuf buf = PacketByteBufs.create();
+            buf.writeString(upgrade.name);
+
+            if(PlayerData.canBuyUpgrade(bender.upgrades, bender.getElement(), upgrade.name, new AtomicInteger(ClientBender.get().level))) {
                 ClientPlayNetworking.send(new BuyUpgradePayload(upgrade.name));
+            }else{
+                ClientPlayNetworking.send(new ToggleUpgradePayload(upgrade.name));
             }
+
+
         }
+        
         return super.mouseClicked(mouseX, mouseY, button);
     }
 

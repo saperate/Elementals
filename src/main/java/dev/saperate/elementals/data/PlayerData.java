@@ -57,8 +57,8 @@ public class PlayerData {
         boolean bought = canBuyUpgrade(upgrades, elements.get(activeElementIndex), upgrade.name, lvl);
         if (bought) {
             upgrades.put(upgrade, true);
+            level -= upgrade.price;
         }
-        level = lvl.get();
 
         return bought;
     }
@@ -67,17 +67,24 @@ public class PlayerData {
         for (Upgrade branches : element.root.children) {
             for (Upgrade upgrade : branches.nextUpgrades(plrUpgrades)) {
                 if (upgrade.name.equals(upgradeName) && upgrade.canBuy(plrUpgrades)) {
-                    if (level.get() >= upgrade.price) {
-                        level.set(level.get() - upgrade.price);
-                        return true;
-                    }
-                    return false;
+                    return level.get() >= upgrade.price;
                 }
             }
         }
         return false;
     }
 
+    /**
+     * Toggles an upgrade. 
+     * Making it enabled will allow it to affect bending, disabled will make it act as if it was not bought.
+     * @param upgrade The upgrade to toggle
+     */
+    public void toggleUpgrade(Upgrade upgrade) {
+        if (upgrades.containsKey(upgrade)) {
+            upgrades.put(upgrade, !upgrades.get(upgrade));
+        }
+    }
+    
     /**
      * @return The current active element
      */
