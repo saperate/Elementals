@@ -79,7 +79,7 @@ public class MetalBulletEntity extends AbstractElementalsEntity<PlayerEntity> {
                 0//Forwards
         );
 
-        Vec3d lookPos = getEntityLookVector(owner, 2);
+        Vec3d lookPos = getEntityLookVector(owner, 2).add(0,0.5f,0);
         float pitchCorrection = SapsUtils.isLookingForwards(lookPos.subtract(owner.getPos()).toVector3f()) ? -1 : 1;
         Quaternionf rotation = new Quaternionf()
                 .rotationXYZ(
@@ -152,4 +152,8 @@ public class MetalBulletEntity extends AbstractElementalsEntity<PlayerEntity> {
         return this.getDataTracker().get(DAMAGE_MULTIPLIER);
     }
 
+    @Override
+    public boolean pushesEntitiesAway() {
+        return false;
+    }
 }

@@ -9,7 +9,7 @@ import net.minecraft.util.math.Vec3d;
 
 import static dev.saperate.elementals.utils.SapsUtils.getEntityLookVector;
 
-public class AbilityMetalBullets implements Ability {//TODO make it so you can hold left click for full auto
+public class AbilityMetalBullets implements Ability {
 
     @Override
     public void onCall(Bender bender, long deltaT) {
@@ -26,7 +26,7 @@ public class AbilityMetalBullets implements Ability {//TODO make it so you can h
         Vec3d pos = getEntityLookVector(player, 2);
         PlayerData plrData = PlayerData.get(bender.player);
 
-        int bulletCount = 20;//TODO basic count w/out metal (standing on earth), enhanced by sacrificing ingots
+        int bulletCount = 20;
         if (plrData.canUseUpgrade("airBulletsCountII")) {//fixme
             bulletCount = 15;
         } else if (plrData.canUseUpgrade("airBulletsCountI")) {

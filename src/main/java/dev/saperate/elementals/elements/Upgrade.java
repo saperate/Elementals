@@ -85,9 +85,14 @@ public final class Upgrade {
      * @return Whether the player can buy this upgrade or not.
      */
     public boolean canBuy(HashMap<Upgrade,Boolean> plrUpgrades) {
-        if (parent == null || !parent.exclusive) {
+        if (parent == null || parent.parent == null)
             return true;
-        }
+        if(!plrUpgrades.getOrDefault(parent, false))
+            return false;
+        if(!parent.exclusive)
+            return true;
+        
+        
         for (Upgrade child : parent.children) {
             if (plrUpgrades.containsKey(child) && plrUpgrades.get(child)) {
                 return false;
