@@ -80,6 +80,7 @@ public final class Upgrade {
     /**
      * Checks if this upgrade is part the next buy-able upgrades list.
      * This does <b>NOT</b> check if the player can afford it with price and whatnot.
+     * We mark an already bought upgrade as not available
      * @param plrUpgrades The list of upgrades that the player has
      * @return Whether the player can buy this upgrade or not.
      */
@@ -88,7 +89,7 @@ public final class Upgrade {
             return true;
         }
         for (Upgrade child : parent.children) {
-            if (plrUpgrades.containsKey(child)) {
+            if (plrUpgrades.containsKey(child) && plrUpgrades.get(child)) {
                 return false;
             }
         }

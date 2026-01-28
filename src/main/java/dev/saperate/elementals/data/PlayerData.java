@@ -13,6 +13,7 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -77,13 +78,76 @@ public class PlayerData {
     /**
      * Toggles an upgrade. 
      * Making it enabled will allow it to affect bending, disabled will make it act as if it was not bought.
+     * It takes into account exclusive upgrades
+     * Does nothing if it is missing
      * @param upgrade The upgrade to toggle
      */
     public void toggleUpgrade(Upgrade upgrade) {
         if (upgrades.containsKey(upgrade)) {
-            upgrades.put(upgrade, !upgrades.get(upgrade));
+            boolean nVal = !upgrades.get(upgrade);
+            upgrades.put(upgrade, nVal);
+            fixUpgradeChildrenRecursive(upgrade,nVal);
+            
+            if(nVal && upgrade.parent.exclusive){ //Fixes the siblings
+                fixExclusiveUpgrades(upgrade);
+            }
         }
     }
+
+    /**
+     * Changes the status of an upgrade between on and off. 
+     * Disabled, the upgrade will act as if it was not bought
+     * It takes into account exclusive upgrades
+     * Does nothing if it is missing
+     * @param upgrade The upgrade to change the status of
+     * @param val True if enabling, False if disabling
+     */
+    public void setUpgrade(Upgrade upgrade, boolean val){
+        if(upgrades.containsKey(upgrade)){
+            upgrades.put(upgrade,val);
+            if(val && upgrade.parent.exclusive){
+                fixExclusiveUpgrades(upgrade);
+            }
+        }
+    }
+    
+    
+    public void fixUpgradeChildrenRecursive(Upgrade root, boolean enabled){
+        if(root.exclusive)
+            return;
+        
+        Stack<Upgrade> disableStack = new Stack<>();
+        disableStack.addAll(List.of(root.children));
+
+        while(!disableStack.empty()){
+            Upgrade curr = disableStack.pop();
+            if(!upgrades.containsKey(curr))
+                continue;
+            upgrades.put(curr, enabled);
+            
+            if(!enabled || !curr.exclusive)
+                disableStack.addAll(List.of(curr.children));
+        }
+    }
+    
+
+    /**
+     * Fixes the skill tree after we set an exclusive upgrade's status
+     * @param except The upgrade to ignore
+     */
+    private void fixExclusiveUpgrades(@NotNull Upgrade except){
+        Stack<Upgrade> disableStack = new Stack<>();
+        disableStack.addAll(List.of(except.parent.children));
+
+        while(!disableStack.empty()){
+            Upgrade curr = disableStack.pop();
+            if(curr == except || !upgrades.containsKey(curr))
+                continue;
+            disableStack.addAll(List.of(curr.children));
+            upgrades.put(curr, false);
+        }
+    }
+    
     
     /**
      * @return The current active element

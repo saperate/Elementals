@@ -188,17 +188,15 @@ public class UpgradeTreeScreen extends Screen {
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         Upgrade upgrade = mouseOnUpgrade(mouseX, mouseY);
-        if (upgrade != null) {
+        if (upgrade != null && button == 0) {
             PacketByteBuf buf = PacketByteBufs.create();
             buf.writeString(upgrade.name);
             
-            if(button == 0 && PlayerData.canBuyUpgrade(bender.upgrades, bender.getElement(), upgrade.name, new AtomicInteger(ClientBender.get().level))){
+            if(PlayerData.canBuyUpgrade(bender.upgrades, bender.getElement(), upgrade.name, new AtomicInteger(ClientBender.get().level))){
                 ClientPlayNetworking.send(BUY_UPGRADE_PACKET_ID, buf);
-            } else if (button == 1) {
+            } else{
                 ClientPlayNetworking.send(TOGGLE_UPGRADE_PACKET_ID, buf);
             }
-
-
         }
         
         return super.mouseClicked(mouseX, mouseY, button);
@@ -281,7 +279,8 @@ public class UpgradeTreeScreen extends Screen {
 
     public void drawUpgradeButton(int x1, int y1, DrawContext context, Upgrade upgrade) {
         String icon = Text.translatable("upgrade.elementals." + upgrade.name + ".icon").getString();
-        float color = bender.upgrades.containsKey(upgrade) ? 1 : 0.25f;
+        
+        float color = bender.upgrades.containsKey(upgrade) && bender.upgrades.get(upgrade)  ? 1 : 0.25f;
         boolean hasIcon = !icon.equals("upgrade.elementals." + upgrade.name + ".icon");
 
         drawTexturedQuad(context, new Identifier(MODID, "textures/gui/" + ClientBender.get().getElement().getName().toLowerCase() + "_" + (hasIcon ? "" : "plain_") + "upgrade_button.png"),
