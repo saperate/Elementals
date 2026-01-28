@@ -87,7 +87,7 @@ public class AbilityAir4 implements Ability {
                 new StatusEffectInstance(ElementalsStatusEffects.SPIRIT_PROJECTION,
                         -1,
                         SpiritProjectionStatusEffect.convertGameModeToAmplifier(plr.interactionManager.getGameMode()),
-                        false, false, false)
+                        false, false, true)
         );
 
         plr.changeGameMode(GameMode.SPECTATOR);

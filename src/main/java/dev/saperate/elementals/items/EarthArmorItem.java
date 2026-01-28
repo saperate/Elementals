@@ -56,7 +56,7 @@ public class EarthArmorItem extends ArmorItem{
         }
         if(entity instanceof LivingEntity player){
             player.addStatusEffect(new StatusEffectInstance(ElementalsStatusEffects.SEISMIC_SENSE,60, 0, false, false, false));
-            player.addStatusEffect(new StatusEffectInstance(ElementalsStatusEffects.DENSE,120,0, false, false, false));
+            player.addStatusEffect(new StatusEffectInstance(ElementalsStatusEffects.DENSE,120,10, false, false, false));
         }
     }
 

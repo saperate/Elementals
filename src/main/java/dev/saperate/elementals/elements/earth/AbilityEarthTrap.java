@@ -79,7 +79,6 @@ public class AbilityEarthTrap implements Ability {
         block.setTargetPosition(victim.getPos().toVector3f());
         bender.player.addStatusEffect(new StatusEffectInstance(ElementalsStatusEffects.STATIONARY, 5, 1, false, false, false));
         victim.addStatusEffect(new StatusEffectInstance(ElementalsStatusEffects.STATIONARY, 60, 1, false, false, true));
-//TODO remove particles in 1.20 too
 
 
         if (distance > 15) {

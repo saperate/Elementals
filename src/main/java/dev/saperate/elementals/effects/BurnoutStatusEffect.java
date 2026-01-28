@@ -26,11 +26,8 @@ public class BurnoutStatusEffect extends StatusEffect {
         if(entity.hasStatusEffect(ElementalsStatusEffects.OVERCHARGED)){
             entity.removeStatusEffect(ElementalsStatusEffects.OVERCHARGED);
         }
-        if(!entity.hasStatusEffect(ElementalsStatusEffects.DENSE)){
-            entity.addStatusEffect(new StatusEffectInstance(ElementalsStatusEffects.DENSE, 8, 1, false, false, false));
-        }else {
-            ((StatusEffectInstanceAccessor) entity.getStatusEffect(ElementalsStatusEffects.DENSE)).setDuration(8);
-        }
+        entity.addStatusEffect(new StatusEffectInstance(ElementalsStatusEffects.DENSE, 8, 1, false, false, false));
+        entity.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, 8, amplifier, false, false, false));
         return true;
     }
 
