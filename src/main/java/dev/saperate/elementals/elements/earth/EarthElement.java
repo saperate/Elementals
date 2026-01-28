@@ -15,6 +15,8 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.registry.RegistryKey;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
@@ -24,10 +26,7 @@ import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
 import org.joml.Vector3f;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static dev.saperate.elementals.Elementals.BENDING_GRIEFING;
 import static dev.saperate.elementals.entities.ElementalEntities.EARTHBLOCK;
@@ -37,6 +36,8 @@ import static dev.saperate.elementals.utils.SapsUtils.getEntityLookVector;
 
 
 public class EarthElement extends Element {
+    private static final HashSet<BlockInformation> blocksToRestore = new HashSet<>();
+    
     public EarthElement() {
         super("Earth", new Upgrade[]{
                 new Upgrade("earthBlock", new Upgrade[]{
@@ -266,6 +267,33 @@ public class EarthElement extends Element {
     }
 
     @Override
+    public void tick(MinecraftServer server) {
+        List<BlockInformation> toRemove = new ArrayList<>();
+        for (BlockInformation entry : blocksToRestore) {
+            if(entry.lifetime > 0) {
+                entry.lifetime--;
+                continue;
+            }
+            
+            toRemove.add(entry);
+            World world = server.getWorld(entry.worldKey);
+            if(world == null)
+                continue;
+            
+            if(!world.getBlockState(entry.pos).isAir()){
+                world.breakBlock(entry.pos,true);
+            }
+            world.setBlockState(entry.pos, entry.state);
+        }
+        toRemove.forEach(blocksToRestore::remove);
+    }
+
+    @Override
+    public void reset() {
+        blocksToRestore.clear();
+    }
+
+    @Override
     public int getColor() {
         return 0xFF34a830;
     }
@@ -296,5 +324,36 @@ public class EarthElement extends Element {
                 && plrData.canUseUpgrade("earthPillarTallI")
                 && plrData.canUseUpgrade("earthArmor")
         ;
+    }
+    
+    public static void addBlockToRestore(BlockInformation info){
+        blocksToRestore.add(info);
+    }
+    
+    public static class BlockInformation{
+        public final BlockPos pos;
+        public final BlockState state;
+        public final RegistryKey<World> worldKey;
+        public int lifetime;
+
+        public BlockInformation(BlockPos pos, BlockState state, RegistryKey<World> worldKey, int lifetime) {
+            this.pos = pos;
+            this.state = state;
+            this.worldKey = worldKey;
+            this.lifetime = lifetime;
+        }
+
+        @Override
+        public boolean equals(Object object) {
+            if (this == object) return true;
+            if (object == null || getClass() != object.getClass()) return false;
+            BlockInformation that = (BlockInformation) object;
+            return Objects.equals(pos, that.pos) && Objects.equals(state, that.state) && Objects.equals(worldKey, that.worldKey);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(pos, state, worldKey);
+        }
     }
 }

@@ -5,6 +5,7 @@ import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.utils.SapsUtils;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.Identifier;
 
 import java.util.*;
@@ -125,6 +126,13 @@ public abstract class Element{
     public Identifier getOverlayTexture(){
         return null;
     }
+    
+    public void tick(MinecraftServer server){}
+
+    /**
+     * Triggered when the world is closed, as to not have residual data
+     */
+    public void reset(){}
     
     @Override
     public int hashCode() {

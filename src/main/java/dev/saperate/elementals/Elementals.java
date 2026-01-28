@@ -11,6 +11,7 @@ import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.data.ElementalConfig;
 import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.effects.ElementalsStatusEffects;
+import dev.saperate.elementals.elements.Element;
 import dev.saperate.elementals.elements.NoneElement;
 import dev.saperate.elementals.elements.air.AirElement;
 import dev.saperate.elementals.elements.blood.BloodElement;
@@ -28,6 +29,7 @@ import net.fabricmc.fabric.api.command.v2.ArgumentTypeRegistry;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.gamerule.v1.GameRuleFactory;
 import net.fabricmc.fabric.api.gamerule.v1.GameRuleRegistry;
 import net.fabricmc.fabric.api.loot.v2.LootTableEvents;
@@ -47,6 +49,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.GameRules;
+import net.minecraft.world.WorldEvents;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -101,7 +104,9 @@ public class Elementals implements ModInitializer {
         ServerPlayConnectionEvents.JOIN.register(Elementals::onPlayReady);
         ServerPlayConnectionEvents.DISCONNECT.register(Elementals::onPlayerDisconnect);
         ServerLifecycleEvents.SERVER_STOPPING.register(Elementals::onPlayEnd);
+        ServerTickEvents.END_SERVER_TICK.register(Elementals::onTickEnd);
         ServerPlayerEvents.AFTER_RESPAWN.register(Elementals::onPlayerRespawn);
+        ServerLifecycleEvents.SERVER_STOPPING.register(Elementals::onServerStopping);
 
         Registry.register(Registries.SOUND_EVENT, WIND_SOUND_ID, WIND_SOUND_EVENT);
         Registry.register(Registries.SOUND_EVENT, WIND_BURST_SOUND_ID, WIND_BURST_SOUND_EVENT);
@@ -124,7 +129,6 @@ public class Elementals implements ModInitializer {
         });
 
     }
-
 
 
     private void registerElements() {
@@ -150,7 +154,11 @@ public class Elementals implements ModInitializer {
         );
     }
 
-
+    private static void onTickEnd(MinecraftServer server) {
+        for (Element element : Element.getElementList()) {
+            element.tick(server);
+        }
+    }
 
     public static void onPlayReady(ServerPlayNetworkHandler handler, PacketSender sender, MinecraftServer server) {
         Bender.getBender(handler.player).syncElements();
@@ -176,6 +184,12 @@ public class Elementals implements ModInitializer {
 
     private static void onPlayerDisconnect(ServerPlayNetworkHandler handler, MinecraftServer server) {
         Bender.benders.remove(handler.player.getUuid());
+    }
+
+    private static void onServerStopping(MinecraftServer server) {
+        for (Element element : Element.getElementList()) {
+            element.reset();
+        }
     }
 
 }

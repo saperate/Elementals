@@ -42,7 +42,7 @@ public class MetalBulletEntityRenderer extends EntityRenderer<MetalBulletEntity>
                 1,
                 texture,
                 1,
-                new Matrix4f().rotate((float) Math.toRadians(90),1,0,0).scale(0.25f),
+                new Matrix4f().rotate((float) Math.toRadians(90),1,0,0).scale(0.15f),
                 false,
                 true,
                 true

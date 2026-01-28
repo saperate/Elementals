@@ -77,27 +77,14 @@ public class AbilityEarthRavine implements Ability {
         }
         bender.setCurrAbility(null);
         
-        
-        new Thread(() -> {
-            try {
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-            for (Map.Entry<BlockPos, BlockState> entry : brokenBlocks.entrySet()) {
-                World world = player.getWorld();
-                BlockPos entryBlockPos = entry.getKey();
-                if(!world.getBlockState(entryBlockPos).isAir()){
-                    world.breakBlock(entryBlockPos,true);
-                }
-                world.setBlockState(entryBlockPos,entry.getValue());//TODO fix
-                try {
-                    Thread.sleep(100);
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-        }).start();
+        for (Map.Entry<BlockPos, BlockState> entry : brokenBlocks.entrySet()) {
+            EarthElement.addBlockToRestore(new EarthElement.BlockInformation(
+                    entry.getKey(),
+                    entry.getValue(),
+                    player.getWorld().getRegistryKey(),
+                    40 + player.getWorld().random.nextBetween(0,140)
+            ));
+        }
     }
 
     @Override

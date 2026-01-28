@@ -84,13 +84,7 @@ public class PlayerData {
      */
     public void toggleUpgrade(Upgrade upgrade) {
         if (upgrades.containsKey(upgrade)) {
-            boolean nVal = !upgrades.get(upgrade);
-            upgrades.put(upgrade, nVal);
-            fixUpgradeChildrenRecursive(upgrade,nVal);
-            
-            if(nVal && upgrade.parent.exclusive){ //Fixes the siblings
-                fixExclusiveUpgrades(upgrade);
-            }
+            setUpgrade(upgrade, !upgrades.get(upgrade));
         }
     }
 
@@ -103,9 +97,14 @@ public class PlayerData {
      * @param val True if enabling, False if disabling
      */
     public void setUpgrade(Upgrade upgrade, boolean val){
-        if(upgrades.containsKey(upgrade)){
-            upgrades.put(upgrade,val);
-            if(val && upgrade.parent.exclusive){
+        if (upgrades.containsKey(upgrade)) {
+            if(!upgrades.get(upgrade.parent) && upgrade.parent.parent != null)
+                return;
+            
+            upgrades.put(upgrade, val);
+            fixUpgradeChildrenRecursive(upgrade,val);
+
+            if(val && upgrade.parent.exclusive){ //Fixes the siblings
                 fixExclusiveUpgrades(upgrade);
             }
         }
@@ -113,7 +112,7 @@ public class PlayerData {
     
     
     public void fixUpgradeChildrenRecursive(Upgrade root, boolean enabled){
-        if(root.exclusive)
+        if(root.exclusive && enabled)
             return;
         
         Stack<Upgrade> disableStack = new Stack<>();
