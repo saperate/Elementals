@@ -30,7 +30,7 @@ public class BurnoutStatusEffect extends StatusEffect {
             entity.removeStatusEffect(OVERCHARGED_EFFECT);
         }
         entity.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, 8, amplifier, false, false, false));
-        entity.addStatusEffect(new StatusEffectInstance(DENSE_EFFECT, 4, 1, false, false, false));
+        entity.addStatusEffect(new StatusEffectInstance(DENSE_EFFECT, 4, 1, false, false, true));
     }
 
     @Override

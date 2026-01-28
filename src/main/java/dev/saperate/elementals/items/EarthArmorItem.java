@@ -48,7 +48,7 @@ public class EarthArmorItem extends DyeableArmorItem {
         }
         if(entity instanceof LivingEntity living){//Not inlining since i might need that later
             if(entity instanceof PlayerEntity player){
-                player.addStatusEffect(new StatusEffectInstance(SEISMIC_SENSE_EFFECT,60, 0, false, false, false));
+                player.addStatusEffect(new StatusEffectInstance(SEISMIC_SENSE_EFFECT,60, 0, false, false, true));
                 player.addStatusEffect(new StatusEffectInstance(DENSE_EFFECT,120,10, false, false, false));
             }
             //TODO figure out how to add armor points
