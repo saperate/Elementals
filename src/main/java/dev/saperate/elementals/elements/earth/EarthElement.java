@@ -36,7 +36,6 @@ import static dev.saperate.elementals.utils.SapsUtils.getEntityLookVector;
 
 
 public class EarthElement extends Element {
-    private static final HashSet<BlockInformation> blocksToRestore = new HashSet<>();
     
     public EarthElement() {
         super("Earth", new Upgrade[]{
@@ -267,33 +266,6 @@ public class EarthElement extends Element {
     }
 
     @Override
-    public void tick(MinecraftServer server) {
-        List<BlockInformation> toRemove = new ArrayList<>();
-        for (BlockInformation entry : blocksToRestore) {
-            if(entry.lifetime > 0) {
-                entry.lifetime--;
-                continue;
-            }
-            
-            toRemove.add(entry);
-            World world = server.getWorld(entry.worldKey);
-            if(world == null)
-                continue;
-            
-            if(!world.getBlockState(entry.pos).isAir()){
-                world.breakBlock(entry.pos,true);
-            }
-            world.setBlockState(entry.pos, entry.state);
-        }
-        toRemove.forEach(blocksToRestore::remove);
-    }
-
-    @Override
-    public void reset() {
-        blocksToRestore.clear();
-    }
-
-    @Override
     public int getColor() {
         return 0xFF34a830;
     }
@@ -326,9 +298,6 @@ public class EarthElement extends Element {
         ;
     }
     
-    public static void addBlockToRestore(BlockInformation info){
-        blocksToRestore.add(info);
-    }
     
     public static class BlockInformation{
         public final BlockPos pos;

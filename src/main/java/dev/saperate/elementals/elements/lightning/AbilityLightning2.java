@@ -32,7 +32,7 @@ public class AbilityLightning2 implements Ability {
                 int duration = 200;
                 PlayerData plrData = PlayerData.get(player);
                 if (plrData.canUseUpgrade("lightningStaticAuraStrengthII")) {
-                    duration = 600;
+                    duration = 600;//TODO make it have a thorns effect
                 } else if (plrData.canUseUpgrade("lightningStaticAuraStrengthI")) {
                     duration = 400;
                 }

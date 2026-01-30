@@ -23,6 +23,7 @@ import dev.saperate.elementals.elements.water.WaterElement;
 import dev.saperate.elementals.enchantments.ElementalsEnchantments;
 import dev.saperate.elementals.entities.ElementalEntities;
 import dev.saperate.elementals.items.ElementalItems;
+import dev.saperate.elementals.misc.BlockRestoreManager;
 import dev.saperate.elementals.misc.IItemRenderProvider;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.ArgumentTypeRegistry;
@@ -155,9 +156,7 @@ public class Elementals implements ModInitializer {
     }
 
     private static void onTickEnd(MinecraftServer server) {
-        for (Element element : Element.getElementList()) {
-            element.tick(server);
-        }
+        BlockRestoreManager.tick(server);
     }
 
     public static void onPlayReady(ServerPlayNetworkHandler handler, PacketSender sender, MinecraftServer server) {
@@ -187,9 +186,7 @@ public class Elementals implements ModInitializer {
     }
 
     private static void onServerStopping(MinecraftServer server) {
-        for (Element element : Element.getElementList()) {
-            element.reset();
-        }
+        BlockRestoreManager.reset();
     }
 
 }

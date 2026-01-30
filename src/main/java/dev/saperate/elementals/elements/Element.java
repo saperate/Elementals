@@ -3,10 +3,12 @@ package dev.saperate.elementals.elements;
 import dev.saperate.elementals.Elementals;
 import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.data.PlayerData;
+import dev.saperate.elementals.elements.earth.EarthElement;
 import dev.saperate.elementals.utils.SapsUtils;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.Identifier;
+import net.minecraft.world.World;
 
 import java.util.*;
 
@@ -127,13 +129,6 @@ public abstract class Element{
         return null;
     }
     
-    public void tick(MinecraftServer server){}
-
-    /**
-     * Triggered when the world is closed, as to not have residual data
-     */
-    public void reset(){}
-    
     @Override
     public int hashCode() {
         return name.hashCode();
@@ -147,4 +142,5 @@ public abstract class Element{
     public static List<Element> getElementList(){
         return elements.values().stream().toList();
     }
+    
 }
