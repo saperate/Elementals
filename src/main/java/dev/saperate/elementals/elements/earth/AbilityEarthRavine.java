@@ -5,6 +5,7 @@ import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.elements.Ability;
 import dev.saperate.elementals.entities.earth.EarthBlockEntity;
 import dev.saperate.elementals.entities.fire.FireBlockEntity;
+import dev.saperate.elementals.misc.BlockRestoreManager;
 import net.minecraft.block.AbstractFireBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
@@ -78,7 +79,7 @@ public class AbilityEarthRavine implements Ability {
         bender.setCurrAbility(null);
         
         for (Map.Entry<BlockPos, BlockState> entry : brokenBlocks.entrySet()) {
-            EarthElement.addBlockToRestore(new EarthElement.BlockInformation(
+            BlockRestoreManager.addBlockToRestore(new EarthElement.BlockInformation(
                     entry.getKey(),
                     entry.getValue(),
                     player.getWorld().getRegistryKey(),
