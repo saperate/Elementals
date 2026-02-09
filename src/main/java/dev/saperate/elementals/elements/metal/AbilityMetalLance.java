@@ -51,7 +51,7 @@ public class AbilityMetalLance implements Ability {
             return;
         lance.setControlled(false);
         HitResult hitResult = SapsUtils.raycastFull(bender.player, 150, false);
-        if(hitResult.getType() != HitResult.Type.MISS){//TODO store entity in ability data
+        if(hitResult.getType() != HitResult.Type.MISS){
             bender.abilityData = packAbilityData(lance,getHoldTime(bender),hitResult.getPos());
             Vec3d dirToTarget = hitResult.getPos().subtract(lance.getPos()).normalize().multiply(2);
             lance.setVelocity(dirToTarget);
