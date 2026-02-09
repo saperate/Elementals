@@ -2,6 +2,7 @@ package dev.saperate.elementals.entities.metal;
 
 import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.entities.common.AbstractElementalsEntity;
+import dev.saperate.elementals.misc.BlockRestoreManager;
 import dev.saperate.elementals.misc.FireExplosion;
 import dev.saperate.elementals.utils.SapsUtils;
 import net.minecraft.entity.EntityType;
@@ -75,7 +76,12 @@ public class MetalLanceEntity extends AbstractElementalsEntity<LivingEntity> {
 
     @Override
     public void collidesWithGround() {
-       remove(RemovalReason.KILLED);
+        remove(RemovalReason.KILLED);
+    }
+
+    @Override
+    public void remove(RemovalReason reason) {
+        super.remove(reason);
     }
 
     @Override

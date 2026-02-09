@@ -44,7 +44,7 @@ public class MetalBindEntityRenderer extends EntityRenderer<MetalBindEntity> {
             Vec3d nextPos = getNodePos((float) (i + 1) /segmentCount,pointA,pointB,distance);
 
             
-            renderCubeFromAToB(pointA,currentPos,nextPos,matrices,vertexConsumer,0.25f);
+            renderCubeFromAToB(pointA,currentPos,nextPos,matrices,vertexConsumer,0.125f);
             
         }
     }
@@ -66,7 +66,7 @@ public class MetalBindEntityRenderer extends EntityRenderer<MetalBindEntity> {
                 0.4f,
                 1F,
                 fireTex,
-                Math.max((float) (pointA.distanceTo(pointB) * 1/size),2), mat,
+                Math.max((float) (pointA.distanceTo(pointB) * 1.5/size),2), mat,
                 false,
                 true,
                 true

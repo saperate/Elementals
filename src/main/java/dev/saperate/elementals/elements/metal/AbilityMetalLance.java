@@ -12,8 +12,11 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MovementType;
 import net.minecraft.entity.damage.DamageSources;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.particle.ParticleTypes;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.explosion.Explosion;
 import org.joml.Vector3f;
 
 import java.util.List;
@@ -64,7 +67,7 @@ public class AbilityMetalLance implements Ability {
         if(lance.getIsControlled()){
             lance.remove(Entity.RemovalReason.KILLED);//TODO make a synced data to transfer whether or not to explode
         }
-        onRemove(bender);//TODO make it so no explosions
+        onRemove(bender);
     }
 
     @Override
@@ -74,6 +77,19 @@ public class AbilityMetalLance implements Ability {
         
         if(thrownPos != null && lance.getPos().distanceTo(thrownPos) < 2){
             lance.discard();
+            Explosion explosion = new Explosion(lance.getWorld(),lance,lance.getX(),lance.getY(),lance.getZ(),1,false, Explosion.DestructionType.DESTROY);
+            explosion.collectBlocksAndDamageEntities();
+            explosion.affectWorld(true);
+            SapsUtils.serverSummonParticles(
+                    (ServerWorld) lance.getWorld(), 
+                    ParticleTypes.EXPLOSION, 
+                    lance,lance.getWorld().getRandom(),
+                    0,0,0,
+                    0,4, 
+                    0, -0.5f, 0, 
+                    0
+            );
+            
             List<LivingEntity> entityList = SapsUtils.getEntitiesInRadius(
                     getThrownPos(bender),1,
                     lance.getWorld(),lance
@@ -82,17 +98,9 @@ public class AbilityMetalLance implements Ability {
                 onRemove(bender);
                 return;
             }
-            LivingEntity closest = entityList.get(0);
-            float closestDist = closest.distanceTo(lance);
-            entityList.remove(0);
-            while (!entityList.isEmpty()){
-                if(entityList.get(0).distanceTo(lance) < closestDist){
-                    closest = entityList.get(0);
-                    closestDist = closest.distanceTo(lance);
-                }
-                entityList.remove(0);
+            for (LivingEntity living: entityList) {
+                living.damage(bender.player.getDamageSources().playerAttack(bender.player), 14);
             }
-            closest.damage(lance.getDamageSources().playerAttack(bender.player),5);
             onRemove(bender);
             return;
         }

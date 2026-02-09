@@ -79,7 +79,7 @@ public class AbilityEarthRavine implements Ability {
         bender.setCurrAbility(null);
         
         for (Map.Entry<BlockPos, BlockState> entry : brokenBlocks.entrySet()) {
-            BlockRestoreManager.addBlockToRestore(new EarthElement.BlockInformation(
+            BlockRestoreManager.addBlockToRestore(new BlockRestoreManager.BlockInformation(
                     entry.getKey(),
                     entry.getValue(),
                     player.getWorld().getRegistryKey(),
