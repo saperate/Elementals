@@ -17,6 +17,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.explosion.Explosion;
 import org.joml.Vector3f;
 
+import static dev.saperate.elementals.Elementals.METAL_BREAK_SOUND_EVENT;
 import static dev.saperate.elementals.entities.ElementalEntities.METALLANCE;
 
 public class MetalLanceEntity extends AbstractElementalsEntity<LivingEntity> {
@@ -87,7 +88,16 @@ public class MetalLanceEntity extends AbstractElementalsEntity<LivingEntity> {
     @Override
     public void onRemoved() {
         if(getRemovalReason().equals(RemovalReason.DISCARDED)){
-            //TODO add sound
+            this.getWorld().playSound(getX(), getY(), getZ(),
+                    SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.BLOCKS,
+                    1,
+                    (1.0f + (this.getWorld().random.nextFloat() - this.getWorld().random.nextFloat()) * 0.2f) * 0.7f,
+                    true
+            );
+            this.getWorld().playSound(getX(), getY(), getZ(), 
+                    METAL_BREAK_SOUND_EVENT, SoundCategory.BLOCKS, 
+                    .25f, (0.0f + (this.getWorld().random.nextFloat() - this.getWorld().random.nextFloat()) * 0.2f) * 0.7f, 
+                    true);
         }
     }
 

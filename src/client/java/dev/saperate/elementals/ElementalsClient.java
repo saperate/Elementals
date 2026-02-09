@@ -62,8 +62,7 @@ import software.bernie.geckolib.animatable.client.RenderProvider;
 
 import java.util.Optional;
 
-import static dev.saperate.elementals.Elementals.LIGHTNING_PARTICLE_TYPE;
-import static dev.saperate.elementals.Elementals.MODID;
+import static dev.saperate.elementals.Elementals.*;
 import static dev.saperate.elementals.entities.ElementalEntities.*;
 import static dev.saperate.elementals.network.ModMessages.*;
 
@@ -93,8 +92,9 @@ public class ElementalsClient implements ClientModInitializer {
 		EntityModelLayerRegistry.registerModelLayer(MODEL_WATER_BLADE_LAYER, WaterBladeModel::getTexturedModelData);
 		EntityModelLayerRegistry.registerModelLayer(MODEL_DECOY_PLAYER, DecoyPlayerModel::getTexturedModelData);
 		EntityModelLayerRegistry.registerModelLayer(MODEL_METAL_LANCE_LAYER, MetalLanceModel::getTexturedModelData);
-
+        
         ParticleFactoryRegistry.getInstance().register(LIGHTNING_PARTICLE_TYPE, FlameParticle.Factory::new);
+		ParticleFactoryRegistry.getInstance().register(METAL_SHARD_PARTICLE_TYPE, FlameParticle.Factory::new);
 
         ClientPlayConnectionEvents.JOIN.register(ElementalsClient::onClientJoin);
         

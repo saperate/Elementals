@@ -73,6 +73,7 @@ public class Elementals implements ModInitializer {
     public static SoundEvent WIND_SOUND_EVENT = SoundEvent.of(WIND_SOUND_ID);
     public static SoundEvent WIND_BURST_SOUND_EVENT = SoundEvent.of(WIND_BURST_SOUND_ID);
     public static final SimpleParticleType LIGHTNING_PARTICLE_TYPE = FabricParticleTypes.simple();
+    public static final DefaultParticleType METAL_SHARD_PARTICLE_TYPE = FabricParticleTypes.simple();
     public static IGliderItemRenderProvider GLIDER_ITEM_RENDER_PROVIDER;
     public static IItemRenderProvider METAL_ARMOR_RENDER_PROVIDER;
 
@@ -111,9 +112,9 @@ public class Elementals implements ModInitializer {
 
         Registry.register(Registries.SOUND_EVENT, WIND_SOUND_ID, WIND_SOUND_EVENT);
         Registry.register(Registries.SOUND_EVENT, WIND_BURST_SOUND_ID, WIND_BURST_SOUND_EVENT);
+        Registry.register(Registries.SOUND_EVENT, METAL_BREAK_SOUND_ID, METAL_BREAK_SOUND_EVENT);
 
         Registry.register(Registries.PARTICLE_TYPE, Identifier.of(MODID, "lightning"), LIGHTNING_PARTICLE_TYPE);
-
 
 
 
