@@ -88,9 +88,12 @@ public class Elementals implements ModInitializer {
     public static UsedAbilityCriterion USED_ABILITY = Criteria.register(new UsedAbilityCriterion());
     private static final Identifier WIND_SOUND_ID = new Identifier(MODID, "wind");
     private static final Identifier WIND_BURST_SOUND_ID = new Identifier(MODID, "wind_burst");
+    private static final Identifier METAL_BREAK_SOUND_ID = new Identifier(MODID, "metal_break");
     public static SoundEvent WIND_SOUND_EVENT = SoundEvent.of(WIND_SOUND_ID);
     public static SoundEvent WIND_BURST_SOUND_EVENT = SoundEvent.of(WIND_BURST_SOUND_ID);
+    public static SoundEvent METAL_BREAK_SOUND_EVENT = SoundEvent.of(METAL_BREAK_SOUND_ID);
     public static final DefaultParticleType LIGHTNING_PARTICLE_TYPE = FabricParticleTypes.simple();
+    public static final DefaultParticleType METAL_SHARD_PARTICLE_TYPE = FabricParticleTypes.simple();
     public static IItemRenderProvider GLIDER_ITEM_RENDER_PROVIDER; //TODO use correct way
     public static IItemRenderProvider METAL_ARMOR_RENDER_PROVIDER;
 
@@ -139,9 +142,11 @@ public class Elementals implements ModInitializer {
 
         Registry.register(Registries.SOUND_EVENT, WIND_SOUND_ID, WIND_SOUND_EVENT);
         Registry.register(Registries.SOUND_EVENT, WIND_BURST_SOUND_ID, WIND_BURST_SOUND_EVENT);
+        Registry.register(Registries.SOUND_EVENT, METAL_BREAK_SOUND_ID, METAL_BREAK_SOUND_EVENT);
 
         Registry.register(Registries.PARTICLE_TYPE, Identifier.of(MODID, "lightning"), LIGHTNING_PARTICLE_TYPE);
-
+        Registry.register(Registries.PARTICLE_TYPE, Identifier.of(MODID, "metal_shard"), METAL_SHARD_PARTICLE_TYPE);
+        
         LootTableEvents.REPLACE.register((resourceManager, lootManager, id, tableBuilder, source) -> {
             if (id.equals(LootTables.DESERT_PYRAMID_ARCHAEOLOGY)) {
                 List<LootPoolEntry> entries = new ArrayList<>(Arrays.asList(tableBuilder.pools[0].entries));

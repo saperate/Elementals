@@ -8,6 +8,11 @@
     "sounds" : [
       "elementals:wind_burst"
     ]
+  },
+  "metal_break" : {
+    "sounds" : [
+      "elementals:metal_break"
+    ]
   }
 }
 

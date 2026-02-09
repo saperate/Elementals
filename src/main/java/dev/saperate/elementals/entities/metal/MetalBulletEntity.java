@@ -1,5 +1,6 @@
 package dev.saperate.elementals.entities.metal;
 
+import dev.saperate.elementals.Elementals;
 import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.entities.common.AbstractElementalsEntity;
 import dev.saperate.elementals.utils.MathHelper;
@@ -14,6 +15,7 @@ import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.joml.Matrix3f;
@@ -21,8 +23,7 @@ import org.joml.Matrix4f;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
-import static dev.saperate.elementals.Elementals.WIND_BURST_SOUND_EVENT;
-import static dev.saperate.elementals.Elementals.WIND_SOUND_EVENT;
+import static dev.saperate.elementals.Elementals.*;
 import static dev.saperate.elementals.entities.ElementalEntities.AIRBULLET;
 import static dev.saperate.elementals.entities.ElementalEntities.METALBULLET;
 import static dev.saperate.elementals.utils.SapsUtils.getEntityLookVector;
@@ -120,9 +121,11 @@ public class MetalBulletEntity extends AbstractElementalsEntity<PlayerEntity> {
     @Override
     public void onRemoved() {
         //TODO make shard particles
-        summonParticles(this, random, ParticleTypes.POOF, 0.01f, 10);
-        this.getWorld().playSound(getX(), getY(), getZ(), WIND_BURST_SOUND_EVENT, SoundCategory.BLOCKS, 0.1f, (1.0f + (this.getWorld().random.nextFloat() - this.getWorld().random.nextFloat()) * 0.2f) * 0.7f, true);
-
+        summonParticles(this, random, METAL_SHARD_PARTICLE_TYPE, 0.1f, 10);
+        this.getWorld().playSound(getX(), getY(), getZ(), 
+                METAL_BREAK_SOUND_EVENT, SoundCategory.BLOCKS, 
+                .125f, (0.0f + (this.getWorld().random.nextFloat() - this.getWorld().random.nextFloat()) * 0.2f) * 0.7f, 
+                false);
     }
 
     public void setArrayId(int val) {
