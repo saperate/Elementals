@@ -301,31 +301,4 @@ public class EarthElement extends Element {
         ;
     }
     
-    
-    public static class BlockInformation{
-        public final BlockPos pos;
-        public final BlockState state;
-        public final RegistryKey<World> worldKey;
-        public int lifetime;
-
-        public BlockInformation(BlockPos pos, BlockState state, RegistryKey<World> worldKey, int lifetime) {
-            this.pos = pos;
-            this.state = state;
-            this.worldKey = worldKey;
-            this.lifetime = lifetime;
-        }
-
-        @Override
-        public boolean equals(Object object) {
-            if (this == object) return true;
-            if (object == null || getClass() != object.getClass()) return false;
-            BlockInformation that = (BlockInformation) object;
-            return Objects.equals(pos, that.pos) && Objects.equals(state, that.state) && Objects.equals(worldKey, that.worldKey);
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(pos, state, worldKey);
-        }
-    }
 }
