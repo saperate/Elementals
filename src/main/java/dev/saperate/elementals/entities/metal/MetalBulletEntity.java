@@ -16,6 +16,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.util.TimeHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.joml.Matrix3f;
@@ -75,7 +76,9 @@ public class MetalBulletEntity extends AbstractElementalsEntity<PlayerEntity> {
     }
 
     private void controlEntity(Entity owner) {
-        float angle = (float) ((2 * Math.PI ) / getArraySize() * getArrayId()) + age * 0.025f;
+        double angle = (float) (((2 * Math.PI ) / getArraySize() * getArrayId()) //base angle difference
+                + age * 0.025f//offset
+        );
         Vector3f vDir = new Vector3f(
                 (float) Math.cos(angle) * 0.75f,
                 (float) Math.sin(angle) * 0.75f,
@@ -124,10 +127,10 @@ public class MetalBulletEntity extends AbstractElementalsEntity<PlayerEntity> {
     public void onRemoved() {
         //TODO make shard particles
         summonParticles(this, random, METAL_SHARD_PARTICLE_TYPE, 0.1f, 10);
-        this.getWorld().playSound(getX(), getY(), getZ(), 
-                METAL_BREAK_SOUND_EVENT, SoundCategory.BLOCKS, 
-                .125f, (0.0f + (this.getWorld().random.nextFloat() - this.getWorld().random.nextFloat()) * 0.2f) * 0.7f, 
-                false);
+        this.getWorld().playSound(getX(), getY(), getZ(),
+                SoundEvents.ENTITY_SLIME_DEATH, SoundCategory.BLOCKS,
+                    .125f, (1.0f + (this.getWorld().random.nextFloat() - this.getWorld().random.nextFloat()) * 0.2f) * 0.3f, 
+                true);
     }
 
     public void setArrayId(int val) {

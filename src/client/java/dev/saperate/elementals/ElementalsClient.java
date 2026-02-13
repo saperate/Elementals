@@ -35,6 +35,7 @@ import dev.saperate.elementals.network.payload.C2S.RequestSyncUpgradeListPayload
 import dev.saperate.elementals.network.payload.C2S.SyncVersionPayload;
 import dev.saperate.elementals.network.payload.S2C.SyncLevelPayload;
 import dev.saperate.elementals.packets.*;
+import dev.saperate.elementals.particle.MetalShardParticle;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
@@ -94,7 +95,7 @@ public class ElementalsClient implements ClientModInitializer {
 		EntityModelLayerRegistry.registerModelLayer(MODEL_METAL_LANCE_LAYER, MetalLanceModel::getTexturedModelData);
         
         ParticleFactoryRegistry.getInstance().register(LIGHTNING_PARTICLE_TYPE, FlameParticle.Factory::new);
-		ParticleFactoryRegistry.getInstance().register(METAL_SHARD_PARTICLE_TYPE, FlameParticle.Factory::new);
+		ParticleFactoryRegistry.getInstance().register(METAL_SHARD_PARTICLE_TYPE, MetalShardParticle.Factory::new);
 
         ClientPlayConnectionEvents.JOIN.register(ElementalsClient::onClientJoin);
         
