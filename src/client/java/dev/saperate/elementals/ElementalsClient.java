@@ -32,6 +32,7 @@ import dev.saperate.elementals.keys.abilities.KeyAbility3;
 import dev.saperate.elementals.keys.abilities.KeyAbility4;
 import dev.saperate.elementals.keys.gui.GuiKey;
 import dev.saperate.elementals.packets.*;
+import dev.saperate.elementals.particle.MetalShardParticle;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
@@ -92,9 +93,8 @@ public class ElementalsClient implements ClientModInitializer {
 		EntityModelLayerRegistry.registerModelLayer(MODEL_WATER_BLADE_LAYER, WaterBladeModel::getTexturedModelData);
 		EntityModelLayerRegistry.registerModelLayer(MODEL_DECOY_PLAYER, DecoyPlayerModel::getTexturedModelData);
 		EntityModelLayerRegistry.registerModelLayer(MODEL_METAL_LANCE_LAYER, MetalLanceModel::getTexturedModelData);
-
 		ParticleFactoryRegistry.getInstance().register(LIGHTNING_PARTICLE_TYPE, FlameParticle.Factory::new);
-		ParticleFactoryRegistry.getInstance().register(METAL_SHARD_PARTICLE_TYPE, FlameParticle.Factory::new);
+		ParticleFactoryRegistry.getInstance().register(METAL_SHARD_PARTICLE_TYPE, MetalShardParticle.Factory::new);
 
 		ClientPlayConnectionEvents.JOIN.register(ElementalsClient::onClientJoin);
 

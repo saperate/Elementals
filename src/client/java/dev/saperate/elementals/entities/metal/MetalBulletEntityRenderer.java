@@ -32,13 +32,12 @@ public class MetalBulletEntityRenderer extends EntityRenderer<MetalBulletEntity>
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
 
-
         VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderLayer.getTranslucentMovingBlock());
 
         drawCube(vertexConsumer, matrices, light,
-                .4f,
-                .4f,
-                .4f,
+                .725f,
+                .69f,
+                .675f,
                 1,
                 texture,
                 1,
