@@ -23,6 +23,7 @@ public class StunnedStatusEffect extends StatusEffect {
     @Override
     public boolean applyUpdateEffect(LivingEntity entity, int amplifier) {
         if(entity.age % (amplifier >= 1 ? 3 : 4) == 0){
+            //TODO blinking or seeing "stars" or blurry vision
             entity.slowMovement(Blocks.AIR.getDefaultState(), new Vec3d(0.00001f,1,0.00001f));
         }
         return true;
