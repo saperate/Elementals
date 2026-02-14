@@ -1,6 +1,9 @@
 {
   "textures": [
-    "elementals:metal_shard"
+    "elementals:metal_shard_0",
+    "elementals:metal_shard_1",
+    "elementals:metal_shard_2",
+    "elementals:metal_shard_3"
   ]
 }
 

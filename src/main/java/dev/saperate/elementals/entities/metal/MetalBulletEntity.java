@@ -27,8 +27,7 @@ import org.joml.Vector3f;
 import static dev.saperate.elementals.Elementals.*;
 import static dev.saperate.elementals.entities.ElementalEntities.AIRBULLET;
 import static dev.saperate.elementals.entities.ElementalEntities.METALBULLET;
-import static dev.saperate.elementals.utils.SapsUtils.getEntityLookVector;
-import static dev.saperate.elementals.utils.SapsUtils.summonParticles;
+import static dev.saperate.elementals.utils.SapsUtils.*;
 
 public class MetalBulletEntity extends AbstractElementalsEntity<PlayerEntity> {
     private static final TrackedData<Integer> ARRAY_ID = DataTracker.registerData(MetalBulletEntity.class, TrackedDataHandlerRegistry.INTEGER);
@@ -123,8 +122,8 @@ public class MetalBulletEntity extends AbstractElementalsEntity<PlayerEntity> {
 
     @Override
     public void onRemoved() {
-        //TODO make shard particles
-        summonParticles(this, random, METAL_SHARD_PARTICLE_TYPE, 0.1f, 10);
+        summonParticlesVelocityAwayFromPoint(this, random, METAL_SHARD_PARTICLE_TYPE, 
+                0.1f, 10, new Vec3d(0,0,0));
         this.getWorld().playSound(getX(), getY(), getZ(),
                 SoundEvents.ENTITY_SLIME_DEATH, SoundCategory.BLOCKS,
                     .125f, (1.0f + (this.getWorld().random.nextFloat() - this.getWorld().random.nextFloat()) * 0.2f) * 0.3f, 
