@@ -12,13 +12,15 @@ public class MetalShardParticle extends AbstractSlowingParticle {
     MetalShardParticle(ClientWorld clientWorld, double d, double e, double f, double g, double h, double i) {
         super(clientWorld, d, e, f, g, h + 0.25f, i);
         random = Random.create();
-        scale(0.75f + 0.5f * random.nextFloat());
+        scale(1f + 0.5f * random.nextFloat());
+        
     }
 
     @Override
     public void tick() {
         super.tick();
         velocityY -= 0.05f;
+        scale -= 0.01f;
     }
 
     public ParticleTextureSheet getType() {

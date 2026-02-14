@@ -287,6 +287,24 @@ public final class SapsUtils {
     }
 
 
+    public static void summonParticlesVelocityAwayFromPoint(Entity entity, Random rnd, ParticleEffect type, float velocity, int density, Vec3d randomPosMultiplier) {
+        for (int i = 0; i < density; i++) {
+            Vec3d particlePos = new Vec3d(entity.getX() - 0.5f + rnd.nextDouble() * randomPosMultiplier.getX(),
+                    entity.getY() + rnd.nextDouble() * randomPosMultiplier.getY(),
+                    entity.getZ() - 0.5f + rnd.nextDouble() * randomPosMultiplier.getZ()
+            );
+            
+            Vec3d dir = particlePos.subtract(entity.getPos());
+            
+            entity.getWorld().addParticle(type,
+                    particlePos.x, particlePos.y, particlePos.z,
+                    dir.x * velocity, 
+                    dir.y * velocity, 
+                    dir.z * velocity);
+        }
+    }
+
+
     public static void serverSummonParticles(ServerWorld world, ParticleEffect type, Entity entity, Random rnd,
                                              double vX, double vY, double vZ, double speed, int count,
                                              float offsetX, float offsetY, float offsetZ, float vAmplitude) {
