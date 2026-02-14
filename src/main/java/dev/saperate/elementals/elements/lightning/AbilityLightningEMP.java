@@ -17,7 +17,7 @@ import static dev.saperate.elementals.utils.SapsUtils.summonParticles;
 
 public class AbilityLightningEMP implements Ability {
     @Override
-    public void onCall(Bender bender, long deltaT) {
+    public void onCall(Bender bender, long deltaT) {//TODO FIX FOR NPCS THX MO
         if (!bender.reduceChi(15)) {
             return;
         }

@@ -60,7 +60,7 @@ public class WaterPouchItem extends Item implements DyeableItem {
         ItemStack stack = super.getDefaultStack();
         WaterPouchItem item = (WaterPouchItem) stack.getItem();
         item.setWaterLevel(stack, 0);
-        return super.getDefaultStack();
+        return stack;
     }
 
     public int getWaterLevel(ItemStack itemStack){
