@@ -125,10 +125,10 @@ public class MetalBulletEntity extends AbstractElementalsEntity<PlayerEntity> {
     @Override
     public void onRemoved() {
         summonParticles(this, random, METAL_SHARD_PARTICLE_TYPE, 
-                0.1f, 10);
+                0.1f, 5);
         this.getWorld().playSound(getX(), getY(), getZ(),
-                SoundEvents.ENTITY_SLIME_DEATH, SoundCategory.BLOCKS,
-                    .125f, (1.0f + (this.getWorld().random.nextFloat() - this.getWorld().random.nextFloat()) * 0.2f) * 0.3f, 
+                METAL_BREAK_SOUND_EVENT, SoundCategory.BLOCKS,
+                    .15f, (2.5f + (this.getWorld().random.nextFloat() - this.getWorld().random.nextFloat()) * 0.2f) * 0.3f, 
                 true);
     }
 
