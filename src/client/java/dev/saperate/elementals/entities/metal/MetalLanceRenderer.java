@@ -1,6 +1,7 @@
 package dev.saperate.elementals.entities.metal;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import dev.saperate.elementals.Elementals;
 import dev.saperate.elementals.entities.models.metal.MetalLanceModel;
 import dev.saperate.elementals.entities.models.water.WaterBladeModel;
 import dev.saperate.elementals.entities.water.WaterBladeEntity;
@@ -24,7 +25,7 @@ import static dev.saperate.elementals.ElementalsClient.MODEL_METAL_LANCE_LAYER;
 import static dev.saperate.elementals.ElementalsClient.MODEL_WATER_BLADE_LAYER;
 
 public class MetalLanceRenderer extends EntityRenderer<MetalLanceEntity> implements FeatureRendererContext<MetalLanceEntity, MetalLanceModel> {
-    private static final Identifier texture = Identifier.of("minecraft", "block/iron_block");
+    private static final Identifier texture = Identifier.of(MODID, "textures/entity/metal_lance.png");
     private final MetalLanceModel model;
     public static long firstTime = -1;
 
@@ -76,7 +77,7 @@ public class MetalLanceRenderer extends EntityRenderer<MetalLanceEntity> impleme
 
     @Override
     public Identifier getTexture(MetalLanceEntity entity) {
-        return Identifier.of("minecraft", "textures/block/iron_block.png");
+        return texture;
     }
 
     @Override

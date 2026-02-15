@@ -90,14 +90,10 @@ public class MetalLanceEntity extends AbstractElementalsEntity<LivingEntity> {
         if(getRemovalReason().equals(RemovalReason.DISCARDED)){
             this.getWorld().playSound(getX(), getY(), getZ(),
                     SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.BLOCKS,
-                    1,
+                    0.25f,
                     (1.0f + (this.getWorld().random.nextFloat() - this.getWorld().random.nextFloat()) * 0.2f) * 0.7f,
                     true
             );
-            this.getWorld().playSound(getX(), getY(), getZ(), 
-                    METAL_BREAK_SOUND_EVENT, SoundCategory.BLOCKS, 
-                    .25f, (0.0f + (this.getWorld().random.nextFloat() - this.getWorld().random.nextFloat()) * 0.2f) * 0.7f, 
-                    true);
         }
     }
 
