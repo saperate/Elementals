@@ -10,7 +10,8 @@
     "LivingEntityMixin",
     "PlayerEntityMixin",
     "ServerPlayerEntityMixin",
-    "StatusEffectInstanceAccessor"
+    "StatusEffectInstanceAccessor",
+    "RecipeManagerMixin"
   ],
   "injectors": {
     "defaultRequire": 1

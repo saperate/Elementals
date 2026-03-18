@@ -51,6 +51,7 @@ public final class ElementalConfig {
         put(Items.GOLD_INGOT, Items.GOLD_NUGGET);
         put(Items.GOLD_ORE, Items.GOLD_NUGGET);
     }};
+    public boolean CRAFTABLE_SCROLLS = false;
  
     public void loadConfig() {
         JsonObject root;
@@ -70,6 +71,7 @@ public final class ElementalConfig {
             HIDE_TIMER = root.get("HIDE_TIMER").getAsBoolean();
             METAL_COST_VALUE = getMetalCostValue(root);
             METAL_LOWER_VALUE_STACK = getMetalLowerValueStack(root);
+            CRAFTABLE_SCROLLS = root.get("CRAFTABLE_SCROLLS").getAsBoolean();
             
         }catch (Exception e){
             // This doesn't override the file, just makes it so we don't use what we loaded
@@ -117,8 +119,10 @@ public final class ElementalConfig {
                 metalLowerValueStack.add(entry);
             }
             root.add("METAL_LOWER_VALUE_STACK", metalLowerValueStack);
-            
-            
+
+
+            root.addProperty("CRAFTABLE_SCROLLS", false);
+
             writer.append(gson.toJson(root));
             writer.close();
         }catch (Exception e){
