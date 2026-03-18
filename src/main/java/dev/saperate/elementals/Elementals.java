@@ -64,7 +64,6 @@ import static dev.saperate.elementals.network.ModMessages.registerNetworking;
 
 public class Elementals implements ModInitializer {
 
-    //TODO add config
     public static final String MODID = "elementals";
     public static final Logger LOGGER = LoggerFactory.getLogger(MODID);
     public static HasElementCriterion HAS_ELEMENT = Criteria.register("elementals/has_element",new HasElementCriterion());

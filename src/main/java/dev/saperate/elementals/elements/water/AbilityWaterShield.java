@@ -10,7 +10,6 @@ import dev.saperate.elementals.entities.water.WaterShieldEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.player.PlayerEntity;
 
-
 public class AbilityWaterShield implements Ability {
     @Override
     public void onCall(Bender bender, long deltaT) {
