@@ -22,6 +22,7 @@ import dev.saperate.elementals.elements.water.WaterElement;
 import dev.saperate.elementals.enchantments.VolumeEnchantment;
 import dev.saperate.elementals.entities.ElementalEntities;
 import dev.saperate.elementals.items.ElementalItems;
+import dev.saperate.elementals.items.ElementalsDynamicRecipes;
 import dev.saperate.elementals.misc.BlockRestoreManager;
 import dev.saperate.elementals.misc.IItemRenderProvider;
 import net.fabricmc.api.ModInitializer;
@@ -164,6 +165,7 @@ public class Elementals implements ModInitializer {
             return null;
         });
 
+        ElementalsDynamicRecipes.register();
     }
 
 

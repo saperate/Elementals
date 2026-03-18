@@ -10,6 +10,7 @@
     "ItemEntityMixin",
     "LivingEntityMixin",
     "PlayerEntityMixin",
+    "RecipeManagerMixin",
     "ServerPlayerEntityMixin"
   ],
   "injectors": {
