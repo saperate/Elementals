@@ -11,8 +11,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.Vec3d;
 
 import static dev.saperate.elementals.effects.StationaryStatusEffect.STATIONARY_EFFECT;
-import static dev.saperate.elementals.utils.SapsUtils.extractBits;
-import static dev.saperate.elementals.utils.SapsUtils.getEntityLookVector;
 
 public class AbilityWaterShield implements Ability {
     @Override

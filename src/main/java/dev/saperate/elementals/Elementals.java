@@ -81,7 +81,6 @@ import static dev.saperate.elementals.network.ModMessages.registerC2SPackets;
 public class Elementals implements ModInitializer {
     public static Enchantment VOLUME_ENCHANTMENT = new VolumeEnchantment();
 
-    //TODO add config
     public static final String MODID = "elementals";
     public static final Logger LOGGER = LoggerFactory.getLogger(MODID);
     public static HasElementCriterion HAS_ELEMENT = Criteria.register(new HasElementCriterion());

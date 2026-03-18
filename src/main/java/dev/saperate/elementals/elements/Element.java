@@ -12,7 +12,6 @@ import net.minecraft.world.World;
 
 import java.util.*;
 
-import static dev.saperate.elementals.utils.SapsUtils.extractBits;
 
 public abstract class Element{
     private static final HashMap<String,Element> elements = new HashMap<>();

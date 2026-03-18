@@ -210,23 +210,7 @@ public final class SapsUtils {
         affectedBlocks.addAll(set);
     }
 
-
-    /**
-     * searches for an int inside another using some bitwise operation. Allows us to store
-     * multiple value inside a single integer with the drawback that they can not be as big as
-     * before, and they take a bit longer to interpret.
-     * @param num The int where we will extract the bits
-     * @param start The index where will start extracting
-     * @param length The number of bits we are searching for
-     * @return An int containing all the bits we were looking for, placed at the start of the new int
-     */
-    public static int extractBits(int num, int start, int length) {
-        int mask = (1 << length) - 1;
-        mask <<= start;
-        int result = num & mask;
-        result >>= start;
-        return result;
-    }
+    
 
     public static String elementsArrayToString(ArrayList<Element> elements) {
         StringBuilder builder = new StringBuilder();
@@ -240,23 +224,7 @@ public final class SapsUtils {
 
         return builder.toString();
     }
-
-    //I don't have any use for this, but I spent time on it, so it is staying
-    public void parseUpgradeInt(int obj) {
-
-        int i = 0;
-        while (true) {
-            int len = extractBits(obj, i, 3);
-            if (len == 0) {
-                break;
-            }
-            i += 3;
-            byte r = (byte) extractBits(obj, i, len);
-
-
-            i += len;
-        }
-    }
+    
 
     public static float calculatePitch(Vec3d direction) {
         double horizontalDistance = Math.sqrt(direction.x * direction.x + direction.z * direction.z);

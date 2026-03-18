@@ -21,8 +21,6 @@ import static dev.saperate.elementals.Elementals.MODID;
 
 public class StateDataSaverAndLoader extends PersistentState {
     public HashMap<UUID, PlayerData> players = new HashMap<>();
-
-
     @Override
     public NbtCompound writeNbt(NbtCompound nbt) {
         System.out.println("saving benders");
