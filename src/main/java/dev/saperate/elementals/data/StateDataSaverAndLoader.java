@@ -35,11 +35,11 @@ public class StateDataSaverAndLoader extends PersistentState {
             playerNbt.putInt("bind2", playerData.getElement().bindableAbilities.indexOf(playerData.boundAbilities[1]));
             playerNbt.putInt("bind3", playerData.getElement().bindableAbilities.indexOf(playerData.boundAbilities[2]));
             playerNbt.putInt("bind4", playerData.getElement().bindableAbilities.indexOf(playerData.boundAbilities[3]));
-
-
+            
+            
             NbtCompound upgradesNbt = new NbtCompound();
             upgradesNbt.putInt("upgradesCount", playerData.upgrades.size());
-
+            
             int i = 0;
             for (Map.Entry<Upgrade, Boolean> entry : playerData.upgrades.entrySet()) {
                 NbtCompound upgradeNbt = new NbtCompound();
