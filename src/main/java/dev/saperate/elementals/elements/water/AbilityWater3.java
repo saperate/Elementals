@@ -16,22 +16,18 @@ public class AbilityWater3 implements Ability {
     public void onCall(Bender bender, long deltaT) {
         PlayerData playerData = PlayerData.get(bender.player);
         PlayerEntity player = bender.player;
-
+        bender.setCurrAbility(null);
+        
         if (player.isSprinting() && playerData.canUseUpgrade("waterSurf")
                 && player.isSubmergedInWater()) {
             WaterElement.get().getAbility(13).onCall(bender, deltaT);
-            return;
 
-        }else if (deltaT >= 200 && !player.isOnGround() && PlayerData.get(player).canUseUpgrade("waterTower")){
+        }else if (deltaT >= 500 && !player.isOnGround() && PlayerData.get(player).canUseUpgrade("waterTower")){
             WaterElement.get().getAbility(16).onCall(bender, deltaT);
-            return;
 
         } else if (player.getRootVehicle().isTouchingWaterOrRain() && playerData.canUseUpgrade("waterJump") || WaterElement.canBend(player,true) != null) {
             WaterElement.get().getAbility(17).onCall(bender, deltaT);
-            return;
         }
-
-        bender.setCurrAbility(null);
     }
 
     @Override
