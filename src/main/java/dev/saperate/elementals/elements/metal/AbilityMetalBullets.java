@@ -13,7 +13,8 @@ public class AbilityMetalBullets implements Ability {
 
     @Override
     public void onCall(Bender bender, long deltaT) {
-        if (!bender.reduceChi(15)) {
+        PlayerEntity player = bender.player;
+        if (!bender.reduceChi(15) || !MetalElement.canBend(player, 16)) {
             if (bender.abilityData == null) {
                 bender.setCurrAbility(null);
             } else {
@@ -21,7 +22,6 @@ public class AbilityMetalBullets implements Ability {
             }
             return;
         }
-        PlayerEntity player = bender.player;
 
         Vec3d pos = getEntityLookVector(player, 2);
         PlayerData plrData = PlayerData.get(bender.player);
