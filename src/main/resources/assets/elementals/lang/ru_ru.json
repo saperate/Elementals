@@ -194,7 +194,7 @@
 
   "upgrade.elementals.waterTower": "Водяная башня",
   "upgrade.elementals.waterTower.description": "Создайте высокую колонну воды, чтобы подняться наверх.",
-  "upgrade.elementals.waterTower.use": "Использование: %d + не касаясь земли + вода под вами + удерживать (0.2с)",
+  "upgrade.elementals.waterTower.use": "Использование: %d + не касаясь земли + вода под вами + удерживать (0.5с)",
   "upgrade.elementals.waterTower.icon": "water",
 
   "upgrade.elementals.waterTowerRangeI": "Дальность I",

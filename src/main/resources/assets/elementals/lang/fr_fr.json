@@ -186,7 +186,7 @@
 
   "upgrade.elementals.waterTower": "Tour d'eau",
   "upgrade.elementals.waterTower.description": " Créez une tour d'eau pour pouvoir aller en hauteurs",
-  "upgrade.elementals.waterTower.use": " Utilisation: %d + ne pas toucher le sol + eau dessous + maintenir (0.2s)",
+  "upgrade.elementals.waterTower.use": " Utilisation: %d + ne pas toucher le sol + eau dessous + maintenir (0.5s)",
   
   "upgrade.elementals.waterTowerRangeI": "Portée I",
   "upgrade.elementals.waterTowerRangeI.description": " Faites une tour plus haute",

@@ -194,7 +194,7 @@
 
   "upgrade.elementals.waterTower": "Water Tower",
   "upgrade.elementals.waterTower.description": " Create a towering column of water to elevate yourself.",
-  "upgrade.elementals.waterTower.use": " Use: %d + not touching ground + water below + hold (0.2s)",
+  "upgrade.elementals.waterTower.use": " Use: %d + not touching ground + water below + hold (0.5s)",
   "upgrade.elementals.waterTower.icon": "water_tower",
 
   "upgrade.elementals.waterTowerRangeI": "Range I",
