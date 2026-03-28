@@ -34,12 +34,12 @@ public final class ElementalConfig {
     public boolean HIDE_TIMER = false;
     public HashMap<Item, Integer> METAL_COST_VALUE = new HashMap<>(){{
         put(Items.COPPER_INGOT, 9);
-        put(Items.COPPER_ORE, 6);
+        put(Items.RAW_COPPER, 6);
         put(Items.IRON_INGOT, 9);
         put(Items.IRON_NUGGET, 1);
-        put(Items.IRON_ORE, 6);
+        put(Items.RAW_IRON, 6);
         put(Items.GOLD_INGOT, 9);
-        put(Items.GOLD_ORE, 6);
+        put(Items.RAW_GOLD, 6);
         put(Items.GOLD_NUGGET, 1);
     }};
     /**
