@@ -180,7 +180,7 @@
 
   "upgrade.elementals.waterTower": "Water Tower",
   "upgrade.elementals.waterTower.description": "Kendinizi yükseltmek için yüksek bir su sütunu oluşturun.",
-  "upgrade.elementals.waterTower.use": " Kullanım: %d + yere değmeden + aşağıda su + tutma (0,5s)",
+  "upgrade.elementals.waterTower.use": " Kullanım: %d + yere değmeden + aşağıda su + tutma (0,5ws)",
 
 
   "upgrade.elementals.waterTowerRangeI": "Menzil I",
