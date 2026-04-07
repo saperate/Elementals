@@ -115,14 +115,11 @@ public class SkyBisonEntity extends AnimalEntity implements GeoEntity {
     public ActionResult interactMob(PlayerEntity player, Hand hand) {
         ItemStack handStack = player.getStackInHand(hand);
         if(player.isSneaking()) {
-            if(player.getActiveHand() != hand){
-                return ActionResult.FAIL;
-            }
             if (handStack.getItem() == Items.SADDLE) {
                 setSaddle(handStack);
                 player.setStackInHand(hand, ItemStack.EMPTY);
                 return ActionResult.PASS;
-            } else if (handStack.isEmpty()) {
+            } else if (handStack.isEmpty() && getSaddle() != null) {
                 player.setStackInHand(hand, getSaddle());
                 setSaddle(ItemStack.EMPTY);
                 return ActionResult.PASS;

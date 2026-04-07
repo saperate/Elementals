@@ -36,6 +36,7 @@ public class AbilityMetalArmor implements Ability {
             return;
         }
 
+        //TODO change for metal cost
         BlockHitResult hit = raycastBlockCustomRotation(player, 4, true, new Vec3d(0, -1, 0));
 
         if (!EarthElement.isBlockBendable(player.getWorld().getBlockState(hit.getBlockPos()), bender) || !player.isOnGround()) {

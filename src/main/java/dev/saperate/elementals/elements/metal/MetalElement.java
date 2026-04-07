@@ -31,7 +31,48 @@ public class MetalElement extends Element {
 
     public MetalElement() {
         super("Metal", new Upgrade("Metal", new Upgrade[]{
-
+                new Upgrade("metalBullets", new Upgrade[]{
+                        new Upgrade("metalBulletCountI", new Upgrade[]{
+                                new Upgrade("metalBulletScatterShot", 2),
+                                new Upgrade("metalBulletCountII", 2),
+                                new Upgrade("metalBulletDamageI", new Upgrade[]{
+                                        new Upgrade("metalLance", new Upgrade[]{
+                                                new Upgrade("metalLanceDamageI", new Upgrade[]{
+                                                        new Upgrade("metalLanceDamageII", 2)
+                                                }, 2),
+                                                new Upgrade("metalLanceRedirect", 2)
+                                        },4)
+                                }, 2),
+                        }, 2)
+                }, 4),
+                new Upgrade("metalBind", new Upgrade[]{
+                        new Upgrade("metalBindRange", 2),
+                        new Upgrade("metalBindEfficiencyI", new Upgrade[]{
+                                new Upgrade("metalBindEfficiencyII", 2)
+                        },2)
+                },4),
+                new Upgrade("metalCable", new Upgrade[]{
+                        new Upgrade("metalCableRangeI", new Upgrade[]{
+                                new Upgrade("metalCableSpeedI", new Upgrade[]{
+                                        new Upgrade("metalCableSpeedII", 2),
+                                        new Upgrade("metalCablePrecisionI", 2)
+                                }, 2),
+                        },2)
+                },4),
+                new Upgrade("metalArmor", new Upgrade[]{
+                        new Upgrade("metalArmorEfficiencyI", new Upgrade[]{
+                                new Upgrade("metalArmorRecyclingI", new Upgrade[]{
+                                        new Upgrade("metalDecoy", new Upgrade[]{
+                                                new Upgrade("metalDecoyRangeI", new Upgrade[]{
+                                                        new Upgrade("metalDecoyRangeII", 2),
+                                                        new Upgrade("metalDecoyDamageI", new Upgrade[]{
+                                                                new Upgrade("metalDecoyDamageII", 2)
+                                                        },2)
+                                                },2)
+                                        },6)
+                                },2)
+                        },2)
+                }, 4)
         }, 0));
         addAbility(new AbilityMetal1(), true);
         addAbility(new AbilityMetalBullets());
@@ -166,4 +207,10 @@ public class MetalElement extends Element {
     public boolean isSkillTreeComplete(Bender bender) {
         return bender.hasElement(this);
     }//TODO make an algorithm for this it's annoying to do by hand
+
+
+    @Override
+    public String[] getBackgroundTextures() {
+        return new String[]{"bottom.png"};
+    }
 }
