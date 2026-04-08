@@ -33,20 +33,20 @@ public class MetalElement extends Element {
         super("Metal", new Upgrade("Metal", new Upgrade[]{
                 new Upgrade("metalBullets", new Upgrade[]{
                         new Upgrade("metalBulletCountI", new Upgrade[]{
-                                new Upgrade("metalBulletScatterShot", 2),
+                                new Upgrade("metalBulletScatterShotI", 2),
                                 new Upgrade("metalBulletCountII", 2),
                                 new Upgrade("metalBulletDamageI", new Upgrade[]{
                                         new Upgrade("metalLance", new Upgrade[]{
                                                 new Upgrade("metalLanceDamageI", new Upgrade[]{
                                                         new Upgrade("metalLanceDamageII", 2)
                                                 }, 2),
-                                                new Upgrade("metalLanceRedirect", 2)
+                                                new Upgrade("metalLanceRedirectI", 2)
                                         },4)
                                 }, 2),
                         }, 2)
                 }, 4),
                 new Upgrade("metalBind", new Upgrade[]{
-                        new Upgrade("metalBindRange", 2),
+                        new Upgrade("metalBindRangeI", 2),
                         new Upgrade("metalBindEfficiencyI", new Upgrade[]{
                                 new Upgrade("metalBindEfficiencyII", 2)
                         },2)

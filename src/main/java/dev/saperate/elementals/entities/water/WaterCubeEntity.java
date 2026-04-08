@@ -81,7 +81,9 @@ public class WaterCubeEntity extends AbstractElementalsEntity<PlayerEntity> {
 
     @Override
     public void collidesWithGround() {
-        WaterElement.placeWater(getBlockPos(),getWorld());
+        if (!getWorld().getGameRules().getBoolean(BENDING_GRIEFING)) {
+            WaterElement.placeWater(getBlockPos(), getWorld());
+        }
         discard();
     }
 

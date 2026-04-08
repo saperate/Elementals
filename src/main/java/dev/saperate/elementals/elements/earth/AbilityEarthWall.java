@@ -4,6 +4,7 @@ import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.elements.Ability;
 import dev.saperate.elementals.entities.earth.EarthBlockEntity;
+import dev.saperate.elementals.misc.BlockRestoreManager;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.player.PlayerEntity;
@@ -71,8 +72,15 @@ public class AbilityEarthWall implements Ability {
             if(!EarthElement.isBlockBendable(state, bender)){
                 return;
             }
-            if(player.getWorld().getGameRules().getBoolean(BENDING_GRIEFING)){
-                player.getWorld().setBlockState(bPos, Blocks.AIR.getDefaultState());
+
+            player.getWorld().setBlockState(bPos, Blocks.AIR.getDefaultState());
+            if(!player.getWorld().getGameRules().getBoolean(BENDING_GRIEFING)){
+                BlockRestoreManager.addBlockToRestore(new BlockRestoreManager.BlockInformation(
+                        bPos,
+                        state,
+                        player.getWorld().getRegistryKey(),
+                        40 + player.getWorld().random.nextBetween(0, 140)
+                ));
             }
 
 
@@ -80,7 +88,7 @@ public class AbilityEarthWall implements Ability {
             entity.setBlockState(state);
             entity.setTargetPosition(startPos.add(0,height - y,0).toCenterPos().toVector3f().add(0,0.05f,0));
             entity.setMovementSpeed(0.2f);
-
+            entity.setUseOffset(true);
             player.getWorld().spawnEntity(entity);
             entities.add(entity);
         }

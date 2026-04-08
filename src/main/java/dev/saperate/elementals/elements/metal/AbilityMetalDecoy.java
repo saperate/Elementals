@@ -191,7 +191,7 @@ public class AbilityMetalDecoy implements Ability {
 
     @Override
     public void onAbilityPress(Bender bender, int keyIndex) {
-        if(keyIndex == 1)
+        if(keyIndex == 3)
             onRemove(bender);
     }
 
