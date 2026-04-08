@@ -724,5 +724,7 @@
   "upgrade.elementals.bloodParalysisEfficiencyI.description": " Use Paralysis using less chi.",
 
   "upgrade.elementals.bloodParalysisEfficiencyII": "Efficiency II",
-  "upgrade.elementals.bloodParalysisEfficiencyII.description": " Use Paralysis using even less chi."
+  "upgrade.elementals.bloodParalysisEfficiencyII.description": " Use Paralysis using even less chi.",
+
+  "upgrade.elementals.metalArmor.icon": "metal_armor"
 }

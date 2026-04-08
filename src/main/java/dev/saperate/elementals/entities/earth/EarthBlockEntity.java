@@ -68,7 +68,7 @@ public class EarthBlockEntity extends AbstractElementalsEntity<PlayerEntity> {
         super.initDataTracker(builder);
         builder.add(MODEL_SHAPE_ID, 0);
         builder.add(BLOCK_STATE, Blocks.AIR.getDefaultState());
-        builder.add(TARGET_POSITION, new Vector3f(0, -50, 0));
+        builder.add(TARGET_POSITION, new Vector3f(0, -1000, 0));
         builder.add(USES_OFFSET, false);
         builder.add(IS_COLLIDABLE, true);
         builder.add(MOVEMENT_SPEED, 0.1f);
@@ -101,19 +101,18 @@ public class EarthBlockEntity extends AbstractElementalsEntity<PlayerEntity> {
     }
 
     private void controlEntity(Entity owner) {
-        if(owner == null){
+        if (owner == null) {
             setControlled(false);
             return;
         }
         Vector3f target = getTargetPosition();
-        Vector3f direction = (target.y == -50 || usesOffset() ?
-                getEntityLookVector(owner, 3) : new Vec3d(target.x, target.y, target.z))
-                .toVector3f();
+        Vector3f direction = target.y == -1000 || usesOffset() ?
+                getEntityLookVector(owner, 3).toVector3f() : target;
 
         if (usesOffset()) {
             direction.add(target);
         }
-
+        
         moveEntityTowardsGoal(direction);
     }
 
@@ -158,7 +157,7 @@ public class EarthBlockEntity extends AbstractElementalsEntity<PlayerEntity> {
         LivingEntity owner = getOwner();
         if (!entity.equals(owner)) {
             entity.damage(this.getDamageSources().playerAttack((PlayerEntity) owner), getDamage());
-        }else {
+        } else {
             entity.fallDistance = 0;
         }
         entity.setVelocity(this.getVelocity().multiply(1.2f));

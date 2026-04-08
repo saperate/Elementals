@@ -9,6 +9,7 @@ import dev.saperate.elementals.elements.metal.MetalElement;
 import dev.saperate.elementals.items.DirtBottleItem;
 import dev.saperate.elementals.items.ElementalItems;
 import dev.saperate.elementals.items.WaterPouchItem;
+import dev.saperate.elementals.misc.BlockRestoreManager;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
@@ -36,7 +37,7 @@ import static dev.saperate.elementals.utils.SapsUtils.getEntityLookVector;
 
 
 public class EarthElement extends Element {
-    
+
     public EarthElement() {
         super("Earth", new Upgrade[]{
                 new Upgrade("earthBlock", new Upgrade[]{
@@ -127,15 +128,23 @@ public class EarthElement extends Element {
         } else if (plrData.canUseUpgrade("earthPickupRangeI")) {
             range = 10;
         }
-        BlockHitResult hit = raycastCollidableBlocks(player.getCameraPosVec(1), getEntityLookVector(player,range), player, 0);
-        if(hit == null){
+        BlockHitResult hit = raycastCollidableBlocks(player.getCameraPosVec(1), getEntityLookVector(player, range), player, 0);
+        if (hit == null) {
             return null;
         }
 
         if (isBlockBendable(hit.getBlockPos(), Bender.getBender((ServerPlayerEntity) player))) {
             BlockState blockState = player.getEntityWorld().getBlockState(hit.getBlockPos());
-            if (consumeBlock && player.getWorld().getGameRules().getBoolean(BENDING_GRIEFING)) {
+            if (consumeBlock) {
                 player.getWorld().setBlockState(hit.getBlockPos(), Blocks.AIR.getDefaultState());
+                if (!player.getWorld().getGameRules().getBoolean(BENDING_GRIEFING)) {
+                    BlockRestoreManager.addBlockToRestore(new BlockRestoreManager.BlockInformation(
+                            hit.getBlockPos(),
+                            blockState,
+                            player.getWorld().getRegistryKey(),
+                            40 + player.getWorld().random.nextBetween(0, 140)
+                    ));
+                }
             }
             return new Object[]{hit.getPos(), blockState, hit.getBlockPos(), hit.getSide()};
         }
@@ -144,30 +153,30 @@ public class EarthElement extends Element {
         return null;
     }
 
-    public static BlockHitResult raycastCollidableBlocks(Vec3d start, Vec3d end, Entity origin, int depth){
-        if(depth >= 20){
+
+    public static BlockHitResult raycastCollidableBlocks(Vec3d start, Vec3d end, Entity origin, int depth) {
+        if (depth >= 20) {
             return null;
         }
         BlockHitResult bHit = origin.getWorld().raycast(
                 new RaycastContext(
-                        start,end, RaycastContext.ShapeType.OUTLINE, RaycastContext.FluidHandling.NONE, origin
+                        start, end, RaycastContext.ShapeType.OUTLINE, RaycastContext.FluidHandling.NONE, origin
                 ));
-        if(bHit.getType().equals(HitResult.Type.MISS)){
+        if (bHit.getType().equals(HitResult.Type.MISS)) {
             return null;
         }
 
         BlockState state = origin.getWorld().getBlockState(bHit.getBlockPos());
-        if(state.isSolid()){
-           return bHit;
+        if (state.isSolid()) {
+            return bHit;
         }
-        return raycastCollidableBlocks(bHit.getPos(),end,origin, depth + 1);
+        return raycastCollidableBlocks(bHit.getPos(), end, origin, depth + 1);
     }
 
-    
 
     public static boolean isBlockBendable(BlockPos pos, Bender bender) {
         BlockState bState = bender.player.getWorld().getBlockState(pos);
-        return isBlockBendable(bState,bender);
+        return isBlockBendable(bState, bender);
     }
 
     //TODO check for netherite and ancient debris and make it more expensive
@@ -184,12 +193,17 @@ public class EarthElement extends Element {
      * @param damagedEntities  Entities that were already damaged, set to null to deal no damage
      */
     public static void makeHole(BlockPos pos, int depth, Bender bender, ArrayList<LivingEntity> damagedEntities) {
-        if(!bender.player.getWorld().getGameRules().getBoolean(BENDING_GRIEFING)){
-            return;
-        }
         for (int y = 0; y < depth; y++) {
             BlockPos bPos = pos.down(y);
-            if (EarthElement.isBlockBendable(bPos, bender)) {
+            BlockState bState = bender.player.getWorld().getBlockState(bPos);
+            if (EarthElement.isBlockBendable(bState, bender)) {
+                BlockRestoreManager.addBlockToRestore(new BlockRestoreManager.BlockInformation(
+                        bPos,
+                        bState,
+                        bender.player.getWorld().getRegistryKey(),
+                        40 + bender.player.getWorld().random.nextBetween(0, 140)
+                ));
+
                 bender.player.getWorld().breakBlock(bPos, false);
             }
         }
@@ -197,40 +211,6 @@ public class EarthElement extends Element {
         if (damagedEntities != null) {
             damageEntityAboveBlock(bender.player, pos, damagedEntities, 2);
         }
-    }
-
-    /**
-     * Makes a hole given a starting position and depth. It will not mine blocks that are not bendable nor does it drop them
-     * Can optionally damage entities standing on top of the block being broken
-     * @param pos  the starting y cord along with the x and z
-     * @param depth  How far down will the hole go
-     * @param bender  The bender that cast the ability
-     * @param damagedEntities  Entities that were already damaged, set to null to deal no damage
-     * @return brokenBlocks A Map of positions and the block that was broken at that place
-     */
-    public static HashMap<BlockPos, BlockState> makeHole(BlockPos pos, int depth, Bender bender, ArrayList<LivingEntity> damagedEntities, HashMap<BlockPos, BlockState> brokenBlocks) {
-        if(!bender.player.getWorld().getGameRules().getBoolean(BENDING_GRIEFING)){
-            return brokenBlocks;
-        }
-        for (int y = 0; y < depth; y++) {
-            BlockPos bPos = pos.down(y);
-            BlockState bState = bender.player.getWorld().getBlockState(bPos);
-            if (EarthElement.isBlockBendable(bState, bender)) {
-                boolean hasPosition = brokenBlocks.containsKey(bPos);
-                
-                //We can't have dupes, drop the blocks that come AFTER
-                bender.player.getWorld().breakBlock(bPos, hasPosition);
-                
-                if(!hasPosition){
-                    brokenBlocks.put(bPos,bState);
-                }
-            }
-        }
-
-        if (damagedEntities != null) {
-            damageEntityAboveBlock(bender.player, pos, damagedEntities, 2);
-        }
-        return brokenBlocks;
     }
 
     /**
@@ -295,7 +275,7 @@ public class EarthElement extends Element {
                 && plrData.canUseUpgrade("earthJumpRangeII")
                 && plrData.canUseUpgrade("earthPillarTallI")
                 && plrData.canUseUpgrade("earthArmor")
-        ;
+                ;
     }
-    
+
 }

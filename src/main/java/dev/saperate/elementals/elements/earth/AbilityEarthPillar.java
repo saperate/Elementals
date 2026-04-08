@@ -79,7 +79,7 @@ public class AbilityEarthPillar implements Ability {
             entity.setBlockState(state);
             entity.setTargetPosition(endPos.toVector3f());
             entity.setShiftToFreeze(false);
-            entity.setDamageOnTouch(true);
+            entity.setDamageOnTouch(true);//TODO replace with damage above block
             entity.setDamage(1);
             entity.maxLifeTime = 20;
             entity.setDropOnEndOfLife(true);
