@@ -195,12 +195,17 @@ public class MetalElement extends Element {
 
     @Override
     public int getColor() {
-        return 0xFFDADDE1;
+        return 0xFFd4c9c4;
     }
 
     @Override
     public int getSecondaryColor() {
-        return 0xFF919191;
+        return 0xFF8d7c76;
+    }
+
+    @Override
+    public int getTertiaryColor() {
+        return 0xFF4f3933;
     }
 
     @Override
