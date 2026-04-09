@@ -52,19 +52,10 @@ public class AbilityAirBall implements Ability {
     }
 
     @Override
-    public void onMiddleClick(Bender bender, boolean started) {
-
-    }
-
-    @Override
     public void onRightClick(Bender bender, boolean started) {
         onRemove(bender);
     }
-
-    @Override
-    public void onTick(Bender bender) {
-
-    }
+    
 
     @Override
     public void onRemove(Bender bender) {

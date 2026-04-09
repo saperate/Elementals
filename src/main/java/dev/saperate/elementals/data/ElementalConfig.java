@@ -32,6 +32,8 @@ public final class ElementalConfig {
     public int CHI_OVERLAY_THRESHOLD = 115;
     public boolean CHI_OVERLAY_TEXT = false;
     public boolean HIDE_TIMER = false;
+    //MISC
+    public float BENDING_DAMAGE_MULTIPLIER;//TODO full rework of bending damage scaling
     public HashMap<Item, Integer> METAL_COST_VALUE = new HashMap<>(){{
         put(Items.COPPER_INGOT, 9);
         put(Items.RAW_COPPER, 6);
@@ -72,6 +74,7 @@ public final class ElementalConfig {
             METAL_COST_VALUE = getMetalCostValue(root);
             METAL_LOWER_VALUE_STACK = getMetalLowerValueStack(root);
             CRAFTABLE_SCROLLS = root.get("CRAFTABLE_SCROLLS").getAsBoolean();
+            BENDING_DAMAGE_MULTIPLIER = root.get("BENDING_DAMAGE_MULTIPLIER").getAsFloat();
             
         }catch (Exception e){
             // This doesn't override the file, just makes it so we don't use what we loaded
@@ -95,6 +98,7 @@ public final class ElementalConfig {
             root.addProperty("CHI_OVERLAY_THRESHOLD", 115);
             root.addProperty("CHI_OVERLAY_TEXT", false);
             root.addProperty("HIDE_TIMER", false);
+            root.addProperty("BENDING_DAMAGE_MULTIPLIER", 1.0f);
 
             
             JsonArray metalCostValue = new JsonArray();

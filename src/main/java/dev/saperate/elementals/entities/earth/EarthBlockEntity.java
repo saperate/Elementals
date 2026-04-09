@@ -1,5 +1,6 @@
 package dev.saperate.elementals.entities.earth;
 
+import dev.saperate.elementals.data.ElementalConfig;
 import dev.saperate.elementals.entities.ElementalEntities;
 import dev.saperate.elementals.entities.common.AbstractElementalsEntity;
 import dev.saperate.elementals.utils.SapsUtils;
@@ -156,7 +157,7 @@ public class EarthBlockEntity extends AbstractElementalsEntity<PlayerEntity> {
     public void onTouchEntity(Entity entity) {
         LivingEntity owner = getOwner();
         if (!entity.equals(owner)) {
-            entity.damage(this.getDamageSources().playerAttack((PlayerEntity) owner), getDamage());
+            entity.damage(this.getDamageSources().playerAttack((PlayerEntity) owner), getDamage() * ElementalConfig.get().BENDING_DAMAGE_MULTIPLIER);
         } else {
             entity.fallDistance = 0;
         }
@@ -168,7 +169,7 @@ public class EarthBlockEntity extends AbstractElementalsEntity<PlayerEntity> {
     @Override
     public void onHitEntity(Entity entity) {
         entity.fallDistance = 0;
-        entity.damage(this.getDamageSources().playerAttack((PlayerEntity) getOwner()), getDamage());
+        entity.damage(this.getDamageSources().playerAttack((PlayerEntity) getOwner()), getDamage() * ElementalConfig.get().BENDING_DAMAGE_MULTIPLIER);
         entity.addVelocity(this.getVelocity().multiply(0.5));
         entity.move(MovementType.SELF, entity.getVelocity());
         entity.velocityModified = true;

@@ -1,6 +1,7 @@
 package dev.saperate.elementals.entities.fire;
 
 import dev.saperate.elementals.data.Bender;
+import dev.saperate.elementals.data.ElementalConfig;
 import dev.saperate.elementals.entities.common.AbstractElementalsEntity;
 import dev.saperate.elementals.utils.SapsUtils;
 import net.minecraft.block.Blocks;
@@ -98,7 +99,7 @@ public class FireBlockEntity extends AbstractElementalsEntity<PlayerEntity> {
             if(SapsUtils.isBeingRainedOn(this)){
                 damage /= 2;
             }
-            entity.damage(getDamageSources().inFire(), damage);
+            entity.damage(getDamageSources().inFire(), damage * ElementalConfig.get().BENDING_DAMAGE_MULTIPLIER);
         }
     }
 

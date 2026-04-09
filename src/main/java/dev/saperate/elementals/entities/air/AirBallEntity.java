@@ -1,5 +1,6 @@
 package dev.saperate.elementals.entities.air;
 
+import dev.saperate.elementals.data.ElementalConfig;
 import dev.saperate.elementals.misc.FireExplosion;
 import dev.saperate.elementals.entities.common.AbstractElementalsEntity;
 import net.minecraft.entity.Entity;
@@ -78,7 +79,7 @@ public class AirBallEntity extends AbstractElementalsEntity<PlayerEntity> {
     }
 
     public void onCollision() {
-        FireExplosion explosion = new FireExplosion(getWorld(), getOwner(), getX(), getY(), getZ(), 2.5f, false, Explosion.DestructionType.KEEP, 8, 4, getOwner());
+        FireExplosion explosion = new FireExplosion(getWorld(), getOwner(), getX(), getY(), getZ(), 2.5f, false, Explosion.DestructionType.KEEP, 8 * ElementalConfig.get().BENDING_DAMAGE_MULTIPLIER, 4, getOwner());
         explosion.collectBlocksAndDamageEntities();
         discard();
     }

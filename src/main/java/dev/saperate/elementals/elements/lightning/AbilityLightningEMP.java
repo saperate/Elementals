@@ -1,6 +1,7 @@
 package dev.saperate.elementals.elements.lightning;
 
 import dev.saperate.elementals.data.Bender;
+import dev.saperate.elementals.data.ElementalConfig;
 import dev.saperate.elementals.elements.Ability;
 import dev.saperate.elementals.entities.lightning.VoltArcEntity;
 import dev.saperate.elementals.misc.FireExplosion;
@@ -25,7 +26,7 @@ public class AbilityLightningEMP implements Ability {
         PlayerEntity player = bender.player;
         SapsUtils.serverSummonParticles((ServerWorld) player.getWorld(),
                 LIGHTNING_PARTICLE_TYPE, player, player.getRandom(), -0.5,-0.5,-0.5,0.75f,100,0,0,0,1);
-        StunExplosion explosion = new StunExplosion(player.getWorld(), player, player.getX(), player.getY(), player.getZ(), 2.5f, false, Explosion.DestructionType.KEEP, 4,0, player);
+        StunExplosion explosion = new StunExplosion(player.getWorld(), player, player.getX(), player.getY(), player.getZ(), 2.5f, false, Explosion.DestructionType.KEEP, 4 * ElementalConfig.get().BENDING_DAMAGE_MULTIPLIER,0, player);
         explosion.collectBlocksAndDamageEntities();
         explosion.affectWorld(true);
     }

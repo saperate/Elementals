@@ -1,6 +1,7 @@
 package dev.saperate.elementals.entities.lightning;
 
 import dev.saperate.elementals.effects.ElementalsStatusEffects;
+import dev.saperate.elementals.data.ElementalConfig;
 import dev.saperate.elementals.entities.common.AbstractElementalsEntity;
 import dev.saperate.elementals.entities.fire.FireArcEntity;
 import net.minecraft.entity.*;
@@ -93,7 +94,7 @@ public class VoltArcEntity extends AbstractElementalsEntity<PlayerEntity> {
             //TODO make a custom sound
             playSound(SoundEvents.ENTITY_LIGHTNING_BOLT_THUNDER,1,1);
             living.addStatusEffect(new StatusEffectInstance(ElementalsStatusEffects.STUNNED,duration, 0, false,false,true));
-            living.damage(this.getDamageSources().playerAttack(getOwner()),1);
+            living.damage(this.getDamageSources().playerAttack(getOwner()),1 * ElementalConfig.get().BENDING_DAMAGE_MULTIPLIER);
             remove();
         }
 

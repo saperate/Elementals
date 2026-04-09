@@ -1,6 +1,7 @@
 package dev.saperate.elementals.elements.metal;
 
 import dev.saperate.elementals.data.Bender;
+import dev.saperate.elementals.data.ElementalConfig;
 import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.effects.SpiritProjectionStatusEffect;
 import dev.saperate.elementals.elements.Ability;
@@ -290,7 +291,7 @@ public class AbilityMetalDecoy implements Ability {
                     }
 
                     Vec3d vec3d = target.getVelocity();
-                    boolean bl5 = target.damage(damageSource, i);
+                    boolean bl5 = target.damage(damageSource, i * ElementalConfig.get().BENDING_DAMAGE_MULTIPLIER);
                     if (bl5) {
                         float k = 1;
                         if (k > 0.0F) {

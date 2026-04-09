@@ -1,5 +1,6 @@
 package dev.saperate.elementals.entities.water;
 
+import dev.saperate.elementals.data.ElementalConfig;
 import dev.saperate.elementals.entities.common.AbstractElementalsEntity;
 import dev.saperate.elementals.utils.SapsUtils;
 import net.minecraft.entity.*;
@@ -85,7 +86,7 @@ public class WaterHealingEntity extends AbstractElementalsEntity<PlayerEntity> {
 
     public void healTarget(Entity entity) {
         if (entity instanceof LivingEntity living) {
-            living.setHealth(living.getHealth() + (getHealing() * (entity.equals(getOwner()) ? 0.5f : 1)));
+            living.setHealth(living.getHealth() + (getHealing() * (entity.equals(getOwner()) ? 0.5f : 1)) * ElementalConfig.get().BENDING_DAMAGE_MULTIPLIER);
         }
     }
 

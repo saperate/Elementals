@@ -1,6 +1,7 @@
 package dev.saperate.elementals.entities.fire;
 
 import dev.saperate.elementals.data.Bender;
+import dev.saperate.elementals.data.ElementalConfig;
 import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.entities.common.AbstractElementalsEntity;
 import dev.saperate.elementals.entities.water.WaterArcEntity;
@@ -145,7 +146,7 @@ public class FireArcEntity extends AbstractElementalsEntity<PlayerEntity> {
         if (!entity.isFireImmune()) {
             entity.setOnFireFor(8);
         }
-        entity.damage(this.getDamageSources().playerAttack(getOwner()), damage);
+        entity.damage(this.getDamageSources().playerAttack(getOwner()), damage * ElementalConfig.get().BENDING_DAMAGE_MULTIPLIER);
         remove();
     }
 

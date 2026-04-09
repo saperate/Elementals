@@ -1,5 +1,6 @@
 package dev.saperate.elementals.entities.water;
 
+import dev.saperate.elementals.data.ElementalConfig;
 import dev.saperate.elementals.entities.common.AbstractElementalsEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -83,7 +84,7 @@ public class WaterJetEntity extends AbstractElementalsEntity<PlayerEntity> {
                 Vec3d direction = getOwner().getEyePos().subtract(victim.getPos()).normalize().multiply(-0.075f);
                 victim.addVelocity(direction);
 
-                victim.damage(getDamageSources().playerAttack(getOwner()), 1.5f * getStreamSize());
+                victim.damage(getDamageSources().playerAttack(getOwner()), 1.5f * getStreamSize() * ElementalConfig.get().BENDING_DAMAGE_MULTIPLIER);
 
             }
             setPosition(hit.getPos());
