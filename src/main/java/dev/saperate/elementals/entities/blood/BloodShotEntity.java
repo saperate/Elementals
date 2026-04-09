@@ -1,5 +1,6 @@
 package dev.saperate.elementals.entities.blood;
 
+import dev.saperate.elementals.data.ElementalConfig;
 import dev.saperate.elementals.entities.common.AbstractElementalsEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -70,7 +71,7 @@ public class BloodShotEntity extends AbstractElementalsEntity<PlayerEntity> {
             for (StatusEffectInstance instance : effects) {
                 living.addStatusEffect(instance);
             }
-            living.damage(this.getDamageSources().playerAttack(getOwner()), 1);
+            living.damage(this.getDamageSources().playerAttack(getOwner()), 1 * ElementalConfig.get().BENDING_DAMAGE_MULTIPLIER);
             discard();
         }
     }

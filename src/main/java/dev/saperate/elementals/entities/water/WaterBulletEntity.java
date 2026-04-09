@@ -1,5 +1,6 @@
 package dev.saperate.elementals.entities.water;
 
+import dev.saperate.elementals.data.ElementalConfig;
 import dev.saperate.elementals.entities.common.AbstractElementalsEntity;
 import dev.saperate.elementals.utils.SapsUtils;
 import net.minecraft.entity.*;
@@ -101,7 +102,7 @@ public class WaterBulletEntity extends AbstractElementalsEntity<PlayerEntity> {
 
     @Override
     public void onHitEntity(Entity entity) {
-        entity.damage(this.getDamageSources().playerAttack((PlayerEntity) getOwner()), 2);
+        entity.damage(this.getDamageSources().playerAttack((PlayerEntity) getOwner()), 2 * ElementalConfig.get().BENDING_DAMAGE_MULTIPLIER);
         entity.addVelocity(this.getVelocity().multiply(0.8f));
         discard();
     }

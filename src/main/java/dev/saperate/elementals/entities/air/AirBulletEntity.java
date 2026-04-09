@@ -1,5 +1,6 @@
 package dev.saperate.elementals.entities.air;
 
+import dev.saperate.elementals.data.ElementalConfig;
 import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.entities.common.AbstractElementalsEntity;
 import dev.saperate.elementals.utils.SapsUtils;
@@ -127,7 +128,7 @@ public class AirBulletEntity extends AbstractElementalsEntity<PlayerEntity> {
         } else if (plrData.canUseUpgrade("airBulletsDamageI")) {
             damage = 2;
         }
-        entity.damage(this.getDamageSources().playerAttack(owner), damage);
+        entity.damage(this.getDamageSources().playerAttack(owner), damage * ElementalConfig.get().BENDING_DAMAGE_MULTIPLIER);
         if (!getIsControlled()) {
             entity.addVelocity(this.getVelocity().multiply(1.2f));
             discard();

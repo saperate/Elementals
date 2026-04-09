@@ -1,5 +1,6 @@
 package dev.saperate.elementals.entities.air;
 
+import dev.saperate.elementals.data.ElementalConfig;
 import dev.saperate.elementals.entities.common.AbstractElementalsEntity;
 import dev.saperate.elementals.entities.water.WaterArcEntity;
 import net.minecraft.block.Block;
@@ -102,7 +103,7 @@ public class AirTornadoEntity extends AbstractElementalsEntity<PlayerEntity> {
         if(getOwner() == entity){
             return;
         }
-        entity.damage(this.getDamageSources().playerAttack((PlayerEntity) getOwner()), 5);//TODO maybe add a debris upgrade for more dmg
+        entity.damage(this.getDamageSources().playerAttack((PlayerEntity) getOwner()), 5 * ElementalConfig.get().BENDING_DAMAGE_MULTIPLIER);//TODO maybe add a debris upgrade for more dmg
         entity.addVelocity(0, 0.50f, 0);
         entity.velocityModified = true;
         entity.move(MovementType.SELF, entity.getVelocity());

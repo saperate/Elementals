@@ -1,6 +1,7 @@
 package dev.saperate.elementals.elements.air;
 
 import dev.saperate.elementals.data.Bender;
+import dev.saperate.elementals.data.ElementalConfig;
 import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.elements.Ability;
 import dev.saperate.elementals.utils.SapsUtils;
@@ -38,16 +39,6 @@ public class AbilityAirGust implements Ability {
         }
         bender.abilityData = true;
         bender.setCurrAbility(this);
-    }
-
-    @Override
-    public void onLeftClick(Bender bender, boolean started) {
-
-    }
-
-    @Override
-    public void onMiddleClick(Bender bender, boolean started) {
-
     }
 
     @Override
@@ -123,7 +114,7 @@ public class AbilityAirGust implements Ability {
                 float dot = -pos.normalize().toVector3f().dot(dir.toVector3f());
 
                 if (Math.cos(dot) <= 0.75 && dot >= 0) {
-                    e.damage(e.getDamageSources().playerAttack(player), 2.5f);
+                    e.damage(e.getDamageSources().playerAttack(player), 2.5f * ElementalConfig.get().BENDING_DAMAGE_MULTIPLIER);
                     e.addVelocity(dir.multiply(-0.1f));
                 }
             }

@@ -1,6 +1,7 @@
 package dev.saperate.elementals.entities.fire;
 
 import dev.saperate.elementals.data.Bender;
+import dev.saperate.elementals.data.ElementalConfig;
 import dev.saperate.elementals.misc.FireExplosion;
 import dev.saperate.elementals.entities.common.AbstractElementalsEntity;
 import net.minecraft.block.AbstractFireBlock;
@@ -108,7 +109,7 @@ public class FireBallEntity extends AbstractElementalsEntity<PlayerEntity> {
 
     public void onCollision(){
         getWorld().setBlockState(getBlockPos(), AbstractFireBlock.getState(getWorld(), getBlockPos()));
-        FireExplosion explosion = new FireExplosion(getWorld(), getOwner(), getX(), getY(), getZ(), 2.5f, true, Explosion.DestructionType.KEEP, 12, getOwner());
+        FireExplosion explosion = new FireExplosion(getWorld(), getOwner(), getX(), getY(), getZ(), 2.5f, true, Explosion.DestructionType.KEEP, 12 * ElementalConfig.get().BENDING_DAMAGE_MULTIPLIER, getOwner());
         explosion.collectBlocksAndDamageEntities();
         explosion.affectWorld(true);
         discard();

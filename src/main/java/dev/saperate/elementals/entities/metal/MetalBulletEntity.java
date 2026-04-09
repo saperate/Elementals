@@ -1,6 +1,7 @@
 package dev.saperate.elementals.entities.metal;
 
 import dev.saperate.elementals.Elementals;
+import dev.saperate.elementals.data.ElementalConfig;
 import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.entities.common.AbstractElementalsEntity;
 import dev.saperate.elementals.utils.MathHelper;
@@ -112,7 +113,7 @@ public class MetalBulletEntity extends AbstractElementalsEntity<PlayerEntity> {
         } else if (plrData.canUseUpgrade("airBulletsDamageI")) {
             damage = 1.75f;
         }
-        entity.damage(this.getDamageSources().playerAttack(owner), damage);
+        entity.damage(this.getDamageSources().playerAttack(owner), damage * ElementalConfig.get().BENDING_DAMAGE_MULTIPLIER);
         entity.timeUntilRegen = 10;
         if (!getIsControlled()) {
             entity.addVelocity(this.getVelocity().multiply(0));

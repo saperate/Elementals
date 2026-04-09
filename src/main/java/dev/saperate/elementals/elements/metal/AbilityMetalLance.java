@@ -1,6 +1,7 @@
 package dev.saperate.elementals.elements.metal;
 
 import dev.saperate.elementals.data.Bender;
+import dev.saperate.elementals.data.ElementalConfig;
 import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.elements.Ability;
 import dev.saperate.elementals.elements.water.WaterElement;
@@ -24,7 +25,7 @@ import java.util.List;
 public class AbilityMetalLance implements Ability {
 
     @Override
-    public void onCall(Bender bender, long deltaT) {
+    public void onCall(Bender bender, long deltaT) {//TODO add chargeup after casting
         if (!bender.reduceChi(15)) {
             if (bender.abilityData == null) {
                 bender.setCurrAbility(null);
@@ -99,7 +100,7 @@ public class AbilityMetalLance implements Ability {
                 return;
             }
             for (LivingEntity living: entityList) {
-                living.damage(bender.player.getDamageSources().playerAttack(bender.player), 14);
+                living.damage(bender.player.getDamageSources().playerAttack(bender.player), 14 * ElementalConfig.get().BENDING_DAMAGE_MULTIPLIER);
             }
             onRemove(bender);
             return;

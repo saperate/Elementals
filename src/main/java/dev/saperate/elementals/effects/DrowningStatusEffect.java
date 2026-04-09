@@ -1,5 +1,6 @@
 package dev.saperate.elementals.effects;
 
+import dev.saperate.elementals.data.ElementalConfig;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffect;
@@ -37,7 +38,7 @@ public class DrowningStatusEffect extends StatusEffect {
                         false
                 );
             } else {
-                entity.damage(entity.getDamageSources().drown(), 1);
+                entity.damage(entity.getDamageSources().drown(), 1 * ElementalConfig.get().BENDING_DAMAGE_MULTIPLIER);
             }
         }
     }

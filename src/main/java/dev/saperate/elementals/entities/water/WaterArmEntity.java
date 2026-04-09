@@ -1,5 +1,6 @@
 package dev.saperate.elementals.entities.water;
 
+import dev.saperate.elementals.data.ElementalConfig;
 import dev.saperate.elementals.entities.common.AbstractElementalsEntity;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.*;
@@ -82,7 +83,7 @@ public class WaterArmEntity extends AbstractElementalsEntity<PlayerEntity> {
             return;
         }
 
-        entity.damage(this.getDamageSources().playerAttack((PlayerEntity) getOwner()), 4);
+        entity.damage(this.getDamageSources().playerAttack((PlayerEntity) getOwner()), 4 * ElementalConfig.get().BENDING_DAMAGE_MULTIPLIER);
         entity.addVelocity(this.getVelocity().multiply(0.2f));
         remove();
     }

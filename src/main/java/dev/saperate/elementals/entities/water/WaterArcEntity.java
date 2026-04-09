@@ -1,5 +1,6 @@
 package dev.saperate.elementals.entities.water;
 
+import dev.saperate.elementals.data.ElementalConfig;
 import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.entities.common.AbstractElementalsEntity;
 import dev.saperate.elementals.utils.SapsUtils;
@@ -109,7 +110,7 @@ public class WaterArcEntity extends AbstractElementalsEntity<PlayerEntity> {
             damage = 7;
         }
 
-        entity.damage(this.getDamageSources().playerAttack((PlayerEntity) getOwner()), damage);
+        entity.damage(this.getDamageSources().playerAttack((PlayerEntity) getOwner()), damage * ElementalConfig.get().BENDING_DAMAGE_MULTIPLIER);
         entity.addVelocity(this.getVelocity().multiply(0.2f));
         entity.velocityModified = true;
         remove();

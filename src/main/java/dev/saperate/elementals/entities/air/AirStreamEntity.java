@@ -1,5 +1,6 @@
 package dev.saperate.elementals.entities.air;
 
+import dev.saperate.elementals.data.ElementalConfig;
 import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.entities.common.AbstractElementalsEntity;
 import dev.saperate.elementals.utils.SapsUtils;
@@ -115,7 +116,7 @@ public class AirStreamEntity extends AbstractElementalsEntity<PlayerEntity> {
             damage = 3.5f;
         }
 
-        entity.damage(getDamageSources().playerAttack(owner), damage);
+        entity.damage(getDamageSources().playerAttack(owner), damage * ElementalConfig.get().BENDING_DAMAGE_MULTIPLIER);
         entity.addVelocity(this.getVelocity().multiply(1.2f));
         entity.move(MovementType.SELF, entity.getVelocity());
         entity.velocityModified = true;

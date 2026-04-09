@@ -1,5 +1,6 @@
 package dev.saperate.elementals.entities.water;
 
+import dev.saperate.elementals.data.ElementalConfig;
 import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.entities.common.AbstractElementalsEntity;
 import dev.saperate.elementals.utils.SapsUtils;
@@ -58,7 +59,7 @@ public class WaterBladeEntity extends AbstractElementalsEntity<PlayerEntity> {
     @Override
     protected void initDataTracker() {
         super.initDataTracker();
-        this.getDataTracker().startTracking(DAMAGE, 1.5f);
+        this.getDataTracker().startTracking(DAMAGE, 7.5f);
     }
 
     @Override
@@ -157,7 +158,7 @@ public class WaterBladeEntity extends AbstractElementalsEntity<PlayerEntity> {
 
     @Override
     public void onHitEntity(Entity entity) {
-        entity.damage(this.getDamageSources().playerAttack(getOwner()), getDamage() * 5);
+        entity.damage(this.getDamageSources().playerAttack(getOwner()), getDamage() * ElementalConfig.get().BENDING_DAMAGE_MULTIPLIER);
         entity.addVelocity(this.getVelocity().multiply(0.8f));
         discard();
     }
@@ -165,7 +166,7 @@ public class WaterBladeEntity extends AbstractElementalsEntity<PlayerEntity> {
     @Override
     public void onTouchEntity(Entity entity) {
         if(age % 10 == 0){
-            entity.damage(this.getDamageSources().playerAttack(getOwner()), getDamage());
+            entity.damage(this.getDamageSources().playerAttack(getOwner()), getDamage() / 5 * ElementalConfig.get().BENDING_DAMAGE_MULTIPLIER);
         }
 
     }

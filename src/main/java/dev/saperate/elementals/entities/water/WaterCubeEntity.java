@@ -1,5 +1,6 @@
 package dev.saperate.elementals.entities.water;
 
+import dev.saperate.elementals.data.ElementalConfig;
 import dev.saperate.elementals.elements.water.WaterElement;
 import dev.saperate.elementals.entities.common.AbstractElementalsEntity;
 import dev.saperate.elementals.utils.SapsUtils;
@@ -89,7 +90,7 @@ public class WaterCubeEntity extends AbstractElementalsEntity<PlayerEntity> {
 
     @Override
     public void onHitEntity(Entity entity) {
-        entity.damage(this.getDamageSources().playerAttack((PlayerEntity) getOwner()), 6);
+        entity.damage(this.getDamageSources().playerAttack((PlayerEntity) getOwner()), 6 * ElementalConfig.get().BENDING_DAMAGE_MULTIPLIER);
         entity.addVelocity(this.getVelocity().multiply(1.25));
         discard();
     }

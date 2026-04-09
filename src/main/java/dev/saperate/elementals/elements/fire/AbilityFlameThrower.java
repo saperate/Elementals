@@ -1,6 +1,7 @@
 package dev.saperate.elementals.elements.fire;
 
 import dev.saperate.elementals.data.Bender;
+import dev.saperate.elementals.data.ElementalConfig;
 import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.elements.Ability;
 import dev.saperate.elementals.utils.SapsUtils;
@@ -107,7 +108,7 @@ public class AbilityFlameThrower implements Ability {
                 if (SapsUtils.isLookingAt(bender.player,e,6,0.75f)) {
                     if (!e.isFireImmune()) {
                         e.setOnFireFor(8);
-                        e.damage(e.getDamageSources().playerAttack(player), PlayerData.get(player).canUseUpgrade("blueFire") ? 3 : 2.5f);
+                        e.damage(e.getDamageSources().playerAttack(player), (PlayerData.get(player).canUseUpgrade("blueFire") ? 3 : 2.5f) * ElementalConfig.get().BENDING_DAMAGE_MULTIPLIER);
                     }
                 }
             }

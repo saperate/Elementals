@@ -66,7 +66,7 @@ public class AbilityMetalBullets implements Ability {
             float speed = getBulletSpeed(bender.plrData) * 2;
             bullet.setControlled(false);
             bullet.setVelocity(bender.player, bender.player.getPitch(), bender.player.getYaw(), 0, speed, 10);
-            bullet.setDamageMultiplier(2.5f);
+            bullet.setDamageMultiplier(2.5f);//FIXME
         }
         bender.abilityData = null;
         onRemove(bender);
