@@ -1,0 +1,14 @@
+{
+  "structures": [
+    {
+      "structure": "elementals:tophs_cage",
+      "weight": 1
+    }
+  ],
+  "placement": {
+    "type": "minecraft:random_spread",
+    "salt": 901646296,
+    "spacing": 16,
+    "separation": 8
+  }
+}

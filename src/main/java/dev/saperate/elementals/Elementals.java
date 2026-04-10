@@ -147,6 +147,7 @@ public class Elementals implements ModInitializer {
         Registry.register(Registries.PARTICLE_TYPE, Identifier.of(MODID, "lightning"), LIGHTNING_PARTICLE_TYPE);
         Registry.register(Registries.PARTICLE_TYPE, Identifier.of(MODID, "metal_shard"), METAL_SHARD_PARTICLE_TYPE);
         
+        //TODO make this better than a bunch of ifs
         LootTableEvents.REPLACE.register((resourceManager, lootManager, id, tableBuilder, source) -> {
             if (id.equals(LootTables.DESERT_PYRAMID_ARCHAEOLOGY)) {
                 List<LootPoolEntry> entries = new ArrayList<>(Arrays.asList(tableBuilder.pools[0].entries));
@@ -160,6 +161,7 @@ public class Elementals implements ModInitializer {
 
                 LootPool.Builder pool = LootPool.builder().with(entries);
                 return LootTable.builder().pool(pool).build();
+                
             }
 
             return null;
