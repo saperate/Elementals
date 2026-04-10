@@ -17,6 +17,8 @@
   "item.elementals.lightning_scroll.tooltip" : "Gives Lightning bending",
   "item.elementals.blood_scroll" : "Blood scroll",
   "item.elementals.blood_scroll.tooltip" : "Gives Blood bending",
+  "item.elementals.metal_scroll" : "Metal scroll",
+  "item.elementals.metal_scroll.tooltip" : "Gives Metal bending",
 
   "item.elementals.boomerang" : "Boomerang",
   "item.elementals.water_pouch" : "Water Pouch",

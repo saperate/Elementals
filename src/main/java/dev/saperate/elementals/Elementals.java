@@ -119,8 +119,7 @@ public class Elementals implements ModInitializer {
 
         Registry.register(Registries.PARTICLE_TYPE, Identifier.of(MODID, "lightning"), LIGHTNING_PARTICLE_TYPE);
 
-
-
+        //TODO make this better than a bunch of ifs
         LootTableEvents.MODIFY.register((key, tableBuilder, source) -> {
             if(source.isBuiltin() && (LootTables.DESERT_PYRAMID_ARCHAEOLOGY.equals(key))){
                 tableBuilder.modifyPools((builder)->{

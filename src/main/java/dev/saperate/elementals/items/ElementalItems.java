@@ -85,6 +85,9 @@ public class ElementalItems {
     public static final BloodScrollItem BLOOD_SCROLL_ITEM = (BloodScrollItem) registerItem("blood_scroll",
             new BloodScrollItem(new Item.Settings()
                     .maxCount(1)));
+    public static final MetalScrollItem METAL_SCROLL_ITEM = (MetalScrollItem) registerItem("metal_scroll",
+            new MetalScrollItem(new FabricItemSettings()
+                    .maxCount(1)));
     public static final DirtBottleItem DIRT_BOTTLE_ITEM = (DirtBottleItem) registerItem("dirt_bottle",
             new DirtBottleItem(new Item.Settings()
                     .maxCount(1)));
@@ -131,6 +134,7 @@ public class ElementalItems {
                 entries.add(AIR_SCROLL_ITEM);
                 entries.add(LIGHTNING_SCROLL_ITEM);
                 entries.add(BLOOD_SCROLL_ITEM);
+                entries.add(METAL_SCROLL_ITEM);
                 entries.add(DIRT_BOTTLE_ITEM);
                 entries.add(LIGHTNING_BOTTLE_ITEM);
                 entries.add(BOOMERANG_ITEM);
