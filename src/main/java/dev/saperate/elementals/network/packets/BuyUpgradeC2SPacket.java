@@ -35,8 +35,13 @@ public class BuyUpgradeC2SPacket {
             return;
         }
 
+
         PlayerData plrData = PlayerData.get(player);
         if (plrData.buyUpgrade(upgrade)) {
+            if(upgrade.parent.exclusive){
+                //Will disable sister upgrades
+                plrData.setUpgrade(upgrade,true);
+            }
             GetUpgradeListC2SPacket.send(player);
             SyncLevelC2SPacket.send(player);
         }

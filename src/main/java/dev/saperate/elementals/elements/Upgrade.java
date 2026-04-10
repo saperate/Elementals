@@ -87,18 +87,7 @@ public final class Upgrade {
     public boolean canBuy(HashMap<Upgrade,Boolean> plrUpgrades) {
         if (parent == null || parent.parent == null)
             return true;
-        if(!plrUpgrades.getOrDefault(parent, false))
-            return false;
-        if(!parent.exclusive)
-            return true;
-        
-        
-        for (Upgrade child : parent.children) {
-            if (plrUpgrades.containsKey(child) && plrUpgrades.get(child)) {
-                return false;
-            }
-        }
-        return true;
+        return plrUpgrades.getOrDefault(parent, false);
     }
 
     public Upgrade getUpgradeByNameRecursive(String upgradeName) {
