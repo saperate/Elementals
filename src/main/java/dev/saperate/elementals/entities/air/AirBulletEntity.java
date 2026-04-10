@@ -33,9 +33,7 @@ import static dev.saperate.elementals.utils.SapsUtils.summonParticles;
 public class AirBulletEntity extends AbstractElementalsEntity<PlayerEntity> {
     private static final TrackedData<Integer> ARRAY_ID = DataTracker.registerData(AirBulletEntity.class, TrackedDataHandlerRegistry.INTEGER);
     private static final TrackedData<Integer> ARRAY_SIZE = DataTracker.registerData(AirBulletEntity.class, TrackedDataHandlerRegistry.INTEGER);
-
-
-
+    
     public AirBulletEntity(EntityType<AirBulletEntity> type, World world) {
         super(type, world, PlayerEntity.class);
     }
