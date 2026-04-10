@@ -31,7 +31,7 @@ public class MetalElement extends Element {
 
     public MetalElement() {
         super("Metal", new Upgrade("Metal", new Upgrade[]{
-                new Upgrade("metalBullets", new Upgrade[]{
+                new Upgrade("metalBullet", new Upgrade[]{
                         new Upgrade("metalBulletCountI", new Upgrade[]{
                                 new Upgrade("metalBulletScatterShotI", 2),
                                 new Upgrade("metalBulletCountII", 2),
@@ -41,7 +41,7 @@ public class MetalElement extends Element {
                                                         new Upgrade("metalLanceDamageII", 2)
                                                 }, 2),
                                                 new Upgrade("metalLanceRedirectI", 2)
-                                        },4)
+                                        }, 4)
                                 }, 2),
                         }, 2)
                 }, 4),
@@ -49,29 +49,27 @@ public class MetalElement extends Element {
                         new Upgrade("metalBindRangeI", 2),
                         new Upgrade("metalBindEfficiencyI", new Upgrade[]{
                                 new Upgrade("metalBindEfficiencyII", 2)
-                        },2)
-                },4),
+                        }, 2)
+                }, 4),
                 new Upgrade("metalCable", new Upgrade[]{
                         new Upgrade("metalCableRangeI", new Upgrade[]{
                                 new Upgrade("metalCableSpeedI", new Upgrade[]{
                                         new Upgrade("metalCableSpeedII", 2),
                                         new Upgrade("metalCablePrecisionI", 2)
                                 }, 2),
-                        },2)
-                },4),
+                        }, 2)
+                }, 4),
                 new Upgrade("metalArmor", new Upgrade[]{
                         new Upgrade("metalArmorEfficiencyI", new Upgrade[]{
-                                new Upgrade("metalArmorRecyclingI", new Upgrade[]{
-                                        new Upgrade("metalDecoy", new Upgrade[]{
-                                                new Upgrade("metalDecoyRangeI", new Upgrade[]{
-                                                        new Upgrade("metalDecoyRangeII", 2),
-                                                        new Upgrade("metalDecoyDamageI", new Upgrade[]{
-                                                                new Upgrade("metalDecoyDamageII", 2)
-                                                        },2)
-                                                },2)
-                                        },6)
-                                },2)
-                        },2)
+                                new Upgrade("metalDecoy", new Upgrade[]{
+                                        new Upgrade("metalDecoyRangeI", new Upgrade[]{
+                                                new Upgrade("metalDecoyRangeII", 2),
+                                                new Upgrade("metalDecoyDamageI", new Upgrade[]{
+                                                        new Upgrade("metalDecoyDamageII", 2)
+                                                }, 2)
+                                        }, 2)
+                                }, 6)
+                        }, 2)
                 }, 4)
         }, 0));
         addAbility(new AbilityMetal1(), true);
@@ -95,10 +93,10 @@ public class MetalElement extends Element {
      */
     //TODO Refactor this monolith
     public static boolean canBend(PlayerEntity player, int cost) {
-        if(player.getAbilities().creativeMode){
+        if (player.getAbilities().creativeMode) {
             return true;
         }
-        
+
         ElementalConfig config = ElementalConfig.get();
         Inventory inventory = player.getInventory();
 
@@ -131,7 +129,7 @@ public class MetalElement extends Element {
 
             } else {
                 int itemReplacementValue = config.METAL_COST_VALUE.get(itemReplacement);
-                int itemReplacementCount = (int) Math.ceil((double) itemValue / itemReplacementValue) 
+                int itemReplacementCount = (int) Math.ceil((double) itemValue / itemReplacementValue)
                         * Math.min(lowestStack.getCount(), itemAmountNeeded);
 
                 //How much of the item's replacement to satisfy costLeft
@@ -142,7 +140,7 @@ public class MetalElement extends Element {
 
                 ItemStack replacementStack = itemReplacement.getDefaultStack();
                 replacementStack.setCount(itemReplacementCount - itemAmountToRemove);
-                
+
                 //We couldn't insert in the inventory, drop to the ground
                 if (!player.getInventory().insertStack(replacementStack))
                     player.getWorld().spawnEntity(new ItemEntity(player.getWorld(), player.getX(), player.getY(), player.getZ(), replacementStack));
@@ -150,7 +148,7 @@ public class MetalElement extends Element {
             validPaymentSlots.remove((Object) lowestSlot);
 
         }
-        
+
         //Remove every item that was consumed
         removeConsumedItems(slotsUsed, inventory);
         return true;

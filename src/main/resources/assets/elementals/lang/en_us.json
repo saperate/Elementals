@@ -726,18 +726,37 @@
   "upgrade.elementals.bloodParalysisEfficiencyII": "Efficiency II",
   "upgrade.elementals.bloodParalysisEfficiencyII.description": " Use Paralysis using even less chi.",
 
-  "upgrade.elementals.metalBullets": "Metal Bullets",
-  "upgrade.elementals.metalBullets.description": " Uses metal to create a series of projectile you can unleash a quick and deadly barrage.",
-  "upgrade.elementals.metalBullets.use": " Use: %d + ([optional] Hold L-Click)",
-  "upgrade.elementals.metalBullets.icon": "metal_bullets",
+  "upgrade.elementals.metalBullet": "Metal Bullets",
+  "upgrade.elementals.metalBullet.description": " Uses metal to create a series of projectile you can unleash a quick and deadly barrage.",
+  "upgrade.elementals.metalBullet.use": " Use: %d + ([optional] Hold L-Click)",
+  "upgrade.elementals.metalBullet.icon": "metal_bullet",
+
+  "upgrade.elementals.metalBulletCountI": "Count I",
+  "upgrade.elementals.metalBulletCountI.description": " Increases the amount of bullets created.",
+
+  "upgrade.elementals.metalBulletCountII": "Count II",
+  "upgrade.elementals.metalBulletCountII.description": " Further increases the amount of bullets created.",
+
+  "upgrade.elementals.metalBulletScatterShotI": "ScatterShot",
+  "upgrade.elementals.metalBulletScatterShotI.description": " Sends all of your bullets out at once, transforming this ability into a deadly but imprecise.",
+  "upgrade.elementals.metalBulletScatterShotI.use": " Use: Middle Click",
+
+  "upgrade.elementals.metalBulletDamageI": "Damage I",
+  "upgrade.elementals.metalBulletDamageI.description": " Increases the damage per bullet.",
   
-  "upgrade.elementals.metalLance.icon": "metal_lance",
+  "upgrade.elementals.metalLance.icon" : "metal_lance",
   
   "upgrade.elementals.metalBind.icon": "metal_bind",
   
   "upgrade.elementals.metalCable.icon": "metal_cable",
-  
+
+  "upgrade.elementals.metalArmor": "Metal Armor",
+  "upgrade.elementals.metalArmor.description": " Creates a metal armor around you that is incredibly durable. This defence, however, comes at the cost of sight and speed.",
+  "upgrade.elementals.metalArmor.use": " Use: %d",
   "upgrade.elementals.metalArmor.icon": "metal_armor",
+
+  "upgrade.elementals.metalArmorEfficiencyI": "Efficiency I",
+  "upgrade.elementals.metalArmorEfficiencyI.description": " Reduces the chi used to cast Metal Armor.",
   
   "upgrade.elementals.metalDecoy.icon": "metal_decoy"
 }

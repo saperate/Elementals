@@ -40,6 +40,7 @@ public class MetalArmorItem extends ArmorItem implements GeoItem {
     public MetalArmorItem(ArmorMaterial armorMaterial, Type type, Settings settings) {
         super(armorMaterial, type, settings);
     }
+    
 
     @Override
     public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
@@ -50,6 +51,7 @@ public class MetalArmorItem extends ArmorItem implements GeoItem {
         if(entity instanceof LivingEntity living){//Not inlining since i might need that later
             if(entity instanceof PlayerEntity player){
                 player.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS,60, 3, false, false, false));
+                player.addStatusEffect(new StatusEffectInstance(SEISMIC_SENSE_EFFECT,120,0, false, false, true));
                 player.addStatusEffect(new StatusEffectInstance(DENSE_EFFECT,120,10, false, false, false));
             }
             //TODO figure out how to add armor points
@@ -82,15 +84,16 @@ public class MetalArmorItem extends ArmorItem implements GeoItem {
     /**
      * Stores the previous armor and colors the new one then returns the new armor
      * @param prevArmor The previous armor the player was wearing
-     * @param standingBlock The block the player is standing on
+     * @param colorMultiply The color to dye the armor with
      * @return the new armor as an item stack
      */
-    public ItemStack getItemStack(ItemStack prevArmor, Block standingBlock) {
+    public ItemStack getItemStack(ItemStack prevArmor, int colorMultiply) {
         ItemStack item = getDefaultStack();
         item.addEnchantment(Enchantments.BINDING_CURSE, 1);
         item.addEnchantment(Enchantments.PROTECTION,3);
         item.addHideFlag(ItemStack.TooltipSection.ENCHANTMENTS);
         item.addHideFlag(ItemStack.TooltipSection.DYE);
+        setColor(item, colorMultiply);
 
         if(prevArmor.getItem() instanceof ArmorItem armorItem){
             setAdditionalProtection(item, armorItem.getProtection());
@@ -166,20 +169,29 @@ public class MetalArmorItem extends ArmorItem implements GeoItem {
         return nbtList.stream().map(NbtCompound.class::cast).map(ItemStack::fromNbt);
     }
 
+    public static int getColor(ItemStack stack) {
+        NbtCompound nbtCompound = stack.getSubNbt("display");
+        return nbtCompound != null && nbtCompound.contains("color", 99) ? nbtCompound.getInt("color") : 10511680;
+    }
 
+    public static void removeColor(ItemStack stack) {
+        NbtCompound nbtCompound = stack.getSubNbt("display");
+        if (nbtCompound != null && nbtCompound.contains("color")) {
+            nbtCompound.remove("color");
+        }
+
+    }
+
+    public static void setColor(ItemStack stack, int color) {
+        stack.getOrCreateSubNbt("display").putInt("color", color);
+    }
+    
     @Override
     public boolean hasGlint(ItemStack stack) {
         return false;
     }
 
-
-    static int darkenColor(int col, int amt) {
-        int r = Math.max((col >> 16), amt);
-        int b = Math.max(((col >> 8) & 0x00FF), amt);
-        int g = Math.max((col & 0x0000FF), amt);
-        return g | (b << 8) | (r << 16);
-    }
-
+    
     @Override
     public void createRenderer(Consumer<Object> consumer) {
         consumer.accept(Elementals.METAL_ARMOR_RENDER_PROVIDER.Create());

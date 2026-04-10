@@ -43,37 +43,33 @@ public class EarthArmorItem extends DyeableArmorItem {
     @Override
     public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
         super.inventoryTick(stack, world, entity, slot, selected);
-        if(slot != 0){
+        if (slot != 0) {
             return;
         }
-        if(entity instanceof LivingEntity living){//Not inlining since i might need that later
-            if(entity instanceof PlayerEntity player){
-                player.addStatusEffect(new StatusEffectInstance(SEISMIC_SENSE_EFFECT,60, 0, false, false, true));
-                player.addStatusEffect(new StatusEffectInstance(DENSE_EFFECT,120,10, false, false, false));
-            }
-            //TODO figure out how to add armor points
+        if (entity instanceof PlayerEntity player) {
+            player.addStatusEffect(new StatusEffectInstance(SEISMIC_SENSE_EFFECT, 60, 0, false, false, true));
+            player.addStatusEffect(new StatusEffectInstance(DENSE_EFFECT, 120, 10, false, false, false));
         }
+        //TODO figure out how to add armor points
     }
 
 
-
-
-    public static int getAdditionalProtection(ItemStack stack){
+    public static int getAdditionalProtection(ItemStack stack) {
         NbtCompound nbtCompound = stack.getOrCreateNbt();
         return nbtCompound.getInt("additional_protection");
     }
 
-    public static float getAdditionalToughness(ItemStack stack){
+    public static float getAdditionalToughness(ItemStack stack) {
         NbtCompound nbtCompound = stack.getOrCreateNbt();
         return nbtCompound.getFloat("additional_toughness");
     }
 
-    public static void setAdditionalProtection(ItemStack stack, int val){
+    public static void setAdditionalProtection(ItemStack stack, int val) {
         NbtCompound nbtCompound = stack.getOrCreateNbt();
         nbtCompound.putInt("additional_protection", val);
     }
 
-    public static void setAdditionalToughness(ItemStack stack, float val){
+    public static void setAdditionalToughness(ItemStack stack, float val) {
         NbtCompound nbtCompound = stack.getOrCreateNbt();
         nbtCompound.putFloat("additional_toughness", val);
     }
@@ -90,20 +86,20 @@ public class EarthArmorItem extends DyeableArmorItem {
         item.addHideFlag(ItemStack.TooltipSection.ENCHANTMENTS);
         item.addHideFlag(ItemStack.TooltipSection.DYE);
 
-        if(prevArmor.getItem() instanceof ArmorItem armorItem){
+        if (prevArmor.getItem() instanceof ArmorItem armorItem) {
             setAdditionalProtection(item, armorItem.getProtection());
             setAdditionalToughness(item, armorItem.getToughness());
         }
 
-        addToBundle(item,prevArmor);
+        addToBundle(item, prevArmor);
 
 
         int color = standingBlock.getDefaultMapColor().color;
-        if(standingBlock.equals(Blocks.GRASS_BLOCK)){
+        if (standingBlock.equals(Blocks.GRASS_BLOCK)) {
             color = Blocks.DIRT.getDefaultMapColor().color;
         }
 
-        setColor(item, darkenColor(color,4));
+        setColor(item, darkenColor(color, 4));
 
         return item;
     }
@@ -162,6 +158,7 @@ public class EarthArmorItem extends DyeableArmorItem {
     private static int getBundleOccupancy(ItemStack stack) {
         return getBundledStacks(stack).mapToInt(itemStack -> getItemOccupancy(itemStack) * itemStack.getCount()).sum();
     }
+
     public static Stream<ItemStack> getBundledStacks(ItemStack stack) {
         NbtCompound nbtCompound = stack.getNbt();
         if (nbtCompound == null) {
