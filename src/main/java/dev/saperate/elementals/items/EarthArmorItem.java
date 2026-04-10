@@ -51,16 +51,16 @@ public class EarthArmorItem extends ArmorItem{
     @Override
     public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
         super.inventoryTick(stack, world, entity, slot, selected);
-        if(slot != 0){
+        if (slot != 0) {
             return;
         }
         if(entity instanceof LivingEntity player){
-            player.addStatusEffect(new StatusEffectInstance(ElementalsStatusEffects.SEISMIC_SENSE,60, 0, false, false, false));
+            player.addStatusEffect(new StatusEffectInstance(ElementalsStatusEffects.SEISMIC_SENSE,60, 0, false, false, true));
             player.addStatusEffect(new StatusEffectInstance(ElementalsStatusEffects.DENSE,120,10, false, false, false));
         }
+        //TODO figure out how to add armor points
     }
-
-
+    
     /**
      * Stores the previous armor and colors the new one then returns the new armor
      * @param prevArmor The previous armor the player was wearing
@@ -69,17 +69,15 @@ public class EarthArmorItem extends ArmorItem{
      */
     public ItemStack getItemStack(ItemStack prevArmor, Block standingBlock, World world) {
         ItemStack item = getDefaultStack();
-
         //Fuck you for making this so painful
         RegistryEntry<Enchantment> enchant = world.getRegistryManager().get(RegistryKeys.ENCHANTMENT).entryOf(Enchantments.BINDING_CURSE);
-
         item.addEnchantment(enchant, 1);
 
         putItem(item,prevArmor);
 
 
         int color = standingBlock.getDefaultMapColor().color;
-        if(standingBlock.equals(Blocks.GRASS_BLOCK)){
+        if (standingBlock.equals(Blocks.GRASS_BLOCK)) {
             color = Blocks.DIRT.getDefaultMapColor().color;
         }
         item.set(DataComponentTypes.DYED_COLOR, new DyedColorComponent(darkenColor(color,4), false));

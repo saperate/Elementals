@@ -136,11 +136,6 @@ public class ElementalItems {
                 entries.add(BOOMERANG_ITEM);
                 entries.add(WATER_POUCH_ITEM);
                 entries.add(GLIDER_ITEM);
-                entries.add(AIR_BANNER_PATTERN_ITEM);
-                entries.add(MOON_LOG);
-                entries.add(MOON_STRIPPED_LOG);
-                entries.add(MOON_PLANKS);
-                entries.add(MOON_PEACH_LEAVES_ITEM);
             }).build();
 
 

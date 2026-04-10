@@ -1,6 +1,7 @@
 package dev.saperate.elementals.elements.metal;
 
 import dev.saperate.elementals.data.Bender;
+import dev.saperate.elementals.effects.ElementalsStatusEffects;
 import dev.saperate.elementals.elements.Ability;
 import dev.saperate.elementals.elements.earth.EarthElement;
 import dev.saperate.elementals.items.MetalArmorItem;
@@ -12,6 +13,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.World;
 
 import static dev.saperate.elementals.items.ElementalItems.*;
 import static dev.saperate.elementals.utils.SapsUtils.raycastBlockCustomRotation;
@@ -25,22 +27,19 @@ public class AbilityMetalArmor implements Ability {
         DefaultedList<ItemStack> inv = player.getInventory().armor;
 
         if (player.getInventory().containsAny(METAL_ARMOR_SET)) {
+            
             removeArmorSet(inv);
-
-            player.removeStatusEffect(SEISMIC_SENSE_EFFECT);
-            player.removeStatusEffect(DENSE_EFFECT);
+            player.removeStatusEffect(ElementalsStatusEffects.SEISMIC_SENSE);
+            player.removeStatusEffect(ElementalsStatusEffects.DENSE);
+            player.removeStatusEffect(StatusEffects.SLOWNESS);
             player.removeStatusEffect(StatusEffects.NIGHT_VISION);
             player.removeStatusEffect(StatusEffects.BLINDNESS);
             return;
         }
-
-        //TODO change for metal cost
-        BlockHitResult hit = raycastBlockCustomRotation(player, 4, true, new Vec3d(0, -1, 0));
-
-        if (!EarthElement.isBlockBendable(player.getWorld().getBlockState(hit.getBlockPos()), bender) || !player.isOnGround()) {
-            return;
-        }
-        if (!bender.reduceChi(30)) {
+        
+        float cost = bender.plrData.canUseUpgrade("metalArmorEfficiencyI") ? 20 : 30;
+        if (!bender.plrData.canUseUpgrade("metalArmor") ||
+                !bender.reduceChi(cost) || !MetalElement.canBend(player,54)) {
             if (bender.abilityData == null) {
                 bender.setCurrAbility(null);
             } else {
@@ -49,12 +48,11 @@ public class AbilityMetalArmor implements Ability {
             return;
         }
 
-        Block standingBlock = player.getWorld().getBlockState(hit.getBlockPos()).getBlock();
-
-        inv.set(EquipmentSlot.HEAD.getEntitySlotId(), METAL_HELMET.getItemStack(inv.get(3), standingBlock));
-        inv.set(EquipmentSlot.CHEST.getEntitySlotId(), METAL_CHESTPLATE.getItemStack(inv.get(2), standingBlock));
-        inv.set(EquipmentSlot.LEGS.getEntitySlotId(), METAL_LEGGINGS.getItemStack(inv.get(1), standingBlock));
-        inv.set(EquipmentSlot.FEET.getEntitySlotId(), METAL_BOOTS.getItemStack(inv.get(0), standingBlock));
+        World world = bender.player.getWorld();
+        inv.set(EquipmentSlot.HEAD.getEntitySlotId(), METAL_HELMET.getItemStack(inv.get(3), 0xFFFFFF, world));
+        inv.set(EquipmentSlot.CHEST.getEntitySlotId(), METAL_CHESTPLATE.getItemStack(inv.get(2), 0xFFFFFF, world));
+        inv.set(EquipmentSlot.LEGS.getEntitySlotId(), METAL_LEGGINGS.getItemStack(inv.get(1), 0xFFFFFF, world));
+        inv.set(EquipmentSlot.FEET.getEntitySlotId(), METAL_BOOTS.getItemStack(inv.get(0), 0xFFFFFF, world));
 
 
     }
@@ -70,7 +68,7 @@ public class AbilityMetalArmor implements Ability {
 
     public static void removeArmor(EquipmentSlot slot, ItemStack stack, DefaultedList<ItemStack> inv) {
         if (!stack.isEmpty() && stack.getItem() instanceof MetalArmorItem) {
-            ItemStack item = MetalArmorItem.getBundledStacks(stack).findFirst().orElse(ItemStack.EMPTY);
+            ItemStack item = MetalArmorItem.getItem(stack);
             inv.set(slot.getEntitySlotId(), item);
         }
     }
