@@ -89,12 +89,16 @@ public class MetalElement extends Element {
     /**
      * This method checks if the player has the metal required to cast an ability. 
      * It <b>WILL</b> take the metal from the inventory if it is able to.
+     * If the player is in creative, it will always return true.
      * @param cost The cost, in iron nuggets, to be able to bend
      * @return True if the player has had metal taken from their inventory
      */
     //TODO Refactor this monolith
-    // TODO not consume in creative
     public static boolean canBend(PlayerEntity player, int cost) {
+        if(player.getAbilities().creativeMode){
+            return true;
+        }
+        
         ElementalConfig config = ElementalConfig.get();
         Inventory inventory = player.getInventory();
 

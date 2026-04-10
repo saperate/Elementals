@@ -127,7 +127,7 @@ public class MetalBulletEntity extends AbstractElementalsEntity<PlayerEntity> {
                 0.1f, 5);
         this.getWorld().playSound(getX(), getY(), getZ(),
                 METAL_BREAK_SOUND_EVENT, SoundCategory.BLOCKS,
-                    .15f, (2.5f + (this.getWorld().random.nextFloat() - this.getWorld().random.nextFloat()) * 0.2f) * 0.3f, 
+                .15f, (2.5f + (this.getWorld().random.nextFloat() - this.getWorld().random.nextFloat()) * 0.2f) * 0.3f, 
                 true);
     }
 
