@@ -1,5 +1,7 @@
 package dev.saperate.elementals.mixin.client;
 
+import dev.saperate.elementals.data.Bender;
+import dev.saperate.elementals.data.ClientBender;
 import dev.saperate.elementals.entities.earth.EarthBlockEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
@@ -34,5 +36,6 @@ public abstract class PlayerEntityRendererMixin {
 		PlayerEntityRenderer plrRenderer = ((PlayerEntityRenderer)(Object) this);
 		plrRenderer.getModel().sneaking = player.isInSneakingPose() || player.isSneaking();
 	}
+
 
 }

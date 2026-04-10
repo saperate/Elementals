@@ -1,0 +1,21 @@
+{
+  "display": {
+    "icon": {
+      "item": "elementals:metal_scroll"
+    },
+    "title": "The Rebel's Bending",
+    "description": "Complete earth bending and unlock the Metal sub-bending",
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true
+  },
+  "criteria": {
+    "requirement": {
+      "conditions": {
+        "element" : "metal"
+      },
+      "trigger": "minecraft:elementals/has_element"
+    }
+  },
+  "parent": "elementals:earthbending"
+}

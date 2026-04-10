@@ -38,16 +38,19 @@ public abstract class CameraMixin {
 
     @Inject(at = @At("TAIL"), method = "update")
     private void render(BlockView area, Entity focusedEntity, boolean thirdPerson, boolean inverseView, float tickDelta, CallbackInfo ci) {
-        if (safeHasStatusEffect(SPIRIT_PROJECTION_EFFECT, MinecraftClient.getInstance().player)) {
+        MinecraftClient minecraftClient = MinecraftClient.getInstance();
+        if (safeHasStatusEffect(SPIRIT_PROJECTION_EFFECT, minecraftClient.player)) {
             this.thirdPerson = false;
         }
         ClientBender bender = ClientBender.get();
         if (bender.currAbility instanceof AbilityMetalDecoy) {
             DecoyPlayerEntity decoy = ((DecoyPlayerEntity) bender.ClientAbilityData);
-            MinecraftClient.getInstance().options.setPerspective(Perspective.THIRD_PERSON_BACK);
-            if (decoy != null) {
+            minecraftClient.options.setPerspective(Perspective.THIRD_PERSON_BACK);
+            if (decoy != null && !decoy.isRemoved()) {
                 setPos(decoy.getX(), decoy.getEyeY(), decoy.getZ());
                 moveBy(-clipToSpace(3.0), -0, 0.0);
+            }else{
+                minecraftClient.setCameraEntity(minecraftClient.player);
             }
         }
     }

@@ -171,7 +171,7 @@ public class MetalArmorItem extends ArmorItem implements GeoItem {
 
     public static int getColor(ItemStack stack) {
         NbtCompound nbtCompound = stack.getSubNbt("display");
-        return nbtCompound != null && nbtCompound.contains("color", 99) ? nbtCompound.getInt("color") : 10511680;
+        return nbtCompound != null && nbtCompound.contains("color", 99) ? nbtCompound.getInt("color") : 0xFFFFFFFF;
     }
 
     public static void removeColor(ItemStack stack) {
