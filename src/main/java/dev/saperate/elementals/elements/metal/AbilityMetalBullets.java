@@ -14,7 +14,7 @@ public class AbilityMetalBullets implements Ability {
     @Override
     public void onCall(Bender bender, long deltaT) {
         PlayerEntity player = bender.player;
-        if (!bender.reduceChi(15) || !MetalElement.canBend(player, 16)) {
+        if (!bender.reduceChi(20) || !MetalElement.canBend(player, 16)) {
             if (bender.abilityData == null) {
                 bender.setCurrAbility(null);
             } else {
@@ -26,11 +26,11 @@ public class AbilityMetalBullets implements Ability {
         Vec3d pos = getEntityLookVector(player, 2);
         PlayerData plrData = PlayerData.get(bender.player);
 
-        int bulletCount = 20;
-        if (plrData.canUseUpgrade("airBulletsCountII")) {//fixme
+        int bulletCount = 10;
+        if (plrData.canUseUpgrade("metalBulletCountII")) {
+            bulletCount = 20;
+        } else if (plrData.canUseUpgrade("metalBulletCountI")) {
             bulletCount = 15;
-        } else if (plrData.canUseUpgrade("airBulletsCountI")) {
-            bulletCount = 10;
         }
 
         MetalBulletEntity[] bullets = new MetalBulletEntity[bulletCount];
@@ -58,15 +58,15 @@ public class AbilityMetalBullets implements Ability {
     @Override
     public void onMiddleClick(Bender bender, boolean started) {//Buckshot
         MetalBulletEntity[] bullets = (MetalBulletEntity[]) bender.abilityData;
-        if(started || bullets == null){
+        if(started || bullets == null || !bender.plrData.canUseUpgrade("metalBulletScatterShotI")){
             return;
         }
 
         for (MetalBulletEntity bullet : bullets) {
-            float speed = getBulletSpeed(bender.plrData) * 2;
+            float speed = 4;
             bullet.setControlled(false);
             bullet.setVelocity(bender.player, bender.player.getPitch(), bender.player.getYaw(), 0, speed, 10);
-            bullet.setDamageMultiplier(2.5f);//FIXME
+            bullet.setDamageMultiplier(0.5f);
         }
         bender.abilityData = null;
         onRemove(bender);
@@ -96,9 +96,8 @@ public class AbilityMetalBullets implements Ability {
         assert bullets != null;
         MetalBulletEntity bullet = bullets[bullets.length - 1];
         bullet.setControlled(false);
-        PlayerData plrData = PlayerData.get(bender.player);
 
-        float speed = getBulletSpeed(plrData);
+        float speed = 2;
         bullet.setVelocity(bender.player, bender.player.getPitch(), bender.player.getYaw(), 0, speed, 0);
 
         if (bullets.length == 1) {
@@ -115,13 +114,4 @@ public class AbilityMetalBullets implements Ability {
         bender.abilityData = newArray;
     }
 
-    private static float getBulletSpeed(PlayerData plrData) {
-        float speed = 2;
-        if (plrData.canUseUpgrade("airBulletsSpeedII")) {//fixme
-            speed = 2;
-        } else if (plrData.canUseUpgrade("airBulletsSpeedI")) {
-            speed = 1.5f;
-        }
-        return speed;
-    }
 }

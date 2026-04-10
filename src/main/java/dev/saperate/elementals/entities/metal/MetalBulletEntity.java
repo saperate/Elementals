@@ -107,13 +107,13 @@ public class MetalBulletEntity extends AbstractElementalsEntity<PlayerEntity> {
         PlayerEntity owner = (PlayerEntity) getOwner();
         PlayerData plrData = PlayerData.get(owner);
 
-        float damage = 2.5f;
-        if (plrData.canUseUpgrade("airBulletsMastery")) {
-            damage = 1;
-        } else if (plrData.canUseUpgrade("airBulletsDamageI")) {
-            damage = 1.75f;
+        float damage = 3;
+        if (plrData.canUseUpgrade("metalBulletDamageI")) {
+            damage = 6;
         }
-        entity.damage(this.getDamageSources().playerAttack(owner), damage * ElementalConfig.get().BENDING_DAMAGE_MULTIPLIER);
+        entity.damage(this.getDamageSources().playerAttack(owner), damage 
+                * getDamageMultiplier() //Used with scattershot, otherwise should be 1
+                * ElementalConfig.get().BENDING_DAMAGE_MULTIPLIER);
         entity.timeUntilRegen = 10;
         if (!getIsControlled()) {
             entity.addVelocity(this.getVelocity().multiply(0));

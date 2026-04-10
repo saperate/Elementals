@@ -726,10 +726,18 @@
   "upgrade.elementals.bloodParalysisEfficiencyII": "Efficiency II",
   "upgrade.elementals.bloodParalysisEfficiencyII.description": " Use Paralysis using even less chi.",
 
+  "upgrade.elementals.metalBullets": "Metal Bullets",
+  "upgrade.elementals.metalBullets.description": " Uses metal to create a series of projectile you can unleash a quick and deadly barrage.",
+  "upgrade.elementals.metalBullets.use": " Use: %d + ([optional] Hold L-Click)",
   "upgrade.elementals.metalBullets.icon": "metal_bullets",
+  
   "upgrade.elementals.metalLance.icon": "metal_lance",
+  
   "upgrade.elementals.metalBind.icon": "metal_bind",
+  
   "upgrade.elementals.metalCable.icon": "metal_cable",
+  
   "upgrade.elementals.metalArmor.icon": "metal_armor",
+  
   "upgrade.elementals.metalDecoy.icon": "metal_decoy"
 }
