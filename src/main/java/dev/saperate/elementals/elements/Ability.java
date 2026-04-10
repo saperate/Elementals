@@ -2,6 +2,8 @@ package dev.saperate.elementals.elements;
 
 import dev.saperate.elementals.data.Bender;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.math.Vec3d;
+import org.jetbrains.annotations.Nullable;
 
 public interface Ability {
     void onCall(Bender bender, long deltaT);
@@ -19,6 +21,8 @@ public interface Ability {
     default void onAbilityPress(Bender bender, int keyIndex){}
 
     void onRemove(Bender bender);
+    
+    default @Nullable Vec3d pointArmsTowards(){return null;}//TODO implement so that we can make bending look better
 
     default boolean shouldImmobilizePlayer(PlayerEntity player) {return false;}
 

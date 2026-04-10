@@ -52,12 +52,9 @@ public class AbilityMetalDecoy implements Ability {
     public void onCall(Bender bender, long deltaT) {
         ServerPlayerEntity plr = (ServerPlayerEntity) bender.player;
         PlayerData plrData = PlayerData.get(plr);
-        if (!plrData.canUseUpgrade("metalDecoy") && false) {
-            bender.setCurrAbility(null);
-            return;
-        }
 
-        if (!bender.reduceChi(15)) {
+        if (!plrData.canUseUpgrade("metalDecoy") ||
+                !bender.reduceChi(40) || !MetalElement.canBend(plr, 63)) {
             if (bender.abilityData == null) {
                 bender.setCurrAbility(null);
             } else {
@@ -80,15 +77,15 @@ public class AbilityMetalDecoy implements Ability {
         decoy.setHeadYaw(plr.getHeadYaw());
         decoy.setPitch(plr.getPitch());
 
-        decoy.setHealth(20);
-        decoy.setPos(plr.getX(), plr.getY(), plr.getZ());
+        decoy.setHealth(40);
+        decoy.setPos(plr.getX(), plr.getY() + 1, plr.getZ());
         decoy.setFocusCamera(true);
-        decoy.addStatusEffect(new StatusEffectInstance(StatusEffects.INVISIBILITY,9999999, 0, false, false, false));
+        decoy.addStatusEffect(new StatusEffectInstance(StatusEffects.INVISIBILITY, 9999999, 0, false, false, false));
 
         plr.getWorld().spawnEntity(decoy);
 
 
-        bender.abilityData = packAbilityData(decoy, -100, null,false);
+        bender.abilityData = packAbilityData(decoy, -100, null, false);
 
         bender.setCurrAbility(this);
     }
@@ -102,31 +99,39 @@ public class AbilityMetalDecoy implements Ability {
 //        ServerChunkManager serverChunkManager = ((ServerWorld) decoy.getWorld()).getChunkManager();
 //        serverChunkManager.sendToNearbyPlayers(decoy, entityAnimationS2CPacket);
 
-        HitResult hit = SapsUtils.raycastFull(decoy, 5, false,Entity::isAlive);
+        HitResult hit = SapsUtils.raycastFull(decoy, 5, false, Entity::isAlive);
         if (hit == null)
             return;
-        if(hit.getType().equals(HitResult.Type.ENTITY) && !started)
-            attack(((EntityHitResult) hit).getEntity(), decoy);
-        else if (hit.getType().equals(HitResult.Type.BLOCK)){
-            if(started){
-                bender.abilityData = packAbilityData(getDecoy(bender),decoy.age, ((BlockHitResult) hit).getBlockPos(),getShouldRotate(bender));
-            }else{
-                bender.abilityData = packAbilityData(getDecoy(bender),-100, null,getShouldRotate(bender));
+        if (hit.getType().equals(HitResult.Type.ENTITY) && !started) {
+            Entity eHit = ((EntityHitResult) hit).getEntity();
+            int damage = 2;
+            PlayerData plrData = bender.plrData;
+            if (plrData.canUseUpgrade("metalDecoyDamageII")) {
+                damage = 6;
+            } else if (plrData.canUseUpgrade("metalDecoyDamageI")) {
+                damage = 4;
+            }
+            eHit.damage(bender.player.getDamageSources().playerAttack(bender.player), damage);
+        } else if (hit.getType().equals(HitResult.Type.BLOCK)) {
+            if (started) {
+                bender.abilityData = packAbilityData(getDecoy(bender), decoy.age, ((BlockHitResult) hit).getBlockPos(), getShouldRotate(bender));
+            } else {
+                bender.abilityData = packAbilityData(getDecoy(bender), -100, null, getShouldRotate(bender));
             }
         }
     }
 
     @Override
     public void onRightClick(Bender bender, boolean started) {
-        bender.abilityData = packAbilityData(getDecoy(bender), getStartMiningAge(bender), getMiningPos(bender),started);
+        bender.abilityData = packAbilityData(getDecoy(bender), getStartMiningAge(bender), getMiningPos(bender), started);
     }
 
     @Override
     public void onTick(Bender bender) {
         DecoyPlayerEntity decoy = getDecoy(bender);
         PlayerEntity player = bender.player;
-        
-        player.addStatusEffect(new StatusEffectInstance(StatusEffects.MINING_FATIGUE,21,1,false,false,false));
+
+        player.addStatusEffect(new StatusEffectInstance(StatusEffects.MINING_FATIGUE, 21, 1, false, false, false));
 
         if (getShouldRotate(bender)) {
             decoy.setYaw(player.getYaw());
@@ -135,20 +140,27 @@ public class AbilityMetalDecoy implements Ability {
         }
 
         if (player.isSprinting()) {
-            
+
             float speed = 0.1f;
             Vec3d velocity = SapsUtils.getEntityLookVector(decoy, 1)
                     .subtract(decoy.getEyePos())
                     .normalize().multiply(speed, 0, speed).add(0, decoy.getVelocity().y, 0);
+            int range = 25;
+            if (bender.plrData.canUseUpgrade("metalDecoyRangeII")) {
+                range = 75;
+            } else if (bender.plrData.canUseUpgrade("metalDecoyRangeI")) {
+                range = 50;
+            }
 
-            if(player.distanceTo(decoy) > 25){
+            float distanceToDecoy = player.distanceTo(decoy);
+            if (distanceToDecoy > range) {
                 Vec3d dirToPlayer = player.getPos().subtract(decoy.getPos());
-                if(dirToPlayer.dotProduct(velocity) < 1){
-                    velocity = Vec3d.ZERO;
+                if (dirToPlayer.dotProduct(velocity) < 1) {
+                    velocity = velocity.multiply(Math.min(1, (0.1) / (distanceToDecoy - range)));
                 }
             }
-            
-            
+
+
             decoy.setVelocity(velocity);
             decoy.move(MovementType.SELF, decoy.getVelocity());
 
@@ -157,40 +169,40 @@ public class AbilityMetalDecoy implements Ability {
             decoy.setVelocity(0, 0.5, 0);
             decoy.move(MovementType.SELF, decoy.getVelocity());
         }
-        
-        if(getStartMiningAge(bender) >= 0){
 
-            HitResult hit = SapsUtils.raycastFull(decoy, 5, false,Entity::isAlive);
+        if (getStartMiningAge(bender) >= 0) {
 
-            if(hit == null || hit.getType() != HitResult.Type.BLOCK){
+            HitResult hit = SapsUtils.raycastFull(decoy, 5, false, Entity::isAlive);
+
+            if (hit == null || hit.getType() != HitResult.Type.BLOCK) {
                 return;
             }
-            
+
             BlockPos prevMiningPos = getMiningPos(bender);
             BlockPos currMiningPos = ((BlockHitResult) hit).getBlockPos();
-            if(prevMiningPos == null || !prevMiningPos.equals(currMiningPos)){
+            if (prevMiningPos == null || !prevMiningPos.equals(currMiningPos)) {
                 bender.abilityData = packAbilityData(
                         decoy,
                         decoy.age,
-                        currMiningPos, 
+                        currMiningPos,
                         getShouldRotate(bender));
                 return;
             }
-            
-            int miningSpeed = 100;//TODO upgrade that gives more mining & damage
+
+            int miningSpeed = 60;
             PlayerData plrData = bender.plrData;
-            if (plrData.canUseUpgrade("waterBladeMiningII")) {
+            if (plrData.canUseUpgrade("metalDecoyDamageII")) {
+                miningSpeed = 15;
+            } else if (plrData.canUseUpgrade("metalDecoyDamageI")) {
                 miningSpeed = 30;
-            } else if (plrData.canUseUpgrade("waterBladeMiningI")) {
-                miningSpeed = 60;
             }
-            SapsUtils.mineBlock(currMiningPos,decoy.getWorld(),decoy.getId(),decoy.age,getStartMiningAge(bender),miningSpeed);
+            SapsUtils.mineBlock(currMiningPos, decoy.getWorld(), decoy.getId(), decoy.age, getStartMiningAge(bender), miningSpeed);
         }
     }
 
     @Override
     public void onAbilityPress(Bender bender, int keyIndex) {
-        if(keyIndex == 3)
+        if (keyIndex == 3)
             onRemove(bender);
     }
 
@@ -219,7 +231,7 @@ public class AbilityMetalDecoy implements Ability {
 
     ///Ability data stuff, cleaner to put it all in their own methods
     public Object packAbilityData(DecoyPlayerEntity decoy, int startMiningAge, BlockPos miningPos, boolean shouldRotate) {
-        return new Object[]{decoy, startMiningAge, miningPos,shouldRotate};
+        return new Object[]{decoy, startMiningAge, miningPos, shouldRotate};
     }
 
     public DecoyPlayerEntity getDecoy(Bender bender) {

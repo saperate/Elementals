@@ -17,4 +17,5 @@ public abstract class PlayerEntityRendererMixin {
 		plrRenderer.getModel().sneaking = player.isInSneakingPose() || player.isSneaking();
 	}
 
+
 }
