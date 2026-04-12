@@ -28,26 +28,25 @@ public class MetalCableEntityRenderer extends EntityRenderer<MetalCableEntity> {
 
     @Override
     public void render(MetalCableEntity entity, float yaw, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light) {
-        if (entity.getChild() == null) {
+        if (entity.getParent() == null) {
             return;
         }
 
         matrices.push();
         VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderLayer.getCutout());
-
-
-        Vec3d pointA = entity.getChild().getPos();
-        Vec3d pointB = entity.getOwner().getPos().add(0,0.5,0);
-        entity.prevDir = renderCubeFromAToB(pointA,pointB,matrices,vertexConsumer,0.125f,entity.prevDir);
+        
+        Vec3d pointB = entity.getPos().subtract(0,0.5,0);
+        Vec3d pointA = entity.getParent().getOwner().getPos().add(0,0.5,0);
+        entity.prevDir = renderCubeFromAToB(pointA,pointB,matrices,vertexConsumer,0.125f,entity.prevDir, tickDelta);
         
         matrices.pop();
     }
 
 
-    private static Vec3d renderCubeFromAToB(Vec3d pointA, Vec3d pointB,MatrixStack matrices, VertexConsumer vertexConsumer, float size, Vec3d prevDir){
+    private static Vec3d renderCubeFromAToB(Vec3d pointA, Vec3d pointB,MatrixStack matrices, VertexConsumer vertexConsumer, float size, Vec3d prevDir, float tickDelta){
         Matrix4f mat = new Matrix4f();
 
-        Vec3d dir = prevDir.lerp(pointA.subtract(pointB).normalize(),1);
+        Vec3d dir = prevDir.lerp(pointA.subtract(pointB).normalize(),tickDelta);
         matrices.scale(size, size, size);
         matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees((float) Math.toDegrees(Math.atan2(dir.x, dir.z))));
         matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees((float) Math.toDegrees(Math.asin(-dir.y))));

@@ -761,8 +761,24 @@
 
   "upgrade.elementals.metalBindEfficiencyII": "Efficiency II",
   "upgrade.elementals.metalBindEfficiencyII.description": " Further reduces the amount of metal needed to cast metal bind.",
-  
+
+  "upgrade.elementals.metalCable": "Metal Bind",
+  "upgrade.elementals.metalCable.description": " Attach yourself to any entity, useful in battle to prevent your opponent from running.",
+  "upgrade.elementals.metalCable.use": " Use: %d",
   "upgrade.elementals.metalCable.icon": "metal_cable",
+
+  "upgrade.elementals.metalCableRangeI": "Range I",
+  "upgrade.elementals.metalCableRangeI.description": " Increases the distance at which metal cable can attach.",
+
+  "upgrade.elementals.metalCableEfficiencyI": "Efficiency I",
+  "upgrade.elementals.metalCableEfficiencyI.description": " Reduces the amount of metal needed to cast metal cable.",
+
+  "upgrade.elementals.metalCableEfficiencyII": "Efficiency II",
+  "upgrade.elementals.metalCableEfficiencyII.description": " Further reduces the amount of metal needed to cast metal cable.",
+
+  "upgrade.elementals.metalCablePrecisionI": "Precision I",
+  "upgrade.elementals.metalCablePrecisionI.description": " Allows you to control at which distance you sit from your cable.",
+  "upgrade.elementals.metalCablePrecisionI.use": " Use: sneak, Mode change : [%d + hold (0.5)]",
 
   "upgrade.elementals.metalArmor": "Metal Armor",
   "upgrade.elementals.metalArmor.description": " Creates a metal armor around you that is incredibly durable. This defence, however, comes at the cost of sight and speed.",
