@@ -19,8 +19,7 @@ import org.joml.Vector3f;
 import static dev.saperate.elementals.Elementals.LIGHTNING_PARTICLE_TYPE;
 import static dev.saperate.elementals.entities.ElementalEntities.LIGHTNINGARC;
 import static dev.saperate.elementals.entities.ElementalEntities.METALCABLE;
-import static dev.saperate.elementals.utils.SapsUtils.getEntityLookVector;
-import static dev.saperate.elementals.utils.SapsUtils.summonParticles;
+import static dev.saperate.elementals.utils.SapsUtils.*;
 
 public class MetalCableEntity extends AbstractElementalsEntity<LivingEntity> {
     private static final TrackedData<Boolean> FROZEN = DataTracker.registerData(MetalCableEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
@@ -90,20 +89,9 @@ public class MetalCableEntity extends AbstractElementalsEntity<LivingEntity> {
         }
 
         if (parent == null) {
-            setPosition(owner.getEyePos().subtract(0,1,0));
-
-            double distanceToOwner = owner.getPos().distanceTo(getTail().getPos());
+            moveEntityTowardsGoal(owner.getEyePos().toVector3f(), getMovementSpeed());
             owner.dismountVehicle();
-            if (distanceToOwner >= getDistance()) {
-                Vec3d dirCenter = owner.getPos().subtract(getTail().getPos()).multiply(-1).normalize();
-                Vec3d velocity = owner.getVelocity().multiply(1.05);
-
-                Vec3d tangent = velocity.subtract(dirCenter.multiply(
-                        ((velocity.dotProduct(dirCenter)) / dirCenter.dotProduct(dirCenter))));
-                owner.setVelocity(tangent.add(dirCenter.multiply(Math.min(distanceToOwner - getDistance(),1))));
-                owner.move(MovementType.PLAYER, owner.getVelocity());
-                owner.fallDistance = 0;
-            }
+            keepOtherEntityNearEntity(getTail(), owner, getDistance());
         }
         if (!getFrozen()) {
             this.move(MovementType.SELF, this.getVelocity());

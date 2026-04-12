@@ -53,8 +53,8 @@ public class MetalElement extends Element {
                 }, 4),
                 new Upgrade("metalCable", new Upgrade[]{
                         new Upgrade("metalCableRangeI", new Upgrade[]{
-                                new Upgrade("metalCableSpeedI", new Upgrade[]{
-                                        new Upgrade("metalCableSpeedII", 2),
+                                new Upgrade("metalCableEfficiencyI", new Upgrade[]{
+                                        new Upgrade("metalCableEfficiencyII", 2),
                                         new Upgrade("metalCablePrecisionI", 2)
                                 }, 2),
                         }, 2)
