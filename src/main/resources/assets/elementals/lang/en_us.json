@@ -747,8 +747,20 @@
   "upgrade.elementals.metalBulletDamageI.description": " Increases the damage per bullet.",
   
   "upgrade.elementals.metalLance.icon" : "metal_lance",
-  
+
+  "upgrade.elementals.metalBind": "Metal Bind",
+  "upgrade.elementals.metalBind.description": " Attach yourself to any entity, useful in battle to prevent your opponent from running.",
+  "upgrade.elementals.metalBind.use": " Use: %d",
   "upgrade.elementals.metalBind.icon": "metal_bind",
+
+  "upgrade.elementals.metalBindRangeI": "Range I",
+  "upgrade.elementals.metalBindRangeI.description": " Decreases the length of the cable.",
+
+  "upgrade.elementals.metalBindEfficiencyI": "Efficiency I",
+  "upgrade.elementals.metalBindEfficiencyI.description": " Reduces the amount of metal needed to cast metal bind.",
+
+  "upgrade.elementals.metalBindEfficiencyII": "Efficiency II",
+  "upgrade.elementals.metalBindEfficiencyII.description": " Further reduces the amount of metal needed to cast metal bind.",
   
   "upgrade.elementals.metalCable.icon": "metal_cable",
 

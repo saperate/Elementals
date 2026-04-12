@@ -595,6 +595,7 @@ public final class SapsUtils {
             other.setVelocity(tangent.add(dirCenter.multiply(Math.min(distanceToOther - maxDistance,1))));
             other.move(MovementType.SELF, other.getVelocity());
             other.fallDistance = 0;
+            other.velocityModified = true;
         }
     }
     
