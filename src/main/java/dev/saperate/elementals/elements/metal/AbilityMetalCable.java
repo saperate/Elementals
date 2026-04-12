@@ -15,6 +15,9 @@ public class AbilityMetalCable implements Ability {
     @Override
     public void onCall(Bender bender, long deltaT) {
         bender.setCurrAbility(null);
+        if(!bender.plrData.canUseUpgrade("metalCable"))
+            return;
+        
         if (deltaT > 500 && bender.isAbilityInBackground(this)) {
             Object data = bender.getBackgroundAbilityData(this);
             bender.setBackgroundAbilityData(this, packAbilityData(getEntity(data), !pullMode(data)));
