@@ -17,8 +17,7 @@ import org.joml.Vector3f;
 
 import static dev.saperate.elementals.Elementals.LIGHTNING_PARTICLE_TYPE;
 import static dev.saperate.elementals.entities.ElementalEntities.*;
-import static dev.saperate.elementals.utils.SapsUtils.getEntityLookVector;
-import static dev.saperate.elementals.utils.SapsUtils.summonParticles;
+import static dev.saperate.elementals.utils.SapsUtils.*;
 
 public class MetalBindEntity extends AbstractElementalsEntity<LivingEntity> {
     private static final TrackedData<Boolean> FROZEN = DataTracker.registerData(MetalBindEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
@@ -44,7 +43,7 @@ public class MetalBindEntity extends AbstractElementalsEntity<LivingEntity> {
     protected void initDataTracker() {
         super.initDataTracker();
         this.getDataTracker().startTracking(FROZEN, false);
-        this.getDataTracker().startTracking(DISTANCE, 18f);
+        this.getDataTracker().startTracking(DISTANCE, 10f);
         this.getDataTracker().startTracking(PARENT_ID, 0);
         this.getDataTracker().startTracking(CHILD_ID, 0);
     }
@@ -52,6 +51,7 @@ public class MetalBindEntity extends AbstractElementalsEntity<LivingEntity> {
     public void createChain(LivingEntity owner, int MAX_CHAIN_LENGTH) {
         if (chainLength < MAX_CHAIN_LENGTH) {
             MetalBindEntity newArc = new MetalBindEntity(getWorld(), owner, getX(), getY(), getZ());
+            newArc.setDistance(getDistance());
             newArc.setParent(this);
             setChild(newArc);
             newArc.setControlled(false);
@@ -79,6 +79,7 @@ public class MetalBindEntity extends AbstractElementalsEntity<LivingEntity> {
     private void moveEntity(Entity owner, Entity parent) {
         if (getChild() == null) {
             moveEntityTowardsGoal(owner.getEyePos().toVector3f(), getMovementSpeed());
+            keepOtherEntityNearEntity(getHead(), owner, getDistance() + 3);
             if (!getFrozen()) {
                 this.move(MovementType.SELF, this.getVelocity());
             }
@@ -87,23 +88,15 @@ public class MetalBindEntity extends AbstractElementalsEntity<LivingEntity> {
 
         if (parent == null) {
             moveEntityTowardsGoal(owner.getEyePos().toVector3f(), getMovementSpeed());
-            double distanceToOwner = owner.getPos().distanceTo(getTail().getPos());
             owner.dismountVehicle();
-            if (distanceToOwner >= getDistance()) {
-                Vec3d dirCenter = owner.getPos().subtract(getTail().getPos()).multiply(-1).normalize();
-                Vec3d velocity = owner.getVelocity().multiply(1.05);
-
-                Vec3d tangent = velocity.subtract(dirCenter.multiply(
-                        ((velocity.dotProduct(dirCenter)) / dirCenter.dotProduct(dirCenter))));
-                owner.setVelocity(tangent.add(dirCenter.multiply(Math.min(distanceToOwner - getDistance(),1))));
-                owner.move(MovementType.PLAYER, owner.getVelocity());
-                owner.fallDistance = 0;
-            }
+            keepOtherEntityNearEntity(getTail(), owner, getDistance());
         }
         if (!getFrozen()) {
             this.move(MovementType.SELF, this.getVelocity());
         }
     }
+
+    
 
 
     @Override
