@@ -15,6 +15,9 @@ public class AbilityMetalBind implements Ability {
     @Override
     public void onCall(Bender bender, long deltaT) {
         bender.setCurrAbility(null);
+        if(!bender.plrData.canUseUpgrade("metalBind"))
+            return;
+        
 
 
         if (!bender.isAbilityInBackground(this)) {

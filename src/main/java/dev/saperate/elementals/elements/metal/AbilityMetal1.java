@@ -6,7 +6,7 @@ import dev.saperate.elementals.elements.Ability;
 public class AbilityMetal1 implements Ability {
     @Override
     public void onCall(Bender bender, long deltaT) {
-        if(deltaT >= 1500){
+        if(deltaT >= 4000){
             MetalElement.get().getAbility(2).onCall(bender,deltaT);
             return;
         }

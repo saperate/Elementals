@@ -1,5 +1,6 @@
 package dev.saperate.elementals.elements.metal;
 
+import dev.saperate.elementals.Elementals;
 import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.data.ElementalConfig;
 import dev.saperate.elementals.data.PlayerData;
@@ -48,7 +49,8 @@ public class AbilityMetalLance implements Ability {
     @Override
     public void onLeftClick(Bender bender, boolean started) {
         MetalLanceEntity lance = getLanceEntity(bender);
-        if(lance == null)
+        if(lance == null 
+                || (!lance.getIsControlled() && !bender.plrData.canUseUpgrade("metalLanceRedirectI")))
             return;
         lance.setControlled(false);
         HitResult hitResult = SapsUtils.raycastFull(bender.player, 150, false);
@@ -60,6 +62,9 @@ public class AbilityMetalLance implements Ability {
             lance.setVelocity(bender.player, bender.player.getPitch(), bender.player.getYaw(), 0, 4, 0);
         }
         lance.move(MovementType.SELF,lance.getVelocity());
+        if(!bender.plrData.canUseUpgrade("metalLanceRedirectI")){
+            onRemove(bender);
+        }
     }
 
     @Override
@@ -78,9 +83,13 @@ public class AbilityMetalLance implements Ability {
         
         if(thrownPos != null && lance.getPos().distanceTo(thrownPos) < 2){
             lance.discard();
-            Explosion explosion = new Explosion(lance.getWorld(),lance,lance.getX(),lance.getY(),lance.getZ(),1,false, Explosion.DestructionType.DESTROY);
-            explosion.collectBlocksAndDamageEntities();
-            explosion.affectWorld(true);
+            
+            if(bender.plrData.canUseUpgrade("metalLanceDamageII") 
+                    && lance.getWorld().getGameRules().getBoolean(Elementals.BENDING_GRIEFING)) {
+                Explosion explosion = new Explosion(lance.getWorld(), lance, lance.getX(), lance.getY(), lance.getZ(), 1, false, Explosion.DestructionType.DESTROY);
+                explosion.collectBlocksAndDamageEntities();
+                explosion.affectWorld(true);
+            }
             SapsUtils.serverSummonParticles(
                     (ServerWorld) lance.getWorld(), 
                     ParticleTypes.EXPLOSION, 
@@ -99,8 +108,15 @@ public class AbilityMetalLance implements Ability {
                 onRemove(bender);
                 return;
             }
+            int damage = 8;
+            if(bender.plrData.canUseUpgrade("metalLanceDamageII"))
+                damage = 14;
+            else if(bender.plrData.canUseUpgrade("metalLanceDamageI"))
+                damage = 12;
+            
+
             for (LivingEntity living: entityList) {
-                living.damage(bender.player.getDamageSources().playerAttack(bender.player), 14 * ElementalConfig.get().BENDING_DAMAGE_MULTIPLIER);
+                living.damage(bender.player.getDamageSources().playerAttack(bender.player), damage * ElementalConfig.get().BENDING_DAMAGE_MULTIPLIER);
             }
             onRemove(bender);
             return;

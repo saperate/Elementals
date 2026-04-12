@@ -745,8 +745,21 @@
 
   "upgrade.elementals.metalBulletDamageI": "Damage I",
   "upgrade.elementals.metalBulletDamageI.description": " Increases the damage per bullet.",
-  
+
+  "upgrade.elementals.metalLance": "Metal Lance",
+  "upgrade.elementals.metalLance.description": " Molds metal into a spear like shape, which you can then precisely throw at high speeds.",
+  "upgrade.elementals.metalLance.use": " Use: %d + hold (4s)",
   "upgrade.elementals.metalLance.icon" : "metal_lance",
+
+  "upgrade.elementals.metalLanceDamageI": "Damage I",
+  "upgrade.elementals.metalLanceDamageI.description": " Increases the damage dealt by metal lance.",
+
+  "upgrade.elementals.metalLanceDamageII": "Damage II",
+  "upgrade.elementals.metalLanceDamageII.description": " Further increases the damage dealt by metal lance.",
+  
+  "upgrade.elementals.metalLanceRedirectI": "Lance Redirect",
+  "upgrade.elementals.metalLanceRedirectI.description": " Allows you to redirect the lance after having thrown it.",
+  "upgrade.elementals.metalLanceRedirectI.use": " Use: L-Click to redirect, R-Click to dismiss",
 
   "upgrade.elementals.metalBind": "Metal Bind",
   "upgrade.elementals.metalBind.description": " Attach yourself to any entity, useful in battle to prevent your opponent from running.",
@@ -762,8 +775,8 @@
   "upgrade.elementals.metalBindEfficiencyII": "Efficiency II",
   "upgrade.elementals.metalBindEfficiencyII.description": " Further reduces the amount of metal needed to cast metal bind.",
 
-  "upgrade.elementals.metalCable": "Metal Bind",
-  "upgrade.elementals.metalCable.description": " Attach yourself to any entity, useful in battle to prevent your opponent from running.",
+  "upgrade.elementals.metalCable": "Metal Cable",
+  "upgrade.elementals.metalCable.description": " Attach yourself to a surface far away, quickly pulling you towards it.",
   "upgrade.elementals.metalCable.use": " Use: %d",
   "upgrade.elementals.metalCable.icon": "metal_cable",
 
