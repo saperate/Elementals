@@ -88,7 +88,6 @@ public class AbilityEarthWall implements Ability {
             entity.setBlockState(state);
             entity.setTargetPosition(startPos.add(0,height - y,0).toCenterPos().toVector3f().add(0,0.05f,0));
             entity.setMovementSpeed(0.2f);
-            entity.setUseOffset(true);
             player.getWorld().spawnEntity(entity);
             entities.add(entity);
         }

@@ -107,8 +107,9 @@ public class EarthBlockEntity extends AbstractElementalsEntity<PlayerEntity> {
             return;
         }
         Vector3f target = getTargetPosition();
-        Vector3f direction = target.y == -1000 || usesOffset() ?
-                getEntityLookVector(owner, 3).toVector3f() : target;
+        Vector3f direction = (target.y == -1000 || usesOffset() ?
+                getEntityLookVector(owner, 3) : new Vec3d(target.x, target.y, target.z))
+                .toVector3f();
 
         if (usesOffset()) {
             direction.add(target);
