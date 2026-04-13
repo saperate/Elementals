@@ -59,7 +59,7 @@ public class AbilityEarthTrap implements Ability {
             return;
         }
 
-        if (!bender.reduceChi(bender.player.isSneaking() ? 0.25f : 0.75f)) {
+        if (!bender.reduceChi(0.25f)) {
             if (bender.abilityData == null) {
                 bender.setCurrAbility(null);
             } else {
@@ -78,11 +78,13 @@ public class AbilityEarthTrap implements Ability {
 
         block.setTargetPosition(victim.getPos().toVector3f());
         bender.player.addStatusEffect(new StatusEffectInstance(STATIONARY_EFFECT, 5, 1, false, false, false));
-        victim.addStatusEffect(new StatusEffectInstance(STATIONARY_EFFECT, 60, 1, false, true, true));
+        victim.addStatusEffect(new StatusEffectInstance(STATIONARY_EFFECT, 60, 1, false, false, true));
 
 
 
-        if (distance > 15) {
+        if (!bender.player.isSneaking()
+                || victim.isRemoved()
+                || distance > 15) {
             block.discard();
             onRemove(bender);
         }

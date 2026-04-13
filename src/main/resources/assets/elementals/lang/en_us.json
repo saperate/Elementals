@@ -396,7 +396,7 @@
   "upgrade.elementals.earthMine.icon": "earth_mine",
 
   "upgrade.elementals.earthTrap": "Trap",
-  "upgrade.elementals.earthTrap.description": " By engulfing your victim's feet in earth, you can effectively prevent them from moving for some time.",
+  "upgrade.elementals.earthTrap.description": " By engulfing your victim's feet in earth, you can prevent them from moving for some time.",
   "upgrade.elementals.earthTrap.use": " Use: %d + sneak + hold (0.5s)",
   "upgrade.elementals.earthTrap.icon": "earth_trap",
 
