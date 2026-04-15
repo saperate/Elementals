@@ -22,6 +22,7 @@ public class ModMessages {
     public static final Identifier ABILITY_PACKET_ID = Identifier.of(MODID, "ability");
     public static final Identifier GET_UPGRADE_LIST_PACKET_ID = Identifier.of(MODID, "get_upgrades");
     public static final Identifier BUY_UPGRADE_PACKET_ID = Identifier.of(MODID, "buy_upgrade");
+    public static final Identifier TOGGLE_UPGRADE_PACKET_ID = Identifier.of(MODID, "toggle_upgrade");
     public static final Identifier CYCLE_BENDING_PACKET_ID = Identifier.of(MODID, "cycle_bending");
     public static final Identifier REQUEST_SYNC_LEVEL_PACKET_ID = Identifier.of(MODID, "request_sync_level");
     public static final Identifier GET_MOD_VERSION_PACKET_ID = Identifier.of(MODID, "get_mod_version");
@@ -43,6 +44,7 @@ public class ModMessages {
         PayloadTypeRegistry.playC2S().register(MousePayload.ID, MousePayload.CODEC);
         PayloadTypeRegistry.playC2S().register(CycleBendingPayload.ID, CycleBendingPayload.CODEC);
         PayloadTypeRegistry.playC2S().register(BuyUpgradePayload.ID, BuyUpgradePayload.CODEC);
+        PayloadTypeRegistry.playC2S().register(ToggleUpgradePayload.ID, ToggleUpgradePayload.CODEC);
         PayloadTypeRegistry.playC2S().register(SyncVersionPayload.ID, SyncVersionPayload.CODEC);
 
         //Receivers
@@ -63,6 +65,9 @@ public class ModMessages {
         });
         ServerPlayNetworking.registerGlobalReceiver(BuyUpgradePayload.ID, (payload, context) -> {
             context.server().execute(() -> BuyUpgradeC2SPacket.receive(context.player(), payload));
+        });
+        ServerPlayNetworking.registerGlobalReceiver(ToggleUpgradePayload.ID, (payload, context) -> {
+            context.server().execute(() -> ToggleUpgradeC2SPacket.receive(context.player(), payload));
         });
         ServerPlayNetworking.registerGlobalReceiver(SyncVersionPayload.ID, (payload, context) -> {
             context.server().execute(() -> GetModVersionC2SPacket.receive(context.player(), payload));

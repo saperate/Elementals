@@ -13,8 +13,6 @@ import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.Vec3d;
 
-import static dev.saperate.elementals.effects.DenseStatusEffect.DENSE_EFFECT;
-import static dev.saperate.elementals.effects.SeismicSenseStatusEffect.SEISMIC_SENSE_EFFECT;
 import static dev.saperate.elementals.items.ElementalItems.*;
 import static dev.saperate.elementals.utils.SapsUtils.raycastBlockCustomRotation;
 

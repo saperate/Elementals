@@ -42,6 +42,7 @@ import net.minecraft.block.DispenserBlock;
 import net.minecraft.command.argument.serialize.ConstantArgumentSerializer;
 import net.minecraft.loot.LootTables;
 import net.minecraft.loot.entry.ItemEntry;
+import net.minecraft.particle.SimpleParticleType;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.server.MinecraftServer;
@@ -72,8 +73,10 @@ public class Elementals implements ModInitializer {
     private static final Identifier WIND_BURST_SOUND_ID = Identifier.of(MODID, "wind_burst");
     public static SoundEvent WIND_SOUND_EVENT = SoundEvent.of(WIND_SOUND_ID);
     public static SoundEvent WIND_BURST_SOUND_EVENT = SoundEvent.of(WIND_BURST_SOUND_ID);
+    private static final Identifier METAL_BREAK_SOUND_ID = Identifier.of(MODID, "metal_break");
+    public static SoundEvent METAL_BREAK_SOUND_EVENT = SoundEvent.of(METAL_BREAK_SOUND_ID);
     public static final SimpleParticleType LIGHTNING_PARTICLE_TYPE = FabricParticleTypes.simple();
-    public static final DefaultParticleType METAL_SHARD_PARTICLE_TYPE = FabricParticleTypes.simple();
+    public static final SimpleParticleType METAL_SHARD_PARTICLE_TYPE = FabricParticleTypes.simple();
     public static IGliderItemRenderProvider GLIDER_ITEM_RENDER_PROVIDER;
     public static IItemRenderProvider METAL_ARMOR_RENDER_PROVIDER;
 
@@ -118,7 +121,7 @@ public class Elementals implements ModInitializer {
 
 
 
-        LootTableEvents.MODIFY.register((key, tableBuilder, source, lookup) -> {
+        LootTableEvents.MODIFY.register((key, tableBuilder, source) -> {
             if(source.isBuiltin() && (LootTables.DESERT_PYRAMID_ARCHAEOLOGY.equals(key))){
                 tableBuilder.modifyPools((builder)->{
                     builder.with(ItemEntry.builder(LIGHTNING_SCROLL_ITEM).build());

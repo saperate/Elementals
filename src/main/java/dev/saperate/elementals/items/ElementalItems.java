@@ -7,6 +7,7 @@ import dev.saperate.elementals.blocks.ElementalsBlocks;
 import dev.saperate.elementals.items.scrolls.*;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.minecraft.block.entity.BannerPattern;
+import net.minecraft.component.type.FoodComponent;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.item.*;
 import net.minecraft.registry.Registries;
@@ -28,7 +29,7 @@ public class ElementalItems {
     public static final FoodComponent LIGHTNING_BOTTLE_FOOD_COMPONENT = new FoodComponent.Builder()
             .alwaysEdible()
             .saturationModifier(-1.2f)
-            .hunger(-6)
+            .nutrition(-6)
             .statusEffect(new StatusEffectInstance(ElementalsStatusEffects.OVERCHARGED,400,0,false,false,true), 1)
             .build();
 
@@ -45,13 +46,13 @@ public class ElementalItems {
 
     public static final Set<Item> METAL_ARMOR_SET = new HashSet<>();
     public static final MetalArmorItem METAL_HELMET = (MetalArmorItem) registerItem("metal_helmet",
-            new MetalArmorItem(ElementalArmorMaterial.METAL, ArmorItem.Type.HELMET, new Item.Settings()));
+            new MetalArmorItem(ElementalsArmorMaterial.METAL_ARMOR, ArmorItem.Type.HELMET, new Item.Settings()));
     public static final MetalArmorItem METAL_CHESTPLATE = (MetalArmorItem) registerItem("metal_chestplate",
-            new MetalArmorItem(ElementalArmorMaterial.METAL, ArmorItem.Type.CHESTPLATE, new Item.Settings()));
+            new MetalArmorItem(ElementalsArmorMaterial.METAL_ARMOR, ArmorItem.Type.CHESTPLATE, new Item.Settings()));
     public static final MetalArmorItem METAL_LEGGINGS = (MetalArmorItem) registerItem("metal_leggings",
-            new MetalArmorItem(ElementalArmorMaterial.METAL, ArmorItem.Type.LEGGINGS, new Item.Settings()));
+            new MetalArmorItem(ElementalsArmorMaterial.METAL_ARMOR, ArmorItem.Type.LEGGINGS, new Item.Settings()));
     public static final MetalArmorItem METAL_BOOTS = (MetalArmorItem) registerItem("metal_boots",
-            new MetalArmorItem(ElementalArmorMaterial.METAL, ArmorItem.Type.BOOTS, new Item.Settings()));
+            new MetalArmorItem(ElementalsArmorMaterial.METAL_ARMOR, ArmorItem.Type.BOOTS, new Item.Settings()));
 
     public static final ScrollItem SCROLL_ITEM = (ScrollItem) registerItem("scroll",
             new ScrollItem(new Item.Settings()
@@ -100,23 +101,23 @@ public class ElementalItems {
             new GliderItem(new Item.Settings()
                     .maxCount(1)));
     public static final BannerPatternItem AIR_BANNER_PATTERN_ITEM = Registry.register(Registries.ITEM, 
-            new Identifier(MODID,"air_banner_pattern"), 
+            Identifier.of(MODID,"air_banner_pattern"), 
             new BannerPatternItem(AIR_BANNER_PATTERN_TAG,new Item.Settings()
                     .maxCount(1)));
             
 
     //BLOCK ITEMS
     public static final BlockItem MOON_PEACH_LEAVES_ITEM = Registry.register(Registries.ITEM,
-            new Identifier(MODID, "moon_peach_leaves"), 
+            Identifier.of(MODID, "moon_peach_leaves"), 
             new BlockItem(ElementalsBlocks.MOON_PEACH_LEAVES, new Item.Settings()));
     public static final BlockItem MOON_LOG = Registry.register(Registries.ITEM,
-            new Identifier(MODID, "moon_log"),
+            Identifier.of(MODID, "moon_log"),
             new BlockItem(ElementalsBlocks.MOON_LOG, new Item.Settings()));
     public static final BlockItem MOON_STRIPPED_LOG = Registry.register(Registries.ITEM,
-            new Identifier(MODID, "moon_stripped_log"),
+            Identifier.of(MODID, "moon_stripped_log"),
             new BlockItem(ElementalsBlocks.MOON_STRIPPED_LOG, new Item.Settings()));
     public static final BlockItem MOON_PLANKS = Registry.register(Registries.ITEM,
-            new Identifier(MODID, "moon_planks"),
+            Identifier.of(MODID, "moon_planks"),
             new BlockItem(ElementalsBlocks.MOON_PLANKS, new Item.Settings()));
 
     public static  final ItemGroup ELEMENTALS_GROUP = FabricItemGroup.builder()
@@ -160,6 +161,8 @@ public class ElementalItems {
         METAL_ARMOR_SET.add(METAL_BOOTS);
         
         Registry.register(Registries.ITEM_GROUP, Identifier.of(MODID, "elementals_group"), ELEMENTALS_GROUP);
-        Registry.register(Registries.BANNER_PATTERN,Identifier.of(MODID,"air"),new BannerPattern("air"));
+        
+        //https://minecraft.wiki/w/Banner_pattern_definition
+        //Registry.register(Registries.BANNER_PATTERN,Identifier.of(MODID,"air"),new BannerPattern("air"));
     }
 }

@@ -26,8 +26,23 @@ public class ElementalsArmorMaterial {
             0,
             SoundEvents.ITEM_ARMOR_EQUIP_LEATHER,
             Ingredient::ofItems,
-            4,
-            25,
+            6,
+            0.9f,
+            true
+    );
+
+    public static final RegistryEntry<ArmorMaterial> METAL_ARMOR = registerMaterial("metal_armor",
+            Map.of(
+                    ArmorItem.Type.HELMET, 9,
+                    ArmorItem.Type.CHESTPLATE, 16,
+                    ArmorItem.Type.LEGGINGS, 13,
+                    ArmorItem.Type.BOOTS, 8
+            ),
+            0,
+            SoundEvents.ITEM_ARMOR_EQUIP_IRON,
+            Ingredient::ofItems,
+            8,
+            1,
             true
     );
 

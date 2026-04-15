@@ -11,6 +11,7 @@ import dev.saperate.elementals.elements.Upgrade;
 import dev.saperate.elementals.keys.KeyInput;
 import dev.saperate.elementals.keys.abilities.KeyAbility1;
 import dev.saperate.elementals.network.payload.C2S.BuyUpgradePayload;
+import dev.saperate.elementals.network.payload.C2S.ToggleUpgradePayload;
 import dev.saperate.elementals.packets.SyncLevelS2CPacket;
 import dev.saperate.elementals.packets.SyncUpgradeListS2CPacket;
 import dev.saperate.elementals.utils.SapsUtils;
