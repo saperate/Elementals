@@ -77,7 +77,7 @@ public class Elementals implements ModInitializer {
     public static SoundEvent METAL_BREAK_SOUND_EVENT = SoundEvent.of(METAL_BREAK_SOUND_ID);
     public static final SimpleParticleType LIGHTNING_PARTICLE_TYPE = FabricParticleTypes.simple();
     public static final SimpleParticleType METAL_SHARD_PARTICLE_TYPE = FabricParticleTypes.simple();
-    public static IGliderItemRenderProvider GLIDER_ITEM_RENDER_PROVIDER;
+    public static IItemRenderProvider GLIDER_ITEM_RENDER_PROVIDER;
     public static IItemRenderProvider METAL_ARMOR_RENDER_PROVIDER;
 
     public static final GameRules.Key<GameRules.BooleanRule> BENDING_GRIEFING =

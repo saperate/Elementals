@@ -72,7 +72,8 @@ public class MetalArmorItem extends ArmorItem implements GeoItem {
         
         RegistryEntry<Enchantment> bindingEnchant = world.getRegistryManager().get(RegistryKeys.ENCHANTMENT).entryOf(Enchantments.BINDING_CURSE);
         RegistryEntry<Enchantment> protectionEnchant = world.getRegistryManager().get(RegistryKeys.ENCHANTMENT).entryOf(Enchantments.PROTECTION);
-        
+        item.addEnchantment(bindingEnchant,0);
+        item.addEnchantment(protectionEnchant,3);
         //FIXME
         //item.addHideFlag(ItemStack.TooltipSection.ENCHANTMENTS);
         //item.addHideFlag(ItemStack.TooltipSection.DYE);

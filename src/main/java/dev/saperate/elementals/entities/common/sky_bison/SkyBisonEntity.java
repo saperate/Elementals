@@ -3,10 +3,7 @@ package dev.saperate.elementals.entities.common.sky_bison;
 import dev.saperate.elementals.mixin.ElementalsLivingEntityAccessor;
 import dev.saperate.elementals.utils.SapsUtils;
 import net.fabricmc.loader.impl.lib.sat4j.core.Vec;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.MovementType;
+import net.minecraft.entity.*;
 import net.minecraft.entity.ai.NoPenaltyTargeting;
 import net.minecraft.entity.ai.control.MoveControl;
 import net.minecraft.entity.ai.goal.*;
@@ -41,12 +38,9 @@ import net.minecraft.world.gen.trunk.BendingTrunkPlacer;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector2d;
 import software.bernie.geckolib.animatable.GeoEntity;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.core.animation.AnimatableManager;
-import software.bernie.geckolib.core.animation.AnimationController;
-import software.bernie.geckolib.core.animation.AnimationState;
-import software.bernie.geckolib.core.animation.RawAnimation;
-import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.animation.*;
+import software.bernie.geckolib.animation.AnimationState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.ArrayList;
@@ -67,6 +61,11 @@ public class SkyBisonEntity extends AnimalEntity implements GeoEntity {
         setFlying(hasNoGravity());
     }
 
+    @Override
+    public boolean isBreedingItem(ItemStack stack) {
+        return stack.getItem().equals(Items.APPLE);
+    }
+
     protected void initGoals() {
         this.goalSelector.add(1, new EscapeDangerGoal(this, 1.2));
         this.goalSelector.add(2, new SwimGoal(this));
@@ -79,11 +78,13 @@ public class SkyBisonEntity extends AnimalEntity implements GeoEntity {
     }
 
     @Override
-    protected void initDataTracker() {
-        super.initDataTracker();
-        this.getDataTracker().startTracking(FLYING, false);
-        this.getDataTracker().startTracking(SADDLE, ItemStack.EMPTY);
+    protected void initDataTracker(DataTracker.Builder builder) {
+        super.initDataTracker(builder);
+        builder.add(FLYING, false);
+        builder.add(SADDLE, ItemStack.EMPTY);
     }
+
+
 
 //TODO stamina system for flying?
     @Override
@@ -143,10 +144,9 @@ public class SkyBisonEntity extends AnimalEntity implements GeoEntity {
         }
         return false;
     }
-
-    @Override
+    
     public double getMountedHeightOffset() {
-        return (double)getDimensions(getPose()).height * 1;
+        return (double)getDimensions(getPose()).height() * 1;
     }
 
     @Nullable
@@ -192,13 +192,14 @@ public class SkyBisonEntity extends AnimalEntity implements GeoEntity {
     //TODO require saddle only for multiple people 
     @Override
     protected void updatePassengerPosition(Entity passenger, PositionUpdater positionUpdater) {
+        //If this broke, check CamelEntity for how to fix it
         if (this.hasPassenger(passenger)) {
             int passengerIndex = getPassengerIndex(passenger);
             Vec3d forward = SapsUtils.getEntityLookVectorIgnorePitch(this,1)
                     .subtract(getEyePos());
             Vec3d sideways = forward.crossProduct(new Vec3d(0,1,0))
                     .multiply(0.75f); // less annoying than doing
-            double heightOffset = this.getY() + this.getMountedHeightOffset() + passenger.getHeightOffset();
+            double heightOffset = this.getY() + this.getMountedHeightOffset(); //+ passenger.getHeightOffset();
 
             Vec3d offset = switch (passengerIndex) {
                 case 0 -> forward.multiply(2f);
@@ -214,6 +215,12 @@ public class SkyBisonEntity extends AnimalEntity implements GeoEntity {
             positionUpdater.accept(passenger, this.getX() + offset.x, heightOffset, this.getZ() + offset.z);
         }
     }
+    
+    @Override
+    protected Vec3d getPassengerAttachmentPos(Entity passenger, EntityDimensions dimensions, float scaleFactor) {
+        return super.getPassengerAttachmentPos(passenger, dimensions, scaleFactor);
+    }
+    
     
     public int getPassengerIndex(Entity passenger){
         List<Entity> passengers = getPassengerList();

@@ -4,17 +4,15 @@ import dev.saperate.elementals.Elementals;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Vanishable;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.*;
 import net.minecraft.world.World;
 import software.bernie.geckolib.animatable.GeoItem;
 import software.bernie.geckolib.animatable.SingletonGeoAnimatable;
+import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.animation.*;
 import software.bernie.geckolib.constant.DataTickets;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.core.animation.*;
-import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.Locale;
@@ -22,7 +20,7 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 //TODO make colorable!!
-public class GliderItem extends Item implements Vanishable, GeoItem {
+public class GliderItem extends Item implements GeoItem {
     private final RawAnimation OPENED_ANIM = RawAnimation.begin().thenPlayAndHold("opened.glider");
     private final RawAnimation CLOSED_ANIM = RawAnimation.begin().thenPlayAndHold("closed.glider");
     private final RawAnimation OPEN_ANIM = RawAnimation.begin().thenPlay("open.glider");
