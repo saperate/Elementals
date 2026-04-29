@@ -31,9 +31,7 @@ import dev.saperate.elementals.keys.abilities.KeyAbility2;
 import dev.saperate.elementals.keys.abilities.KeyAbility3;
 import dev.saperate.elementals.keys.abilities.KeyAbility4;
 import dev.saperate.elementals.keys.gui.GuiKey;
-import dev.saperate.elementals.network.payload.C2S.RequestSyncUpgradeListPayload;
 import dev.saperate.elementals.network.payload.C2S.SyncVersionPayload;
-import dev.saperate.elementals.network.payload.S2C.SyncLevelPayload;
 import dev.saperate.elementals.packets.*;
 import dev.saperate.elementals.particle.MetalShardParticle;
 import net.fabricmc.api.ClientModInitializer;
@@ -59,13 +57,11 @@ import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
-import software.bernie.geckolib.animatable.client.RenderProvider;
 
 import java.util.Optional;
 
 import static dev.saperate.elementals.Elementals.*;
 import static dev.saperate.elementals.entities.ElementalEntities.*;
-import static dev.saperate.elementals.network.ModMessages.*;
 
 public class ElementalsClient implements ClientModInitializer {
     public static final EntityModelLayer MODEL_DECOY_PLAYER = new EntityModelLayer(Identifier.of(MODID, "decoy_player"), "main");

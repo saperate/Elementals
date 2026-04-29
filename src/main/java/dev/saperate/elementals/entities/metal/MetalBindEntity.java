@@ -38,14 +38,13 @@ public class MetalBindEntity extends AbstractElementalsEntity<LivingEntity> {
 
         setControlled(true);
     }
-
     @Override
-    protected void initDataTracker() {
-        super.initDataTracker();
-        this.getDataTracker().startTracking(FROZEN, false);
-        this.getDataTracker().startTracking(DISTANCE, 10f);
-        this.getDataTracker().startTracking(PARENT_ID, 0);
-        this.getDataTracker().startTracking(CHILD_ID, 0);
+    protected void initDataTracker(DataTracker.Builder builder) {
+        super.initDataTracker(builder);
+        builder.add(FROZEN, false);
+        builder.add(DISTANCE, 10f);
+        builder.add(PARENT_ID, 0);
+        builder.add(CHILD_ID, 0);
     }
 
     public void createChain(LivingEntity owner, int MAX_CHAIN_LENGTH) {

@@ -241,7 +241,7 @@ public class ElementalEntities {
 
     public static final EntityType<SkyBisonEntity> SKYBISON = Registry.register(
             Registries.ENTITY_TYPE,
-            new Identifier("elementals", "sky_bison"),
+            Identifier.of("elementals", "sky_bison"),
             FabricEntityTypeBuilder.<SkyBisonEntity>create(SpawnGroup.MISC, SkyBisonEntity::new)
                     .dimensions(EntityDimensions.fixed(3.25f, 3.25f)).build());
     

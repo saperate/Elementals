@@ -88,12 +88,10 @@ public class MetalLanceEntity extends AbstractElementalsEntity<LivingEntity> {
     @Override
     public void onRemoved() {
         if(getRemovalReason().equals(RemovalReason.DISCARDED)){
-            this.getWorld().playSound(getX(), getY(), getZ(),
-                    SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.BLOCKS,
+            this.getWorld().playSound(this, getBlockPos(),
+                    SoundEvents.ENTITY_GENERIC_EXPLODE.value(), SoundCategory.BLOCKS,
                     0.25f,
-                    (1.0f + (this.getWorld().random.nextFloat() - this.getWorld().random.nextFloat()) * 0.2f) * 0.7f,
-                    true
-            );
+                    (1.0f + (this.getWorld().random.nextFloat() - this.getWorld().random.nextFloat()) * 0.2f) * 0.7f);
         }
     }
 

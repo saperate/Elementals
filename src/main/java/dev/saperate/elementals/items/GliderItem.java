@@ -1,6 +1,9 @@
 package dev.saperate.elementals.items;
 
 import dev.saperate.elementals.Elementals;
+import net.minecraft.component.ComponentType;
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.NbtComponent;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -10,6 +13,7 @@ import net.minecraft.util.*;
 import net.minecraft.world.World;
 import software.bernie.geckolib.animatable.GeoItem;
 import software.bernie.geckolib.animatable.SingletonGeoAnimatable;
+import software.bernie.geckolib.animatable.client.GeoRenderProvider;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animation.*;
 import software.bernie.geckolib.constant.DataTickets;
@@ -26,7 +30,6 @@ public class GliderItem extends Item implements GeoItem {
     private final RawAnimation OPEN_ANIM = RawAnimation.begin().thenPlay("open.glider");
     private final RawAnimation CLOSE_ANIM = RawAnimation.begin().thenPlay("close.glider");
     private final AnimatableInstanceCache animatableInstanceCache = GeckoLibUtil.createInstanceCache(this);
-    private final Supplier<Object> renderer = GeoItem.makeRenderer(this);
 
     public GliderItem(Settings settings) {
         super(settings);
@@ -65,13 +68,8 @@ public class GliderItem extends Item implements GeoItem {
 
 
     @Override
-    public void createRenderer(Consumer<Object> consumer) {
+    public void createGeoRenderer(Consumer<GeoRenderProvider> consumer) {
         consumer.accept(Elementals.GLIDER_ITEM_RENDER_PROVIDER.Create());
-    }
-
-    @Override
-    public Supplier<Object> getRenderProvider() {
-        return renderer;
     }
 
 
@@ -106,40 +104,53 @@ public class GliderItem extends Item implements GeoItem {
     }
 
     public GliderStates getState(ItemStack stack) {
-        if (stack.getNbt() == null || !GliderStates.isValid(stack.getNbt().getString("state"))) {
+        NbtComponent customData = stack.get(DataComponentTypes.CUSTOM_DATA);
+        if (customData == null || !GliderStates.isValid(customData.copyNbt().getString("state"))) {
             return GliderStates.CLOSED;
         }
-        return GliderStates.valueOf(stack.getNbt().getString("state").toUpperCase(Locale.ROOT));
+        return GliderStates.valueOf(customData.copyNbt().getString("state").toUpperCase(Locale.ROOT));
     }
 
     public void setState(ItemStack stack, GliderStates state) {
-        if (stack.getNbt() == null) {
-            NbtCompound nbt = new NbtCompound();
-            stack.setNbt(nbt);
+        NbtComponent component = stack.get(DataComponentTypes.CUSTOM_DATA);
+        if(stack.getHolder() == null){
+            return;
         }
-        stack.getNbt().putString("state", state.id);
+        NbtCompound data;
+        if(component != null){
+            data = component.copyNbt();
+        }else{
+            data = new NbtCompound();
+        }
+        data.putString("state", state.id);
+        stack.set(DataComponentTypes.CUSTOM_DATA, NbtComponent.of(data));
         updateStateChangeTick(stack);
     }
     
 
     private void updateStateChangeTick(ItemStack stack) {
+        NbtComponent component = stack.get(DataComponentTypes.CUSTOM_DATA);
         if(stack.getHolder() == null){
             return;
         }
-        if (stack.getNbt() == null) {
-            NbtCompound nbt = new NbtCompound();
-            stack.setNbt(nbt);
+        NbtCompound data;
+        if(component != null){
+            data = component.copyNbt();
+        }else{
+            data = new NbtCompound();
         }
-        stack.getNbt().putDouble("tickAtStateChange", stack.getHolder().age);
+        data.putDouble("tickAtStateChange", stack.getHolder().age);
+        stack.set(DataComponentTypes.CUSTOM_DATA, NbtComponent.of(data));
     }
 
     public double timeSinceStateChange(ItemStack stack) {
-        if (stack.getNbt() == null || stack.getHolder() == null) {
+        NbtComponent customData = stack.get(DataComponentTypes.CUSTOM_DATA);
+        if (customData == null || stack.getHolder() == null) {
             return Double.MAX_VALUE;
         }
-        return Math.max(stack.getHolder().age - stack.getNbt().getDouble("tickAtStateChange"), 0);
+        return Math.max(stack.getHolder().age - customData.copyNbt().getDouble("tickAtStateChange"), 0);
     }
-
+    
 
     public enum GliderStates {
         OPEN("open"),

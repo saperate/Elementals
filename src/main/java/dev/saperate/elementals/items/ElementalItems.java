@@ -2,7 +2,6 @@ package dev.saperate.elementals.items;
 
 import dev.saperate.elementals.armors.materials.ElementalsArmorMaterial;
 import dev.saperate.elementals.effects.ElementalsStatusEffects;
-import dev.saperate.elementals.armors.materials.ElementalArmorMaterial;
 import dev.saperate.elementals.blocks.ElementalsBlocks;
 import dev.saperate.elementals.items.scrolls.*;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
@@ -86,7 +85,7 @@ public class ElementalItems {
             new BloodScrollItem(new Item.Settings()
                     .maxCount(1)));
     public static final MetalScrollItem METAL_SCROLL_ITEM = (MetalScrollItem) registerItem("metal_scroll",
-            new MetalScrollItem(new FabricItemSettings()
+            new MetalScrollItem(new Item.Settings()
                     .maxCount(1)));
     public static final DirtBottleItem DIRT_BOTTLE_ITEM = (DirtBottleItem) registerItem("dirt_bottle",
             new DirtBottleItem(new Item.Settings()

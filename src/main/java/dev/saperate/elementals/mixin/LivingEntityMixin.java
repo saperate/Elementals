@@ -33,6 +33,8 @@ public abstract class LivingEntityMixin {
     @Shadow @Nullable private DamageSource lastDamageSource;
 
 
+    @Shadow protected int fallFlyingTicks;
+
     @Inject(at = @At("TAIL"), method = "damage")
     private void onDamage(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
         LivingEntity living = ((LivingEntity) (Object) this);
@@ -111,7 +113,7 @@ public abstract class LivingEntityMixin {
             ItemStack stack = SapsUtils.getFirstItemOfTypeInHands(player, ElementalItems.GLIDER_ITEM);
             if (!stack.isEmpty() && ElementalItems.GLIDER_ITEM.getState(stack) == GliderItem.GliderStates.OPEN 
                     && player.isFallFlying() && !player.isOnGround() && !player.hasVehicle() && !player.hasStatusEffect(StatusEffects.LEVITATION)) {
-                    int i = player.getRoll() + 1;
+                    int i = fallFlyingTicks + 1;
                     if (!player.getWorld().isClient && i % 10 == 0) {
                         player.emitGameEvent(GameEvent.ELYTRA_GLIDE);
                     }

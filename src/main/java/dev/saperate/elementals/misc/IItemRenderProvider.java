@@ -1,6 +1,8 @@
 package dev.saperate.elementals.misc;
 
+import software.bernie.geckolib.animatable.client.GeoRenderProvider;
+
 public interface IItemRenderProvider {
     
-    Object Create();
+    GeoRenderProvider Create();
 }

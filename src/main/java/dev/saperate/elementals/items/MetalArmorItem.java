@@ -23,6 +23,7 @@ import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.world.World;
 import software.bernie.geckolib.animatable.GeoItem;
+import software.bernie.geckolib.animatable.client.GeoRenderProvider;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animation.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
@@ -32,10 +33,8 @@ import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-//FIXME port the geckolib impl
 public class MetalArmorItem extends ArmorItem implements GeoItem {
     private final AnimatableInstanceCache animatableInstanceCache = GeckoLibUtil.createInstanceCache(this);
-    private final Supplier<Object> renderProvider = GeoItem.makeRenderer(this);
     private static final String ITEMS_KEY = "Items";
     public static final int MAX_STORAGE = 1;
 
@@ -140,13 +139,8 @@ public class MetalArmorItem extends ArmorItem implements GeoItem {
 
     
     @Override
-    public void createRenderer(Consumer<Object> consumer) {
+    public void createGeoRenderer(Consumer<GeoRenderProvider> consumer) {
         consumer.accept(Elementals.METAL_ARMOR_RENDER_PROVIDER.Create());
-    }
-
-    @Override
-    public Supplier<Object> getRenderProvider() {
-        return renderProvider;
     }
     
 

@@ -21,53 +21,53 @@ public class ElementalsDynamicRecipes {
         
          entries.add(createShapedRecipeJson(
                 Lists.newArrayList('p', 'c', 'd'),
-                Lists.newArrayList(new Identifier("paper"), new Identifier("fire_charge"), new Identifier("diamond")),
+                Lists.newArrayList(Identifier.of("paper"), Identifier.of("fire_charge"), Identifier.of("diamond")),
                 Lists.newArrayList("item", "item", "item"),
                 Lists.newArrayList(
                         "dcd",
                         "dpd",
                         "dcd"
                 ), 
-                new Identifier(Elementals.MODID, "fire_scroll")
+                Identifier.of(Elementals.MODID, "fire_scroll")
         ));
 
 
         entries.add(createShapedRecipeJson(
                 Lists.newArrayList('p', 'c', 'd'),
-                Lists.newArrayList(new Identifier("paper"), new Identifier("sponge"), new Identifier("diamond")),
+                Lists.newArrayList(Identifier.of("paper"), Identifier.of("sponge"), Identifier.of("diamond")),
                 Lists.newArrayList("item", "item", "item"),
                 Lists.newArrayList(
                         "dcd",
                         "dpd",
                         "dcd"
                 ),
-                new Identifier(Elementals.MODID, "water_scroll")
+                Identifier.of(Elementals.MODID, "water_scroll")
         ));
 
 
         entries.add(createShapedRecipeJson(
                 Lists.newArrayList('p', 'c', 'd'),
-                Lists.newArrayList(new Identifier("paper"), new Identifier("mud"), new Identifier("diamond")),
+                Lists.newArrayList(Identifier.of("paper"), Identifier.of("mud"), Identifier.of("diamond")),
                 Lists.newArrayList("item", "item", "item"),
                 Lists.newArrayList(
                         "dcd",
                         "dpd",
                         "dcd"
                 ),
-                new Identifier(Elementals.MODID, "earth_scroll")
+                Identifier.of(Elementals.MODID, "earth_scroll")
         ));
 
 
         entries.add(createShapedRecipeJson(
                 Lists.newArrayList('p', 'c', 'd'),
-                Lists.newArrayList(new Identifier("paper"), new Identifier("wind_charge"), new Identifier("diamond")),
+                Lists.newArrayList(Identifier.of("paper"), Identifier.of("wind_charge"), Identifier.of("diamond")),
                 Lists.newArrayList("item", "item", "item"),
                 Lists.newArrayList(
                         "dcd",
                         "dpd",
                         "dcd"
                 ),
-                new Identifier(Elementals.MODID, "air_scroll")
+                Identifier.of(Elementals.MODID, "air_scroll")
         ));
     }
     
