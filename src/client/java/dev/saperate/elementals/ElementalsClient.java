@@ -53,10 +53,16 @@ import net.minecraft.client.particle.FlameParticle;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.entity.model.BipedEntityModel;
 import net.minecraft.client.render.entity.model.EntityModelLayer;
+import net.minecraft.client.render.item.BuiltinModelItemRenderer;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.packet.CustomPayload;
 import net.minecraft.util.Identifier;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import software.bernie.geckolib.animatable.client.GeoRenderProvider;
+import software.bernie.geckolib.renderer.GeoArmorRenderer;
 
 import java.util.Optional;
 
@@ -100,22 +106,22 @@ public class ElementalsClient implements ClientModInitializer {
                 ElementalItems.WATER_POUCH_ITEM
         );
 
-        Elementals.GLIDER_ITEM_RENDER_PROVIDER = () -> new RenderProvider(){
+        Elementals.GLIDER_ITEM_RENDER_PROVIDER = () -> new GeoRenderProvider(){
             private final GliderItemRenderer renderer = new GliderItemRenderer();
+
             @Override
-            public net.minecraft.client.render.item.BuiltinModelItemRenderer getCustomRenderer() {
+            public BuiltinModelItemRenderer getGeoItemRenderer() {
                 return renderer;
             }
         };
 
-        Elementals.METAL_ARMOR_RENDER_PROVIDER = () -> new RenderProvider(){
+        Elementals.METAL_ARMOR_RENDER_PROVIDER = () -> new GeoRenderProvider(){
             private MetalArmorRenderer renderer;
+            
             @Override
-            public BipedEntityModel<LivingEntity> getHumanoidArmorModel(LivingEntity livingEntity, ItemStack itemStack, EquipmentSlot equipmentSlot, BipedEntityModel<LivingEntity> original) {
+            public <T extends LivingEntity> BipedEntityModel<?> getGeoArmorRenderer(@Nullable T livingEntity, ItemStack itemStack, @Nullable EquipmentSlot equipmentSlot, @Nullable BipedEntityModel<T> original) {
                 if(this.renderer == null)
                     this.renderer = new MetalArmorRenderer();
-
-                this.renderer.prepForRender(livingEntity, itemStack, equipmentSlot, original);
 
                 return renderer;
             }
