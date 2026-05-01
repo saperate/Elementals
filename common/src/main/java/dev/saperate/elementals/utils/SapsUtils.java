@@ -2,54 +2,35 @@ package dev.saperate.elementals.utils;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
-import dev.saperate.elementals.data.PlayerData;
-import dev.saperate.elementals.elements.Element;
-import dev.saperate.elementals.items.ElementalItems;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import net.fabricmc.loader.impl.lib.sat4j.core.Vec;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.FluidBlock;
-import net.minecraft.component.ComponentType;
-import net.minecraft.component.DataComponentTypes;
-import net.minecraft.component.type.PotionContentsComponent;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.MovementType;
-import net.minecraft.entity.effect.StatusEffect;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.projectile.ProjectileUtil;
-import net.minecraft.fluid.FluidState;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.particle.ParticleEffect;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.text.Text;
-import net.minecraft.util.Hand;
-import net.minecraft.util.crash.CrashException;
-import net.minecraft.util.crash.CrashReport;
-import net.minecraft.util.crash.CrashReportSection;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.hit.EntityHitResult;
-import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Box;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.math.Vec3i;
-import net.minecraft.util.math.random.Random;
-import net.minecraft.world.BlockView;
-import net.minecraft.world.RaycastContext;
-import net.minecraft.world.World;
-import net.minecraft.world.event.GameEvent;
-import net.minecraft.world.explosion.Explosion;
-import net.minecraft.world.explosion.ExplosionBehavior;
+import net.minecraft.CrashReport;
+import net.minecraft.CrashReportCategory;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.MoverType;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.ProjectileUtil;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.alchemy.PotionContents;
+import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.LiquidBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.gameevent.GameEvent;
+import net.minecraft.world.phys.*;
 import org.joml.Vector3f;
 
 import java.util.*;
@@ -73,7 +54,6 @@ public final class SapsUtils {
      * @return The block position of the hit or null if none is found
      * @see Entity
      * @see BlockPos
-     * @see World
      */
     public static BlockPos checkBlockCollision(Entity entity, float sensitivity) {
         return checkBlockCollision(entity, sensitivity, true, true, entity.getBoundingBox());
@@ -91,7 +71,6 @@ public final class SapsUtils {
      * @return The block position of the hit or null if none is found
      * @see Entity
      * @see BlockPos
-     * @see World
      */
     public static BlockPos checkBlockCollision(Entity entity, float sensitivity, boolean includeFluids) {
         return checkBlockCollision(entity, sensitivity, includeFluids, true, entity.getBoundingBox());
@@ -109,7 +88,6 @@ public final class SapsUtils {
      * @return The block position of the hit or null if none is found
      * @see Entity
      * @see BlockPos
-     * @see World
      */
     public static BlockPos checkBlockCollision(Entity entity, float sensitivity, boolean includeFluids, boolean requireSolid) {
         return checkBlockCollision(entity, sensitivity, includeFluids, requireSolid, entity.getBoundingBox());
@@ -127,22 +105,21 @@ public final class SapsUtils {
      * @return The block position of the hit or null if none is found
      * @see Entity
      * @see BlockPos
-     * @see World
-     * @see Box
+     * @see AABB
      */
-    public static BlockPos checkBlockCollision(Entity entity, float sensitivity, boolean includeFluids, boolean requireSolid, Box bounds) {
-        Box box = bounds.expand(sensitivity);
-        BlockPos blockPos = BlockPos.ofFloored(box.minX + 1.0E-7, box.minY + 1.0E-7, box.minZ + 1.0E-7);
-        BlockPos blockPos2 = BlockPos.ofFloored(box.maxX - 1.0E-7, box.maxY - 1.0E-7, box.maxZ - 1.0E-7);
+    public static BlockPos checkBlockCollision(Entity entity, float sensitivity, boolean includeFluids, boolean requireSolid, AABB bounds) {
+        AABB box = bounds.inflate(sensitivity);
+        BlockPos blockPos = BlockPos.containing(box.minX + 1.0E-7, box.minY + 1.0E-7, box.minZ + 1.0E-7);
+        BlockPos blockPos2 = BlockPos.containing(box.maxX - 1.0E-7, box.maxY - 1.0E-7, box.maxZ - 1.0E-7);
 
         //There is a weird bug where if you didn't move the entity yet, the bounding box doesn't add position
         //So this is here to fix that
         if (!isAboutEquals(box.minX, entity.getX(), box.maxX - box.minX)) {
-            blockPos = blockPos.add(entity.getBlockPos());
-            blockPos2 = blockPos2.add(entity.getBlockPos());
+            blockPos = blockPos.offset(entity.getOnPos());
+            blockPos2 = blockPos2.offset(entity.getOnPos());
         }
 
-        BlockPos.Mutable mutable = new BlockPos.Mutable();
+        BlockPos.MutableBlockPos mutable = new BlockPos.MutableBlockPos();
 
         List<BlockPos> possibleHits = new ArrayList<>();
 
@@ -150,23 +127,15 @@ public final class SapsUtils {
             for (int j = blockPos.getY(); j <= blockPos2.getY(); ++j) {
                 for (int k = blockPos.getZ(); k <= blockPos2.getZ(); ++k) {
                     mutable.set(i, j, k);
-                    BlockState blockState = entity.getWorld().getBlockState(mutable);
+                    BlockState blockState = entity.level().getBlockState(mutable);
                     if (blockState.isAir()
-                            || (!includeFluids && blockState.getBlock() instanceof FluidBlock)
+                            || (!includeFluids && blockState.getBlock() instanceof LiquidBlock)
                             || (requireSolid && !blockState.isSolid())
                     ) {
                         continue;
                     }
-
-                    try {
-                        blockState.onEntityCollision(entity.getWorld(), mutable, entity);
-                        possibleHits.add(new BlockPos(mutable));
-                    } catch (Throwable var12) {
-                        CrashReport crashReport = CrashReport.create(var12, "Colliding entity with block");
-                        CrashReportSection crashReportSection = crashReport.addElement("Block being collided with");
-                        CrashReportSection.addBlockInfo(crashReportSection, entity.getWorld(), mutable, blockState);
-                        throw new CrashException(crashReport);
-                    }
+                    blockState.entityInside(entity.level(), mutable, entity);
+                    possibleHits.add(new BlockPos(mutable));
                 }
             }
         }
@@ -174,9 +143,9 @@ public final class SapsUtils {
 
         //Get the closest block from all possible hits
         BlockPos bestHit = possibleHits.isEmpty() ? null : possibleHits.get(0);
-        double bestDistance = possibleHits.isEmpty() ? -1 : entity.squaredDistanceTo(bestHit.toCenterPos());
+        double bestDistance = possibleHits.isEmpty() ? -1 : entity.distanceToSqr(bestHit.getCenter());
         for (BlockPos hit : possibleHits) {
-            double dist = entity.squaredDistanceTo(hit.toCenterPos());
+            double dist = entity.distanceToSqr(hit.getCenter());
             if (dist < bestDistance) {
                 bestHit = hit;
                 bestDistance = dist;
@@ -190,10 +159,10 @@ public final class SapsUtils {
     /**
      * Hacky way to get which blocks can be affected by an explosion
      */
-    public static void getAffectedBlocks(World world, Entity entity, double x, double y, double z, float power) {
+    public static void getAffectedBlocks(Level world, Entity entity, double x, double y, double z, float power) {
         ObjectArrayList<BlockPos> affectedBlocks = new ObjectArrayList<>();
         int l, k;
-        world.emitGameEvent(entity, GameEvent.EXPLODE, new Vec3d(x, y, z));
+        world.gameEvent(entity, GameEvent.EXPLODE, new Vec3(x, y, z));
         HashSet<BlockPos> set = Sets.newHashSet();
         for (int j = 0; j < 16; ++j) {
             for (k = 0; k < 16; ++k) {
@@ -201,8 +170,8 @@ public final class SapsUtils {
                 for (l = 0; l < 16; ++l) {
                     if (j != 0 && j != 15 && k != 0 && k != 15 && l != 0 && l != 15) continue;
                     for (float h = power * (0.7f + world.random.nextFloat() * 0.6f); h > 0.0f; h -= 0.22500001f) {
-                        BlockPos blockPos = BlockPos.ofFloored(x, y, z);
-                        if (!world.isInBuildLimit(blockPos)) continue block2;
+                        BlockPos blockPos = BlockPos.containing(x, y, z);
+                        if (world.isOutsideBuildHeight(blockPos)) continue block2;
                         set.add(blockPos);
                     }
                 }
@@ -212,7 +181,6 @@ public final class SapsUtils {
         affectedBlocks.addAll(set);
     }
 
-    
 
     public static String elementsArrayToString(ArrayList<Element> elements) {
         StringBuilder builder = new StringBuilder();
@@ -226,67 +194,67 @@ public final class SapsUtils {
 
         return builder.toString();
     }
-    
 
-    public static float calculatePitch(Vec3d direction) {
+
+    public static float calculatePitch(Vec3 direction) {
         double horizontalDistance = Math.sqrt(direction.x * direction.x + direction.z * direction.z);
         double pitch = Math.atan2(direction.y, horizontalDistance);
         return (float) Math.toDegrees(pitch);
     }
 
-    public static float calculateYaw(Vec3d direction) {
+    public static float calculateYaw(Vec3 direction) {
         double yaw = Math.atan2(-direction.x, direction.z);
         return (float) Math.toDegrees(yaw);
     }
 
-    public static void summonParticles(Entity entity, Random rnd, ParticleEffect type, float velocity, int density) {
+    public static void summonParticles(Entity entity, Random rnd, ParticleOptions type, float velocity, int density) {
         summonParticles(entity, rnd, type, velocity, density, 1);
     }
 
 
-    public static void summonParticles(Entity entity, Random rnd, ParticleEffect type, float velocity, int density, float rndYForce) {
+    public static void summonParticles(Entity entity, Random rnd, ParticleOptions type, float velocity, int density, float rndYForce) {
         for (int i = 0; i < density; i++) {
-            entity.getWorld().addParticle(type,
+            entity.level().addParticle(type,
                     entity.getX() - 0.5f + rnd.nextDouble(),
                     entity.getY() + rnd.nextDouble() * rndYForce,
                     entity.getZ() - 0.5f + rnd.nextDouble(),
-                    rnd.nextBetween(-1, 1) * velocity, rnd.nextBetween(-1, 1) * velocity, rnd.nextBetween(-1, 1) * velocity);
+                    rnd.nextDouble(-1, 1) * velocity, rnd.nextDouble(-1, 1) * velocity, rnd.nextDouble(-1, 1) * velocity);
         }
     }
 
 
-    public static void summonParticlesVelocityAwayFromPoint(Entity entity, Random rnd, ParticleEffect type, float velocity, int density, Vec3d randomPosMultiplier) {
+    public static void summonParticlesVelocityAwayFromPoint(Entity entity, Random rnd, ParticleOptions type, float velocity, int density, Vec3 randomPosMultiplier) {
         for (int i = 0; i < density; i++) {
-            Vec3d particlePos = new Vec3d(entity.getX() - 0.5f + rnd.nextDouble() * randomPosMultiplier.getX(),
-                    entity.getY() + rnd.nextDouble() * randomPosMultiplier.getY(),
-                    entity.getZ() - 0.5f + rnd.nextDouble() * randomPosMultiplier.getZ()
+            Vec3 particlePos = new Vec3(entity.getX() - 0.5f + rnd.nextDouble() * randomPosMultiplier.x,
+                    entity.getY() + rnd.nextDouble() * randomPosMultiplier.y,
+                    entity.getZ() - 0.5f + rnd.nextDouble() * randomPosMultiplier.z
             );
-            
-            Vec3d dir = particlePos.subtract(entity.getPos());
-            
-            entity.getWorld().addParticle(type,
+
+            Vec3 dir = particlePos.subtract(entity.position());
+
+            entity.level().addParticle(type,
                     particlePos.x, particlePos.y, particlePos.z,
-                    dir.x * velocity, 
-                    dir.y * velocity, 
+                    dir.x * velocity,
+                    dir.y * velocity,
                     dir.z * velocity);
         }
     }
 
 
-    public static void serverSummonParticles(ServerWorld world, ParticleEffect type, Entity entity, Random rnd,
+    public static void serverSummonParticles(ServerLevel world, ParticleOptions type, Entity entity, Random rnd,
                                              double vX, double vY, double vZ, double speed, int count,
                                              float offsetX, float offsetY, float offsetZ, float vAmplitude) {
-        serverSummonParticles(world,type,entity.getPos(),rnd,vX,vY,vZ,speed,count,offsetX,offsetY,offsetZ,vAmplitude);
+        serverSummonParticles(world, type, entity.position(), rnd, vX, vY, vZ, speed, count, offsetX, offsetY, offsetZ, vAmplitude);
     }
 
-    public static void serverSummonParticles(ServerWorld world, ParticleEffect type, Vec3d pos, Random rnd,
+    public static void serverSummonParticles(ServerLevel world, ParticleOptions type, Vec3 pos, Random rnd,
                                              double vX, double vY, double vZ, double speed, int count,
                                              float offsetX, float offsetY, float offsetZ, float vAmplitude) {
         for (int i = 0; i < count; i++) {
-            world.spawnParticles(type,
-                    pos.getX() + rnd.nextDouble() - 0.5f + offsetX,
-                    pos.getY() + rnd.nextDouble() + 0.5f + offsetY,
-                    pos.getZ() + rnd.nextDouble() - 0.5f + offsetZ,
+            world.sendParticles(type,
+                    pos.x + rnd.nextDouble() - 0.5f + offsetX,
+                    pos.y + rnd.nextDouble() + 0.5f + offsetY,
+                    pos.z + rnd.nextDouble() - 0.5f + offsetZ,
                     0,
                     vX + rnd.nextDouble() * vAmplitude,
                     vY + rnd.nextDouble() * vAmplitude,
@@ -307,45 +275,45 @@ public final class SapsUtils {
         );
     }
 
-    public static Vec3d getEntityLookVector(Entity e, float distance) {
-        if(e == null){
-            return new Vec3d(0,0,0);
+    public static Vec3 getEntityLookVector(Entity e, float distance) {
+        if (e == null) {
+            return new Vec3(0, 0, 0);
         }
-        double rYaw = Math.toRadians(e.getYaw() + 90);
-        double rPitch = Math.toRadians(-e.getPitch());
+        double rYaw = Math.toRadians(e.getYRot() + 90);
+        double rPitch = Math.toRadians(-e.getXRot());
 
         float x = (float) (Math.cos(rPitch) * Math.cos(rYaw));
         float y = (float) Math.sin(rPitch);
         float z = (float) (Math.cos(rPitch) * Math.sin(rYaw));
 
-        return new Vec3d(x, y, z).multiply(distance).add(e.getEyePos());
+        return new Vec3(x, y, z).scale(distance).add(e.getEyePosition());
     }
-    
-    public static Vec3d getEntityLookVectorIgnorePitch(Entity e, float distance) {
-        if(e == null){
-            return new Vec3d(0,0,0);
+
+    public static Vec3 getEntityLookVectorIgnorePitch(Entity e, float distance) {
+        if (e == null) {
+            return new Vec3(0, 0, 0);
         }
-        double rYaw = Math.toRadians(e.getYaw() + 90);
-        double rPitch = Math.toRadians(-e.getPitch());
+        double rYaw = Math.toRadians(e.getYRot() + 90);
+        double rPitch = Math.toRadians(-e.getXRot());
 
         float x = (float) (Math.cos(rYaw));
         float z = (float) (Math.sin(rYaw));
 
-        return new Vec3d(x, 0, z).multiply(distance).add(e.getEyePos());
+        return new Vec3(x, 0, z).scale(distance).add(e.getEyePosition());
     }
 
-    public static HitResult raycastEntity(Entity origin, double maxDistance, Predicate<Entity> predicate) {
-        Vec3d cameraPos = origin.getCameraPosVec(1.0f);
-        Vec3d rot = origin.getRotationVec(1.0f);
-        Vec3d context = cameraPos.add(rot.x * maxDistance, rot.y * maxDistance, rot.z * maxDistance);
-        Box box = origin.getBoundingBox().stretch(rot.multiply(maxDistance)).expand(1d, 1d, 1d);
-        return ProjectileUtil.raycast(origin, origin.getEyePos(), context, box, predicate.and(entity -> entity instanceof LivingEntity && !entity.isSpectator() && entity.canHit()), maxDistance * maxDistance);
+    public static EntityHitResult raycastEntity(Entity origin, double maxDistance, Predicate<Entity> predicate) {
+        Vec3 cameraPos = origin.getEyePosition(1.0f);
+        Vec3 rot = origin.getViewVector(1.0f);
+        Vec3 context = cameraPos.add(rot.x * maxDistance, rot.y * maxDistance, rot.z * maxDistance);
+        AABB box = origin.getBoundingBox().expandTowards(rot.scale(maxDistance)).inflate(1d);
+            return ProjectileUtil.getEntityHitResult(origin, origin.getEyePosition(), context, box, predicate.and(entity -> entity instanceof LivingEntity && !entity.isSpectator() && entity.isPickable()), maxDistance * maxDistance);
     }
 
-    public static BlockHitResult raycastBlockCustomRotation(Entity origin, float maxDistance, boolean includeFluids, Vec3d rotation) {
-        Vec3d cameraPos = origin.getCameraPosVec(1);
-        Vec3d context = cameraPos.add(rotation.x * maxDistance, rotation.y * maxDistance, rotation.z * maxDistance);
-        return origin.getWorld().raycast(new RaycastContext(cameraPos, context, RaycastContext.ShapeType.OUTLINE, includeFluids ? RaycastContext.FluidHandling.ANY : RaycastContext.FluidHandling.NONE, origin));
+    public static BlockHitResult raycastBlockCustomRotation(Entity origin, float maxDistance, boolean includeFluids, Vec3 rotation) {
+        Vec3 cameraPos = origin.getEyePosition(1);
+        Vec3 context = cameraPos.add(rotation.x * maxDistance, rotation.y * maxDistance, rotation.z * maxDistance);
+        return origin.level().clip(new ClipContext(cameraPos, context, ClipContext.Block.OUTLINE, includeFluids ? ClipContext.Fluid.ANY : ClipContext.Fluid.NONE, origin));
 
     }
 
@@ -355,16 +323,14 @@ public final class SapsUtils {
     }
 
     public static HitResult raycastFull(Entity origin, double maxDistance, boolean includeFluids, Predicate<Entity> entityPredicate) {
-        EntityHitResult eHit = (EntityHitResult) raycastEntity(origin, maxDistance, entityPredicate);
-        BlockHitResult bHit = (BlockHitResult) origin.raycast(maxDistance, 1.0f, includeFluids);
+        EntityHitResult eHit = raycastEntity(origin, maxDistance, entityPredicate);
+        BlockHitResult bHit = (BlockHitResult) origin.pick(maxDistance, 1.0f, includeFluids);
 
         if (eHit == null) {
             return bHit;
-        } else if (bHit == null) {
-            return eHit;
         }
 
-        if (eHit.squaredDistanceTo(origin) < bHit.squaredDistanceTo(origin)) {
+        if (eHit.distanceTo(origin) < bHit.distanceTo(origin)) {
             return eHit;
         } else {
             return bHit;
@@ -387,7 +353,8 @@ public final class SapsUtils {
     public static Boolean isAboutEquals(double a, double b, double errorMargin) {
         return Math.abs(a - b) <= errorMargin;
     }
-    public static Boolean isAboutEquals(Vec3d a, Vec3d b, double errorMargin) {
+
+    public static Boolean isAboutEquals(Vec3 a, Vec3 b, double errorMargin) {
         return a.distanceTo(b) <= errorMargin;
     }
 
@@ -399,11 +366,11 @@ public final class SapsUtils {
      * @param entity The entity that we check
      * @return true if the entity has the status effect
      */
-    public static boolean safeHasStatusEffect(RegistryEntry<StatusEffect> effect, LivingEntity entity) {
+    public static boolean safeHasStatusEffect(Holder<MobEffect> effect, LivingEntity entity) {
         boolean hasEffect = false;
         try {
             if (entity != null) {
-                hasEffect = entity.hasStatusEffect(effect);
+                hasEffect = entity.hasEffect(effect);
             } else {
                 return false;
             }
@@ -417,13 +384,13 @@ public final class SapsUtils {
      * Searches for "<br>" in the translatable to be able to actually do line breaks in tooltips
      * @return the number of args used in the translatable
      */
-    public static int addTranslatable(List<Text> tooltip, String key, Object... args) {
-        String raw = Text.translatable(key, args).getString();
+    public static int addTranslatable(List<Component> tooltip, String key, Object... args) {
+        String raw = Component.translatable(key, args).getString();
         if (raw.equals(key)) {
             return 0;
         }
         for (String str : raw.split("<br>")) {
-            tooltip.add(Text.of(str));
+            tooltip.add(Component.literal(str));
         }
         return raw.split("%d").length;
     }
@@ -437,8 +404,8 @@ public final class SapsUtils {
      * @param args The arguments used by the translatable
      * @return the number of args used in the translatable
      */
-    public static int addTranslatableAutomaticLineBreaks(List<Text> tooltip, String key, int max, Object... args) {
-        String raw = Text.translatable(key, args).getString();
+    public static int addTranslatableAutomaticLineBreaks(List<Component> tooltip, String key, int max, Object... args) {
+        String raw = Component.translatable(key, args).getString();
         if (raw.equals(key)) {
             return 0;
         }
@@ -447,35 +414,36 @@ public final class SapsUtils {
         for (int i = 0; i < arr.length; i++) {
             builder.append(arr[i]).append(" ");
             if (i % max == 0 && i != arr.length - 1) {
-                tooltip.add(Text.of(builder.toString()));
+                tooltip.add(Component.literal(builder.toString()));
                 builder = new StringBuilder();
             }
         }
-        tooltip.add(Text.of(builder.toString()));
+        tooltip.add(Component.literal(builder.toString()));
         return raw.split("%d").length;
     }
 
     public static void launchEntity(Entity entity, float power) {
-        launchEntity(entity,power,true);
+        launchEntity(entity, power, true);
     }
 
     public static void launchEntity(Entity entity, float power, boolean reduceYVelocity) {
-        if(entity instanceof PlayerEntity player && !player.isOnGround() 
-                && hasItemInEitherHands(player,ElementalItems.GLIDER_ITEM)){
+        if (entity instanceof Player player && !player.onGround()
+                && hasItemInEitherHands(player, ElementalItems.GLIDER_ITEM)) {
             power *= 0.5f;
         }
-        
+
         Vector3f velocity = getEntityLookVector(entity, 1)
-                .subtract(entity.getEyePos())
+                .subtract(entity.getEyePosition())
                 .normalize().multiply(power, reduceYVelocity ? Math.sqrt(power * 0.5) : power * 0.5f, power).toVector3f();
         //returns the root vehicle or itself if there are none
         Entity vehicle = entity.getRootVehicle();
-        
-        vehicle.setVelocity(velocity.x,
+
+        vehicle.setDeltaMovement(velocity.x,
                 velocity.y,
                 velocity.z);
-        vehicle.velocityModified = true;
-        vehicle.move(MovementType.PLAYER, vehicle.getVelocity());
+        //TODO uncomment if launchentity doesnt work
+        //vehicle.hurtMarked = true;
+        vehicle.move(MoverType.PLAYER, vehicle.getDeltaMovement());
     }
 
     /**
@@ -487,8 +455,8 @@ public final class SapsUtils {
      * @param sound The sound which will be played
      */
     public static void playSoundAtEntity(Entity entity, SoundEvent sound, int interval) {
-        if (entity.age % interval == 0) {
-            entity.getWorld().playSound(null, entity.getBlockPos(), sound, SoundCategory.NEUTRAL, 1, (1.0f + (entity.getWorld().random.nextFloat() - entity.getWorld().random.nextFloat()) * 0.2f) * 0.7f);
+        if (entity.tickCount % interval == 0) {
+            entity.level().playSound(null, entity.getOnPos(), sound, SoundSource.NEUTRAL, 1, (1.0f + (entity.level().random.nextFloat() - entity.level().random.nextFloat()) * 0.2f) * 0.7f);
         }
     }
 
@@ -502,9 +470,9 @@ public final class SapsUtils {
      * @param angle The "radius" of the base of the cone. Usually 0.75 works best for a screen
      * @return True if the observed is within the cone made by the looker
      */
-    public static boolean isLookingAt(Entity looker, Entity observed, int maxDistance, float angle){
-        Vector3f pos = getEntityLookVector(looker, 3).subtract(looker.getPos()).normalize().multiply(3).toVector3f();
-        Vector3f dir = looker.getPos().subtract(observed.getPos()).toVector3f();
+    public static boolean isLookingAt(Entity looker, Entity observed, int maxDistance, float angle) {
+        Vector3f pos = getEntityLookVector(looker, 3).subtract(looker.position()).normalize().scale(3).toVector3f();
+        Vector3f dir = looker.position().subtract(observed.position()).toVector3f();
         if (dir.length() > maxDistance && maxDistance >= 0) {
             return false;
         }
@@ -512,41 +480,41 @@ public final class SapsUtils {
         float dot = -pos.normalize().dot(dir);
         System.out.println(Math.cos(dot));
 
-        return (Math.cos(dot) <= angle  && dot >= 0);
+        return (Math.cos(dot) <= angle && dot >= 0);
     }
 
     /**
      * Checks what status effects we can get from the player's hand. Then removes those from the inventory.
      */
-    public static List<StatusEffectInstance> getEffectsFromHands(PlayerEntity player){
-        ArrayList<StatusEffectInstance> effects = new ArrayList<>();
+    public static List<MobEffectInstance> getEffectsFromHands(Player player) {
+        ArrayList<MobEffectInstance> effects = new ArrayList<>();
 
-        for (ItemStack stack : player.getHandItems()) {
-            PotionContentsComponent potionContents = stack.get(DataComponentTypes.POTION_CONTENTS);
+        for (ItemStack stack : player.getHandSlots()) {
+            PotionContents potionContents = stack.get(DataComponents.POTION_CONTENTS);
             if (potionContents == null) {
                 continue;
             }
-            for (StatusEffectInstance statusEffectInstance : potionContents.getEffects()) {
+            for (MobEffectInstance statusEffectInstance : potionContents.getAllEffects()) {
                 effects.add(statusEffectInstance);
-                player.getInventory().removeOne(stack);
-                player.getInventory().insertStack(Items.GLASS_BOTTLE.getDefaultStack());
+                player.getInventory().removeItem(stack);
+                player.getInventory().add(Items.GLASS_BOTTLE.getDefaultInstance());
             }
         }
         return effects;
     }
 
     public static boolean isBeingRainedOn(Entity entity) {
-        BlockPos blockPos = entity.getBlockPos();
-        return entity.getWorld().hasRain(blockPos) || entity.getWorld().hasRain(BlockPos.ofFloored((double) blockPos.getX(), entity.getBoundingBox().maxY, (double) blockPos.getZ()));
+        BlockPos blockPos = entity.getOnPos();
+        return entity.level().isRainingAt(blockPos) || entity.level().isRainingAt(BlockPos.containing(blockPos.getX(), entity.getBoundingBox().maxY, (double) blockPos.getZ()));
     }
 
     /**
      * Finds entities in a given radius. This method does not take into account walls.
      * The shape of the thing is a square.
      */
-    public static List<LivingEntity> getEntitiesInRadius(Vec3d origin, float radius, World world, Entity except){
+    public static List<LivingEntity> getEntitiesInRadius(Vec3 origin, float radius, Level world, Entity except) {
         return Lists.transform(
-                getEntitiesInRadius(origin,radius,world,except, entity -> entity instanceof LivingEntity),
+                getEntitiesInRadius(origin, radius, world, except, entity -> entity instanceof LivingEntity),
                 entity -> (LivingEntity) entity
         );
     }
@@ -555,16 +523,16 @@ public final class SapsUtils {
      * Finds entities in a given radius. This method does not take into account walls.
      * The shape of the thing is a square.
      */
-    public static List<Entity> getEntitiesInRadius(Vec3d origin, float radius, World world, Entity except, Predicate<Entity> pred){
-        return world.getOtherEntities(
+    public static List<Entity> getEntitiesInRadius(Vec3 origin, float radius, Level world, Entity except, Predicate<Entity> pred) {
+        return world.getEntities(
                 except,
-                new Box(origin.subtract(radius,radius,radius),origin.add(radius,radius,radius)),
+                new AABB(origin.subtract(radius, radius, radius), origin.add(radius, radius, radius)),
                 pred
         );
     }
 
-    public static boolean isLookingForwards(Vector3f direction){
-        double dot = Math.acos(new Vector3f(0,0,1).dot(direction)/direction.length());
+    public static boolean isLookingForwards(Vector3f direction) {
+        double dot = Math.acos(new Vector3f(0, 0, 1).dot(direction) / direction.length());
         return dot >= 1.5;
     }
 
@@ -572,50 +540,51 @@ public final class SapsUtils {
      *
      * @return True if the block was broken
      */
-    public static boolean mineBlock(BlockPos blockHit, World world, int entityId, int age, int startMiningAge, float miningSpeed) {
+    public static boolean mineBlock(BlockPos blockHit, Level world, int entityId, int age, int startMiningAge, float miningSpeed) {
         float progress = calcBlockBreakingDelta(world.getBlockState(blockHit), world, blockHit, miningSpeed)
                 * (age - startMiningAge + 1);
-        world.setBlockBreakingInfo(entityId, blockHit, (int) (progress * 10));
+        world.destroyBlockProgress(entityId, blockHit, (int) (progress * 10));
 
         if (progress >= 1) {
-            world.breakBlock(blockHit, true);
+            world.destroyBlock(blockHit, true);
             return true;
         }
         return false;
     }
-    
-    public static void keepOtherEntityNearEntity(Entity curr, Entity other, float maxDistance){
-        double distanceToOther = other.getPos().distanceTo(curr.getPos());
+
+    public static void keepOtherEntityNearEntity(Entity curr, Entity other, float maxDistance) {
+        double distanceToOther = other.position().distanceTo(curr.position());
         if (distanceToOther >= maxDistance) {
-            Vec3d dirCenter = other.getPos().subtract(curr.getPos()).multiply(-1).normalize();
-            Vec3d velocity = other.getVelocity().multiply(1.05);
+            Vec3 dirCenter = other.position().subtract(curr.position()).scale(-1).normalize();
+            Vec3 velocity = other.getDeltaMovement().scale(1.05);
 
-            Vec3d tangent = velocity.subtract(dirCenter.multiply(
-                    ((velocity.dotProduct(dirCenter)) / dirCenter.dotProduct(dirCenter))));
-            other.setVelocity(tangent.add(dirCenter.multiply(Math.min(distanceToOther - maxDistance,1))));
-            other.move(MovementType.SELF, other.getVelocity());
+            Vec3 tangent = velocity.subtract(dirCenter.scale(
+                    ((velocity.dot(dirCenter)) / dirCenter.dot(dirCenter))));
+            other.setDeltaMovement(tangent.add(dirCenter.scale(Math.min(distanceToOther - maxDistance, 1))));
+            other.move(MoverType.SELF, other.getDeltaMovement());
             other.fallDistance = 0;
-            other.velocityModified = true;
+            //TODO uncomment if this stops working
+            //other.hurtMarked = true;
         }
-    }
-    
-    public static boolean hasItemInEitherHands(PlayerEntity player, Item item){
-        return player.getStackInHand(Hand.MAIN_HAND).isOf(item)
-                || player.getStackInHand(Hand.OFF_HAND).isOf(item);
     }
 
-    public static ItemStack getFirstItemOfTypeInHands(PlayerEntity player, Item type){
-        if(player.getStackInHand(Hand.MAIN_HAND).isOf(type)){
-            return player.getStackInHand(Hand.MAIN_HAND);
+    public static boolean hasItemInEitherHands(Player player, Item item) {
+        return player.getItemInHand(InteractionHand.MAIN_HAND).is(item)
+                || player.getItemInHand(InteractionHand.OFF_HAND).is(item);
+    }
+
+    public static ItemStack getFirstItemOfTypeInHands(Player player, Item type) {
+        if (player.getItemInHand(InteractionHand.MAIN_HAND).is(type)) {
+            return player.getItemInHand(InteractionHand.MAIN_HAND);
         }
-        if(player.getStackInHand(Hand.OFF_HAND).isOf(type)){
-            return player.getStackInHand(Hand.OFF_HAND);
+        if (player.getItemInHand(InteractionHand.OFF_HAND).is(type)) {
+            return player.getItemInHand(InteractionHand.OFF_HAND);
         }
         return ItemStack.EMPTY;
     }
-    
-    private static float calcBlockBreakingDelta(BlockState state, BlockView world, BlockPos pos, float miningSpeed) {
-        float f = state.getHardness(world, pos);
+
+    private static float calcBlockBreakingDelta(BlockState state, Level world, BlockPos pos, float miningSpeed) {
+        float f = state.getDestroySpeed(world, pos);
         if (f == -1.0f) {
             return 0.0f;
         }

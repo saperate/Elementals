@@ -1,11 +1,11 @@
 package dev.saperate.elementals.utils;
 
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.phys.Vec3;
 
 public abstract class MathHelper {
 
-    public static Vec3d clampVector(Vec3d vec, double min, double max){
-        return new Vec3d(
+    public static Vec3 clampVector(Vec3 vec, double min, double max){
+        return new Vec3(
                 clamp(vec.x,min,max),
                 clamp(vec.y,min,max),
                 clamp(vec.z,min,max)
