@@ -1,6 +1,7 @@
 package dev.saperate.elementals.items;
 
 import dev.saperate.elementals.Elementals;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.model.json.ModelTransformationMode;
 import net.minecraft.client.util.math.MatrixStack;
@@ -27,10 +28,10 @@ public class GliderItemRenderer extends GeoItemRenderer<GliderItem> {
     public Identifier getTextureLocation(GliderItem animatable) {
         GliderItem.GliderStates state = animatable.getState(currentItemStack);
         
-        
         switch (state){
             case OPEN -> {
-                if(animatable.timeSinceStateChange(currentItemStack) > 10.5){
+                if(animatable.timeSinceStateChange(currentItemStack, MinecraftClient.getInstance().world) 
+                        > 10.5){
                     return textureOpen;
                 }
                 return textureClosed;

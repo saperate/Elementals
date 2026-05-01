@@ -8,6 +8,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.*;
 import net.minecraft.world.World;
@@ -45,14 +46,14 @@ public class GliderItem extends Item implements GeoItem {
         if (!world.isClient) {
             switch (getState(stack)) { //Handles the switch between open and closed.
                 case OPEN -> {
-                    setState(stack, GliderStates.CLOSED);
+                    setState(stack, GliderStates.CLOSED, (ServerWorld) user.getWorld());
                     
                     triggerAnim(user,GeoItem.getOrAssignId(stack, (ServerWorld) world),
                             "controller","close"
                     );
                 }
                 case CLOSED -> {
-                    setState(stack, GliderStates.OPEN);
+                    setState(stack, GliderStates.OPEN, (ServerWorld) user.getWorld());
 
                     triggerAnim(user,GeoItem.getOrAssignId(stack, (ServerWorld) world),
                             "controller","open"
@@ -77,7 +78,7 @@ public class GliderItem extends Item implements GeoItem {
     private PlayState animationPredicate(AnimationState<GliderItem> animationState) {
         ItemStack stack = animationState.getData(DataTickets.ITEMSTACK);
         GliderStates gliderState = getState(stack);
-
+        
         switch (gliderState) {
             case OPEN -> animationState.setAnimation(OPENED_ANIM);
             case CLOSED -> animationState.setAnimation(CLOSED_ANIM);
@@ -111,11 +112,8 @@ public class GliderItem extends Item implements GeoItem {
         return GliderStates.valueOf(customData.copyNbt().getString("state").toUpperCase(Locale.ROOT));
     }
 
-    public void setState(ItemStack stack, GliderStates state) {
+    public void setState(ItemStack stack, GliderStates state, ServerWorld world) {
         NbtComponent component = stack.get(DataComponentTypes.CUSTOM_DATA);
-        if(stack.getHolder() == null){
-            return;
-        }
         NbtCompound data;
         if(component != null){
             data = component.copyNbt();
@@ -124,31 +122,28 @@ public class GliderItem extends Item implements GeoItem {
         }
         data.putString("state", state.id);
         stack.set(DataComponentTypes.CUSTOM_DATA, NbtComponent.of(data));
-        updateStateChangeTick(stack);
+        updateStateChangeTick(stack, world);
     }
     
 
-    private void updateStateChangeTick(ItemStack stack) {
+    private void updateStateChangeTick(ItemStack stack, World world) {
         NbtComponent component = stack.get(DataComponentTypes.CUSTOM_DATA);
-        if(stack.getHolder() == null){
-            return;
-        }
         NbtCompound data;
         if(component != null){
             data = component.copyNbt();
         }else{
             data = new NbtCompound();
         }
-        data.putDouble("tickAtStateChange", stack.getHolder().age);
+        data.putDouble("tickAtStateChange", world.getTime());
         stack.set(DataComponentTypes.CUSTOM_DATA, NbtComponent.of(data));
     }
 
-    public double timeSinceStateChange(ItemStack stack) {
+    public double timeSinceStateChange(ItemStack stack, World world) {
         NbtComponent customData = stack.get(DataComponentTypes.CUSTOM_DATA);
-        if (customData == null || stack.getHolder() == null) {
+        if (customData == null) {
             return Double.MAX_VALUE;
         }
-        return Math.max(stack.getHolder().age - customData.copyNbt().getDouble("tickAtStateChange"), 0);
+        return Math.max(world.getTime() - customData.copyNbt().getDouble("tickAtStateChange"), 0);
     }
     
 
