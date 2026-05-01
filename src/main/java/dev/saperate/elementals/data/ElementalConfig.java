@@ -33,7 +33,7 @@ public final class ElementalConfig {
     public boolean CHI_OVERLAY_TEXT = false;
     public boolean HIDE_TIMER = false;
     //MISC
-    public float BENDING_DAMAGE_MULTIPLIER;//TODO full rework of bending damage scaling
+    public float BENDING_DAMAGE_MULTIPLIER = 1;//TODO full rework of bending damage scaling
     public HashMap<Item, Integer> METAL_COST_VALUE = new HashMap<>(){{
         put(Items.COPPER_INGOT, 9);
         put(Items.RAW_COPPER, 6);
