@@ -140,7 +140,7 @@ public class WaterPouchItem extends Item {
 
     public int getColor(ItemStack stack) {
         return ColorHelper.Argb.fullAlpha(
-                stack.getOrDefault(DataComponentTypes.DYED_COLOR,new DyedColorComponent(0xFFFFFFFF,false)).rgb()
+                stack.getOrDefault(DataComponentTypes.DYED_COLOR,new DyedColorComponent(0xFF4f341d,false)).rgb()
         );
     }
 }
