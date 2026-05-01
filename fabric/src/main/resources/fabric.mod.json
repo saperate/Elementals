@@ -16,7 +16,7 @@
     "environment": "*",
     "entrypoints": {
         "main": [
-          "dev.saperate.elementals.ExampleMod"
+            "dev.saperate.elementals.ElementalsFabric"
         ]
     },
     "mixins": [
