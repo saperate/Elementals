@@ -3,8 +3,6 @@ package dev.saperate.elementals.utils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import net.minecraft.CrashReport;
-import net.minecraft.CrashReportCategory;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
@@ -35,7 +33,6 @@ import org.joml.Vector3f;
 
 import java.util.*;
 import java.util.function.Predicate;
-import java.util.stream.IntStream;
 
 /**
  * A collection of methods that makes some redundant stuff easier to use
