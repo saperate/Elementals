@@ -1,9 +1,10 @@
 package dev.saperate.elementals.items;
 
-import net.minecraft.client.renderer.EffectInstance;
+import dev.saperate.elementals.effects.ElementalsStatusEffects;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ArmorItem;
@@ -37,8 +38,8 @@ public class EarthArmorItem extends ArmorItem {
             return;
         }
         if(entity instanceof LivingEntity living){
-            living.addEffect(new EffectInstance(ElementalsStatusEffects.SEISMIC_SENSE,60, 0, false, false, true));
-            living.addEffect(new EffectInstance(ElementalsStatusEffects.DENSE,120,10, false, false, false));
+            living.addEffect(new MobEffectInstance(ElementalsStatusEffects.SEISMIC_SENSE,60, 0, false, false, true));
+            living.addEffect(new MobEffectInstance(ElementalsStatusEffects.DENSE,120,10, false, false, false));
         }
         //TODO figure out how to add armor points
     }

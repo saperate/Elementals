@@ -1,6 +1,7 @@
 package dev.saperate.elementals.items;
 
 import dev.saperate.elementals.Constants;
+import dev.saperate.elementals.effects.ElementalsStatusEffects;
 import dev.saperate.elementals.items.scrolls.*;
 import dev.saperate.elementals.platform.Services;
 import net.minecraft.core.Registry;
