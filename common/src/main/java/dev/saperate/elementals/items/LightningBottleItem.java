@@ -1,49 +1,42 @@
 package dev.saperate.elementals.items;
 
-import net.minecraft.advancement.criterion.Criteria;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.effect.StatusEffects;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.stat.Stats;
-import net.minecraft.util.Hand;
-import net.minecraft.util.TypedActionResult;
-import net.minecraft.util.UseAction;
-import net.minecraft.world.World;
-import org.jetbrains.annotations.Nullable;
 
+import net.minecraft.advancements.CriteriaTriggers;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.stats.Stats;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.UseAnim;
+import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.NotNull;
 
-public class LightningBottleItem extends Item{
+public class LightningBottleItem extends Item {
 
-    public LightningBottleItem(Settings settings) {
+    public LightningBottleItem(Properties settings) {
         super(settings);
     }
 
     @Override
-    public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
-        return super.use(world, user, hand);
-    }
-
-    public ItemStack finishUsing(ItemStack stack, World world, LivingEntity user) {
-        super.finishUsing(stack, world, user);
-        if (user instanceof ServerPlayerEntity serverPlayerEntity) {
-            Criteria.CONSUME_ITEM.trigger(serverPlayerEntity, stack);
-            serverPlayerEntity.incrementStat(Stats.USED.getOrCreateStat(this));
+    public ItemStack finishUsingItem(ItemStack stack, Level world, LivingEntity user) {
+        super.finishUsingItem(stack, world, user);
+        if (user instanceof ServerPlayer serverPlayer) {
+            CriteriaTriggers.CONSUME_ITEM.trigger(serverPlayer, stack);
+            serverPlayer.awardStat(Stats.ITEM_USED.get(this));
         }
 
         if (stack.isEmpty()) {
             return new ItemStack(Items.GLASS_BOTTLE);
         } else {
-            if (user instanceof PlayerEntity && !((PlayerEntity) user).getAbilities().creativeMode) {
+            if (user instanceof Player && !((Player) user).getAbilities().instabuild) {
                 ItemStack itemStack = new ItemStack(Items.GLASS_BOTTLE);
-                PlayerEntity playerEntity = (PlayerEntity) user;
-                if (!playerEntity.getInventory().insertStack(itemStack)) {
-                    playerEntity.dropItem(itemStack, false);
+                Player player = (Player) user;
+                if (!player.getInventory().add(itemStack)) {
+                    player.drop(itemStack, false);
                 }
             }
 
@@ -51,19 +44,24 @@ public class LightningBottleItem extends Item{
         }
     }
 
-    public int getMaxUseTime(ItemStack stack) {
+
+    @Override
+    public int getUseDuration(ItemStack stack, LivingEntity entity) {
         return 40;
     }
 
-    public UseAction getUseAction(ItemStack stack) {
-        return UseAction.DRINK;
+    @Override
+    public UseAnim getUseAnimation(ItemStack stack) {
+        return UseAnim.DRINK;
     }
 
-    public SoundEvent getDrinkSound() {
-        return SoundEvents.ENTITY_GENERIC_DRINK;
+    @Override
+    public SoundEvent getDrinkingSound() {
+        return SoundEvents.GENERIC_DRINK;
     }
 
-    public SoundEvent getEatSound() {
-        return SoundEvents.ENTITY_GENERIC_DRINK;
+    @Override
+    public @NotNull SoundEvent getEatingSound() {
+        return SoundEvents.GENERIC_DRINK;
     }
 }

@@ -2,27 +2,25 @@ package dev.saperate.elementals.items;
 
 import dev.saperate.elementals.Elementals;
 import dev.saperate.elementals.effects.ElementalsStatusEffects;
-import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
-import net.minecraft.component.DataComponentTypes;
-import net.minecraft.component.type.BundleContentsComponent;
-import net.minecraft.component.type.DyedColorComponent;
-import net.minecraft.enchantment.Enchantment;
-import net.minecraft.enchantment.Enchantments;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.effect.StatusEffects;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.*;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
-import net.minecraft.nbt.NbtList;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.world.World;
-import software.bernie.geckolib.animatable.GeoItem;
+
+import net.minecraft.core.Holder;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ArmorItem;
+import net.minecraft.world.item.ArmorMaterial;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.BundleItem;
+import net.minecraft.world.item.component.BundleContents;
+import net.minecraft.world.item.component.DyedItemColor;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraft.world.level.Level;
+import software.bernie.geckolib.animatable;
 import software.bernie.geckolib.animatable.client.GeoRenderProvider;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animation.AnimatableManager;
@@ -39,22 +37,22 @@ public class MetalArmorItem extends ArmorItem implements GeoItem {
     public static final int MAX_STORAGE = 1;
 
 
-    public MetalArmorItem(RegistryEntry<ArmorMaterial> armorMaterial, Type type, Settings settings) {
+    public MetalArmorItem(Holder<ArmorMaterial> armorMaterial, Type type, Properties settings) {
         super(armorMaterial, type, settings);
     }
     
 
     @Override
-    public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
-        super.inventoryTick(stack, world, entity, slot, selected);
+    public void inventoryTick(ItemStack stack, Level level, Entity entity, int slot, boolean selected) {
+        super.inventoryTick(stack, level, entity, slot, selected);
         if(slot != 0){
             return;
         }
         if(entity instanceof LivingEntity living){//Not inlining since i might need that later
-            if(entity instanceof PlayerEntity player){
-                player.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS,60, 3, false, false, false));
-                player.addStatusEffect(new StatusEffectInstance(ElementalsStatusEffects.SEISMIC_SENSE,120,0, false, false, false));
-                player.addStatusEffect(new StatusEffectInstance(ElementalsStatusEffects.DENSE,120,10, false, false, false));
+            if(entity instanceof Player player){
+                player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN,60, 3, false, false, false));
+                player.addEffect(new MobEffectInstance(ElementalsStatusEffects.SEISMIC_SENSE,120,0, false, false, false));
+                player.addEffect(new MobEffectInstance(ElementalsStatusEffects.DENSE,120,10, false, false, false));
             }
             //TODO figure out how to add armor points
         }
@@ -66,13 +64,13 @@ public class MetalArmorItem extends ArmorItem implements GeoItem {
      * @param colorMultiply The color to dye the armor with
      * @return the new armor as an item stack
      */
-    public ItemStack getItemStack(ItemStack prevArmor, int colorMultiply, World world) {
-        ItemStack item = getDefaultStack();
-        
-        RegistryEntry<Enchantment> bindingEnchant = world.getRegistryManager().get(RegistryKeys.ENCHANTMENT).entryOf(Enchantments.BINDING_CURSE);
-        RegistryEntry<Enchantment> protectionEnchant = world.getRegistryManager().get(RegistryKeys.ENCHANTMENT).entryOf(Enchantments.PROTECTION);
-        item.addEnchantment(bindingEnchant,0);
-        item.addEnchantment(protectionEnchant,3);
+    public ItemStack getItemStack(ItemStack prevArmor, int colorMultiply, Level world) {
+        ItemStack item = getDefaultInstance();
+
+        Holder<Enchantment> bindingEnchant = world.holderLookup(Registries.ENCHANTMENT).get(Enchantments.BINDING_CURSE).get();
+        Holder<Enchantment> protectionEnchant = world.holderLookup(Registries.ENCHANTMENT).get(Enchantments.PROTECTION).get();
+        item.enchant(bindingEnchant,0);
+        item.enchant(protectionEnchant,3);
         //FIXME
         //item.addHideFlag(ItemStack.TooltipSection.ENCHANTMENTS);
         //item.addHideFlag(ItemStack.TooltipSection.DYE);
@@ -97,8 +95,8 @@ public class MetalArmorItem extends ArmorItem implements GeoItem {
         ArrayList<ItemStack> items = new ArrayList<>();
         items.add(stack);
 
-        BundleContentsComponent contents = new BundleContentsComponent(items);
-        armor.set(DataComponentTypes.BUNDLE_CONTENTS, contents);
+        BundleContents contents = new BundleContents(items);
+        armor.set(DataComponents.BUNDLE_CONTENTS, contents);
         return true;
     }
 
@@ -109,15 +107,15 @@ public class MetalArmorItem extends ArmorItem implements GeoItem {
      * @return the stack previously added with {@link #putItem(ItemStack, ItemStack)} or {@link ItemStack#EMPTY}
      */
     public static ItemStack getItem(ItemStack armor){
-        BundleContentsComponent contents = armor.get(DataComponentTypes.BUNDLE_CONTENTS);
+        BundleContents contents = armor.get(DataComponents.BUNDLE_CONTENTS);
         if(contents == null){
             return ItemStack.EMPTY;
         }
-        return contents.get(0);
+        return contents.getItemUnsafe(0);
     }
 
     public static int getColor(ItemStack stack) {
-        DyedColorComponent component = stack.get(DataComponentTypes.DYED_COLOR);
+        DyedItemColor component = stack.get(DataComponents.DYED_COLOR);
         if(component == null){
             return 0xFFFFFFFF;
         }
@@ -129,7 +127,7 @@ public class MetalArmorItem extends ArmorItem implements GeoItem {
     }
 
     public static void setColor(ItemStack stack, int color) {
-        stack.set(DataComponentTypes.DYED_COLOR, new DyedColorComponent(color, false));
+        stack.set(DataComponents.DYED_COLOR, new DyedItemColor(color, false));
     }
     
     @Override

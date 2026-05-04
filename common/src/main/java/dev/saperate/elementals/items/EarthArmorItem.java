@@ -1,62 +1,44 @@
 package dev.saperate.elementals.items;
 
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Multimap;
-import dev.saperate.elementals.effects.ElementalsStatusEffects;
-import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
-import net.minecraft.component.ComponentType;
-import net.minecraft.component.DataComponentTypes;
-import net.minecraft.component.type.BundleContentsComponent;
-import net.minecraft.component.type.DyedColorComponent;
-import net.minecraft.component.type.ItemEnchantmentsComponent;
-import net.minecraft.component.type.NbtComponent;
-import net.minecraft.enchantment.Enchantment;
-import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.enchantment.EnchantmentLevelEntry;
-import net.minecraft.enchantment.Enchantments;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.attribute.EntityAttribute;
-import net.minecraft.entity.attribute.EntityAttributeModifier;
-import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.*;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
-import net.minecraft.nbt.NbtList;
-import net.minecraft.registry.Registry;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.util.collection.DefaultedList;
-import net.minecraft.world.World;
+import net.minecraft.client.renderer.EffectInstance;
+import net.minecraft.core.Holder;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ArmorItem;
+import net.minecraft.world.item.ArmorMaterial;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.BundleContents;
+import net.minecraft.world.item.component.DyedItemColor;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.item.BundleItem;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Optional;
-import java.util.stream.Stream;
 
 
-public class EarthArmorItem extends ArmorItem{
+public class EarthArmorItem extends ArmorItem {
     private static final String ITEMS_KEY = "Items";
     public static final int MAX_STORAGE = 1;
 
 
-    public EarthArmorItem(RegistryEntry<ArmorMaterial> armorMaterial, Type type, Settings settings) {
+    public EarthArmorItem(Holder<ArmorMaterial> armorMaterial, Type type, Properties settings) {
         super(armorMaterial, type, settings);
     }
 
     @Override
-    public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
+    public void inventoryTick(ItemStack stack, Level world, Entity entity, int slot, boolean selected) {
         super.inventoryTick(stack, world, entity, slot, selected);
         if (slot != 0) {
             return;
         }
-        if(entity instanceof LivingEntity player){
-            player.addStatusEffect(new StatusEffectInstance(ElementalsStatusEffects.SEISMIC_SENSE,60, 0, false, false, true));
-            player.addStatusEffect(new StatusEffectInstance(ElementalsStatusEffects.DENSE,120,10, false, false, false));
+        if(entity instanceof LivingEntity living){
+            living.addEffect(new EffectInstance(ElementalsStatusEffects.SEISMIC_SENSE,60, 0, false, false, true));
+            living.addEffect(new EffectInstance(ElementalsStatusEffects.DENSE,120,10, false, false, false));
         }
         //TODO figure out how to add armor points
     }
@@ -67,20 +49,20 @@ public class EarthArmorItem extends ArmorItem{
      * @param standingBlock The block the player is standing on
      * @return the new armor as an item stack
      */
-    public ItemStack getItemStack(ItemStack prevArmor, Block standingBlock, World world) {
-        ItemStack item = getDefaultStack();
+    public ItemStack getItemStack(ItemStack prevArmor, Block standingBlock, Level world) {
+        ItemStack item = getDefaultInstance();
         //Fuck you for making this so painful
-        RegistryEntry<Enchantment> enchant = world.getRegistryManager().get(RegistryKeys.ENCHANTMENT).entryOf(Enchantments.BINDING_CURSE);
-        item.addEnchantment(enchant, 1);
+        Holder<Enchantment> enchant = world.holderLookup(Registries.ENCHANTMENT).get(Enchantments.BINDING_CURSE).get();
+        item.enchant(enchant, 1);
 
         putItem(item,prevArmor);
 
 
-        int color = standingBlock.getDefaultMapColor().color;
+        int color = standingBlock.defaultMapColor().col;
         if (standingBlock.equals(Blocks.GRASS_BLOCK)) {
-            color = Blocks.DIRT.getDefaultMapColor().color;
+            color = Blocks.DIRT.defaultMapColor().col;
         }
-        item.set(DataComponentTypes.DYED_COLOR, new DyedColorComponent(darkenColor(color,4), false));
+        item.set(DataComponents.DYED_COLOR, new DyedItemColor(darkenColor(color,4), false));
 
         return item;
     }
@@ -100,8 +82,8 @@ public class EarthArmorItem extends ArmorItem{
         ArrayList<ItemStack> items = new ArrayList<>();
         items.add(stack);
 
-        BundleContentsComponent contents = new BundleContentsComponent(items);
-        armor.set(DataComponentTypes.BUNDLE_CONTENTS, contents);
+        BundleContents contents = new BundleContents(items);
+        armor.set(DataComponents.BUNDLE_CONTENTS, contents);
         return true;
     }
 
@@ -112,11 +94,11 @@ public class EarthArmorItem extends ArmorItem{
      * @return the stack previously added with {@link #putItem(ItemStack, ItemStack)} or {@link ItemStack#EMPTY}
      */
     public static ItemStack getItem(ItemStack armor){
-        BundleContentsComponent contents = armor.get(DataComponentTypes.BUNDLE_CONTENTS);
+        BundleContents contents = armor.get(DataComponents.BUNDLE_CONTENTS);
         if(contents == null){
             return ItemStack.EMPTY;
         }
-        return contents.get(0);
+        return contents.getItemUnsafe(0);
     }
 
 
@@ -126,9 +108,9 @@ public class EarthArmorItem extends ArmorItem{
         int g = Math.max((col & 0x0000FF), amt);
         return g | (b << 8) | (r << 16);
     }
-
+    
     @Override
-    public boolean hasGlint(ItemStack stack) {
+    public boolean isFoil(ItemStack stack) {
         return false;
     }
 }

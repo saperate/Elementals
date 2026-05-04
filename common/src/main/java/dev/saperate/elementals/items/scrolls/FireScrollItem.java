@@ -12,26 +12,20 @@ import net.minecraft.world.level.Level;
 
 import java.util.List;
 
-public class FireScrollItem extends Item {
+public class FireScrollItem extends AbstractScrollItem {
 
-    public FireScrollItem(Item.Properties settings) {
+    public FireScrollItem(Properties settings) {
         super(settings);
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level world, Player user, InteractionHand hand) {
-        if (!user.level().isClientSide) {
-            Bender bender = Bender.getBender((ServerPlayer) user);
-            if(bender.addElement(FireElement.get(), true)){
-                user.getInventory().removeItem(user.getItemInHand(hand));
-            }
-        }
-        return super.use(world, user, hand);
+    String getTranslatable() {
+        return "item.elementals.fire_scroll.tooltip";
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag type) {
-        tooltip.add(Component.translatable("item.elementals.fire_scroll.tooltip"));
+    Element getElement() {
+        return FireElement.get();
     }
 
 }
