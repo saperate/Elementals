@@ -1,82 +1,79 @@
 package dev.saperate.elementals.items;
 
-import dev.saperate.elementals.Elementals;
-import dev.saperate.elementals.enchantments.ElementalsEnchantments;
-import dev.saperate.elementals.entities.common.DirtBottleEntity;
-import dev.saperate.elementals.utils.SapsUtils;
-import net.minecraft.block.Blocks;
-import net.minecraft.component.DataComponentTypes;
-import net.minecraft.component.type.DyedColorComponent;
-import net.minecraft.component.type.NbtComponent;
-import net.minecraft.enchantment.Enchantment;
-import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.enchantment.Enchantments;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUsageContext;
-import net.minecraft.item.tooltip.TooltipType;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.text.Text;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.ColorHelper;
 
-import java.util.Iterator;
+import dev.saperate.elementals.utils.SapsUtils;
+import net.minecraft.core.Holder;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.util.FastColor;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.CustomData;
+import net.minecraft.world.item.component.DyedItemColor;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
+
 import java.util.List;
+import java.util.Properties;
 
 
 public class WaterPouchItem extends Item {
-    public WaterPouchItem(Settings settings) {
+    public WaterPouchItem(Properties settings) {
         super(settings);
     }
 
-
     @Override
-    public ActionResult useOnBlock(ItemUsageContext context) {
+    public InteractionResult useOn(UseOnContext context) {
         //We have to raycast since this method doesn't check for fluids
         HitResult hit = SapsUtils.raycastFull(context.getPlayer(),20,true);
         if(hit instanceof BlockHitResult bHit
-                && context.getWorld().getBlockState(bHit.getBlockPos()).getBlock().equals(Blocks.WATER)){
+                && context.getLevel().getBlockState(bHit.getBlockPos()).getBlock().equals(Blocks.WATER)){
 
-            fillPouch(context.getStack(),-1);
-            return ActionResult.SUCCESS;
+            fillPouch(context.getItemInHand(),-1);
+            return InteractionResult.SUCCESS;
         }
-        return ActionResult.FAIL;
+        return InteractionResult.FAIL;
     }
 
     @Override
-    public ItemStack getDefaultStack() {
-        ItemStack stack = super.getDefaultStack();
+    public ItemStack getDefaultInstance() {
+        ItemStack stack = super.getDefaultInstance();
         WaterPouchItem item = (WaterPouchItem) stack.getItem();
         item.setWaterLevel(stack, 0);
         return stack;
     }
 
     public int getWaterLevel(ItemStack itemStack){
-        NbtComponent data = itemStack.get(DataComponentTypes.CUSTOM_DATA);
+        CustomData data = itemStack.get(DataComponents.CUSTOM_DATA);
         if (data != null) {
-            int count = data.copyNbt().getInt("custom_model_data");
-            setWaterLevel(itemStack,count);
+            int count = data.copyTag().getInt("custom_model_data");
+            //TODO uncomment if it somehow breaks but idk why this was here
+            //setWaterLevel(itemStack,count);
             return count;
         }
         return 0;
     }
 
     public void setWaterLevel(ItemStack itemStack, int val){
-        NbtComponent component = itemStack.get(DataComponentTypes.CUSTOM_DATA);
+        CustomData component = itemStack.get(DataComponents.CUSTOM_DATA);
 
-        NbtCompound data;
+        CompoundTag data;
         if(component != null){
-            data = component.copyNbt();
+            data = component.copyTag();
             data.putInt("custom_model_data", val);
         }else {
-            data = new NbtCompound();
+            data = new CompoundTag();
             data.putInt("custom_model_data", val);
         }
 
-        itemStack.set(DataComponentTypes.CUSTOM_DATA, NbtComponent.of(data));
+        itemStack.set(DataComponents.CUSTOM_DATA, CustomData.of(data));
     }
 
     /**
@@ -121,26 +118,20 @@ public class WaterPouchItem extends Item {
 
     public int getMaxWaterLevel(ItemStack itemStack){
         int level = 0;
-
-
-        for (RegistryEntry<Enchantment> enchant : EnchantmentHelper.getEnchantments(itemStack).getEnchantments()){
-            if(enchant.getKey().isPresent() && enchant.getKey().get().equals(ElementalsEnchantments.VOLUME)){
-                level = EnchantmentHelper.getLevel(enchant, itemStack);
-            }
-        }
-
+        
+        level = EnchantmentHelper.getItemEnchantmentLevel(ElementalsEnchantments.VOLUME, itemStack);
         return 9 + level * 4;
     }
 
     @Override
-    public void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType type) {
+    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag type) {
         SapsUtils.addTranslatable(tooltip,"item.elementals.water_pouch.tooltip",getWaterLevel(stack));
     }
 
 
     public int getColor(ItemStack stack) {
-        return ColorHelper.Argb.fullAlpha(
-                stack.getOrDefault(DataComponentTypes.DYED_COLOR,new DyedColorComponent(0xFF4f341d,false)).rgb()
+        return FastColor.ARGB32.color(
+                0xFF, stack.getOrDefault(DataComponents.DYED_COLOR,new DyedItemColor(0x4f341d,false)).rgb()
         );
     }
 }
