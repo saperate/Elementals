@@ -1,6 +1,7 @@
 package dev.saperate.elementals.items;
 
 
+import dev.saperate.elementals.enchantments.ElementalsEnchantments;
 import dev.saperate.elementals.utils.SapsUtils;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
@@ -118,8 +119,12 @@ public class WaterPouchItem extends Item {
 
     public int getMaxWaterLevel(ItemStack itemStack){
         int level = 0;
-        
-        level = EnchantmentHelper.getItemEnchantmentLevel(ElementalsEnchantments.VOLUME, itemStack);
+
+        for (Holder<Enchantment> enchant : EnchantmentHelper.getEnchantmentsForCrafting(itemStack).keySet()){
+            if(enchant.equals(ElementalsEnchantments.VOLUME)){
+                level = EnchantmentHelper.getItemEnchantmentLevel(enchant, itemStack);
+            }
+        }
         return 9 + level * 4;
     }
 
