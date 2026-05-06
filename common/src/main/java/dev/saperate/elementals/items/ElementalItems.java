@@ -119,7 +119,7 @@ public class ElementalItems {
     public static final BlockItem MOON_PLANKS = Registry.register(Registries.ITEM,
             ResourceLocation.fromNamespaceAndPath(Constants.MODID, "moon_planks"),
             new BlockItem(ElementalsBlocks.MOON_PLANKS, new Item.Properties()));
-    public static final CreativeModeTab ELEMENTALS_TAB = Services.ITEM.createItemTab();
+    public static final CreativeModeTab ELEMENTALS_TAB = Services.REGISTRY.createItemTab();
 
     private static Item registerItem(String name, Item item) {
         return Registry.register(BuiltInRegistries.ITEM, ResourceLocation.fromNamespaceAndPath(Constants.MODID,name), item);

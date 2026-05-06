@@ -1,22 +1,20 @@
 package dev.saperate.elementals.platform;
 
-import dev.saperate.elementals.Constants;
-import dev.saperate.elementals.platform.services.IItemHelper;
-import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
-import net.minecraft.core.Registry;
-import net.minecraft.core.registries.Registries;
+import dev.saperate.elementals.platform.services.IRegistryHelper;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 
 import static dev.saperate.elementals.items.ElementalItems.*;
 
-public class FabricItemHelper implements IItemHelper {
+public class ForgeRegistryHelper implements IRegistryHelper {
 
     @Override
     public CreativeModeTab createItemTab() {
-        return FabricItemGroup.builder()
+        return CreativeModeTab.builder()
                 .icon(() -> new ItemStack(SCROLL_ITEM))
                 .title(Component.literal("Elementals"))
                 .displayItems((context,entries) -> {
@@ -34,5 +32,10 @@ public class FabricItemHelper implements IItemHelper {
                     entries.accept(WATER_POUCH_ITEM);
                     entries.accept(GLIDER_ITEM);
                 }).build();
+    }
+
+    @Override
+    public <T extends BlockEntity> BlockEntityType<T> createBlockEntityType(BlockEntityTypeFactory<T> factory, Block... validBlocks) {
+        return BlockEntityType.Builder.of(factory::create, validBlocks).build(null);
     }
 }

@@ -1,13 +1,16 @@
 package dev.saperate.elementals.platform;
 
-import dev.saperate.elementals.platform.services.IItemHelper;
+import dev.saperate.elementals.platform.services.IRegistryHelper;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 
 import static dev.saperate.elementals.items.ElementalItems.*;
 
-public class ForgeItemHelper implements IItemHelper {
+public class NeoForgeRegistryHelper implements IRegistryHelper {
 
     @Override
     public CreativeModeTab createItemTab() {
@@ -29,5 +32,10 @@ public class ForgeItemHelper implements IItemHelper {
                     entries.accept(WATER_POUCH_ITEM);
                     entries.accept(GLIDER_ITEM);
                 }).build();
+    }
+
+    @Override
+    public <T extends BlockEntity> BlockEntityType<T> createBlockEntityType(BlockEntityTypeFactory<T> factory, Block... validBlocks) {
+        return BlockEntityType.Builder.of(factory::create, validBlocks).build(null);
     }
 }
