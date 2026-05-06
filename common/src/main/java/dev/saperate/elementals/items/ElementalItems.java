@@ -1,6 +1,8 @@
 package dev.saperate.elementals.items;
 
 import dev.saperate.elementals.Constants;
+import dev.saperate.elementals.armors.materials.ElementalsArmorMaterial;
+import dev.saperate.elementals.blocks.ElementalsBlocks;
 import dev.saperate.elementals.effects.ElementalsStatusEffects;
 import dev.saperate.elementals.items.scrolls.*;
 import dev.saperate.elementals.platform.Services;
@@ -104,19 +106,18 @@ public class ElementalItems {
             ResourceLocation.fromNamespaceAndPath(Constants.MODID,"air_banner_pattern"), 
             new BannerPatternItem(AIR_BANNER_PATTERN_TAG,new Item.Properties()
                     .stacksTo(1)));
-            
-
+    
     //BLOCK ITEMS
-    public static final BlockItem MOON_PEACH_LEAVES_ITEM = Registry.register(Registries.ITEM,
+    public static final BlockItem MOON_PEACH_LEAVES_ITEM = Registry.register(BuiltInRegistries.ITEM,
             ResourceLocation.fromNamespaceAndPath(Constants.MODID, "moon_peach_leaves"), 
             new BlockItem(ElementalsBlocks.MOON_PEACH_LEAVES, new Item.Properties()));
-    public static final BlockItem MOON_LOG = Registry.register(Registries.ITEM,
+    public static final BlockItem MOON_LOG = Registry.register(BuiltInRegistries.ITEM,
             ResourceLocation.fromNamespaceAndPath(Constants.MODID, "moon_log"),
             new BlockItem(ElementalsBlocks.MOON_LOG, new Item.Properties()));
-    public static final BlockItem MOON_STRIPPED_LOG = Registry.register(Registries.ITEM,
+    public static final BlockItem MOON_STRIPPED_LOG = Registry.register(BuiltInRegistries.ITEM,
             ResourceLocation.fromNamespaceAndPath(Constants.MODID, "moon_stripped_log"),
             new BlockItem(ElementalsBlocks.MOON_STRIPPED_LOG, new Item.Properties()));
-    public static final BlockItem MOON_PLANKS = Registry.register(Registries.ITEM,
+    public static final BlockItem MOON_PLANKS = Registry.register(BuiltInRegistries.ITEM,
             ResourceLocation.fromNamespaceAndPath(Constants.MODID, "moon_planks"),
             new BlockItem(ElementalsBlocks.MOON_PLANKS, new Item.Properties()));
     public static final CreativeModeTab ELEMENTALS_TAB = Services.REGISTRY.createItemTab();
