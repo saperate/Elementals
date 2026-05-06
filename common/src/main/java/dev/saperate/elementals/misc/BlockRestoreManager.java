@@ -1,11 +1,11 @@
 package dev.saperate.elementals.misc;
 
-import dev.saperate.elementals.elements.earth.EarthElement;
-import net.minecraft.block.BlockState;
-import net.minecraft.registry.RegistryKey;
+
+import net.minecraft.core.BlockPos;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -24,14 +24,14 @@ public class BlockRestoreManager {
             }
 
             toRemove.add(entry);
-            World world = server.getWorld(entry.worldKey);
+            Level world = server.getLevel(entry.worldKey);
             if(world == null)
                 continue;
 
             if(!world.getBlockState(entry.pos).isAir()){
-                world.breakBlock(entry.pos,true);
+                world.destroyBlock(entry.pos,true);
             }
-            world.setBlockState(entry.pos, entry.state);
+            world.setBlockAndUpdate(entry.pos, entry.state);
         }
         toRemove.forEach(blocksToRestore::remove);
     }
@@ -50,10 +50,10 @@ public class BlockRestoreManager {
     public static class BlockInformation{
         public final BlockPos pos;
         public final BlockState state;
-        public final RegistryKey<World> worldKey;
+        public final ResourceKey<Level> worldKey;
         public int lifetime;
 
-        public BlockInformation(BlockPos pos, BlockState state, RegistryKey<World> worldKey, int lifetime) {
+        public BlockInformation(BlockPos pos, BlockState state, ResourceKey<Level> worldKey, int lifetime) {
             this.pos = pos;
             this.state = state;
             this.worldKey = worldKey;
