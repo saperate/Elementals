@@ -1,4 +1,4 @@
-package dev.saperate.elementals.commands;
+package commands;
 
 import com.google.common.collect.Lists;
 import com.mojang.brigadier.StringReader;
@@ -8,10 +8,8 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.DynamicCommandExceptionType;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
-import dev.saperate.elementals.elements.Element;
-import net.minecraft.command.CommandSource;
-import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.text.Text;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.SharedSuggestionProvider;
 
 import java.util.Collection;
 import java.util.List;
@@ -48,8 +46,8 @@ public class ElementArgumentType implements ArgumentType<Element> {
     @Override
     public <S> CompletableFuture<Suggestions> listSuggestions(CommandContext<S> context, SuggestionsBuilder builder) {
         final String remaining = builder.getRemaining();
-        if (context.getSource() instanceof ServerCommandSource source) {
-            return CommandSource.suggestMatching(
+        if (context.getSource() instanceof CommandSourceStack source) {
+            return SharedSuggestionProvider.suggest(
                     Lists.transform(Element.getElementList(), Element::getName),
                     builder
             );

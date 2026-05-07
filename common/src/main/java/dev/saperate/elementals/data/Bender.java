@@ -1,8 +1,8 @@
 package dev.saperate.elementals.data;
 
+import commands.BendingCommand;
 import commonnetwork.api.Network;
 import dev.saperate.elementals.Elementals;
-import dev.saperate.elementals.commands.BendingCommand;
 import dev.saperate.elementals.effects.ElementalsStatusEffects;
 import dev.saperate.elementals.elements.Ability;
 import dev.saperate.elementals.elements.Element;
