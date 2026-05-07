@@ -6,8 +6,12 @@
   "compatibilityLevel": "JAVA_18",
   "mixins": [
     "CriteriaTriggersAccessor",
+    "ElementalsLivingEntityAccessor",
+    "FurnaceBlockEntityAccessor",
     "GameRulesAccessor",
     "GameRulesBooleanRuleAccessor",
+    "MobEffectInstanceAccessor",
+    "NearestAttackableTargetGoalMixin",
     "SimpleParticleTypeAccessor"
   ],
   "client": [

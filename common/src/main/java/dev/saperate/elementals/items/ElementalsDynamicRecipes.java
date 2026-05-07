@@ -5,7 +5,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import dev.saperate.elementals.Elementals;
 import dev.saperate.elementals.data.ElementalConfig;
-import net.minecraft.util.Identifier;
+import net.minecraft.resources.ResourceLocation;
 
 import java.util.ArrayList;
 
@@ -21,60 +21,68 @@ public class ElementalsDynamicRecipes {
         
          entries.add(createShapedRecipeJson(
                 Lists.newArrayList('p', 'c', 'd'),
-                Lists.newArrayList(Identifier.of("paper"), Identifier.of("fire_charge"), Identifier.of("diamond")),
+                Lists.newArrayList(ResourceLocation.withDefaultNamespace("paper"), 
+                        ResourceLocation.withDefaultNamespace("fire_charge"), 
+                        ResourceLocation.withDefaultNamespace("diamond")),
                 Lists.newArrayList("item", "item", "item"),
                 Lists.newArrayList(
                         "dcd",
                         "dpd",
                         "dcd"
                 ), 
-                Identifier.of(Elementals.MODID, "fire_scroll")
+                ResourceLocation.fromNamespaceAndPath(Elementals.MODID, "fire_scroll")
         ));
 
 
         entries.add(createShapedRecipeJson(
                 Lists.newArrayList('p', 'c', 'd'),
-                Lists.newArrayList(Identifier.of("paper"), Identifier.of("sponge"), Identifier.of("diamond")),
+                Lists.newArrayList(ResourceLocation.withDefaultNamespace("paper"),
+                        ResourceLocation.withDefaultNamespace("sponge"),
+                        ResourceLocation.withDefaultNamespace("diamond")),
                 Lists.newArrayList("item", "item", "item"),
                 Lists.newArrayList(
                         "dcd",
                         "dpd",
                         "dcd"
                 ),
-                Identifier.of(Elementals.MODID, "water_scroll")
+                ResourceLocation.fromNamespaceAndPath(Elementals.MODID, "water_scroll")
         ));
 
 
         entries.add(createShapedRecipeJson(
                 Lists.newArrayList('p', 'c', 'd'),
-                Lists.newArrayList(Identifier.of("paper"), Identifier.of("mud"), Identifier.of("diamond")),
+                Lists.newArrayList(ResourceLocation.withDefaultNamespace("paper"),
+                        ResourceLocation.withDefaultNamespace("mud"),
+                        ResourceLocation.withDefaultNamespace("diamond")),
                 Lists.newArrayList("item", "item", "item"),
                 Lists.newArrayList(
                         "dcd",
                         "dpd",
                         "dcd"
                 ),
-                Identifier.of(Elementals.MODID, "earth_scroll")
+                ResourceLocation.fromNamespaceAndPath(Elementals.MODID, "earth_scroll")
         ));
 
 
         entries.add(createShapedRecipeJson(
                 Lists.newArrayList('p', 'c', 'd'),
-                Lists.newArrayList(Identifier.of("paper"), Identifier.of("wind_charge"), Identifier.of("diamond")),
+                Lists.newArrayList(ResourceLocation.withDefaultNamespace("paper"),
+                        ResourceLocation.withDefaultNamespace("wind_charge"),
+                        ResourceLocation.withDefaultNamespace("diamond")),
                 Lists.newArrayList("item", "item", "item"),
                 Lists.newArrayList(
                         "dcd",
                         "dpd",
                         "dcd"
                 ),
-                Identifier.of(Elementals.MODID, "air_scroll")
+                ResourceLocation.fromNamespaceAndPath(Elementals.MODID, "air_scroll")
         ));
     }
     
     /**
      * @see "https://wiki.fabricmc.net/tutorial:dynamic_recipe_generation"
      */
-    public static RecipeEntry createShapedRecipeJson(ArrayList<Character> keys, ArrayList<Identifier> items, ArrayList<String> type, ArrayList<String> pattern, Identifier output) {
+    public static RecipeEntry createShapedRecipeJson(ArrayList<Character> keys, ArrayList<ResourceLocation> items, ArrayList<String> type, ArrayList<String> pattern, ResourceLocation output) {
         JsonObject json = new JsonObject();
         json.addProperty("type", "minecraft:crafting_shaped");
 
@@ -108,8 +116,8 @@ public class ElementalsDynamicRecipes {
     
     public static final class RecipeEntry{
         public final JsonObject object;
-        public final Identifier ID;
-        private RecipeEntry(JsonObject object, Identifier ID){
+        public final ResourceLocation ID;
+        private RecipeEntry(JsonObject object, ResourceLocation ID){
             this.object = object;
             this.ID = ID;
         }

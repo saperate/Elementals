@@ -65,6 +65,8 @@ public class Elementals {
         ElementalEntities.register();
         ElementalsSounds.register();
         ElementalsNetworking.register();
+        ElementalsDynamicRecipes.register();
+        
         Services.REGISTRY.registerLootTables();
         Services.REGISTRY.registerCommands();
         registerElements();
@@ -77,9 +79,6 @@ public class Elementals {
 
         Registry.register(BuiltInRegistries.PARTICLE_TYPE, ResourceLocation.fromNamespaceAndPath(MODID, "lightning"), LIGHTNING_PARTICLE_TYPE);
         Registry.register(BuiltInRegistries.PARTICLE_TYPE, ResourceLocation.fromNamespaceAndPath(MODID, "metal_shard"), METAL_SHARD_PARTICLE_TYPE);
-
-
-        ElementalsDynamicRecipes.register();
     }
 
 
