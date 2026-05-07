@@ -22,7 +22,7 @@ import java.util.Set;
 
 public class ElementalsItems {
 
-    public static final TagKey<BannerPattern> AIR_BANNER_PATTERN_TAG = TagKey.create(Registries.BANNER_PATTERN, ResourceLocation.fromNamespaceAndPath("elementals","pattern_item/air_banner_pattern"));
+    public static final TagKey<BannerPattern> AIR_BANNER_PATTERN_TAG = TagKey.create(Registries.BANNER_PATTERN, ResourceLocation.fromNamespaceAndPath("assets/elementals","pattern_item/air_banner_pattern"));
     
     public static final FoodProperties LIGHTNING_BOTTLE_FOOD_COMPONENT = new FoodProperties.Builder()
             .alwaysEdible()

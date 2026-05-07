@@ -207,18 +207,18 @@ public final class SapsUtils {
         return (float) Math.toDegrees(yaw);
     }
 
-    public static void summonParticles(Entity entity, Random rnd, ParticleOptions type, float velocity, int density) {
+    public static void summonParticles(Entity entity, RandomSource rnd, ParticleOptions type, float velocity, int density) {
         summonParticles(entity, rnd, type, velocity, density, 1);
     }
 
 
-    public static void summonParticles(Entity entity, Random rnd, ParticleOptions type, float velocity, int density, float rndYForce) {
+    public static void summonParticles(Entity entity, RandomSource rnd, ParticleOptions type, float velocity, int density, float rndYForce) {
         for (int i = 0; i < density; i++) {
             entity.level().addParticle(type,
                     entity.getX() - 0.5f + rnd.nextDouble(),
                     entity.getY() + rnd.nextDouble() * rndYForce,
                     entity.getZ() - 0.5f + rnd.nextDouble(),
-                    rnd.nextDouble(-1, 1) * velocity, rnd.nextDouble(-1, 1) * velocity, rnd.nextDouble(-1, 1) * velocity);
+                    rnd.nextDouble() * velocity, rnd.nextDouble() * velocity, rnd.nextDouble() * velocity);
         }
     }
 

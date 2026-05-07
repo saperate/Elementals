@@ -38,7 +38,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class Elementals {
-    public static final String MODID = "elementals";
+    public static final String MODID = "assets/elementals";
     public static final Logger LOGGER = LoggerFactory.getLogger(MODID);
     public static HasElementCriterion HAS_ELEMENT = CriteriaTriggersAccessor.callRegister(HasElementCriterion.getName(), new HasElementCriterion());
     public static UsedAbilityCriterion USED_ABILITY = CriteriaTriggersAccessor.callRegister(UsedAbilityCriterion.getName(), new UsedAbilityCriterion());

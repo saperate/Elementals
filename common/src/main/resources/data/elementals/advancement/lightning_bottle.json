@@ -1,0 +1,33 @@
+{
+  "display": {
+    "icon": {
+      "count": 1,
+      "id": "elementals:lightning_bottle"
+    },
+    "title": "Lightning in a bottle",
+    "description": " Acquire a lightning bottle",
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true
+  },
+  "criteria": {
+    "item_used": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "elementals:lightning_bottle"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "requirements": [
+    [
+      "item_used"
+    ]
+  ],
+  "parent": "elementals:lightningbending"
+}

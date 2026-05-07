@@ -1,7 +1,0 @@
-{
-  "parent": "minecraft:block/leaves",
-  "textures": {
-    "all": "elementals:block/moon_leaves"
-  }
-}
-

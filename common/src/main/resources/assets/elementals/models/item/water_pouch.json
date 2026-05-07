@@ -1,0 +1,33 @@
+{
+	"credit": "Made with Blockbench",
+	"parent": "minecraft:item/handheld",
+	"textures": {
+		"layer0" : "elementals:item/water_pouch",
+		"layer1" : "elementals:item/water_pouch_overlay"
+	},
+
+	"display": {
+		"thirdperson_righthand": {
+			"rotation": [150, -90, 55],
+			"translation": [0, -0.75, 1.5],
+			"scale": [0.6, 0.6, 0.6]
+		},
+		"thirdperson_lefthand": {
+			"rotation": [35, 90, 55],
+			"translation": [0, -0.75, 2.75],
+			"scale": [0.6, 0.6, 0.6]
+		},
+		"firstperson_righthand": {
+			"rotation": [0, -95, 0],
+			"translation": [2.75, 0, 0]
+		},
+		"firstperson_lefthand": {
+			"rotation": [0, 95, 0],
+			"translation": [2.75, 0, 0]
+		},
+		"head": {
+			"rotation": [-180, -90, 0],
+			"translation": [0.25, 7.25, 1.75]
+		}
+	}
+}

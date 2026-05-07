@@ -13,7 +13,7 @@ import net.minecraft.network.chat.Component;
 public class ElementalsCommand {
 
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher, CommandBuildContext commandRegistryAccess, Commands.CommandSelection registrationEnvironment) {
-        dispatcher.register(Commands.literal("elementals")
+        dispatcher.register(Commands.literal("assets/elementals")
                         .then(Commands.literal("status")
                                 .executes(ElementalsCommand::statusSelf)
                         )

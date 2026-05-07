@@ -1,8 +1,0 @@
-{
-  "parent": "minecraft:block/cube_column",
-  "textures": {
-    "end": "elementals:block/moon_log_top",
-    "side": "elementals:block/moon_log_side"
-  }
-}
-

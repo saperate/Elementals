@@ -1,0 +1,22 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "category": "equipment",
+    "key": {
+        "#": {
+            "item": "minecraft:leather"
+        },
+        "X": {
+            "item": "minecraft:string"
+        }
+    },
+    "pattern": [
+        "#X ",
+        "X##",
+        " ##"
+    ],
+    "result": {
+        "count": 1,
+        "id": "elementals:water_pouch"
+    },
+    "show_notification": true
+}

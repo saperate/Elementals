@@ -1,0 +1,22 @@
+{
+  "display": {
+    "icon": {
+      "count" : 1,
+      "id": "elementals:blood_scroll"
+    },
+    "title": "The Taboo Bending",
+    "description": "Complete water bending and unlock the Blood sub-bending",
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true
+  },
+  "criteria": {
+    "element": {
+      "conditions": {
+        "element" : "blood"
+      },
+      "trigger": "minecraft:elementals/has_element"
+    }
+  },
+  "parent": "elementals:waterbending"
+}
