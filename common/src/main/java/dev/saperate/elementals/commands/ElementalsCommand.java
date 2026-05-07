@@ -1,4 +1,4 @@
-package commands;
+package dev.saperate.elementals.commands;
 
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;

@@ -1,4 +1,4 @@
-package commands;
+package dev.saperate.elementals.commands;
 
 import com.google.common.collect.Lists;
 import com.mojang.brigadier.StringReader;

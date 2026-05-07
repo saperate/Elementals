@@ -1,4 +1,4 @@
-package commands;
+package dev.saperate.elementals.commands;
 
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
@@ -20,7 +20,6 @@ import net.minecraft.world.entity.player.Player;
 
 
 import java.util.Locale;
-import java.util.function.Supplier;
 
 public class BendingCommand {
     public static boolean debug = false;

@@ -1,12 +1,12 @@
 package dev.saperate.elementals.data;
 
-import commands.BendingCommand;
 import commonnetwork.api.Network;
 import dev.saperate.elementals.Elementals;
 import dev.saperate.elementals.effects.ElementalsStatusEffects;
 import dev.saperate.elementals.elements.Ability;
 import dev.saperate.elementals.elements.Element;
 import dev.saperate.elementals.elements.NoneElement;
+import dev.saperate.elementals.commands.BendingCommand;
 import dev.saperate.elementals.network.packets.S2C.SyncChiPacket;
 import dev.saperate.elementals.network.packets.S2C.SyncCurrAbilityPacket;
 import dev.saperate.elementals.network.packets.S2C.SyncElementsPacket;
@@ -14,8 +14,6 @@ import dev.saperate.elementals.network.payload.S2C.SyncChiPayload;
 import dev.saperate.elementals.network.payload.S2C.SyncCurrAbilityPayload;
 import dev.saperate.elementals.network.payload.S2C.SyncElementsPayload;
 import dev.saperate.elementals.utils.SapsUtils;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.player.Player;
