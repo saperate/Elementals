@@ -3,7 +3,6 @@ package dev.saperate.elementals.network.packets.C2S;
 import commonnetwork.networking.data.PacketContext;
 import commonnetwork.networking.data.Side;
 import dev.saperate.elementals.data.Bender;
-import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.network.ModMessages;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
@@ -40,7 +39,7 @@ public record MouseClickPacket(CompoundTag data) {
 
     public static void handle(PacketContext<MouseClickPacket> ctx)
     {
-        ModMessages.isOnSideOrThrow(ctx.side(), Side.SERVER);
+        ModMessages.expectSideOrThrow(ctx.side(), Side.SERVER);
         
         MouseClickPacket packet = ctx.message();
         int left = packet.getLeft();

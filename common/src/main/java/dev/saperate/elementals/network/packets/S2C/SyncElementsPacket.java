@@ -30,7 +30,7 @@ public record SyncElementsPacket(String packedElements, int activeElementIndex) 
 
     public static void handle(PacketContext<SyncElementsPacket> ctx)
     {
-        ModMessages.isOnSideOrThrow(ctx.side(), Side.CLIENT);
+        ModMessages.expectSideOrThrow(ctx.side(), Side.CLIENT);
         ClientBender bender = ClientBender.get();
         SyncElementsPacket packet = ctx.message();
         

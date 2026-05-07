@@ -27,7 +27,7 @@ public record SyncChiPacket(float chi) {
 
     public static void handle(PacketContext<SyncChiPacket> ctx)
     {
-        ModMessages.isOnSideOrThrow(ctx.side(), Side.CLIENT);
-        
+        ModMessages.expectSideOrThrow(ctx.side(), Side.CLIENT);
+        ClientBender.get().chi = ctx.message().chi();
     }
 }

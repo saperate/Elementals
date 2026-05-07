@@ -29,7 +29,7 @@ public record CycleBendingPacket(boolean data) {
 
     public static void handle(PacketContext<CycleBendingPacket> ctx)
     {
-        ModMessages.isOnSideOrThrow(ctx.side(), Side.SERVER);
+        ModMessages.expectSideOrThrow(ctx.side(), Side.SERVER);
         
         CycleBendingPacket packet = ctx.message();
         Bender bender = Bender.getBender(ctx.sender());
