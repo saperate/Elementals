@@ -33,7 +33,7 @@ public record BuyUpgradePacket(String name) {
 
     public static void handle(PacketContext<BuyUpgradePacket> ctx)
     {
-        ModMessages.isOnSideOrThrow(ctx.side(), Side.CLIENT);
+        ModMessages.isOnSideOrThrow(ctx.side(), Side.SERVER);
         
         String name = ctx.message().name();
         ServerPlayer player = ctx.sender();

@@ -5,7 +5,10 @@ import commonnetwork.networking.data.Side;
 import dev.saperate.elementals.Constants;
 import dev.saperate.elementals.network.packets.C2S.AbilityPacket;
 import dev.saperate.elementals.network.packets.C2S.BuyUpgradePacket;
+import dev.saperate.elementals.network.packets.C2S.CycleBendingPacket;
+import dev.saperate.elementals.network.packets.C2S.MouseClickPacket;
 import dev.saperate.elementals.network.packets.S2C.SyncChiPacket;
+import dev.saperate.elementals.network.packets.S2C.SyncElementsPacket;
 import dev.saperate.elementals.network.payload.C2S.*;
 import dev.saperate.elementals.network.payload.S2C.*;
 import net.minecraft.resources.ResourceLocation;
@@ -32,20 +35,18 @@ public class ModMessages {
     public static void registerNetworking() {
         //S2C payloads
         Network.registerPacket(SyncChiPacket.type(), SyncChiPacket.class, SyncChiPacket.STREAM_CODEC, SyncChiPacket::handle);
-        PayloadTypeRegistry.playS2C().register(SyncChiPayload.ID, SyncChiPayload.CODEC);
+        Network.registerPacket(SyncElementsPacket.type(), SyncElementsPacket.class, SyncElementsPacket.STREAM_CODEC, SyncElementsPacket::handle);
         PayloadTypeRegistry.playS2C().register(SyncCurrAbilityPayload.ID, SyncCurrAbilityPayload.CODEC);
-        PayloadTypeRegistry.playS2C().register(SyncElementsPayload.ID, SyncElementsPayload.CODEC);
         PayloadTypeRegistry.playS2C().register(SyncLevelPayload.ID, SyncLevelPayload.CODEC);
         PayloadTypeRegistry.playS2C().register(SyncUpgradeListPayload.ID, SyncUpgradeListPayload.CODEC);
 
         //C2S payloads
         Network.registerPacket(AbilityPacket.type(), AbilityPacket.class, AbilityPacket.STREAM_CODEC, AbilityPacket::handle);
         Network.registerPacket(BuyUpgradePacket.type(), BuyUpgradePacket.class, BuyUpgradePacket.STREAM_CODEC, BuyUpgradePacket::handle);
+        Network.registerPacket(CycleBendingPacket.type(), CycleBendingPacket.class, CycleBendingPacket.STREAM_CODEC, CycleBendingPacket::handle);
+        Network.registerPacket(MouseClickPacket.type(), MouseClickPacket.class, MouseClickPacket.STREAM_CODEC, MouseClickPacket::handle);
         PayloadTypeRegistry.playC2S().register(RequestSyncLevelPayload.ID, RequestSyncLevelPayload.CODEC);
         PayloadTypeRegistry.playC2S().register(RequestSyncUpgradeListPayload.ID, RequestSyncUpgradeListPayload.CODEC);
-        PayloadTypeRegistry.playC2S().register(MousePayload.ID, MousePayload.CODEC);
-        PayloadTypeRegistry.playC2S().register(CycleBendingPayload.ID, CycleBendingPayload.CODEC);
-        PayloadTypeRegistry.playC2S().register(BuyUpgradePayload.ID, BuyUpgradePayload.CODEC);
         PayloadTypeRegistry.playC2S().register(ToggleUpgradePayload.ID, ToggleUpgradePayload.CODEC);
         PayloadTypeRegistry.playC2S().register(SyncVersionPayload.ID, SyncVersionPayload.CODEC);
     }

@@ -1,5 +1,6 @@
 package dev.saperate.elementals.data;
 
+import commonnetwork.api.Network;
 import dev.saperate.elementals.Elementals;
 import dev.saperate.elementals.commands.BendingCommand;
 import dev.saperate.elementals.effects.ElementalsStatusEffects;
@@ -251,8 +252,7 @@ public class Bender {
         CompoundTag nbt = new CompoundTag();
         nbt.putString("packedElements",packageElementsIntoString(plrData.elements));
         nbt.putInt("activeElement",plrData.activeElementIndex);
-
-        ServerPlayNetworking.send((ServerPlayer) player, new SyncElementsPayload(nbt));
+        Network.getNetworkHandler().sendToClient(new SyncElementsPayload(nbt), player);
     }
 
     public static void syncAbility(Bender bender) {

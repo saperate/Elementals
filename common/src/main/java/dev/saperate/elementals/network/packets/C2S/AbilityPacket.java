@@ -29,7 +29,7 @@ public record AbilityPacket(int index, boolean isStart) {
 
     public static void handle(PacketContext<AbilityPacket> ctx)
     {
-        ModMessages.isOnSideOrThrow(ctx.side(), Side.CLIENT);
+        ModMessages.isOnSideOrThrow(ctx.side(), Side.SERVER);
         
         AbilityPacket packet = ctx.message();
         Bender.getBender(ctx.sender()).bend(packet.index, packet.isStart());
