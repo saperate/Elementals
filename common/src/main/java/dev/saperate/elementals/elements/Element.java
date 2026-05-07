@@ -1,15 +1,10 @@
 package dev.saperate.elementals.elements;
 
-import dev.saperate.elementals.Elementals;
 import dev.saperate.elementals.data.Bender;
-import dev.saperate.elementals.data.PlayerData;
-import dev.saperate.elementals.elements.earth.EarthElement;
-import dev.saperate.elementals.utils.SapsUtils;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.Identifier;
-import net.minecraft.world.World;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
 
+import javax.annotation.Nullable;
 import java.util.*;
 
 import static dev.saperate.elementals.Elementals.MODID;
@@ -82,15 +77,15 @@ public abstract class Element{
         return name;
     }
 
-    public NbtCompound onSave(HashMap<Upgrade,Boolean> plrUpgrades){
-        NbtCompound nbt = new NbtCompound();
+    public CompoundTag onSave(HashMap<Upgrade,Boolean> plrUpgrades){
+        CompoundTag nbt = new CompoundTag();
         for(Upgrade child : root.children){
             child.onSave(nbt,plrUpgrades);
         }
         return nbt;
     }
 
-    public void onRead(NbtCompound nbt, HashMap<Upgrade,Boolean> plrUpgrades){
+    public void onRead(CompoundTag nbt, HashMap<Upgrade,Boolean> plrUpgrades){
         for(Upgrade child : root.children){
             child.onRead(nbt,plrUpgrades);
         }
@@ -116,15 +111,16 @@ public abstract class Element{
         return 0xFF13AEA9;
     }
 
-    public Identifier getGuiBackgroundIdentifier(){
-        return Identifier.of(MODID,"textures/gui/default_gui_background.png");
+    public ResourceLocation getGuiBackgroundIdentifier(){
+        return ResourceLocation.fromNamespaceAndPath(MODID,"textures/gui/default_gui_background.png");
     }
 
     public int getTertiaryColor(){
         return 0xFFffef00;
     }
     
-    public Identifier getOverlayTexture(){
+    @Nullable
+    public ResourceLocation getOverlayTexture(){
         return null;
     }
     

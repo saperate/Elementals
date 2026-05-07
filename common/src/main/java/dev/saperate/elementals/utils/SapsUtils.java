@@ -2,6 +2,8 @@ package dev.saperate.elementals.utils;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import dev.saperate.elementals.elements.Element;
+import dev.saperate.elementals.items.ElementalsItems;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
@@ -11,6 +13,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -238,13 +241,13 @@ public final class SapsUtils {
     }
 
 
-    public static void serverSummonParticles(ServerLevel world, ParticleOptions type, Entity entity, Random rnd,
+    public static void serverSummonParticles(ServerLevel world, ParticleOptions type, Entity entity, RandomSource rnd,
                                              double vX, double vY, double vZ, double speed, int count,
                                              float offsetX, float offsetY, float offsetZ, float vAmplitude) {
         serverSummonParticles(world, type, entity.position(), rnd, vX, vY, vZ, speed, count, offsetX, offsetY, offsetZ, vAmplitude);
     }
 
-    public static void serverSummonParticles(ServerLevel world, ParticleOptions type, Vec3 pos, Random rnd,
+    public static void serverSummonParticles(ServerLevel world, ParticleOptions type, Vec3 pos, RandomSource rnd,
                                              double vX, double vY, double vZ, double speed, int count,
                                              float offsetX, float offsetY, float offsetZ, float vAmplitude) {
         for (int i = 0; i < count; i++) {
@@ -425,7 +428,7 @@ public final class SapsUtils {
 
     public static void launchEntity(Entity entity, float power, boolean reduceYVelocity) {
         if (entity instanceof Player player && !player.onGround()
-                && hasItemInEitherHands(player, ElementalItems.GLIDER_ITEM)) {
+                && hasItemInEitherHands(player, ElementalsItems.GLIDER_ITEM)) {
             power *= 0.5f;
         }
 

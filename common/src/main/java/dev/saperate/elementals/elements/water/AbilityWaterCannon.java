@@ -4,13 +4,12 @@ import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.effects.ElementalsStatusEffects;
 import dev.saperate.elementals.elements.Ability;
-import dev.saperate.elementals.entities.water.WaterJetEntity;
 import dev.saperate.elementals.utils.MathHelper;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.particle.ParticleTypes;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3f;
 
 import static dev.saperate.elementals.utils.SapsUtils.getEntityLookVector;
@@ -28,7 +27,7 @@ public class AbilityWaterCannon implements Ability {
             return;
         }
 
-        PlayerEntity player = bender.player;
+        Player player = bender.player;
         Vector3f pos = WaterElement.canBend(player, true);
 
         if (pos != null) {
@@ -40,39 +39,25 @@ public class AbilityWaterCannon implements Ability {
     }
 
     @Override
-    public void onLeftClick(Bender bender, boolean started) {
-
-    }
-
-    @Override
-    public void onMiddleClick(Bender bender, boolean started) {
-
-    }
-
-    @Override
-    public void onRightClick(Bender bender, boolean started) {
-    }
-
-    @Override
     public void onTick(Bender bender) {
         int chargeTime = (int) ((Object[]) bender.abilityData)[0];
         ((Object[]) bender.abilityData)[0] = chargeTime - 1;
 
         if (chargeTime == 0) {//Just got done charging
-            PlayerEntity player = bender.player;
-            Vec3d pos = getEntityLookVector(player, .5f);
+            Player player = bender.player;
+            Vec3 pos = getEntityLookVector(player, .5f);
 
-            WaterJetEntity parent = new WaterJetEntity(player.getWorld(), player, pos.x, pos.y, pos.z);
+            WaterJetEntity parent = new WaterJetEntity(player.level(), player, pos.x, pos.y, pos.z);
             ((Object[]) bender.abilityData)[1] = parent;
             parent.setStreamSize(4);
             parent.setRange(20);
-            player.getWorld().spawnEntity(parent);
+            player.level().addFreshEntity(parent);
 
-            WaterJetEntity child = new WaterJetEntity(player.getWorld(), player, pos.x, pos.y, pos.z);
+            WaterJetEntity child = new WaterJetEntity(player.level(), player, pos.x, pos.y, pos.z);
             parent.setChild(child);
             parent.setStreamSize(4);
             parent.setRange(20);
-            player.getWorld().spawnEntity(child);
+            player.level().addFreshEntity(child);
 
             PlayerData plrData = PlayerData.get(player);
             if (plrData.canUseUpgrade("waterCannonRangeI")) {
@@ -87,8 +72,8 @@ public class AbilityWaterCannon implements Ability {
         } else if (chargeTime == -60) {//Reached end of life
             onRemove(bender);
         } else if (chargeTime > 0) {//charging
-            PlayerEntity player = bender.player;
-            serverSummonParticles((ServerWorld) player.getWorld(),
+            Player player = bender.player;
+            serverSummonParticles((ServerLevel) player.level(),
                     ParticleTypes.SPLASH, player, player.getRandom(),
                     0, 0.25f, 0,
                     0.1f, 2,
@@ -100,7 +85,7 @@ public class AbilityWaterCannon implements Ability {
             entity.setStreamSize(newSize);
             entity.getChild().setStreamSize(newSize);
         }
-        bender.player.addStatusEffect(new StatusEffectInstance(ElementalsStatusEffects.STATIONARY, 1, 1, false, false, false));
+        bender.player.addEffect(new MobEffectInstance(ElementalsStatusEffects.STATIONARY, 1, 1, false, false, false));
     }
 
     @Override

@@ -3,7 +3,6 @@ package dev.saperate.elementals.elements.water;
 import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.elements.Ability;
-import dev.saperate.elementals.elements.fire.FireElement;
 
 public class AbilityWater2 implements Ability {
     @Override
@@ -18,7 +17,7 @@ public class AbilityWater2 implements Ability {
             WaterElement.get().getAbility(7).onCall(bender, deltaT);
             return;
         }
-        if (bender.player.isSneaking()) {
+        if (bender.player.isCrouching()) {
             if (playerData.canUseUpgrade("waterBlade")) {
                 WaterElement.get().getAbility(9).onCall(bender, deltaT);
                 return;
@@ -28,26 +27,6 @@ public class AbilityWater2 implements Ability {
             }
         }
         WaterElement.get().getAbility(3).onCall(bender, deltaT);
-    }
-
-    @Override
-    public void onLeftClick(Bender bender, boolean started) {
-
-    }
-
-    @Override
-    public void onMiddleClick(Bender bender, boolean started) {
-
-    }
-
-    @Override
-    public void onRightClick(Bender bender, boolean started) {
-
-    }
-
-    @Override
-    public void onTick(Bender bender) {
-
     }
 
     @Override

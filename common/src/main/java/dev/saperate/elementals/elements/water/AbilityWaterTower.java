@@ -3,20 +3,10 @@ package dev.saperate.elementals.elements.water;
 import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.elements.Ability;
-import dev.saperate.elementals.entities.water.WaterCubeEntity;
-import dev.saperate.elementals.entities.water.WaterJetEntity;
-import dev.saperate.elementals.entities.water.WaterTowerEntity;
-import net.minecraft.block.Blocks;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.MovementType;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.particle.ParticleTypes;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.Vec3d;
-import org.joml.Vector3f;
+import net.minecraft.world.entity.MoverType;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
 
 import static dev.saperate.elementals.utils.SapsUtils.*;
 
@@ -40,18 +30,18 @@ public class AbilityWaterTower implements Ability {
             onRemove(bender);
         } else {
             bender.setCurrAbility(null);
-            PlayerEntity player = bender.player;
+            Player player = bender.player;
 
-            if (player.isTouchingWaterOrRain()) {
-                player.addVelocity(0, 1, 0);
-                player.velocityModified = true;
-                player.move(MovementType.PLAYER, player.getVelocity());
+            if (player.isInWaterOrRain()) {
+                player.addDeltaMovement(new Vec3(0, 1, 0));
+                player.hurtMarked = true; //TODO Verify this works
+                player.move(MoverType.PLAYER, player.getDeltaMovement());
             }
 
-            WaterTowerEntity entity = new WaterTowerEntity(player.getWorld(), player);
-            entity.setOwnerCouldFly(player.getAbilities().allowFlying);
+            WaterTowerEntity entity = new WaterTowerEntity(player.level(), player);
+            entity.setOwnerCouldFly(player.getAbilities().mayfly);
             bender.abilityData = entity;
-            bender.addBackgroundAbility(this, makeAbilityData(entity, player.getAbilities().allowFlying));
+            bender.addBackgroundAbility(this, makeAbilityData(entity, player.getAbilities().mayfly));
 
             int height = 10;
             PlayerData plrData = PlayerData.get(player);
@@ -60,7 +50,7 @@ public class AbilityWaterTower implements Ability {
             }
             entity.setMaxTowerHeight(height);
 
-            player.getWorld().spawnEntity(entity);
+            player.level().addFreshEntity(entity);
         }
     }
 
@@ -75,7 +65,7 @@ public class AbilityWaterTower implements Ability {
             return;
         }
 
-        PlayerEntity player = bender.player;
+        Player player = bender.player;
         WaterTowerEntity entity = getEntity(bender);
 
         int height = 10;
@@ -84,13 +74,13 @@ public class AbilityWaterTower implements Ability {
             height = 15;
         }
 
-        BlockHitResult hit = raycastBlockCustomRotation(player, height, true, new Vec3d(0, -1, 0));
+        BlockHitResult hit = raycastBlockCustomRotation(player, height, true, new Vec3(0, -1, 0));
 
         boolean isAir = hit == null;
 
-        if (!player.isSubmergedInWater() && (player.isOnGround()
+        if (!player.isUnderWater() && (player.onGround()
                 || entity.getY() - 0.25f > player.getY()
-                || (!isAir && !WaterElement.isBlockBendable(hit.getBlockPos(), player.getWorld(), false, plrData.canUseUpgrade("waterPickupEfficiencyI"))))) {
+                || (!isAir && !WaterElement.isBlockBendable(hit.getBlockPos(), player.level(), false, plrData.canUseUpgrade("waterPickupEfficiencyI"))))) {
             onRemove(bender);
             return;
         }
@@ -98,7 +88,7 @@ public class AbilityWaterTower implements Ability {
         if (entity == null) {
             return;
         }
-        entity.setPosition(hit.getPos());
+        entity.setPosition(hit.getLocation());
     }
 
     @Override

@@ -3,19 +3,17 @@ package dev.saperate.elementals.elements.water;
 import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.elements.Ability;
-import dev.saperate.elementals.entities.water.WaterHelmetEntity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.hit.EntityHitResult;
-import net.minecraft.util.hit.HitResult;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.HitResult;
 
 import static dev.saperate.elementals.utils.SapsUtils.*;
 
 public class AbilityWaterSuffocate implements Ability {
     @Override
     public void onCall(Bender bender, long deltaT) {
-        PlayerEntity player = bender.player;
+        Player player = bender.player;
         PlayerData plrData = PlayerData.get(player);
         if (!bender.reduceChi(5)) {
             if (bender.abilityData == null) {
@@ -41,10 +39,10 @@ public class AbilityWaterSuffocate implements Ability {
         EntityHitResult eHit = (EntityHitResult) hit;
         if (eHit.getEntity() instanceof LivingEntity victim) {
 
-            WaterHelmetEntity entity = new WaterHelmetEntity(player.getWorld(), victim, player.getX(), player.getY(), player.getZ());
+            WaterHelmetEntity entity = new WaterHelmetEntity(player.level(), victim, player.getX(), player.getY(), player.getZ());
             entity.suffocate = true;
             entity.setCaster(player);
-            player.getWorld().spawnEntity(entity);
+            player.level().addFreshEntity(entity);
             entity.setRange(range);
 
             bender.abilityData = entity;
@@ -73,10 +71,10 @@ public class AbilityWaterSuffocate implements Ability {
         }
 
         double distance = ((WaterHelmetEntity)bender.abilityData)
-                .getOwner().getPos().subtract(bender.player.getPos()).length();
+                .getOwner().getPos().subtract(bender.player.position()).length();
 
 
-        if (!bender.player.isSneaking()
+        if (!bender.player.isCrouching()
                 || distance > 15) {
             onRemove(bender);
         }

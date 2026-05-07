@@ -10,9 +10,6 @@ import dev.saperate.elementals.commands.BendingCommand;
 import dev.saperate.elementals.network.packets.S2C.SyncChiPacket;
 import dev.saperate.elementals.network.packets.S2C.SyncCurrAbilityPacket;
 import dev.saperate.elementals.network.packets.S2C.SyncElementsPacket;
-import dev.saperate.elementals.network.payload.S2C.SyncChiPayload;
-import dev.saperate.elementals.network.payload.S2C.SyncCurrAbilityPayload;
-import dev.saperate.elementals.network.payload.S2C.SyncElementsPayload;
 import dev.saperate.elementals.utils.SapsUtils;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -100,7 +97,7 @@ public class Bender {
 
         backgroundAbilities.forEach((Ability ability, Object data) -> ability.onBackgroundTick(this, data));
 
-        if(player.age % 20 == 0 && currAbility != null && currAbility.shouldImmobilizePlayer(player)){
+        if(player.tickCount % 20 == 0 && currAbility != null && currAbility.shouldImmobilizePlayer(player)){
             player.addEffect(new MobEffectInstance(ElementalsStatusEffects.STATIONARY,20,0,false,false,true));
         }
 

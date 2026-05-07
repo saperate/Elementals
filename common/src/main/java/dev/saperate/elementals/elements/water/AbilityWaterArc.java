@@ -3,17 +3,15 @@ package dev.saperate.elementals.elements.water;
 import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.elements.Ability;
-import dev.saperate.elementals.entities.water.WaterArcEntity;
-import dev.saperate.elementals.entities.water.WaterBladeEntity;
-import dev.saperate.elementals.entities.water.WaterCubeEntity;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.world.entity.player.Player;
 import org.joml.Vector3f;
 
-public class AbilityWaterBlade implements Ability {
-
+public class AbilityWaterArc implements Ability {
     @Override
     public void onCall(Bender bender, long deltaT) {
-        if (!bender.reduceChi(15)) {
+        Player player = bender.player;
+        int chi = PlayerData.get(player).canUseUpgrade("waterArcEfficiencyI") ? 5 : 15;
+        if (!bender.reduceChi(chi)) {
             if (bender.abilityData == null) {
                 bender.setCurrAbility(null);
             } else {
@@ -22,18 +20,13 @@ public class AbilityWaterBlade implements Ability {
             return;
         }
 
-        PlayerEntity player = bender.player;
         Vector3f pos = WaterElement.canBend(player, true);
 
         if (pos != null) {
-            WaterBladeEntity entity = new WaterBladeEntity(player.getWorld(), player, pos.x, pos.y, pos.z);
+            WaterArcEntity entity = new WaterArcEntity(player.level(), player, pos.x, pos.y, pos.z);
             bender.abilityData = entity;
-            player.getWorld().spawnEntity(entity);
-
-            PlayerData plrData = PlayerData.get(player);
-            if (plrData.canUseUpgrade("waterBladeDamageI")) {
-                entity.setDamage(10);
-            }
+            entity.createChain(player);
+            player.level().addFreshEntity(entity);
 
             bender.setCurrAbility(this);
         } else {
@@ -41,58 +34,51 @@ public class AbilityWaterBlade implements Ability {
         }
     }
 
-
     @Override
     public void onLeftClick(Bender bender, boolean started) {
-        WaterBladeEntity entity = (WaterBladeEntity) bender.abilityData;
-        if (entity == null) {
-            onRemove(bender);
+        WaterArcEntity entity = (WaterArcEntity) bender.abilityData;
+        if(entity != null && entity.age <= 2){
             return;
         }
         onRemove(bender);
-        float speed = 1;
+        if (entity == null) {
+            return;
+        }
         PlayerData plrData = PlayerData.get(bender.player);
-        if (plrData.canUseUpgrade("waterBladeSpeedII")) {
+
+        float speed = 1;
+        if (plrData.canUseUpgrade("waterArcSpeedII")) {
             speed = 2;
-        } else if (plrData.canUseUpgrade("waterBladeSpeedI")) {
+        } else if (plrData.canUseUpgrade("waterArcSpeedI")) {
             speed = 1.5f;
         }
-        entity.setVelocity(bender.player, bender.player.getPitch(), bender.player.getYaw(), 0, speed, 0);
-    }
-
-    @Override
-    public void onMiddleClick(Bender bender, boolean started) {
-
+        entity.setVelocity(bender.player, bender.player.getXRot(), bender.player.getYRot(), 0, speed, 0);
     }
 
     @Override
     public void onRightClick(Bender bender, boolean started) {
         PlayerEntity player = bender.player;
         if (WaterElement.tryStoreWater(player)) {
-            WaterBladeEntity entity = (WaterBladeEntity) bender.abilityData;
+            WaterArcEntity entity = (WaterArcEntity) bender.abilityData;
             if (entity == null) {
                 return;
             }
-            entity.discard();
+            entity.remove();
             bender.setCurrAbility(null);
             return;
         }
         onRemove(bender);
     }
-
-    @Override
-    public void onTick(Bender bender) {
-
-    }
+    
 
     @Override
     public void onRemove(Bender bender) {
-        WaterBladeEntity entity = (WaterBladeEntity) bender.abilityData;
+        bender.setCurrAbility(null);
+        WaterArcEntity entity = (WaterArcEntity) bender.abilityData;
         if (entity == null) {
             return;
         }
         entity.setControlled(false);
-        bender.setCurrAbility(null);
     }
 
 }

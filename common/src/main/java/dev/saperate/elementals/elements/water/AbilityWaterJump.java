@@ -3,9 +3,9 @@ package dev.saperate.elementals.elements.water;
 import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.elements.Ability;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.particle.ParticleTypes;
-import net.minecraft.server.world.ServerWorld;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.player.Player;
 
 import static dev.saperate.elementals.utils.SapsUtils.launchEntity;
 import static dev.saperate.elementals.utils.SapsUtils.serverSummonParticles;
@@ -19,7 +19,7 @@ public class AbilityWaterJump implements Ability {
             return;
         }
 
-        PlayerEntity player = bender.player;
+        Player player = bender.player;
         PlayerData plrData = PlayerData.get(player);
 
         float power = 2;
@@ -33,32 +33,12 @@ public class AbilityWaterJump implements Ability {
         launchEntity(player,power);
         player.fallDistance = 0;
 
-        serverSummonParticles((ServerWorld) player.getWorld(),
+        serverSummonParticles((ServerLevel) player.level(),
                 ParticleTypes.SPLASH, player, player.getRandom(),
                 0, 0.1f, 0,
                 0.1f, 4,
                 0, -0.5f, 0, 0);
         bender.setCurrAbility(null);
-    }
-
-    @Override
-    public void onLeftClick(Bender bender, boolean started) {
-
-    }
-
-    @Override
-    public void onMiddleClick(Bender bender, boolean started) {
-
-    }
-
-    @Override
-    public void onRightClick(Bender bender, boolean started) {
-
-    }
-
-    @Override
-    public void onTick(Bender bender) {
-
     }
 
     @Override

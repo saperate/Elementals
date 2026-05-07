@@ -1,28 +1,23 @@
 package dev.saperate.elementals.elements.water;
 
-import dev.saperate.elementals.Elementals;
 import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.elements.Element;
 import dev.saperate.elementals.elements.Upgrade;
-import dev.saperate.elementals.items.ElementalItems;
+import dev.saperate.elementals.items.ElementalsItems;
 import dev.saperate.elementals.items.WaterPouchItem;
-import net.minecraft.block.*;
-import net.minecraft.component.DataComponentTypes;
-import net.minecraft.component.type.PotionContentsComponent;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.fluid.Fluids;
-import net.minecraft.item.Items;
-import net.minecraft.item.PotionItem;
-import net.minecraft.potion.Potion;
-import net.minecraft.potion.Potions;
-import net.minecraft.state.property.Properties;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.alchemy.PotionContents;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
 import org.joml.Vector3f;
 
 import static dev.saperate.elementals.Elementals.BENDING_GRIEFING;
@@ -133,7 +128,7 @@ public class WaterElement extends Element {
         addAbility(new AbilityWaterJump());
     }
 
-    public static Vector3f canBend(PlayerEntity player, boolean consumeWater) {//todo make it so some abilities still consume water, even though you might have efficiency unlocked
+    public static Vector3f canBend(Player player, boolean consumeWater) {//todo make it so some abilities still consume water, even though you might have efficiency unlocked
         if (isBeingRainedOn(player)) {
             return getEntityLookVector(player, 2).toVector3f();
         }
@@ -146,23 +141,23 @@ public class WaterElement extends Element {
             range = 10;
         }
 
-        BlockHitResult hit = (BlockHitResult) player.raycast(range, 1, true);
+        BlockHitResult hit = (BlockHitResult) player.pick(range, 1, true);
 
-        BlockState blockState = player.getEntityWorld().getBlockState(hit.getBlockPos());
+        BlockState blockState = player.level().getBlockState(hit.getBlockPos());
 
         boolean hasEfficiency = plrData.canUseUpgrade("waterPickupEfficiencyI");
 
-        if (hit.getType() == HitResult.Type.BLOCK && isBlockBendable(hit.getBlockPos(), player.getWorld(), !hasEfficiency, hasEfficiency)) {
-            if (consumeWater && player.getWorld().getGameRules().getBoolean(BENDING_GRIEFING)) {
-                if (blockState.contains(Properties.WATERLOGGED) && blockState.get(Properties.WATERLOGGED)) {
-                    player.getWorld().setBlockState(hit.getBlockPos(), blockState.with(Properties.WATERLOGGED, false), 3);
+        if (hit.getType() == HitResult.Type.BLOCK && isBlockBendable(hit.getBlockPos(), player.level(), !hasEfficiency, hasEfficiency)) {
+            if (consumeWater && player.level().getGameRules().getBoolean(BENDING_GRIEFING)) {
+                if (blockState.hasProperty(BlockStateProperties.WATERLOGGED) && blockState.getValue(BlockStateProperties.WATERLOGGED)) {
+                    player.level().setBlockAndUpdate(hit.getBlockPos(), blockState.setValue(BlockStateProperties.WATERLOGGED, false));
                 } else if (blockState.getBlock().equals(Blocks.WATER_CAULDRON)) {
-                    player.getWorld().setBlockState(hit.getBlockPos(),Blocks.CAULDRON.getDefaultState());
+                    player.level().setBlockAndUpdate(hit.getBlockPos(),Blocks.CAULDRON.defaultBlockState());
                 } else {
-                    player.getWorld().setBlockState(hit.getBlockPos(), Blocks.AIR.getDefaultState());
+                    player.level().setBlockAndUpdate(hit.getBlockPos(), Blocks.AIR.defaultBlockState());
                 }
             }
-            return hit.getPos().toVector3f();
+            return hit.getLocation().toVector3f();
         }
 
         if (tryRetrieveWater(player)) {
@@ -170,13 +165,13 @@ public class WaterElement extends Element {
         }
 
         if(plrData.canUseUpgrade("bloodBag")){
-            player.damage(player.getDamageSources().dryOut(),2);
+            player.hurt(player.damageSources().dryOut(),2);
             return getEntityLookVector(player, 2.5f).toVector3f();
         }
         return null;
     }
 
-    public static boolean isBlockBendable(BlockPos pos, World world, boolean requireFullBlock, boolean canUseDiverseBlocks) {
+    public static boolean isBlockBendable(BlockPos pos, Level world, boolean requireFullBlock, boolean canUseDiverseBlocks) {
         BlockState bState = world.getBlockState(pos);
         Block block = bState.getBlock();
 
@@ -194,14 +189,13 @@ public class WaterElement extends Element {
                                 || block.equals(Blocks.TALL_GRASS)
                                 || block.equals(Blocks.CACTUS)
                                 || block instanceof LeavesBlock
-                                || block instanceof PlantBlock
-                                || block instanceof AbstractPlantBlock
+                                || block instanceof GrowingPlantBlock
                 ) && !block.equals(Blocks.DEAD_BUSH)
         ) {
             return true;
         }
 
-        return (bState.contains(Properties.WATERLOGGED) && bState.get(Properties.WATERLOGGED) && !requireFullBlock);
+        return (bState.hasProperty(BlockStateProperties.WATERLOGGED) && bState.getValue(BlockStateProperties.WATERLOGGED) && !requireFullBlock);
     }
 
 
@@ -211,13 +205,13 @@ public class WaterElement extends Element {
      * @param player The player where the water will be placed
      * @return true if water was placed in the player's inventory
      */
-    public static boolean tryStoreWater(PlayerEntity player){
-        return player.getInventory().containsAny((stack) -> {
+    public static boolean tryStoreWater(Player player){
+        return player.getInventory().hasAnyMatching((stack) -> {
             if(stack.getItem().equals(Items.GLASS_BOTTLE)){
-                stack.decrement(1);
-                player.getInventory().insertStack(Items.POTION.getDefaultStack());
+                stack.shrink(1);
+                player.getInventory().add(Items.POTION.getDefaultInstance());
                 return true;
-            } else if (stack.getItem().equals(ElementalItems.WATER_POUCH_ITEM)) {
+            } else if (stack.getItem().equals(ElementalsItems.WATER_POUCH_ITEM)) {
                 WaterPouchItem item = (WaterPouchItem) stack.getItem();
                 return item.fillPouch(stack,1);
             }
@@ -231,15 +225,15 @@ public class WaterElement extends Element {
      * @param player The player where the water will be taken
      * @return true if water was taken from the player's inventory
      */
-    public static boolean tryRetrieveWater(PlayerEntity player){
-        return player.getInventory().containsAny((stack) -> {
-            PotionContentsComponent contents = stack.get(DataComponentTypes.POTION_CONTENTS);
+    public static boolean tryRetrieveWater(Player player){
+        return player.getInventory().hasAnyMatching((stack) -> {
+            PotionContents contents = stack.get(DataComponents.POTION_CONTENTS);
 
             if (contents != null && !contents.hasEffects()) {
-                player.getInventory().removeOne(stack);
-                player.getInventory().insertStack(Items.GLASS_BOTTLE.getDefaultStack());
+                player.getInventory().removeItem(stack);
+                player.getInventory().add(Items.GLASS_BOTTLE.getDefaultInstance());
                 return true;
-            } else if (stack.getItem().equals(ElementalItems.WATER_POUCH_ITEM)) {
+            } else if (stack.getItem().equals(ElementalsItems.WATER_POUCH_ITEM)) {
                 WaterPouchItem item = (WaterPouchItem) stack.getItem();
                 return item.emptyPouch(stack,1);
             }
@@ -256,22 +250,22 @@ public class WaterElement extends Element {
      * @param pos the position where water will try to be placed
      * @return whether water was placed
      */
-    public static boolean placeWater(BlockPos pos, World world){
-        if(world.getRegistryKey().equals(World.NETHER) || !world.getGameRules().getBoolean(BENDING_GRIEFING)){
+    public static boolean placeWater(BlockPos pos, Level world){
+        if(world.dimension().equals(Level.NETHER) || !world.getGameRules().getBoolean(BENDING_GRIEFING)){
             //TODO add smoke particles or smth
             return true;
         }
         BlockState bState = world.getBlockState(pos);
 
-        if(bState.getBlock() instanceof FluidFillable fillable){
-            boolean success = fillable.tryFillWithFluid(world,pos,bState, Fluids.WATER.getDefaultState());
+        if(bState.getBlock() instanceof LiquidBlockContainer fillable){
+            boolean success = fillable.placeLiquid(world,pos,bState, Fluids.WATER.defaultFluidState());
             if(success){
                 return true;
             }
         }
 
-        if(bState.canBucketPlace(Fluids.WATER)){
-            return world.setBlockState(pos, Blocks.WATER.getDefaultState());
+        if(bState.canBeReplaced(Fluids.WATER)){
+            return world.setBlockAndUpdate(pos, Blocks.WATER.defaultBlockState());
         }
         return false;
     }

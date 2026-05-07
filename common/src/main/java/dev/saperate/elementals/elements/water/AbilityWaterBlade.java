@@ -4,16 +4,17 @@ import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.elements.Ability;
 import dev.saperate.elementals.entities.water.WaterArcEntity;
+import dev.saperate.elementals.entities.water.WaterBladeEntity;
 import dev.saperate.elementals.entities.water.WaterCubeEntity;
-import dev.saperate.elementals.entities.water.WaterHealingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.world.entity.player.Player;
 import org.joml.Vector3f;
 
-public class AbilityWaterHealing implements Ability {
+public class AbilityWaterBlade implements Ability {
 
     @Override
     public void onCall(Bender bender, long deltaT) {
-        if (!bender.reduceChi(30)) {
+        if (!bender.reduceChi(15)) {
             if (bender.abilityData == null) {
                 bender.setCurrAbility(null);
             } else {
@@ -21,19 +22,18 @@ public class AbilityWaterHealing implements Ability {
             }
             return;
         }
-        PlayerEntity player = bender.player;
+
+        Player player = bender.player;
         Vector3f pos = WaterElement.canBend(player, true);
 
         if (pos != null) {
-            WaterHealingEntity entity = new WaterHealingEntity(player.getWorld(), player, pos.x, pos.y, pos.z);
+            WaterBladeEntity entity = new WaterBladeEntity(player.level(), player, pos.x, pos.y, pos.z);
             bender.abilityData = entity;
-            player.getWorld().spawnEntity(entity);
+            player.level().addFreshEntity(entity);
 
             PlayerData plrData = PlayerData.get(player);
-            if (plrData.canUseUpgrade("waterHealingEfficiencyII")) {
-                entity.setHealing(4);
-            } else if (plrData.canUseUpgrade("waterHealingEfficiencyI")) {
-                entity.setHealing(2);
+            if (plrData.canUseUpgrade("waterBladeDamageI")) {
+                entity.setDamage(10);
             }
 
             bender.setCurrAbility(this);
@@ -45,25 +45,27 @@ public class AbilityWaterHealing implements Ability {
 
     @Override
     public void onLeftClick(Bender bender, boolean started) {
-        WaterHealingEntity entity = (WaterHealingEntity) bender.abilityData;
-        onRemove(bender);
+        WaterBladeEntity entity = (WaterBladeEntity) bender.abilityData;
         if (entity == null) {
+            onRemove(bender);
             return;
         }
-
-        entity.setVelocity(bender.player, bender.player.getPitch(), bender.player.getYaw(), 0, 1, 0);
-    }
-
-    @Override
-    public void onMiddleClick(Bender bender, boolean started) {
-
+        onRemove(bender);
+        float speed = 1;
+        PlayerData plrData = PlayerData.get(bender.player);
+        if (plrData.canUseUpgrade("waterBladeSpeedII")) {
+            speed = 2;
+        } else if (plrData.canUseUpgrade("waterBladeSpeedI")) {
+            speed = 1.5f;
+        }
+        entity.setVelocity(bender.player, bender.player.getXRot(), bender.player.getYRot(), 0, speed, 0);
     }
 
     @Override
     public void onRightClick(Bender bender, boolean started) {
-        PlayerEntity player = bender.player;
+        Player player = bender.player;
         if (WaterElement.tryStoreWater(player)) {
-            WaterHealingEntity entity = (WaterHealingEntity) bender.abilityData;
+            WaterBladeEntity entity = (WaterBladeEntity) bender.abilityData;
             if (entity == null) {
                 return;
             }
@@ -75,13 +77,8 @@ public class AbilityWaterHealing implements Ability {
     }
 
     @Override
-    public void onTick(Bender bender) {
-
-    }
-
-    @Override
     public void onRemove(Bender bender) {
-        WaterHealingEntity entity = (WaterHealingEntity) bender.abilityData;
+        WaterBladeEntity entity = (WaterBladeEntity) bender.abilityData;
         if (entity == null) {
             return;
         }

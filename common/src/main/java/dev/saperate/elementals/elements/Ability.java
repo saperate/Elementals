@@ -1,8 +1,8 @@
 package dev.saperate.elementals.elements;
 
 import dev.saperate.elementals.data.Bender;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
 public interface Ability {
@@ -22,9 +22,9 @@ public interface Ability {
 
     void onRemove(Bender bender);
     
-    default @Nullable Vec3d pointArmsTowards(){return null;}//TODO implement so that we can make bending look better
+    default @Nullable Vec3 pointArmsTowards(){return null;}//TODO implement so that we can make bending look better
 
-    default boolean shouldImmobilizePlayer(PlayerEntity player) {return false;}
+    default boolean shouldImmobilizePlayer(Player player) {return false;}
 
     /**
      * Takes in an ability as a parameter and returns the class name with the word "Ability" removed

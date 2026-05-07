@@ -3,13 +3,15 @@ package dev.saperate.elementals.elements.water;
 import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.elements.Ability;
-import dev.saperate.elementals.entities.water.WaterArcEntity;
-import net.minecraft.block.Blocks;
-import net.minecraft.entity.MovementType;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.particle.ParticleTypes;
-import net.minecraft.server.world.ServerWorld;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.MoverType;
+import net.minecraft.world.entity.player.Player;
 import org.joml.Vector3f;
+
+import java.util.Random;
 
 import static dev.saperate.elementals.utils.SapsUtils.getEntityLookVector;
 import static dev.saperate.elementals.utils.SapsUtils.serverSummonParticles;
@@ -22,19 +24,10 @@ public class AbilityWaterSurf implements Ability {
     }
 
     @Override
-    public void onLeftClick(Bender bender, boolean started) {
-
-    }
-
-    @Override
     public void onMiddleClick(Bender bender, boolean started) {
         onRemove(bender);
     }
-
-    @Override
-    public void onRightClick(Bender bender, boolean started) {
-
-    }
+    
 
     @Override
     public void onTick(Bender bender) {
@@ -47,11 +40,11 @@ public class AbilityWaterSurf implements Ability {
             return;
         }
 
-        if(bender.player.isSneaking()){
+        if(bender.player.isCrouching()){
             onRemove(bender);
         }
 
-        PlayerEntity player = bender.player;
+        Player player = bender.player;
         float power = 1.35f;
         PlayerData plrData = PlayerData.get(player);
         if (plrData.canUseUpgrade("waterSurfSpeedI")) {
@@ -59,25 +52,26 @@ public class AbilityWaterSurf implements Ability {
         }else if (plrData.canUseUpgrade("waterSurfSpeedII")) {
             power = 1.5f;
         }
-        serverSummonParticles((ServerWorld) player.getWorld(),
+        
+        serverSummonParticles((ServerLevel) player.level(),
                 ParticleTypes.SPLASH, player, player.getRandom(),
-                0, 0.1f, 0,
-                0.1f, 4,
-                0, -0.5f, 0, 0);
-        if(player.isTouchingWater() && !player.isSubmergedInWater()){
+                0d, 0.1d, 0d,
+                0.1d, 4,
+                0f, -0.5f, 0f, 0f);
+        if(player.isInWater() && !player.isUnderWater()){
             //TODO maybe make an upgrade that makes it also work in the rain
             movePlayer(player,bender,power,0);
 
-            serverSummonParticles((ServerWorld) player.getWorld(),
+            serverSummonParticles((ServerLevel) player.level(),
                     ParticleTypes.CLOUD, player, player.getRandom(),
                     0, 0.1f, 0,
                     0.1f, 1,
                     0, -0.5f, 0, 0);
-        } else if (player.isSubmergedInWater()) {
+        } else if (player.isUnderWater()) {
             player.startFallFlying();
             movePlayer(player,bender,power,1);
 
-            serverSummonParticles((ServerWorld) player.getWorld(),
+            serverSummonParticles((ServerLevel) player.level(),
                     ParticleTypes.BUBBLE, player, player.getRandom(),
                     0, 0.1f, 0,
                     0.1f, 5,
@@ -92,13 +86,13 @@ public class AbilityWaterSurf implements Ability {
         bender.setCurrAbility(null);
     }
 
-    private void movePlayer(PlayerEntity player, Bender bender, float power, int yMult){
+    private void movePlayer(Player player, Bender bender, float power, int yMult){
         Vector3f velocity = getEntityLookVector(player, 2)
-                .subtract(player.getEyePos()).multiply(1,yMult,1)
-                .normalize().multiply(power).toVector3f();
-        player.setVelocity(velocity.x, velocity.y, velocity.z);
-        player.velocityModified = true;
-        player.move(MovementType.PLAYER, player.getVelocity());
+                .subtract(player.getEyePosition()).multiply(1,yMult,1)
+                .normalize().scale(power).toVector3f();
+        player.setDeltaMovement(velocity.x, velocity.y, velocity.z);
+        player.hurtMarked = true;
+        player.move(MoverType.PLAYER, player.getDeltaMovement());
         bender.abilityData = true;
     }
 

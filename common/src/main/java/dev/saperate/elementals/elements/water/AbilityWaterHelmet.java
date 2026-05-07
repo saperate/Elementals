@@ -3,10 +3,7 @@ package dev.saperate.elementals.elements.water;
 import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.elements.Ability;
-import dev.saperate.elementals.entities.fire.FireShieldEntity;
-import dev.saperate.elementals.entities.water.WaterHelmetEntity;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.world.entity.player.Player;
 
 
 public class AbilityWaterHelmet implements Ability {
@@ -21,11 +18,11 @@ public class AbilityWaterHelmet implements Ability {
             return;
         }
         bender.setCurrAbility(null);
-        PlayerEntity player = bender.player;
+        Player player = bender.player;
         PlayerData plrData = PlayerData.get(player);
 
-        WaterHelmetEntity entity = new WaterHelmetEntity(player.getWorld(), player, player.getX(), player.getY(), player.getZ());
-        player.getWorld().spawnEntity(entity);
+        WaterHelmetEntity entity = new WaterHelmetEntity(player.level(), player, player.getX(), player.getY(), player.getZ());
+        player.level().addFreshEntity(entity);
         entity.setStealthy(plrData.canUseUpgrade("waterHelmetStealth"));
 
         if(plrData.canUseUpgrade("waterHelmetMastery")){

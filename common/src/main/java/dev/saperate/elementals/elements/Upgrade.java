@@ -1,7 +1,6 @@
 package dev.saperate.elementals.elements;
 
-
-import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.CompoundTag;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -44,8 +43,8 @@ public final class Upgrade {
         this.price = price;
     }
 
-    public void onSave(@NotNull NbtCompound nbtCompound, HashMap<Upgrade,Boolean> plrUpgrades) {
-        NbtCompound nbt = new NbtCompound();
+    public void onSave(@NotNull CompoundTag nbtCompound, HashMap<Upgrade,Boolean> plrUpgrades) {
+        CompoundTag nbt = new CompoundTag();
         if (plrUpgrades.containsKey(this)) {
             nbt.putBoolean("isActive", plrUpgrades.get(this));
             nbtCompound.put(name, nbt);
@@ -55,9 +54,9 @@ public final class Upgrade {
         }
     }
 
-    public void onRead(@NotNull NbtCompound nbtCompound, HashMap<Upgrade,Boolean> plrUpgrades) {
+    public void onRead(@NotNull CompoundTag nbtCompound, HashMap<Upgrade,Boolean> plrUpgrades) {
         if (nbtCompound.contains(name)) {
-            NbtCompound nbt = nbtCompound.getCompound(name);
+            CompoundTag nbt = nbtCompound.getCompound(name);
             plrUpgrades.put(this, nbt.getBoolean("isActive"));
             for (Upgrade c : children) {
                 c.onRead(nbtCompound, plrUpgrades);

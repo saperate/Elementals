@@ -1,14 +1,10 @@
 package dev.saperate.elementals.elements.water;
 
 import dev.saperate.elementals.data.Bender;
-import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.effects.ElementalsStatusEffects;
 import dev.saperate.elementals.elements.Ability;
-import dev.saperate.elementals.entities.fire.FireShieldEntity;
-import dev.saperate.elementals.entities.water.WaterBulletEntity;
-import dev.saperate.elementals.entities.water.WaterShieldEntity;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.player.Player;
 
 public class AbilityWaterShield implements Ability {
     @Override
@@ -21,16 +17,16 @@ public class AbilityWaterShield implements Ability {
             }
             return;
         }
-        PlayerEntity player = bender.player;
+        Player player = bender.player;
 
         if(WaterElement.canBend(player,true) == null){
             bender.setCurrAbility( null);
             return;
         }
 
-        WaterShieldEntity entity = new WaterShieldEntity(player.getWorld(), player, player.getX(), player.getY(), player.getZ());
+        WaterShieldEntity entity = new WaterShieldEntity(player.level(), player, player.getX(), player.getY(), player.getZ());
         bender.abilityData = entity;
-        player.getWorld().spawnEntity(entity);
+        player.level().addFreshEntity(entity);
 
 
         bender.setCurrAbility(this);
@@ -47,8 +43,8 @@ public class AbilityWaterShield implements Ability {
             }
             return;
         }
-        bender.player.addStatusEffect(new StatusEffectInstance(ElementalsStatusEffects.STATIONARY,1,1,false,false,false));
-        if(!bender.player.isSneaking()){
+        bender.player.addEffect(new MobEffectInstance(ElementalsStatusEffects.STATIONARY,1,1,false,false,false));
+        if(!bender.player.isCrouching()){
             onRemove(bender);
         }
     }
