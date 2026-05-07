@@ -18,5 +18,5 @@ public final class ElementalsEnchantments {
                 ResourceLocation.fromNamespaceAndPath(Constants.MODID, name));
     }
 
-    public static void register(){}
+    public static void registerEnchantments(){}
 }

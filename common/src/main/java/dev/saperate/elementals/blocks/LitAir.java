@@ -44,10 +44,6 @@ public class LitAir extends BaseEntityBlock {
         return null;
     }
 
-    public static Block registerBlock() {
-        return ElementalsBlocks.LIT_AIR;
-    }
-
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {

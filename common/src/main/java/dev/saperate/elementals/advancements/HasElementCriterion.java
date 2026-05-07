@@ -25,8 +25,8 @@ public class HasElementCriterion extends SimpleCriterionTrigger<HasElementCriter
     public HasElementCriterion(){
     }
 
-    public ResourceLocation getLocation() {//TODO test if this works
-        return ResourceLocation.withDefaultNamespace(Constants.MODID + "/" + "has_element");
+    public static String getName() {//TODO test if this works
+        return Constants.MODID + "/" + "has_element";
     }
 
     public void trigger(ServerPlayer player) {

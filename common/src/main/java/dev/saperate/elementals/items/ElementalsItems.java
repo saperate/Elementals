@@ -9,19 +9,18 @@ import dev.saperate.elementals.platform.Services;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.*;
+import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraft.world.level.block.entity.BannerPattern;
 
 import java.util.HashSet;
 import java.util.Set;
 
-public class ElementalItems {
+public class ElementalsItems {
 
     public static final TagKey<BannerPattern> AIR_BANNER_PATTERN_TAG = TagKey.create(Registries.BANNER_PATTERN, ResourceLocation.fromNamespaceAndPath("elementals","pattern_item/air_banner_pattern"));
     
@@ -126,7 +125,7 @@ public class ElementalItems {
         return Registry.register(BuiltInRegistries.ITEM, ResourceLocation.fromNamespaceAndPath(Constants.MODID,name), item);
     }
 
-    public static void register() {
+    public static void registerItems() {
         EARTH_ARMOR_SET.add(EARTH_HELMET);
         EARTH_ARMOR_SET.add(EARTH_CHESTPLATE);
         EARTH_ARMOR_SET.add(EARTH_LEGGINGS);
@@ -136,6 +135,9 @@ public class ElementalItems {
         METAL_ARMOR_SET.add(METAL_CHESTPLATE);
         METAL_ARMOR_SET.add(METAL_LEGGINGS);
         METAL_ARMOR_SET.add(METAL_BOOTS);
+
+        DispenserBlock.registerBehavior(BOOMERANG_ITEM,BOOMERANG_ITEM);
+        DispenserBlock.registerBehavior(DIRT_BOTTLE_ITEM,DIRT_BOTTLE_ITEM);
         
         Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, ResourceLocation.fromNamespaceAndPath(Constants.MODID,"elementals_tab") , ELEMENTALS_TAB);
     }

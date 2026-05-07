@@ -15,6 +15,7 @@ public interface IRegistryHelper {
     // So we just let them handle it
     <T extends BlockEntity> BlockEntityType<T> createBlockEntityType(BlockEntityTypeFactory<T> factory, Block... validBlocks);
 
+
     /**
      * Helper interface for {@link #createBlockEntityType}
      * @param <T> A type that extends BlockEntity
@@ -23,4 +24,7 @@ public interface IRegistryHelper {
     interface BlockEntityTypeFactory<T extends BlockEntity> {
         T create(BlockPos blockPos, BlockState blockState);
     }
+    
+    void registerCommands();
+    void modifyLootTables();
 }

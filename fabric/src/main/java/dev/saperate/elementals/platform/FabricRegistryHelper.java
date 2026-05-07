@@ -1,20 +1,27 @@
 package dev.saperate.elementals.platform;
 
-import dev.saperate.elementals.blocks.blockEntities.LitAirBlockEntity;
+import dev.saperate.elementals.Elementals;
+import dev.saperate.elementals.commands.BendingCommand;
+import dev.saperate.elementals.commands.ElementalsCommand;
+import dev.saperate.elementals.items.ElementalsItems;
 import dev.saperate.elementals.platform.services.IRegistryHelper;
+import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
+import net.fabricmc.fabric.api.gamerule.v1.GameRuleFactory;
+import net.fabricmc.fabric.api.gamerule.v1.GameRuleRegistry;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
-import net.minecraft.core.BlockPos;
+import net.fabricmc.fabric.api.loot.v3.LootTableEvents;
+import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.loot.BuiltInLootTables;
+import net.minecraft.world.level.storage.loot.entries.LootItem;
 
-import java.lang.reflect.InvocationTargetException;
-
-import static dev.saperate.elementals.items.ElementalItems.*;
+import static dev.saperate.elementals.items.ElementalsItems.*;
 
 public class FabricRegistryHelper implements IRegistryHelper {
 
@@ -45,5 +52,25 @@ public class FabricRegistryHelper implements IRegistryHelper {
         return BlockEntityType.Builder.of(factory::create, validBlocks).build();
     }
 
+    @Override
+    public void registerCommands() {
+        CommandRegistrationCallback.EVENT.register(BendingCommand::register);
+        CommandRegistrationCallback.EVENT.register(ElementalsCommand::register);
+    }
+
+    @Override
+    public void modifyLootTables() {
+        LootTableEvents.MODIFY.register(((key, tableBuilder, source, registries) -> {
+            if(source.isBuiltin() && (BuiltInLootTables.DESERT_PYRAMID_ARCHAEOLOGY.equals(key))){
+                tableBuilder.modifyPools((builder)->{
+                    builder.with(LootItem.lootTableItem(ElementalsItems.LIGHTNING_SCROLL_ITEM).build());
+                });
+            }else if(source.isBuiltin() && (BuiltInLootTables.FISHING_TREASURE.equals(key))){
+                tableBuilder.modifyPools((builder)->{
+                    builder.with(LootItem.lootTableItem(ElementalsItems.BLOOD_SCROLL_ITEM).build());
+                });
+            }
+        }));
+    }
 
 }

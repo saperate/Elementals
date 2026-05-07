@@ -23,8 +23,8 @@ public class UsedAbilityCriterion extends SimpleCriterionTrigger<UsedAbilityCrit
     public UsedAbilityCriterion() {
     }
 
-    public ResourceLocation getLocation() {
-        return ResourceLocation.withDefaultNamespace(Constants.MODID + "/" + "usedAbility");
+    public static String getName() {
+        return Constants.MODID + "/" + "usedAbility";
     }
 
     public void trigger(ServerPlayer player, String usedAbility) {

@@ -1,5 +1,8 @@
 package dev.saperate.elementals.platform;
 
+import dev.saperate.elementals.commands.BendingCommand;
+import dev.saperate.elementals.commands.ElementalsCommand;
+import dev.saperate.elementals.items.ElementalsItems;
 import dev.saperate.elementals.platform.services.IRegistryHelper;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.CreativeModeTab;
@@ -7,8 +10,14 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.storage.loot.BuiltInLootTables;
+import net.minecraft.world.level.storage.loot.LootPool;
+import net.minecraft.world.level.storage.loot.entries.LootItem;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.LootTableLoadEvent;
+import net.minecraftforge.event.RegisterCommandsEvent;
 
-import static dev.saperate.elementals.items.ElementalItems.*;
+import static dev.saperate.elementals.items.ElementalsItems.*;
 
 public class ForgeRegistryHelper implements IRegistryHelper {
 
@@ -37,5 +46,28 @@ public class ForgeRegistryHelper implements IRegistryHelper {
     @Override
     public <T extends BlockEntity> BlockEntityType<T> createBlockEntityType(BlockEntityTypeFactory<T> factory, Block... validBlocks) {
         return BlockEntityType.Builder.of(factory::create, validBlocks).build(null);
+    }
+
+    @Override
+    public void registerCommands() {
+        MinecraftForge.EVENT_BUS.addListener(((RegisterCommandsEvent event) -> {
+            BendingCommand.register(event.getDispatcher(), event.getBuildContext(), event.getCommandSelection());
+            ElementalsCommand.register(event.getDispatcher(), event.getBuildContext(), event.getCommandSelection());
+        }));
+    }
+
+    @Override
+    public void modifyLootTables() {
+        MinecraftForge.EVENT_BUS.addListener((LootTableLoadEvent event) -> {
+            if (event.getTable().getLootTableId().equals(BuiltInLootTables.DESERT_PYRAMID_ARCHAEOLOGY.location())){
+                event.getTable().addPool(LootPool.lootPool()
+                        .add(LootItem.lootTableItem(ElementalsItems.LIGHTNING_SCROLL_ITEM)).build());
+            }
+
+            if (event.getTable().getLootTableId().equals(BuiltInLootTables.FISHING_TREASURE.location())){
+                event.getTable().addPool(LootPool.lootPool()
+                        .add(LootItem.lootTableItem(BLOOD_SCROLL_ITEM)).build());
+            }
+        });
     }
 }
