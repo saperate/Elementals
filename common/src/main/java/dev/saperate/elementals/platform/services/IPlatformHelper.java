@@ -1,5 +1,7 @@
 package dev.saperate.elementals.platform.services;
 
+import java.io.File;
+
 public interface IPlatformHelper {
 
     /**
@@ -8,6 +10,14 @@ public interface IPlatformHelper {
      * @return The name of the current platform.
      */
     String getPlatformName();
+
+    /**
+     * Finds the directory where config files are located
+     * It should be working_dir/config
+     * 
+     * @return the path to the config file, as a File
+     */
+    File getConfigDir();
 
     /**
      * Checks if a mod with the given id is loaded.

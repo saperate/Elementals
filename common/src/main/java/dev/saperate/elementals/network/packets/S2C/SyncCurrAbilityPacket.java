@@ -15,7 +15,7 @@ public record SyncCurrAbilityPacket(int abilityIndex) {
     {
         return new CustomPacketPayload.Type<>(ModMessages.SYNC_CHI_PACKET_ID);
     }
-
+    
     public SyncCurrAbilityPacket(FriendlyByteBuf buf) {
         this(buf.readInt());
     }

@@ -7,14 +7,19 @@ import dev.saperate.elementals.effects.ElementalsStatusEffects;
 import dev.saperate.elementals.elements.Ability;
 import dev.saperate.elementals.elements.Element;
 import dev.saperate.elementals.elements.NoneElement;
+import dev.saperate.elementals.network.packets.S2C.SyncChiPacket;
+import dev.saperate.elementals.network.packets.S2C.SyncCurrAbilityPacket;
+import dev.saperate.elementals.network.packets.S2C.SyncElementsPacket;
 import dev.saperate.elementals.network.payload.S2C.SyncChiPayload;
 import dev.saperate.elementals.network.payload.S2C.SyncCurrAbilityPayload;
 import dev.saperate.elementals.network.payload.S2C.SyncElementsPayload;
 import dev.saperate.elementals.utils.SapsUtils;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.GameType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -249,18 +254,17 @@ public class Bender {
         if (player.level().isClientSide || player.getServer() == null) {
             return;
         }
-        CompoundTag nbt = new CompoundTag();
-        nbt.putString("packedElements",packageElementsIntoString(plrData.elements));
-        nbt.putInt("activeElement",plrData.activeElementIndex);
-        Network.getNetworkHandler().sendToClient(new SyncElementsPayload(nbt), player);
+        
+        Network.getNetworkHandler().sendToClient(new SyncElementsPacket(
+                packageElementsIntoString(plrData.elements),
+                plrData.activeElementIndex
+        ), (ServerPlayer) player);
     }
 
     public static void syncAbility(Bender bender) {
-        ServerPlayNetworking.send(
-                (ServerPlayerEntity) bender.player,
-                new SyncCurrAbilityPayload(
-                        bender.currAbility != null ? bender.getElement().getIndexOfAbility(bender.currAbility) : -1)
-        );
+        Network.getNetworkHandler().sendToClient(new SyncCurrAbilityPacket(
+                (bender.currAbility != null ? bender.getElement().getIndexOfAbility(bender.currAbility) : -1)
+        ), (ServerPlayer) bender.player);
     }
 
     /**
@@ -332,8 +336,8 @@ public class Bender {
      * @return True if we were able to reduce the chi without going in the negatives, false if not.
      */
     public boolean reduceChi(float val, boolean giveXP) {
-        ServerPlayerEntity serverPlayer = ((ServerPlayerEntity) player);
-        if (serverPlayer.interactionManager.getGameMode().equals(GameMode.CREATIVE)) {
+        ServerPlayer serverPlayer = ((ServerPlayer) player);
+        if (serverPlayer.gameMode.getGameModeForPlayer().equals(GameType.CREATIVE)) {
             return true;
         }
 
@@ -342,7 +346,7 @@ public class Bender {
         if (newChi < 0) {
             if(newChi >= -10 && !safeHasStatusEffect(ElementalsStatusEffects.BURNOUT,player)){
                 newChi = 0;
-                player.addStatusEffect(new StatusEffectInstance(ElementalsStatusEffects.BURNOUT,200,0,false,false,true));
+                player.addEffect(new MobEffectInstance(ElementalsStatusEffects.BURNOUT,200,0,false,false,true));
             }else {
                 return false;
             }
@@ -359,7 +363,9 @@ public class Bender {
 
 
     public void syncChi() {
-        ServerPlayNetworking.send((ServerPlayerEntity) player, new SyncChiPayload(plrData.chi));
+        Network.getNetworkHandler().sendToClient(new SyncChiPacket(
+                plrData.chi
+        ), (ServerPlayer) player);
     }
 
     public float xpAddedByChi(float chi) {

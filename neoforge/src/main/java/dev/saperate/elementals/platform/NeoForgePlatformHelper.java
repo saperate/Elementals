@@ -3,6 +3,9 @@ package dev.saperate.elementals.platform;
 import dev.saperate.elementals.platform.services.IPlatformHelper;
 import net.neoforged.fml.ModList;
 import net.neoforged.fml.loading.FMLLoader;
+import net.neoforged.fml.loading.FMLPaths;
+
+import java.io.File;
 
 public class NeoForgePlatformHelper implements IPlatformHelper {
 
@@ -10,6 +13,11 @@ public class NeoForgePlatformHelper implements IPlatformHelper {
     public String getPlatformName() {
 
         return "NeoForge";
+    }
+
+    @Override
+    public File getConfigDir() {
+        return FMLPaths.CONFIGDIR.get().toFile();
     }
 
     @Override

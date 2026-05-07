@@ -1,25 +1,17 @@
 package dev.saperate.elementals.data;
 
 import com.google.gson.*;
-import dev.saperate.elementals.elements.Ability;
-import dev.saperate.elementals.elements.Element;
-import dev.saperate.elementals.elements.earth.EarthElement;
-import dev.saperate.elementals.elements.water.AbilityWaterTower;
-import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.item.Item;
-import net.minecraft.item.Items;
-import net.minecraft.registry.Registries;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.Identifier;
+import dev.saperate.elementals.platform.Services;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.Map;
-
 public final class ElementalConfig {
     //TODO sync configs when joining a server
     private final Gson gson = new GsonBuilder().setPrettyPrinting().create();
@@ -105,7 +97,7 @@ public final class ElementalConfig {
             for (Item item : METAL_COST_VALUE.keySet()) {
                 JsonObject entry = new JsonObject();
                 entry.addProperty("ITEM",
-                        Registries.ITEM.getId(item).toString());
+                        BuiltInRegistries.ITEM.getResourceKey(item).toString());
                 entry.addProperty("VALUE",
                         METAL_COST_VALUE.get(item));
                 metalCostValue.add(entry);
@@ -117,9 +109,9 @@ public final class ElementalConfig {
             for (Item item : METAL_LOWER_VALUE_STACK.keySet()) {
                 JsonObject entry = new JsonObject();
                 entry.addProperty("ITEM_BEFORE", 
-                        Registries.ITEM.getId(item).toString());
-                entry.addProperty("ITEM_AFTER", 
-                        Registries.ITEM.getId(METAL_LOWER_VALUE_STACK.get(item)).toString());
+                        BuiltInRegistries.ITEM.getResourceKey(item).toString());
+                entry.addProperty("ITEM_AFTER",
+                        BuiltInRegistries.ITEM.getResourceKey(METAL_LOWER_VALUE_STACK.get(item)).toString());
                 metalLowerValueStack.add(entry);
             }
             root.add("METAL_LOWER_VALUE_STACK", metalLowerValueStack);
@@ -144,7 +136,7 @@ public final class ElementalConfig {
         for(JsonElement rawEntry : array.asList()){
             JsonObject entry = rawEntry.getAsJsonObject();
             out.put(
-                    Registries.ITEM.get(Identifier.splitOn(entry.get("ITEM").getAsString(),':')), 
+                    BuiltInRegistries.ITEM.get(ResourceLocation.bySeparator(entry.get("ITEM").getAsString(),':')), 
                     entry.get("VALUE").getAsInt());
         }
         
@@ -159,8 +151,8 @@ public final class ElementalConfig {
         for(JsonElement rawEntry : array.asList()){
             JsonObject entry = rawEntry.getAsJsonObject();
             out.put(
-                    Registries.ITEM.get(Identifier.splitOn(entry.get("ITEM_BEFORE").getAsString(),':')),
-                    Registries.ITEM.get(Identifier.splitOn(entry.get("ITEM_AFTER").getAsString(),':')));
+                    BuiltInRegistries.ITEM.get(ResourceLocation.bySeparator(entry.get("ITEM_BEFORE").getAsString(),':')),
+                    BuiltInRegistries.ITEM.get(ResourceLocation.bySeparator(entry.get("ITEM_AFTER").getAsString(),':')));
         }
 
         return out;
@@ -169,7 +161,8 @@ public final class ElementalConfig {
 
 
     private File getConfigFile() {
-        return new File(FabricLoader.getInstance().getConfigDir().toFile(), "elementals.json");
+        
+        return new File(Services.PLATFORM.getConfigDir(), "elementals.json");
     }
 
     public ElementalConfig resetConfig() {

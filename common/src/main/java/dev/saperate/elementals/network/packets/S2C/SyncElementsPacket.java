@@ -16,7 +16,7 @@ public record SyncElementsPacket(String packedElements, int activeElementIndex) 
     {
         return new CustomPacketPayload.Type<>(ModMessages.SYNC_ELEMENT_PACKET_ID);
     }
-
+    
     public SyncElementsPacket(FriendlyByteBuf buf) {
         this(buf.readUtf(),buf.readInt());
     }

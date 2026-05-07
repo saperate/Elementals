@@ -1,42 +1,38 @@
 package dev.saperate.elementals.data;
 
+import dev.saperate.elementals.Constants;
 import dev.saperate.elementals.elements.Element;
 import dev.saperate.elementals.elements.Upgrade;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.registry.RegistryWrapper;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.world.PersistentState;
-import net.minecraft.world.PersistentStateManager;
-import net.minecraft.world.World;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.saveddata.SavedData;
+import net.minecraft.world.level.storage.DimensionDataStorage;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import static dev.saperate.elementals.Elementals.MODID;
-
-public class StateDataSaverAndLoader extends PersistentState {
-    private static Type<StateDataSaverAndLoader> type = new Type<>(
+public class StateDataSaverAndLoader extends SavedData {
+    private static SavedData.Factory<StateDataSaverAndLoader> type = new SavedData.Factory<>(
             StateDataSaverAndLoader::new,
-            StateDataSaverAndLoader::createFromNbt,
+            StateDataSaverAndLoader::load,
             null
     );
     public HashMap<UUID, PlayerData> players = new HashMap<>();
 
-
-    public static StateDataSaverAndLoader createFromNbt(NbtCompound tag, RegistryWrapper.WrapperLookup registryLookup) {
+    
+    public static StateDataSaverAndLoader load(CompoundTag tag, HolderLookup.Provider provider) {
         StateDataSaverAndLoader state = new StateDataSaverAndLoader();
 
-        NbtCompound playersNbt = tag.getCompound("players");
-        playersNbt.getKeys().forEach(key -> {
+        CompoundTag playersNbt = tag.getCompound("players");
+        playersNbt.getAllKeys().forEach(key -> {
 
             PlayerData playerData = new PlayerData();
-            NbtCompound nbt = playersNbt.getCompound(key);
+            CompoundTag nbt = playersNbt.getCompound(key);
 
             playerData.elements = Bender.unpackElementsFromString(nbt.getString("element"));
             playerData.activeElementIndex = nbt.getInt("elementIndex");
@@ -51,10 +47,10 @@ public class StateDataSaverAndLoader extends PersistentState {
             if (!nbt.getCompound("upgrades").isEmpty()) {
                 playerData.getElement().onRead(nbt.getCompound("upgrades"), playerData.upgrades);
             } else {
-                NbtCompound upgradesList = nbt.getCompound("upgradeList");
+                CompoundTag upgradesList = nbt.getCompound("upgradeList");
                 int uCount = upgradesList.getInt("upgradesCount");
                 for (int i = 0; i < uCount; i++) {
-                    NbtCompound upgradeNbt = upgradesList.getCompound("upgrade" + i);
+                    CompoundTag upgradeNbt = upgradesList.getCompound("upgrade" + i);
                     playerData.upgrades.put(new Upgrade(upgradeNbt.getString("name"), -1), upgradeNbt.getBoolean("active"));
                 }
             }
@@ -73,28 +69,28 @@ public class StateDataSaverAndLoader extends PersistentState {
     }
 
     public static StateDataSaverAndLoader getServerState(MinecraftServer server) {
-        ServerWorld world = server.getWorld(World.OVERWORLD);
+        ServerLevel world = server.getLevel(Level.OVERWORLD);
 
         assert world != null;
-        PersistentStateManager persistentStateManager = world.getPersistentStateManager();
+        DimensionDataStorage persistentStateManager = world.getDataStorage();
 
-        StateDataSaverAndLoader state = persistentStateManager.getOrCreate(type, MODID);
-        state.markDirty();
+        StateDataSaverAndLoader state = persistentStateManager.get(type, Constants.MODID);
+        state.setDirty();
         return state;
     }
 
-    public static PlayerData getPlayerState(PlayerEntity player) {
+    public static PlayerData getPlayerState(Player player) {
         StateDataSaverAndLoader serverState = getServerState(player.getServer());
 
-        PlayerData playerState = serverState.players.computeIfAbsent(player.getUuid(), uuid -> new PlayerData());
+        PlayerData playerState = serverState.players.computeIfAbsent(player.getUUID(), uuid -> new PlayerData());
         return playerState;
     }
 
     @Override
-    public NbtCompound writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
-        NbtCompound playersNbt = new NbtCompound();
+    public CompoundTag save(CompoundTag compoundTag, HolderLookup.Provider provider) {
+        CompoundTag playersNbt = new CompoundTag();
         players.forEach(((uuid, playerData) -> {
-            NbtCompound playerNbt = new NbtCompound();
+            CompoundTag playerNbt = new CompoundTag();
 
             playerNbt.putString("element", Bender.packageElementsIntoString(playerData.elements));
             playerNbt.putInt("elementIndex", playerData.activeElementIndex);
@@ -105,12 +101,12 @@ public class StateDataSaverAndLoader extends PersistentState {
             playerNbt.putInt("bind4", playerData.getElement().bindableAbilities.indexOf(playerData.boundAbilities[3]));
 
 
-            NbtCompound upgradesNbt = new NbtCompound();
+            CompoundTag upgradesNbt = new CompoundTag();
             upgradesNbt.putInt("upgradesCount", playerData.upgrades.size());
 
             int i = 0;
             for (Map.Entry<Upgrade, Boolean> entry : playerData.upgrades.entrySet()) {
-                NbtCompound upgradeNbt = new NbtCompound();
+                CompoundTag upgradeNbt = new CompoundTag();
                 upgradeNbt.putString("name", entry.getKey().name);
                 upgradeNbt.putBoolean("active", entry.getValue());
                 upgradesNbt.put("upgrade" + i, upgradeNbt);
@@ -126,9 +122,9 @@ public class StateDataSaverAndLoader extends PersistentState {
 
             playersNbt.put(uuid.toString(), playerNbt);
         }));
-        nbt.put("players", playersNbt);
+        compoundTag.put("players", playersNbt);
 
 
-        return nbt;
+        return compoundTag;
     }
 }

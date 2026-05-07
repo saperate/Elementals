@@ -4,21 +4,12 @@ import dev.saperate.elementals.elements.Ability;
 import dev.saperate.elementals.elements.Element;
 import dev.saperate.elementals.elements.NoneElement;
 import dev.saperate.elementals.elements.Upgrade;
-import dev.saperate.elementals.network.packets.SyncLevelC2SPacket;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
+import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
+import dev.saperate.elementals.network.packets.common.SyncLevelPacket;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
-
-import static dev.saperate.elementals.network.ModMessages.SYNC_CHI_PACKET_ID;
 
 public class PlayerData {
     public Ability[] boundAbilities = new Ability[4];
@@ -49,7 +40,7 @@ public class PlayerData {
      * to do that, use the send method in SyncLevelC2SPacket.
      * @param upgrade The upgrade we want to buy
      * @return True if we were able to buy the upgrade, False if not
-     * @see SyncLevelC2SPacket
+     * @see SyncLevelPacket
      */
     public boolean buyUpgrade(Upgrade upgrade) {
         //Wrapper class so that we can reduce the levels
@@ -158,7 +149,7 @@ public class PlayerData {
         return elements.get(activeElementIndex);
     }
 
-    public static PlayerData get(PlayerEntity player) {
+    public static PlayerData get(Player player) {
         return StateDataSaverAndLoader.getPlayerState(player);
     }
 }
