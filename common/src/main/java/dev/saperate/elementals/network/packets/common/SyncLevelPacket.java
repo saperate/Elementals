@@ -4,9 +4,8 @@ import commonnetwork.api.Network;
 import commonnetwork.networking.data.PacketContext;
 import commonnetwork.networking.data.Side;
 import dev.saperate.elementals.data.PlayerData;
-import dev.saperate.elementals.network.ModMessages;
+import dev.saperate.elementals.network.ElementalsNetworking;
 import dev.saperate.elementals.network.payload.S2C.SyncLevelPayload;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
@@ -18,7 +17,7 @@ public record SyncLevelPacket(int level, float xp) {
     
     public static CustomPacketPayload.Type<CustomPacketPayload> type()
     {
-        return new CustomPacketPayload.Type<>(ModMessages.SYNC_LEVEL_PACKET_ID);
+        return new CustomPacketPayload.Type<>(ElementalsNetworking.SYNC_LEVEL_PACKET_ID);
     }
 
     public SyncLevelPacket(FriendlyByteBuf buf) {

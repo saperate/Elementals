@@ -11,7 +11,7 @@ import dev.saperate.elementals.network.packets.common.SyncLevelPacket;
 import dev.saperate.elementals.network.packets.common.SyncUpgradeListPacket;
 import net.minecraft.resources.ResourceLocation;
 
-public class ModMessages {
+public class ElementalsNetworking {
     //S2C
     public static final ResourceLocation SYNC_CHI_PACKET_ID = ResourceLocation.fromNamespaceAndPath(Constants.MODID, "sync_chi");
     public static final ResourceLocation SYNC_CURR_ABILITY_PACKET_ID = ResourceLocation.fromNamespaceAndPath(Constants.MODID, "curr_ability");
@@ -29,7 +29,7 @@ public class ModMessages {
     public static final ResourceLocation SYNC_LEVEL_PACKET_ID = ResourceLocation.fromNamespaceAndPath(Constants.MODID, "sync_level");
     public static final ResourceLocation SYNC_UPGRADE_LIST_PACKET_ID = ResourceLocation.fromNamespaceAndPath(Constants.MODID, "sync_upgrades");
 
-    public static void registerNetworking() {
+    public static void register() {
         //S2C payloads
         Network.registerPacket(SyncChiPacket.type(), SyncChiPacket.class, SyncChiPacket.STREAM_CODEC, SyncChiPacket::handle);
         Network.registerPacket(SyncElementsPacket.type(), SyncElementsPacket.class, SyncElementsPacket.STREAM_CODEC, SyncElementsPacket::handle);

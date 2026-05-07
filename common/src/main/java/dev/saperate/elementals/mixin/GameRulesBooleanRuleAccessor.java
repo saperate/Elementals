@@ -8,7 +8,7 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 import java.util.function.BiConsumer;
 
 /**
- * Taken directly from fabric api
+ * Taken directly from Fabric-API
  */
 @Mixin(GameRules.BooleanValue.class)
 public interface GameRulesBooleanRuleAccessor {

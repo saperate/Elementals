@@ -5,7 +5,7 @@ import commonnetwork.networking.data.Side;
 import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.data.StateDataSaverAndLoader;
-import dev.saperate.elementals.network.ModMessages;
+import dev.saperate.elementals.network.ElementalsNetworking;
 import dev.saperate.elementals.network.packets.GetUpgradeListC2SPacket;
 import dev.saperate.elementals.network.packets.SyncLevelC2SPacket;
 import net.minecraft.network.FriendlyByteBuf;
@@ -19,7 +19,7 @@ public record BuyUpgradePacket(String name) {
     
     public static CustomPacketPayload.Type<CustomPacketPayload> type()
     {
-        return new CustomPacketPayload.Type<>(ModMessages.BUY_UPGRADE_PACKET_ID);
+        return new CustomPacketPayload.Type<>(ElementalsNetworking.BUY_UPGRADE_PACKET_ID);
     }
 
     public BuyUpgradePacket(FriendlyByteBuf buf) {
@@ -33,7 +33,7 @@ public record BuyUpgradePacket(String name) {
 
     public static void handle(PacketContext<BuyUpgradePacket> ctx)
     {
-        ModMessages.expectSideOrThrow(ctx.side(), Side.SERVER);
+        ElementalsNetworking.expectSideOrThrow(ctx.side(), Side.SERVER);
         
         String name = ctx.message().name();
         ServerPlayer player = ctx.sender();

@@ -125,7 +125,7 @@ public class ElementalsItems {
         return Registry.register(BuiltInRegistries.ITEM, ResourceLocation.fromNamespaceAndPath(Constants.MODID,name), item);
     }
 
-    public static void registerItems() {
+    public static void register() {
         EARTH_ARMOR_SET.add(EARTH_HELMET);
         EARTH_ARMOR_SET.add(EARTH_CHESTPLATE);
         EARTH_ARMOR_SET.add(EARTH_LEGGINGS);

@@ -2,7 +2,7 @@ package dev.saperate.elementals.network.packets.C2S;
 
 import commonnetwork.networking.data.PacketContext;
 import commonnetwork.networking.data.Side;
-import dev.saperate.elementals.network.ModMessages;
+import dev.saperate.elementals.network.ElementalsNetworking;
 import net.minecraft.SharedConstants;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
@@ -14,7 +14,7 @@ public record SyncVersionPacket(String version) {
 
 
     public static CustomPacketPayload.Type<CustomPacketPayload> type() {
-        return new CustomPacketPayload.Type<>(ModMessages.SYNC_MOD_VERSION_PACKET_ID);
+        return new CustomPacketPayload.Type<>(ElementalsNetworking.SYNC_MOD_VERSION_PACKET_ID);
     }
 
     public SyncVersionPacket(FriendlyByteBuf buf) {
@@ -26,7 +26,7 @@ public record SyncVersionPacket(String version) {
     }
 
     public static void handle(PacketContext<SyncVersionPacket> ctx) {
-        ModMessages.expectSideOrThrow(ctx.side(), Side.SERVER);
+        ElementalsNetworking.expectSideOrThrow(ctx.side(), Side.SERVER);
         String version = ctx.message().version;
         String serverVersion = getModVersion();
 

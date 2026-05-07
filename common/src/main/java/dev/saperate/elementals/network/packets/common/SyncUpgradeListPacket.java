@@ -5,7 +5,7 @@ import commonnetwork.networking.data.PacketContext;
 import commonnetwork.networking.data.Side;
 import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.data.PlayerData;
-import dev.saperate.elementals.network.ModMessages;
+import dev.saperate.elementals.network.ElementalsNetworking;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
@@ -18,7 +18,7 @@ public record SyncUpgradeListPacket(CompoundTag data) {
     
     public static CustomPacketPayload.Type<CustomPacketPayload> type()
     {
-        return new CustomPacketPayload.Type<>(ModMessages.SYNC_UPGRADE_LIST_PACKET_ID);
+        return new CustomPacketPayload.Type<>(ElementalsNetworking.SYNC_UPGRADE_LIST_PACKET_ID);
     }
 
     public SyncUpgradeListPacket(FriendlyByteBuf buf) {

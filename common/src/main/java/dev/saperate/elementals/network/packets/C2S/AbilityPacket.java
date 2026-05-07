@@ -3,7 +3,7 @@ package dev.saperate.elementals.network.packets.C2S;
 import commonnetwork.networking.data.PacketContext;
 import commonnetwork.networking.data.Side;
 import dev.saperate.elementals.data.Bender;
-import dev.saperate.elementals.network.ModMessages;
+import dev.saperate.elementals.network.ElementalsNetworking;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
@@ -14,7 +14,7 @@ public record AbilityPacket(int index, boolean isStart) {
     
     public static CustomPacketPayload.Type<CustomPacketPayload> type()
     {
-        return new CustomPacketPayload.Type<>(ModMessages.ABILITY_PACKET_ID);
+        return new CustomPacketPayload.Type<>(ElementalsNetworking.ABILITY_PACKET_ID);
     }
 
     public AbilityPacket(FriendlyByteBuf buf) {
@@ -29,7 +29,7 @@ public record AbilityPacket(int index, boolean isStart) {
 
     public static void handle(PacketContext<AbilityPacket> ctx)
     {
-        ModMessages.expectSideOrThrow(ctx.side(), Side.SERVER);
+        ElementalsNetworking.expectSideOrThrow(ctx.side(), Side.SERVER);
         
         AbilityPacket packet = ctx.message();
         Bender.getBender(ctx.sender()).bend(packet.index, packet.isStart());

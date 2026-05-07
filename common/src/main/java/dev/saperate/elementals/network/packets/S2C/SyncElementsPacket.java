@@ -3,7 +3,7 @@ package dev.saperate.elementals.network.packets.S2C;
 import commonnetwork.networking.data.PacketContext;
 import commonnetwork.networking.data.Side;
 import dev.saperate.elementals.data.Bender;
-import dev.saperate.elementals.network.ModMessages;
+import dev.saperate.elementals.network.ElementalsNetworking;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
@@ -14,7 +14,7 @@ public record SyncElementsPacket(String packedElements, int activeElementIndex) 
     
     public static CustomPacketPayload.Type<CustomPacketPayload> type()
     {
-        return new CustomPacketPayload.Type<>(ModMessages.SYNC_ELEMENT_PACKET_ID);
+        return new CustomPacketPayload.Type<>(ElementalsNetworking.SYNC_ELEMENT_PACKET_ID);
     }
     
     public SyncElementsPacket(FriendlyByteBuf buf) {
@@ -30,7 +30,7 @@ public record SyncElementsPacket(String packedElements, int activeElementIndex) 
 
     public static void handle(PacketContext<SyncElementsPacket> ctx)
     {
-        ModMessages.expectSideOrThrow(ctx.side(), Side.CLIENT);
+        ElementalsNetworking.expectSideOrThrow(ctx.side(), Side.CLIENT);
         ClientBender bender = ClientBender.get();
         SyncElementsPacket packet = ctx.message();
         

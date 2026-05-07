@@ -59,7 +59,7 @@ public class FabricRegistryHelper implements IRegistryHelper {
     }
 
     @Override
-    public void modifyLootTables() {
+    public void registerLootTables() {
         LootTableEvents.MODIFY.register(((key, tableBuilder, source, registries) -> {
             if(source.isBuiltin() && (BuiltInLootTables.DESERT_PYRAMID_ARCHAEOLOGY.equals(key))){
                 tableBuilder.modifyPools((builder)->{

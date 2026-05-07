@@ -26,5 +26,5 @@ public interface IRegistryHelper {
     }
     
     void registerCommands();
-    void modifyLootTables();
+    void registerLootTables();
 }

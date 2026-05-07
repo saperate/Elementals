@@ -60,7 +60,7 @@ public class ElementalsBlocks {
             new Block(BlockBehaviour.Properties.of().strength(1f).noOcclusion()));
     
     
-    public static void registerBlocks(){
+    public static void register(){
         System.out.println("Registering elementals blocks..");
     }
     

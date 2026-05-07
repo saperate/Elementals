@@ -57,7 +57,7 @@ public class ForgeRegistryHelper implements IRegistryHelper {
     }
 
     @Override
-    public void modifyLootTables() {
+    public void registerLootTables() {
         MinecraftForge.EVENT_BUS.addListener((LootTableLoadEvent event) -> {
             if (event.getTable().getLootTableId().equals(BuiltInLootTables.DESERT_PYRAMID_ARCHAEOLOGY.location())){
                 event.getTable().addPool(LootPool.lootPool()

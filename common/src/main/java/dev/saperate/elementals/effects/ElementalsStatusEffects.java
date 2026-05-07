@@ -20,7 +20,7 @@ public final class ElementalsStatusEffects {
     public static Holder<MobEffect> OVERCHARGED = registerEffect("overcharged", new OverchargedStatusEffect());
     public static Holder<MobEffect> BURNOUT = registerEffect("burnout", new BurnoutStatusEffect());
     
-    public static void registerEffects(){}
+    public static void register(){}
     
     public static Holder<MobEffect> registerEffect(String name, MobEffect effect){
         return Registry.registerForHolder(BuiltInRegistries.MOB_EFFECT, 

@@ -4,7 +4,7 @@ import commonnetwork.networking.data.PacketContext;
 import commonnetwork.networking.data.Side;
 import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.data.PlayerData;
-import dev.saperate.elementals.network.ModMessages;
+import dev.saperate.elementals.network.ElementalsNetworking;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
@@ -15,7 +15,7 @@ public record CycleBendingPacket(boolean data) {
     
     public static CustomPacketPayload.Type<CustomPacketPayload> type()
     {
-        return new CustomPacketPayload.Type<>(ModMessages.CYCLE_BENDING_PACKET_ID);
+        return new CustomPacketPayload.Type<>(ElementalsNetworking.CYCLE_BENDING_PACKET_ID);
     }
 
     public CycleBendingPacket(FriendlyByteBuf buf) {
@@ -29,7 +29,7 @@ public record CycleBendingPacket(boolean data) {
 
     public static void handle(PacketContext<CycleBendingPacket> ctx)
     {
-        ModMessages.expectSideOrThrow(ctx.side(), Side.SERVER);
+        ElementalsNetworking.expectSideOrThrow(ctx.side(), Side.SERVER);
         
         CycleBendingPacket packet = ctx.message();
         Bender bender = Bender.getBender(ctx.sender());

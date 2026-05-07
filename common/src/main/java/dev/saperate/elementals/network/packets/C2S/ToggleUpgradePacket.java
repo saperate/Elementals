@@ -4,7 +4,7 @@ import commonnetwork.networking.data.PacketContext;
 import commonnetwork.networking.data.Side;
 import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.data.PlayerData;
-import dev.saperate.elementals.network.ModMessages;
+import dev.saperate.elementals.network.ElementalsNetworking;
 import dev.saperate.elementals.network.packets.GetUpgradeListC2SPacket;
 import dev.saperate.elementals.network.packets.SyncLevelC2SPacket;
 import net.minecraft.network.FriendlyByteBuf;
@@ -18,7 +18,7 @@ public record ToggleUpgradePacket(String name) {
     
     public static CustomPacketPayload.Type<CustomPacketPayload> type()
     {
-        return new CustomPacketPayload.Type<>(ModMessages.TOGGLE_UPGRADE_PACKET_ID);
+        return new CustomPacketPayload.Type<>(ElementalsNetworking.TOGGLE_UPGRADE_PACKET_ID);
     }
 
     public ToggleUpgradePacket(FriendlyByteBuf buf) {
@@ -32,7 +32,7 @@ public record ToggleUpgradePacket(String name) {
 
     public static void handle(PacketContext<ToggleUpgradePacket> ctx)
     {
-        ModMessages.expectSideOrThrow(ctx.side(), Side.SERVER);
+        ElementalsNetworking.expectSideOrThrow(ctx.side(), Side.SERVER);
         
         String name = ctx.message().name();
         ServerPlayer player = ctx.sender();

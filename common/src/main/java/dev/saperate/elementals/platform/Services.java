@@ -1,7 +1,7 @@
 package dev.saperate.elementals.platform;
 
 import dev.saperate.elementals.Constants;
-import dev.saperate.elementals.platform.services.IItemHelper;
+import dev.saperate.elementals.platform.services.IEventsHelper;
 import dev.saperate.elementals.platform.services.IPlatformHelper;
 import dev.saperate.elementals.platform.services.IRegistryHelper;
 
@@ -10,6 +10,7 @@ import java.util.ServiceLoader;
 public class Services {
     public static final IPlatformHelper PLATFORM = load(IPlatformHelper.class);
     public static final IRegistryHelper REGISTRY = load(IRegistryHelper.class);
+    public static final IEventsHelper EVENTS = load(IEventsHelper.class);
     
     public static <T> T load(Class<T> clazz) {
 

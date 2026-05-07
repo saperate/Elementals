@@ -5,7 +5,10 @@
   "refmap": "${mod_id}.refmap.json",
   "compatibilityLevel": "JAVA_18",
   "mixins": [
-    "GameRulesAccessor"
+    "CriteriaTriggersAccessor",
+    "GameRulesAccessor",
+    "GameRulesBooleanRuleAccessor",
+    "SimpleParticleTypeAccessor"
   ],
   "client": [
   ],
