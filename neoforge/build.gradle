@@ -42,6 +42,7 @@ neoForge {
 }
 
 dependencies {
+    implementation "mysticdrew:common-networking-neoforge:${common_network_version}"
     implementation "software.bernie.geckolib:geckolib-neoforge-${minecraft_version}:${geckolib_version}"
 }
 
