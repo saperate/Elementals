@@ -39,7 +39,7 @@ public class AbilityFireWisp implements Ability {
         }
         Player player = bender.player;
 
-        Vector3f pos = player.getEyePos().subtract(0,0.5f,0).toVector3f();
+        Vector3f pos = player.getEyePosition().subtract(0,0.5f,0).toVector3f();
 
         FireWispEntity entity = new FireWispEntity(player.level(), player, pos.x, pos.y, pos.z);
         bender.abilityData = entity;

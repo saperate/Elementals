@@ -2,30 +2,18 @@ package dev.saperate.elementals.elements.metal;
 
 import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.data.ElementalConfig;
-import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.elements.Element;
 import dev.saperate.elementals.elements.Upgrade;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.entity.ItemEntity;
-import net.minecraft.entity.player.Player;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.state.property.Properties;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.hit.HitResult;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
-import org.joml.Vector3f;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-
-import static dev.saperate.elementals.Elementals.BENDING_GRIEFING;
-import static dev.saperate.elementals.utils.SapsUtils.getEntityLookVector;
-import static dev.saperate.elementals.utils.SapsUtils.isBeingRainedOn;
 
 public class MetalElement extends Element {
 
@@ -93,7 +81,7 @@ public class MetalElement extends Element {
      */
     //TODO Refactor this monolith
     public static boolean canBend(Player player, int cost) {
-        if (player.getAbilities().creativeMode) {
+        if (player.getAbilities().instabuild) {
             return true;
         }
 
@@ -117,7 +105,7 @@ public class MetalElement extends Element {
                 return false;
 
 
-            ItemStack lowestStack = inventory.getStack(lowestSlot);
+            ItemStack lowestStack = inventory.getItem(lowestSlot);
             int itemValue = config.METAL_COST_VALUE.get(lowestStack.getItem());
             int itemAmountNeeded = (int) Math.ceil((double) costLeft / itemValue);//How much of the item to satisfy costLeft
             Item itemReplacement = config.METAL_LOWER_VALUE_STACK.get(lowestStack.getItem());
@@ -138,11 +126,11 @@ public class MetalElement extends Element {
                 costLeft -= itemAmountToRemove * itemReplacementValue;
                 slotsUsed.put(lowestSlot, itemAmountNeeded);
 
-                ItemStack replacementStack = itemReplacement.getDefaultStack();
+                ItemStack replacementStack = itemReplacement.getDefaultInstance();
                 replacementStack.setCount(itemReplacementCount - itemAmountToRemove);
 
                 //We couldn't insert in the inventory, drop to the ground
-                if (!player.getInventory().insertStack(replacementStack))
+                if (!player.getInventory().add(replacementStack))
                     player.level().addFreshEntity(new ItemEntity(player.level(), player.getX(), player.getY(), player.getZ(), replacementStack));
             }
             validPaymentSlots.remove((Object) lowestSlot);
@@ -156,22 +144,22 @@ public class MetalElement extends Element {
 
     private static void removeConsumedItems(Map<Integer, Integer> slotsUsed, Inventory inventory) {
         for (Map.Entry<Integer, Integer> entry : slotsUsed.entrySet()) {
-            ItemStack stack = inventory.getStack(entry.getKey());
+            ItemStack stack = inventory.getItem(entry.getKey());
             stack.setCount(stack.getCount() - entry.getValue());
 
             if (stack.getCount() <= 0) {
                 stack = ItemStack.EMPTY;
             }
 
-            inventory.setStack(entry.getKey(), stack);
+            inventory.setItem(entry.getKey(), stack);
         }
     }
 
     @NotNull
     private static ArrayList<Integer> getValidPaymentSlots(Inventory inventory, ElementalConfig config) {
         ArrayList<Integer> validPaymentSlots = new ArrayList<>();
-        for (int i = 0; i < inventory.size(); i++) {
-            ItemStack stack = inventory.getStack(i);
+        for (int i = 0; i < inventory.getContainerSize(); i++) {
+            ItemStack stack = inventory.getItem(i);
             if (config.METAL_COST_VALUE.containsKey(stack.getItem())) {
                 validPaymentSlots.add(i);
             }
@@ -181,7 +169,7 @@ public class MetalElement extends Element {
 
     private static int getLowestSlot(ArrayList<Integer> validPaymentSlots, ElementalConfig config, Inventory inventory, int lowestValue, int lowestSlot) {
         for (Integer slot : validPaymentSlots) {
-            int currValue = config.METAL_COST_VALUE.get(inventory.getStack(slot).getItem());
+            int currValue = config.METAL_COST_VALUE.get(inventory.getItem(slot).getItem());
             if (currValue < lowestValue) {
                 lowestValue = currValue;
                 lowestSlot = slot;

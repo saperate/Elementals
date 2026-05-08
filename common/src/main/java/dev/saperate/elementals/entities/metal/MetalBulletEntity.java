@@ -1,32 +1,25 @@
 package dev.saperate.elementals.entities.metal;
 
-import dev.saperate.elementals.Elementals;
 import dev.saperate.elementals.data.ElementalConfig;
 import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.entities.common.AbstractElementalsEntity;
-import dev.saperate.elementals.utils.MathHelper;
+import dev.saperate.elementals.misc.ElementalsSounds;
 import dev.saperate.elementals.utils.SapsUtils;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.MoverType;
-import net.minecraft.entity.data.SynchedEntityData;
-import net.minecraft.entity.data.EntityDataAccessor;
-import net.minecraft.entity.data.EntityDataSerializers;
-import net.minecraft.entity.player.Player;
-import net.minecraft.particle.ParticleTypes;
-import net.minecraft.sound.SoundSource;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.TimeHelper;
-import net.minecraft.util.math.Vec3;
-import net.minecraft.world.Level;
-import org.joml.Matrix3f;
-import org.joml.Matrix4f;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.MoverType;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
 import static dev.saperate.elementals.Elementals.*;
-import static dev.saperate.elementals.entities.ElementalEntities.AIRBULLET;
 import static dev.saperate.elementals.entities.ElementalEntities.METALBULLET;
 import static dev.saperate.elementals.utils.SapsUtils.*;
 
@@ -86,11 +79,11 @@ public class MetalBulletEntity extends AbstractElementalsEntity<Player> {
         );
 
         Vec3 lookPos = getEntityLookVector(owner, 2).add(0,0.5f,0);
-        float pitchCorrection = SapsUtils.isLookingForwards(lookPos.subtract(owner.getPos()).toVector3f()) ? -1 : 1;
+        float pitchCorrection = SapsUtils.isLookingForwards(lookPos.subtract(owner.position()).toVector3f()) ? -1 : 1;
         Quaternionf rotation = new Quaternionf()
                 .rotationXYZ(
-                        (float) Math.toRadians(owner.getPitch() * pitchCorrection),
-                        (float) Math.toRadians(-owner.getYaw()),
+                        (float) Math.toRadians(owner.getXRot() * pitchCorrection),
+                        (float) Math.toRadians(-owner.getYRot()),
                         0//Roll
                 );
 
@@ -116,9 +109,9 @@ public class MetalBulletEntity extends AbstractElementalsEntity<Player> {
         entity.hurt(this.damageSources().playerAttack(owner), damage 
                 * getDamageMultiplier() //Used with scattershot, otherwise should be 1
                 * ElementalConfig.get().BENDING_DAMAGE_MULTIPLIER);
-        entity.timeUntilRegen = 10;
+        entity.invulnerableTime = 10;
         if (!getIsControlled()) {
-            entity.addDeltaMovement(this.getDeltaMovement().multiply(0));
+            entity.addDeltaMovement(this.getDeltaMovement().scale(0));
             discard();
         }
     }
@@ -127,10 +120,10 @@ public class MetalBulletEntity extends AbstractElementalsEntity<Player> {
     public void onClientRemoval() {
         summonParticles(this, random, METAL_SHARD_PARTICLE_TYPE, 
                 0.1f, 5);
-        this.level().playSound(getX(), getY(), getZ(),
-                METAL_BREAK_SOUND_EVENT, SoundSource.BLOCKS,
-                .15f, (2.5f + (this.level().random.nextFloat() - this.level().random.nextFloat()) * 0.2f) * 0.3f, 
-                true);
+        this.level().playSound(this, getOnPos(),
+                ElementalsSounds.METAL_BREAK_SOUND_EVENT, SoundSource.BLOCKS,
+                .15f, 
+                (2.5f + (this.level().random.nextFloat() - this.level().random.nextFloat()) * 0.2f) * 0.3f);
     }
 
     public void setArrayId(int val) {

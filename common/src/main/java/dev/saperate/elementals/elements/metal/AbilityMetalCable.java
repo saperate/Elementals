@@ -4,12 +4,9 @@ import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.elements.Ability;
 import dev.saperate.elementals.entities.metal.MetalCableEntity;
-import dev.saperate.elementals.mixin.ElementalsLivingEntityAccessor;
 import dev.saperate.elementals.utils.SapsUtils;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.Player;
-import net.minecraft.util.hit.EntityHitResult;
-import net.minecraft.util.hit.HitResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.phys.HitResult;
 
 public class AbilityMetalCable implements Ability {
     @Override
@@ -34,8 +31,8 @@ public class AbilityMetalCable implements Ability {
             if(!bender.reduceChi(10) || !MetalElement.canBend(bender.player, cost)){
                 return;
             }
-            
-            Player player = bender.player;
+
+            var player = bender.player;
             int range = 25;
             if(plrData.canUseUpgrade("metalCableRangeI")){
                 range = 50;
@@ -56,7 +53,7 @@ public class AbilityMetalCable implements Ability {
             entity.setControlled(false);
             entity.createChain(player,1);
             entity.getTail().setFrozen(true);
-            entity.getTail().setPosition(hitResult.getPos());
+            entity.getTail().setPos(hitResult.getLocation());
             bender.addBackgroundAbility(this, packAbilityData(entity, true));
             entity.setDistance(5f);
         } else {

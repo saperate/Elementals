@@ -3,20 +3,15 @@ package dev.saperate.elementals.elements.metal;
 import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.effects.ElementalsStatusEffects;
 import dev.saperate.elementals.elements.Ability;
-import dev.saperate.elementals.elements.earth.EarthElement;
 import dev.saperate.elementals.items.MetalArmorItem;
-import net.minecraft.block.Block;
-import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.effect.MobEffects;
-import net.minecraft.entity.player.Player;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.collection.DefaultedList;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.math.Vec3;
-import net.minecraft.world.Level;
+import net.minecraft.core.NonNullList;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 
-import static dev.saperate.elementals.items.ElementalItems.*;
-import static dev.saperate.elementals.utils.SapsUtils.raycastBlockCustomRotation;
+import static dev.saperate.elementals.items.ElementalsItems.*;
 
 public class AbilityMetalArmor implements Ability {
 
@@ -24,16 +19,16 @@ public class AbilityMetalArmor implements Ability {
     public void onCall(Bender bender, long deltaT) {
         bender.setCurrAbility(null);
         Player player = bender.player;
-        DefaultedList<ItemStack> inv = player.getInventory().armor;
+        NonNullList<ItemStack> inv = player.getInventory().armor;
 
-        if (player.getInventory().containsAny(METAL_ARMOR_SET)) {
+        if (player.getInventory().hasAnyOf(METAL_ARMOR_SET)) {
             
             removeArmorSet(inv);
-            player.removeStatusEffect(ElementalsStatusEffects.SEISMIC_SENSE);
-            player.removeStatusEffect(ElementalsStatusEffects.DENSE);
-            player.removeStatusEffect(MobEffects.SLOWNESS);
-            player.removeStatusEffect(MobEffects.NIGHT_VISION);
-            player.removeStatusEffect(MobEffects.BLINDNESS);
+            player.removeEffect(ElementalsStatusEffects.SEISMIC_SENSE);
+            player.removeEffect(ElementalsStatusEffects.DENSE);
+            player.removeEffect(MobEffects.MOVEMENT_SLOWDOWN);
+            player.removeEffect(MobEffects.NIGHT_VISION);
+            player.removeEffect(MobEffects.BLINDNESS);
             return;
         }
         
@@ -49,15 +44,15 @@ public class AbilityMetalArmor implements Ability {
         }
 
         Level world = bender.player.level();
-        inv.set(EquipmentSlot.HEAD.getEntitySlotId(), METAL_HELMET.getItemStack(inv.get(3), 0xFFFFFF, world));
-        inv.set(EquipmentSlot.CHEST.getEntitySlotId(), METAL_CHESTPLATE.getItemStack(inv.get(2), 0xFFFFFF, world));
-        inv.set(EquipmentSlot.LEGS.getEntitySlotId(), METAL_LEGGINGS.getItemStack(inv.get(1), 0xFFFFFF, world));
-        inv.set(EquipmentSlot.FEET.getEntitySlotId(), METAL_BOOTS.getItemStack(inv.get(0), 0xFFFFFF, world));
+        inv.set(EquipmentSlot.HEAD.getIndex(), METAL_HELMET.getItemStack(inv.get(3), 0xFFFFFF, world));
+        inv.set(EquipmentSlot.CHEST.getIndex(), METAL_CHESTPLATE.getItemStack(inv.get(2), 0xFFFFFF, world));
+        inv.set(EquipmentSlot.LEGS.getIndex(), METAL_LEGGINGS.getItemStack(inv.get(1), 0xFFFFFF, world));
+        inv.set(EquipmentSlot.FEET.getIndex(), METAL_BOOTS.getItemStack(inv.get(0), 0xFFFFFF, world));
 
 
     }
 
-    public static void removeArmorSet(DefaultedList<ItemStack> inv) {
+    public static void removeArmorSet(NonNullList<ItemStack> inv) {
         ItemStack[] armor = getArmorStacks(inv);
 
         removeArmor(EquipmentSlot.HEAD, armor[0], inv);
@@ -66,19 +61,19 @@ public class AbilityMetalArmor implements Ability {
         removeArmor(EquipmentSlot.FEET, armor[3], inv);
     }
 
-    public static void removeArmor(EquipmentSlot slot, ItemStack stack, DefaultedList<ItemStack> inv) {
+    public static void removeArmor(EquipmentSlot slot, ItemStack stack, NonNullList<ItemStack> inv) {
         if (!stack.isEmpty() && stack.getItem() instanceof MetalArmorItem) {
             ItemStack item = MetalArmorItem.getItem(stack);
-            inv.set(slot.getEntitySlotId(), item);
+            inv.set(slot.getIndex(), item);
         }
     }
 
-    public static ItemStack[] getArmorStacks(DefaultedList<ItemStack> inv) {
+    public static ItemStack[] getArmorStacks(NonNullList<ItemStack> inv) {
         return new ItemStack[]{
-                inv.get(EquipmentSlot.HEAD.getEntitySlotId()),
-                inv.get(EquipmentSlot.CHEST.getEntitySlotId()),
-                inv.get(EquipmentSlot.LEGS.getEntitySlotId()),
-                inv.get(EquipmentSlot.FEET.getEntitySlotId())
+                inv.get(EquipmentSlot.HEAD.getIndex()),
+                inv.get(EquipmentSlot.CHEST.getIndex()),
+                inv.get(EquipmentSlot.LEGS.getIndex()),
+                inv.get(EquipmentSlot.FEET.getIndex())
         };
     }
     

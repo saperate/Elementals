@@ -1,54 +1,32 @@
 package dev.saperate.elementals.entities.common;
 
-import com.google.common.collect.Lists;
-import dev.saperate.elementals.commands.BendingCommand;
 import dev.saperate.elementals.data.Bender;
-import dev.saperate.elementals.entities.air.AirBallEntity;
-import dev.saperate.elementals.utils.MathHelper;
 import dev.saperate.elementals.utils.SapsUtils;
-import net.minecraft.entity.*;
-import net.minecraft.entity.ai.goal.LookAroundGoal;
-import net.minecraft.entity.ai.goal.SitGoal;
-import net.minecraft.entity.ai.goal.SwimGoal;
-import net.minecraft.entity.ai.goal.TemptGoal;
-import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.data.SynchedEntityData;
-import net.minecraft.entity.data.EntityDataAccessor;
-import net.minecraft.entity.data.EntityDataSerializers;
-import net.minecraft.entity.mob.MobEntity;
-import net.minecraft.entity.mob.PathAwareEntity;
-import net.minecraft.entity.passive.TameableEntity;
-import net.minecraft.entity.player.Player;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.recipe.Ingredient;
-import net.minecraft.registry.tag.FluidTags;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.util.Arm;
-import net.minecraft.util.Util;
-import net.minecraft.util.collection.DefaultedList;
-import net.minecraft.util.math.Box;
-import net.minecraft.util.math.Vec3;
-import net.minecraft.world.Difficulty;
-import net.minecraft.world.GameRules;
-import net.minecraft.world.Level;
+import net.minecraft.core.NonNullList;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.tags.FluidTags;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 
 import java.util.*;
-import java.util.function.Predicate;
-
-import static dev.saperate.elementals.entities.ElementalEntities.AIRBALL;
 import static dev.saperate.elementals.entities.ElementalEntities.DECOYPLAYER;
 
-public class DecoyPlayerEntity extends PathAwareEntity {
+public class DecoyPlayerEntity extends PathfinderMob {
     public double prevCapeX, prevCapeY, prevCapeZ;
     public double capeX, capeY, capeZ;
     public static final EntityDataAccessor<Optional<UUID>> OWNER_ID = SynchedEntityData.defineId(DecoyPlayerEntity.class, EntityDataSerializers.OPTIONAL_UUID);
     public static final EntityDataAccessor<String> OWNER_NAME = SynchedEntityData.defineId(DecoyPlayerEntity.class, EntityDataSerializers.STRING);
-    private DefaultedList<ItemStack> items = DefaultedList.ofSize(7, ItemStack.EMPTY);
+    private final NonNullList<ItemStack> items = NonNullList.of(ItemStack.EMPTY);
     public static final EntityDataAccessor<Integer> RANGE = SynchedEntityData.defineId(DecoyPlayerEntity.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<Boolean> FOCUS_CAMERA = SynchedEntityData.defineId(DecoyPlayerEntity.class, EntityDataSerializers.BOOLEAN);
-    public DecoyPlayerEntity(EntityType<? extends PathAwareEntity> entityType, Level world) {
+    public DecoyPlayerEntity(EntityType<? extends PathfinderMob> entityType, Level world) {
         super(entityType, world);
     }
 
@@ -84,45 +62,43 @@ public class DecoyPlayerEntity extends PathAwareEntity {
         }
 
         //I have no idea why, but this prevents the entity from floating and being stuck, so it is staying
-        if (tickCount <= 10 || true) {
-            this.prevX = this.getX();
-            this.prevY = this.getY();
-            this.prevZ = this.getZ();
-            Vec3 vec3d = this.getDeltaMovement();
-            float f = this.getStandingEyeHeight() - 0.11111111f;
-            if (this.isTouchingWater() && this.getFluidHeight(FluidTags.WATER) > (double) f) {
-                this.applyWaterBuoyancy();
-            } else if (this.isInLava() && this.getFluidHeight(FluidTags.LAVA) > (double) f) {
-                this.applyLavaBuoyancy();
-            } else if (!this.isNoGravity()) {
-                this.setDeltaMovement(this.getDeltaMovement().add(0.0, -0.04, 0.0));
+        this.xOld = this.getX();
+        this.yOld = this.getY();
+        this.zOld = this.getZ();
+        Vec3 vec3d = this.getDeltaMovement();
+        float f = this.getEyeHeight() - 0.11111111f;
+        if (this.isInWater() && this.getFluidHeight(FluidTags.WATER) > (double) f) {
+            this.applyWaterBuoyancy();
+        } else if (this.isInLava() && this.getFluidHeight(FluidTags.LAVA) > (double) f) {
+            this.applyLavaBuoyancy();
+        } else if (!this.isNoGravity()) {
+            this.setDeltaMovement(this.getDeltaMovement().add(0.0, -0.04, 0.0));
+        }
+        if (this.level().isClientSide) {
+            this.noPhysics = false;
+        } else {
+            boolean bl = this.noPhysics = !this.level().noCollision(this, this.getBoundingBox().contract(1.0E-7,1.0E-7,1.0E-7));
+            if (this.noPhysics) {
+                this.moveTowardsClosestSpace(this.getX(), (this.getBoundingBox().minY + this.getBoundingBox().maxY) / 2.0, this.getZ());
             }
-            if (this.level().isClientSide) {
-                this.noClip = false;
-            } else {
-                boolean bl = this.noClip = !this.level().isSpaceEmpty(this, this.getBoundingBox().contract(1.0E-7));
-                if (this.noClip) {
-                    this.pushOutOfBlocks(this.getX(), (this.getBoundingBox().minY + this.getBoundingBox().maxY) / 2.0, this.getZ());
+        }
+        if (!this.onGround() || this.getDeltaMovement().horizontalDistanceSqr() > (double) 1.0E-5f || (this.tickCount + this.getId()) % 4 == 0) {
+            this.move(MoverType.SELF, this.getDeltaMovement());
+            float g = 0.98f;
+            if (this.onGround()) {
+                g = this.level().getBlockState(this.getBlockPosBelowThatAffectsMyMovement()).getBlock().getFriction() * 0.98f;
+            }
+            this.setDeltaMovement(this.getDeltaMovement().multiply(g, 0.98, g));
+            if (this.onGround()) {
+                Vec3 vec3d2 = this.getDeltaMovement();
+                if (vec3d2.y < 0.0) {
+                    this.setDeltaMovement(vec3d2.multiply(1.0, -0.5, 1.0));
                 }
             }
-            if (!this.isOnGround() || this.getDeltaMovement().horizontalLengthSquared() > (double) 1.0E-5f || (this.tickCount + this.getId()) % 4 == 0) {
-                this.move(MoverType.SELF, this.getDeltaMovement());
-                float g = 0.98f;
-                if (this.isOnGround()) {
-                    g = this.level().getBlockState(this.getVelocityAffectingPos()).getBlock().getSlipperiness() * 0.98f;
-                }
-                this.setDeltaMovement(this.getDeltaMovement().multiply(g, 0.98, g));
-                if (this.isOnGround()) {
-                    Vec3 vec3d2 = this.getDeltaMovement();
-                    if (vec3d2.y < 0.0) {
-                        this.setDeltaMovement(vec3d2.multiply(1.0, -0.5, 1.0));
-                    }
-                }
-            }
-            this.velocityDirty |= this.updateWaterState();
-            if (!this.level().isClientSide && this.getDeltaMovement().subtract(vec3d).lengthSquared() > 0.01) {
-                this.velocityDirty = true;
-            }
+        }
+        this.hasImpulse |= this.updateInWaterStateAndDoFluidPushing();
+        if (!this.level().isClientSide && this.getDeltaMovement().subtract(vec3d).lengthSqr() > 0.01) {
+            this.hasImpulse = true;
         }
     }
     
@@ -132,12 +108,12 @@ public class DecoyPlayerEntity extends PathAwareEntity {
     }
 
     @Override
-    public boolean isPersistent() {
+    public boolean isPersistenceRequired() {
         return true;
     }
 
     @Override
-    public boolean cannotDespawn() {
+    public boolean requiresCustomPersistence() {
         return true;
     }
 
@@ -149,30 +125,29 @@ public class DecoyPlayerEntity extends PathAwareEntity {
                 discard();
                 return false;
             }
-            Bender.getBender((ServerPlayerEntity) owner).currAbility.onRemove(Bender.getBender((ServerPlayerEntity) owner));
+            Bender.getBender((ServerPlayer) owner).currAbility.onRemove(Bender.getBender((ServerPlayer) owner));
         }
         return super.hurt(source, amount);
     }
-
-
     @Override
-    public Iterable<ItemStack> getArmorItems() {
+    public Iterable<ItemStack> getArmorSlots() {
         return items;
     }
-
+    
+    
     @Override
-    public ItemStack getEquippedStack(EquipmentSlot slot) {
-        return items.get(slot.getArmorStandSlotId());
+    public ItemStack getItemBySlot(EquipmentSlot slot) {
+        return items.get(slot.getIndex());
     }
 
     @Override
-    public void equipStack(EquipmentSlot slot, ItemStack stack) {
-        items.set(slot.getArmorStandSlotId(), stack);
+    public void setItemSlot(EquipmentSlot slot, ItemStack stack) {
+        items.set(slot.getIndex(), stack);
     }
 
     @Override
-    public Arm getMainArm() {
-        return Arm.RIGHT;
+    public HumanoidArm getMainArm() {
+        return HumanoidArm.RIGHT;
     }
 
     /**
@@ -186,7 +161,7 @@ public class DecoyPlayerEntity extends PathAwareEntity {
         if (uuid == null) {
             return null;
         }
-        return level().getPlayerByUuid(uuid);
+        return level().getPlayerByUUID(uuid);
     }
 
     public UUID getOwnerUUID() {
@@ -194,7 +169,7 @@ public class DecoyPlayerEntity extends PathAwareEntity {
     }
 
     public void setOwner(Player owner) {
-        this.getEntityData().set(OWNER_ID, Optional.of(owner.getUuid()));
+        this.getEntityData().set(OWNER_ID, Optional.of(owner.getUUID()));
         setOwnerName(owner);
     }
 
@@ -203,17 +178,17 @@ public class DecoyPlayerEntity extends PathAwareEntity {
     }
 
     private void setOwnerName(Player owner) {
-        this.getEntityData().set(OWNER_NAME, owner.getNameForScoreboard());
+        this.getEntityData().set(OWNER_NAME, owner.getScoreboardName());
     }
 
     public void equipItemStack() {
-        this.equipStack(EquipmentSlot.HEAD, items.get(0));
-        this.equipStack(EquipmentSlot.CHEST, items.get(1));
-        this.equipStack(EquipmentSlot.LEGS, items.get(2));
-        this.equipStack(EquipmentSlot.FEET, items.get(3));
+        this.setItemSlot(EquipmentSlot.HEAD, items.get(0));
+        this.setItemSlot(EquipmentSlot.CHEST, items.get(1));
+        this.setItemSlot(EquipmentSlot.LEGS, items.get(2));
+        this.setItemSlot(EquipmentSlot.FEET, items.get(3));
 
-        this.equipStack(EquipmentSlot.MAINHAND, items.get(4));
-        this.equipStack(EquipmentSlot.OFFHAND, items.get(5));
+        this.setItemSlot(EquipmentSlot.MAINHAND, items.get(4));
+        this.setItemSlot(EquipmentSlot.OFFHAND, items.get(5));
     }
 
 
@@ -275,7 +250,7 @@ public class DecoyPlayerEntity extends PathAwareEntity {
     }
 
     @Override
-    public float getStepHeight() {
+    public float maxUpStep() {
         return 1.1f;
     }
 }

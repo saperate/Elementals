@@ -3,23 +3,18 @@ package dev.saperate.elementals.elements.metal;
 import dev.saperate.elementals.Elementals;
 import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.data.ElementalConfig;
-import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.elements.Ability;
-import dev.saperate.elementals.elements.water.WaterElement;
 import dev.saperate.elementals.entities.metal.MetalLanceEntity;
-import dev.saperate.elementals.entities.water.WaterBladeEntity;
 import dev.saperate.elementals.utils.SapsUtils;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.MoverType;
-import net.minecraft.entity.damage.DamageSources;
-import net.minecraft.entity.player.Player;
-import net.minecraft.particle.ParticleTypes;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.Vec3;
-import net.minecraft.world.explosion.Explosion;
-import org.joml.Vector3f;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.MoverType;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Explosion;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
 
 import java.util.List;
 
@@ -55,11 +50,11 @@ public class AbilityMetalLance implements Ability {
         lance.setControlled(false);
         HitResult hitResult = SapsUtils.raycastFull(bender.player, 150, false);
         if(hitResult.getType() != HitResult.Type.MISS){
-            bender.abilityData = packAbilityData(lance,getHoldTime(bender),hitResult.getPos());
-            Vec3 dirToTarget = hitResult.getPos().subtract(lance.getPos()).normalize().multiply(2);
+            bender.abilityData = packAbilityData(lance,getHoldTime(bender),hitResult.getLocation());
+            Vec3 dirToTarget = hitResult.getLocation().subtract(lance.position()).normalize().scale(2);
             lance.setDeltaMovement(dirToTarget);
         }else {
-            lance.setDeltaMovement(bender.player, bender.player.getPitch(), bender.player.getYaw(), 0, 4, 0);
+            lance.setDeltaMovement(bender.player, bender.player.getXRot(), bender.player.getYRot(), 0, 4, 0);
         }
         lance.move(MoverType.SELF,lance.getDeltaMovement());
         if(!bender.plrData.canUseUpgrade("metalLanceRedirectI")){
@@ -81,17 +76,17 @@ public class AbilityMetalLance implements Ability {
         MetalLanceEntity lance = getLanceEntity(bender);
         Vec3 thrownPos = getThrownPos(bender);
         
-        if(thrownPos != null && lance.getPos().distanceTo(thrownPos) < 2){
+        if(thrownPos != null && lance.position().distanceTo(thrownPos) < 2){
             lance.discard();
             
             if(bender.plrData.canUseUpgrade("metalLanceDamageII") 
                     && lance.level().getGameRules().getBoolean(Elementals.BENDING_GRIEFING)) {
-                Explosion explosion = new Explosion(lance.level(), lance, lance.getX(), lance.getY(), lance.getZ(), 1, false, Explosion.DestructionType.DESTROY);
-                explosion.collectBlocksAndDamageEntities();
-                explosion.affectWorld(true);
+                Explosion explosion = new Explosion(lance.level(), lance, lance.getX(), lance.getY(), lance.getZ(), 1, false, Explosion.BlockInteraction.DESTROY);
+                explosion.explode();
+                explosion.finalizeExplosion(true);
             }
             SapsUtils.serverSummonParticles(
-                    (ServerWorld) lance.level(), 
+                    (ServerLevel) lance.level(), 
                     ParticleTypes.EXPLOSION, 
                     lance,lance.level().getRandom(),
                     0,0,0,

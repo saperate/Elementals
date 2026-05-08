@@ -1,23 +1,17 @@
 package dev.saperate.elementals.entities.metal;
 
 import dev.saperate.elementals.entities.common.AbstractElementalsEntity;
-import dev.saperate.elementals.entities.fire.FireArcEntity;
-import net.fabricmc.loader.impl.lib.sat4j.core.Vec;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.MoverType;
-import net.minecraft.entity.data.SynchedEntityData;
-import net.minecraft.entity.data.EntityDataAccessor;
-import net.minecraft.entity.data.EntityDataSerializers;
-import net.minecraft.entity.player.Player;
-import net.minecraft.particle.ParticleTypes;
-import net.minecraft.util.math.Vec3;
-import net.minecraft.world.Level;
-import org.joml.Vector3f;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.MoverType;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 
-import static dev.saperate.elementals.Elementals.LIGHTNING_PARTICLE_TYPE;
-import static dev.saperate.elementals.entities.ElementalEntities.LIGHTNINGARC;
 import static dev.saperate.elementals.entities.ElementalEntities.METALCABLE;
 import static dev.saperate.elementals.utils.SapsUtils.*;
 
@@ -81,7 +75,7 @@ public class MetalCableEntity extends AbstractElementalsEntity<LivingEntity> {
 
     private void moveEntity(Entity owner, Entity parent) {
         if (getChild() == null) {
-            moveEntityTowardsGoal(owner.getEyePos().toVector3f(), getMovementSpeed() * 4);
+            moveEntityTowardsGoal(owner.getEyePosition().toVector3f(), getMovementSpeed() * 4);
             if (!getFrozen()) {
                 this.move(MoverType.SELF, this.getDeltaMovement());
             }
@@ -89,8 +83,8 @@ public class MetalCableEntity extends AbstractElementalsEntity<LivingEntity> {
         }
 
         if (parent == null) {
-            moveEntityTowardsGoal(owner.getEyePos().toVector3f(), getMovementSpeed());
-            owner.dismountVehicle();
+            moveEntityTowardsGoal(owner.getEyePosition().toVector3f(), getMovementSpeed());
+            owner.removeVehicle();
             keepOtherEntityNearEntity(getTail(), owner, getDistance());
         }
         if (!getFrozen()) {

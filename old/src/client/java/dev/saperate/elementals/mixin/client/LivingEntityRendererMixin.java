@@ -42,7 +42,7 @@ public abstract class LivingEntityRendererMixin<T extends LivingEntity, M extend
 	private void init(T livingEntity, float f, float g, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i, CallbackInfo ci) {
 		if(livingEntity instanceof DecoyPlayerEntity && ClientBender.get().currAbility instanceof AbilityMetalDecoy){
 			Camera camera = MinecraftClient.getInstance().gameRenderer.getCamera();
-			if(camera.getPos().distanceTo(livingEntity.getEyePos()) < 0.75){
+			if(camera.getPos().distanceTo(livingEntity.getEyePosition()) < 0.75){
 				ci.cancel();
 			}
 		}

@@ -74,7 +74,7 @@ public class AbilityFire3 implements Ability {
 
             player.startFallFlying();
             Vector3f velocity = getEntityLookVector(player, 2)
-                    .subtract(player.getEyePos())
+                    .subtract(player.getEyePosition())
                     .normalize().multiply(power).toVector3f();
             player.setDeltaMovement(velocity.x, velocity.y, velocity.z);
             player.velocityModified = true;

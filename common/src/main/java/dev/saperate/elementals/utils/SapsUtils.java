@@ -442,7 +442,7 @@ public final class SapsUtils {
                 velocity.y,
                 velocity.z);
         //TODO uncomment if launchentity doesnt work
-        //vehicle.hurtMarked = true;
+        vehicle.hasImpulse = true;
         vehicle.move(MoverType.PLAYER, vehicle.getDeltaMovement());
     }
 
@@ -564,7 +564,7 @@ public final class SapsUtils {
             other.move(MoverType.SELF, other.getDeltaMovement());
             other.fallDistance = 0;
             //TODO uncomment if this stops working
-            //other.hurtMarked = true;
+            other.hasImpulse = true;
         }
     }
 

@@ -168,7 +168,7 @@ public class FireExplosion extends Explosion {
             if (!(entity instanceof Player playerEntity) || (playerEntity = (Player) entity).isSpectator() || playerEntity.isCreative() && playerEntity.getAbilities().flying){
                 continue;
             }
-            playerEntity.hurtMarked = true;
+            playerEntity.hasImpulse = true;
         }
     }
 

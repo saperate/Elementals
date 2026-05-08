@@ -105,7 +105,7 @@ public class FireWispEntity extends AbstractElementalsEntity<Player> {
             if(yaw < 0){
                 yaw = 360 + yaw;
             }
-            moveEntityTowardsGoal(getOwner().getEyePos()
+            moveEntityTowardsGoal(getOwner().getEyePosition()
                     .add(-.75 * Math.cos(Math.toRadians(yaw)),0.5,-.75 * Math.sin(Math.toRadians(yaw))).toVector3f());
         }else {
             discard();

@@ -32,7 +32,7 @@ public class AbilityBlood4 implements Ability {
         boolean isNight = BloodElement.isNight(player.level());
 
         int baseRange = bender.getData().canUseUpgrade("bloodParalysisRangeI") ? 5 : 3;
-        List<LivingEntity> entities = SapsUtils.getEntitiesInRadius(player.getEyePos(), isNight ? baseRange + 5 : baseRange, player.level(), player);
+        List<LivingEntity> entities = SapsUtils.getEntitiesInRadius(player.getEyePosition(), isNight ? baseRange + 5 : baseRange, player.level(), player);
 
         for (LivingEntity living : entities) {
             if (living instanceof Player && !isNight) {

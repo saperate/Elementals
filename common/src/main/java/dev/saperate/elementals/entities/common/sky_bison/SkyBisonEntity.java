@@ -163,7 +163,7 @@ public class SkyBisonEntity extends AnimalEntity implements GeoEntity {
         setBodyYaw(controllingPlayer.bodyYaw);
         
         Vec3 forward = SapsUtils.getEntityLookVectorIgnorePitch(controllingPlayer,1)
-                .subtract(controllingPlayer.getEyePos());
+                .subtract(controllingPlayer.getEyePosition());
         Vec3 sideways = forward.crossProduct(new Vec3(0,1,0)).multiply(-controllingPlayer.sidewaysSpeed);
         
         //Can't inline it cause it's used to cross product sideways vector
@@ -196,7 +196,7 @@ public class SkyBisonEntity extends AnimalEntity implements GeoEntity {
         if (this.hasPassenger(passenger)) {
             int passengerIndex = getPassengerIndex(passenger);
             Vec3 forward = SapsUtils.getEntityLookVectorIgnorePitch(this,1)
-                    .subtract(getEyePos());
+                    .subtract(getEyePosition());
             Vec3 sideways = forward.crossProduct(new Vec3(0,1,0))
                     .multiply(0.75f); // less annoying than doing
             double heightOffset = this.getY() + this.getMountedHeightOffset(); //+ passenger.getHeightOffset();

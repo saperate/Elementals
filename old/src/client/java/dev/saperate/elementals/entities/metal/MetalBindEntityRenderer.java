@@ -33,7 +33,7 @@ public class MetalBindEntityRenderer extends EntityRenderer<MetalBindEntity> {
         
         VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderLayer.getCutout());
         
-        Vec3 pointA = entity.getOwner().getEyePos();//Other
+        Vec3 pointA = entity.getOwner().getEyePosition();//Other
         Vec3 pointB = entity.getChild().getOwner().getLeashPos(tickDelta);//Player
         
         double distance = pointA.distanceTo(pointB);

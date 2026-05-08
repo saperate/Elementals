@@ -1,23 +1,16 @@
 package dev.saperate.elementals.entities.metal;
 
-import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.entities.common.AbstractElementalsEntity;
-import dev.saperate.elementals.misc.BlockRestoreManager;
-import dev.saperate.elementals.misc.FireExplosion;
 import dev.saperate.elementals.utils.SapsUtils;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.MoverType;
-import net.minecraft.entity.player.Player;
-import net.minecraft.sound.SoundSource;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3;
-import net.minecraft.world.Level;
-import net.minecraft.world.explosion.Explosion;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.MoverType;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3f;
 
-import static dev.saperate.elementals.Elementals.METAL_BREAK_SOUND_EVENT;
 import static dev.saperate.elementals.entities.ElementalEntities.METALLANCE;
 
 public class MetalLanceEntity extends AbstractElementalsEntity<LivingEntity> {
@@ -50,15 +43,15 @@ public class MetalLanceEntity extends AbstractElementalsEntity<LivingEntity> {
         }
         lookPos = SapsUtils.getEntityLookVector(owner, 1);
         float pitchCorrection = SapsUtils.isLookingForwards(lookPos
-                .subtract(owner.getPos()).toVector3f()) ? -1 : 1;
-        setRotation(owner.getBodyYaw(), owner.getPitch() * pitchCorrection);
+                .subtract(owner.position()).toVector3f()) ? -1 : 1;
+        setRot(owner.getYRot(), owner.getXRot() * pitchCorrection);
 
-        Vector3f goal = owner.getPos().toVector3f()
-                .add(0,owner.getHeight() + 0.6f,0);
+        Vector3f goal = owner.position().toVector3f()
+                .add(0,owner.getEyeHeight() + 0.6f,0);
         
         Vec3 perpendicularVec;
 
-        float pitch = getPitch() * pitchCorrection;
+        float pitch = getXRot() * pitchCorrection;
         if(pitch > -80 && pitch < 70){
             perpendicularVec = new Vec3(0,1,0);
         } else if (pitch < 0) {
@@ -67,8 +60,8 @@ public class MetalLanceEntity extends AbstractElementalsEntity<LivingEntity> {
             perpendicularVec = new Vec3(0.7,0,0.7);
         }
 
-        goal = goal.add(lookPos.subtract(owner.getPos())
-                .crossProduct(perpendicularVec)
+        goal = goal.add(lookPos.subtract(owner.position())
+                .cross(perpendicularVec)
                 .toVector3f().mul(0.6f));
         
         moveEntityTowardsGoal(goal);
@@ -89,7 +82,7 @@ public class MetalLanceEntity extends AbstractElementalsEntity<LivingEntity> {
     public void onClientRemoval() {
         if(getRemovalReason().equals(RemovalReason.DISCARDED)){
             this.level().playSound(this, getOnPos(),
-                    SoundEvents.ENTITY_GENERIC_EXPLODE.value(), SoundSource.BLOCKS,
+                    SoundEvents.GENERIC_EXPLODE.value(), SoundSource.BLOCKS,
                     0.25f,
                     (1.0f + (this.level().random.nextFloat() - this.level().random.nextFloat()) * 0.2f) * 0.7f);
         }

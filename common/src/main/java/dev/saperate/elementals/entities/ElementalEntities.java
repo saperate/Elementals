@@ -151,31 +151,14 @@ public class ElementalEntities {
                     .dimensions(EntityDimensions.changing(0.125f, 0.125f)).build());
 
     //METAL
-    public static final EntityType<MetalCableEntity> METALCABLE = Registry.register(
-            Registries.ENTITY_TYPE,
-            Identifier.of("assets/elementals", "metal_cable"),
-            FabricEntityTypeBuilder.<MetalCableEntity>create(SpawnGroup.MISC, MetalCableEntity::new)
-                    .disableSummon()
-                    .dimensions(EntityDimensions.changing(0.25f, 0.25f)).build());
-    public static final EntityType<MetalBindEntity> METALBIND = Registry.register(
-            Registries.ENTITY_TYPE,
-            Identifier.of("assets/elementals", "metal_bind"),
-            FabricEntityTypeBuilder.<MetalBindEntity>create(SpawnGroup.MISC, MetalBindEntity::new)
-                    .disableSummon()
-                    .dimensions(EntityDimensions.changing(0.25f, 0.25f)).build());
-    public static final EntityType<MetalBulletEntity> METALBULLET = Registry.register(
-            Registries.ENTITY_TYPE,
-            Identifier.of("assets/elementals", "metal_bullet"),
-            FabricEntityTypeBuilder.<MetalBulletEntity>create(SpawnGroup.MISC, MetalBulletEntity::new)
-                    .disableSummon()
-                    .dimensions(EntityDimensions.fixed(0.25f, 0.25f)).build());
-    
-    public static final EntityType<MetalLanceEntity> METALLANCE = Registry.register(
-            Registries.ENTITY_TYPE,
-            Identifier.of(Elementals.MODID,"metal_lance"),
-            FabricEntityTypeBuilder.<MetalLanceEntity>create(SpawnGroup.MISC, MetalLanceEntity::new)
-                    .disableSummon()
-                    .dimensions(EntityDimensions.fixed(.4f, .4f)).build());
+    public static final EntityType<MetalCableEntity> METALCABLE = registerAbilityEntity(
+            "metal_cable", MetalCableEntity::new, 0.25f, 0.25f);
+    public static final EntityType<MetalBindEntity> METALBIND = registerAbilityEntity(
+            "metal_bind", MetalBindEntity::new, 0.25f, 0.25f);
+    public static final EntityType<MetalBulletEntity> METALBULLET = registerAbilityEntity(
+            "metal_bullet", MetalBulletEntity::new, 0.25f, 0.25f);
+    public static final EntityType<MetalLanceEntity> METALLANCE = registerAbilityEntity(
+            "metal_lance", MetalLanceEntity::new, .4f, .4f);
 
     //Common
     public static final EntityType<DecoyPlayerEntity> DECOYPLAYER = Registry.register(

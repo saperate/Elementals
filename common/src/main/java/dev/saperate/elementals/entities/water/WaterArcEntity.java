@@ -105,7 +105,7 @@ public class WaterArcEntity extends AbstractElementalsEntity<Player> {
 
         entity.hurt(this.damageSources().playerAttack((Player) getOwner()), damage * ElementalConfig.get().BENDING_DAMAGE_MULTIPLIER);
         entity.addDeltaMovement(this.getDeltaMovement().scale(0.2f));
-        entity.hurtMarked = true;//TODO check if this works
+        entity.hasImpulse = true;//TODO check if this works
         remove();
     }
 

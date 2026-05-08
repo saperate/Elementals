@@ -37,7 +37,7 @@ public class AbilityBloodPush implements Ability {
             );
 
             Vector3f velocity = getEntityLookVector(player, 1)
-                    .subtract(player.getEyePos())
+                    .subtract(player.getEyePosition())
                     .normalize().multiply(power, power * 0.5f, power).toVector3f();
             //returns the root vehicle or itself if there are none
             Entity vehicle = living.getRootVehicle();

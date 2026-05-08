@@ -4,8 +4,8 @@ import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.elements.Ability;
 import dev.saperate.elementals.entities.metal.MetalBulletEntity;
-import net.minecraft.entity.player.Player;
-import net.minecraft.util.math.Vec3;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.phys.Vec3;
 
 import static dev.saperate.elementals.utils.SapsUtils.getEntityLookVector;
 
@@ -66,7 +66,7 @@ public class AbilityMetalBullets implements Ability {
         for (MetalBulletEntity bullet : bullets) {
             float speed = 4;
             bullet.setControlled(false);
-            bullet.setDeltaMovement(bender.player, bender.player.getPitch(), bender.player.getYaw(), 0, speed, 10);
+            bullet.setDeltaMovement(bender.player, bender.player.getXRot(), bender.player.getYRot(), 0, speed, 10);
             bullet.setDamageMultiplier(0.5f);
         }
         bender.abilityData = null;
@@ -99,7 +99,7 @@ public class AbilityMetalBullets implements Ability {
         bullet.setControlled(false);
 
         float speed = 2;
-        bullet.setDeltaMovement(bender.player, bender.player.getPitch(), bender.player.getYaw(), 0, speed, 0);
+        bullet.setDeltaMovement(bender.player, bender.player.getXRot(), bender.player.getYRot(), 0, speed, 0);
 
         if (bullets.length == 1) {
             bender.abilityData = null; // Prevents onRemove from killing bullets
