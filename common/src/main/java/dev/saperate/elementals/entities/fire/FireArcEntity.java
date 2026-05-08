@@ -4,30 +4,20 @@ import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.data.ElementalConfig;
 import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.entities.common.AbstractElementalsEntity;
-import dev.saperate.elementals.entities.water.WaterArcEntity;
 import dev.saperate.elementals.utils.SapsUtils;
-import net.minecraft.block.AbstractFireBlock;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.*;
-import net.minecraft.entity.data.SynchedEntityData;
-import net.minecraft.entity.data.EntityDataAccessor;
-import net.minecraft.entity.data.EntityDataSerializers;
-import net.minecraft.entity.player.Player;
-import net.minecraft.entity.projectile.ProjectileEntity;
-import net.minecraft.entity.projectile.ProjectileUtil;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.particle.ParticleTypes;
-import net.minecraft.predicate.entity.EntityPredicates;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.sound.SoundSource;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.TypeFilter;
-import net.minecraft.util.hit.EntityHitResult;
-import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3;
-import net.minecraft.world.Level;
-import org.joml.Vector3f;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.MoverType;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 
 import static dev.saperate.elementals.entities.ElementalEntities.FIREARC;
 import static dev.saperate.elementals.utils.SapsUtils.getEntityLookVector;
@@ -85,12 +75,12 @@ public class FireArcEntity extends AbstractElementalsEntity<Player> {
     public void tick() {
         super.tick();
 
-        if (touchingWater && getParent() == null && !level().isClientSide) {
+        if (isInWater() && getParent() == null && !level().isClientSide) {
             remove();
 
             Player owner = getOwner();
             if(owner != null){
-                Bender bender = Bender.getBender((ServerPlayerEntity) owner);
+                Bender bender = Bender.getBender((ServerPlayer) owner);
                 if(bender.currAbility != null){
                     bender.currAbility.onRemove(bender);
                 }
@@ -98,12 +88,12 @@ public class FireArcEntity extends AbstractElementalsEntity<Player> {
             return;
         }
 
-        if (random.nextBetween(0, 20) == 6) {
+        if (random.nextInt(0, 20) == 6) {
             summonParticles(this, random,
                     isBlue() ? ParticleTypes.SOUL_FIRE_FLAME : ParticleTypes.FLAME,
                     0, 1);
             if (getParent() == null) {
-                playSound(SoundEvents.BLOCK_FIRE_AMBIENT, 1, 0);
+                playSound(SoundEvents.FIRE_AMBIENT, 1, 0);
             }
         }
 
@@ -129,7 +119,7 @@ public class FireArcEntity extends AbstractElementalsEntity<Player> {
         if (entity == getOwner() || getParent() != null) {
             return;
         }
-        entity.addDeltaMovement(this.getDeltaMovement().multiply(0.2f));
+        entity.addDeltaMovement(this.getDeltaMovement().scale(0.2f));
         PlayerData plrData = PlayerData.get(getOwner());
 
         float damage = isBlue() ? 3.5f : 2.5f;//TODO BUFF
@@ -143,8 +133,8 @@ public class FireArcEntity extends AbstractElementalsEntity<Player> {
             damage /= 2;
         }
 
-        if (!entity.isFireImmune()) {
-            entity.setOnFireFor(8);
+        if (!entity.fireImmune()) {
+            entity.igniteForSeconds(8);
         }
         entity.hurt(this.damageSources().playerAttack(getOwner()), damage * ElementalConfig.get().BENDING_DAMAGE_MULTIPLIER);
         remove();
@@ -156,11 +146,11 @@ public class FireArcEntity extends AbstractElementalsEntity<Player> {
             moveEntityTowardsGoal(getEntityLookVector(owner, 3).add(0, 0.5, 0).toVector3f());
         } else {
             if (parent != null) {
-                Vec3 direction = parent.getPos().subtract(getPos());
+                Vec3 direction = parent.position().subtract(position());
                 double distance = direction.length();
 
                 if (distance > chainDistance) {
-                    direction = direction.normalize().multiply(distance - chainDistance).add(getPos());
+                    direction = direction.normalize().scale(distance - chainDistance).add(position());
                     setPos(direction.x, direction.y, direction.z);
                 }
             }
@@ -176,7 +166,7 @@ public class FireArcEntity extends AbstractElementalsEntity<Player> {
         summonParticles(this, random,
                 isBlue() ? ParticleTypes.SOUL_FIRE_FLAME : ParticleTypes.FLAME,
                 0.1f, 10);
-        this.level().playSound(getX(), getY(), getZ(), SoundEvents.ITEM_FIRECHARGE_USE, SoundSource.BLOCKS, 0.25f, (1.0f + (this.level().random.nextFloat() - this.level().random.nextFloat()) * 0.2f) * 0.7f, false);
+        this.level().playSound(this, getOnPos(), SoundEvents.FIRECHARGE_USE, SoundSource.BLOCKS, 0.25f, (1.0f + (this.level().random.nextFloat() - this.level().random.nextFloat()) * 0.2f) * 0.7f);
     }
 
     /**

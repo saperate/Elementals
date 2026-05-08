@@ -3,24 +3,18 @@ package dev.saperate.elementals.elements.fire;
 import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.elements.Ability;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityPose;
-import net.minecraft.entity.MoverType;
-import net.minecraft.entity.player.Player;
-import net.minecraft.particle.ParticleTypes;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.math.Box;
-import net.minecraft.util.math.Vec3;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.MoverType;
+import net.minecraft.world.entity.player.Player;
 import org.joml.Vector3f;
-
-import java.util.List;
 
 import static dev.saperate.elementals.utils.SapsUtils.*;
 
 public class AbilityFire3 implements Ability {
     @Override
     public void onCall(Bender bender, long deltaT) {
-        if (PlayerData.get(bender.player).canUseUpgrade("fireJump") && !bender.player.isTouchingWater()) {
+        if (PlayerData.get(bender.player).canUseUpgrade("fireJump") && !bender.player.isInWater()) {
             bender.setCurrAbility(this);
             return;
         }
@@ -57,7 +51,7 @@ public class AbilityFire3 implements Ability {
     public void onTick(Bender bender) {
         Player player = bender.player;
         int count = 1;
-        if ((bender.abilityData == null || bender.abilityData.equals(true)) && player.isSprinting() && !player.isOnGround()
+        if ((bender.abilityData == null || bender.abilityData.equals(true)) && player.isSprinting() && !player.onGround()
                 && PlayerData.get(player).canUseUpgrade("fireJet")) {
 
             if (player.isUnderWater()) {
@@ -75,9 +69,9 @@ public class AbilityFire3 implements Ability {
             player.startFallFlying();
             Vector3f velocity = getEntityLookVector(player, 2)
                     .subtract(player.getEyePosition())
-                    .normalize().multiply(power).toVector3f();
+                    .normalize().scale(power).toVector3f();
             player.setDeltaMovement(velocity.x, velocity.y, velocity.z);
-            player.velocityModified = true;
+            player.hasImpulse = true;
             player.move(MoverType.PLAYER, player.getDeltaMovement());
             bender.abilityData = true;
             player.fallDistance = 0;
@@ -90,7 +84,7 @@ public class AbilityFire3 implements Ability {
                 }
                 return;
             }
-            serverSummonParticles((ServerWorld) player.level(),
+            serverSummonParticles((ServerLevel) player.level(),
                     PlayerData.get(player).canUseUpgrade("blueFire") ?
                             ParticleTypes.SOUL_FIRE_FLAME : ParticleTypes.FLAME, player, player.getRandom(),
                     0, 0.1f, 0,
@@ -101,7 +95,7 @@ public class AbilityFire3 implements Ability {
             if (bender.abilityData.equals(true)) {
                 onRemove(bender);
             } else if (bender.abilityData.equals(false)) {
-                bender.abilityData = player.getRootVehicle().isOnGround();
+                bender.abilityData = player.getRootVehicle().onGround();
                 count = 8;
                 if (player.isCrouching()) {
                     //bomb jump upgrade will enable it to be canceled
@@ -111,7 +105,7 @@ public class AbilityFire3 implements Ability {
 
         }
 
-        serverSummonParticles((ServerWorld) player.level(),
+        serverSummonParticles((ServerLevel) player.level(),
                 PlayerData.get(player).canUseUpgrade("blueFire") ?
                         ParticleTypes.SOUL_FIRE_FLAME : ParticleTypes.FLAME, player, player.getRandom(),
                 0, 0.1f, 0,

@@ -1,33 +1,27 @@
 package dev.saperate.elementals.entities.common;
 
-import net.minecraft.block.Blocks;
-import net.minecraft.component.DataComponentTypes;
-import net.minecraft.component.type.NbtComponent;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.FallingBlockEntity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.Player;
-import net.minecraft.entity.projectile.thrown.ThrownItemEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.particle.ParticleTypes;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundSource;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.hit.EntityHitResult;
-import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3;
-import net.minecraft.world.Level;
-import org.jetbrains.annotations.Nullable;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.item.FallingBlockEntity;
+import net.minecraft.world.entity.projectile.ThrowableItemProjectile;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.CustomData;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
 
 import static dev.saperate.elementals.entities.ElementalEntities.DIRTBOTTLEENTITY;
-import static dev.saperate.elementals.items.ElementalItems.DIRT_BOTTLE_ITEM;
+import static dev.saperate.elementals.items.ElementalsItems.DIRT_BOTTLE_ITEM;
 
-public class DirtBottleEntity extends ThrownItemEntity {
+public class DirtBottleEntity extends ThrowableItemProjectile {
     private final Level world = level();
 
     public DirtBottleEntity(EntityType<DirtBottleEntity> entityType, Level world) {
@@ -50,39 +44,39 @@ public class DirtBottleEntity extends ThrownItemEntity {
 
 
     @Override
-    protected void onEntityHit(EntityHitResult entityHitResult) {
-        super.onEntityHit(entityHitResult);
+    protected void onHitEntity(EntityHitResult entityHitResult) {
+        super.onHitEntity(entityHitResult);
         Entity hit = entityHitResult.getEntity();
         BlockPos bPos = hit.getOnPos();
 
-        if (!world.getBlockState(bPos).isAir() && !world.getBlockState(bPos).isLiquid()) {
-            bPos = bPos.up();
+        if (!world.getBlockState(bPos).isAir() && !world.getBlockState(bPos).liquid()) {
+            bPos = bPos.above();
         }
-        if (world.getBlockState(bPos).isAir() || world.getBlockState(bPos).isLiquid()) {
-            level().setBlockState(
+        if (world.getBlockState(bPos).isAir() || world.getBlockState(bPos).liquid()) {
+            level().setBlockAndUpdate(
                     bPos,
-                    Blocks.DIRT.getDefaultState());
+                    Blocks.DIRT.defaultBlockState());
         }
 
         discard();
     }
 
     @Override
-    protected void onCollision(HitResult hitResult) {
-        super.onCollision(hitResult);
+    protected void onHitBlock(BlockHitResult hitResult) {
+        super.onHitBlock(hitResult);
         if (hitResult.getType().equals(HitResult.Type.ENTITY)) {
             return;
         }
         BlockPos bPos = new BlockPos(getBlockX(), (int) Math.round(getY()), getBlockZ());
-        FallingBlockEntity.spawnFromBlock(world, bPos, Blocks.DIRT.getDefaultState());
+        FallingBlockEntity.fall(world, bPos, Blocks.DIRT.defaultBlockState());
         discard();
     }
-
+    
     public ItemStack asItemStack() {
         ItemStack stack = new ItemStack(DIRT_BOTTLE_ITEM);
-        NbtCompound tag = new NbtCompound();
-        tag.putUuid("EntityUUID", this.getUuid());
-        stack.set(DataComponentTypes.CUSTOM_DATA, NbtComponent.of(tag));
+        CompoundTag tag = new CompoundTag();
+        tag.putUUID("EntityUUID", this.getUUID());
+        stack.set(DataComponents.CUSTOM_DATA, CustomData.of(tag));
         return stack;
     }
 }

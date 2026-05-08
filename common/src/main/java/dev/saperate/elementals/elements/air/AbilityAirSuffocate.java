@@ -3,12 +3,10 @@ package dev.saperate.elementals.elements.air;
 import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.elements.Ability;
 import dev.saperate.elementals.entities.water.WaterHelmetEntity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.effect.MobEffectInstance;
-import net.minecraft.entity.player.Player;
-import net.minecraft.util.hit.EntityHitResult;
-import net.minecraft.util.hit.HitResult;
-
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.HitResult;
 
 import static dev.saperate.elementals.utils.SapsUtils.raycastFull;
 
@@ -65,7 +63,7 @@ public class AbilityAirSuffocate implements Ability {
             return;
         }
         double distance = ((WaterHelmetEntity)bender.abilityData)
-                .getOwner().getPos().subtract(bender.player.getPos()).length();
+                .getOwner().position().subtract(bender.player.position()).length();
 
 
         if (!bender.player.isCrouching()

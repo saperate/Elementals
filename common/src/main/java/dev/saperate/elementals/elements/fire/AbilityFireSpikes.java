@@ -4,11 +4,11 @@ import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.elements.Ability;
 import dev.saperate.elementals.entities.fire.FireBlockEntity;
-import net.minecraft.block.AbstractFireBlock;
-import net.minecraft.entity.player.Player;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.random.Random;
+import net.minecraft.core.BlockPos;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.block.FireBlock;
+import net.minecraft.world.phys.BlockHitResult;
 
 public class AbilityFireSpikes implements Ability {
     @Override
@@ -22,15 +22,15 @@ public class AbilityFireSpikes implements Ability {
             return;
         }
         Player player = bender.player;
-        Random rnd = player.getRandom();
+        RandomSource rnd = player.getRandom();
         PlayerData plrData = PlayerData.get(player);
-        BlockHitResult hit = (BlockHitResult) player.raycast(5, 0, true);
-        BlockPos bPos = hit.getOnPos();
+        BlockHitResult hit = (BlockHitResult) player.pick(5, 0, true);
+        BlockPos bPos = hit.getBlockPos();
 
 
         placeFire(bender, bPos, hit, plrData);
-        int dx = (int) Math.round(-Math.sin(Math.toRadians(player.getYaw())));
-        int dz = (int) Math.round(Math.cos(Math.toRadians(player.getYaw())));
+        int dx = (int) Math.round(-Math.sin(Math.toRadians(player.getYRot())));
+        int dz = (int) Math.round(Math.cos(Math.toRadians(player.getYRot())));
 
         int range = PlayerData.get(player).canUseUpgrade("fireSpikesRangeI") ? 10 : 6;
 
@@ -38,13 +38,13 @@ public class AbilityFireSpikes implements Ability {
 
         for (int i = 1; i <= range; i++) {
 
-            if(rnd.nextBetween(0,6 / countMod) == 0){
-                placeFire(bender, bPos.add(dx * i, 0, dz * i), hit, plrData);
+            if(rnd.nextInt(0,6 / countMod) == 0){
+                placeFire(bender, bPos.offset(dx * i, 0, dz * i), hit, plrData);
             }
 
             for (int j = -i; j < i; j++) {
-                if(rnd.nextBetween(0,4 / countMod) == 0) {
-                    placeFire(bender, bPos.add(dz * j + (i * dx), 0,  - (dx * j - (i * dz))), hit, plrData);
+                if(rnd.nextInt(0,4 / countMod) == 0) {
+                    placeFire(bender, bPos.offset(dz * j + (i * dx), 0,  - (dx * j - (i * dz))), hit, plrData);
                 }
             }
 
@@ -54,33 +54,14 @@ public class AbilityFireSpikes implements Ability {
     public void placeFire(Bender bender, BlockPos bPos, BlockHitResult hit, PlayerData plrData) {
         Player player = bender.player;
 
-        if (AbstractFireBlock.canPlaceAt(player.level(), bPos.up(), hit.getSide())) {
+        if (FireBlock.canBePlacedAt(player.level(), bPos.above(), hit.getDirection())) {
             FireBlockEntity entity = new FireBlockEntity(player.level(), player, bPos.getX() + 0.5f, bPos.getY() + 1, bPos.getZ() + 0.5f);
             entity.setFinalFireHeight(1.5f);
             player.level().addFreshEntity(entity);
-            FireElement.placeFire(hit.getOnPos(), hit.getSide(), player, player.level().getBlockState(bPos));
+            FireElement.placeFire(hit.getBlockPos(), hit.getDirection(), player, player.level().getBlockState(bPos));
         }
     }
-
-    @Override
-    public void onLeftClick(Bender bender, boolean started) {
-
-    }
-
-    @Override
-    public void onMiddleClick(Bender bender, boolean started) {
-
-    }
-
-    @Override
-    public void onRightClick(Bender bender, boolean started) {
-
-    }
-
-    @Override
-    public void onTick(Bender bender) {
-
-    }
+    
     @Override
     public void onRemove(Bender bender) {
         bender.setCurrAbility(null);

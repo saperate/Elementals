@@ -1,33 +1,25 @@
 package dev.saperate.elementals.entities.earth;
 
 import dev.saperate.elementals.data.ElementalConfig;
-import dev.saperate.elementals.entities.ElementalEntities;
 import dev.saperate.elementals.entities.common.AbstractElementalsEntity;
-import dev.saperate.elementals.utils.SapsUtils;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.entity.*;
-import net.minecraft.entity.data.SynchedEntityData;
-import net.minecraft.entity.data.EntityDataAccessor;
-import net.minecraft.entity.data.EntityDataSerializers;
-import net.minecraft.entity.player.Player;
-import net.minecraft.entity.projectile.ProjectileEntity;
-import net.minecraft.entity.projectile.ProjectileUtil;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.particle.BlockStateParticleEffect;
-import net.minecraft.particle.ParticleTypes;
-import net.minecraft.predicate.entity.EntityPredicates;
-import net.minecraft.sound.SoundSource;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.TypeFilter;
-import net.minecraft.util.hit.EntityHitResult;
-import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3;
-import net.minecraft.world.Level;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.BlockParticleOption;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.MoverType;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3f;
-
-import java.util.List;
 
 import static dev.saperate.elementals.Elementals.BENDING_GRIEFING;
 import static dev.saperate.elementals.entities.ElementalEntities.EARTHBLOCK;
@@ -37,7 +29,7 @@ import static dev.saperate.elementals.utils.SapsUtils.summonParticles;
 public class EarthBlockEntity extends AbstractElementalsEntity<Player> {
     private static final EntityDataAccessor<Integer> MODEL_SHAPE_ID = SynchedEntityData.defineId(EarthBlockEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<BlockState> BLOCK_STATE = SynchedEntityData.defineId(EarthBlockEntity.class, EntityDataSerializers.BLOCK_STATE);
-    private static final EntityDataAccessor<Vector3f> TARGET_POSITION = SynchedEntityData.defineId(EarthBlockEntity.class, EntityDataSerializers.VECTOR3F);
+    private static final EntityDataAccessor<Vector3f> TARGET_POSITION = SynchedEntityData.defineId(EarthBlockEntity.class, EntityDataSerializers.VECTOR3);
     private static final EntityDataAccessor<Boolean> USES_OFFSET = SynchedEntityData.defineId(EarthBlockEntity.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Boolean> IS_COLLIDABLE = SynchedEntityData.defineId(EarthBlockEntity.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Float> MOVEMENT_SPEED = SynchedEntityData.defineId(EarthBlockEntity.class, EntityDataSerializers.FLOAT);
@@ -68,7 +60,7 @@ public class EarthBlockEntity extends AbstractElementalsEntity<Player> {
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
         builder.define(MODEL_SHAPE_ID, 0);
-        builder.define(BLOCK_STATE, Blocks.AIR.getDefaultState());
+        builder.define(BLOCK_STATE, Blocks.AIR.defaultBlockState());
         builder.define(TARGET_POSITION, new Vector3f(0, -1000, 0));
         builder.define(USES_OFFSET, false);
         builder.define(IS_COLLIDABLE, true);
@@ -80,9 +72,9 @@ public class EarthBlockEntity extends AbstractElementalsEntity<Player> {
     @Override
     public void tick() {
         super.tick();
-        if (random.nextBetween(0, 20) == 6) {
+        if (random.nextInt(0, 20) == 6) {
             summonParticles(this, random,
-                    new BlockStateParticleEffect(ParticleTypes.BLOCK, getBlockState()),
+                    new BlockParticleOption(ParticleTypes.BLOCK, getBlockState()),
                     0, 1);
         }
 
@@ -119,7 +111,7 @@ public class EarthBlockEntity extends AbstractElementalsEntity<Player> {
     }
 
     @Override
-    public boolean isCollidable() {
+    public boolean canBeCollidedWith() {
         return !(getModelShapeId() == 1) && isEntityCollidable();
     }
 
@@ -131,7 +123,7 @@ public class EarthBlockEntity extends AbstractElementalsEntity<Player> {
     @Override
     public void collidesWithGround() {
         if (!(getModelShapeId() == 1) && drops && level().getGameRules().getBoolean(BENDING_GRIEFING)) {
-            level().setBlockState(
+            level().setBlockAndUpdate(
                     new BlockPos(
                             getBlockX(),
                             (int) Math.round(getY()),
@@ -150,7 +142,7 @@ public class EarthBlockEntity extends AbstractElementalsEntity<Player> {
     @Override
     public void onClientRemoval() {
         super.onClientRemoval();
-        this.level().playSound(getX(), getY(), getZ(), SoundEvents.BLOCK_STONE_BREAK, SoundSource.BLOCKS, .5f, (1.0f + (this.level().random.nextFloat() - this.level().random.nextFloat()) * 0.2f) * 0.7f, false);
+        this.level().playSound(this, getOnPos(), SoundEvents.STONE_BREAK, SoundSource.BLOCKS, .5f, (1.0f + (this.level().random.nextFloat() - this.level().random.nextFloat()) * 0.2f) * 0.7f);
         //TODO make this drop the block's item or place the block
     }
 
@@ -162,8 +154,8 @@ public class EarthBlockEntity extends AbstractElementalsEntity<Player> {
         } else {
             entity.fallDistance = 0;
         }
-        entity.setDeltaMovement(this.getDeltaMovement().multiply(1.2f));
-        entity.velocityModified = true;
+        entity.setDeltaMovement(this.getDeltaMovement().scale(1.2f));
+        entity.hasImpulse = true;
         entity.move(MoverType.SELF, entity.getDeltaMovement());
     }
 
@@ -171,9 +163,9 @@ public class EarthBlockEntity extends AbstractElementalsEntity<Player> {
     public void onHitEntity(Entity entity) {
         entity.fallDistance = 0;
         entity.hurt(this.damageSources().playerAttack((Player) getOwner()), getDamage() * ElementalConfig.get().BENDING_DAMAGE_MULTIPLIER);
-        entity.addDeltaMovement(this.getDeltaMovement().multiply(0.5));
+        entity.addDeltaMovement(this.getDeltaMovement().scale(0.5));
         entity.move(MoverType.SELF, entity.getDeltaMovement());
-        entity.velocityModified = true;
+        entity.hasImpulse = true;
         discard();
     }
 

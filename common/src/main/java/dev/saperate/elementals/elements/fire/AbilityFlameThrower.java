@@ -5,27 +5,23 @@ import dev.saperate.elementals.data.ElementalConfig;
 import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.elements.Ability;
 import dev.saperate.elementals.utils.SapsUtils;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.ItemEntity;
-import net.minecraft.entity.decoration.AbstractDecorationEntity;
-import net.minecraft.entity.player.Player;
-import net.minecraft.entity.projectile.ProjectileEntity;
-import net.minecraft.entity.projectile.thrown.EggEntity;
-import net.minecraft.particle.ParticleTypes;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundSource;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.math.Box;
-import net.minecraft.util.math.Vec3;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.decoration.HangingEntity;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3f;
 
 import java.util.List;
 
-import static dev.saperate.elementals.Elementals.WIND_SOUND_EVENT;
 import static dev.saperate.elementals.utils.SapsUtils.*;
 
 public class AbilityFlameThrower implements Ability {
-    public static final Box boundingBox = new Box(new Vec3(-1, -1, -1), new Vec3(1, 1, 1));
+    public static final AABB boundingBox = new AABB(new Vec3(-1, -1, -1), new Vec3(1, 1, 1));
 
     @Override
     public void onCall(Bender bender, long deltaT) {
@@ -39,16 +35,6 @@ public class AbilityFlameThrower implements Ability {
         }
         bender.abilityData = true;
         bender.setCurrAbility(this);
-    }
-
-    @Override
-    public void onLeftClick(Bender bender, boolean started) {
-
-    }
-
-    @Override
-    public void onMiddleClick(Bender bender, boolean started) {
-
     }
 
     @Override
@@ -77,37 +63,37 @@ public class AbilityFlameThrower implements Ability {
 
         Player player = bender.player;
         if (bender.abilityData.equals(true)) {
-            serverSummonParticles((ServerWorld) player.level(),
+            serverSummonParticles((ServerLevel) player.level(),
                     PlayerData.get(player).canUseUpgrade("blueFire") ?
                             ParticleTypes.SOUL_FIRE_FLAME : ParticleTypes.FLAME, player, player.getRandom(),
                     0, 0.1f, 0,
                     0.1f, 1,
                     0, 0, 0, 0);
         } else {
-            Vector3f pos = getEntityLookVector(player, 3).subtract(player.getPos()).normalize().multiply(3).toVector3f();
+            Vector3f pos = getEntityLookVector(player, 3).subtract(player.position()).normalize().scale(3).toVector3f();
 
 
-            serverSummonParticles((ServerWorld) player.level(),
+            serverSummonParticles((ServerLevel) player.level(),
                     PlayerData.get(player).canUseUpgrade("blueFire") ?
                             ParticleTypes.SOUL_FIRE_FLAME : ParticleTypes.FLAME, player, player.getRandom(),
                     pos.x - 1,
                     pos.y - 1.6f,
                     pos.z - 1,
-                    0.05f + player.getMovementSpeed(), 8,
+                    0.05f + player.getSpeed(), 8,
                     0, 0, 0, 2);
-            playSoundAtEntity(player,SoundEvents.BLOCK_FIRE_AMBIENT,5);
+            playSoundAtEntity(player, SoundEvents.FIRE_AMBIENT,5);
 
-            List<Entity> hits = player.level().getEntitiesByClass(Entity.class,
-                    boundingBox.expand(12).offset(player.getPos()),
+            List<Entity> hits = player.level().getEntitiesOfClass(Entity.class,
+                    boundingBox.inflate(12).move(player.position()),
                     Entity::isAlive);
 
             for (Entity e : hits) {
-                if (e.equals(player)  || e instanceof ItemEntity || e instanceof AbstractDecorationEntity) {
+                if (e.equals(player)  || e instanceof ItemEntity || e instanceof HangingEntity) {
                     continue;
                 }
                 if (SapsUtils.isLookingAt(bender.player,e,6,0.75f)) {
-                    if (!e.isFireImmune()) {
-                        e.setOnFireFor(8);
+                    if (!e.fireImmune()) {
+                        e.igniteForSeconds(8);
                         e.hurt(e.damageSources().playerAttack(player), (PlayerData.get(player).canUseUpgrade("blueFire") ? 3 : 2.5f) * ElementalConfig.get().BENDING_DAMAGE_MULTIPLIER);
                     }
                 }

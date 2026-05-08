@@ -67,7 +67,7 @@ public class LightningArcEntity extends AbstractElementalsEntity<Player> {
                     LIGHTNING_PARTICLE_TYPE,
                     0, 1, 0);
             if (getParent() == null) {
-                //playSound(SoundEvents.BLOCK_FIRE_AMBIENT, 1, 0);
+                //playSound(SoundEvents.FIRE_AMBIENT, 1, 0);
             }
         }
 

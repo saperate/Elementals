@@ -1,26 +1,19 @@
 package dev.saperate.elementals.entities.fire;
 
-import dev.saperate.elementals.blocks.blockEntities.LitAirBlockEntity;
 import dev.saperate.elementals.data.Bender;
-import dev.saperate.elementals.elements.Ability;
-import dev.saperate.elementals.elements.fire.AbilityFireWisp;
 import dev.saperate.elementals.elements.fire.FireElement;
 import dev.saperate.elementals.entities.common.AbstractElementalsEntity;
-import dev.saperate.elementals.misc.FireExplosion;
-import net.minecraft.block.AbstractFireBlock;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.MoverType;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.data.SynchedEntityData;
-import net.minecraft.entity.data.EntityDataAccessor;
-import net.minecraft.entity.data.EntityDataSerializers;
-import net.minecraft.entity.player.Player;
-import net.minecraft.particle.ParticleTypes;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.world.Level;
-import net.minecraft.world.explosion.Explosion;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.MoverType;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 
 
 import static dev.saperate.elementals.entities.ElementalEntities.FIREWISP;
@@ -56,16 +49,16 @@ public class FireWispEntity extends AbstractElementalsEntity<Player> {
     public void tick() {
         super.tick();
 
-        if (touchingWater && !level().isClientSide) {
+        if (isInWater() && !level().isClientSide) {
             remove();
             return;
         }
 
-        if (random.nextBetween(0, 20) == 6) {
+        if (random.nextInt(0, 20) == 6) {
             summonParticles(this, random,
                     isBlue() ? ParticleTypes.SOUL_FIRE_FLAME : ParticleTypes.FLAME,
                     0, 1);
-            //playSound(SoundEvents.BLOCK_FIRE_AMBIENT, 1, 0);
+            //playSound(SoundEvents.FIRE_AMBIENT, 1, 0);
 
         }
 
@@ -101,7 +94,7 @@ public class FireWispEntity extends AbstractElementalsEntity<Player> {
 
     private void moveEntity() {
         if (getIsControlled() ) {
-            float yaw = getOwner().getHeadYaw() % 360;
+            float yaw = getOwner().getYHeadRot() % 360;
             if(yaw < 0){
                 yaw = 360 + yaw;
             }
@@ -119,7 +112,7 @@ public class FireWispEntity extends AbstractElementalsEntity<Player> {
 
         Player owner = getOwner();
         if(owner != null && !level().isClientSide){
-            Bender bender = Bender.getBender((ServerPlayerEntity) owner);
+            Bender bender = Bender.getBender((ServerPlayer) owner);
             bender.removeAbilityFromBackground(FireElement.get().getAbility(11));
         }
     }

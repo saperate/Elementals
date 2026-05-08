@@ -3,7 +3,6 @@ package dev.saperate.elementals.entities;
 
 
 import dev.saperate.elementals.Constants;
-import dev.saperate.elementals.Elementals;
 import dev.saperate.elementals.entities.blood.BloodShotEntity;
 import dev.saperate.elementals.entities.common.BoomerangEntity;
 import dev.saperate.elementals.entities.common.DecoyPlayerEntity;
@@ -19,6 +18,7 @@ import dev.saperate.elementals.entities.metal.MetalBulletEntity;
 import dev.saperate.elementals.entities.metal.MetalCableEntity;
 import dev.saperate.elementals.entities.metal.MetalLanceEntity;
 import dev.saperate.elementals.entities.water.*;
+import dev.saperate.elementals.mixin.DefaultAttributeRegistryAccessor;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
@@ -28,152 +28,89 @@ import static dev.saperate.elementals.entities.water.WaterTowerEntity.heightLimi
 
 public class ElementalEntities {
     //Water
-    public static final EntityType<WaterArcEntity> WATERARC = registerAbilityEntity(
+    public static final EntityType<WaterArcEntity> WATERARC = registerEntity(
             "water_arc", WaterArcEntity::new, 0.25f, 0.25f);
-    public static final EntityType<WaterArmEntity> WATERARM = registerAbilityEntity(
+    public static final EntityType<WaterArmEntity> WATERARM = registerEntity(
             "water_arm", WaterArmEntity::new, 0.25f, 0.25f);
-    public static final EntityType<WaterBladeEntity> WATERBLADE = registerAbilityEntity(
+    public static final EntityType<WaterBladeEntity> WATERBLADE = registerEntity(
             "water_blade", WaterBladeEntity::new, 0.6f, 0.125f);
-    public static final EntityType<WaterBulletEntity> WATERBULLET = registerAbilityEntity(
+    public static final EntityType<WaterBulletEntity> WATERBULLET = registerEntity(
             "water_bullet", WaterBulletEntity::new, 0.25f, 0.25f);
-    public static final EntityType<WaterCubeEntity> WATERCUBE = registerAbilityEntity(
+    public static final EntityType<WaterCubeEntity> WATERCUBE = registerEntity(
             "water_cube", WaterCubeEntity::new, 1, 1);
-    public static final EntityType<WaterHealingEntity> WATERHEALING = registerAbilityEntity(
+    public static final EntityType<WaterHealingEntity> WATERHEALING = registerEntity(
             "water_healing", WaterHealingEntity::new, 0.5f, 0.5f);
-    public static final EntityType<WaterHelmetEntity> WATERHELMET = registerAbilityEntity(
+    public static final EntityType<WaterHelmetEntity> WATERHELMET = registerEntity(
             "water_helmet", WaterHelmetEntity::new, 1, 1);
-    public static final EntityType<WaterJetEntity> WATERJET = registerAbilityEntity(
+    public static final EntityType<WaterJetEntity> WATERJET = registerEntity(
             "water_jet", WaterJetEntity::new, 0.25f, 0.25f);
-    public static final EntityType<WaterShieldEntity> WATERSHIELD = registerAbilityEntity(
+    public static final EntityType<WaterShieldEntity> WATERSHIELD = registerEntity(
             "water_shield", WaterShieldEntity::new, 3, 3);
-    public static final EntityType<WaterTowerEntity> WATERTOWER = registerAbilityEntity(
+    public static final EntityType<WaterTowerEntity> WATERTOWER = registerEntity(
             "water_tower", WaterTowerEntity::new, 1, heightLimit);
 
     //Fire
-    public static final EntityType<FireArcEntity> FIREARC = Registry.register(
-            Registries.ENTITY_TYPE,
-            Identifier.of("assets/elementals", "fire_arc"),
-            FabricEntityTypeBuilder.<FireArcEntity>create(SpawnGroup.MISC, FireArcEntity::new)
-                    .disableSummon()
-                    .dimensions(EntityDimensions.fixed(0.25f, 0.25f)).build());
-    public static final EntityType<FireBallEntity> FIREBALL = Registry.register(
-            Registries.ENTITY_TYPE,
-            Identifier.of("assets/elementals", "fire_ball"),
-            FabricEntityTypeBuilder.<FireBallEntity>create(SpawnGroup.MISC, FireBallEntity::new)
-                    .disableSummon()
-                    .dimensions(EntityDimensions.fixed(1, 1)).build());
-    public static final EntityType<FireBlockEntity> FIREBLOCK = Registry.register(
-            Registries.ENTITY_TYPE,
-            Identifier.of("assets/elementals", "fire_block"),
-            FabricEntityTypeBuilder.<FireBlockEntity>create(SpawnGroup.MISC, FireBlockEntity::new)
-                    .disableSummon()
-                    .dimensions(EntityDimensions.changing(1, FireBlockEntity.MAX_FLAME_SIZE)).build());
-    public static final EntityType<FireShieldEntity> FIRESHIELD = Registry.register(
-            Registries.ENTITY_TYPE,
-            Identifier.of("assets/elementals", "fire_shield"),
-            FabricEntityTypeBuilder.<FireShieldEntity>create(SpawnGroup.MISC, FireShieldEntity::new)
-                    .disableSummon()
-                    .dimensions(EntityDimensions.changing(3.5f, FireShieldEntity.MAX_FLAME_SIZE)).build());
-
-    public static final EntityType<FireWispEntity> FIREWISP = Registry.register(
-            Registries.ENTITY_TYPE,
-            Identifier.of("assets/elementals", "fire_wisp"),
-            FabricEntityTypeBuilder.<FireWispEntity>create(SpawnGroup.MISC, FireWispEntity::new)
-                    .disableSummon()
-                    .dimensions(EntityDimensions.fixed(0.25f, 0.25f)).build());
+    public static final EntityType<FireArcEntity> FIREARC = registerEntity(
+            "fire_arc", FireArcEntity::new, 0.25f, 0.25f);
+    public static final EntityType<FireBallEntity> FIREBALL = registerEntity(
+            "fire_ball", FireBallEntity::new, 1, 1);
+    public static final EntityType<FireBlockEntity> FIREBLOCK = registerEntity(
+            "fire_block", FireBlockEntity::new, 1, FireBlockEntity.MAX_FLAME_SIZE);
+    public static final EntityType<FireShieldEntity> FIRESHIELD = registerEntity(
+            "fire_shield", FireShieldEntity::new, 3.5f, 3f);
+    public static final EntityType<FireWispEntity> FIREWISP = registerEntity(
+            "fire_wisp", FireWispEntity::new, 0.25f, 0.25f);
 
     //Earth
-    public static final EntityType<EarthBlockEntity> EARTHBLOCK = Registry.register(
-            Registries.ENTITY_TYPE,
-            Identifier.of("assets/elementals", "earth_block"),
-            FabricEntityTypeBuilder.<EarthBlockEntity>create(SpawnGroup.MISC, EarthBlockEntity::new)
-                    .disableSummon()
-                    .dimensions(EntityDimensions.fixed(.9f, .9f)).build());
+    public static final EntityType<EarthBlockEntity> EARTHBLOCK = registerEntity(
+            "earth_block", EarthBlockEntity::new, .9f, .9f);
+
 
     //Air
-    public static final EntityType<AirShieldEntity> AIRSHIELD = Registry.register(
-            Registries.ENTITY_TYPE,
-            Identifier.of("assets/elementals", "air_shield"),
-            FabricEntityTypeBuilder.<AirShieldEntity>create(SpawnGroup.MISC, AirShieldEntity::new)
-                    .disableSummon()
-                    .dimensions(EntityDimensions.changing(3, 3)).build());
-    public static final EntityType<AirTornadoEntity> AIRTORNADO = Registry.register(
-            Registries.ENTITY_TYPE,
-            Identifier.of("assets/elementals", "air_tornado"),
-            FabricEntityTypeBuilder.<AirTornadoEntity>create(SpawnGroup.MISC, AirTornadoEntity::new)
-                    .disableSummon()
-                    .dimensions(EntityDimensions.changing(1.5f, 4)).build());
-    public static final EntityType<AirStreamEntity> AIRSTREAM = Registry.register(
-            Registries.ENTITY_TYPE,
-            Identifier.of("assets/elementals", "air_stream"),
-            FabricEntityTypeBuilder.<AirStreamEntity>create(SpawnGroup.MISC, AirStreamEntity::new)
-                    .disableSummon()
-                    .dimensions(EntityDimensions.changing(0.25f, 0.25f)).build());
-    public static final EntityType<AirBallEntity> AIRBALL = Registry.register(
-            Registries.ENTITY_TYPE,
-            Identifier.of("assets/elementals", "air_ball"),
-            FabricEntityTypeBuilder.<AirBallEntity>create(SpawnGroup.MISC, AirBallEntity::new)
-                    .disableSummon()
-                    .dimensions(EntityDimensions.fixed(1, 1)).build());
-    public static final EntityType<AirBulletEntity> AIRBULLET = Registry.register(
-            Registries.ENTITY_TYPE,
-            Identifier.of("assets/elementals", "air_bullet"),
-            FabricEntityTypeBuilder.<AirBulletEntity>create(SpawnGroup.MISC, AirBulletEntity::new)
-                    .disableSummon()
-                    .dimensions(EntityDimensions.fixed(0.25f, 0.25f)).build());
-    public static final EntityType<AirScooterEntity> AIRSCOOTER = Registry.register(
-            Registries.ENTITY_TYPE,
-            Identifier.of("assets/elementals", "air_scooter"),
-            FabricEntityTypeBuilder.<AirScooterEntity>create(SpawnGroup.MISC, AirScooterEntity::new)
-                    .disableSummon()
-                    .dimensions(EntityDimensions.fixed(1, 1)).build());
+    public static final EntityType<AirShieldEntity> AIRSHIELD = registerEntity(
+            "air_shield", AirShieldEntity::new, 3, 3);
+    public static final EntityType<AirTornadoEntity> AIRTORNADO = registerEntity(
+            "air_tornado", AirTornadoEntity::new, 1.5f, 4);
+    public static final EntityType<AirStreamEntity> AIRSTREAM = registerEntity(
+            "air_stream", AirStreamEntity::new, 0.25f, 0.25f);
+    public static final EntityType<AirBallEntity> AIRBALL = registerEntity(
+            "air_ball", AirBallEntity::new, 1, 1);
+    public static final EntityType<AirBulletEntity> AIRBULLET = registerEntity(
+            "air_bullet", AirBulletEntity::new, 0.25f, 0.25f);
+    public static final EntityType<AirScooterEntity> AIRSCOOTER = registerEntity(
+            "air_scooter", AirScooterEntity::new, 1, 1);
 
     //LIGHTNING
-    public static final EntityType<LightningArcEntity> LIGHTNINGARC = registerAbilityEntity(
+    public static final EntityType<LightningArcEntity> LIGHTNINGARC = registerEntity(
             "lightning_arc", LightningArcEntity::new, 0.25f, 0.25f);
-    public static final EntityType<VoltArcEntity> VOLTARC = registerAbilityEntity(
+    public static final EntityType<VoltArcEntity> VOLTARC = registerEntity(
             "volt_arc", VoltArcEntity::new, 0.125f, 0.125f);
 
     //BLOOD
-    public static final EntityType<BloodShotEntity> BLOODSHOT = registerAbilityEntity(
+    public static final EntityType<BloodShotEntity> BLOODSHOT = registerEntity(
             "blood_shot", BloodShotEntity::new, 0.125f, 0.125f);
 
     //METAL
-    public static final EntityType<MetalCableEntity> METALCABLE = registerAbilityEntity(
+    public static final EntityType<MetalCableEntity> METALCABLE = registerEntity(
             "metal_cable", MetalCableEntity::new, 0.25f, 0.25f);
-    public static final EntityType<MetalBindEntity> METALBIND = registerAbilityEntity(
+    public static final EntityType<MetalBindEntity> METALBIND = registerEntity(
             "metal_bind", MetalBindEntity::new, 0.25f, 0.25f);
-    public static final EntityType<MetalBulletEntity> METALBULLET = registerAbilityEntity(
+    public static final EntityType<MetalBulletEntity> METALBULLET = registerEntity(
             "metal_bullet", MetalBulletEntity::new, 0.25f, 0.25f);
-    public static final EntityType<MetalLanceEntity> METALLANCE = registerAbilityEntity(
+    public static final EntityType<MetalLanceEntity> METALLANCE = registerEntity(
             "metal_lance", MetalLanceEntity::new, .4f, .4f);
 
     //Common
-    public static final EntityType<DecoyPlayerEntity> DECOYPLAYER = Registry.register(
-            Registries.ENTITY_TYPE,
-            Identifier.of("assets/elementals", "decoy_player"),
-            FabricEntityTypeBuilder.<DecoyPlayerEntity>create(SpawnGroup.MISC, DecoyPlayerEntity::new)
-                    .disableSummon()
-                    .dimensions(EntityDimensions.fixed(0.6f, 2)).build());
+    public static final EntityType<DecoyPlayerEntity> DECOYPLAYER = registerEntity(
+            "decoy_player", DecoyPlayerEntity::new, 0.6f, 2);
+    public static final EntityType<DirtBottleEntity> DIRTBOTTLEENTITY = registerEntity(
+            "dirt_bottle", DirtBottleEntity::new, .75f, .75f);
+    public static final EntityType<BoomerangEntity> BOOMERANGENTITY = registerEntity(
+            "boomerang", BoomerangEntity::new, .6f, .2f);
+    public static final EntityType<SkyBisonEntity> SKYBISON = registerEntity(
+            "sky_bison", SkyBisonEntity::new, 3.25f, 3.25f);
 
-    public static final EntityType<DirtBottleEntity> DIRTBOTTLEENTITY = Registry.register(
-            Registries.ENTITY_TYPE,
-            Identifier.of("assets/elementals", "dirt_bottle"),
-            FabricEntityTypeBuilder.<DirtBottleEntity>create(SpawnGroup.MISC, DirtBottleEntity::new)
-                    .dimensions(EntityDimensions.fixed(.75f, .75f)).build());
-    public static final EntityType<BoomerangEntity> BOOMERANGENTITY = Registry.register(
-            Registries.ENTITY_TYPE,
-            Identifier.of("assets/elementals", "boomerang"),
-            FabricEntityTypeBuilder.<BoomerangEntity>create(SpawnGroup.MISC, BoomerangEntity::new)
-                    .dimensions(EntityDimensions.fixed(.6f, .2f)).build());
-
-    public static final EntityType<SkyBisonEntity> SKYBISON = Registry.register(
-            Registries.ENTITY_TYPE,
-            Identifier.of("assets/elementals", "sky_bison"),
-            FabricEntityTypeBuilder.<SkyBisonEntity>create(SpawnGroup.MISC, SkyBisonEntity::new)
-                    .dimensions(EntityDimensions.fixed(3.25f, 3.25f)).build());
-
-    private static <T extends Entity> EntityType<T> registerAbilityEntity(String name, EntityType.EntityFactory<T> factory, float width, float height) {
+    private static <T extends Entity> EntityType<T> registerEntity(String name, EntityType.EntityFactory<T> factory, float width, float height) {
         return Registry.register(
                 BuiltInRegistries.ENTITY_TYPE,
                 ResourceLocation.fromNamespaceAndPath(Constants.MODID, name),
@@ -183,8 +120,8 @@ public class ElementalEntities {
     }
     
     public static void register() {
-        FabricDefaultAttributeRegistry.register(DECOYPLAYER, DecoyPlayerEntity.createMobAttributes());
-        FabricDefaultAttributeRegistry.register(SKYBISON, SkyBisonEntity.createAttributes());
+        DefaultAttributeRegistryAccessor.getRegistry().put(DECOYPLAYER, DecoyPlayerEntity.createMobAttributes().build());
+        DefaultAttributeRegistryAccessor.getRegistry().put(SKYBISON, SkyBisonEntity.createAttributes().build());
     }
 
 }

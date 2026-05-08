@@ -3,23 +3,17 @@ package dev.saperate.elementals.entities.fire;
 import dev.saperate.elementals.data.ElementalConfig;
 import dev.saperate.elementals.entities.common.AbstractElementalsEntity;
 import dev.saperate.elementals.utils.SapsUtils;
-import net.minecraft.block.Blocks;
-import net.minecraft.entity.*;
-import net.minecraft.entity.data.SynchedEntityData;
-import net.minecraft.entity.data.EntityDataAccessor;
-import net.minecraft.entity.data.EntityDataSerializers;
-import net.minecraft.entity.player.Player;
-import net.minecraft.entity.projectile.ProjectileEntity;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.particle.ParticleTypes;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.math.Vec3;
-import net.minecraft.world.Level;
-
-import java.util.List;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 
 import static dev.saperate.elementals.entities.ElementalEntities.FIRESHIELD;
-import static dev.saperate.elementals.utils.SapsUtils.summonParticles;
 
 public class FireShieldEntity extends AbstractElementalsEntity<Player> {
     public static final int MAX_FLAME_SIZE = 3;
@@ -56,8 +50,8 @@ public class FireShieldEntity extends AbstractElementalsEntity<Player> {
     public void tick() {
         super.tick();
 
-        if (random.nextBetween(0, 20) == 6) {
-            playSound(SoundEvents.BLOCK_FIRE_AMBIENT, 1, 0);
+        if (random.nextInt(0, 20) == 6) {
+            playSound(SoundEvents.FIRE_AMBIENT, 1, 0);
         }
 
         Entity owner = getOwner();
@@ -65,7 +59,7 @@ public class FireShieldEntity extends AbstractElementalsEntity<Player> {
             return;
         }
 
-        moveEntityTowardsGoal(owner.getPos().toVector3f());
+        moveEntityTowardsGoal(owner.position().toVector3f());
 
 
         float diff = (getFireHeight() - prevFlameSize) / heightAdjustSpeed;
@@ -84,9 +78,9 @@ public class FireShieldEntity extends AbstractElementalsEntity<Player> {
     @Override
     public void onTouchEntity(Entity entity) {
         if (entity.getY() - getY() < getFireHeight() + 1
-                && Math.abs(entity.getPos().subtract(getPos()).length()) > 2) {
-            if (!entity.isFireImmune()) {
-                entity.setOnFireFor(8);
+                && Math.abs(entity.position().subtract(position()).length()) > 2) {
+            if (!entity.fireImmune()) {
+                entity.igniteForSeconds(8);
                 float damage = isBlue() ? 2.5f : 1.5f;
                 if(SapsUtils.isBeingRainedOn(this)){
                     damage /= 2;
@@ -94,7 +88,7 @@ public class FireShieldEntity extends AbstractElementalsEntity<Player> {
                 entity.hurt(damageSources().inFire(), damage * ElementalConfig.get().BENDING_DAMAGE_MULTIPLIER);
             }
 
-            Vec3 direction = entity.getPos().add(0, 1.5f, 0).subtract(getPos()).multiply(0.1f);
+            Vec3 direction = entity.position().add(0, 1.5f, 0).subtract(position()).scale(0.1f);
             entity.setDeltaMovement(getDeltaMovement().add(direction));
         }
     }
@@ -105,7 +99,7 @@ public class FireShieldEntity extends AbstractElementalsEntity<Player> {
     }
 
     @Override
-    public boolean isCollidable() {
+    public boolean canBeCollidedWith() {
         return true;
     }
 

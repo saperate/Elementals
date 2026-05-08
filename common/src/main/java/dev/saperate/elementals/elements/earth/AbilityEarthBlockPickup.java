@@ -4,9 +4,9 @@ import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.elements.Ability;
 import dev.saperate.elementals.entities.earth.EarthBlockEntity;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.Player;
-import net.minecraft.util.math.Vec3;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 
 public class AbilityEarthBlockPickup implements Ability {
     @Override
@@ -53,13 +53,8 @@ public class AbilityEarthBlockPickup implements Ability {
         } else if (plrData.canUseUpgrade("earthBlockSpeedI")) {
             speed = 1.5f;
         }
-        entity.setDeltaMovement(bender.player, bender.player.getPitch(), bender.player.getYaw(), 0, speed, 0);
+        entity.setDeltaMovement(bender.player, bender.player.getXRot(), bender.player.getYRot(), 0, speed, 0);
         entity.setDamage(plrData.canUseUpgrade("earthBlockDamageI") ? 8 : 4);
-    }
-
-    @Override
-    public void onMiddleClick(Bender bender, boolean started) {
-
     }
 
     @Override
@@ -82,16 +77,12 @@ public class AbilityEarthBlockPickup implements Ability {
         } else if (plrData.canUseUpgrade("earthBlockSpeedI")) {
             speed = 2;
         }
-        blockEntity.setDeltaMovement(bender.player, bender.player.getPitch(), bender.player.getYaw(), 0, speed, 0);
+        blockEntity.setDeltaMovement(bender.player, bender.player.getXRot(), bender.player.getYRot(), 0, speed, 0);
         blockEntity.setModelShapeId(1);
         blockEntity.setDamage(plrData.canUseUpgrade("earthBlockDamageI") ? 12 : 8);
         blockEntity.setShiftToFreeze(false);
     }
-
-    @Override
-    public void onTick(Bender bender) {
-
-    }
+    
 
     @Override
     public void onRemove(Bender bender) {

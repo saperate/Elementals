@@ -3,13 +3,8 @@ package dev.saperate.elementals.elements.air;
 import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.elements.Ability;
-import dev.saperate.elementals.entities.air.AirShieldEntity;
 import dev.saperate.elementals.entities.air.AirTornadoEntity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.effect.MobEffectInstance;
-import net.minecraft.entity.player.Player;
-
-
+import net.minecraft.world.entity.player.Player;
 
 public class AbilityAirTornado implements Ability {
     @Override
@@ -81,7 +76,7 @@ public class AbilityAirTornado implements Ability {
             return;
         }
         entity.setControlled(false);
-        entity.setDeltaMovement(bender.player, bender.player.getPitch(), bender.player.getYaw(), 0, 0.2f, 0);
+        entity.setDeltaMovement(bender.player, bender.player.getXRot(), bender.player.getYRot(), 0, 0.2f, 0);
         entity.setDeltaMovement(entity.getDeltaMovement().multiply(1, 0, 1));//We can't fling tornadoes upwards
         entity.maxLifeTime = 120;
         //entity.setStepHeight(1f); fixme

@@ -14,32 +14,12 @@ public class AbilityAir3 implements Ability {
             return;
         }
 
-        if (deltaT >= 500 && !bender.player.hasVehicle() //0.5 seconds
+        if (deltaT >= 500 && !bender.player.isPassenger() //0.5 seconds
                 && playerData.canUseUpgrade("airScooter")) {
             AirElement.get().getAbility(10).onCall(bender, deltaT);
             return;
         }
         AirElement.get().getAbility(11).onCall(bender, deltaT);
-
-    }
-
-    @Override
-    public void onLeftClick(Bender bender, boolean started) {
-
-    }
-
-    @Override
-    public void onMiddleClick(Bender bender, boolean started) {
-
-    }
-
-    @Override
-    public void onRightClick(Bender bender, boolean started) {
-
-    }
-
-    @Override
-    public void onTick(Bender bender) {
 
     }
 

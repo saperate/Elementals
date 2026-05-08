@@ -1,23 +1,19 @@
 package dev.saperate.elementals.elements.fire;
 
-import dev.saperate.elementals.Elementals;
 import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.elements.Element;
 import dev.saperate.elementals.elements.Upgrade;
-import net.minecraft.block.AbstractFireBlock;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.SoulFireBlock;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.Player;
-import net.minecraft.sound.SoundSource;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.state.property.Properties;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.world.event.GameEvent;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.block.BaseFireBlock;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.gameevent.GameEvent;
 
 //TODO add compat with blue fire overlay mod
 public class FireElement extends Element {
@@ -81,15 +77,15 @@ public class FireElement extends Element {
     }
 
     public static void placeFire(BlockPos pos, Direction side, Entity entity, BlockState state){
-        BlockPos newPos = pos.offset(side);
+        BlockPos newPos = pos.relative(side);
 
-        entity.level().playSound(entity, pos, SoundEvents.ITEM_FLINTANDSTEEL_USE, SoundSource.BLOCKS, 1.0F, entity.level().getRandom().nextFloat() * 0.4F + 0.8F);
+        entity.level().playSound(entity, pos, SoundEvents.FLINTANDSTEEL_USE, SoundSource.BLOCKS, 1.0F, entity.level().getRandom().nextFloat() * 0.4F + 0.8F);
 
-        if(state.getProperties().contains(Properties.LIT)){
-            entity.level().setBlockState(pos, state.with(Properties.LIT, true), 11);
-            entity.level().emitGameEvent(entity, GameEvent.BLOCK_CHANGE, pos);
+        if(state.getProperties().contains(BlockStateProperties.LIT)){
+            entity.level().setBlockAndUpdate(pos, state.setValue(BlockStateProperties.LIT, true));
+            entity.level().gameEvent(entity, GameEvent.BLOCK_CHANGE, pos);
         }else{
-            entity.level().setBlockState(newPos, AbstractFireBlock.getState(entity.level(),newPos));
+            entity.level().setBlockAndUpdate(newPos, BaseFireBlock.getState(entity.level(),newPos));
         }
     }
 

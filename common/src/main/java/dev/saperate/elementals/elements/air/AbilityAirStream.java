@@ -4,7 +4,7 @@ import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.elements.Ability;
 import dev.saperate.elementals.entities.air.AirStreamEntity;
-import net.minecraft.entity.player.Player;
+import net.minecraft.world.entity.player.Player;
 import org.joml.Vector3f;
 
 import static dev.saperate.elementals.utils.SapsUtils.getEntityLookVector;
@@ -54,22 +54,10 @@ public class AbilityAirStream implements Ability {
         }
         entity.setDeltaMovement(bender.player, bender.player.getPitch(), bender.player.getYaw(), 0, speed, 0);
     }
-
-    @Override
-    public void onMiddleClick(Bender bender, boolean started) {
-
-    }
-
     @Override
     public void onRightClick(Bender bender, boolean started) {
         onRemove(bender);
     }
-
-    @Override
-    public void onTick(Bender bender) {
-
-    }
-
     @Override
     public void onRemove(Bender bender) {
         AirStreamEntity entity = (AirStreamEntity) bender.abilityData;

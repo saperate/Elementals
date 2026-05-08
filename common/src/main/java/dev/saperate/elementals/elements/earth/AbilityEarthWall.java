@@ -5,11 +5,10 @@ import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.elements.Ability;
 import dev.saperate.elementals.entities.earth.EarthBlockEntity;
 import dev.saperate.elementals.misc.BlockRestoreManager;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.entity.player.Player;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.LinkedList;
 
@@ -39,15 +38,15 @@ public class AbilityEarthWall implements Ability {
         LinkedList<EarthBlockEntity> entities = new LinkedList<>();
         BlockPos pos = (BlockPos) vars[2];
 
-        double dx = -Math.sin(Math.toRadians(player.getYaw() - 90));
-        double dz = Math.cos(Math.toRadians(player.getYaw() - 90));
+        double dx = -Math.sin(Math.toRadians(player.getYRot() - 90));
+        double dz = Math.cos(Math.toRadians(player.getYRot() - 90));
 
         for (int i = 1; i <= (plrData.canUseUpgrade("widerWall") ? 4 : 2); i++) {
             int dxScaled = (int) Math.round(dx * i);
             int dzScaled = (int) Math.round(dz * i);
 
-            placePillar(pos.add(dxScaled,0,dzScaled),3, entities, bender);
-            placePillar(pos.add(-dxScaled,0,-dzScaled),3, entities, bender);
+            placePillar(pos.offset(dxScaled,0,dzScaled),3, entities, bender);
+            placePillar(pos.offset(-dxScaled,0,-dzScaled),3, entities, bender);
         }
         placePillar(pos,3, entities, bender);
 
@@ -73,35 +72,26 @@ public class AbilityEarthWall implements Ability {
                 return;
             }
 
-            player.level().setBlockState(bPos, Blocks.AIR.getDefaultState());
+            player.level().setBlockAndUpdate(bPos, Blocks.AIR.defaultBlockState());
             if(!player.level().getGameRules().getBoolean(BENDING_GRIEFING)){
                 BlockRestoreManager.addBlockToRestore(new BlockRestoreManager.BlockInformation(
                         bPos,
                         state,
-                        player.level().getRegistryKey(),
-                        40 + player.level().random.nextBetween(0, 140)
+                        player.level().dimension(),
+                        40 + player.level().random.nextInt(0, 140)
                 ));
             }
 
 
             EarthBlockEntity entity = new EarthBlockEntity(player.level(), player, startPos.getX() + 0.5f, startPos.getY() - y, startPos.getZ() + 0.5f);
             entity.setBlockState(state);
-            entity.setTargetPosition(startPos.add(0,height - y,0).toCenterPos().toVector3f().add(0,0.05f,0));
+            entity.setTargetPosition(startPos.offset(0,height - y,0).getCenter().toVector3f().add(0,0.05f,0));
             entity.setMovementSpeed(0.2f);
             player.level().addFreshEntity(entity);
             entities.add(entity);
         }
     }
-
-    @Override
-    public void onLeftClick(Bender bender, boolean started) {
-
-    }
-
-    @Override
-    public void onMiddleClick(Bender bender, boolean started) {
-
-    }
+    
 
     @Override
     public void onRightClick(Bender bender, boolean started) {
@@ -136,11 +126,6 @@ public class AbilityEarthWall implements Ability {
                 entity.maxLifeTime = timer;
             }
         }
-    }
-
-    @Override
-    public void onTick(Bender bender) {
-
     }
 
     @Override

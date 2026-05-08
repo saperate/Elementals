@@ -1,16 +1,10 @@
 package dev.saperate.elementals.elements.earth;
 
 import dev.saperate.elementals.data.Bender;
-import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.elements.Ability;
-import dev.saperate.elementals.entities.earth.EarthBlockEntity;
-import net.minecraft.entity.player.Player;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3;
-import net.minecraft.world.Level;
-
-import java.util.LinkedList;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.entity.player.Player;
 
 import static dev.saperate.elementals.Elementals.BENDING_GRIEFING;
 
@@ -50,10 +44,10 @@ public class AbilityEarthMine implements Ability {
                     }
                     BlockPos offset = switch (dir) {
                         case SOUTH, NORTH ->
-                                pos.add(i, j, 0);
+                                pos.offset(i, j, 0);
                         case WEST, EAST ->
-                                pos.add(0, i, j);
-                        default -> pos.add(i, 0, j);
+                                pos.offset(0, i, j);
+                        default -> pos.offset(i, 0, j);
                     };
                     minePillar(offset, dir,numBlocks,bender);
                 }
@@ -67,8 +61,8 @@ public class AbilityEarthMine implements Ability {
 
     public void minePillar(BlockPos pos, Direction dir, int amount, Bender bender){
         for (int i = 0; i < amount; i++) {
-            if(EarthElement.isBlockBendable(pos.offset(dir,i), bender)){
-                bender.player.level().breakBlock(pos.offset(dir,i),true);
+            if(EarthElement.isBlockBendable(pos.relative(dir,i), bender)){
+                bender.player.level().destroyBlock(pos.relative(dir,i),true);
             }
         }
     }

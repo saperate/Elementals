@@ -3,36 +3,22 @@ package dev.saperate.elementals.entities.air;
 import dev.saperate.elementals.data.ElementalConfig;
 import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.entities.common.AbstractElementalsEntity;
-import dev.saperate.elementals.utils.SapsUtils;
-import net.minecraft.block.AbstractFireBlock;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.MoverType;
-import net.minecraft.entity.data.SynchedEntityData;
-import net.minecraft.entity.data.EntityDataAccessor;
-import net.minecraft.entity.data.EntityDataSerializers;
-import net.minecraft.entity.player.Player;
-import net.minecraft.entity.projectile.ProjectileEntity;
-import net.minecraft.entity.projectile.ProjectileUtil;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.particle.ParticleTypes;
-import net.minecraft.predicate.entity.EntityPredicates;
-import net.minecraft.sound.SoundSource;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.TypeFilter;
-import net.minecraft.util.hit.EntityHitResult;
-import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3;
-import net.minecraft.world.Level;
-import org.joml.Vector3f;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.MoverType;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 
-import static dev.saperate.elementals.Elementals.WIND_BURST_SOUND_EVENT;
-import static dev.saperate.elementals.Elementals.WIND_SOUND_EVENT;
 import static dev.saperate.elementals.entities.ElementalEntities.AIRSTREAM;
-import static dev.saperate.elementals.entities.ElementalEntities.FIREARC;
+import static dev.saperate.elementals.misc.ElementalsSounds.WIND_BURST_SOUND_EVENT;
+import static dev.saperate.elementals.misc.ElementalsSounds.WIND_SOUND_EVENT;
 import static dev.saperate.elementals.utils.SapsUtils.getEntityLookVector;
 import static dev.saperate.elementals.utils.SapsUtils.summonParticles;
 
@@ -84,7 +70,7 @@ public class AirStreamEntity extends AbstractElementalsEntity<Player> {
     public void tick() {
         super.tick();
 
-        if (random.nextBetween(0, 40) == 6) {
+        if (random.nextInt(0, 40) == 6) {
             summonParticles(this, random,
                     ParticleTypes.POOF,
                     0, 1);
@@ -117,11 +103,11 @@ public class AirStreamEntity extends AbstractElementalsEntity<Player> {
         }
 
         entity.hurt(damageSources().playerAttack(owner), damage * ElementalConfig.get().BENDING_DAMAGE_MULTIPLIER);
-        entity.addDeltaMovement(this.getDeltaMovement().multiply(1.2f));
+        entity.addDeltaMovement(this.getDeltaMovement().scale(1.2f));
         entity.move(MoverType.SELF, entity.getDeltaMovement());
-        entity.velocityModified = true;
+        entity.hasImpulse = true;
         remove();
-        this.level().playSound(getX(), getY(), getZ(), WIND_BURST_SOUND_EVENT, SoundSource.BLOCKS, 1, (1.0f + (this.level().random.nextFloat() - this.level().random.nextFloat()) * 0.2f) * 0.7f, true);
+        this.level().playSound(this, getOnPos(), WIND_BURST_SOUND_EVENT, SoundSource.BLOCKS, 1, (1.0f + (this.level().random.nextFloat() - this.level().random.nextFloat()) * 0.2f) * 0.7f);
     }
 
     @Override
@@ -130,7 +116,7 @@ public class AirStreamEntity extends AbstractElementalsEntity<Player> {
             return;
         }
         remove();
-        this.level().playSound(getX(), getY(), getZ(), WIND_BURST_SOUND_EVENT, SoundSource.BLOCKS, 1, (1.0f + (this.level().random.nextFloat() - this.level().random.nextFloat()) * 0.2f) * 0.7f, true);
+        this.level().playSound(this, getOnPos(), WIND_BURST_SOUND_EVENT, SoundSource.BLOCKS, 1, (1.0f + (this.level().random.nextFloat() - this.level().random.nextFloat()) * 0.2f) * 0.7f);
     }
 
     @Override
@@ -144,11 +130,11 @@ public class AirStreamEntity extends AbstractElementalsEntity<Player> {
             moveEntityTowardsGoal(getEntityLookVector(getOwner(), 3).add(0,0.5,0).toVector3f());
         } else {
             if (parent != null) {
-                Vec3 direction = parent.getPos().subtract(getPos());
+                Vec3 direction = parent.position().subtract(position());
                 double distance = direction.length();
 
                 if (distance > chainDistance) {
-                    direction = direction.normalize().multiply(distance - chainDistance).add(getPos());
+                    direction = direction.normalize().scale(distance - chainDistance).add(position());
                     setPos(direction.x, direction.y, direction.z);
                 }
 

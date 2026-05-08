@@ -29,26 +29,6 @@ public class AbilityAir1 implements Ability {
     }
 
     @Override
-    public void onLeftClick(Bender bender, boolean started) {
-
-    }
-
-    @Override
-    public void onMiddleClick(Bender bender, boolean started) {
-
-    }
-
-    @Override
-    public void onRightClick(Bender bender, boolean started) {
-
-    }
-
-    @Override
-    public void onTick(Bender bender) {
-
-    }
-
-    @Override
     public void onRemove(Bender bender) {
 
     }

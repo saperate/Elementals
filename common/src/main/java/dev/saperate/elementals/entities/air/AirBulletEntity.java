@@ -3,30 +3,23 @@ package dev.saperate.elementals.entities.air;
 import dev.saperate.elementals.data.ElementalConfig;
 import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.entities.common.AbstractElementalsEntity;
-import dev.saperate.elementals.utils.SapsUtils;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.MoverType;
-import net.minecraft.entity.data.SynchedEntityData;
-import net.minecraft.entity.data.EntityDataAccessor;
-import net.minecraft.entity.data.EntityDataSerializers;
-import net.minecraft.entity.player.Player;
-import net.minecraft.entity.projectile.ProjectileEntity;
-import net.minecraft.entity.projectile.ProjectileUtil;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.particle.ParticleTypes;
-import net.minecraft.sound.SoundSource;
-import net.minecraft.util.hit.EntityHitResult;
-import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.Level;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.MoverType;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3f;
 
-import static dev.saperate.elementals.Elementals.WIND_BURST_SOUND_EVENT;
-import static dev.saperate.elementals.Elementals.WIND_SOUND_EVENT;
 import static dev.saperate.elementals.entities.ElementalEntities.AIRBULLET;
-import static dev.saperate.elementals.entities.ElementalEntities.WATERBULLET;
+import static dev.saperate.elementals.misc.ElementalsSounds.WIND_BURST_SOUND_EVENT;
+import static dev.saperate.elementals.misc.ElementalsSounds.WIND_SOUND_EVENT;
 import static dev.saperate.elementals.utils.SapsUtils.getEntityLookVector;
 import static dev.saperate.elementals.utils.SapsUtils.summonParticles;
 
@@ -62,7 +55,7 @@ public class AirBulletEntity extends AbstractElementalsEntity<Player> {
     @Override
     public void tick() {
         super.tick();
-        if (random.nextBetween(0, 40) == 6) {
+        if (random.nextInt(0, 40) == 6) {
             summonParticles(this, random,
                     ParticleTypes.POOF,
                     0, 1);
@@ -92,7 +85,7 @@ public class AirBulletEntity extends AbstractElementalsEntity<Player> {
         Vector3f direction;
             direction = getEntityLookVector(owner, 3)
                     .subtract(0, 1, 0)
-                    .subtract(getPos()).toVector3f();
+                    .subtract(position()).toVector3f();
 
         double angle = ((2 * Math.PI) / getArraySize()) * getArrayId() + Math.toRadians(tickCount * 2);
 
@@ -107,7 +100,7 @@ public class AirBulletEntity extends AbstractElementalsEntity<Player> {
         }
 
 
-        this.addDeltaMovement(direction.x, direction.y, direction.z);
+        this.addDeltaMovement(new Vec3(direction.x, direction.y, direction.z));
     }
 
     @Override
@@ -128,7 +121,7 @@ public class AirBulletEntity extends AbstractElementalsEntity<Player> {
         }
         entity.hurt(this.damageSources().playerAttack(owner), damage * ElementalConfig.get().BENDING_DAMAGE_MULTIPLIER);
         if (!getIsControlled()) {
-            entity.addDeltaMovement(this.getDeltaMovement().multiply(1.2f));
+            entity.addDeltaMovement(this.getDeltaMovement().scale(1.2f));
             discard();
         }
     }
@@ -136,7 +129,7 @@ public class AirBulletEntity extends AbstractElementalsEntity<Player> {
     @Override
     public void onClientRemoval() {
         summonParticles(this, random, ParticleTypes.POOF, 0.01f, 10);
-        this.level().playSound(getX(), getY(), getZ(), WIND_BURST_SOUND_EVENT, SoundSource.BLOCKS, 0.1f, (1.0f + (this.level().random.nextFloat() - this.level().random.nextFloat()) * 0.2f) * 0.7f, true);
+        this.level().playSound(this, getOnPos(), WIND_BURST_SOUND_EVENT, SoundSource.BLOCKS, 0.1f, (1.0f + (this.level().random.nextFloat() - this.level().random.nextFloat()) * 0.2f) * 0.7f);
 
     }
 

@@ -8,25 +8,20 @@ import dev.saperate.elementals.elements.Ability;
 import dev.saperate.elementals.entities.common.DecoyPlayerEntity;
 import dev.saperate.elementals.utils.MathHelper;
 import dev.saperate.elementals.utils.SapsUtils;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.MoverType;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.effect.MobEffectInstance;
-import net.minecraft.entity.passive.PigEntity;
-import net.minecraft.entity.player.Player;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.hit.EntityHitResult;
-import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.Vec3;
-import net.minecraft.world.GameMode;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.MoverType;
+import net.minecraft.world.level.GameType;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
 
 
 public class AbilityAir4 implements Ability {
     @Override
     public void onCall(Bender bender, long deltaT) {
-        ServerPlayerEntity plr = (ServerPlayerEntity) bender.player;
+        ServerPlayer plr = (ServerPlayer) bender.player;
         PlayerData plrData = PlayerData.get(plr);
         if (!plrData.canUseUpgrade("airSpiritProjection")) {
             bender.setCurrAbility(null);
@@ -57,40 +52,40 @@ public class AbilityAir4 implements Ability {
 
         decoy.setCustomName(plr.getDisplayName());
 
-        decoy.equipStack(EquipmentSlot.HEAD, plr.getEquippedStack(EquipmentSlot.HEAD));
-        decoy.equipStack(EquipmentSlot.CHEST, plr.getEquippedStack(EquipmentSlot.CHEST));
-        decoy.equipStack(EquipmentSlot.LEGS, plr.getEquippedStack(EquipmentSlot.LEGS));
-        decoy.equipStack(EquipmentSlot.FEET, plr.getEquippedStack(EquipmentSlot.FEET));
-        decoy.equipStack(EquipmentSlot.MAINHAND, plr.getEquippedStack(EquipmentSlot.MAINHAND));
-        decoy.equipStack(EquipmentSlot.OFFHAND, plr.getEquippedStack(EquipmentSlot.OFFHAND));
+        decoy.setItemSlot(EquipmentSlot.HEAD, plr.getItemBySlot(EquipmentSlot.HEAD));
+        decoy.setItemSlot(EquipmentSlot.CHEST, plr.getItemBySlot(EquipmentSlot.CHEST));
+        decoy.setItemSlot(EquipmentSlot.LEGS, plr.getItemBySlot(EquipmentSlot.LEGS));
+        decoy.setItemSlot(EquipmentSlot.FEET, plr.getItemBySlot(EquipmentSlot.FEET));
+        decoy.setItemSlot(EquipmentSlot.MAINHAND, plr.getItemBySlot(EquipmentSlot.MAINHAND));
+        decoy.setItemSlot(EquipmentSlot.OFFHAND, plr.getItemBySlot(EquipmentSlot.OFFHAND));
 
-        decoy.setYaw(plr.getYaw());
-        decoy.setHeadYaw(plr.getHeadYaw());
-        decoy.setPitch(plr.getPitch());
+        decoy.setYRot(plr.getYRot());
+        decoy.setYHeadRot(plr.getYHeadRot());
+        decoy.setXRot(plr.getXRot());
 
         decoy.setDeltaMovement(plr.getDeltaMovement());
         decoy.fallDistance = plr.fallDistance;
         decoy.setHealth(plr.getHealth());
-        decoy.setFireTicks(plr.getFireTicks());
-        decoy.setOnFire(plr.isOnFire());
+        decoy.igniteForTicks(plr.getRemainingFireTicks());
+        decoy.setSharedFlagOnFire(plr.isOnFire());
 
-        for (MobEffectInstance effect : plr.getStatusEffects()) {
+        for (MobEffectInstance effect : plr.getActiveEffects()) {
             decoy.addEffect(effect);
         }
 
         plr.level().addFreshEntity(decoy);
 
 
-        bender.abilityData = new Object[]{plr.interactionManager.getGameMode(), decoy};
+        bender.abilityData = new Object[]{plr.gameMode.getGameModeForPlayer(), decoy};
 
         bender.player.addEffect(
                 new MobEffectInstance(ElementalsStatusEffects.SPIRIT_PROJECTION,
                         -1,
-                        SpiritProjectionStatusEffect.convertGameModeToAmplifier(plr.interactionManager.getGameMode()),
+                        SpiritProjectionStatusEffect.convertGameModeToAmplifier(plr.gameMode.getGameModeForPlayer()),
                         false, false, true)
         );
 
-        plr.changeGameMode(GameMode.SPECTATOR);
+        plr.setGameMode(GameType.SPECTATOR);
         bender.setCurrAbility(this);
     }
 
@@ -115,24 +110,24 @@ public class AbilityAir4 implements Ability {
     }
 
     private static void preventOwnerFromGoingFar(Bender bender, DecoyPlayerEntity decoy, int range) {
-        Vec3 direction = decoy.getPos().subtract(bender.player.getPos());
+        Vec3 direction = decoy.position().subtract(bender.player.position());
         double distance = direction.length();
         if (distance > range) {
             if (distance > range * 10) {
-                bender.player.teleport(decoy.getX(), decoy.getY(), decoy.getZ(),false);
+                bender.player.teleportTo(decoy.getX(), decoy.getY(), decoy.getZ());
             }
 
 
-            direction = direction.multiply(distance - range).multiply(0.1f);
+            direction = direction.scale(distance - range).scale(0.1f);
 
 
             double damping =  0.1f + (0.3f - 0.1f) * (1 - Math.min(1, distance / range));
-            direction = MathHelper.clampVector(direction.multiply(damping),-10,10);
+            direction = MathHelper.clampVector(direction.scale(damping),-10,10);
 
 
-            bender.player.addDeltaMovement(direction.x,direction.y,direction.z);
+            bender.player.addDeltaMovement(new Vec3(direction.x,direction.y,direction.z));
             bender.player.move(MoverType.SELF, bender.player.getDeltaMovement());
-            bender.player.velocityModified = true;
+            bender.player.hasImpulse = true;
             
         }
     }
@@ -146,26 +141,26 @@ public class AbilityAir4 implements Ability {
     public void onRemove(Bender bender) {
         Object[] data = (Object[]) bender.abilityData;
 
-        GameMode gm = (GameMode) data[0];
+        GameType gm = (GameType) data[0];
         if (gm != null) {
-            ((ServerPlayerEntity) bender.player).changeGameMode(gm);
+            ((ServerPlayer) bender.player).setGameMode(gm);
         }
 
         DecoyPlayerEntity decoy = (DecoyPlayerEntity) data[1];
         if (decoy != null) {
-            bender.player.teleport(decoy.getX(), decoy.getY(), decoy.getZ(), false);
+            bender.player.teleportTo(decoy.getX(), decoy.getY(), decoy.getZ());
             bender.player.setHealth(decoy.getHealth());
-            bender.player.setAir(decoy.getAir());
-            bender.player.setFireTicks(decoy.getFireTicks());
-            bender.player.setOnFire(decoy.isOnFire());
-            for (MobEffectInstance effect : decoy.getStatusEffects()) {
+            bender.player.setAirSupply(decoy.getAirSupply());
+            bender.player.setRemainingFireTicks(decoy.getRemainingFireTicks());
+            bender.player.setSharedFlagOnFire(decoy.isOnFire());
+            for (MobEffectInstance effect : decoy.getActiveEffects()) {
                 bender.player.addEffect(effect);
             }
 
             decoy.discard();
         }
 
-        bender.player.removeStatusEffect(ElementalsStatusEffects.SPIRIT_PROJECTION);
+        bender.player.removeEffect(ElementalsStatusEffects.SPIRIT_PROJECTION);
         bender.setCurrAbility(null);
         bender.abilityData = null;
     }

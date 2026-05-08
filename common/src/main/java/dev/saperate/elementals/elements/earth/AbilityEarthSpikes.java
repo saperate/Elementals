@@ -4,15 +4,13 @@ import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.elements.Ability;
 import dev.saperate.elementals.entities.earth.EarthBlockEntity;
-import net.minecraft.block.Blocks;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.Player;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.random.Random;
+import net.minecraft.core.BlockPos;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.phys.BlockHitResult;
 
 import java.util.ArrayList;
-import java.util.List;
 
 
 public class AbilityEarthSpikes implements Ability {
@@ -27,30 +25,30 @@ public class AbilityEarthSpikes implements Ability {
             return;
         }
         Player player = bender.player;
-        Random rnd = player.getRandom();
+        RandomSource rnd = player.getRandom();
         PlayerData plrData = PlayerData.get(player);
-        BlockHitResult hit = (BlockHitResult) player.raycast(5, 0, false);
-        BlockPos bPos = hit.getOnPos();
+        BlockHitResult hit = (BlockHitResult) player.pick(5, 0, false);
+        BlockPos bPos = hit.getBlockPos();
 
         ArrayList<LivingEntity> damagedEntities = new ArrayList<>();
 
-        int dx = (int) Math.round(-Math.sin(Math.toRadians(player.getYaw())));
-        int dz = (int) Math.round(Math.cos(Math.toRadians(player.getYaw())));
+        int dx = (int) Math.round(-Math.sin(Math.toRadians(player.getYRot())));
+        int dz = (int) Math.round(Math.cos(Math.toRadians(player.getYRot())));
         int a = 0;
 
         int range = plrData.canUseUpgrade("earthSpikesRangeI") ? 8 : 4;
         placeSpike(bPos, bender,damagedEntities);
         for (int i = 1; i <= range; i++) {
-            placeSpike(bPos.add(dx * i, 0 , dz * i), bender, damagedEntities);
+            placeSpike(bPos.offset(dx * i, 0 , dz * i), bender, damagedEntities);
 
 
             int spread = plrData.canUseUpgrade("earthSpikesSpreadI") ? 6 : 2;
             for (int j = -spread; j < spread; j++) {
-                if(rnd.nextBetween(0,3) != 1 || j == 0){
+                if(rnd.nextInt(0,3) != 1 || j == 0){
                     a++;
                     continue;
                 }
-                placeSpike(bPos.add(dz * j + (i * dx), 0,  - (dx * j - (i * dz))), bender, damagedEntities);
+                placeSpike(bPos.offset(dz * j + (i * dx), 0,  - (dx * j - (i * dz))), bender, damagedEntities);
             }
         }
         bender.setCurrAbility(null);
@@ -59,8 +57,8 @@ public class AbilityEarthSpikes implements Ability {
     public void placeSpike(BlockPos pos, Bender bender, ArrayList<LivingEntity> damagedEntities){
         //Place it one block down if there isn't a block, otherwise don't place it at all
         if(!EarthElement.isBlockBendable(pos,bender)){
-            if(EarthElement.isBlockBendable(pos.down(),bender)){
-                pos = pos.down();
+            if(EarthElement.isBlockBendable(pos.below(),bender)){
+                pos = pos.below();
             }else{
                 return;
             }
@@ -80,7 +78,7 @@ public class AbilityEarthSpikes implements Ability {
         block.setMovementSpeed(0.6f);
         block.setDamageOnTouch(true);
         block.setShiftToFreeze(false);
-        block.setTargetPosition(pos.toCenterPos().toVector3f().add(0,1,0));
+        block.setTargetPosition(pos.getCenter().toVector3f().add(0,1,0));
 
         bender.player.level().addFreshEntity(block);
     }

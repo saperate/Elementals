@@ -3,12 +3,9 @@ package dev.saperate.elementals.elements.earth;
 import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.elements.Ability;
-import dev.saperate.elementals.entities.water.WaterTowerEntity;
-import net.minecraft.entity.MoverType;
-import net.minecraft.entity.player.Player;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.math.Vec3;
-import org.joml.Vector3f;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
 
 import static dev.saperate.elementals.utils.SapsUtils.*;
 
@@ -21,7 +18,7 @@ public class AbilityEarthJump implements Ability {
 
         BlockHitResult hit = raycastBlockCustomRotation(player, 12, true, new Vec3(0, -1, 0));
 
-        if(!EarthElement.isBlockBendable(player.level().getBlockState(hit.getOnPos()), bender) || !player.getRootVehicle().isOnGround()){
+        if(!EarthElement.isBlockBendable(player.level().getBlockState(hit.getBlockPos()), bender) || !player.getRootVehicle().onGround()){
             return;
         }
 
@@ -45,27 +42,7 @@ public class AbilityEarthJump implements Ability {
         launchEntity(player,power);
 
     }
-
-    @Override
-    public void onLeftClick(Bender bender, boolean started) {
-
-    }
-
-    @Override
-    public void onMiddleClick(Bender bender, boolean started) {
-
-    }
-
-    @Override
-    public void onRightClick(Bender bender, boolean started) {
-
-    }
-
-    @Override
-    public void onTick(Bender bender) {
-
-    }
-
+    
     @Override
     public void onRemove(Bender bender) {
 

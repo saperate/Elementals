@@ -1,27 +1,22 @@
 package dev.saperate.elementals.entities.fire;
 
-import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.data.ElementalConfig;
 import dev.saperate.elementals.entities.common.AbstractElementalsEntity;
 import dev.saperate.elementals.utils.SapsUtils;
-import net.minecraft.block.Blocks;
-import net.minecraft.entity.*;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.data.SynchedEntityData;
-import net.minecraft.entity.data.EntityDataAccessor;
-import net.minecraft.entity.data.EntityDataSerializers;
-import net.minecraft.entity.player.Player;
-import net.minecraft.entity.projectile.ProjectileEntity;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.particle.ParticleTypes;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.world.Level;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.level.Level;
 
 import java.util.List;
 
 import static dev.saperate.elementals.entities.ElementalEntities.FIREBLOCK;
-import static dev.saperate.elementals.utils.SapsUtils.summonParticles;
-import static net.minecraft.entity.projectile.ProjectileUtil.getEntityCollision;
 
 public class FireBlockEntity extends AbstractElementalsEntity<Player> {
     public static final int MAX_FLAME_SIZE = 5;
@@ -51,8 +46,8 @@ public class FireBlockEntity extends AbstractElementalsEntity<Player> {
 
     @Override
     public boolean hurt(DamageSource source, float amount) {
-        Entity entity = source.getSource();
-        if (entity instanceof ProjectileEntity) {
+        Entity entity = source.getDirectEntity();
+        if (entity instanceof Projectile) {
             entity.discard();
         }
         return super.hurt(source, amount);
@@ -70,8 +65,8 @@ public class FireBlockEntity extends AbstractElementalsEntity<Player> {
     @Override
     public void tick() {
         super.tick();
-        if (random.nextBetween(0, 20) == 6) {
-            playSound(SoundEvents.BLOCK_FIRE_AMBIENT, 1, 0);
+        if (random.nextInt(0, 20) == 6) {
+            playSound(SoundEvents.FIRE_AMBIENT, 1, 0);
         }
 
         lifeTime--;
@@ -86,15 +81,15 @@ public class FireBlockEntity extends AbstractElementalsEntity<Player> {
             heightAdjustSpeed = 5;
         }
 
-        if (touchingWater) {
+        if (isInWater()) {
             discard();
         }
     }
 
     @Override
     public void onTouchEntity(Entity entity) {
-        if (!entity.isFireImmune() && entity.getY() - getY() < getFireHeight()) {
-            entity.setOnFireFor(8);
+        if (!entity.fireImmune() && entity.getY() - getY() < getFireHeight()) {
+            entity.igniteForSeconds(8);
             float damage = isBlue() ? 2.5f : 1.5f;
             if(SapsUtils.isBeingRainedOn(this)){
                 damage /= 2;
@@ -106,11 +101,6 @@ public class FireBlockEntity extends AbstractElementalsEntity<Player> {
     @Override
     public float projectileDeflectionRange() {
         return 1;
-    }
-
-    @Override
-    public void onDataTrackerUpdate(List<SynchedEntityData.SerializedEntry<?>> dataEntries) {
-        super.onDataTrackerUpdate(dataEntries);
     }
 
     @Override

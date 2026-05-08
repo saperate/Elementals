@@ -1,34 +1,28 @@
 package dev.saperate.elementals.entities.common;
 
-import dev.saperate.elementals.utils.SapsUtils;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.component.ComponentType;
-import net.minecraft.component.DataComponentTypes;
-import net.minecraft.component.type.NbtComponent;
-import net.minecraft.entity.*;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.damage.DamageTypes;
-import net.minecraft.entity.player.Player;
-import net.minecraft.entity.projectile.PersistentProjectileEntity;
-import net.minecraft.entity.projectile.ProjectileUtil;
-import net.minecraft.entity.projectile.thrown.ThrownItemEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.util.hit.EntityHitResult;
-import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3;
-import net.minecraft.world.Level;
-import org.joml.Vector3f;
+
+import dev.saperate.elementals.items.ElementalsItems;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.entity.projectile.ProjectileUtil;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.CustomData;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
 
 import static dev.saperate.elementals.entities.ElementalEntities.BOOMERANGENTITY;
-import static dev.saperate.elementals.entities.ElementalEntities.DIRTBOTTLEENTITY;
-import static dev.saperate.elementals.items.ElementalItems.BOOMERANG_ITEM;
-import static dev.saperate.elementals.items.ElementalItems.DIRT_BOTTLE_ITEM;
+import static dev.saperate.elementals.items.ElementalsItems.BOOMERANG_ITEM;
 
-public class BoomerangEntity extends PersistentProjectileEntity {
+public class BoomerangEntity extends AbstractArrow {
     public Vec3 startingPos;
     public int time = 0;
 
@@ -67,18 +61,18 @@ public class BoomerangEntity extends PersistentProjectileEntity {
             if (inGround) {
                 inGround = false;
                 inGroundTime = 0;
-                Vec3 dir = this.getPos().subtract(startingPos).normalize().multiply(-0.5);
+                Vec3 dir = this.position().subtract(startingPos).normalize().scale(-0.5);
                 setDeltaMovement(dir);
             }
 
-            HitResult hit = ProjectileUtil.getCollision(this, entity -> entity instanceof ItemEntity);
-            if (hit instanceof EntityHitResult entityHitResult && entityHitResult.getEntity() != null) {
+            HitResult hit = ProjectileUtil.getHitResultOnMoveVector(this, entity -> entity instanceof ItemEntity);
+            if (hit instanceof EntityHitResult entityHitResult) {
                 tickCount = 21;
-                Vec3 dir = this.getPos().subtract(startingPos).normalize().multiply(-0.5);
+                Vec3 dir = this.position().subtract(startingPos).normalize().scale(-0.5);
                 setDeltaMovement(dir);
             }
         } else if (tickCount == 20) {
-            Vec3 dir = this.getPos().subtract(startingPos).normalize().multiply(-0.5);
+            Vec3 dir = this.position().subtract(startingPos).normalize().scale(-0.5);
             setDeltaMovement(dir);
         } else if (tickCount == 70) {
             setNoGravity(false);
@@ -90,13 +84,13 @@ public class BoomerangEntity extends PersistentProjectileEntity {
     }
 
     public void dropBoomerang(){
-        ItemEntity itemEntity = new ItemEntity(level(), getX(), getY(), getZ(), BOOMERANG_ITEM.getDefaultStack());
+        ItemEntity itemEntity = new ItemEntity(level(), getX(), getY(), getZ(), BOOMERANG_ITEM.getDefaultInstance());
         level().addFreshEntity(itemEntity);
         discard();
     }
 
     @Override
-    protected void onEntityHit(EntityHitResult entityHitResult) {
+    protected void onHitEntity(EntityHitResult entityHitResult) {
         Entity owner = getOwner();
 
         if (entityHitResult.getEntity().equals(owner)) {
@@ -127,7 +121,7 @@ public class BoomerangEntity extends PersistentProjectileEntity {
             } else {
                 damageSource = this.damageSources().arrow(this, owner);
                 if (owner instanceof LivingEntity) {
-                    ((LivingEntity) owner).onAttacking(living);
+                    ((LivingEntity) owner).setLastHurtMob(living);
                 }
             }
             living.hurt(damageSource, 4);
@@ -135,45 +129,45 @@ public class BoomerangEntity extends PersistentProjectileEntity {
     }
 
     @Override
-    public void onPlayerCollision(Player player) {
+    public void playerTouch(Player player) {
         if (player == getOwner()) {
-            super.onPlayerCollision(player);
+            super.playerTouch(player);
         }
     }
 
 
     @Override
-    public ItemStack asItemStack() {
+    public ItemStack getPickupItem() {
         ItemStack stack = new ItemStack(BOOMERANG_ITEM);
-        NbtCompound tag = new NbtCompound();
-        tag.putUuid("EntityUUID", this.getUuid());
-        stack.set(DataComponentTypes.CUSTOM_DATA, NbtComponent.of(tag));
+        CompoundTag tag = new CompoundTag();
+        tag.putUUID("EntityUUID", this.getUUID());
+        stack.set(DataComponents.CUSTOM_DATA, CustomData.of(tag));
         return stack;
     }
 
     @Override
-    protected ItemStack getDefaultItemStack() {
+    protected ItemStack getDefaultPickupItem() {
         return new ItemStack(BOOMERANG_ITEM);
     }
 
 
     @Override
-    public void writeCustomDataToNbt(NbtCompound nbt) {
+    public void addAdditionalSaveData(CompoundTag nbt) {
         nbt.putDouble("startX", startingPos.x);
         nbt.putDouble("startY", startingPos.y);
         nbt.putDouble("startZ", startingPos.z);
-        super.writeCustomDataToNbt(nbt);
+        super.addAdditionalSaveData(nbt);
     }
 
     @Override
-    public void readCustomDataFromNbt(NbtCompound nbt) {
+    public void readAdditionalSaveData(CompoundTag nbt) {
         startingPos = new Vec3(
                 nbt.getDouble("startX"),
                 nbt.getDouble("startY"),
                 nbt.getDouble("startZ")
         );
 
-        super.readCustomDataFromNbt(nbt);
+        super.readAdditionalSaveData(nbt);
     }
 
     public boolean getInGround() {

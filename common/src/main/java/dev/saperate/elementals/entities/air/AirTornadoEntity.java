@@ -2,33 +2,20 @@ package dev.saperate.elementals.entities.air;
 
 import dev.saperate.elementals.data.ElementalConfig;
 import dev.saperate.elementals.entities.common.AbstractElementalsEntity;
-import dev.saperate.elementals.entities.water.WaterArcEntity;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.MoverType;
-import net.minecraft.entity.data.SynchedEntityData;
-import net.minecraft.entity.data.EntityDataAccessor;
-import net.minecraft.entity.data.EntityDataSerializers;
-import net.minecraft.entity.player.Player;
-import net.minecraft.entity.projectile.ProjectileEntity;
-import net.minecraft.entity.projectile.ProjectileUtil;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.particle.BlockStateParticleEffect;
-import net.minecraft.particle.ParticleTypes;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.hit.EntityHitResult;
-import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.Vec3;
-import net.minecraft.world.Level;
-import org.joml.Vector3f;
+import dev.saperate.elementals.misc.ElementalsSounds;
+import net.minecraft.core.particles.BlockParticleOption;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.MoverType;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 
-import static dev.saperate.elementals.Elementals.WIND_SOUND_EVENT;
 import static dev.saperate.elementals.entities.ElementalEntities.AIRTORNADO;
-import static dev.saperate.elementals.entities.ElementalEntities.WATERJET;
 import static dev.saperate.elementals.utils.SapsUtils.*;
 
 public class AirTornadoEntity extends AbstractElementalsEntity<Player> {
@@ -62,11 +49,11 @@ public class AirTornadoEntity extends AbstractElementalsEntity<Player> {
     @Override
     public void tick() {
         super.tick();
-        if (random.nextBetween(0, 40) == 6) {
+        if (random.nextInt(0, 40) == 6) {
             summonParticles(this, random,
                     ParticleTypes.POOF,
                     0, 1);
-            playSound(WIND_SOUND_EVENT, 1, (1.0f + (this.level().random.nextFloat() - this.level().random.nextFloat()) * 0.2f) * 0.7f);
+            playSound(ElementalsSounds.WIND_SOUND_EVENT, 1, (1.0f + (this.level().random.nextFloat() - this.level().random.nextFloat()) * 0.2f) * 0.7f);
         }
 
         Player owner = getOwner();
@@ -80,15 +67,15 @@ public class AirTornadoEntity extends AbstractElementalsEntity<Player> {
         }
 
         if (getIsControlled()) {
-            moveEntityTowardsGoal(getOwner().raycast(getRange(),1,true).getPos().toVector3f());
+            moveEntityTowardsGoal(getOwner().pick(getRange(),1,true).getLocation().toVector3f());
             setDeltaMovement(getDeltaMovement().multiply(1,0,1));
         }
         setDeltaMovement(getDeltaMovement().add(0, -0.4, 0));
 
         this.move(MoverType.SELF, this.getDeltaMovement());
 
-        if (isOnGround() && level().isClientSide) {
-            summonParticles(this, random, new BlockStateParticleEffect(ParticleTypes.BLOCK, level().getBlockState(getOnPos().down())), 0, 5);
+        if (onGround() && level().isClientSide) {
+            summonParticles(this, random, new BlockParticleOption(ParticleTypes.BLOCK, level().getBlockState(getOnPos().below())), 0, 5);
         }
     }
 
@@ -103,8 +90,8 @@ public class AirTornadoEntity extends AbstractElementalsEntity<Player> {
             return;
         }
         entity.hurt(this.damageSources().playerAttack((Player) getOwner()), 5 * ElementalConfig.get().BENDING_DAMAGE_MULTIPLIER);//TODO maybe add a debris upgrade for more dmg
-        entity.addDeltaMovement(0, 0.50f, 0);
-        entity.velocityModified = true;
+        entity.addDeltaMovement(new Vec3(0, 0.50f, 0));
+        entity.hasImpulse = true;
         entity.move(MoverType.SELF, entity.getDeltaMovement());
     }
 
@@ -141,9 +128,8 @@ public class AirTornadoEntity extends AbstractElementalsEntity<Player> {
     public boolean discardsOnNullOwner() {
         return true;
     }
-
     @Override
-    public float getStepHeight() {
+    public float maxUpStep() {
         return 2;
     }
 }

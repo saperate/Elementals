@@ -3,14 +3,9 @@ package dev.saperate.elementals.elements.air;
 import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.elements.Ability;
-import dev.saperate.elementals.elements.earth.EarthElement;
-import net.minecraft.entity.MoverType;
-import net.minecraft.entity.player.Player;
-import net.minecraft.particle.ParticleTypes;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.math.Vec3;
-import org.joml.Vector3f;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.player.Player;
 
 import static dev.saperate.elementals.utils.SapsUtils.*;
 
@@ -41,33 +36,13 @@ public class AbilityAirJump implements Ability {
         launchEntity(player,power, false);
         player.fallDistance = 0;
 
-        serverSummonParticles((ServerWorld) player.level(),
+        serverSummonParticles((ServerLevel) player.level(),
                 ParticleTypes.POOF, player, player.getRandom(),
                 0, 0, 0,
                 0.1f, 8,
                 0, -1.5f, 0, 0);
     }
-
-    @Override
-    public void onLeftClick(Bender bender, boolean started) {
-
-    }
-
-    @Override
-    public void onMiddleClick(Bender bender, boolean started) {
-
-    }
-
-    @Override
-    public void onRightClick(Bender bender, boolean started) {
-
-    }
-
-    @Override
-    public void onTick(Bender bender) {
-
-    }
-
+    
     @Override
     public void onRemove(Bender bender) {
 

@@ -4,18 +4,20 @@ import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.data.ElementalConfig;
 import dev.saperate.elementals.misc.FireExplosion;
 import dev.saperate.elementals.entities.common.AbstractElementalsEntity;
-import net.minecraft.block.AbstractFireBlock;
-import net.minecraft.entity.*;
-import net.minecraft.entity.data.SynchedEntityData;
-import net.minecraft.entity.data.EntityDataAccessor;
-import net.minecraft.entity.data.EntityDataSerializers;
-import net.minecraft.entity.player.Player;
-import net.minecraft.particle.ParticleTypes;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.sound.SoundSource;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.world.Level;
-import net.minecraft.world.explosion.Explosion;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.MoverType;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Explosion;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.BaseFireBlock;
 
 import java.util.Objects;
 
@@ -52,12 +54,12 @@ public class FireBallEntity extends AbstractElementalsEntity<Player> {
     public void tick() {
         super.tick();
 
-        if (touchingWater && !level().isClientSide) {
+        if (isInWater() && !level().isClientSide) {
             discard();
 
             Player owner = getOwner();
             if(owner != null){
-                Bender bender = Bender.getBender((ServerPlayerEntity) owner);
+                Bender bender = Bender.getBender((ServerPlayer) owner);
                 if(bender.currAbility != null){
                     bender.currAbility.onRemove(bender);
                 }
@@ -65,11 +67,11 @@ public class FireBallEntity extends AbstractElementalsEntity<Player> {
             return;
         }
 
-        if (random.nextBetween(0, 20) == 6) {
+        if (random.nextInt(0, 20) == 6) {
             summonParticles(this, random,
                     isBlue() ? ParticleTypes.SOUL_FIRE_FLAME : ParticleTypes.FLAME,
                     0, 1);
-            playSound(SoundEvents.BLOCK_FIRE_AMBIENT, 1, 0);
+            playSound(SoundEvents.FIRE_AMBIENT, 1, 0);
 
         }
 
@@ -108,10 +110,10 @@ public class FireBallEntity extends AbstractElementalsEntity<Player> {
     }
 
     public void onCollision(){
-        level().setBlockState(getOnPos(), AbstractFireBlock.getState(level(), getOnPos()));
-        FireExplosion explosion = new FireExplosion(level(), getOwner(), getX(), getY(), getZ(), 2.5f, true, Explosion.DestructionType.KEEP, 12 * ElementalConfig.get().BENDING_DAMAGE_MULTIPLIER, getOwner());
-        explosion.collectBlocksAndDamageEntities();
-        explosion.affectWorld(true);
+        level().setBlockAndUpdate(getOnPos(), BaseFireBlock.getState(level(), getOnPos()));
+        FireExplosion explosion = new FireExplosion(level(), getOwner(), getX(), getY(), getZ(), 2.5f, true, Explosion.BlockInteraction.KEEP, 12 * ElementalConfig.get().BENDING_DAMAGE_MULTIPLIER, getOwner());
+        explosion.explode();
+        explosion.finalizeExplosion(true);
         discard();
     }
 
@@ -123,7 +125,7 @@ public class FireBallEntity extends AbstractElementalsEntity<Player> {
         summonParticles(this, random,
                 isBlue() ? ParticleTypes.SOUL_FIRE_FLAME : ParticleTypes.FLAME,
                 0.25f, 25);
-        this.level().playSound(getX(), getY(), getZ(), SoundEvents.ENTITY_GENERIC_EXPLODE.value(), SoundSource.BLOCKS, 4.0f, (1.0f + (this.level().random.nextFloat() - this.level().random.nextFloat()) * 0.2f) * 0.7f, true);
+        this.level().playSound(this, getOnPos(), SoundEvents.GENERIC_EXPLODE.value(), SoundSource.BLOCKS, 4.0f, (1.0f + (this.level().random.nextFloat() - this.level().random.nextFloat()) * 0.2f) * 0.7f);
     }
 
     public boolean isBlue() {

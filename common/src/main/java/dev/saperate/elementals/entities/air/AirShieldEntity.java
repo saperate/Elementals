@@ -1,24 +1,14 @@
 package dev.saperate.elementals.entities.air;
 
-import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.entities.common.AbstractElementalsEntity;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.data.SynchedEntityData;
-import net.minecraft.entity.data.EntityDataAccessor;
-import net.minecraft.entity.data.EntityDataSerializers;
-import net.minecraft.entity.player.Player;
-import net.minecraft.entity.projectile.ProjectileEntity;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.particle.ParticleTypes;
-import net.minecraft.util.math.Vec3;
-import net.minecraft.world.Level;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 
-import java.util.List;
-
-import static dev.saperate.elementals.Elementals.WIND_SOUND_EVENT;
 import static dev.saperate.elementals.entities.ElementalEntities.AIRSHIELD;
+import static dev.saperate.elementals.misc.ElementalsSounds.WIND_SOUND_EVENT;
 import static dev.saperate.elementals.utils.SapsUtils.summonParticles;
 
 
@@ -42,7 +32,7 @@ public class AirShieldEntity extends AbstractElementalsEntity<Player> {
     @Override
     public void tick() {
         super.tick();
-        if (random.nextBetween(0, 20) == 6) {
+        if (random.nextInt(0, 20) == 6) {
             summonParticles(this, random,
                     ParticleTypes.POOF,
                     0, 1);
@@ -54,12 +44,11 @@ public class AirShieldEntity extends AbstractElementalsEntity<Player> {
             return;
         }
 
-        moveEntityTowardsGoal(owner.getPos().toVector3f());
+        moveEntityTowardsGoal(owner.position().toVector3f());
     }
 
-
     @Override
-    public boolean isCollidable() {
+    public boolean canBeCollidedWith() {
         return true;
     }
 

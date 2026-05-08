@@ -3,14 +3,12 @@ package dev.saperate.elementals.elements.fire;
 import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.elements.Ability;
-import dev.saperate.elementals.entities.fire.FireBallEntity;
 import dev.saperate.elementals.entities.fire.FireWispEntity;
 import dev.saperate.elementals.utils.SapsUtils;
-import net.minecraft.entity.player.Player;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Player;
 import org.joml.Vector3f;
 
-import static dev.saperate.elementals.utils.SapsUtils.getEntityLookVector;
 import static dev.saperate.elementals.utils.SapsUtils.raycastFull;
 
 public class AbilityFireWisp implements Ability {
@@ -23,7 +21,7 @@ public class AbilityFireWisp implements Ability {
             Player other = (Player) SapsUtils.entityFromHitResult(
                     raycastFull(originalBender.player,5,true, entity -> entity instanceof Player));
             if(other != null){
-                bender = Bender.getBender((ServerPlayerEntity) other);
+                bender = Bender.getBender((ServerPlayer) other);
             }
         }
 
@@ -52,7 +50,7 @@ public class AbilityFireWisp implements Ability {
     @Override
     public void onBackgroundTick(Bender bender, Object data) {
         FireWispEntity wisp = (FireWispEntity) data;
-        if(!bender.reduceChi(0.075f, false) || wisp.isTouchingWater()){
+        if(!bender.reduceChi(0.075f, false) || wisp.isInWater()){
             wisp.discard();
             bender.removeAbilityFromBackground(this);
         }

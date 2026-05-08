@@ -3,14 +3,11 @@ package dev.saperate.elementals.elements.air;
 import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.elements.Ability;
-import dev.saperate.elementals.elements.water.WaterElement;
 import dev.saperate.elementals.entities.air.AirBulletEntity;
-import net.minecraft.entity.player.Player;
-import net.minecraft.util.math.Vec3;
-import org.joml.Vector3f;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.phys.Vec3;
 
 import static dev.saperate.elementals.utils.SapsUtils.getEntityLookVector;
-
 public class AbilityAirBullets implements Ability {
 
     @Override
@@ -70,7 +67,7 @@ public class AbilityAirBullets implements Ability {
         } else if (plrData.canUseUpgrade("airBulletsSpeedI")) {
             speed = 1.5f;
         }
-        bullet.setDeltaMovement(bender.player, bender.player.getPitch(), bender.player.getYaw(), 0, speed, 0);
+        bullet.setDeltaMovement(bender.player, bender.player.getXRot(), bender.player.getYRot(), 0, speed, 0);
 
         AirBulletEntity[] newArray = new AirBulletEntity[bullets.length - 1];
         for (int i = 0; i < bullets.length - 1; i++) {
@@ -78,20 +75,6 @@ public class AbilityAirBullets implements Ability {
             newArray[i] = bullets[i];
         }
         bender.abilityData = newArray;
-    }
-
-    @Override
-    public void onMiddleClick(Bender bender, boolean started) {
-
-    }
-
-    @Override
-    public void onRightClick(Bender bender, boolean started) {
-    }
-
-    @Override
-    public void onTick(Bender bender) {
-
     }
 
     @Override

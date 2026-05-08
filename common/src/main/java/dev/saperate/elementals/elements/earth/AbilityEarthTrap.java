@@ -4,12 +4,12 @@ import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.effects.ElementalsStatusEffects;
 import dev.saperate.elementals.elements.Ability;
 import dev.saperate.elementals.entities.earth.EarthBlockEntity;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.effect.MobEffectInstance;
-import net.minecraft.entity.player.Player;
-import net.minecraft.util.hit.EntityHitResult;
-import net.minecraft.util.hit.HitResult;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.HitResult;
 
 
 import static dev.saperate.elementals.utils.SapsUtils.raycastFull;
@@ -27,7 +27,7 @@ public class AbilityEarthTrap implements Ability {
         }
 
         EntityHitResult eHit = (EntityHitResult) hit;
-        BlockState state = player.level().getBlockState(eHit.getEntity().getOnPos().down());
+        BlockState state = player.level().getBlockState(eHit.getEntity().getOnPos().below());
         if (eHit.getEntity() instanceof LivingEntity victim && EarthElement.isBlockBendable(state, bender)) {
             EarthBlockEntity block = new EarthBlockEntity(player.level(), player, victim.getX(), victim.getY(), victim.getZ());
             bender.abilityData = block;
@@ -74,9 +74,9 @@ public class AbilityEarthTrap implements Ability {
         EarthBlockEntity block = ((EarthBlockEntity) vars[1]);
 
         double distance = victim
-                .getPos().subtract(bender.player.getPos()).length();
+                .position().subtract(bender.player.position()).length();
 
-        block.setTargetPosition(victim.getPos().toVector3f());
+        block.setTargetPosition(victim.position().toVector3f());
         bender.player.addEffect(new MobEffectInstance(ElementalsStatusEffects.STATIONARY, 5, 1, false, false, false));
         victim.addEffect(new MobEffectInstance(ElementalsStatusEffects.STATIONARY, 60, 1, false, false, true));
 

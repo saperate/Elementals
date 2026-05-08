@@ -1,16 +1,14 @@
 package dev.saperate.elementals.elements.earth;
 
-import dev.saperate.elementals.Elementals;
 import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.elements.Ability;
 import dev.saperate.elementals.entities.earth.EarthBlockEntity;
 import dev.saperate.elementals.misc.BlockRestoreManager;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.entity.player.Player;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.GameRules;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
 import org.joml.Vector3f;
 
 import java.util.LinkedList;
@@ -44,16 +42,16 @@ public class AbilityEarthChunkPickup implements Ability {
         for (int y = 0; y < size + size; y++) {
             for (int x = (int) -Math.floor(size); x < Math.ceil(size); x++) {
                 for (int z = (int) -Math.floor(size); z < size; z++) {
-                    BlockPos bPos = pos.add(x,-y,z);
+                    BlockPos bPos = pos.offset(x,-y,z);
                     BlockState state = player.level().getBlockState(bPos);
                     if(EarthElement.isBlockBendable(state, bender)){
-                        player.level().setBlockState(bPos, Blocks.AIR.getDefaultState());
+                        player.level().setBlockAndUpdate(bPos, Blocks.AIR.defaultBlockState());
                         if(!player.level().getGameRules().getBoolean(BENDING_GRIEFING)){
                             BlockRestoreManager.addBlockToRestore(new BlockRestoreManager.BlockInformation(
                                     bPos,
                                     state,
-                                    player.level().getRegistryKey(),
-                                    40 + player.level().random.nextBetween(0, 140)
+                                    player.level().dimension(),
+                                    40 + player.level().random.nextInt(0, 140)
                             ));
                         }
 
@@ -87,7 +85,7 @@ public class AbilityEarthChunkPickup implements Ability {
         }
 
         for (EarthBlockEntity entity : entities){
-            entity.setDeltaMovement(bender.player, bender.player.getPitch(), bender.player.getYaw(), 0, 1, 0);
+            entity.setDeltaMovement(bender.player, bender.player.getXRot(), bender.player.getYRot(), 0, 1, 0);
             entity.setControlled(false);
             entity.setCollidable(false);
         }
