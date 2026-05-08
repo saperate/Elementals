@@ -3,22 +3,17 @@ package dev.saperate.elementals.elements.lightning;
 import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.effects.ElementalsStatusEffects;
-import dev.saperate.elementals.effects.StationaryStatusEffect;
 import dev.saperate.elementals.elements.Ability;
-import dev.saperate.elementals.entities.fire.FireArcEntity;
 import dev.saperate.elementals.entities.lightning.LightningArcEntity;
 import dev.saperate.elementals.utils.SapsUtils;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LightningEntity;
-import net.minecraft.entity.effect.MobEffectInstance;
-import net.minecraft.entity.player.Player;
-import net.minecraft.particle.ParticleTypes;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.math.Vec3;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LightningBolt;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3f;
 
 import static dev.saperate.elementals.utils.SapsUtils.getEntityLookVector;
-import static dev.saperate.elementals.utils.SapsUtils.serverSummonParticles;
 
 public class AbilityLightningBolt implements Ability {
     @Override
@@ -53,17 +48,12 @@ public class AbilityLightningBolt implements Ability {
     public void onLeftClick(Bender bender, boolean started) {
         LightningArcEntity e = (LightningArcEntity) bender.abilityData;
         if(e.getTail().chainLength == LightningArcEntity.MAX_CHAIN_LENGTH){
-            Vec3 pos = SapsUtils.raycastFull(bender.player, 100,true).getPos();
-            LightningEntity lightning = new LightningEntity(EntityType.LIGHTNING_BOLT,e.level());
+            Vec3 pos = SapsUtils.raycastFull(bender.player, 100,true).getLocation();
+            LightningBolt lightning = new LightningBolt(EntityType.LIGHTNING_BOLT,e.level());
             lightning.setPos(pos.x,pos.y,pos.z);
             e.level().addFreshEntity(lightning);
             onRemove(bender);
         }
-    }
-
-    @Override
-    public void onMiddleClick(Bender bender, boolean started) {
-
     }
 
     @Override

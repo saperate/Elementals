@@ -3,15 +3,8 @@ package dev.saperate.elementals.elements.lightning;
 import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.elements.Ability;
-import dev.saperate.elementals.entities.lightning.LightningArcEntity;
 import dev.saperate.elementals.entities.lightning.VoltArcEntity;
-import dev.saperate.elementals.utils.SapsUtils;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LightningEntity;
-import net.minecraft.entity.effect.MobEffectInstance;
-import net.minecraft.entity.player.Player;
-import net.minecraft.util.math.Vec3;
+import net.minecraft.world.entity.player.Player;
 import org.joml.Vector3f;
 
 import static dev.saperate.elementals.utils.SapsUtils.getEntityLookVector;
@@ -58,7 +51,7 @@ public class AbilityLightningVoltArc implements Ability {
     public void onTick(Bender bender) {
         VoltArcEntity entity = (VoltArcEntity) bender.abilityData;
         if (entity != null && entity.tickCount >= 5){
-            entity.setDeltaMovement(bender.player, bender.player.getPitch(), bender.player.getYaw(), 0, 4, 0);
+            entity.setDeltaMovement(bender.player, bender.player.getXRot(), bender.player.getYRot(), 0, 4, 0);
             entity.setControlled(false);
             bender.setCurrAbility(null);
         }

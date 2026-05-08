@@ -5,11 +5,10 @@ import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.effects.ElementalsStatusEffects;
 import dev.saperate.elementals.elements.Ability;
 import dev.saperate.elementals.utils.SapsUtils;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LightningEntity;
-import net.minecraft.entity.player.Player;
-import net.minecraft.util.math.Vec3;
-
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LightningBolt;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.phys.Vec3;
 
 public class AbilityLightningRedirect implements Ability {
     @Override
@@ -33,13 +32,13 @@ public class AbilityLightningRedirect implements Ability {
             return;
         }
 
-        Vec3 pos = SapsUtils.raycastFull(bender.player, 20,true).getPos();
-        LightningEntity lightning = new LightningEntity(EntityType.LIGHTNING_BOLT,player.level());
+        Vec3 pos = SapsUtils.raycastFull(bender.player, 20,true).getLocation();
+        LightningBolt lightning = new LightningBolt(EntityType.LIGHTNING_BOLT,player.level());
         lightning.setPos(pos.x,pos.y,pos.z);
         player.level().addFreshEntity(lightning);
 
-        player.heal((float) player.getStatusEffect(ElementalsStatusEffects.SHOCKED).getAmplifier() / 10);
-        player.removeStatusEffect(ElementalsStatusEffects.SHOCKED);
+        player.heal((float) player.getEffect(ElementalsStatusEffects.SHOCKED).getAmplifier() / 10);
+        player.removeEffect(ElementalsStatusEffects.SHOCKED);
     }
 
 

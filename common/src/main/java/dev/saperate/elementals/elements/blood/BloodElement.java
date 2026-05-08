@@ -3,8 +3,7 @@ package dev.saperate.elementals.elements.blood;
 import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.elements.Element;
 import dev.saperate.elementals.elements.Upgrade;
-import net.minecraft.util.Identifier;
-import net.minecraft.world.Level;
+import net.minecraft.world.level.Level;
 
 public class BloodElement extends Element {
 
@@ -88,7 +87,7 @@ public class BloodElement extends Element {
     }//TODO this
 
     public static boolean isNight(Level world) {
-        long time = world.getTimeOfDay() % 24000;
+        long time = world.getDayTime() % 24000;
         return time >= 13500 && time <= 22750;
     }
 }

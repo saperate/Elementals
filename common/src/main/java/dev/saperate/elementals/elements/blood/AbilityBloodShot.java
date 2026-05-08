@@ -4,7 +4,7 @@ import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.elements.Ability;
 import dev.saperate.elementals.entities.blood.BloodShotEntity;
 import dev.saperate.elementals.utils.SapsUtils;
-import net.minecraft.entity.player.Player;
+import net.minecraft.world.entity.player.Player;
 import org.joml.Vector3f;
 
 import static dev.saperate.elementals.utils.SapsUtils.getEntityLookVector;
@@ -33,7 +33,7 @@ public class AbilityBloodShot implements Ability {
                 player.level(),
                 player,
                 pos.x, pos.y, pos.z,
-                player.getActiveStatusEffects()
+                player.getActiveEffects()
         );
         if(bender.getData().canUseUpgrade("bloodShotPrecisionI")){
             entity.effects.addAll(SapsUtils.getEffectsFromHands(player));
@@ -60,7 +60,7 @@ public class AbilityBloodShot implements Ability {
     public void onTick(Bender bender) {
         BloodShotEntity entity = (BloodShotEntity) bender.abilityData;
         if (entity != null && entity.tickCount >= 5) {
-            entity.setDeltaMovement(bender.player, bender.player.getPitch(), bender.player.getYaw(), 0, 4, 0);
+            entity.setDeltaMovement(bender.player, bender.player.getXRot(), bender.player.getYRot(), 0, 4, 0);
             entity.setControlled(false);
             bender.setCurrAbility(null);
         }

@@ -4,9 +4,8 @@ import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.effects.ElementalsStatusEffects;
 import dev.saperate.elementals.elements.Ability;
-import net.minecraft.entity.effect.MobEffectInstance;
-import net.minecraft.entity.effect.MobEffects;
-import net.minecraft.entity.player.Player;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.player.Player;
 
 import static dev.saperate.elementals.utils.SapsUtils.safeHasStatusEffect;
 
@@ -36,26 +35,6 @@ public class AbilityLightning3 implements Ability {
             player.addEffect(new MobEffectInstance(ElementalsStatusEffects.OVERCHARGED, duration, 0, false, false, true));
         }
         bender.setCurrAbility(null);
-    }
-
-    @Override
-    public void onLeftClick(Bender bender, boolean started) {
-
-    }
-
-    @Override
-    public void onMiddleClick(Bender bender, boolean started) {
-
-    }
-
-    @Override
-    public void onRightClick(Bender bender, boolean started) {
-
-    }
-
-    @Override
-    public void onTick(Bender bender) {
-
     }
 
     @Override

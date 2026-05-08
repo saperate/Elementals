@@ -4,8 +4,8 @@ import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.effects.ElementalsStatusEffects;
 import dev.saperate.elementals.elements.Ability;
-import net.minecraft.entity.effect.MobEffectInstance;
-import net.minecraft.entity.player.Player;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.player.Player;
 
 import static dev.saperate.elementals.utils.SapsUtils.safeHasStatusEffect;
 
@@ -27,7 +27,7 @@ public class AbilityLightning2 implements Ability {
         }
         if (player.isCrouching() && playerData.canUseUpgrade("lightningStaticAura")) {
             if (safeHasStatusEffect(ElementalsStatusEffects.STATIC_AURA, player)) {
-                player.removeStatusEffect(ElementalsStatusEffects.STATIC_AURA);
+                player.removeEffect(ElementalsStatusEffects.STATIC_AURA);
             } else {
                 int duration = 200;
                 PlayerData plrData = PlayerData.get(player);

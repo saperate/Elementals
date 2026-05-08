@@ -2,24 +2,23 @@ package dev.saperate.elementals.entities.blood;
 
 import dev.saperate.elementals.data.ElementalConfig;
 import dev.saperate.elementals.entities.common.AbstractElementalsEntity;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.MoverType;
-import net.minecraft.entity.data.SynchedEntityData;
-import net.minecraft.entity.data.EntityDataAccessor;
-import net.minecraft.entity.data.EntityDataSerializers;
-import net.minecraft.entity.effect.StatusEffect;
-import net.minecraft.entity.effect.MobEffectInstance;
-import net.minecraft.entity.player.Player;
-import net.minecraft.particle.ParticleTypes;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.sound.SoundSource;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.world.Level;
+import net.minecraft.core.Holder;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.MoverType;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3f;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -36,15 +35,13 @@ public class BloodShotEntity extends AbstractElementalsEntity<Player> {
     }
 
 
-    public BloodShotEntity(Level world, Player owner, double x, double y, double z, Map<RegistryEntry<StatusEffect>, MobEffectInstance> ownerEffects) {
+    public BloodShotEntity(Level world, Player owner, double x, double y, double z, Collection<MobEffectInstance> ownerEffects) {
         super(BLOODSHOT, world, Player.class);
         setOwner(owner);
         setPos(x, y, z);
         setControlled(true);
 
-        for(MobEffectInstance instance : ownerEffects.values()){
-            effects.add(new MobEffectInstance(instance));
-        }
+        effects.addAll(ownerEffects);
     }
 
 
@@ -53,7 +50,7 @@ public class BloodShotEntity extends AbstractElementalsEntity<Player> {
     public void tick() {
         super.tick();
 
-        if (random.nextBetween(0, 40) == 6) {
+        if (random.nextInt(0, 40) == 6) {
             summonParticles(this, random,
                     ParticleTypes.SPLASH,
                     0, 1);
@@ -94,7 +91,7 @@ public class BloodShotEntity extends AbstractElementalsEntity<Player> {
         }
         Vector3f direction = getEntityLookVector(owner, distance)
                 .subtract(0, 0.25f, 0)
-                .subtract(getPos()).toVector3f();
+                .subtract(position()).toVector3f();
         direction.mul(0.25f);
 
         if (direction.length() < 0.6f) {
@@ -102,7 +99,7 @@ public class BloodShotEntity extends AbstractElementalsEntity<Player> {
         }
 
 
-        this.addDeltaMovement(direction.x, direction.y, direction.z);
+        this.addDeltaMovement(new Vec3(direction.x, direction.y, direction.z));
     }
 
     @Override
@@ -113,7 +110,7 @@ public class BloodShotEntity extends AbstractElementalsEntity<Player> {
     @Override
     public void onClientRemoval() {
         summonParticles(this, random, ParticleTypes.SPLASH, 0, 10);
-        this.level().playSound(getX(), getY(), getZ(), SoundEvents.PLAYER_SPLASH, SoundSource.BLOCKS, 0.25f, (1.0f + (this.level().random.nextFloat() - this.level().random.nextFloat()) * 0.2f) * 0.7f, false);
+        this.level().playSound(this, getOnPos(), SoundEvents.PLAYER_SPLASH, SoundSource.BLOCKS, 0.25f, (1.0f + (this.level().random.nextFloat() - this.level().random.nextFloat()) * 0.2f) * 0.7f);
 
     }
 

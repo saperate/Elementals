@@ -129,26 +129,14 @@ public class ElementalEntities {
                     .dimensions(EntityDimensions.fixed(1, 1)).build());
 
     //LIGHTNING
-    public static final EntityType<LightningArcEntity> LIGHTNINGARC = Registry.register(
-            Registries.ENTITY_TYPE,
-            Identifier.of("assets/elementals", "lightning_arc"),
-            FabricEntityTypeBuilder.<LightningArcEntity>create(SpawnGroup.MISC, LightningArcEntity::new)
-                    .disableSummon()
-                    .dimensions(EntityDimensions.changing(0.25f, 0.25f)).build());
-    public static final EntityType<VoltArcEntity> VOLTARC = Registry.register(
-            Registries.ENTITY_TYPE,
-            Identifier.of("assets/elementals", "volt_arc"),
-            FabricEntityTypeBuilder.<VoltArcEntity>create(SpawnGroup.MISC, VoltArcEntity::new)
-                    .disableSummon()
-                    .dimensions(EntityDimensions.changing(0.125f, 0.125f)).build());
+    public static final EntityType<LightningArcEntity> LIGHTNINGARC = registerAbilityEntity(
+            "lightning_arc", LightningArcEntity::new, 0.25f, 0.25f);
+    public static final EntityType<VoltArcEntity> VOLTARC = registerAbilityEntity(
+            "volt_arc", VoltArcEntity::new, 0.125f, 0.125f);
 
     //BLOOD
-    public static final EntityType<BloodShotEntity> BLOODSHOT = Registry.register(
-            Registries.ENTITY_TYPE,
-            Identifier.of("assets/elementals", "blood_shot"),
-            FabricEntityTypeBuilder.<BloodShotEntity>create(SpawnGroup.MISC, BloodShotEntity::new)
-                    .disableSummon()
-                    .dimensions(EntityDimensions.changing(0.125f, 0.125f)).build());
+    public static final EntityType<BloodShotEntity> BLOODSHOT = registerAbilityEntity(
+            "blood_shot", BloodShotEntity::new, 0.125f, 0.125f);
 
     //METAL
     public static final EntityType<MetalCableEntity> METALCABLE = registerAbilityEntity(

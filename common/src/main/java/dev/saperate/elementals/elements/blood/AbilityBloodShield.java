@@ -1,24 +1,19 @@
 package dev.saperate.elementals.elements.blood;
 
-import dev.saperate.elementals.Elementals;
 import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.elements.Ability;
 import dev.saperate.elementals.utils.SapsUtils;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.MoverType;
-import net.minecraft.entity.player.Player;
-import net.minecraft.particle.ParticleEffect;
-import net.minecraft.particle.ParticleTypes;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.random.Random;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.MoverType;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3f;
 
 import java.util.List;
-
-import static dev.saperate.elementals.utils.SapsUtils.*;
 
 
 public class AbilityBloodShield implements Ability {
@@ -41,16 +36,16 @@ public class AbilityBloodShield implements Ability {
     public void onBackgroundTick(Bender bender, Object data) {
         Player player = bender.player;
 
-        Random rnd = player.getRandom();
-        SapsUtils.serverSummonParticles((ServerWorld) player.level(), ParticleTypes.FISHING, player, player.getRandom(),
-                rnd.nextBetween(-1,1), rnd.nextBetween(-1,1), rnd.nextBetween(-1,1),
-                0.01,1,0f,(float) rnd.nextBetween(-25, (int) player.getHeight() * 100) / 100,0f,0f
+        RandomSource rnd = player.getRandom();
+        SapsUtils.serverSummonParticles((ServerLevel) player.level(), ParticleTypes.FISHING, player, player.getRandom(),
+                rnd.nextDouble(), rnd.nextDouble(), rnd.nextDouble(),
+                0.01,1,0f,(float) rnd.nextInt(-25, (int) player.getBbHeight() * 100) / 100,0f,0f
         );
 
 
-        List<Entity> hits = player.level().getOtherEntities(
+        List<Entity> hits = player.level().getEntities(
                 player,
-                player.getBoundingBox().expand(2.5),
+                player.getBoundingBox().inflate(2.5),
                 entity -> entity instanceof LivingEntity
         );
 
@@ -61,25 +56,23 @@ public class AbilityBloodShield implements Ability {
 
         for (Entity entity : hits) {
 
-            double distance = player.getPos().distanceTo(entity.getPos());
+            double distance = player.position().distanceTo(entity.position());
             double power = 1 / (distance - 0.3d);
 
-            Vector3f velocity = entity.getPos()
-                    .subtract(player.getPos())
+            Vector3f velocity = entity.position()
+                    .subtract(player.position())
                     .normalize().multiply(power, power * 0.5f, power).toVector3f();
 
-            SapsUtils.serverSummonParticles((ServerWorld) player.level(), ParticleTypes.FISHING, player, player.getRandom(),
+            SapsUtils.serverSummonParticles((ServerLevel) player.level(), ParticleTypes.FISHING, player, player.getRandom(),
                     velocity.normalize().x,velocity.normalize().y,velocity.normalize().z,
-                    0.2,1,0f,player.getHeight()/5,0f,0f
+                    0.2,1,0f,player.getBbHeight()/5,0f,0f
             );
             
             //returns the root vehicle or itself if there are none
             Entity vehicle = entity.getRootVehicle();
 
-            vehicle.addDeltaMovement(velocity.x,
-                    velocity.y,
-                    velocity.z);
-            vehicle.velocityModified = true;
+            vehicle.addDeltaMovement(new Vec3(velocity.x, velocity.y, velocity.z));
+            vehicle.hasImpulse = true;
             vehicle.move(MoverType.PLAYER, vehicle.getDeltaMovement());
         }
     }

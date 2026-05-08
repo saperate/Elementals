@@ -1,26 +1,17 @@
 package dev.saperate.elementals.entities.lightning;
 
-import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.entities.common.AbstractElementalsEntity;
-import dev.saperate.elementals.entities.fire.FireArcEntity;
-import dev.saperate.elementals.utils.SapsUtils;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LightningEntity;
-import net.minecraft.entity.MoverType;
-import net.minecraft.entity.data.SynchedEntityData;
-import net.minecraft.entity.data.EntityDataAccessor;
-import net.minecraft.entity.data.EntityDataSerializers;
-import net.minecraft.entity.player.Player;
-import net.minecraft.particle.ParticleTypes;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundSource;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.math.Vec3;
-import net.minecraft.world.Level;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.MoverType;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 
 import static dev.saperate.elementals.Elementals.LIGHTNING_PARTICLE_TYPE;
-import static dev.saperate.elementals.entities.ElementalEntities.FIREARC;
 import static dev.saperate.elementals.entities.ElementalEntities.LIGHTNINGARC;
 import static dev.saperate.elementals.utils.SapsUtils.getEntityLookVector;
 import static dev.saperate.elementals.utils.SapsUtils.summonParticles;
@@ -71,7 +62,7 @@ public class LightningArcEntity extends AbstractElementalsEntity<Player> {
     public void tick() {
         super.tick();
 
-        if (random.nextBetween(0, 20) == 6) {
+        if (random.nextInt(0, 20) == 6) {
             summonParticles(this, random,
                     LIGHTNING_PARTICLE_TYPE,
                     0, 1, 0);
@@ -109,11 +100,11 @@ public class LightningArcEntity extends AbstractElementalsEntity<Player> {
             moveEntityTowardsGoal(getEntityLookVector(owner, 3).add(0,0.5,0).toVector3f());
         } else if (getParent() != null) {
             setDeltaMovement(0,0,0);
-            Vec3 direction = parent.getPos().subtract(getPos());
+            Vec3 direction = parent.position().subtract(position());
             double distance = direction.length();
 
             if (distance > chainDistance && (getChild() != null || chainLength == MAX_CHAIN_LENGTH)) {
-                direction = direction.normalize().multiply(distance - chainDistance).add(getPos());
+                direction = direction.normalize().scale(distance - chainDistance).add(position());
                 setPos(direction.x, direction.y, direction.z);
             }
             if(getChild() == null && chainLength != MAX_CHAIN_LENGTH && distance > chainDistance * 1.25f){ //If we are at the tail of the arc

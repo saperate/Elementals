@@ -3,10 +3,7 @@ package dev.saperate.elementals.elements.lightning;
 import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.elements.Ability;
-import net.minecraft.entity.effect.MobEffectInstance;
-import net.minecraft.entity.player.Player;
-
-
+import net.minecraft.world.entity.player.Player;
 
 public class AbilityLightning4 implements Ability {
     @Override

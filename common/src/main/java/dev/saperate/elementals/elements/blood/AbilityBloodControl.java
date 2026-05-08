@@ -3,12 +3,13 @@ package dev.saperate.elementals.elements.blood;
 import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.elements.Ability;
 import dev.saperate.elementals.utils.SapsUtils;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.MoverType;
-import net.minecraft.entity.player.Player;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.util.hit.HitResult;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.MoverType;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3f;
 
 import static dev.saperate.elementals.utils.SapsUtils.getEntityLookVector;
@@ -62,7 +63,7 @@ public class AbilityBloodControl implements Ability {
         vehicle.setDeltaMovement(velocity.x,
                 velocity.y,
                 velocity.z);
-        vehicle.velocityModified = true;
+        vehicle.hasImpulse = true;
         vehicle.move(MoverType.PLAYER, vehicle.getDeltaMovement());
         bender.setCurrAbility(null);
     }
@@ -97,10 +98,10 @@ public class AbilityBloodControl implements Ability {
             living.fallDistance = 0;
         }
 
-        HitResult hit = bender.player.raycast(getDistance(bender),1, !bender.player.isUnderWater());
+        HitResult hit = bender.player.pick(getDistance(bender),1, !bender.player.isUnderWater());
 
-        Vector3f direction = hit.getPos().toVector3f().sub(0, 0.5f, 0)
-                .sub(living.getPos().toVector3f())
+        Vector3f direction = hit.getLocation().toVector3f().sub(0, 0.5f, 0)
+                .sub(living.position().toVector3f())
                 .mul(0.05f)
                 .mul(1,1,1)
                 ;
@@ -109,8 +110,8 @@ public class AbilityBloodControl implements Ability {
             onRemove(bender);
         }
 
-        living.addDeltaMovement(direction.x, direction.y, direction.z);
-        living.velocityModified = true;
+        living.addDeltaMovement(new Vec3(direction.x, direction.y, direction.z));
+        living.hasImpulse = true;
         living.move(MoverType.PLAYER, living.getDeltaMovement());
     }
 
@@ -121,7 +122,7 @@ public class AbilityBloodControl implements Ability {
 
     @Override
     public boolean shouldImmobilizePlayer(Player player) {
-        return !Bender.getBender((ServerPlayerEntity) player).getData().canUseUpgrade("bloodControlPrecisionI");
+        return !Bender.getBender((ServerPlayer) player).getData().canUseUpgrade("bloodControlPrecisionI");
     }
 
     public LivingEntity getVictim(Bender bender){

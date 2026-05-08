@@ -3,8 +3,7 @@ package dev.saperate.elementals.elements.lightning;
 import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.elements.Ability;
-import dev.saperate.elementals.elements.air.AirElement;
-import net.minecraft.entity.player.Player;
+import net.minecraft.world.entity.player.Player;
 
 
 public class AbilityLightning1 implements Ability {
@@ -22,26 +21,6 @@ public class AbilityLightning1 implements Ability {
             return;
         }
         LightningElement.get().getAbility(2).onCall(bender,deltaT);
-    }
-
-    @Override
-    public void onLeftClick(Bender bender, boolean started) {
-
-    }
-
-    @Override
-    public void onMiddleClick(Bender bender, boolean started) {
-
-    }
-
-    @Override
-    public void onRightClick(Bender bender, boolean started) {
-
-    }
-
-    @Override
-    public void onTick(Bender bender) {
-
     }
 
     @Override

@@ -3,21 +3,20 @@ package dev.saperate.elementals.entities.lightning;
 import dev.saperate.elementals.effects.ElementalsStatusEffects;
 import dev.saperate.elementals.data.ElementalConfig;
 import dev.saperate.elementals.entities.common.AbstractElementalsEntity;
-import dev.saperate.elementals.entities.fire.FireArcEntity;
-import net.minecraft.entity.*;
-import net.minecraft.entity.damage.DamageTypes;
-import net.minecraft.entity.data.SynchedEntityData;
-import net.minecraft.entity.data.EntityDataAccessor;
-import net.minecraft.entity.data.EntityDataSerializers;
-import net.minecraft.entity.effect.MobEffectInstance;
-import net.minecraft.entity.player.Player;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.math.Vec3;
-import net.minecraft.world.Level;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.MoverType;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 
 import static dev.saperate.elementals.Elementals.LIGHTNING_PARTICLE_TYPE;
-import static dev.saperate.elementals.entities.ElementalEntities.LIGHTNINGARC;
 import static dev.saperate.elementals.entities.ElementalEntities.VOLTARC;
 import static dev.saperate.elementals.utils.SapsUtils.*;
 
@@ -92,7 +91,7 @@ public class VoltArcEntity extends AbstractElementalsEntity<Player> {
         }
         if(entity instanceof LivingEntity living){
             //TODO make a custom sound
-            playSound(SoundEvents.ENTITY_LIGHTNING_BOLT_THUNDER,1,1);
+            playSound(SoundEvents.LIGHTNING_BOLT_THUNDER,1,1);
             living.addEffect(new MobEffectInstance(ElementalsStatusEffects.STUNNED,duration, 0, false,false,true));
             living.hurt(this.damageSources().playerAttack(getOwner()),1 * ElementalConfig.get().BENDING_DAMAGE_MULTIPLIER);
             remove();
@@ -106,11 +105,11 @@ public class VoltArcEntity extends AbstractElementalsEntity<Player> {
             moveEntityTowardsGoal(getEntityLookVector(owner, 3).add(0,0.5,0).toVector3f());
         } else if (getParent() != null) {
             setDeltaMovement(0,0,0);
-            Vec3 direction = parent.getPos().subtract(getPos());
+            Vec3 direction = parent.position().subtract(position());
             double distance = direction.length();
 
             if (distance > chainDistance && (getChild() != null || chainLength == MAX_CHAIN_LENGTH)) {
-                direction = direction.normalize().multiply(distance - chainDistance).add(getPos());
+                direction = direction.normalize().scale(distance - chainDistance).add(position());
                 setPos(direction.x, direction.y, direction.z);
             }
             if(getChild() == null && chainLength != MAX_CHAIN_LENGTH && distance > chainDistance * 1.25f){ //If we are at the tail of the arc

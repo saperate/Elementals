@@ -1,15 +1,13 @@
 package dev.saperate.elementals.elements.blood;
 
 import dev.saperate.elementals.data.Bender;
-import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.elements.Ability;
-import dev.saperate.elementals.elements.lightning.LightningElement;
 import dev.saperate.elementals.utils.SapsUtils;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.MoverType;
-import net.minecraft.entity.player.Player;
-import net.minecraft.util.hit.HitResult;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.MoverType;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.phys.HitResult;
 import org.joml.Vector3f;
 
 import static dev.saperate.elementals.utils.SapsUtils.getEntityLookVector;
@@ -45,7 +43,7 @@ public class AbilityBloodPush implements Ability {
             vehicle.setDeltaMovement(velocity.x,
                     velocity.y,
                     velocity.z);
-            vehicle.velocityModified = true;
+            vehicle.hasImpulse = true;
             vehicle.move(MoverType.PLAYER, vehicle.getDeltaMovement());
 
         }
