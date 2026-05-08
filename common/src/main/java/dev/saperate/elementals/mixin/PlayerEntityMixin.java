@@ -4,6 +4,7 @@ import com.mojang.datafixers.util.Either;
 import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.effects.ElementalsStatusEffects;
 import dev.saperate.elementals.elements.metal.AbilityMetalDecoy;
+import dev.saperate.elementals.entities.earth.EarthBlockEntity;
 import dev.saperate.elementals.items.GliderItem;
 import dev.saperate.elementals.utils.SapsUtils;
 import net.minecraft.core.BlockPos;
@@ -42,7 +43,7 @@ public abstract class PlayerEntityMixin {
         Player player = ((Player) (Object) this);
         List<EarthBlockEntity> entities = player.level().getEntitiesOfClass(EarthBlockEntity.class,
                 player.getBoundingBox().inflate(0.1f),
-                EarthBlockEntity::isCollidable);
+                EarthBlockEntity::canBeCollidedWith);
 
         if (entities.size() > 1) {
             cir.setReturnValue(false);

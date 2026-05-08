@@ -11,11 +11,28 @@
     "FurnaceBlockEntityAccessor",
     "GameRulesAccessor",
     "GameRulesBooleanRuleAccessor",
+    "ItemEntityMixin",
+    "LivingEntityMixin",
     "MobEffectInstanceAccessor",
     "NearestAttackableTargetGoalMixin",
+    "PlayerEntityMixin",
+    "RecipeManagerMixin",
+    "ServerPlayerEntityMixin",
     "SimpleParticleTypeAccessor"
   ],
   "client": [
+    "client.CameraMixin",
+    "client.ClientPlayerEntityMixin",
+    "client.GameRendererMixin",
+    "client.GlowMixin",
+    "client.GuiAccessor",
+    "client.HeldItemRendererMixin",
+    "client.LivingEntityRendererMixin",
+    "client.MinecraftClientMixin",
+    "client.MouseMixin",
+    "client.OverlayMixin",
+    "client.PlayerEntityRendererMixin",
+    "client.SpectatorMenuCommandMixin"
   ],
   "server": [],
   "injectors": {

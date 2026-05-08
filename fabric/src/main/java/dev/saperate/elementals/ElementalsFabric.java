@@ -7,7 +7,6 @@ public class ElementalsFabric implements ModInitializer {
     
     @Override
     public void onInitialize() {
-        Constants.LOG.info("Hello Fabric world!");
         Elementals.init();
     }
 }

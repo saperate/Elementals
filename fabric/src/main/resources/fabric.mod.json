@@ -17,6 +17,9 @@
     "entrypoints": {
         "main": [
             "dev.saperate.elementals.ElementalsFabric"
+        ],
+        "client": [
+            "dev.saperate.elementals.client.ElementalsClientFabric"
         ]
     },
     "mixins": [

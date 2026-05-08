@@ -11,7 +11,7 @@ import java.util.Map;
 @Mixin(GameRules.class)
 public class GameRulesAccessor {
     @Invoker("register")
-    static <T extends GameRules.Value<T>> GameRules.Key<T> callRegister(String name, GameRules.Category category, GameRules.Type<T> type) {
+    public static <T extends GameRules.Value<T>> GameRules.Key<T> callRegister(String name, GameRules.Category category, GameRules.Type<T> type) {
         throw new AssertionError();
     }
 }
