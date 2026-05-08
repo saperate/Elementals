@@ -49,7 +49,7 @@ public class OverlayMixin {
         RenderSystem.setShader(GameRenderer::getPositionTexProgram);
         RenderSystem.setShaderTexture(0, UNDERWATER_TEXTURE);
         BlockPos blockPos = BlockPos.ofFloored((double) client.player.getX(), (double) client.player.getEyeY(), (double) client.player.getZ());
-        float f = LightmapTextureManager.getBrightness(client.player.getWorld().getDimension(), client.player.getWorld().getLightLevel(blockPos));
+        float f = LightmapTextureManager.getBrightness(client.player.level().getDimension(), client.player.level().getLightLevel(blockPos));
         RenderSystem.enableBlend();
         RenderSystem.setShaderColor(f, f, f * blueMultiplier, 0.5f);
 

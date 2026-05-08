@@ -6,8 +6,8 @@ import dev.saperate.elementals.elements.Ability;
 import dev.saperate.elementals.entities.air.AirShieldEntity;
 import dev.saperate.elementals.entities.air.AirTornadoEntity;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.effect.MobEffectInstance;
+import net.minecraft.entity.player.Player;
 
 
 
@@ -22,9 +22,9 @@ public class AbilityAirTornado implements Ability {
             }
             return;
         }
-        PlayerEntity player = bender.player;
+        Player player = bender.player;
 
-        AirTornadoEntity entity = new AirTornadoEntity(player.getWorld(), player, player.getX(), player.getY(), player.getZ());
+        AirTornadoEntity entity = new AirTornadoEntity(player.level(), player, player.getX(), player.getY(), player.getZ());
         PlayerData plrData = PlayerData.get(player);
         float speed = 0.01f;
 
@@ -37,7 +37,7 @@ public class AbilityAirTornado implements Ability {
         entity.setControlled(true);
         bender.abilityData = entity;
         entity.setOwner(player);
-        player.getWorld().spawnEntity(entity);
+        player.level().addFreshEntity(entity);
 
 
         bender.setCurrAbility(this);
@@ -68,7 +68,7 @@ public class AbilityAirTornado implements Ability {
             }
             return;
         }
-        if (!bender.player.isSneaking()) {
+        if (!bender.player.isCrouching()) {
             onRemove(bender);
         }
     }
@@ -81,8 +81,8 @@ public class AbilityAirTornado implements Ability {
             return;
         }
         entity.setControlled(false);
-        entity.setVelocity(bender.player, bender.player.getPitch(), bender.player.getYaw(), 0, 0.2f, 0);
-        entity.setVelocity(entity.getVelocity().multiply(1, 0, 1));//We can't fling tornadoes upwards
+        entity.setDeltaMovement(bender.player, bender.player.getPitch(), bender.player.getYaw(), 0, 0.2f, 0);
+        entity.setDeltaMovement(entity.getDeltaMovement().multiply(1, 0, 1));//We can't fling tornadoes upwards
         entity.maxLifeTime = 120;
         //entity.setStepHeight(1f); fixme
     }

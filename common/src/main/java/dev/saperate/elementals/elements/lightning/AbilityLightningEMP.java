@@ -7,7 +7,7 @@ import dev.saperate.elementals.entities.lightning.VoltArcEntity;
 import dev.saperate.elementals.misc.FireExplosion;
 import dev.saperate.elementals.misc.StunExplosion;
 import dev.saperate.elementals.utils.SapsUtils;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.Player;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.world.explosion.Explosion;
 import org.joml.Vector3f;
@@ -23,10 +23,10 @@ public class AbilityLightningEMP implements Ability {
             return;
         }
         bender.setCurrAbility(null);
-        PlayerEntity player = bender.player;
-        SapsUtils.serverSummonParticles((ServerWorld) player.getWorld(),
+        Player player = bender.player;
+        SapsUtils.serverSummonParticles((ServerWorld) player.level(),
                 LIGHTNING_PARTICLE_TYPE, player, player.getRandom(), -0.5,-0.5,-0.5,0.75f,100,0,0,0,1);
-        StunExplosion explosion = new StunExplosion(player.getWorld(), player, player.getX(), player.getY(), player.getZ(), 2.5f, false, Explosion.DestructionType.KEEP, 4 * ElementalConfig.get().BENDING_DAMAGE_MULTIPLIER,0, player);
+        StunExplosion explosion = new StunExplosion(player.level(), player, player.getX(), player.getY(), player.getZ(), 2.5f, false, Explosion.DestructionType.KEEP, 4 * ElementalConfig.get().BENDING_DAMAGE_MULTIPLIER,0, player);
         explosion.collectBlocksAndDamageEntities();
         explosion.affectWorld(true);
     }

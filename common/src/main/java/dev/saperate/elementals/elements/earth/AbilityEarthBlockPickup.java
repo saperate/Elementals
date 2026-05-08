@@ -5,13 +5,13 @@ import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.elements.Ability;
 import dev.saperate.elementals.entities.earth.EarthBlockEntity;
 import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.entity.player.Player;
+import net.minecraft.util.math.Vec3;
 
 public class AbilityEarthBlockPickup implements Ability {
     @Override
     public void onCall(Bender bender, long deltaT) {
-        PlayerEntity player = bender.player;
+        Player player = bender.player;
         if (!bender.reduceChi(10)) {
             if (bender.abilityData == null) {
                 bender.setCurrAbility(null);
@@ -23,14 +23,14 @@ public class AbilityEarthBlockPickup implements Ability {
 
         Object[] vars = EarthElement.canBend(player, true);
         if (vars != null) {
-            Vec3d pos = (Vec3d) vars[0];
+            Vec3 pos = (Vec3) vars[0];
             BlockState state = (BlockState) vars[1];
 
-            EarthBlockEntity entity = new EarthBlockEntity(player.getWorld(), player, pos.x, pos.y, pos.z);
+            EarthBlockEntity entity = new EarthBlockEntity(player.level(), player, pos.x, pos.y, pos.z);
             bender.abilityData = entity;
             entity.setBlockState(state);
 
-            player.getWorld().spawnEntity(entity);
+            player.level().addFreshEntity(entity);
             bender.setCurrAbility(this);
         } else {
             bender.setCurrAbility(null);
@@ -53,7 +53,7 @@ public class AbilityEarthBlockPickup implements Ability {
         } else if (plrData.canUseUpgrade("earthBlockSpeedI")) {
             speed = 1.5f;
         }
-        entity.setVelocity(bender.player, bender.player.getPitch(), bender.player.getYaw(), 0, speed, 0);
+        entity.setDeltaMovement(bender.player, bender.player.getPitch(), bender.player.getYaw(), 0, speed, 0);
         entity.setDamage(plrData.canUseUpgrade("earthBlockDamageI") ? 8 : 4);
     }
 
@@ -67,11 +67,11 @@ public class AbilityEarthBlockPickup implements Ability {
         if (started) {
             return;
         }
-        PlayerEntity player = bender.player;
+        Player player = bender.player;
 
         EarthBlockEntity blockEntity = (EarthBlockEntity) bender.abilityData;
         onRemove(bender);
-        if (blockEntity == null || !PlayerData.get(player).canUseUpgrade("earthBlockShrapnel") || !player.isSneaking()) {
+        if (blockEntity == null || !PlayerData.get(player).canUseUpgrade("earthBlockShrapnel") || !player.isCrouching()) {
             return;
         }
         PlayerData plrData = PlayerData.get(bender.player);
@@ -82,7 +82,7 @@ public class AbilityEarthBlockPickup implements Ability {
         } else if (plrData.canUseUpgrade("earthBlockSpeedI")) {
             speed = 2;
         }
-        blockEntity.setVelocity(bender.player, bender.player.getPitch(), bender.player.getYaw(), 0, speed, 0);
+        blockEntity.setDeltaMovement(bender.player, bender.player.getPitch(), bender.player.getYaw(), 0, speed, 0);
         blockEntity.setModelShapeId(1);
         blockEntity.setDamage(plrData.canUseUpgrade("earthBlockDamageI") ? 12 : 8);
         blockEntity.setShiftToFreeze(false);

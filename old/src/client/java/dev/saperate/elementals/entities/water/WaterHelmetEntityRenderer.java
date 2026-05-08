@@ -9,7 +9,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.RotationAxis;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.Vec3;
 import org.joml.Matrix4f;
 
 import static dev.saperate.elementals.entities.utils.RenderUtils.drawCube;
@@ -27,7 +27,7 @@ public class WaterHelmetEntityRenderer extends EntityRenderer<WaterHelmetEntity>
     @Override
     public void render(WaterHelmetEntity entity, float yaw, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light) {
         LivingEntity owner = entity.getOwner();
-        Vec3d eyePos = owner.getCameraPosVec(tickDelta);
+        Vec3 eyePos = owner.getCameraPosVec(tickDelta);
         entity.setPos(eyePos.x,eyePos.y - 0.5f, eyePos.z);
 
         if(!entity.isOwnerBiped()){
@@ -50,7 +50,7 @@ public class WaterHelmetEntityRenderer extends EntityRenderer<WaterHelmetEntity>
         mat.scale(0.65f);
 
         if(entity.getModelId() == 0){
-            int color = BiomeColors.getWaterColor(entity.getWorld(),entity.getBlockPos());
+            int color = BiomeColors.getWaterColor(entity.level(),entity.getOnPos());
             drawCube(vertexConsumer, matrices, light,
                     (color >> 16 & 255) / 255.0f,
                     (color >> 8 & 255) / 255.0f,

@@ -6,8 +6,8 @@ import dev.saperate.elementals.elements.Ability;
 import dev.saperate.elementals.utils.SapsUtils;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.MovementType;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.MoverType;
+import net.minecraft.entity.player.Player;
 import net.minecraft.particle.ParticleEffect;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.world.ServerWorld;
@@ -39,16 +39,16 @@ public class AbilityBloodShield implements Ability {
 
     @Override
     public void onBackgroundTick(Bender bender, Object data) {
-        PlayerEntity player = bender.player;
+        Player player = bender.player;
 
         Random rnd = player.getRandom();
-        SapsUtils.serverSummonParticles((ServerWorld) player.getWorld(), ParticleTypes.FISHING, player, player.getRandom(),
+        SapsUtils.serverSummonParticles((ServerWorld) player.level(), ParticleTypes.FISHING, player, player.getRandom(),
                 rnd.nextBetween(-1,1), rnd.nextBetween(-1,1), rnd.nextBetween(-1,1),
                 0.01,1,0f,(float) rnd.nextBetween(-25, (int) player.getHeight() * 100) / 100,0f,0f
         );
 
 
-        List<Entity> hits = player.getWorld().getOtherEntities(
+        List<Entity> hits = player.level().getOtherEntities(
                 player,
                 player.getBoundingBox().expand(2.5),
                 entity -> entity instanceof LivingEntity
@@ -68,7 +68,7 @@ public class AbilityBloodShield implements Ability {
                     .subtract(player.getPos())
                     .normalize().multiply(power, power * 0.5f, power).toVector3f();
 
-            SapsUtils.serverSummonParticles((ServerWorld) player.getWorld(), ParticleTypes.FISHING, player, player.getRandom(),
+            SapsUtils.serverSummonParticles((ServerWorld) player.level(), ParticleTypes.FISHING, player, player.getRandom(),
                     velocity.normalize().x,velocity.normalize().y,velocity.normalize().z,
                     0.2,1,0f,player.getHeight()/5,0f,0f
             );
@@ -76,11 +76,11 @@ public class AbilityBloodShield implements Ability {
             //returns the root vehicle or itself if there are none
             Entity vehicle = entity.getRootVehicle();
 
-            vehicle.addVelocity(velocity.x,
+            vehicle.addDeltaMovement(velocity.x,
                     velocity.y,
                     velocity.z);
             vehicle.velocityModified = true;
-            vehicle.move(MovementType.PLAYER, vehicle.getVelocity());
+            vehicle.move(MoverType.PLAYER, vehicle.getDeltaMovement());
         }
     }
 }

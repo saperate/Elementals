@@ -13,7 +13,7 @@ public class AbilityEarth2 implements Ability {
             return;
         }
 
-        if (bender.player.isSneaking()) {
+        if (bender.player.isCrouching()) {
             if (deltaT >= 500 && playerData.canUseUpgrade("earthTrap")) {
                 EarthElement.get().getAbility(6).onCall(bender, deltaT);
                 return;

@@ -5,7 +5,7 @@ import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.effects.ElementalsStatusEffects;
 import dev.saperate.elementals.elements.Ability;
-import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.entity.effect.MobEffectInstance;
 import net.minecraft.server.network.ServerPlayerEntity;
 
 
@@ -41,7 +41,7 @@ public class AbilityEarth4 implements Ability {
                 return;
             }
             Elementals.USED_ABILITY.trigger((ServerPlayerEntity) bender.player, "seismic_sense");
-            bender.player.addStatusEffect(new StatusEffectInstance(ElementalsStatusEffects.SEISMIC_SENSE, 2400));
+            bender.player.addEffect(new MobEffectInstance(ElementalsStatusEffects.SEISMIC_SENSE, 2400));
         }
     }
 

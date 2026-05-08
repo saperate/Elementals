@@ -2,6 +2,7 @@ package dev.saperate.elementals.elements.water;
 
 import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.elements.Ability;
+import dev.saperate.elementals.entities.water.WaterBulletEntity;
 import net.minecraft.world.entity.player.Player;
 import org.joml.Vector3f;
 
@@ -43,7 +44,7 @@ public class AbilityWaterBullet implements Ability {
 
         WaterBulletEntity bullet = bullets[bullets.length - 1];
         bullet.setControlled(false);
-        bullet.setVelocity(bender.player, bender.player.getXRot(), bender.player.getYRot(), 0, 1, 0);
+        bullet.setDeltaMovement(bender.player, bender.player.getXRot(), bender.player.getYRot(), 0, 1, 0);
 
         WaterBulletEntity[] newArray = new WaterBulletEntity[bullets.length - 1];
         for (int i = 0; i < bullets.length - 1; i++) {

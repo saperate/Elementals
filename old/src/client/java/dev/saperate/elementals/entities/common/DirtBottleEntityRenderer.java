@@ -30,7 +30,7 @@ public class DirtBottleEntityRenderer extends EntityRenderer<DirtBottleEntity> {
         matrices.multiply(this.dispatcher.getRotation());
         matrices.scale(0.75F, 0.75F, 0.75F);
 
-        this.itemRenderer.renderItem(entity.getStack(), ModelTransformationMode.GROUND, light, OverlayTexture.DEFAULT_UV, matrices, vertexConsumers, entity.getWorld(), entity.getId());
+        this.itemRenderer.renderItem(entity.getStack(), ModelTransformationMode.GROUND, light, OverlayTexture.DEFAULT_UV, matrices, vertexConsumers, entity.level(), entity.getId());
 
         matrices.pop();
     }

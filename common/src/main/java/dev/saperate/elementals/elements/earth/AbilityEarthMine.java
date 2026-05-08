@@ -4,11 +4,11 @@ import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.elements.Ability;
 import dev.saperate.elementals.entities.earth.EarthBlockEntity;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.Player;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
+import net.minecraft.util.math.Vec3;
+import net.minecraft.world.Level;
 
 import java.util.LinkedList;
 
@@ -17,12 +17,12 @@ import static dev.saperate.elementals.Elementals.BENDING_GRIEFING;
 public class AbilityEarthMine implements Ability {
     @Override
     public void onCall(Bender bender, long deltaT) {
-        PlayerEntity player = bender.player;
+        Player player = bender.player;
 
         //TODO make it so it consumes more chi if the block is harder to break
 
         Object[] vars = EarthElement.canBend(player, false);
-        if (vars == null || !player.getWorld().getGameRules().getBoolean(BENDING_GRIEFING)) {
+        if (vars == null || !player.level().getGameRules().getBoolean(BENDING_GRIEFING)) {
             bender.setCurrAbility(null);
             return;
         }
@@ -68,7 +68,7 @@ public class AbilityEarthMine implements Ability {
     public void minePillar(BlockPos pos, Direction dir, int amount, Bender bender){
         for (int i = 0; i < amount; i++) {
             if(EarthElement.isBlockBendable(pos.offset(dir,i), bender)){
-                bender.player.getWorld().breakBlock(pos.offset(dir,i),true);
+                bender.player.level().breakBlock(pos.offset(dir,i),true);
             }
         }
     }

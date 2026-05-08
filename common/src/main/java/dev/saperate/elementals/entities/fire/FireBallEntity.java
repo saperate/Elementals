@@ -6,15 +6,15 @@ import dev.saperate.elementals.misc.FireExplosion;
 import dev.saperate.elementals.entities.common.AbstractElementalsEntity;
 import net.minecraft.block.AbstractFireBlock;
 import net.minecraft.entity.*;
-import net.minecraft.entity.data.DataTracker;
-import net.minecraft.entity.data.TrackedData;
-import net.minecraft.entity.data.TrackedDataHandlerRegistry;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.data.SynchedEntityData;
+import net.minecraft.entity.data.EntityDataAccessor;
+import net.minecraft.entity.data.EntityDataSerializers;
+import net.minecraft.entity.player.Player;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundSource;
 import net.minecraft.sound.SoundEvents;
-import net.minecraft.world.World;
+import net.minecraft.world.Level;
 import net.minecraft.world.explosion.Explosion;
 
 import java.util.Objects;
@@ -23,39 +23,39 @@ import static dev.saperate.elementals.entities.ElementalEntities.FIREBALL;
 import static dev.saperate.elementals.utils.SapsUtils.getEntityLookVector;
 import static dev.saperate.elementals.utils.SapsUtils.summonParticles;
 
-public class FireBallEntity extends AbstractElementalsEntity<PlayerEntity> {
-    private static final TrackedData<Boolean> IS_BLUE = DataTracker.registerData(FireBallEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
-    public FireBallEntity(EntityType<FireBallEntity> type, World world) {
-        super(type, world, PlayerEntity.class);
+public class FireBallEntity extends AbstractElementalsEntity<Player> {
+    private static final EntityDataAccessor<Boolean> IS_BLUE = SynchedEntityData.defineId(FireBallEntity.class, EntityDataSerializers.BOOLEAN);
+    public FireBallEntity(EntityType<FireBallEntity> type, Level world) {
+        super(type, world, Player.class);
     }
 
-    public FireBallEntity(World world, PlayerEntity owner) {
-        super(FIREBALL, world, PlayerEntity.class);
+    public FireBallEntity(Level world, Player owner) {
+        super(FIREBALL, world, Player.class);
         setOwner(owner);
         setPos(owner.getX(), owner.getY(), owner.getZ());
     }
 
-    public FireBallEntity(World world, PlayerEntity owner, double x, double y, double z) {
-        super(FIREBALL, world, PlayerEntity.class);
+    public FireBallEntity(Level world, Player owner, double x, double y, double z) {
+        super(FIREBALL, world, Player.class);
         setOwner(owner);
         setPos(x, y, z);
         setControlled(true);
     }
 
     @Override
-    protected void initDataTracker(DataTracker.Builder builder) {
-        super.initDataTracker(builder);
-        builder.add(IS_BLUE, false);
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(IS_BLUE, false);
     }
 
     @Override
     public void tick() {
         super.tick();
 
-        if (touchingWater && !getWorld().isClient) {
+        if (touchingWater && !level().isClientSide) {
             discard();
 
-            PlayerEntity owner = getOwner();
+            Player owner = getOwner();
             if(owner != null){
                 Bender bender = Bender.getBender((ServerPlayerEntity) owner);
                 if(bender.currAbility != null){
@@ -78,7 +78,7 @@ public class FireBallEntity extends AbstractElementalsEntity<PlayerEntity> {
             return;
         }
 
-        if (!owner.isSneaking()) {
+        if (!owner.isCrouching()) {
             moveEntity();
         }
 
@@ -89,7 +89,7 @@ public class FireBallEntity extends AbstractElementalsEntity<PlayerEntity> {
             moveEntityTowardsGoal(getEntityLookVector(getOwner(), 3).subtract(0,0.5,0).toVector3f());
         }
 
-        this.move(MovementType.SELF, this.getVelocity());
+        this.move(MoverType.SELF, this.getDeltaMovement());
     }
 
     @Override
@@ -108,30 +108,30 @@ public class FireBallEntity extends AbstractElementalsEntity<PlayerEntity> {
     }
 
     public void onCollision(){
-        getWorld().setBlockState(getBlockPos(), AbstractFireBlock.getState(getWorld(), getBlockPos()));
-        FireExplosion explosion = new FireExplosion(getWorld(), getOwner(), getX(), getY(), getZ(), 2.5f, true, Explosion.DestructionType.KEEP, 12 * ElementalConfig.get().BENDING_DAMAGE_MULTIPLIER, getOwner());
+        level().setBlockState(getOnPos(), AbstractFireBlock.getState(level(), getOnPos()));
+        FireExplosion explosion = new FireExplosion(level(), getOwner(), getX(), getY(), getZ(), 2.5f, true, Explosion.DestructionType.KEEP, 12 * ElementalConfig.get().BENDING_DAMAGE_MULTIPLIER, getOwner());
         explosion.collectBlocksAndDamageEntities();
         explosion.affectWorld(true);
         discard();
     }
 
     @Override
-    public void onRemoved() {
+    public void onClientRemoval() {
         if(Objects.equals(getRemovalReason(), RemovalReason.KILLED)){
             return;
         }
         summonParticles(this, random,
                 isBlue() ? ParticleTypes.SOUL_FIRE_FLAME : ParticleTypes.FLAME,
                 0.25f, 25);
-        this.getWorld().playSound(getX(), getY(), getZ(), SoundEvents.ENTITY_GENERIC_EXPLODE.value(), SoundCategory.BLOCKS, 4.0f, (1.0f + (this.getWorld().random.nextFloat() - this.getWorld().random.nextFloat()) * 0.2f) * 0.7f, true);
+        this.level().playSound(getX(), getY(), getZ(), SoundEvents.ENTITY_GENERIC_EXPLODE.value(), SoundSource.BLOCKS, 4.0f, (1.0f + (this.level().random.nextFloat() - this.level().random.nextFloat()) * 0.2f) * 0.7f, true);
     }
 
     public boolean isBlue() {
-        return this.dataTracker.get(IS_BLUE);
+        return this.entityData.get(IS_BLUE);
     }
 
     public void setIsBlue(boolean val) {
-        this.getDataTracker().set(IS_BLUE, val);
+        this.getEntityData().set(IS_BLUE, val);
     }
 
     @Override

@@ -4,7 +4,7 @@ import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.elements.Ability;
 import dev.saperate.elementals.entities.blood.BloodShotEntity;
 import dev.saperate.elementals.utils.SapsUtils;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.Player;
 import org.joml.Vector3f;
 
 import static dev.saperate.elementals.utils.SapsUtils.getEntityLookVector;
@@ -12,7 +12,7 @@ import static dev.saperate.elementals.utils.SapsUtils.getEntityLookVector;
 public class AbilityBloodShot implements Ability {
     @Override
     public void onCall(Bender bender, long deltaT) {
-        PlayerEntity player = bender.player;
+        Player player = bender.player;
 
         float cost = 20;
         if (bender.getData().canUseUpgrade("bloodShotEfficiencyII")) {
@@ -30,7 +30,7 @@ public class AbilityBloodShot implements Ability {
 
 
         BloodShotEntity entity = new BloodShotEntity(
-                player.getWorld(),
+                player.level(),
                 player,
                 pos.x, pos.y, pos.z,
                 player.getActiveStatusEffects()
@@ -42,10 +42,10 @@ public class AbilityBloodShot implements Ability {
 
 
         bender.abilityData = entity;
-        player.getWorld().spawnEntity(entity);
-        entity.setVelocity(0.001f, 0.001f, 0.001f);
+        player.level().addFreshEntity(entity);
+        entity.setDeltaMovement(0.001f, 0.001f, 0.001f);
 
-        player.damage(player.getDamageSources().dryOut(),2);
+        player.hurt(player.damageSources().dryOut(),2);
 
         bender.setCurrAbility(this);
     }
@@ -59,8 +59,8 @@ public class AbilityBloodShot implements Ability {
     @Override
     public void onTick(Bender bender) {
         BloodShotEntity entity = (BloodShotEntity) bender.abilityData;
-        if (entity != null && entity.age >= 5) {
-            entity.setVelocity(bender.player, bender.player.getPitch(), bender.player.getYaw(), 0, 4, 0);
+        if (entity != null && entity.tickCount >= 5) {
+            entity.setDeltaMovement(bender.player, bender.player.getPitch(), bender.player.getYaw(), 0, 4, 0);
             entity.setControlled(false);
             bender.setCurrAbility(null);
         }

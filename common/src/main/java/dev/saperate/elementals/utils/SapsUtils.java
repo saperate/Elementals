@@ -540,9 +540,9 @@ public final class SapsUtils {
      *
      * @return True if the block was broken
      */
-    public static boolean mineBlock(BlockPos blockHit, Level world, int entityId, int age, int startMiningAge, float miningSpeed) {
+    public static boolean mineBlock(BlockPos blockHit, Level world, int entityId, int tickCount, int startMiningAge, float miningSpeed) {
         float progress = calcBlockBreakingDelta(world.getBlockState(blockHit), world, blockHit, miningSpeed)
-                * (age - startMiningAge + 1);
+                * (tickCount - startMiningAge + 1);
         world.destroyBlockProgress(entityId, blockHit, (int) (progress * 10));
 
         if (progress >= 1) {

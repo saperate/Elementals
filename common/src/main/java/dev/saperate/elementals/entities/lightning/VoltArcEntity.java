@@ -6,25 +6,25 @@ import dev.saperate.elementals.entities.common.AbstractElementalsEntity;
 import dev.saperate.elementals.entities.fire.FireArcEntity;
 import net.minecraft.entity.*;
 import net.minecraft.entity.damage.DamageTypes;
-import net.minecraft.entity.data.DataTracker;
-import net.minecraft.entity.data.TrackedData;
-import net.minecraft.entity.data.TrackedDataHandlerRegistry;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.data.SynchedEntityData;
+import net.minecraft.entity.data.EntityDataAccessor;
+import net.minecraft.entity.data.EntityDataSerializers;
+import net.minecraft.entity.effect.MobEffectInstance;
+import net.minecraft.entity.player.Player;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
+import net.minecraft.util.math.Vec3;
+import net.minecraft.world.Level;
 
 import static dev.saperate.elementals.Elementals.LIGHTNING_PARTICLE_TYPE;
 import static dev.saperate.elementals.entities.ElementalEntities.LIGHTNINGARC;
 import static dev.saperate.elementals.entities.ElementalEntities.VOLTARC;
 import static dev.saperate.elementals.utils.SapsUtils.*;
 
-public class VoltArcEntity extends AbstractElementalsEntity<PlayerEntity> {
+public class VoltArcEntity extends AbstractElementalsEntity<Player> {
 
-    private static final TrackedData<Integer> PARENT_ID = DataTracker.registerData(VoltArcEntity.class, TrackedDataHandlerRegistry.INTEGER);
-    private static final TrackedData<Integer> CHILD_ID = DataTracker.registerData(VoltArcEntity.class, TrackedDataHandlerRegistry.INTEGER);
+    private static final EntityDataAccessor<Integer> PARENT_ID = SynchedEntityData.defineId(VoltArcEntity.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Integer> CHILD_ID = SynchedEntityData.defineId(VoltArcEntity.class, EntityDataSerializers.INT);
     public static final float chainDistance = 0.75f;
     public static final int MAX_CHAIN_LENGTH = 1;
     public int chainLength = 0;
@@ -32,12 +32,12 @@ public class VoltArcEntity extends AbstractElementalsEntity<PlayerEntity> {
     public int duration = 200;
 
 
-    public VoltArcEntity(EntityType<VoltArcEntity> type, World world) {
-        super(type, world, PlayerEntity.class);
+    public VoltArcEntity(EntityType<VoltArcEntity> type, Level world) {
+        super(type, world, Player.class);
     }
 
-    public VoltArcEntity(World world, PlayerEntity owner, double x, double y, double z) {
-        super(VOLTARC, world, PlayerEntity.class);
+    public VoltArcEntity(Level world, Player owner, double x, double y, double z) {
+        super(VOLTARC, world, Player.class);
         setOwner(owner);
         setPos(x, y, z);
 
@@ -45,21 +45,21 @@ public class VoltArcEntity extends AbstractElementalsEntity<PlayerEntity> {
     }
 
     @Override
-    protected void initDataTracker(DataTracker.Builder builder) {
-        super.initDataTracker(builder);
-        builder.add(PARENT_ID, 0);
-        builder.add(CHILD_ID, 0);
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(PARENT_ID, 0);
+        builder.define(CHILD_ID, 0);
     }
 
 
     public void makeChild(){
         VoltArcEntity parent = getTail();
-        VoltArcEntity newArc = new VoltArcEntity(getWorld(), getOwner(), getX(), getY(), getZ());
+        VoltArcEntity newArc = new VoltArcEntity(level(), getOwner(), getX(), getY(), getZ());
 
         newArc.setParent(parent);
         parent.setChild(newArc);
         newArc.setControlled(false);
-        getWorld().spawnEntity(newArc);
+        level().addFreshEntity(newArc);
 
         chainLength++;
         newArc.chainLength = chainLength;
@@ -70,7 +70,7 @@ public class VoltArcEntity extends AbstractElementalsEntity<PlayerEntity> {
         super.tick();
 
 
-        PlayerEntity owner = getOwner();
+        Player owner = getOwner();
         if (owner == null && isRemoved()) {
             return;
         }
@@ -93,8 +93,8 @@ public class VoltArcEntity extends AbstractElementalsEntity<PlayerEntity> {
         if(entity instanceof LivingEntity living){
             //TODO make a custom sound
             playSound(SoundEvents.ENTITY_LIGHTNING_BOLT_THUNDER,1,1);
-            living.addStatusEffect(new StatusEffectInstance(ElementalsStatusEffects.STUNNED,duration, 0, false,false,true));
-            living.damage(this.getDamageSources().playerAttack(getOwner()),1 * ElementalConfig.get().BENDING_DAMAGE_MULTIPLIER);
+            living.addEffect(new MobEffectInstance(ElementalsStatusEffects.STUNNED,duration, 0, false,false,true));
+            living.hurt(this.damageSources().playerAttack(getOwner()),1 * ElementalConfig.get().BENDING_DAMAGE_MULTIPLIER);
             remove();
         }
 
@@ -105,8 +105,8 @@ public class VoltArcEntity extends AbstractElementalsEntity<PlayerEntity> {
         if (getIsControlled()) {
             moveEntityTowardsGoal(getEntityLookVector(owner, 3).add(0,0.5,0).toVector3f());
         } else if (getParent() != null) {
-            setVelocity(0,0,0);
-            Vec3d direction = parent.getPos().subtract(getPos());
+            setDeltaMovement(0,0,0);
+            Vec3 direction = parent.getPos().subtract(getPos());
             double distance = direction.length();
 
             if (distance > chainDistance && (getChild() != null || chainLength == MAX_CHAIN_LENGTH)) {
@@ -119,12 +119,12 @@ public class VoltArcEntity extends AbstractElementalsEntity<PlayerEntity> {
         }
 
 
-        this.move(MovementType.SELF, this.getVelocity());
+        this.move(MoverType.SELF, this.getDeltaMovement());
     }
 
 
     @Override
-    public void onRemoved() {
+    public void onClientRemoval() {
         if(getIsControlled()){
             return;
         }
@@ -137,7 +137,7 @@ public class VoltArcEntity extends AbstractElementalsEntity<PlayerEntity> {
      * Safely despawns the arc along with all of its children
      */
     public void despawn() {
-        if (getWorld().isClient) {
+        if (level().isClientSide) {
             return;
         }
         getHead().remove();
@@ -183,28 +183,28 @@ public class VoltArcEntity extends AbstractElementalsEntity<PlayerEntity> {
 
 
     public VoltArcEntity getParent() {
-        int parentId = this.getDataTracker().get(PARENT_ID);
-        Entity parent = this.getWorld().getEntityById(parentId);
-        return parent instanceof VoltArcEntity ? (VoltArcEntity) this.getWorld().getEntityById(parentId) : null;
+        int parentId = this.getEntityData().get(PARENT_ID);
+        Entity parent = this.level().getEntity(parentId);
+        return parent instanceof VoltArcEntity ? (VoltArcEntity) this.level().getEntity(parentId) : null;
     }
 
     public void setParent(VoltArcEntity parent) {
-        this.getDataTracker().set(PARENT_ID, parent != null ? parent.getId() : 0);
+        this.getEntityData().set(PARENT_ID, parent != null ? parent.getId() : 0);
     }
 
     public VoltArcEntity getChild() {
-        int childId = this.getDataTracker().get(CHILD_ID);
-        Entity child = this.getWorld().getEntityById(childId);
-        return child instanceof VoltArcEntity ? (VoltArcEntity) this.getWorld().getEntityById(childId) : null;
+        int childId = this.getEntityData().get(CHILD_ID);
+        Entity child = this.level().getEntity(childId);
+        return child instanceof VoltArcEntity ? (VoltArcEntity) this.level().getEntity(childId) : null;
     }
 
     public void setChild(VoltArcEntity child) {
-        this.getDataTracker().set(CHILD_ID, child != null ? child.getId() : 0);
+        this.getEntityData().set(CHILD_ID, child != null ? child.getId() : 0);
     }
 
     @Override
-    public boolean hasNoGravity() {
-        return super.hasNoGravity() || getParent() != null;
+    public boolean isNoGravity() {
+        return super.isNoGravity() || getParent() != null;
     }
 
     @Override

@@ -5,7 +5,7 @@ import dev.saperate.elementals.entities.earth.EarthBlockEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.*;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.Player;
 import net.minecraft.util.Identifier;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -34,7 +34,7 @@ public abstract class GameRendererMixin {
 
     @Inject(at = @At("TAIL"), method = "render")
     private void render(RenderTickCounter tickCounter, boolean tick, CallbackInfo ci) {
-        PlayerEntity plr = MinecraftClient.getInstance().player;
+        Player plr = MinecraftClient.getInstance().player;
         GameRenderer renderer = MinecraftClient.getInstance().gameRenderer;
 
 
@@ -43,7 +43,7 @@ public abstract class GameRendererMixin {
         boolean customShaderEnabled = customPostProcessorEnabled(renderer,MODID + ":shaders/post/seismicsense.json");
 
         if(hasStatusEffect && !customShaderEnabled){
-            renderer.onCameraEntitySet(new EarthBlockEntity(plr.getWorld(),plr));
+            renderer.onCameraEntitySet(new EarthBlockEntity(plr.level(),plr));
         }else if(!hasStatusEffect && customShaderEnabled){
             renderer.onCameraEntitySet(null);
         }

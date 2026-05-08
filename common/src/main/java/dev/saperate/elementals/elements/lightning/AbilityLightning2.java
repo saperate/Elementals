@@ -4,8 +4,8 @@ import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.effects.ElementalsStatusEffects;
 import dev.saperate.elementals.elements.Ability;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.effect.MobEffectInstance;
+import net.minecraft.entity.player.Player;
 
 import static dev.saperate.elementals.utils.SapsUtils.safeHasStatusEffect;
 
@@ -13,7 +13,7 @@ import static dev.saperate.elementals.utils.SapsUtils.safeHasStatusEffect;
 public class AbilityLightning2 implements Ability {
     @Override
     public void onCall(Bender bender, long deltaT) {
-        PlayerEntity player = bender.player;
+        Player player = bender.player;
         PlayerData playerData = PlayerData.get(player);
 
         if(!playerData.canUseUpgrade("lightningVoltArc")){
@@ -25,7 +25,7 @@ public class AbilityLightning2 implements Ability {
             LightningElement.get().getAbility(5).onCall(bender, deltaT);
             return;
         }
-        if (player.isSneaking() && playerData.canUseUpgrade("lightningStaticAura")) {
+        if (player.isCrouching() && playerData.canUseUpgrade("lightningStaticAura")) {
             if (safeHasStatusEffect(ElementalsStatusEffects.STATIC_AURA, player)) {
                 player.removeStatusEffect(ElementalsStatusEffects.STATIC_AURA);
             } else {
@@ -36,7 +36,7 @@ public class AbilityLightning2 implements Ability {
                 } else if (plrData.canUseUpgrade("lightningStaticAuraStrengthI")) {
                     duration = 400;
                 }
-                player.addStatusEffect(new StatusEffectInstance(ElementalsStatusEffects.STATIC_AURA, duration, 0, false, false, true));
+                player.addEffect(new MobEffectInstance(ElementalsStatusEffects.STATIC_AURA, duration, 0, false, false, true));
             }
             bender.setCurrAbility(null);
             return;

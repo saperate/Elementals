@@ -10,8 +10,8 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.SoulFireBlock;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.sound.SoundCategory;
+import net.minecraft.entity.player.Player;
+import net.minecraft.sound.SoundSource;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.Identifier;
@@ -83,13 +83,13 @@ public class FireElement extends Element {
     public static void placeFire(BlockPos pos, Direction side, Entity entity, BlockState state){
         BlockPos newPos = pos.offset(side);
 
-        entity.getWorld().playSound(entity, pos, SoundEvents.ITEM_FLINTANDSTEEL_USE, SoundCategory.BLOCKS, 1.0F, entity.getWorld().getRandom().nextFloat() * 0.4F + 0.8F);
+        entity.level().playSound(entity, pos, SoundEvents.ITEM_FLINTANDSTEEL_USE, SoundSource.BLOCKS, 1.0F, entity.level().getRandom().nextFloat() * 0.4F + 0.8F);
 
         if(state.getProperties().contains(Properties.LIT)){
-            entity.getWorld().setBlockState(pos, state.with(Properties.LIT, true), 11);
-            entity.getWorld().emitGameEvent(entity, GameEvent.BLOCK_CHANGE, pos);
+            entity.level().setBlockState(pos, state.with(Properties.LIT, true), 11);
+            entity.level().emitGameEvent(entity, GameEvent.BLOCK_CHANGE, pos);
         }else{
-            entity.getWorld().setBlockState(newPos, AbstractFireBlock.getState(entity.getWorld(),newPos));
+            entity.level().setBlockState(newPos, AbstractFireBlock.getState(entity.level(),newPos));
         }
     }
 

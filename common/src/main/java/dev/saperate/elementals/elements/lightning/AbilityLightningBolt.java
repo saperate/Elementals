@@ -10,11 +10,11 @@ import dev.saperate.elementals.entities.lightning.LightningArcEntity;
 import dev.saperate.elementals.utils.SapsUtils;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LightningEntity;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.effect.MobEffectInstance;
+import net.minecraft.entity.player.Player;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.Vec3;
 import org.joml.Vector3f;
 
 import static dev.saperate.elementals.utils.SapsUtils.getEntityLookVector;
@@ -23,7 +23,7 @@ import static dev.saperate.elementals.utils.SapsUtils.serverSummonParticles;
 public class AbilityLightningBolt implements Ability {
     @Override
     public void onCall(Bender bender, long deltaT) {
-        PlayerEntity player = bender.player;
+        Player player = bender.player;
 
         float cost = 35;
         PlayerData plrData = PlayerData.get(player);
@@ -39,11 +39,11 @@ public class AbilityLightningBolt implements Ability {
 
         Vector3f pos = getEntityLookVector(player, 2).toVector3f();
 
-        LightningArcEntity entity = new LightningArcEntity(player.getWorld(), player, pos.x, pos.y, pos.z);
+        LightningArcEntity entity = new LightningArcEntity(player.level(), player, pos.x, pos.y, pos.z);
         entity.makeChild();
 
         bender.abilityData = entity;
-        player.getWorld().spawnEntity(entity);
+        player.level().addFreshEntity(entity);
 
 
         bender.setCurrAbility(this);
@@ -53,10 +53,10 @@ public class AbilityLightningBolt implements Ability {
     public void onLeftClick(Bender bender, boolean started) {
         LightningArcEntity e = (LightningArcEntity) bender.abilityData;
         if(e.getTail().chainLength == LightningArcEntity.MAX_CHAIN_LENGTH){
-            Vec3d pos = SapsUtils.raycastFull(bender.player, 100,true).getPos();
-            LightningEntity lightning = new LightningEntity(EntityType.LIGHTNING_BOLT,e.getWorld());
+            Vec3 pos = SapsUtils.raycastFull(bender.player, 100,true).getPos();
+            LightningEntity lightning = new LightningEntity(EntityType.LIGHTNING_BOLT,e.level());
             lightning.setPos(pos.x,pos.y,pos.z);
-            e.getWorld().spawnEntity(lightning);
+            e.level().addFreshEntity(lightning);
             onRemove(bender);
         }
     }
@@ -73,10 +73,10 @@ public class AbilityLightningBolt implements Ability {
 
     @Override
     public void onTick(Bender bender) {
-        if(!bender.player.isSneaking()){
+        if(!bender.player.isCrouching()){
             onRemove(bender);
         }
-        bender.player.addStatusEffect(new StatusEffectInstance(ElementalsStatusEffects.STATIONARY,20, 0, false, false, false));
+        bender.player.addEffect(new MobEffectInstance(ElementalsStatusEffects.STATIONARY,20, 0, false, false, false));
     }
 
     @Override

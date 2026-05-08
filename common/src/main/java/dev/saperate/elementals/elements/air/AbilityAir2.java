@@ -19,7 +19,7 @@ public class AbilityAir2 implements Ability {
             AirElement.get().getAbility(6).onCall(bender, deltaT);
             return;
         }
-        if (bender.player.isSneaking()) {
+        if (bender.player.isCrouching()) {
             if (playerData.canUseUpgrade("airBullets")) {
                 AirElement.get().getAbility(7).onCall(bender, deltaT);
                 return;

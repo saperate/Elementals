@@ -7,8 +7,8 @@ import dev.saperate.elementals.elements.lightning.LightningElement;
 import dev.saperate.elementals.utils.SapsUtils;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.MovementType;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.MoverType;
+import net.minecraft.entity.player.Player;
 import net.minecraft.util.hit.HitResult;
 import org.joml.Vector3f;
 
@@ -18,7 +18,7 @@ import static dev.saperate.elementals.utils.SapsUtils.getEntityLookVector;
 public class AbilityBloodPush implements Ability {
     @Override
     public void onCall(Bender bender, long deltaT) {
-        PlayerEntity player = bender.player;
+        Player player = bender.player;
         bender.setCurrAbility(null);
 
         HitResult hit = SapsUtils.raycastFull(
@@ -42,11 +42,11 @@ public class AbilityBloodPush implements Ability {
             //returns the root vehicle or itself if there are none
             Entity vehicle = living.getRootVehicle();
 
-            vehicle.setVelocity(velocity.x,
+            vehicle.setDeltaMovement(velocity.x,
                     velocity.y,
                     velocity.z);
             vehicle.velocityModified = true;
-            vehicle.move(MovementType.PLAYER, vehicle.getVelocity());
+            vehicle.move(MoverType.PLAYER, vehicle.getDeltaMovement());
 
         }
 
@@ -59,7 +59,7 @@ public class AbilityBloodPush implements Ability {
     }
 
     @Override
-    public boolean shouldImmobilizePlayer(PlayerEntity player) {
+    public boolean shouldImmobilizePlayer(Player player) {
         return true;
     }
 

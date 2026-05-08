@@ -5,11 +5,11 @@ import dev.saperate.elementals.misc.FireExplosion;
 import dev.saperate.elementals.entities.common.AbstractElementalsEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.MovementType;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.MoverType;
+import net.minecraft.entity.player.Player;
 import net.minecraft.particle.ParticleTypes;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.world.World;
+import net.minecraft.sound.SoundSource;
+import net.minecraft.world.Level;
 import net.minecraft.world.explosion.Explosion;
 
 import static dev.saperate.elementals.Elementals.WIND_BURST_SOUND_EVENT;
@@ -18,20 +18,20 @@ import static dev.saperate.elementals.entities.ElementalEntities.AIRBALL;
 import static dev.saperate.elementals.utils.SapsUtils.getEntityLookVector;
 import static dev.saperate.elementals.utils.SapsUtils.summonParticles;
 
-public class AirBallEntity extends AbstractElementalsEntity<PlayerEntity> {
+public class AirBallEntity extends AbstractElementalsEntity<Player> {
 
-    public AirBallEntity(EntityType<AirBallEntity> type, World world) {
-        super(type, world, PlayerEntity.class);
+    public AirBallEntity(EntityType<AirBallEntity> type, Level world) {
+        super(type, world, Player.class);
     }
 
-    public AirBallEntity(World world, PlayerEntity owner) {
-        super(AIRBALL, world, PlayerEntity.class);
+    public AirBallEntity(Level world, Player owner) {
+        super(AIRBALL, world, Player.class);
         setOwner(owner);
         setPos(owner.getX(), owner.getY(), owner.getZ());
     }
 
-    public AirBallEntity(World world, PlayerEntity owner, double x, double y, double z) {
-        super(AIRBALL, world, PlayerEntity.class);
+    public AirBallEntity(Level world, Player owner, double x, double y, double z) {
+        super(AIRBALL, world, Player.class);
         setOwner(owner);
         setPos(x, y, z);
         setControlled(true);
@@ -45,7 +45,7 @@ public class AirBallEntity extends AbstractElementalsEntity<PlayerEntity> {
                     ParticleTypes.POOF,
                     0, 1);
 
-            playSound(WIND_SOUND_EVENT, 1, (1.0f + (this.getWorld().random.nextFloat() - this.getWorld().random.nextFloat()) * 0.2f) * 0.7f);
+            playSound(WIND_SOUND_EVENT, 1, (1.0f + (this.level().random.nextFloat() - this.level().random.nextFloat()) * 0.2f) * 0.7f);
         }
 
         Entity owner = getOwner();
@@ -54,7 +54,7 @@ public class AirBallEntity extends AbstractElementalsEntity<PlayerEntity> {
         }
 
 
-        if (!owner.isSneaking()) {
+        if (!owner.isCrouching()) {
             moveEntity();
         }
 
@@ -65,7 +65,7 @@ public class AirBallEntity extends AbstractElementalsEntity<PlayerEntity> {
             moveEntityTowardsGoal(getEntityLookVector(getOwner(),3).subtract(0,0.5,0).toVector3f());
         }
 
-        this.move(MovementType.SELF, this.getVelocity());
+        this.move(MoverType.SELF, this.getDeltaMovement());
     }
 
     @Override
@@ -79,7 +79,7 @@ public class AirBallEntity extends AbstractElementalsEntity<PlayerEntity> {
     }
 
     public void onCollision() {
-        FireExplosion explosion = new FireExplosion(getWorld(), getOwner(), getX(), getY(), getZ(), 2.5f, false, Explosion.DestructionType.KEEP, 8 * ElementalConfig.get().BENDING_DAMAGE_MULTIPLIER, 4, getOwner());
+        FireExplosion explosion = new FireExplosion(level(), getOwner(), getX(), getY(), getZ(), 2.5f, false, Explosion.DestructionType.KEEP, 8 * ElementalConfig.get().BENDING_DAMAGE_MULTIPLIER, 4, getOwner());
         explosion.collectBlocksAndDamageEntities();
         discard();
     }
@@ -90,11 +90,11 @@ public class AirBallEntity extends AbstractElementalsEntity<PlayerEntity> {
     }
 
     @Override
-    public void onRemoved() {
+    public void onClientRemoval() {
         summonParticles(this, random,
                 ParticleTypes.POOF,
                 0.25f, 25);
-        this.getWorld().playSound(getX(), getY(), getZ(), WIND_BURST_SOUND_EVENT, SoundCategory.BLOCKS, 4.0f, (1.0f + (this.getWorld().random.nextFloat() - this.getWorld().random.nextFloat()) * 0.2f) * 0.7f, true);
+        this.level().playSound(getX(), getY(), getZ(), WIND_BURST_SOUND_EVENT, SoundSource.BLOCKS, 4.0f, (1.0f + (this.level().random.nextFloat() - this.level().random.nextFloat()) * 0.2f) * 0.7f, true);
     }
     @Override
     public float touchGroundFrictionMultiplier() {

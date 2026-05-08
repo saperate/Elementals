@@ -9,9 +9,9 @@ import dev.saperate.elementals.utils.SapsUtils;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LightningEntity;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.entity.effect.MobEffectInstance;
+import net.minecraft.entity.player.Player;
+import net.minecraft.util.math.Vec3;
 import org.joml.Vector3f;
 
 import static dev.saperate.elementals.utils.SapsUtils.getEntityLookVector;
@@ -19,7 +19,7 @@ import static dev.saperate.elementals.utils.SapsUtils.getEntityLookVector;
 public class AbilityLightningVoltArc implements Ability {
     @Override
     public void onCall(Bender bender, long deltaT) {
-        PlayerEntity player = bender.player;
+        Player player = bender.player;
         if (!bender.reduceChi(10)) {
             bender.setCurrAbility(null);
             return;
@@ -27,7 +27,7 @@ public class AbilityLightningVoltArc implements Ability {
 
         Vector3f pos = getEntityLookVector(player, 2.5f).toVector3f();
 
-        VoltArcEntity entity = new VoltArcEntity(player.getWorld(), player, pos.x, pos.y, pos.z);
+        VoltArcEntity entity = new VoltArcEntity(player.level(), player, pos.x, pos.y, pos.z);
         entity.makeChild();
 
         int duration = 200;
@@ -41,8 +41,8 @@ public class AbilityLightningVoltArc implements Ability {
         entity.duration = duration;
 
         bender.abilityData = entity;
-        player.getWorld().spawnEntity(entity);
-        entity.setVelocity(0.001f, 0.001f, 0.001f);
+        player.level().addFreshEntity(entity);
+        entity.setDeltaMovement(0.001f, 0.001f, 0.001f);
 
 
         bender.setCurrAbility(this);
@@ -57,8 +57,8 @@ public class AbilityLightningVoltArc implements Ability {
     @Override
     public void onTick(Bender bender) {
         VoltArcEntity entity = (VoltArcEntity) bender.abilityData;
-        if (entity != null && entity.age >= 5){
-            entity.setVelocity(bender.player, bender.player.getPitch(), bender.player.getYaw(), 0, 4, 0);
+        if (entity != null && entity.tickCount >= 5){
+            entity.setDeltaMovement(bender.player, bender.player.getPitch(), bender.player.getYaw(), 0, 4, 0);
             entity.setControlled(false);
             bender.setCurrAbility(null);
         }

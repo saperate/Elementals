@@ -3,47 +3,35 @@ package dev.saperate.elementals.entities.water;
 import dev.saperate.elementals.data.ElementalConfig;
 import dev.saperate.elementals.elements.water.WaterElement;
 import dev.saperate.elementals.entities.common.AbstractElementalsEntity;
-import dev.saperate.elementals.utils.SapsUtils;
-import net.minecraft.block.Blocks;
-import net.minecraft.entity.*;
-import net.minecraft.entity.data.DataTracker;
-import net.minecraft.entity.data.TrackedData;
-import net.minecraft.entity.data.TrackedDataHandlerRegistry;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.projectile.ProjectileEntity;
-import net.minecraft.entity.projectile.ProjectileUtil;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.particle.ParticleTypes;
-import net.minecraft.predicate.entity.EntityPredicates;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.TypeFilter;
-import net.minecraft.util.hit.EntityHitResult;
-import net.minecraft.util.hit.HitResult;
-import net.minecraft.world.World;
-import org.joml.Vector3f;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.MoverType;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 
-import java.util.List;
 
 import static dev.saperate.elementals.Elementals.BENDING_GRIEFING;
 import static dev.saperate.elementals.entities.ElementalEntities.WATERCUBE;
 import static dev.saperate.elementals.utils.SapsUtils.getEntityLookVector;
 import static dev.saperate.elementals.utils.SapsUtils.summonParticles;
 
-public class WaterCubeEntity extends AbstractElementalsEntity<PlayerEntity> {
+public class WaterCubeEntity extends AbstractElementalsEntity<Player> {
 
-    public WaterCubeEntity(EntityType<WaterCubeEntity> type, World world) {
-        super(type, world, PlayerEntity.class);
+    public WaterCubeEntity(EntityType<WaterCubeEntity> type, Level world) {
+        super(type, world, Player.class);
     }
 
-    public WaterCubeEntity(World world, PlayerEntity owner) {
-        super(WATERCUBE, world, PlayerEntity.class);
+    public WaterCubeEntity(Level world, Player owner) {
+        super(WATERCUBE, world, Player.class);
         setOwner(owner);
         setPos(owner.getX(), owner.getY(), owner.getZ());
     }
 
-    public WaterCubeEntity(World world, PlayerEntity owner, double x, double y, double z) {
-        super(WATERCUBE, world, PlayerEntity.class);
+    public WaterCubeEntity(Level world, Player owner, double x, double y, double z) {
+        super(WATERCUBE, world, Player.class);
         setOwner(owner);
         setPos(x, y, z);
         setControlled(true);
@@ -53,11 +41,11 @@ public class WaterCubeEntity extends AbstractElementalsEntity<PlayerEntity> {
     public void tick() {
         super.tick();
 
-        if (random.nextBetween(0, 40) == 6) {
+        if (random.nextInt(0, 40) == 6) {
             summonParticles(this, random,
                     ParticleTypes.SPLASH,
                     0, 1);
-            playSound(SoundEvents.ENTITY_PLAYER_SWIM, 0.25f, 0);
+            playSound(SoundEvents.PLAYER_SWIM, 0.25f, 0);
         }
 
         Entity owner = getOwner();
@@ -66,7 +54,7 @@ public class WaterCubeEntity extends AbstractElementalsEntity<PlayerEntity> {
         }
 
 
-        if (!owner.isSneaking()) {
+        if (!owner.isCrouching()) {
             moveEntity(owner);
         }
 
@@ -77,34 +65,33 @@ public class WaterCubeEntity extends AbstractElementalsEntity<PlayerEntity> {
             moveEntityTowardsGoal(getEntityLookVector(owner, 3).toVector3f());
         }
 
-        this.move(MovementType.SELF, this.getVelocity());
+        this.move(MoverType.SELF, this.getDeltaMovement());
     }
 
     @Override
     public void collidesWithGround() {
-        if (getWorld().getGameRules().getBoolean(BENDING_GRIEFING)) {
-            WaterElement.placeWater(getBlockPos(), getWorld());
+        if (level().getGameRules().getBoolean(BENDING_GRIEFING)) {
+            WaterElement.placeWater(getOnPos(), level());
         }
         discard();
     }
 
     @Override
     public void onHitEntity(Entity entity) {
-        entity.damage(this.getDamageSources().playerAttack((PlayerEntity) getOwner()), 6 * ElementalConfig.get().BENDING_DAMAGE_MULTIPLIER);
-        entity.addVelocity(this.getVelocity().multiply(1.25));
+        entity.hurt(this.damageSources().playerAttack((Player) getOwner()), 6 * ElementalConfig.get().BENDING_DAMAGE_MULTIPLIER);
+        entity.addDeltaMovement(this.getDeltaMovement().scale(1.25));
         discard();
     }
 
     @Override
-    public boolean canHit() {
+    public boolean isPickable() {
         return true;
     }
 
-
     @Override
-    public void onRemoved() {
+    public void onClientRemoval() {
         summonParticles(this, random, ParticleTypes.SPLASH, 0, 10);
-        this.getWorld().playSound(getX(), getY(), getZ(), SoundEvents.ENTITY_PLAYER_SPLASH, SoundCategory.BLOCKS, 0.25f, (1.0f + (this.getWorld().random.nextFloat() - this.getWorld().random.nextFloat()) * 0.2f) * 0.7f, false);
+        this.level().playSound(this, getOnPos(), SoundEvents.PLAYER_SPLASH, SoundSource.BLOCKS, 0.25f, (1.0f + (this.level().random.nextFloat() - this.level().random.nextFloat()) * 0.2f) * 0.7f);
 
     }
 

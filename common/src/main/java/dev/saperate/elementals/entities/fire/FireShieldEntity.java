@@ -5,51 +5,51 @@ import dev.saperate.elementals.entities.common.AbstractElementalsEntity;
 import dev.saperate.elementals.utils.SapsUtils;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.*;
-import net.minecraft.entity.data.DataTracker;
-import net.minecraft.entity.data.TrackedData;
-import net.minecraft.entity.data.TrackedDataHandlerRegistry;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.data.SynchedEntityData;
+import net.minecraft.entity.data.EntityDataAccessor;
+import net.minecraft.entity.data.EntityDataSerializers;
+import net.minecraft.entity.player.Player;
 import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
+import net.minecraft.util.math.Vec3;
+import net.minecraft.world.Level;
 
 import java.util.List;
 
 import static dev.saperate.elementals.entities.ElementalEntities.FIRESHIELD;
 import static dev.saperate.elementals.utils.SapsUtils.summonParticles;
 
-public class FireShieldEntity extends AbstractElementalsEntity<PlayerEntity> {
+public class FireShieldEntity extends AbstractElementalsEntity<Player> {
     public static final int MAX_FLAME_SIZE = 3;
-    private static final TrackedData<Float> FINAL_HEIGHT = DataTracker.registerData(FireShieldEntity.class, TrackedDataHandlerRegistry.FLOAT);
-    private static final TrackedData<Float> HEIGHT = DataTracker.registerData(FireShieldEntity.class, TrackedDataHandlerRegistry.FLOAT);
-    private static final TrackedData<Boolean> IS_BLUE = DataTracker.registerData(FireShieldEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
+    private static final EntityDataAccessor<Float> FINAL_HEIGHT = SynchedEntityData.defineId(FireShieldEntity.class, EntityDataSerializers.FLOAT);
+    private static final EntityDataAccessor<Float> HEIGHT = SynchedEntityData.defineId(FireShieldEntity.class, EntityDataSerializers.FLOAT);
+    private static final EntityDataAccessor<Boolean> IS_BLUE = SynchedEntityData.defineId(FireShieldEntity.class, EntityDataSerializers.BOOLEAN);
     public float prevFlameSize = 0;
     public int heightAdjustSpeed = 10;//Smaller is faster
 
-    public FireShieldEntity(EntityType<FireShieldEntity> type, World world) {
-        super(type, world, PlayerEntity.class);
+    public FireShieldEntity(EntityType<FireShieldEntity> type, Level world) {
+        super(type, world, Player.class);
     }
 
-    public FireShieldEntity(World world, PlayerEntity owner) {
+    public FireShieldEntity(Level world, Player owner) {
         this(world, owner, owner.getX(), owner.getY(), owner.getZ());
     }
 
-    public FireShieldEntity(World world, PlayerEntity owner, double x, double y, double z) {
-        super(FIRESHIELD, world, PlayerEntity.class);
+    public FireShieldEntity(Level world, Player owner, double x, double y, double z) {
+        super(FIRESHIELD, world, Player.class);
         setPos(x, y, z);
         setFireHeight(MAX_FLAME_SIZE);
         setOwner(owner);
     }
 
     @Override
-    protected void initDataTracker(DataTracker.Builder builder) {
-        super.initDataTracker(builder);
-        builder.add(HEIGHT, 0.1f);
-        builder.add(FINAL_HEIGHT, 3f);
-        builder.add(IS_BLUE, false);
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(HEIGHT, 0.1f);
+        builder.define(FINAL_HEIGHT, 3f);
+        builder.define(IS_BLUE, false);
     }
 
     @Override
@@ -91,11 +91,11 @@ public class FireShieldEntity extends AbstractElementalsEntity<PlayerEntity> {
                 if(SapsUtils.isBeingRainedOn(this)){
                     damage /= 2;
                 }
-                entity.damage(getDamageSources().inFire(), damage * ElementalConfig.get().BENDING_DAMAGE_MULTIPLIER);
+                entity.hurt(damageSources().inFire(), damage * ElementalConfig.get().BENDING_DAMAGE_MULTIPLIER);
             }
 
-            Vec3d direction = entity.getPos().add(0, 1.5f, 0).subtract(getPos()).multiply(0.1f);
-            entity.setVelocity(getVelocity().add(direction));
+            Vec3 direction = entity.getPos().add(0, 1.5f, 0).subtract(getPos()).multiply(0.1f);
+            entity.setDeltaMovement(getDeltaMovement().add(direction));
         }
     }
 
@@ -111,34 +111,34 @@ public class FireShieldEntity extends AbstractElementalsEntity<PlayerEntity> {
 
 
     public float getFireHeight() {
-        return this.dataTracker.get(HEIGHT);
+        return this.entityData.get(HEIGHT);
     }
 
     public void setFireHeight(float h) {
-        this.getDataTracker().set(HEIGHT, h);
+        this.getEntityData().set(HEIGHT, h);
     }
 
     public boolean isBlue() {
-        return this.dataTracker.get(IS_BLUE);
+        return this.entityData.get(IS_BLUE);
     }
 
     public void setIsBlue(boolean val) {
-        this.getDataTracker().set(IS_BLUE, val);
+        this.getEntityData().set(IS_BLUE, val);
     }
 
 
     @Override
-    public boolean canHit() {
+    public boolean isPickable() {
         return true;
     }
 
 
     public float getFinalFireHeight() {
-        return this.dataTracker.get(FINAL_HEIGHT);
+        return this.entityData.get(FINAL_HEIGHT);
     }
 
     public void setFinalFireHeight(float h) {
-        this.getDataTracker().set(FINAL_HEIGHT, h);
+        this.getEntityData().set(FINAL_HEIGHT, h);
     }
 
     @Override

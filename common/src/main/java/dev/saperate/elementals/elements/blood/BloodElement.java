@@ -4,7 +4,7 @@ import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.elements.Element;
 import dev.saperate.elementals.elements.Upgrade;
 import net.minecraft.util.Identifier;
-import net.minecraft.world.World;
+import net.minecraft.world.Level;
 
 public class BloodElement extends Element {
 
@@ -87,7 +87,7 @@ public class BloodElement extends Element {
         return bender.hasElement(this);
     }//TODO this
 
-    public static boolean isNight(World world) {
+    public static boolean isNight(Level world) {
         long time = world.getTimeOfDay() % 24000;
         return time >= 13500 && time <= 22750;
     }

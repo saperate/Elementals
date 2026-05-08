@@ -1,81 +1,73 @@
 package dev.saperate.elementals.entities.water;
 
+
+
 import dev.saperate.elementals.data.ElementalConfig;
 import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.entities.common.AbstractElementalsEntity;
 import dev.saperate.elementals.utils.SapsUtils;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.OperatorBlock;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.entity.*;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.damage.DamageSources;
-import net.minecraft.entity.damage.DamageTypes;
-import net.minecraft.entity.data.DataTracker;
-import net.minecraft.entity.data.TrackedData;
-import net.minecraft.entity.data.TrackedDataHandlerRegistry;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.projectile.ProjectileEntity;
-import net.minecraft.entity.projectile.ProjectileUtil;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.particle.ParticleTypes;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.hit.EntityHitResult;
-import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.BlockView;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.MoverType;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3f;
 
 import static dev.saperate.elementals.entities.ElementalEntities.WATERBLADE;
 import static dev.saperate.elementals.utils.SapsUtils.getEntityLookVector;
 import static dev.saperate.elementals.utils.SapsUtils.summonParticles;
 
-public class WaterBladeEntity extends AbstractElementalsEntity<PlayerEntity> {
-    private static final TrackedData<Float> DAMAGE = DataTracker.registerData(WaterBladeEntity.class, TrackedDataHandlerRegistry.FLOAT);
+public class WaterBladeEntity extends AbstractElementalsEntity<Player> {
+    private static final EntityDataAccessor<Float> DAMAGE = SynchedEntityData.defineId(WaterBladeEntity.class, EntityDataSerializers.FLOAT);
     private BlockPos currMiningPos = null;
     private int startMiningAge = -1;
 
 
-    public WaterBladeEntity(EntityType<WaterBladeEntity> type, World world) {
-        super(type, world, PlayerEntity.class);
+    public WaterBladeEntity(EntityType<WaterBladeEntity> type, Level world) {
+        super(type, world, Player.class);
     }
 
-    public WaterBladeEntity(World world, PlayerEntity owner) {
-        super(WATERBLADE, world, PlayerEntity.class);
+    public WaterBladeEntity(Level world, Player owner) {
+        super(WATERBLADE, world, Player.class);
         setOwner(owner);
         setPos(owner.getX(), owner.getY(), owner.getZ());
     }
 
-    public WaterBladeEntity(World world, PlayerEntity owner, double x, double y, double z) {
-        super(WATERBLADE, world, PlayerEntity.class);
+    public WaterBladeEntity(Level world, Player owner, double x, double y, double z) {
+        super(WATERBLADE, world, Player.class);
         setOwner(owner);
         setPos(x, y, z);
         setControlled(true);
     }
 
     @Override
-    protected void initDataTracker(DataTracker.Builder builder) {
-        super.initDataTracker(builder);
-        builder.add(DAMAGE, 7.5f);
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(DAMAGE, 7.5f);
     }
 
     @Override
     public void tick() {
         super.tick();
 
-        if (random.nextBetween(0, 40) == 6) {
+        if (random.nextInt(0, 40) == 6) {
             summonParticles(this, random,
                     ParticleTypes.SPLASH,
                     0, 1);
-            playSound(SoundEvents.ENTITY_PLAYER_SWIM, 0.25f, 0);
+            playSound(SoundEvents.PLAYER_SWIM, 0.25f, 0);
         }
 
         BlockPos blockHit = SapsUtils.checkBlockCollision(this, 0.1f, false, false);
 
-        PlayerEntity owner = (PlayerEntity) getOwner();
+        Player owner = (Player) getOwner();
         if (owner == null || isRemoved()) {
             return;
         }
@@ -83,16 +75,16 @@ public class WaterBladeEntity extends AbstractElementalsEntity<PlayerEntity> {
 
         moveEntity(owner);
 
-        if (getWorld().isClient) {
+        if (level().isClientSide) {
             return;
         }
 
         if (currMiningPos == null || !currMiningPos.equals(blockHit)) {
             if (currMiningPos != null) {
-                getWorld().setBlockBreakingInfo(getId(), currMiningPos, (0));
+                level().destroyBlockProgress(getId(), currMiningPos, (0));
             }
             currMiningPos = blockHit;
-            startMiningAge = age;
+            startMiningAge = tickCount;
         }
 
         if (blockHit != null) {
@@ -106,9 +98,9 @@ public class WaterBladeEntity extends AbstractElementalsEntity<PlayerEntity> {
                 } else if (plrData.canUseUpgrade("waterBladeMiningI")) {
                     miningSpeed = 60;
                 }
-                SapsUtils.mineBlock(blockHit, getWorld(), getId(), age, startMiningAge, miningSpeed);
+                SapsUtils.mineBlock(blockHit, level(), getId(), tickCount, startMiningAge, miningSpeed);
 
-                if (age % 5 == 0) {
+                if (tickCount % 5 == 0) {
                     summonParticles(this, random,
                             ParticleTypes.CLOUD,
                             0, 1, 0);
@@ -124,31 +116,31 @@ public class WaterBladeEntity extends AbstractElementalsEntity<PlayerEntity> {
 
 
         //gravity
-        this.setVelocity(this.getVelocity().add(0.0, -0.02, 0.0));
+        this.setDeltaMovement(this.getDeltaMovement().add(0.0, -0.02, 0.0));
 
         if (getIsControlled()) {
             controlEntity(owner);
         }
 
 
-        this.move(MovementType.SELF, this.getVelocity());
+        this.move(MoverType.SELF, this.getDeltaMovement());
     }
 
     private void controlEntity(Entity owner) {
         float distance = 3;
-        if (owner.isSneaking()) {
+        if (owner.isCrouching()) {
             distance = 6;
         }
         Vector3f direction = getEntityLookVector(owner, distance)
-                .subtract(getPos()).toVector3f();
+                .subtract(position()).toVector3f();
         direction.mul(0.25f);
 
         if (direction.length() < 0.6f) {
-            this.setVelocity(0, 0, 0);
+            this.setDeltaMovement(0, 0, 0);
         }
 
 
-        this.addVelocity(direction.x, direction.y, direction.z);
+        this.addDeltaMovement(new Vec3(direction.x, direction.y, direction.z));
     }
 
     @Override
@@ -158,32 +150,32 @@ public class WaterBladeEntity extends AbstractElementalsEntity<PlayerEntity> {
 
     @Override
     public void onHitEntity(Entity entity) {
-        entity.damage(this.getDamageSources().playerAttack(getOwner()), getDamage() * ElementalConfig.get().BENDING_DAMAGE_MULTIPLIER);
-        entity.addVelocity(this.getVelocity().multiply(0.8f));
+        entity.hurt(this.damageSources().playerAttack(getOwner()), getDamage() * ElementalConfig.get().BENDING_DAMAGE_MULTIPLIER);
+        entity.addDeltaMovement(this.getDeltaMovement().scale(0.8f));
         discard();
     }
 
     @Override
     public void onTouchEntity(Entity entity) {
-        if(age % 10 == 0){
-            entity.damage(this.getDamageSources().playerAttack(getOwner()), getDamage() / 5 * ElementalConfig.get().BENDING_DAMAGE_MULTIPLIER);
+        if(tickCount % 10 == 0){
+            entity.hurt(this.damageSources().playerAttack(getOwner()), getDamage() / 5 * ElementalConfig.get().BENDING_DAMAGE_MULTIPLIER);
         }
 
     }
 
     @Override
-    public void onRemoved() {
+    public void onClientRemoval() {
         summonParticles(this, random, ParticleTypes.SPLASH, 0, 10);
-        this.getWorld().playSound(getX(), getY(), getZ(), SoundEvents.ENTITY_PLAYER_SPLASH, SoundCategory.BLOCKS, 0.25f, (1.0f + (this.getWorld().random.nextFloat() - this.getWorld().random.nextFloat()) * 0.2f) * 0.7f, false);
+        this.level().playSound(this, getOnPos(), SoundEvents.PLAYER_SPLASH, SoundSource.BLOCKS, 0.25f, (1.0f + (this.level().random.nextFloat() - this.level().random.nextFloat()) * 0.2f) * 0.7f);
 
     }
 
     public void setDamage(float val) {
-        getDataTracker().set(DAMAGE, val);
+        getEntityData().set(DAMAGE, val);
     }
 
     public float getDamage() {
-        return getDataTracker().get(DAMAGE);
+        return getEntityData().get(DAMAGE);
     }
 
     @Override

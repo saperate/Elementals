@@ -4,8 +4,8 @@ import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.elements.Ability;
 import dev.saperate.elementals.entities.metal.MetalBulletEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.entity.player.Player;
+import net.minecraft.util.math.Vec3;
 
 import static dev.saperate.elementals.utils.SapsUtils.getEntityLookVector;
 
@@ -13,7 +13,7 @@ public class AbilityMetalBullets implements Ability {
 
     @Override
     public void onCall(Bender bender, long deltaT) {
-        PlayerEntity player = bender.player;
+        Player player = bender.player;
         if (!bender.plrData.canUseUpgrade("metalBullet") 
                 || !bender.reduceChi(20) || !MetalElement.canBend(player, 16)) {
             if (bender.abilityData == null) {
@@ -24,7 +24,7 @@ public class AbilityMetalBullets implements Ability {
             return;
         }
 
-        Vec3d pos = getEntityLookVector(player, 2);
+        Vec3 pos = getEntityLookVector(player, 2);
         PlayerData plrData = PlayerData.get(bender.player);
 
         int bulletCount = 10;
@@ -36,12 +36,12 @@ public class AbilityMetalBullets implements Ability {
 
         MetalBulletEntity[] bullets = new MetalBulletEntity[bulletCount];
         for (int i = 0; i < bulletCount; i++) {
-            MetalBulletEntity entity = new MetalBulletEntity(player.getWorld(), player, pos.x, pos.y, pos.z);
+            MetalBulletEntity entity = new MetalBulletEntity(player.level(), player, pos.x, pos.y, pos.z);
             entity.setArrayId(i);
             entity.setArraySize(bulletCount);
             bullets[i] = entity;
 
-            player.getWorld().spawnEntity(entity);
+            player.level().addFreshEntity(entity);
         }
         bender.abilityData = bullets;
         bender.setCurrAbility(this);
@@ -66,7 +66,7 @@ public class AbilityMetalBullets implements Ability {
         for (MetalBulletEntity bullet : bullets) {
             float speed = 4;
             bullet.setControlled(false);
-            bullet.setVelocity(bender.player, bender.player.getPitch(), bender.player.getYaw(), 0, speed, 10);
+            bullet.setDeltaMovement(bender.player, bender.player.getPitch(), bender.player.getYaw(), 0, speed, 10);
             bullet.setDamageMultiplier(0.5f);
         }
         bender.abilityData = null;
@@ -75,7 +75,7 @@ public class AbilityMetalBullets implements Ability {
 
     @Override
     public void onTick(Bender bender) {
-        if(bender.isHolding(0,4) && bender.player.age % 3 == 0){
+        if(bender.isHolding(0,4) && bender.player.tickCount % 3 == 0){
             FireBullet(bender);
         }
     }
@@ -99,7 +99,7 @@ public class AbilityMetalBullets implements Ability {
         bullet.setControlled(false);
 
         float speed = 2;
-        bullet.setVelocity(bender.player, bender.player.getPitch(), bender.player.getYaw(), 0, speed, 0);
+        bullet.setDeltaMovement(bender.player, bender.player.getPitch(), bender.player.getYaw(), 0, speed, 0);
 
         if (bullets.length == 1) {
             bender.abilityData = null; // Prevents onRemove from killing bullets

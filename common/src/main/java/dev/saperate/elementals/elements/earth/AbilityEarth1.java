@@ -13,7 +13,7 @@ public class AbilityEarth1 implements Ability {
             return;
         }
 
-        if (bender.player.isSneaking()) {
+        if (bender.player.isCrouching()) {
             if (playerData.canUseUpgrade("earthWall")) {
                 EarthElement.get().getAbility(2).onCall(bender,deltaT);
                 return;

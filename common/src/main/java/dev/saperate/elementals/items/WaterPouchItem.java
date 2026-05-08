@@ -35,7 +35,7 @@ public class WaterPouchItem extends Item {
         //We have to raycast since this method doesn't check for fluids
         HitResult hit = SapsUtils.raycastFull(context.getPlayer(),20,true);
         if(hit instanceof BlockHitResult bHit
-                && context.getLevel().getBlockState(bHit.getBlockPos()).getBlock().equals(Blocks.WATER)){
+                && context.getLevel().getBlockState(bHit.getOnPos()).getBlock().equals(Blocks.WATER)){
 
             fillPouch(context.getItemInHand(),-1);
             return InteractionResult.SUCCESS;

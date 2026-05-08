@@ -7,13 +7,13 @@ import dev.saperate.elementals.elements.earth.EarthElement;
 import dev.saperate.elementals.items.MetalArmorItem;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.effect.StatusEffects;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.effect.MobEffects;
+import net.minecraft.entity.player.Player;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
+import net.minecraft.util.math.Vec3;
+import net.minecraft.world.Level;
 
 import static dev.saperate.elementals.items.ElementalItems.*;
 import static dev.saperate.elementals.utils.SapsUtils.raycastBlockCustomRotation;
@@ -23,7 +23,7 @@ public class AbilityMetalArmor implements Ability {
     @Override
     public void onCall(Bender bender, long deltaT) {
         bender.setCurrAbility(null);
-        PlayerEntity player = bender.player;
+        Player player = bender.player;
         DefaultedList<ItemStack> inv = player.getInventory().armor;
 
         if (player.getInventory().containsAny(METAL_ARMOR_SET)) {
@@ -31,9 +31,9 @@ public class AbilityMetalArmor implements Ability {
             removeArmorSet(inv);
             player.removeStatusEffect(ElementalsStatusEffects.SEISMIC_SENSE);
             player.removeStatusEffect(ElementalsStatusEffects.DENSE);
-            player.removeStatusEffect(StatusEffects.SLOWNESS);
-            player.removeStatusEffect(StatusEffects.NIGHT_VISION);
-            player.removeStatusEffect(StatusEffects.BLINDNESS);
+            player.removeStatusEffect(MobEffects.SLOWNESS);
+            player.removeStatusEffect(MobEffects.NIGHT_VISION);
+            player.removeStatusEffect(MobEffects.BLINDNESS);
             return;
         }
         
@@ -48,7 +48,7 @@ public class AbilityMetalArmor implements Ability {
             return;
         }
 
-        World world = bender.player.getWorld();
+        Level world = bender.player.level();
         inv.set(EquipmentSlot.HEAD.getEntitySlotId(), METAL_HELMET.getItemStack(inv.get(3), 0xFFFFFF, world));
         inv.set(EquipmentSlot.CHEST.getEntitySlotId(), METAL_CHESTPLATE.getItemStack(inv.get(2), 0xFFFFFF, world));
         inv.set(EquipmentSlot.LEGS.getEntitySlotId(), METAL_LEGGINGS.getItemStack(inv.get(1), 0xFFFFFF, world));

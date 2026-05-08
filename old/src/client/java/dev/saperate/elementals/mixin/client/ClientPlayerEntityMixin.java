@@ -7,7 +7,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.damage.DamageTypes;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.Player;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -25,7 +25,7 @@ public abstract class ClientPlayerEntityMixin {
 
     @Inject(at = @At("TAIL"), method = "tick")
     private void render(CallbackInfo ci) {
-        PlayerEntity plr = ((PlayerEntity) (Object) this);
+        Player plr = ((Player) (Object) this);
         if (plr == MinecraftClient.getInstance().player) {
             ClientBender.get().tick();
             if (ClientBender.get().player != plr) {
@@ -48,7 +48,7 @@ public abstract class ClientPlayerEntityMixin {
     @Inject(at = @At("RETURN"), method = "canStartSprinting", cancellable = true)
     private void canStartSprinting(CallbackInfoReturnable<Boolean> cir) {
         ClientBender bender = ClientBender.get();
-        PlayerEntity plr = ((PlayerEntity) (Object) this);
+        Player plr = ((Player) (Object) this);
         
         if (bender.currAbility instanceof AbilityMetalDecoy) {
             cir.setReturnValue(!plr.isSprinting());

@@ -5,7 +5,7 @@ import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.elements.Ability;
 import dev.saperate.elementals.entities.air.AirBallEntity;
 import dev.saperate.elementals.entities.air.AirScooterEntity;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.Player;
 import org.joml.Vector3f;
 
 import static dev.saperate.elementals.utils.SapsUtils.getEntityLookVector;
@@ -21,7 +21,7 @@ public class AbilityAirScooter implements Ability {
             }
             return;
         }
-        PlayerEntity player = bender.player;
+        Player player = bender.player;
         PlayerData plrData = PlayerData.get(player);
 
         float speed = 0.5f;
@@ -32,9 +32,9 @@ public class AbilityAirScooter implements Ability {
             speed = 0.65f;
         }
 
-        AirScooterEntity entity = new AirScooterEntity(player.getWorld(), player);
+        AirScooterEntity entity = new AirScooterEntity(player.level(), player);
         entity.setSpeed(speed);
-        player.getWorld().spawnEntity(entity);
+        player.level().addFreshEntity(entity);
         bender.setCurrAbility(this);
         bender.abilityData = entity;
     }
@@ -56,7 +56,7 @@ public class AbilityAirScooter implements Ability {
 
     @Override
     public void onTick(Bender bender) {
-        if(bender.player.isSneaking()){
+        if(bender.player.isCrouching()){
             ((AirScooterEntity)bender.abilityData).discard();
             bender.setCurrAbility(null);
             return;

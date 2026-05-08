@@ -7,7 +7,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.FallingBlockEntity;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.Player;
 import net.minecraft.entity.projectile.thrown.ThrownItemEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -15,30 +15,30 @@ import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundSource;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
+import net.minecraft.util.math.Vec3;
+import net.minecraft.world.Level;
 import org.jetbrains.annotations.Nullable;
 
 import static dev.saperate.elementals.entities.ElementalEntities.DIRTBOTTLEENTITY;
 import static dev.saperate.elementals.items.ElementalItems.DIRT_BOTTLE_ITEM;
 
 public class DirtBottleEntity extends ThrownItemEntity {
-    private final World world = getWorld();
+    private final Level world = level();
 
-    public DirtBottleEntity(EntityType<DirtBottleEntity> entityType, World world) {
+    public DirtBottleEntity(EntityType<DirtBottleEntity> entityType, Level world) {
         super(entityType, world);
     }
 
-    public DirtBottleEntity(World world, LivingEntity owner) {
+    public DirtBottleEntity(Level world, LivingEntity owner) {
         super(DIRTBOTTLEENTITY, owner, world);
     }
 
-    public DirtBottleEntity(World world, Vec3d position) {
+    public DirtBottleEntity(Level world, Vec3 position) {
         super(DIRTBOTTLEENTITY, position.x, position.y, position.z, world);
     }
 
@@ -53,13 +53,13 @@ public class DirtBottleEntity extends ThrownItemEntity {
     protected void onEntityHit(EntityHitResult entityHitResult) {
         super.onEntityHit(entityHitResult);
         Entity hit = entityHitResult.getEntity();
-        BlockPos bPos = hit.getBlockPos();
+        BlockPos bPos = hit.getOnPos();
 
         if (!world.getBlockState(bPos).isAir() && !world.getBlockState(bPos).isLiquid()) {
             bPos = bPos.up();
         }
         if (world.getBlockState(bPos).isAir() || world.getBlockState(bPos).isLiquid()) {
-            getWorld().setBlockState(
+            level().setBlockState(
                     bPos,
                     Blocks.DIRT.getDefaultState());
         }

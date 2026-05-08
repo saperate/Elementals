@@ -7,11 +7,11 @@ import dev.saperate.elementals.entities.earth.EarthBlockEntity;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.FallingBlockEntity;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.Player;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.Vec3;
 
 import java.util.LinkedList;
 
@@ -21,7 +21,7 @@ public class AbilityEarthPillar implements Ability {
     @Override
     public void onCall(Bender bender, long deltaT) {
 
-        PlayerEntity player = bender.player;
+        Player player = bender.player;
         PlayerData plrData = PlayerData.get(player);
 
         Object[] vars = EarthElement.canBend(player, false);
@@ -47,16 +47,16 @@ public class AbilityEarthPillar implements Ability {
         for (int i = 0; i < height; i++) {
             if (dir.equals(Direction.UP)){
                 BlockPos bPos = startPos.offset(dir,i);
-                BlockState state = player.getWorld().getBlockState(bPos);
+                BlockState state = player.level().getBlockState(bPos);
 
                 if(!EarthElement.isBlockBendable(state, bender)){
                     return;
                 }
-                FallingBlockEntity.spawnFromBlock(player.getWorld(),bPos,state);
+                FallingBlockEntity.spawnFromBlock(player.level(),bPos,state);
                 continue;
             }
             BlockPos pos = startPos.offset(dir,i);
-            Vec3d target = startPos.toCenterPos().offset(dir.getOpposite(), height - i + 0.1f);
+            Vec3 target = startPos.toCenterPos().offset(dir.getOpposite(), height - i + 0.1f);
             placeBlock(pos, target, player);
         }
 
@@ -64,18 +64,18 @@ public class AbilityEarthPillar implements Ability {
         bender.setCurrAbility(null);
     }
 
-    public static void placeBlock(BlockPos startPos, Vec3d endPos, PlayerEntity player){
-            BlockState state = player.getWorld().getBlockState(startPos);
+    public static void placeBlock(BlockPos startPos, Vec3 endPos, Player player){
+            BlockState state = player.level().getBlockState(startPos);
 
             if(!EarthElement.isBlockBendable(state, Bender.getBender((ServerPlayerEntity) player))){
                 return;
             }
-            if(player.getWorld().getGameRules().getBoolean(BENDING_GRIEFING)){
-                player.getWorld().setBlockState(startPos, Blocks.AIR.getDefaultState());
+            if(player.level().getGameRules().getBoolean(BENDING_GRIEFING)){
+                player.level().setBlockState(startPos, Blocks.AIR.getDefaultState());
             }
 
 
-            EarthBlockEntity entity = new EarthBlockEntity(player.getWorld(), player, startPos.getX() + 0.5f, startPos.getY(), startPos.getZ() + 0.5f);
+            EarthBlockEntity entity = new EarthBlockEntity(player.level(), player, startPos.getX() + 0.5f, startPos.getY(), startPos.getZ() + 0.5f);
             entity.setBlockState(state);
             entity.setTargetPosition(endPos.toVector3f());
             entity.setShiftToFreeze(false);
@@ -85,7 +85,7 @@ public class AbilityEarthPillar implements Ability {
             entity.setDropOnEndOfLife(true);
             entity.setMovementSpeed(0.5f);
 
-            player.getWorld().spawnEntity(entity);
+            player.level().addFreshEntity(entity);
     }
 
     @Override

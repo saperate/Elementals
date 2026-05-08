@@ -12,7 +12,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RotationAxis;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.Vec3;
 import net.minecraft.world.LightType;
 import org.joml.Matrix4f;
 
@@ -39,18 +39,18 @@ public class MetalCableEntityRenderer extends EntityRenderer<MetalCableEntity> {
         matrices.push();
         VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderLayer.getCutout());
         
-        Vec3d pointB = entity.getPos().subtract(0,0.5,0);
-        Vec3d pointA = entity.getParent().getOwner().getPos().add(0,0.5,0);
+        Vec3 pointB = entity.getPos().subtract(0,0.5,0);
+        Vec3 pointA = entity.getParent().getOwner().getPos().add(0,0.5,0);
         entity.prevDir = renderCubeFromAToB(pointA,pointB,matrices,vertexConsumer,0.125f,entity.prevDir, tickDelta);
         
         matrices.pop();
     }
 
 
-    private static Vec3d renderCubeFromAToB(Vec3d pointA, Vec3d pointB,MatrixStack matrices, VertexConsumer vertexConsumer, float size, Vec3d prevDir, float tickDelta){
+    private static Vec3 renderCubeFromAToB(Vec3 pointA, Vec3 pointB,MatrixStack matrices, VertexConsumer vertexConsumer, float size, Vec3 prevDir, float tickDelta){
         Matrix4f mat = new Matrix4f();
 
-        Vec3d dir = prevDir.lerp(pointA.subtract(pointB).normalize(),tickDelta);
+        Vec3 dir = prevDir.lerp(pointA.subtract(pointB).normalize(),tickDelta);
         matrices.scale(size, size, size);
         matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees((float) Math.toDegrees(Math.atan2(dir.x, dir.z))));
         matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees((float) Math.toDegrees(Math.asin(-dir.y))));

@@ -7,14 +7,14 @@ import dev.saperate.elementals.elements.Ability;
 import dev.saperate.elementals.utils.SapsUtils;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LightningEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.entity.player.Player;
+import net.minecraft.util.math.Vec3;
 
 
 public class AbilityLightningRedirect implements Ability {
     @Override
     public void onCall(Bender bender, long deltaT) {
-        PlayerEntity player = bender.player;
+        Player player = bender.player;
         bender.setCurrAbility(null);
 
         float cost = 25;
@@ -33,10 +33,10 @@ public class AbilityLightningRedirect implements Ability {
             return;
         }
 
-        Vec3d pos = SapsUtils.raycastFull(bender.player, 20,true).getPos();
-        LightningEntity lightning = new LightningEntity(EntityType.LIGHTNING_BOLT,player.getWorld());
+        Vec3 pos = SapsUtils.raycastFull(bender.player, 20,true).getPos();
+        LightningEntity lightning = new LightningEntity(EntityType.LIGHTNING_BOLT,player.level());
         lightning.setPos(pos.x,pos.y,pos.z);
-        player.getWorld().spawnEntity(lightning);
+        player.level().addFreshEntity(lightning);
 
         player.heal((float) player.getStatusEffect(ElementalsStatusEffects.SHOCKED).getAmplifier() / 10);
         player.removeStatusEffect(ElementalsStatusEffects.SHOCKED);

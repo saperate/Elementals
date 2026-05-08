@@ -34,7 +34,7 @@ public class DirtBottleItem extends Item implements DispenseItemBehavior {
         if (!level.isClientSide) {
             DirtBottleEntity entity = new DirtBottleEntity(level, user);
             entity.setItem(handStack);
-            entity.setVelocity(user, user.getXRot(), user.getYRot(), 0.0f, .75f, 0f);
+            entity.setDeltaMovement(user, user.getXRot(), user.getYRot(), 0.0f, .75f, 0f);
             level.addFreshEntity(entity);
         }
         user.awardStat(Stats.ITEM_USED.get(this));
@@ -70,7 +70,7 @@ public class DirtBottleItem extends Item implements DispenseItemBehavior {
                 )
         );
 
-        dirtBottleEntity.setVelocity(
+        dirtBottleEntity.setDeltaMovement(
                 direction.getStepX(),
                 direction.getStepY(),
                 direction.getStepZ(),

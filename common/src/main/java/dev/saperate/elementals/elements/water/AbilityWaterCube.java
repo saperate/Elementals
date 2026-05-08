@@ -2,6 +2,7 @@ package dev.saperate.elementals.elements.water;
 
 import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.elements.Ability;
+import dev.saperate.elementals.entities.water.WaterCubeEntity;
 import net.minecraft.world.entity.player.Player;
 import org.joml.Vector3f;
 public class AbilityWaterCube implements Ability {
@@ -40,7 +41,7 @@ public class AbilityWaterCube implements Ability {
             return;
         }
 
-        entity.setVelocity(bender.player, bender.player.getXRot(), bender.player.getYRot(), 0, 1, 0);
+        entity.setDeltaMovement(bender.player, bender.player.getXRot(), bender.player.getYRot(), 0, 1, 0);
     }
     
 

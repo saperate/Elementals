@@ -2,37 +2,29 @@ package dev.saperate.elementals.entities.water;
 
 import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.entities.common.AbstractElementalsEntity;
-import net.minecraft.entity.*;
-import net.minecraft.entity.data.DataTracker;
-import net.minecraft.entity.data.TrackedData;
-import net.minecraft.entity.data.TrackedDataHandlerRegistry;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.projectile.ProjectileEntity;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.particle.ParticleTypes;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
-
-import java.util.List;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 
 import static dev.saperate.elementals.entities.ElementalEntities.WATERSHIELD;
 import static dev.saperate.elementals.utils.SapsUtils.summonParticles;
 
 
-public class WaterShieldEntity extends AbstractElementalsEntity<PlayerEntity> {
+public class WaterShieldEntity extends AbstractElementalsEntity<Player> {
 
-    public WaterShieldEntity(EntityType<WaterShieldEntity> type, World world) {
-        super(type, world, PlayerEntity.class);
+    public WaterShieldEntity(EntityType<WaterShieldEntity> type, Level world) {
+        super(type, world, Player.class);
     }
 
-    public WaterShieldEntity(World world, PlayerEntity owner) {
+    public WaterShieldEntity(Level world, Player owner) {
         this(world, owner, owner.getX(), owner.getY(), owner.getZ());
     }
 
-    public WaterShieldEntity(World world, PlayerEntity owner, double x, double y, double z) {
-        super(WATERSHIELD, world, PlayerEntity.class);
+    public WaterShieldEntity(Level world, Player owner, double x, double y, double z) {
+        super(WATERSHIELD, world, Player.class);
         setPos(x, y, z);
         setOwner(owner);
     }
@@ -41,35 +33,34 @@ public class WaterShieldEntity extends AbstractElementalsEntity<PlayerEntity> {
     public void tick() {
         super.tick();
 
-        if (random.nextBetween(0, 10) == 6) {
-            playSound(SoundEvents.ENTITY_PLAYER_SWIM,0.05f,0);
+        if (random.nextInt(0, 10) == 6) {
+            playSound(SoundEvents.PLAYER_SWIM,0.05f,0);
         }
 
-        PlayerEntity owner = (PlayerEntity) getOwner();
+        Player owner = (Player) getOwner();
 
         if(owner == null || isRemoved()){
             return;
         }
 
-        moveEntityTowardsGoal(owner.getPos().toVector3f());
+        moveEntityTowardsGoal(owner.position().toVector3f());
     }
 
 
     @Override
-    public void onRemoved() {
+    public void onClientRemoval() {
         summonParticles( this,random, ParticleTypes.SPLASH, 10,100);
-        if(!this.getWorld().isClient){
-            Bender bender = Bender.getBender((ServerPlayerEntity) getOwner());
+        if(!this.level().isClientSide){
+            Bender bender = Bender.getBender((ServerPlayer) getOwner());
             if(bender != null && bender.currAbility != null){//Clean up the mess
                 bender.abilityData = null;
                 bender.currAbility.onRemove(bender);
             }
         }
     }
-
-
+    
     @Override
-    public boolean isCollidable() {
+    public boolean canBeCollidedWith() {
         return true;
     }
 

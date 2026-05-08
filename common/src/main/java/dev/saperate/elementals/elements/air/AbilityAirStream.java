@@ -4,7 +4,7 @@ import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.elements.Ability;
 import dev.saperate.elementals.entities.air.AirStreamEntity;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.Player;
 import org.joml.Vector3f;
 
 import static dev.saperate.elementals.utils.SapsUtils.getEntityLookVector;
@@ -12,7 +12,7 @@ import static dev.saperate.elementals.utils.SapsUtils.getEntityLookVector;
 public class AbilityAirStream implements Ability {
     @Override
     public void onCall(Bender bender, long deltaT) {
-        PlayerEntity player = bender.player;
+        Player player = bender.player;
         int chi = PlayerData.get(player).canUseUpgrade("airStreamEfficiencyI") ? 10 : 20;
         if (!bender.reduceChi(chi)) {
             if (bender.abilityData == null) {
@@ -25,10 +25,10 @@ public class AbilityAirStream implements Ability {
 
         Vector3f pos = getEntityLookVector(player, 2).toVector3f();
 
-        AirStreamEntity entity = new AirStreamEntity(player.getWorld(), player, pos.x, pos.y, pos.z);
+        AirStreamEntity entity = new AirStreamEntity(player.level(), player, pos.x, pos.y, pos.z);
         bender.abilityData = entity;
         entity.createChain(player);
-        player.getWorld().spawnEntity(entity);
+        player.level().addFreshEntity(entity);
 
         bender.setCurrAbility(this);
 
@@ -37,7 +37,7 @@ public class AbilityAirStream implements Ability {
     @Override
     public void onLeftClick(Bender bender, boolean started) {
         AirStreamEntity entity = (AirStreamEntity) bender.abilityData;
-        if(entity != null && entity.age <= 2){
+        if(entity != null && entity.tickCount <= 2){
             return;
         }
         onRemove(bender);
@@ -52,7 +52,7 @@ public class AbilityAirStream implements Ability {
         } else if (plrData.canUseUpgrade("airStreamSpeedI")) {
             speed = 1.5f;
         }
-        entity.setVelocity(bender.player, bender.player.getPitch(), bender.player.getYaw(), 0, speed, 0);
+        entity.setDeltaMovement(bender.player, bender.player.getPitch(), bender.player.getYaw(), 0, speed, 0);
     }
 
     @Override

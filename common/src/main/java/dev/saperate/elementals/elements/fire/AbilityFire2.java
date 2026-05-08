@@ -15,7 +15,7 @@ public class AbilityFire2 implements Ability {
             return;
         }
 
-        if (bender.player.isSneaking()) {
+        if (bender.player.isCrouching()) {
             if(playerData.canUseUpgrade("fireShield")){
                 FireElement.get().getAbility(7).onCall(bender,deltaT);
                 return;

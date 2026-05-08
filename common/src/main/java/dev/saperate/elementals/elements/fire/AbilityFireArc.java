@@ -8,7 +8,7 @@ import dev.saperate.elementals.entities.fire.FireArcEntity;
 import dev.saperate.elementals.entities.fire.FireBallEntity;
 import dev.saperate.elementals.entities.water.WaterArcEntity;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.Player;
 import org.joml.Vector3f;
 
 import static dev.saperate.elementals.utils.SapsUtils.getEntityLookVector;
@@ -16,7 +16,7 @@ import static dev.saperate.elementals.utils.SapsUtils.getEntityLookVector;
 public class AbilityFireArc implements Ability {
     @Override
     public void onCall(Bender bender, long deltaT) {
-        PlayerEntity player = bender.player;
+        Player player = bender.player;
         int chi = PlayerData.get(player).canUseUpgrade("fireArcEfficiencyI") ? 10 : 20;
         if (!bender.reduceChi(chi)) {
             if (bender.abilityData == null) {
@@ -29,11 +29,11 @@ public class AbilityFireArc implements Ability {
 
         Vector3f pos = getEntityLookVector(player, 2).toVector3f();
 
-        FireArcEntity entity = new FireArcEntity(player.getWorld(), player, pos.x, pos.y, pos.z);
+        FireArcEntity entity = new FireArcEntity(player.level(), player, pos.x, pos.y, pos.z);
         bender.abilityData = entity;
         entity.setIsBlue(PlayerData.get(player).canUseUpgrade("blueFire"));
         entity.createChain(player);
-        player.getWorld().spawnEntity(entity);
+        player.level().addFreshEntity(entity);
 
         bender.setCurrAbility(this);
 
@@ -42,7 +42,7 @@ public class AbilityFireArc implements Ability {
     @Override
     public void onLeftClick(Bender bender, boolean started) {
         FireArcEntity entity = (FireArcEntity) bender.abilityData;
-        if(entity != null && entity.age <= 2){
+        if(entity != null && entity.tickCount <= 2){
             return;
         }
         onRemove(bender);
@@ -57,7 +57,7 @@ public class AbilityFireArc implements Ability {
         } else if (plrData.canUseUpgrade("fireArcSpeedI")) {
             speed = 1.5f;
         }
-        entity.setVelocity(bender.player, bender.player.getPitch(), bender.player.getYaw(), 0, speed, 0);
+        entity.setDeltaMovement(bender.player, bender.player.getPitch(), bender.player.getYaw(), 0, speed, 0);
     }
 
     @Override

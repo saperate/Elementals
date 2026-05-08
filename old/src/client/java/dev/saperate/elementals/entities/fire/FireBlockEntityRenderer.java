@@ -37,7 +37,7 @@ public class FireBlockEntityRenderer extends EntityRenderer<FireBlockEntity> {
 
         BlockState state = entity.isBlue() ? Blocks.SOUL_FIRE.getDefaultState() : Blocks.FIRE.getDefaultState();
 
-        MinecraftClient.getInstance().getBlockRenderManager().renderBlock(state, entity.getBlockPos(), entity.getWorld(), matrices, vertexConsumer, false, entity.getEntityWorld().random);
+        MinecraftClient.getInstance().getBlockRenderManager().renderBlock(state, entity.getOnPos(), entity.level(), matrices, vertexConsumer, false, entity.getEntityWorld().random);
 
         RenderSystem.disableBlend();
         matrices.pop();

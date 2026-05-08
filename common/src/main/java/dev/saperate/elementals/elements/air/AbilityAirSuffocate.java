@@ -4,8 +4,8 @@ import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.elements.Ability;
 import dev.saperate.elementals.entities.water.WaterHelmetEntity;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.effect.MobEffectInstance;
+import net.minecraft.entity.player.Player;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
 
@@ -23,7 +23,7 @@ public class AbilityAirSuffocate implements Ability {
             }
             return;
         }
-        PlayerEntity player = bender.player;
+        Player player = bender.player;
 
         HitResult hit = raycastFull(player,12,false);
         if(hit == null || !hit.getType().equals(HitResult.Type.ENTITY)){
@@ -34,11 +34,11 @@ public class AbilityAirSuffocate implements Ability {
         EntityHitResult eHit = (EntityHitResult) hit;
         if (eHit.getEntity() instanceof LivingEntity victim) {
 
-            WaterHelmetEntity entity = new WaterHelmetEntity(player.getWorld(), victim, player.getX(), player.getY(), player.getZ());
+            WaterHelmetEntity entity = new WaterHelmetEntity(player.level(), victim, player.getX(), player.getY(), player.getZ());
             entity.suffocate = true;
             entity.setCaster(player);
             entity.setModelId(1);
-            player.getWorld().spawnEntity(entity);
+            player.level().addFreshEntity(entity);
 
             bender.abilityData = entity;
             bender.setCurrAbility(this);
@@ -68,7 +68,7 @@ public class AbilityAirSuffocate implements Ability {
                 .getOwner().getPos().subtract(bender.player.getPos()).length();
 
 
-        if (!bender.player.isSneaking()
+        if (!bender.player.isCrouching()
                 || distance > 15) {
             onRemove(bender);
         }

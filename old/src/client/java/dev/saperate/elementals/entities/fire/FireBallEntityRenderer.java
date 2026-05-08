@@ -50,7 +50,7 @@ public class FireBallEntityRenderer extends EntityRenderer<FireBallEntity> {
 
         matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees((float) Math.toDegrees(-rot)));
         matrices.translate(-0.5f, 0, -0.5f);
-        MinecraftClient.getInstance().getBlockRenderManager().renderBlock(state, entity.getBlockPos(), entity.getWorld(), matrices, vertexConsumer, false, entity.getEntityWorld().random);
+        MinecraftClient.getInstance().getBlockRenderManager().renderBlock(state, entity.getOnPos(), entity.level(), matrices, vertexConsumer, false, entity.getEntityWorld().random);
 
         Matrix4f mat = new Matrix4f();
 

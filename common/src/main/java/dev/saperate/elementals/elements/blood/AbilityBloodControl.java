@@ -5,8 +5,8 @@ import dev.saperate.elementals.elements.Ability;
 import dev.saperate.elementals.utils.SapsUtils;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.MovementType;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.MoverType;
+import net.minecraft.entity.player.Player;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.hit.HitResult;
 import org.joml.Vector3f;
@@ -17,8 +17,8 @@ import static dev.saperate.elementals.utils.SapsUtils.getEntityLookVector;
 public class AbilityBloodControl implements Ability {
     @Override
     public void onCall(Bender bender, long deltaT) {
-        PlayerEntity player = bender.player;
-        if(!BloodElement.isNight(player.getWorld()) && !bender.plrData.canUseUpgrade("bloodControlPrecisionII")){
+        Player player = bender.player;
+        if(!BloodElement.isNight(player.level()) && !bender.plrData.canUseUpgrade("bloodControlPrecisionII")){
             bender.setCurrAbility(null);
             return;
         }
@@ -42,13 +42,13 @@ public class AbilityBloodControl implements Ability {
 
     @Override
     public void onLeftClick(Bender bender, boolean started) {
-        PlayerEntity player = bender.player;
+        Player player = bender.player;
         LivingEntity living = getVictim(bender);
         if(living == null || living.isRemoved()){
             bender.setCurrAbility(null);
             return;
         }
-        float power = player.isSneaking() ? -3 : 3;
+        float power = player.isCrouching() ? -3 : 3;
         if(bender.plrData.canUseUpgrade("bloodControlPowerI")){
             power *= 1.5f;
         }
@@ -59,17 +59,17 @@ public class AbilityBloodControl implements Ability {
         //returns the root vehicle or itself if there are none
         Entity vehicle = living.getRootVehicle();
 
-        vehicle.setVelocity(velocity.x,
+        vehicle.setDeltaMovement(velocity.x,
                 velocity.y,
                 velocity.z);
         vehicle.velocityModified = true;
-        vehicle.move(MovementType.PLAYER, vehicle.getVelocity());
+        vehicle.move(MoverType.PLAYER, vehicle.getDeltaMovement());
         bender.setCurrAbility(null);
     }
 
     @Override
     public void onMiddleClick(Bender bender, boolean started) {
-        if(bender.player.isSneaking()){
+        if(bender.player.isCrouching()){
             decrementDistance(bender);
         }else {
             incrementDistance(bender);
@@ -93,11 +93,11 @@ public class AbilityBloodControl implements Ability {
             return;
         }
 
-        if(living.getVelocity().y <= -0.020f){
+        if(living.getDeltaMovement().y <= -0.020f){
             living.fallDistance = 0;
         }
 
-        HitResult hit = bender.player.raycast(getDistance(bender),1, !bender.player.isSubmergedInWater());
+        HitResult hit = bender.player.raycast(getDistance(bender),1, !bender.player.isUnderWater());
 
         Vector3f direction = hit.getPos().toVector3f().sub(0, 0.5f, 0)
                 .sub(living.getPos().toVector3f())
@@ -109,9 +109,9 @@ public class AbilityBloodControl implements Ability {
             onRemove(bender);
         }
 
-        living.addVelocity(direction.x, direction.y, direction.z);
+        living.addDeltaMovement(direction.x, direction.y, direction.z);
         living.velocityModified = true;
-        living.move(MovementType.PLAYER, living.getVelocity());
+        living.move(MoverType.PLAYER, living.getDeltaMovement());
     }
 
     @Override
@@ -120,7 +120,7 @@ public class AbilityBloodControl implements Ability {
     }
 
     @Override
-    public boolean shouldImmobilizePlayer(PlayerEntity player) {
+    public boolean shouldImmobilizePlayer(Player player) {
         return !Bender.getBender((ServerPlayerEntity) player).getData().canUseUpgrade("bloodControlPrecisionI");
     }
 

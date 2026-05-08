@@ -6,13 +6,13 @@ import dev.saperate.elementals.elements.Ability;
 import dev.saperate.elementals.items.EarthArmorItem;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.effect.StatusEffects;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.effect.MobEffects;
+import net.minecraft.entity.player.Player;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
+import net.minecraft.util.math.Vec3;
+import net.minecraft.world.Level;
 
 import static dev.saperate.elementals.items.ElementalItems.*;
 import static dev.saperate.elementals.utils.SapsUtils.raycastBlockCustomRotation;
@@ -22,7 +22,7 @@ public class AbilityEarthArmor implements Ability {
     @Override
     public void onCall(Bender bender, long deltaT) {
         bender.setCurrAbility(null);
-        PlayerEntity player = bender.player;
+        Player player = bender.player;
         DefaultedList<ItemStack> inv = player.getInventory().armor;
 
         if (player.getInventory().containsAny(EARTH_ARMOR_SET)) {
@@ -30,14 +30,14 @@ public class AbilityEarthArmor implements Ability {
 
             player.removeStatusEffect(ElementalsStatusEffects.SEISMIC_SENSE);
             player.removeStatusEffect(ElementalsStatusEffects.DENSE);
-            player.removeStatusEffect(StatusEffects.NIGHT_VISION);
-            player.removeStatusEffect(StatusEffects.BLINDNESS);
+            player.removeStatusEffect(MobEffects.NIGHT_VISION);
+            player.removeStatusEffect(MobEffects.BLINDNESS);
             return;
         }
 
-        BlockHitResult hit = raycastBlockCustomRotation(player, 4, true, new Vec3d(0, -1, 0));
+        BlockHitResult hit = raycastBlockCustomRotation(player, 4, true, new Vec3(0, -1, 0));
 
-        if (!EarthElement.isBlockBendable(player.getWorld().getBlockState(hit.getBlockPos()), bender) || !player.isOnGround()) {
+        if (!EarthElement.isBlockBendable(player.level().getBlockState(hit.getOnPos()), bender) || !player.isOnGround()) {
             return;
         }
         if (!bender.reduceChi(30)) {
@@ -49,8 +49,8 @@ public class AbilityEarthArmor implements Ability {
             return;
         }
 
-        Block standingBlock = player.getWorld().getBlockState(hit.getBlockPos()).getBlock();
-        World world = player.getWorld();
+        Block standingBlock = player.level().getBlockState(hit.getOnPos()).getBlock();
+        Level world = player.level();
 
         inv.set(EquipmentSlot.HEAD.getEntitySlotId(), EARTH_HELMET.getItemStack(inv.get(3), standingBlock, world));
         inv.set(EquipmentSlot.CHEST.getEntitySlotId(), EARTH_CHESTPLATE.getItemStack(inv.get(2), standingBlock, world));

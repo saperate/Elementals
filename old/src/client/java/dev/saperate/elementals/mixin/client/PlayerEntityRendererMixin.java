@@ -14,7 +14,7 @@ public abstract class PlayerEntityRendererMixin {
 	private void modelPose(AbstractClientPlayerEntity player, CallbackInfo ci) {
 		//Quick dirty bug fix
 		PlayerEntityRenderer plrRenderer = ((PlayerEntityRenderer)(Object) this);
-		plrRenderer.getModel().sneaking = player.isInSneakingPose() || player.isSneaking();
+		plrRenderer.getModel().sneaking = player.isInSneakingPose() || player.isCrouching();
 	}
 
 

@@ -15,7 +15,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RotationAxis;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.Vec3;
 import org.joml.*;
 import org.lwjgl.opengl.GL11;
 

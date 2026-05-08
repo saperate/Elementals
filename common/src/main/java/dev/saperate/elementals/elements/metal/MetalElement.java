@@ -8,7 +8,7 @@ import dev.saperate.elementals.elements.Upgrade;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.ItemEntity;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.Player;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -92,7 +92,7 @@ public class MetalElement extends Element {
      * @return True if the player has had metal taken from their inventory
      */
     //TODO Refactor this monolith
-    public static boolean canBend(PlayerEntity player, int cost) {
+    public static boolean canBend(Player player, int cost) {
         if (player.getAbilities().creativeMode) {
             return true;
         }
@@ -143,7 +143,7 @@ public class MetalElement extends Element {
 
                 //We couldn't insert in the inventory, drop to the ground
                 if (!player.getInventory().insertStack(replacementStack))
-                    player.getWorld().spawnEntity(new ItemEntity(player.getWorld(), player.getX(), player.getY(), player.getZ(), replacementStack));
+                    player.level().addFreshEntity(new ItemEntity(player.level(), player.getX(), player.getY(), player.getZ(), replacementStack));
             }
             validPaymentSlots.remove((Object) lowestSlot);
 

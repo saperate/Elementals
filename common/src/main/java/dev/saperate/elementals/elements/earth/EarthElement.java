@@ -14,17 +14,17 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.effect.MobEffectInstance;
+import net.minecraft.entity.player.Player;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.Vec3;
 import net.minecraft.world.RaycastContext;
-import net.minecraft.world.World;
+import net.minecraft.world.Level;
 import org.joml.Vector3f;
 
 import java.util.*;
@@ -114,13 +114,13 @@ public class EarthElement extends Element {
 
     /**
      * Calculates if the block can be bent, if it can, we return an array of Object which contains in this order:
-     * <br>0 - Vec3d -> the position where the hit intercepted
+     * <br>0 - Vec3 -> the position where the hit intercepted
      * <br>1 - BlockState -> the block state before we consumed it
      * <br>2 - BlockPos -> the block pos where the raycast hit
      * <br>3 - Direction -> the direction of the face where the raycast hit
      * @return Array of calculated items
      */
-    public static Object[] canBend(PlayerEntity player, boolean consumeBlock) {
+    public static Object[] canBend(Player player, boolean consumeBlock) {
         PlayerData plrData = PlayerData.get(player);
         int range = 5;
         if (plrData.canUseUpgrade("earthPickupRangeII")) {
@@ -133,20 +133,20 @@ public class EarthElement extends Element {
             return null;
         }
 
-        if (isBlockBendable(hit.getBlockPos(), Bender.getBender((ServerPlayerEntity) player))) {
-            BlockState blockState = player.getEntityWorld().getBlockState(hit.getBlockPos());
+        if (isBlockBendable(hit.getOnPos(), Bender.getBender((ServerPlayerEntity) player))) {
+            BlockState blockState = player.getEntityWorld().getBlockState(hit.getOnPos());
             if (consumeBlock) {
-                player.getWorld().setBlockState(hit.getBlockPos(), Blocks.AIR.getDefaultState());
-                if (!player.getWorld().getGameRules().getBoolean(BENDING_GRIEFING)) {
+                player.level().setBlockState(hit.getOnPos(), Blocks.AIR.getDefaultState());
+                if (!player.level().getGameRules().getBoolean(BENDING_GRIEFING)) {
                     BlockRestoreManager.addBlockToRestore(new BlockRestoreManager.BlockInformation(
-                            hit.getBlockPos(),
+                            hit.getOnPos(),
                             blockState,
-                            player.getWorld().getRegistryKey(),
-                            40 + player.getWorld().random.nextBetween(0, 140)
+                            player.level().getRegistryKey(),
+                            40 + player.level().random.nextBetween(0, 140)
                     ));
                 }
             }
-            return new Object[]{hit.getPos(), blockState, hit.getBlockPos(), hit.getSide()};
+            return new Object[]{hit.getPos(), blockState, hit.getOnPos(), hit.getSide()};
         }
 
 
@@ -154,11 +154,11 @@ public class EarthElement extends Element {
     }
 
 
-    public static BlockHitResult raycastCollidableBlocks(Vec3d start, Vec3d end, Entity origin, int depth) {
+    public static BlockHitResult raycastCollidableBlocks(Vec3 start, Vec3 end, Entity origin, int depth) {
         if (depth >= 20) {
             return null;
         }
-        BlockHitResult bHit = origin.getWorld().raycast(
+        BlockHitResult bHit = origin.level().raycast(
                 new RaycastContext(
                         start, end, RaycastContext.ShapeType.OUTLINE, RaycastContext.FluidHandling.NONE, origin
                 ));
@@ -166,7 +166,7 @@ public class EarthElement extends Element {
             return null;
         }
 
-        BlockState state = origin.getWorld().getBlockState(bHit.getBlockPos());
+        BlockState state = origin.level().getBlockState(bHit.getOnPos());
         if (state.isSolid()) {
             return bHit;
         }
@@ -175,7 +175,7 @@ public class EarthElement extends Element {
 
 
     public static boolean isBlockBendable(BlockPos pos, Bender bender) {
-        BlockState bState = bender.player.getWorld().getBlockState(pos);
+        BlockState bState = bender.player.level().getBlockState(pos);
         return isBlockBendable(bState, bender);
     }
 
@@ -195,16 +195,16 @@ public class EarthElement extends Element {
     public static void makeHole(BlockPos pos, int depth, Bender bender, ArrayList<LivingEntity> damagedEntities) {
         for (int y = 0; y < depth; y++) {
             BlockPos bPos = pos.down(y);
-            BlockState bState = bender.player.getWorld().getBlockState(bPos);
+            BlockState bState = bender.player.level().getBlockState(bPos);
             if (EarthElement.isBlockBendable(bState, bender)) {
                 BlockRestoreManager.addBlockToRestore(new BlockRestoreManager.BlockInformation(
                         bPos,
                         bState,
-                        bender.player.getWorld().getRegistryKey(),
-                        40 + bender.player.getWorld().random.nextBetween(0, 140)
+                        bender.player.level().getRegistryKey(),
+                        40 + bender.player.level().random.nextBetween(0, 140)
                 ));
 
-                bender.player.getWorld().breakBlock(bPos, false);
+                bender.player.level().breakBlock(bPos, false);
             }
         }
 
@@ -220,7 +220,7 @@ public class EarthElement extends Element {
      * @param pos The position of the block where we want to damage entities above
      * @param amount The amount of damage dealt
      */
-    public static void damageEntityAboveBlock(PlayerEntity player, BlockPos pos, float amount) {
+    public static void damageEntityAboveBlock(Player player, BlockPos pos, float amount) {
         damageEntityAboveBlock(player, pos, new ArrayList<>(), amount);
     }
 
@@ -232,16 +232,16 @@ public class EarthElement extends Element {
      * @param damagedEntities (Optional) List of already damaged entities to prevent double hits
      * @param amount The amount of damage dealt
      */
-    public static void damageEntityAboveBlock(PlayerEntity player, BlockPos pos, ArrayList<LivingEntity> damagedEntities, float amount) {
-        List<LivingEntity> hits = player.getWorld().getEntitiesByClass(LivingEntity.class,
+    public static void damageEntityAboveBlock(Player player, BlockPos pos, ArrayList<LivingEntity> damagedEntities, float amount) {
+        List<LivingEntity> hits = player.level().getEntitiesByClass(LivingEntity.class,
                 EARTHBLOCK.getSpawnBox(pos.getX(), pos.getY() + 1, pos.getZ()), LivingEntity::isOnGround);
         for (LivingEntity entity : hits) {
             if (entity == player) {
                 continue;
             }
             damagedEntities.add(entity);
-            entity.damage(player.getDamageSources().playerAttack(player), 2.5f);
-            entity.addStatusEffect(new StatusEffectInstance(ElementalsStatusEffects.STUNNED, 200, 1, false,false,true));
+            entity.hurt(player.damageSources().playerAttack(player), 2.5f);
+            entity.addEffect(new MobEffectInstance(ElementalsStatusEffects.STUNNED, 200, 1, false,false,true));
         }
     }
 

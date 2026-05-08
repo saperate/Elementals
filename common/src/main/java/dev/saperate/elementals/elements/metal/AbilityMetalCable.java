@@ -7,7 +7,7 @@ import dev.saperate.elementals.entities.metal.MetalCableEntity;
 import dev.saperate.elementals.mixin.ElementalsLivingEntityAccessor;
 import dev.saperate.elementals.utils.SapsUtils;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.Player;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
 
@@ -35,7 +35,7 @@ public class AbilityMetalCable implements Ability {
                 return;
             }
             
-            PlayerEntity player = bender.player;
+            Player player = bender.player;
             int range = 25;
             if(plrData.canUseUpgrade("metalCableRangeI")){
                 range = 50;
@@ -48,11 +48,11 @@ public class AbilityMetalCable implements Ability {
             }
 
             MetalCableEntity entity = new MetalCableEntity(
-                    player.getWorld(),
+                    player.level(),
                     player,
                     player.getX(), player.getY(), player.getZ()
             );
-            player.getWorld().spawnEntity(entity);
+            player.level().addFreshEntity(entity);
             entity.setControlled(false);
             entity.createChain(player,1);
             entity.getTail().setFrozen(true);
@@ -73,11 +73,11 @@ public class AbilityMetalCable implements Ability {
 
     @Override
     public void onBackgroundTick(Bender bender, Object data) {
-        PlayerEntity player = bender.player;
+        Player player = bender.player;
         player.stopFallFlying();
 
         MetalCableEntity entity = getEntity(data);
-        if (player.isSneaking() && bender.plrData.canUseUpgrade("metalCablePrecisionI")) {
+        if (player.isCrouching() && bender.plrData.canUseUpgrade("metalCablePrecisionI")) {
             entity.setDistance((float) Math.max(Math.min(entity.getDistance() + (pullMode(data) ? -0.1 : 0.1), 20), 0.1));
         }
     }

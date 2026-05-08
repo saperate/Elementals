@@ -7,9 +7,9 @@ import dev.saperate.elementals.entities.earth.EarthBlockEntity;
 import dev.saperate.elementals.misc.BlockRestoreManager;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.Player;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.Vec3;
 
 import java.util.LinkedList;
 
@@ -18,7 +18,7 @@ import static dev.saperate.elementals.Elementals.BENDING_GRIEFING;
 public class AbilityEarthWall implements Ability {
     @Override
     public void onCall(Bender bender, long deltaT) {
-        PlayerEntity player = bender.player;
+        Player player = bender.player;
         PlayerData plrData = PlayerData.get(player);
 
         Object[] vars = EarthElement.canBend(player, false);
@@ -60,35 +60,35 @@ public class AbilityEarthWall implements Ability {
     }
 
     public static void placePillar(BlockPos startPos, int height, LinkedList<EarthBlockEntity> entities, Bender bender){
-        PlayerEntity player = bender.player;
+        Player player = bender.player;
 
         for (int y = 0; y < height; y++) {
             BlockPos bPos = new BlockPos(
                     startPos.getX(),
                     (startPos.getY() - y),
                     startPos.getZ());
-            BlockState state = player.getWorld().getBlockState(bPos);
+            BlockState state = player.level().getBlockState(bPos);
 
             if(!EarthElement.isBlockBendable(state, bender)){
                 return;
             }
 
-            player.getWorld().setBlockState(bPos, Blocks.AIR.getDefaultState());
-            if(!player.getWorld().getGameRules().getBoolean(BENDING_GRIEFING)){
+            player.level().setBlockState(bPos, Blocks.AIR.getDefaultState());
+            if(!player.level().getGameRules().getBoolean(BENDING_GRIEFING)){
                 BlockRestoreManager.addBlockToRestore(new BlockRestoreManager.BlockInformation(
                         bPos,
                         state,
-                        player.getWorld().getRegistryKey(),
-                        40 + player.getWorld().random.nextBetween(0, 140)
+                        player.level().getRegistryKey(),
+                        40 + player.level().random.nextBetween(0, 140)
                 ));
             }
 
 
-            EarthBlockEntity entity = new EarthBlockEntity(player.getWorld(), player, startPos.getX() + 0.5f, startPos.getY() - y, startPos.getZ() + 0.5f);
+            EarthBlockEntity entity = new EarthBlockEntity(player.level(), player, startPos.getX() + 0.5f, startPos.getY() - y, startPos.getZ() + 0.5f);
             entity.setBlockState(state);
             entity.setTargetPosition(startPos.add(0,height - y,0).toCenterPos().toVector3f().add(0,0.05f,0));
             entity.setMovementSpeed(0.2f);
-            player.getWorld().spawnEntity(entity);
+            player.level().addFreshEntity(entity);
             entities.add(entity);
         }
     }
@@ -128,7 +128,7 @@ public class AbilityEarthWall implements Ability {
         }
 
         for (EarthBlockEntity entity : entities){
-            if((!canUseTimer && bender.player.isSneaking()) || !canUseTimer){
+            if((!canUseTimer && bender.player.isCrouching()) || !canUseTimer){
                 entity.setControlled(false);
             }else {
                 entity.setShiftToFreeze(false);

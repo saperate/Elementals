@@ -30,7 +30,7 @@ public class BoomerangEntityRenderer extends EntityRenderer<BoomerangEntity> {
         matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(90));
         matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(entity.time));
 
-        this.itemRenderer.renderItem(entity.asItemStack(), ModelTransformationMode.GROUND, light, OverlayTexture.DEFAULT_UV, matrices, vertexConsumers, entity.getWorld(), entity.getId());
+        this.itemRenderer.renderItem(entity.asItemStack(), ModelTransformationMode.GROUND, light, OverlayTexture.DEFAULT_UV, matrices, vertexConsumers, entity.level(), entity.getId());
 
         matrices.pop();
         if(!entity.getInGround()){

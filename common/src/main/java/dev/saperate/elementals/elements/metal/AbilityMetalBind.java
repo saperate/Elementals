@@ -7,7 +7,7 @@ import dev.saperate.elementals.entities.metal.MetalBindEntity;
 import dev.saperate.elementals.entities.metal.MetalBindEntity;
 import dev.saperate.elementals.utils.SapsUtils;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.Player;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
 
@@ -33,7 +33,7 @@ public class AbilityMetalBind implements Ability {
                 return;
             }
 
-            PlayerEntity player = bender.player;
+            Player player = bender.player;
             HitResult hitResult = SapsUtils.raycastFull(player, 10, false);
 
             if (!hitResult.getType().equals(HitResult.Type.ENTITY)) {
@@ -41,7 +41,7 @@ public class AbilityMetalBind implements Ability {
             }
 
             MetalBindEntity entity = new MetalBindEntity(
-                    player.getWorld(),
+                    player.level(),
                     (LivingEntity) ((EntityHitResult) hitResult).getEntity(),
                     player.getX(), player.getY(), player.getZ()
             );
@@ -67,7 +67,7 @@ public class AbilityMetalBind implements Ability {
 
     @Override
     public void onBackgroundTick(Bender bender, Object data) {
-        PlayerEntity player = bender.player;
+        Player player = bender.player;
         player.stopFallFlying();
 
     }

@@ -4,9 +4,9 @@ import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.effects.ElementalsStatusEffects;
 import dev.saperate.elementals.elements.Ability;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.effect.StatusEffects;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.effect.MobEffectInstance;
+import net.minecraft.entity.effect.MobEffects;
+import net.minecraft.entity.player.Player;
 
 import static dev.saperate.elementals.utils.SapsUtils.safeHasStatusEffect;
 
@@ -14,7 +14,7 @@ import static dev.saperate.elementals.utils.SapsUtils.safeHasStatusEffect;
 public class AbilityLightning3 implements Ability {
     @Override
     public void onCall(Bender bender, long deltaT) {
-        PlayerEntity player = bender.player;
+        Player player = bender.player;
         PlayerData playerData = PlayerData.get(player);
 
         if(!playerData.canUseUpgrade("lightningOvercharge")){
@@ -33,7 +33,7 @@ public class AbilityLightning3 implements Ability {
             if (!bender.reduceChi(15)) {
                 return;
             }
-            player.addStatusEffect(new StatusEffectInstance(ElementalsStatusEffects.OVERCHARGED, duration, 0, false, false, true));
+            player.addEffect(new MobEffectInstance(ElementalsStatusEffects.OVERCHARGED, duration, 0, false, false, true));
         }
         bender.setCurrAbility(null);
     }

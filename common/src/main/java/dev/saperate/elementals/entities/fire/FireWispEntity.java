@@ -11,15 +11,15 @@ import net.minecraft.block.AbstractFireBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.MovementType;
+import net.minecraft.entity.MoverType;
 import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.data.DataTracker;
-import net.minecraft.entity.data.TrackedData;
-import net.minecraft.entity.data.TrackedDataHandlerRegistry;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.data.SynchedEntityData;
+import net.minecraft.entity.data.EntityDataAccessor;
+import net.minecraft.entity.data.EntityDataSerializers;
+import net.minecraft.entity.player.Player;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.world.World;
+import net.minecraft.world.Level;
 import net.minecraft.world.explosion.Explosion;
 
 
@@ -27,36 +27,36 @@ import static dev.saperate.elementals.entities.ElementalEntities.FIREWISP;
 import static dev.saperate.elementals.utils.SapsUtils.getEntityLookVector;
 import static dev.saperate.elementals.utils.SapsUtils.summonParticles;
 
-public class FireWispEntity extends AbstractElementalsEntity<PlayerEntity> {
-    private static final TrackedData<Boolean> IS_BLUE = DataTracker.registerData(FireWispEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
-    public FireWispEntity(EntityType<FireWispEntity> type, World world) {
-        super(type, world, PlayerEntity.class);
+public class FireWispEntity extends AbstractElementalsEntity<Player> {
+    private static final EntityDataAccessor<Boolean> IS_BLUE = SynchedEntityData.defineId(FireWispEntity.class, EntityDataSerializers.BOOLEAN);
+    public FireWispEntity(EntityType<FireWispEntity> type, Level world) {
+        super(type, world, Player.class);
     }
 
-    public FireWispEntity(World world, PlayerEntity owner) {
-        super(FIREWISP, world, PlayerEntity.class);
+    public FireWispEntity(Level world, Player owner) {
+        super(FIREWISP, world, Player.class);
         setOwner(owner);
         setPos(owner.getX(), owner.getY(), owner.getZ());
     }
 
-    public FireWispEntity(World world, PlayerEntity owner, double x, double y, double z) {
-        super(FIREWISP, world, PlayerEntity.class);
+    public FireWispEntity(Level world, Player owner, double x, double y, double z) {
+        super(FIREWISP, world, Player.class);
         setOwner(owner);
         setPos(x, y, z);
         setControlled(true);
     }
 
     @Override
-    protected void initDataTracker(DataTracker.Builder builder) {
-        super.initDataTracker(builder);
-        builder.add(IS_BLUE, false);
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(IS_BLUE, false);
     }
 
     @Override
     public void tick() {
         super.tick();
 
-        if (touchingWater && !getWorld().isClient) {
+        if (touchingWater && !level().isClientSide) {
             remove();
             return;
         }
@@ -79,7 +79,7 @@ public class FireWispEntity extends AbstractElementalsEntity<PlayerEntity> {
             return;
         }
 
-        if (!owner.isSneaking()) {
+        if (!owner.isCrouching()) {
             moveEntity();
         }
 
@@ -88,12 +88,12 @@ public class FireWispEntity extends AbstractElementalsEntity<PlayerEntity> {
     }
 
     @Override
-    public boolean canHit() {
+    public boolean isPickable() {
         return true;
     }
 
     @Override
-    public boolean damage(DamageSource source, float amount) {
+    public boolean hurt(DamageSource source, float amount) {
         remove();
         return true;
     }
@@ -111,14 +111,14 @@ public class FireWispEntity extends AbstractElementalsEntity<PlayerEntity> {
             discard();
         }
 
-        this.move(MovementType.SELF, this.getVelocity());
+        this.move(MoverType.SELF, this.getDeltaMovement());
     }
 
     public void remove(){
         discard();
 
-        PlayerEntity owner = getOwner();
-        if(owner != null && !getWorld().isClient){
+        Player owner = getOwner();
+        if(owner != null && !level().isClientSide){
             Bender bender = Bender.getBender((ServerPlayerEntity) owner);
             bender.removeAbilityFromBackground(FireElement.get().getAbility(11));
         }
@@ -135,18 +135,18 @@ public class FireWispEntity extends AbstractElementalsEntity<PlayerEntity> {
     }
 
     @Override
-    public void onRemoved() {
+    public void onClientRemoval() {
         summonParticles(this, random,
                 isBlue() ? ParticleTypes.SOUL_FIRE_FLAME : ParticleTypes.FLAME,
                 0.25f, 25);
     }
 
     public boolean isBlue() {
-        return this.dataTracker.get(IS_BLUE);
+        return this.entityData.get(IS_BLUE);
     }
 
     public void setIsBlue(boolean val) {
-        this.getDataTracker().set(IS_BLUE, val);
+        this.getEntityData().set(IS_BLUE, val);
     }
 
     @Override

@@ -15,7 +15,7 @@ public class AbilityAir1 implements Ability {
             return;
         }
 
-        if (bender.player.isSneaking()) {
+        if (bender.player.isCrouching()) {
             if(playerData.canUseUpgrade("airShield")){
                 AirElement.get().getAbility(2).onCall(bender,deltaT);
                 return;

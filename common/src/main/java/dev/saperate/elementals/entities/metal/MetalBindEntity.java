@@ -5,14 +5,14 @@ import dev.saperate.elementals.entities.fire.FireArcEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.MovementType;
-import net.minecraft.entity.data.DataTracker;
-import net.minecraft.entity.data.TrackedData;
-import net.minecraft.entity.data.TrackedDataHandlerRegistry;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.MoverType;
+import net.minecraft.entity.data.SynchedEntityData;
+import net.minecraft.entity.data.EntityDataAccessor;
+import net.minecraft.entity.data.EntityDataSerializers;
+import net.minecraft.entity.player.Player;
 import net.minecraft.particle.ParticleTypes;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
+import net.minecraft.util.math.Vec3;
+import net.minecraft.world.Level;
 import org.joml.Vector3f;
 
 import static dev.saperate.elementals.Elementals.LIGHTNING_PARTICLE_TYPE;
@@ -20,18 +20,18 @@ import static dev.saperate.elementals.entities.ElementalEntities.*;
 import static dev.saperate.elementals.utils.SapsUtils.*;
 
 public class MetalBindEntity extends AbstractElementalsEntity<LivingEntity> {
-    private static final TrackedData<Boolean> FROZEN = DataTracker.registerData(MetalBindEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
-    private static final TrackedData<Float> DISTANCE = DataTracker.registerData(MetalBindEntity.class, TrackedDataHandlerRegistry.FLOAT);
-    private static final TrackedData<Integer> PARENT_ID = DataTracker.registerData(MetalBindEntity.class, TrackedDataHandlerRegistry.INTEGER);
-    private static final TrackedData<Integer> CHILD_ID = DataTracker.registerData(MetalBindEntity.class, TrackedDataHandlerRegistry.INTEGER);
+    private static final EntityDataAccessor<Boolean> FROZEN = SynchedEntityData.defineId(MetalBindEntity.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Float> DISTANCE = SynchedEntityData.defineId(MetalBindEntity.class, EntityDataSerializers.FLOAT);
+    private static final EntityDataAccessor<Integer> PARENT_ID = SynchedEntityData.defineId(MetalBindEntity.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Integer> CHILD_ID = SynchedEntityData.defineId(MetalBindEntity.class, EntityDataSerializers.INT);
     public int chainLength = 0;
 
 
-    public MetalBindEntity(EntityType<MetalBindEntity> type, World world) {
+    public MetalBindEntity(EntityType<MetalBindEntity> type, Level world) {
         super(type, world, LivingEntity.class);
     }
 
-    public MetalBindEntity(World world, LivingEntity owner, double x, double y, double z) {
+    public MetalBindEntity(Level world, LivingEntity owner, double x, double y, double z) {
         super(METALBIND, world, LivingEntity.class);
         setOwner(owner);
         setPos(x, y, z);
@@ -39,22 +39,22 @@ public class MetalBindEntity extends AbstractElementalsEntity<LivingEntity> {
         setControlled(true);
     }
     @Override
-    protected void initDataTracker(DataTracker.Builder builder) {
-        super.initDataTracker(builder);
-        builder.add(FROZEN, false);
-        builder.add(DISTANCE, 10f);
-        builder.add(PARENT_ID, 0);
-        builder.add(CHILD_ID, 0);
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(FROZEN, false);
+        builder.define(DISTANCE, 10f);
+        builder.define(PARENT_ID, 0);
+        builder.define(CHILD_ID, 0);
     }
 
     public void createChain(LivingEntity owner, int MAX_CHAIN_LENGTH) {
         if (chainLength < MAX_CHAIN_LENGTH) {
-            MetalBindEntity newArc = new MetalBindEntity(getWorld(), owner, getX(), getY(), getZ());
+            MetalBindEntity newArc = new MetalBindEntity(level(), owner, getX(), getY(), getZ());
             newArc.setDistance(getDistance());
             newArc.setParent(this);
             setChild(newArc);
             newArc.setControlled(false);
-            getWorld().spawnEntity(newArc);
+            level().addFreshEntity(newArc);
             chainLength++;
             newArc.chainLength = chainLength;
             newArc.createChain(owner, MAX_CHAIN_LENGTH);
@@ -80,7 +80,7 @@ public class MetalBindEntity extends AbstractElementalsEntity<LivingEntity> {
             moveEntityTowardsGoal(owner.getEyePos().toVector3f(), getMovementSpeed());
             keepOtherEntityNearEntity(getHead(), owner, getDistance() + 3);
             if (!getFrozen()) {
-                this.move(MovementType.SELF, this.getVelocity());
+                this.move(MoverType.SELF, this.getDeltaMovement());
             }
             return;
         }
@@ -91,7 +91,7 @@ public class MetalBindEntity extends AbstractElementalsEntity<LivingEntity> {
             keepOtherEntityNearEntity(getTail(), owner, getDistance());
         }
         if (!getFrozen()) {
-            this.move(MovementType.SELF, this.getVelocity());
+            this.move(MoverType.SELF, this.getDeltaMovement());
         }
     }
 
@@ -99,7 +99,7 @@ public class MetalBindEntity extends AbstractElementalsEntity<LivingEntity> {
 
 
     @Override
-    public void onRemoved() {
+    public void onClientRemoval() {
         if (getIsControlled()) {
             return;
         }
@@ -112,7 +112,7 @@ public class MetalBindEntity extends AbstractElementalsEntity<LivingEntity> {
      * Safely despawns the arc along with all of its children
      */
     public void despawn() {
-        if (getWorld().isClient) {
+        if (level().isClientSide) {
             return;
         }
         getHead().remove();
@@ -159,43 +159,43 @@ public class MetalBindEntity extends AbstractElementalsEntity<LivingEntity> {
 
 
     public MetalBindEntity getParent() {
-        int parentId = this.getDataTracker().get(PARENT_ID);
-        Entity parent = this.getWorld().getEntityById(parentId);
-        return parent instanceof MetalBindEntity ? (MetalBindEntity) this.getWorld().getEntityById(parentId) : null;
+        int parentId = this.getEntityData().get(PARENT_ID);
+        Entity parent = this.level().getEntity(parentId);
+        return parent instanceof MetalBindEntity ? (MetalBindEntity) this.level().getEntity(parentId) : null;
     }
 
     public void setParent(MetalBindEntity parent) {
-        this.getDataTracker().set(PARENT_ID, parent != null ? parent.getId() : 0);
+        this.getEntityData().set(PARENT_ID, parent != null ? parent.getId() : 0);
     }
 
     public MetalBindEntity getChild() {
-        int childId = this.getDataTracker().get(CHILD_ID);
-        Entity child = this.getWorld().getEntityById(childId);
-        return child instanceof MetalBindEntity ? (MetalBindEntity) this.getWorld().getEntityById(childId) : null;
+        int childId = this.getEntityData().get(CHILD_ID);
+        Entity child = this.level().getEntity(childId);
+        return child instanceof MetalBindEntity ? (MetalBindEntity) this.level().getEntity(childId) : null;
     }
 
     public void setChild(MetalBindEntity child) {
-        this.getDataTracker().set(CHILD_ID, child != null ? child.getId() : 0);
+        this.getEntityData().set(CHILD_ID, child != null ? child.getId() : 0);
     }
 
     public boolean getFrozen() {
-        return this.getDataTracker().get(FROZEN);
+        return this.getEntityData().get(FROZEN);
     }
 
     public void setFrozen(boolean val) {
-        this.getDataTracker().set(FROZEN, val);
+        this.getEntityData().set(FROZEN, val);
     }
 
     public float getDistance() {
-        return this.getDataTracker().get(DISTANCE);
+        return this.getEntityData().get(DISTANCE);
     }
 
     public void setDistance(float val) {
-        this.getDataTracker().set(DISTANCE, val);
+        this.getEntityData().set(DISTANCE, val);
     }
 
     @Override
-    public boolean hasNoGravity() {
+    public boolean isNoGravity() {
         return getParent() == null;
     }
 

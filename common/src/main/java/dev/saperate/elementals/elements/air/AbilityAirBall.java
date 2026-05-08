@@ -4,7 +4,7 @@ import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.elements.Ability;
 import dev.saperate.elementals.entities.air.AirBallEntity;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.Player;
 import org.joml.Vector3f;
 
 import static dev.saperate.elementals.utils.SapsUtils.getEntityLookVector;
@@ -20,13 +20,13 @@ public class AbilityAirBall implements Ability {
             }
             return;
         }
-        PlayerEntity player = bender.player;
+        Player player = bender.player;
 
         Vector3f pos = getEntityLookVector(player, 2).toVector3f();
 
-        AirBallEntity entity = new AirBallEntity(player.getWorld(), player, pos.x, pos.y, pos.z);
+        AirBallEntity entity = new AirBallEntity(player.level(), player, pos.x, pos.y, pos.z);
         bender.abilityData = entity;
-        player.getWorld().spawnEntity(entity);
+        player.level().addFreshEntity(entity);
 
         bender.setCurrAbility(this);
 
@@ -48,7 +48,7 @@ public class AbilityAirBall implements Ability {
             speed = 1.25f;
         }
 
-        entity.setVelocity(bender.player, bender.player.getPitch(), bender.player.getYaw(), 0, speed, 0);
+        entity.setDeltaMovement(bender.player, bender.player.getPitch(), bender.player.getYaw(), 0, speed, 0);
     }
 
     @Override

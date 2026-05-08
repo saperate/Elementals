@@ -9,64 +9,64 @@ import dev.saperate.elementals.utils.SapsUtils;
 import net.minecraft.block.AbstractFireBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.*;
-import net.minecraft.entity.data.DataTracker;
-import net.minecraft.entity.data.TrackedData;
-import net.minecraft.entity.data.TrackedDataHandlerRegistry;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.data.SynchedEntityData;
+import net.minecraft.entity.data.EntityDataAccessor;
+import net.minecraft.entity.data.EntityDataSerializers;
+import net.minecraft.entity.player.Player;
 import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.entity.projectile.ProjectileUtil;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.predicate.entity.EntityPredicates;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundSource;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.TypeFilter;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
+import net.minecraft.util.math.Vec3;
+import net.minecraft.world.Level;
 import org.joml.Vector3f;
 
 import static dev.saperate.elementals.entities.ElementalEntities.FIREARC;
 import static dev.saperate.elementals.utils.SapsUtils.getEntityLookVector;
 import static dev.saperate.elementals.utils.SapsUtils.summonParticles;
 
-public class FireArcEntity extends AbstractElementalsEntity<PlayerEntity> {
-    private static final TrackedData<Integer> PARENT_ID = DataTracker.registerData(FireArcEntity.class, TrackedDataHandlerRegistry.INTEGER);
-    private static final TrackedData<Integer> CHILD_ID = DataTracker.registerData(FireArcEntity.class, TrackedDataHandlerRegistry.INTEGER);
-    private static final TrackedData<Boolean> IS_BLUE = DataTracker.registerData(FireArcEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
+public class FireArcEntity extends AbstractElementalsEntity<Player> {
+    private static final EntityDataAccessor<Integer> PARENT_ID = SynchedEntityData.defineId(FireArcEntity.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Integer> CHILD_ID = SynchedEntityData.defineId(FireArcEntity.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Boolean> IS_BLUE = SynchedEntityData.defineId(FireArcEntity.class, EntityDataSerializers.BOOLEAN);
 
     public static final float chainDistance = 0.75f;
     private static final int MAX_CHAIN_LENGTH = 6;
     public int chainLength = 0;
 
 
-    public FireArcEntity(EntityType<FireArcEntity> type, World world) {
-        super(type, world, PlayerEntity.class);
+    public FireArcEntity(EntityType<FireArcEntity> type, Level world) {
+        super(type, world, Player.class);
     }
 
-    public FireArcEntity(World world, PlayerEntity owner) {
+    public FireArcEntity(Level world, Player owner) {
         this(world, owner, owner.getX(), owner.getY(), owner.getZ());
     }
 
-    public FireArcEntity(World world, PlayerEntity owner, double x, double y, double z) {
-        super(FIREARC, world, PlayerEntity.class);
+    public FireArcEntity(Level world, Player owner, double x, double y, double z) {
+        super(FIREARC, world, Player.class);
         setOwner(owner);
         setPos(x, y, z);
         setNoGravity(false);
         setControlled(true);
     }
 
-    public void createChain(PlayerEntity owner) {
+    public void createChain(Player owner) {
         if (chainLength < MAX_CHAIN_LENGTH) {
-            FireArcEntity newArc = new FireArcEntity(getWorld(), owner, getX(), getY(), getZ());
+            FireArcEntity newArc = new FireArcEntity(level(), owner, getX(), getY(), getZ());
             newArc.setParent(this);
             setChild(newArc);
             newArc.setControlled(false);
             newArc.setIsBlue(isBlue());
-            getWorld().spawnEntity(newArc);
+            level().addFreshEntity(newArc);
             chainLength++;
             newArc.chainLength = chainLength;
             newArc.createChain(owner);
@@ -74,21 +74,21 @@ public class FireArcEntity extends AbstractElementalsEntity<PlayerEntity> {
     }
 
     @Override
-    protected void initDataTracker(DataTracker.Builder builder) {
-        super.initDataTracker(builder);
-        builder.add(PARENT_ID, 0);
-        builder.add(CHILD_ID, 0);
-        builder.add(IS_BLUE, false);
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(PARENT_ID, 0);
+        builder.define(CHILD_ID, 0);
+        builder.define(IS_BLUE, false);
     }
 
     @Override
     public void tick() {
         super.tick();
 
-        if (touchingWater && getParent() == null && !getWorld().isClient) {
+        if (touchingWater && getParent() == null && !level().isClientSide) {
             remove();
 
-            PlayerEntity owner = getOwner();
+            Player owner = getOwner();
             if(owner != null){
                 Bender bender = Bender.getBender((ServerPlayerEntity) owner);
                 if(bender.currAbility != null){
@@ -109,7 +109,7 @@ public class FireArcEntity extends AbstractElementalsEntity<PlayerEntity> {
 
         super.tick();
 
-        PlayerEntity owner = getOwner();
+        Player owner = getOwner();
         if (owner == null && isRemoved()) {
             return;
         }
@@ -129,7 +129,7 @@ public class FireArcEntity extends AbstractElementalsEntity<PlayerEntity> {
         if (entity == getOwner() || getParent() != null) {
             return;
         }
-        entity.addVelocity(this.getVelocity().multiply(0.2f));
+        entity.addDeltaMovement(this.getDeltaMovement().multiply(0.2f));
         PlayerData plrData = PlayerData.get(getOwner());
 
         float damage = isBlue() ? 3.5f : 2.5f;//TODO BUFF
@@ -146,7 +146,7 @@ public class FireArcEntity extends AbstractElementalsEntity<PlayerEntity> {
         if (!entity.isFireImmune()) {
             entity.setOnFireFor(8);
         }
-        entity.damage(this.getDamageSources().playerAttack(getOwner()), damage * ElementalConfig.get().BENDING_DAMAGE_MULTIPLIER);
+        entity.hurt(this.damageSources().playerAttack(getOwner()), damage * ElementalConfig.get().BENDING_DAMAGE_MULTIPLIER);
         remove();
     }
 
@@ -156,7 +156,7 @@ public class FireArcEntity extends AbstractElementalsEntity<PlayerEntity> {
             moveEntityTowardsGoal(getEntityLookVector(owner, 3).add(0, 0.5, 0).toVector3f());
         } else {
             if (parent != null) {
-                Vec3d direction = parent.getPos().subtract(getPos());
+                Vec3 direction = parent.getPos().subtract(getPos());
                 double distance = direction.length();
 
                 if (distance > chainDistance) {
@@ -167,23 +167,23 @@ public class FireArcEntity extends AbstractElementalsEntity<PlayerEntity> {
         }
 
 
-        this.move(MovementType.SELF, this.getVelocity());
+        this.move(MoverType.SELF, this.getDeltaMovement());
     }
 
 
     @Override
-    public void onRemoved() {
+    public void onClientRemoval() {
         summonParticles(this, random,
                 isBlue() ? ParticleTypes.SOUL_FIRE_FLAME : ParticleTypes.FLAME,
                 0.1f, 10);
-        this.getWorld().playSound(getX(), getY(), getZ(), SoundEvents.ITEM_FIRECHARGE_USE, SoundCategory.BLOCKS, 0.25f, (1.0f + (this.getWorld().random.nextFloat() - this.getWorld().random.nextFloat()) * 0.2f) * 0.7f, false);
+        this.level().playSound(getX(), getY(), getZ(), SoundEvents.ITEM_FIRECHARGE_USE, SoundSource.BLOCKS, 0.25f, (1.0f + (this.level().random.nextFloat() - this.level().random.nextFloat()) * 0.2f) * 0.7f, false);
     }
 
     /**
      * Safely despawns the arc along with all of its children
      */
     public void despawn() {
-        if (getWorld().isClient) {
+        if (level().isClientSide) {
             return;
         }
         getHead().remove();
@@ -220,36 +220,36 @@ public class FireArcEntity extends AbstractElementalsEntity<PlayerEntity> {
     }
 
     public FireArcEntity getParent() {
-        int parentId = this.getDataTracker().get(PARENT_ID);
-        Entity parent = this.getWorld().getEntityById(parentId);
-        return parent instanceof FireArcEntity ? (FireArcEntity) this.getWorld().getEntityById(parentId) : null;
+        int parentId = this.getEntityData().get(PARENT_ID);
+        Entity parent = this.level().getEntity(parentId);
+        return parent instanceof FireArcEntity ? (FireArcEntity) this.level().getEntity(parentId) : null;
     }
 
     public void setParent(FireArcEntity parent) {
-        this.getDataTracker().set(PARENT_ID, parent != null ? parent.getId() : 0);
+        this.getEntityData().set(PARENT_ID, parent != null ? parent.getId() : 0);
     }
 
     public FireArcEntity getChild() {
-        int childId = this.getDataTracker().get(CHILD_ID);
-        Entity child = this.getWorld().getEntityById(childId);
-        return child instanceof FireArcEntity ? (FireArcEntity) this.getWorld().getEntityById(childId) : null;
+        int childId = this.getEntityData().get(CHILD_ID);
+        Entity child = this.level().getEntity(childId);
+        return child instanceof FireArcEntity ? (FireArcEntity) this.level().getEntity(childId) : null;
     }
 
     public void setChild(FireArcEntity child) {
-        this.getDataTracker().set(CHILD_ID, child != null ? child.getId() : 0);
+        this.getEntityData().set(CHILD_ID, child != null ? child.getId() : 0);
     }
 
     public boolean isBlue() {
-        return this.dataTracker.get(IS_BLUE);
+        return this.entityData.get(IS_BLUE);
     }
 
     public void setIsBlue(boolean val) {
-        this.getDataTracker().set(IS_BLUE, val);
+        this.getEntityData().set(IS_BLUE, val);
     }
 
     @Override
-    public boolean hasNoGravity() {
-        return super.hasNoGravity() || getParent() != null;
+    public boolean isNoGravity() {
+        return super.isNoGravity() || getParent() != null;
     }
 
     @Override

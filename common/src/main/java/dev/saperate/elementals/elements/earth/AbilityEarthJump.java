@@ -4,10 +4,10 @@ import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.elements.Ability;
 import dev.saperate.elementals.entities.water.WaterTowerEntity;
-import net.minecraft.entity.MovementType;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.MoverType;
+import net.minecraft.entity.player.Player;
 import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.Vec3;
 import org.joml.Vector3f;
 
 import static dev.saperate.elementals.utils.SapsUtils.*;
@@ -17,11 +17,11 @@ public class AbilityEarthJump implements Ability {
     @Override
     public void onCall(Bender bender, long deltaT) {
         bender.setCurrAbility(null);
-        PlayerEntity player = bender.player;
+        Player player = bender.player;
 
-        BlockHitResult hit = raycastBlockCustomRotation(player, 12, true, new Vec3d(0, -1, 0));
+        BlockHitResult hit = raycastBlockCustomRotation(player, 12, true, new Vec3(0, -1, 0));
 
-        if(!EarthElement.isBlockBendable(player.getWorld().getBlockState(hit.getBlockPos()), bender) || !player.getRootVehicle().isOnGround()){
+        if(!EarthElement.isBlockBendable(player.level().getBlockState(hit.getOnPos()), bender) || !player.getRootVehicle().isOnGround()){
             return;
         }
 

@@ -15,12 +15,12 @@ import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.damage.DamageSources;
 import net.minecraft.entity.damage.DamageTypes;
-import net.minecraft.entity.data.DataTracker;
-import net.minecraft.entity.data.TrackedData;
-import net.minecraft.entity.data.TrackedDataHandlerRegistry;
+import net.minecraft.entity.data.SynchedEntityData;
+import net.minecraft.entity.data.EntityDataAccessor;
+import net.minecraft.entity.data.EntityDataSerializers;
 import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.entity.passive.PassiveEntity;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.Player;
 import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -31,9 +31,9 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec2f;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.Vec3;
 import net.minecraft.util.math.random.Random;
-import net.minecraft.world.World;
+import net.minecraft.world.Level;
 import net.minecraft.world.gen.trunk.BendingTrunkPlacer;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector2d;
@@ -52,13 +52,13 @@ public class SkyBisonEntity extends AnimalEntity implements GeoEntity {
     public static final RawAnimation IDLE_ANIM = RawAnimation.begin().thenPlay("idle");
     public static final RawAnimation WALK_ANIM = RawAnimation.begin().thenLoop("walk");
     public static final RawAnimation FLY_ANIM = RawAnimation.begin().thenLoop("flying");
-    public static final TrackedData<Boolean> FLYING = DataTracker.registerData(SkyBisonEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
-    public static final TrackedData<ItemStack> SADDLE = DataTracker.registerData(SkyBisonEntity.class, TrackedDataHandlerRegistry.ITEM_STACK);
+    public static final EntityDataAccessor<Boolean> FLYING = SynchedEntityData.defineId(SkyBisonEntity.class, EntityDataSerializers.BOOLEAN);
+    public static final EntityDataAccessor<ItemStack> SADDLE = SynchedEntityData.defineId(SkyBisonEntity.class, EntityDataSerializers.ITEM_STACK);
     
-    public SkyBisonEntity(EntityType<? extends AnimalEntity> entityType, World world) {
+    public SkyBisonEntity(EntityType<? extends AnimalEntity> entityType, Level world) {
         super(entityType, world);
         this.moveControl = new SkyBisonMoveControl(this);
-        setFlying(hasNoGravity());
+        setFlying(isNoGravity());
     }
 
     @Override
@@ -72,16 +72,16 @@ public class SkyBisonEntity extends AnimalEntity implements GeoEntity {
         this.goalSelector.add(4, new FollowParentGoal(this, 1.0));
         this.goalSelector.add(6, new BisonWanderAroundGoal(this));
         this.goalSelector.add(7, new WanderAroundGoal(this,1f));
-        this.goalSelector.add(7, new LookAtEntityGoal(this, PlayerEntity.class, 6.0F));
+        this.goalSelector.add(7, new LookAtEntityGoal(this, Player.class, 6.0F));
         this.goalSelector.add(8, new LookAroundGoal(this));
         this.goalSelector.add(3, new TemptGoal(this, 1.25, Ingredient.ofItems(new ItemConvertible[]{Items.APPLE}), false));
     }
 
     @Override
-    protected void initDataTracker(DataTracker.Builder builder) {
-        super.initDataTracker(builder);
-        builder.add(FLYING, false);
-        builder.add(SADDLE, ItemStack.EMPTY);
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(FLYING, false);
+        builder.define(SADDLE, ItemStack.EMPTY);
     }
 
 
@@ -89,9 +89,9 @@ public class SkyBisonEntity extends AnimalEntity implements GeoEntity {
 //TODO stamina system for flying?
     @Override
     public void tick() {
-        if (hasNoGravity() && !isFlying()) {
+        if (isNoGravity() && !isFlying()) {
             setNoGravity(false);
-        } else if (!hasNoGravity() && isFlying()) {
+        } else if (!isNoGravity() && isFlying()) {
             setNoGravity(true);
         }
         
@@ -102,10 +102,10 @@ public class SkyBisonEntity extends AnimalEntity implements GeoEntity {
         }
 
 
-        if(getRandom().nextInt(480) == 0 && !getWorld().isClient && !hasControllingPassenger()){
+        if(getRandom().nextInt(480) == 0 && !level().isClientSide && !hasControllingPassenger()){
             setFlying(!isFlying());
-            addVelocity(0,.1f,0);
-            move(MovementType.SELF,getVelocity());
+            addDeltaMovement(0,.1f,0);
+            move(MoverType.SELF,getDeltaMovement());
         }
 
         
@@ -113,9 +113,9 @@ public class SkyBisonEntity extends AnimalEntity implements GeoEntity {
     }
 
     @Override
-    public ActionResult interactMob(PlayerEntity player, Hand hand) {
+    public ActionResult interactMob(Player player, Hand hand) {
         ItemStack handStack = player.getStackInHand(hand);
-        if(player.isSneaking()) {
+        if(player.isCrouching()) {
             if (handStack.getItem() == Items.SADDLE) {
                 setSaddle(handStack);
                 player.setStackInHand(hand, ItemStack.EMPTY);
@@ -129,7 +129,7 @@ public class SkyBisonEntity extends AnimalEntity implements GeoEntity {
         return tryRideMob(player);
     }
 
-    public ActionResult tryRideMob(PlayerEntity player){
+    public ActionResult tryRideMob(Player player){
         if((getPassengerList().size() < 8 && hasSaddle()) || getPassengerList().isEmpty()){
             player.startRiding(this,true);
             return ActionResult.PASS;
@@ -138,9 +138,9 @@ public class SkyBisonEntity extends AnimalEntity implements GeoEntity {
     }
     
     @Override
-    public boolean damage(DamageSource source, float amount) {
+    public boolean hurt(DamageSource source, float amount) {
         if(!source.isOf(DamageTypes.FALL)){
-            return super.damage(source,amount);
+            return super.hurt(source,amount);
         }
         return false;
     }
@@ -159,12 +159,12 @@ public class SkyBisonEntity extends AnimalEntity implements GeoEntity {
     }
 
     @Override
-    protected Vec3d getControlledMovementInput(PlayerEntity controllingPlayer, Vec3d movementInput) {
+    protected Vec3 getControlledMovementInput(Player controllingPlayer, Vec3 movementInput) {
         setBodyYaw(controllingPlayer.bodyYaw);
         
-        Vec3d forward = SapsUtils.getEntityLookVectorIgnorePitch(controllingPlayer,1)
+        Vec3 forward = SapsUtils.getEntityLookVectorIgnorePitch(controllingPlayer,1)
                 .subtract(controllingPlayer.getEyePos());
-        Vec3d sideways = forward.crossProduct(new Vec3d(0,1,0)).multiply(-controllingPlayer.sidewaysSpeed);
+        Vec3 sideways = forward.crossProduct(new Vec3(0,1,0)).multiply(-controllingPlayer.sidewaysSpeed);
         
         //Can't inline it cause it's used to cross product sideways vector
         forward = forward.multiply(controllingPlayer.forwardSpeed);
@@ -184,8 +184,8 @@ public class SkyBisonEntity extends AnimalEntity implements GeoEntity {
             setFlying(true);
         }
 
-        Vec3d movement = forward.add(sideways).add(0,h,0).normalize().multiply(3.9000000953674316 * 0.15f);
-        setVelocity(movement);
+        Vec3 movement = forward.add(sideways).add(0,h,0).normalize().multiply(3.9000000953674316 * 0.15f);
+        setDeltaMovement(movement);
         return movement;
     }
 
@@ -195,13 +195,13 @@ public class SkyBisonEntity extends AnimalEntity implements GeoEntity {
         //If this broke, check CamelEntity for how to fix it
         if (this.hasPassenger(passenger)) {
             int passengerIndex = getPassengerIndex(passenger);
-            Vec3d forward = SapsUtils.getEntityLookVectorIgnorePitch(this,1)
+            Vec3 forward = SapsUtils.getEntityLookVectorIgnorePitch(this,1)
                     .subtract(getEyePos());
-            Vec3d sideways = forward.crossProduct(new Vec3d(0,1,0))
+            Vec3 sideways = forward.crossProduct(new Vec3(0,1,0))
                     .multiply(0.75f); // less annoying than doing
             double heightOffset = this.getY() + this.getMountedHeightOffset(); //+ passenger.getHeightOffset();
 
-            Vec3d offset = switch (passengerIndex) {
+            Vec3 offset = switch (passengerIndex) {
                 case 0 -> forward.multiply(2f);
                 case 1 -> forward.add(sideways);
                 case 2 -> forward.add(sideways.multiply(-1));
@@ -209,7 +209,7 @@ public class SkyBisonEntity extends AnimalEntity implements GeoEntity {
                 case 4 -> sideways.multiply(-1);
                 case 5 -> forward.multiply(-1.25f).add(sideways);
                 case 6 -> forward.multiply(1.25f).add(sideways).multiply(-1);
-                default -> Vec3d.ZERO;
+                default -> Vec3.ZERO;
             };
 
             positionUpdater.accept(passenger, this.getX() + offset.x, heightOffset, this.getZ() + offset.z);
@@ -217,7 +217,7 @@ public class SkyBisonEntity extends AnimalEntity implements GeoEntity {
     }
     
     @Override
-    protected Vec3d getPassengerAttachmentPos(Entity passenger, EntityDimensions dimensions, float scaleFactor) {
+    protected Vec3 getPassengerAttachmentPos(Entity passenger, EntityDimensions dimensions, float scaleFactor) {
         return super.getPassengerAttachmentPos(passenger, dimensions, scaleFactor);
     }
     
@@ -234,7 +234,7 @@ public class SkyBisonEntity extends AnimalEntity implements GeoEntity {
         return new Vec2f(controllingEntity.getPitch() * 0.5F, controllingEntity.getYaw());
     }
 
-    protected void tickControlled(PlayerEntity controllingPlayer, Vec3d movementInput) {
+    protected void tickControlled(Player controllingPlayer, Vec3 movementInput) {
         super.tickControlled(controllingPlayer, movementInput);
         Vec2f vec2f = getRotation(controllingPlayer);
         float f = this.getYaw();
@@ -290,20 +290,20 @@ public class SkyBisonEntity extends AnimalEntity implements GeoEntity {
     }
 
     public void setFlying(boolean val) {
-        this.dataTracker.set(FLYING, val);
+        this.entityData.set(FLYING, val);
         setNoGravity(val);
     }
 
     public boolean isFlying() {
-        return this.dataTracker.get(FLYING);
+        return this.entityData.get(FLYING);
     }
 
     public void setSaddle(ItemStack saddle) {
-        this.dataTracker.set(SADDLE, saddle);
+        this.entityData.set(SADDLE, saddle);
     }
 
     public ItemStack getSaddle() {
-        return this.dataTracker.get(SADDLE);
+        return this.entityData.get(SADDLE);
     }
     
     public boolean hasSaddle(){
@@ -350,7 +350,7 @@ public class SkyBisonEntity extends AnimalEntity implements GeoEntity {
                         return false;
                     }
 
-                Vec3d vec3d = this.getWanderTarget();
+                Vec3 vec3d = this.getWanderTarget();
                 if (vec3d == null) {
                     return false;
                 } else {
@@ -363,7 +363,7 @@ public class SkyBisonEntity extends AnimalEntity implements GeoEntity {
         }
         public void start() {
             if(entity.isFlying()) {
-                Vec3d target = getWanderTarget();
+                Vec3 target = getWanderTarget();
                 if (target != null) {
                     entity.getMoveControl().moveTo(target.x, target.y, target.z, 0.8f);
                 }
@@ -378,13 +378,13 @@ public class SkyBisonEntity extends AnimalEntity implements GeoEntity {
         }
 
         @Nullable
-        protected Vec3d getWanderTarget() {
+        protected Vec3 getWanderTarget() {
             if (entity.isFlying()) {
                 Random random = entity.getRandom();
                 double x = entity.getX() + (double) ((random.nextFloat() * 2.0F - 1.0F) * 16.0F);
                 double y = entity.getY() + (double) ((random.nextFloat() * 2.0F - 1.0F) * 16.0F);
                 double z = entity.getZ() + (double) ((random.nextFloat() * 2.0F - 1.0F) * 16.0F);
-                return new Vec3d(x, y, z);
+                return new Vec3(x, y, z);
             }
             return NoPenaltyTargeting.find(entity, 10, 7);
         }
@@ -410,12 +410,12 @@ public class SkyBisonEntity extends AnimalEntity implements GeoEntity {
                 if (entity.isFlying()) {
                     if (this.collisionCheckCooldown-- <= 0) {
                         this.collisionCheckCooldown += entity.getRandom().nextInt(5) + 2;
-                        Vec3d vec3d = getDistanceToTarget();
+                        Vec3 vec3d = getDistanceToTarget();
                         double d = vec3d.length();
                         vec3d = vec3d.normalize();
                         if (this.willCollide(vec3d, MathHelper.ceil(d))) {
-                            entity.setVelocity(entity.getVelocity().add(vec3d.multiply(0.1)));
-                            entity.move(MovementType.SELF, entity.getVelocity());
+                            entity.setDeltaMovement(entity.getDeltaMovement().add(vec3d.multiply(0.1)));
+                            entity.move(MoverType.SELF, entity.getDeltaMovement());
                             
                         } else {
                             state = State.WAIT;
@@ -424,19 +424,19 @@ public class SkyBisonEntity extends AnimalEntity implements GeoEntity {
                 }
             }
             
-            entity.setYaw(SapsUtils.calculateYaw(entity.getVelocity()));
+            entity.setYaw(SapsUtils.calculateYaw(entity.getDeltaMovement()));
             if(!entity.isFlying()){
                 super.tick();   
             }
         }
 
-        private boolean willCollide(Vec3d direction, int steps) {
+        private boolean willCollide(Vec3 direction, int steps) {
             Box box = entity.getBoundingBox();
 
             for (int i = 1; i < steps; ++i) {
                 box = box.offset(direction);
 
-                if (!entity.getWorld().isSpaceEmpty(entity, box)) {
+                if (!entity.level().isSpaceEmpty(entity, box)) {
                     return false;
                 }
             }
@@ -444,8 +444,8 @@ public class SkyBisonEntity extends AnimalEntity implements GeoEntity {
             return true;
         }
 
-        public Vec3d getDistanceToTarget() {
-            return new Vec3d(this.targetX - this.entity.getX(), this.targetY - this.entity.getY(), this.targetZ - this.entity.getZ());
+        public Vec3 getDistanceToTarget() {
+            return new Vec3(this.targetX - this.entity.getX(), this.targetY - this.entity.getY(), this.targetZ - this.entity.getZ());
         }
     }
 }

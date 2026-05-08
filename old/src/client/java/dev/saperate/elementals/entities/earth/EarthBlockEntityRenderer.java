@@ -12,7 +12,7 @@ import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.RotationAxis;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.Vec3;
 
 public class EarthBlockEntityRenderer extends EntityRenderer<EarthBlockEntity> {
     private static final Identifier texture = Identifier.of("minecraft", "textures/block/dirt.png");
@@ -36,7 +36,7 @@ public class EarthBlockEntityRenderer extends EntityRenderer<EarthBlockEntity> {
                 matrices.translate(0.5f, -1, 0.5f);
                 VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderLayer.getItemEntityTranslucentCull(getTexture(entity)));
 
-                Vec3d dir = entity.getVelocity();
+                Vec3 dir = entity.getDeltaMovement();
                 matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees((float) Math.toDegrees(Math.atan2(dir.x, dir.z))));
                 matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees((float) Math.toDegrees(Math.asin(-dir.y))));
 
@@ -56,7 +56,7 @@ public class EarthBlockEntityRenderer extends EntityRenderer<EarthBlockEntity> {
             default -> {
                 BlockState state = entity.getBlockState();
                 VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderLayers.getMovingBlockLayer(state));
-                MinecraftClient.getInstance().getBlockRenderManager().renderBlock(state, entity.getBlockPos(), entity.getWorld(), matrices, vertexConsumer, false, entity.getEntityWorld().random);
+                MinecraftClient.getInstance().getBlockRenderManager().renderBlock(state, entity.getOnPos(), entity.level(), matrices, vertexConsumer, false, entity.getEntityWorld().random);
             }
 
 

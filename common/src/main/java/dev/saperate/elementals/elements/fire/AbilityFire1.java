@@ -10,7 +10,7 @@ public class AbilityFire1 implements Ability {
     public void onCall(Bender bender, long deltaT) {
         PlayerData playerData = PlayerData.get(bender.player);
 
-        if (bender.player.isSneaking()) {
+        if (bender.player.isCrouching()) {
             if(playerData.canUseUpgrade("fireWall")){
                 FireElement.get().getAbility(2).onCall(bender,deltaT);
                 bender.setCurrAbility(null);//TODO move these in their respective ability

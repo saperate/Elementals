@@ -7,8 +7,8 @@ import dev.saperate.elementals.elements.Ability;
 import dev.saperate.elementals.utils.SapsUtils;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.effect.MobEffectInstance;
+import net.minecraft.entity.player.Player;
 
 import java.util.List;
 
@@ -28,18 +28,18 @@ public class AbilityBlood4 implements Ability {
         if (deltaT < 1500 || !bender.reduceChi(cost)) {
             return;
         }
-        PlayerEntity player = bender.player;
-        boolean isNight = BloodElement.isNight(player.getWorld());
+        Player player = bender.player;
+        boolean isNight = BloodElement.isNight(player.level());
 
         int baseRange = bender.getData().canUseUpgrade("bloodParalysisRangeI") ? 5 : 3;
-        List<LivingEntity> entities = SapsUtils.getEntitiesInRadius(player.getEyePos(), isNight ? baseRange + 5 : baseRange, player.getWorld(), player);
+        List<LivingEntity> entities = SapsUtils.getEntitiesInRadius(player.getEyePos(), isNight ? baseRange + 5 : baseRange, player.level(), player);
 
         for (LivingEntity living : entities) {
-            if (living instanceof PlayerEntity && !isNight) {
-                living.addStatusEffect(new StatusEffectInstance(ElementalsStatusEffects.STUNNED, 100, 0, false, false, true));
+            if (living instanceof Player && !isNight) {
+                living.addEffect(new MobEffectInstance(ElementalsStatusEffects.STUNNED, 100, 0, false, false, true));
                 continue;
             }
-            living.addStatusEffect(new StatusEffectInstance(ElementalsStatusEffects.STATIONARY, 120, 2, true, false, true));
+            living.addEffect(new MobEffectInstance(ElementalsStatusEffects.STATIONARY, 120, 2, true, false, true));
         }
     }
 

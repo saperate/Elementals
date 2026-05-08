@@ -2,57 +2,53 @@ package dev.saperate.elementals.entities.water;
 
 import dev.saperate.elementals.data.ElementalConfig;
 import dev.saperate.elementals.entities.common.AbstractElementalsEntity;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.*;
-import net.minecraft.entity.data.DataTracker;
-import net.minecraft.entity.data.TrackedData;
-import net.minecraft.entity.data.TrackedDataHandlerRegistry;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.projectile.ProjectileEntity;
-import net.minecraft.entity.projectile.ProjectileUtil;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.particle.ParticleTypes;
-import net.minecraft.util.hit.EntityHitResult;
-import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.MoverType;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3f;
 
 import static dev.saperate.elementals.entities.ElementalEntities.WATERARM;
 import static dev.saperate.elementals.utils.SapsUtils.*;
 
-public class WaterArmEntity extends AbstractElementalsEntity<PlayerEntity> {
-    private static final TrackedData<Integer> PARENT_ID = DataTracker.registerData(WaterArmEntity.class, TrackedDataHandlerRegistry.INTEGER);
-    private static final TrackedData<Integer> CHILD_ID = DataTracker.registerData(WaterArmEntity.class, TrackedDataHandlerRegistry.INTEGER);
+public class WaterArmEntity extends AbstractElementalsEntity<Player> {
+    private static final EntityDataAccessor<Integer> PARENT_ID = SynchedEntityData.defineId(WaterArmEntity.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Integer> CHILD_ID = SynchedEntityData.defineId(WaterArmEntity.class, EntityDataSerializers.INT);
     public static final float chainDistance = 1;
     private static final int MAX_CHAIN_LENGTH = 4;
     public int chainLength = 0;
 
 
-    public WaterArmEntity(EntityType<WaterArmEntity> type, World world) {
-        super(type, world, PlayerEntity.class);
+    public WaterArmEntity(EntityType<WaterArmEntity> type, Level world) {
+        super(type, world, Player.class);
     }
 
-    public WaterArmEntity(World world, PlayerEntity owner) {
+    public WaterArmEntity(Level world, Player owner) {
         this(world, owner, owner.getX(), owner.getY(), owner.getZ());
     }
 
-    public WaterArmEntity(World world, PlayerEntity owner, double x, double y, double z) {
-        super(WATERARM, world, PlayerEntity.class);
+    public WaterArmEntity(Level world, Player owner, double x, double y, double z) {
+        super(WATERARM, world, Player.class);
         setOwner(owner);
         setPos(x, y, z);
         setNoGravity(false);
         setControlled(true);
     }
 
-    public void createChain(PlayerEntity owner) {
+    public void createChain(Player owner) {
         if (chainLength < MAX_CHAIN_LENGTH) {
-            WaterArmEntity newArc = new WaterArmEntity(getWorld(), owner, getX(), getY(), getZ());
+            WaterArmEntity newArc = new WaterArmEntity(level(), owner, getX(), getY(), getZ());
             newArc.setParent(this);
             setChild(newArc);
             newArc.setControlled(false);
-            getWorld().spawnEntity(newArc);
+            level().addFreshEntity(newArc);
             chainLength++;
             newArc.chainLength = chainLength;
             newArc.createChain(owner);
@@ -60,10 +56,10 @@ public class WaterArmEntity extends AbstractElementalsEntity<PlayerEntity> {
     }
 
     @Override
-    protected void initDataTracker(DataTracker.Builder builder) {
-        super.initDataTracker(builder);
-        builder.add(PARENT_ID, 0);
-        builder.add(CHILD_ID, 0);
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(PARENT_ID, 0);
+        builder.define(CHILD_ID, 0);
     }
 
     @Override
@@ -83,8 +79,8 @@ public class WaterArmEntity extends AbstractElementalsEntity<PlayerEntity> {
             return;
         }
 
-        entity.damage(this.getDamageSources().playerAttack((PlayerEntity) getOwner()), 4 * ElementalConfig.get().BENDING_DAMAGE_MULTIPLIER);
-        entity.addVelocity(this.getVelocity().multiply(0.2f));
+        entity.hurt(this.damageSources().playerAttack((Player) getOwner()), 4 * ElementalConfig.get().BENDING_DAMAGE_MULTIPLIER);
+        entity.addDeltaMovement(this.getDeltaMovement().scale(0.2f));
         remove();
     }
 
@@ -96,8 +92,8 @@ public class WaterArmEntity extends AbstractElementalsEntity<PlayerEntity> {
     }
 
     @Override
-    public boolean hasNoGravity() {
-        return super.hasNoGravity() || getParent() != null;
+    public boolean isNoGravity() {
+        return super.isNoGravity() || getParent() != null;
     }
 
     private void moveEntity(Entity owner) {
@@ -107,15 +103,15 @@ public class WaterArmEntity extends AbstractElementalsEntity<PlayerEntity> {
             HitResult hit = raycastFull(owner, 5, true, entity -> !(entity instanceof WaterArmEntity));
 
 
-            forwardIk(hit.getPos());
+            forwardIk(hit.getLocation());
 
         }
 
 
-        this.move(MovementType.SELF, this.getVelocity().add(owner.getVelocity().multiply(1, 0, 1)));
+        this.move(MoverType.SELF, this.getDeltaMovement().add(owner.getDeltaMovement().multiply(1, 0, 1)));
     }
 
-    public Vec3d forwardIk(Vec3d goal) {
+    public Vec3 forwardIk(Vec3 goal) {
         WaterArmEntity child = getChild();
         if (child != null) {
             goal = child.forwardIk(goal);
@@ -124,7 +120,7 @@ public class WaterArmEntity extends AbstractElementalsEntity<PlayerEntity> {
             }
         }
 
-        Vec3d newGoal = getPos();
+        Vec3 newGoal = position();
         goTowardsGoal(goal);
 
         return newGoal;
@@ -132,43 +128,42 @@ public class WaterArmEntity extends AbstractElementalsEntity<PlayerEntity> {
 
 
     private void controlEntity(Entity owner) {
-        Vector3f direction = owner.getPos().add(0, (owner.getEyeY() - owner.getY()) / 2, 0)
-                .subtract(getPos()).toVector3f();
+        Vector3f direction = owner.position().add(0, (owner.getEyeY() - owner.getY()) / 2, 0)
+                .subtract(position()).toVector3f();
         direction.mul(0.125f);
 
         if (direction.length() < 0.4f) {
-            this.setVelocity(0, 0, 0);
+            this.setDeltaMovement(0, 0, 0);
         }
 
 
-        this.addVelocity(direction.x, direction.y, direction.z);
+        this.addDeltaMovement(new Vec3(direction.x, direction.y, direction.z));
     }
 
-    private void goTowardsGoal(Vec3d goal) {
-        Vec3d direction = goal.subtract(getPos());
+    private void goTowardsGoal(Vec3 goal) {
+        Vec3 direction = goal.subtract(position());
         double distance = direction.length();
 
         //Constraint so that it stays roughly N blocks away from the parent
         if (distance > chainDistance) {
-            direction = direction.multiply(distance - chainDistance).multiply(0.075f);
+            direction = direction.scale(distance - chainDistance).scale(0.075f);
         } else if (distance < chainDistance) {
-            direction = direction.multiply(-0.03f);
+            direction = direction.scale(-0.03f);
         } else {
-            direction = direction.multiply(0);
+            direction = direction.scale(0);
         }
 
 
         double damping = 0.1f + (0.3f) * (1 - Math.min(1, distance / chainDistance));
-        direction = direction.multiply(damping);
+        direction = direction.scale(damping);
 
-        this.addVelocity(direction.x, direction.y, direction.z);
+        this.addDeltaMovement(new Vec3(direction.x, direction.y, direction.z));
 
-        this.addVelocity(getVelocity().multiply(-0.1f));
+        this.addDeltaMovement(getDeltaMovement().scale(-0.1f));
     }
 
-
     @Override
-    public void onRemoved() {
+    public void onClientRemoval() {
         summonParticles(this, random, ParticleTypes.SPLASH, 10, 100);
     }
 
@@ -176,7 +171,7 @@ public class WaterArmEntity extends AbstractElementalsEntity<PlayerEntity> {
      * Safely despawns the arc along with all of its children
      */
     public void despawn() {
-        if (getWorld().isClient) {
+        if (level().isClientSide) {
             return;
         }
         getHead().remove();
@@ -210,21 +205,21 @@ public class WaterArmEntity extends AbstractElementalsEntity<PlayerEntity> {
 
 
     public WaterArmEntity getParent() {
-        int parentId = this.getDataTracker().get(PARENT_ID);
-        return parentId != 0 ? (WaterArmEntity) this.getWorld().getEntityById(parentId) : null;
+        int parentId = this.getEntityData().get(PARENT_ID);
+        return parentId != 0 ? (WaterArmEntity) this.level().getEntity(parentId) : null;
     }
 
     public void setParent(WaterArmEntity parent) {
-        this.getDataTracker().set(PARENT_ID, parent != null ? parent.getId() : 0);
+        this.getEntityData().set(PARENT_ID, parent != null ? parent.getId() : 0);
     }
 
     public WaterArmEntity getChild() {
-        int childId = this.getDataTracker().get(CHILD_ID);
-        return childId != 0 ? (WaterArmEntity) this.getWorld().getEntityById(childId) : null;
+        int childId = this.getEntityData().get(CHILD_ID);
+        return childId != 0 ? (WaterArmEntity) this.level().getEntity(childId) : null;
     }
 
     public void setChild(WaterArmEntity child) {
-        this.getDataTracker().set(CHILD_ID, child != null ? child.getId() : 0);
+        this.getEntityData().set(CHILD_ID, child != null ? child.getId() : 0);
     }
 
 }

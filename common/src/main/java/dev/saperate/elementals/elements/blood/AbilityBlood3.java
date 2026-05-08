@@ -5,8 +5,8 @@ import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.effects.ElementalsStatusEffects;
 import dev.saperate.elementals.elements.Ability;
 import dev.saperate.elementals.utils.SapsUtils;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.effect.MobEffectInstance;
+import net.minecraft.entity.player.Player;
 
 import static dev.saperate.elementals.utils.SapsUtils.safeHasStatusEffect;
 
@@ -14,7 +14,7 @@ import static dev.saperate.elementals.utils.SapsUtils.safeHasStatusEffect;
 public class AbilityBlood3 implements Ability {
     @Override
     public void onCall(Bender bender, long deltaT) {
-        PlayerEntity player = bender.player;
+        Player player = bender.player;
         PlayerData playerData = PlayerData.get(player);
         bender.setCurrAbility(null);
 
@@ -26,7 +26,7 @@ public class AbilityBlood3 implements Ability {
             if (!bender.reduceChi(15)) {
                 return;
             }
-            player.addStatusEffect(new StatusEffectInstance(ElementalsStatusEffects.OVERCHARGED, playerData.canUseUpgrade("bloodOverchargeStrengthI") ? 600 : 400, 1, false, false, true));
+            player.addEffect(new MobEffectInstance(ElementalsStatusEffects.OVERCHARGED, playerData.canUseUpgrade("bloodOverchargeStrengthI") ? 600 : 400, 1, false, false, true));
         }else if(player.isOnGround()){
             if (!bender.reduceChi(10)) {
                 return;

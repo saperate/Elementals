@@ -11,7 +11,7 @@ import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.client.render.model.json.ModelTransformationMode;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.Player;
 import net.minecraft.item.ItemStack;
 
 public class GliderFeatureRenderer<T extends LivingEntity, M extends EntityModel<T>> extends FeatureRenderer<T, M> {
@@ -24,7 +24,7 @@ public class GliderFeatureRenderer<T extends LivingEntity, M extends EntityModel
 
     @Override
     public void render(MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, T entity, float limbAngle, float limbDistance, float tickDelta, float animationProgress, float headYaw, float headPitch) {
-        ItemStack stack = SapsUtils.getFirstItemOfTypeInHands((PlayerEntity) entity, ElementalItems.GLIDER_ITEM);
+        ItemStack stack = SapsUtils.getFirstItemOfTypeInHands((Player) entity, ElementalItems.GLIDER_ITEM);
         if(stack.isEmpty() || !entity.isFallFlying() 
                 || ElementalItems.GLIDER_ITEM.getState(stack) == GliderItem.GliderStates.CLOSED){
             return;
@@ -38,7 +38,7 @@ public class GliderFeatureRenderer<T extends LivingEntity, M extends EntityModel
                 stack, ModelTransformationMode.HEAD, 
                 light, 0xFFFFFFFF, 
                 matrices, vertexConsumers, 
-                entity.getWorld(), 0);
+                entity.level(), 0);
         matrices.pop();
     }
 }

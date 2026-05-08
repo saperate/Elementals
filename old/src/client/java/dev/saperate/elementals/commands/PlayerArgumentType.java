@@ -13,17 +13,17 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.network.ClientCommandSource;
 import net.minecraft.command.CommandSource;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.Player;
 import net.minecraft.text.Text;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
-public class PlayerArgumentType implements ArgumentType<PlayerEntity> {
+public class PlayerArgumentType implements ArgumentType<Player> {
 
     public static final DynamicCommandExceptionType INVALID_PLAYER = new DynamicCommandExceptionType(o -> Text.literal("Invalid player: " + o));
     @Override
-    public PlayerEntity parse(StringReader reader) throws CommandSyntaxException {
+    public Player parse(StringReader reader) throws CommandSyntaxException {
         int argBeginning = reader.getCursor();
         if (!reader.canRead()) {
             reader.skip();
@@ -33,7 +33,7 @@ public class PlayerArgumentType implements ArgumentType<PlayerEntity> {
         reader.readString();
 
         List<AbstractClientPlayerEntity> players = MinecraftClient.getInstance().world.getPlayers();
-        for (PlayerEntity plr : players){
+        for (Player plr : players){
             if(plr.getName().getString().equals(name)){
                 return plr;
             }
@@ -62,7 +62,7 @@ public class PlayerArgumentType implements ArgumentType<PlayerEntity> {
 
 
 
-    public static <S> PlayerEntity getPlayer(CommandContext<S> context, String name) {
-        return context.getArgument(name, PlayerEntity.class);
+    public static <S> Player getPlayer(CommandContext<S> context, String name) {
+        return context.getArgument(name, Player.class);
     }
 }

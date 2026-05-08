@@ -12,7 +12,7 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.Player;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.loot.context.LootContextParameterSet;
@@ -20,9 +20,9 @@ import net.minecraft.loot.context.LootContextParameters;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.Vec3;
 import net.minecraft.util.math.random.Random;
-import net.minecraft.world.World;
+import net.minecraft.world.Level;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -43,11 +43,11 @@ public class AbilityEarthRavine implements Ability {
             }
             return;
         }
-        PlayerEntity player = bender.player;
+        Player player = bender.player;
         Random rnd = player.getRandom();
         PlayerData plrData = PlayerData.get(player);
         BlockHitResult hit = (BlockHitResult) player.raycast(5, 0, false);
-        BlockPos bPos = hit.getBlockPos();
+        BlockPos bPos = hit.getOnPos();
 
         ArrayList<LivingEntity> damagedEntities = new ArrayList<>();
 

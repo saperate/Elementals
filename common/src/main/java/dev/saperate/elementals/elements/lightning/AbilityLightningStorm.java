@@ -11,12 +11,12 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LightningEntity;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.effect.MobEffectInstance;
+import net.minecraft.entity.player.Player;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.Box;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
+import net.minecraft.util.math.Vec3;
+import net.minecraft.world.Level;
 import net.minecraft.world.explosion.Explosion;
 
 import java.util.List;
@@ -26,25 +26,25 @@ public class AbilityLightningStorm implements Ability {
     @Override
     public void onCall(Bender bender, long deltaT) {
         bender.setCurrAbility(null);
-        if (bender.isAbilityInBackground(this) || !bender.player.getWorld().isSkyVisible(bender.player.getBlockPos())) {
+        if (bender.isAbilityInBackground(this) || !bender.player.level().isSkyVisible(bender.player.getOnPos())) {
             return;
         }
         if (!bender.reduceChi(100)) {
             return;
         }
         bender.addBackgroundAbility(this, new Object[]{0, bender.player.getPos()});
-        bender.player.addStatusEffect(new StatusEffectInstance(ElementalsStatusEffects.BURNOUT,200,0,false,false,true));
+        bender.player.addEffect(new MobEffectInstance(ElementalsStatusEffects.BURNOUT,200,0,false,false,true));
     }
 
 
     @Override
     public void onBackgroundTick(Bender bender, Object data) {
-        PlayerEntity player = bender.player;
+        Player player = bender.player;
         PlayerData plrData = bender.getData();
-        World world = player.getWorld();
+        Level world = player.level();
 
         int aliveTicks = (int) ((Object[]) data)[0];
-        Vec3d origin = (Vec3d) ((Object[]) data)[1];
+        Vec3 origin = (Vec3) ((Object[]) data)[1];
 
 
 
@@ -59,13 +59,13 @@ public class AbilityLightningStorm implements Ability {
             return;
         }
 
-        Vec3d pos = origin;
+        Vec3 pos = origin;
         int range = 25;
 
         if (player.getRandom().nextBetween(1, 4) == 1) {
-            List<Entity> entities = player.getWorld().getOtherEntities(player, new Box(origin.subtract(range, range, range), origin.add(range, range, range)),
+            List<Entity> entities = player.level().getOtherEntities(player, new Box(origin.subtract(range, range, range), origin.add(range, range, range)),
                     (Entity e) -> {
-                        if (e instanceof LivingEntity && world.isSkyVisible(e.getBlockPos())){
+                        if (e instanceof LivingEntity && world.isSkyVisible(e.getOnPos())){
                             return player.getRandom().nextBoolean();
                         }
                         return false;
@@ -87,7 +87,7 @@ public class AbilityLightningStorm implements Ability {
                 pos.y,
                 pos.z + player.getRandom().nextBetween(-range, range)
         );
-        world.spawnEntity(lightning);
+        world.addFreshEntity(lightning);
 
     }
 

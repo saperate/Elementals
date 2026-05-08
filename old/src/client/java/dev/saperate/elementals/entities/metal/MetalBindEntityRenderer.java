@@ -11,7 +11,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RotationAxis;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.Vec3;
 import net.minecraft.world.LightType;
 import org.joml.Matrix4f;
 
@@ -33,15 +33,15 @@ public class MetalBindEntityRenderer extends EntityRenderer<MetalBindEntity> {
         
         VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderLayer.getCutout());
         
-        Vec3d pointA = entity.getOwner().getEyePos();//Other
-        Vec3d pointB = entity.getChild().getOwner().getLeashPos(tickDelta);//Player
+        Vec3 pointA = entity.getOwner().getEyePos();//Other
+        Vec3 pointB = entity.getChild().getOwner().getLeashPos(tickDelta);//Player
         
         double distance = pointA.distanceTo(pointB);
         
         int segmentCount = (int) (distance*2) + 5;
         for (int i = 0; i < segmentCount; i++) {
-            Vec3d currentPos = getNodePos((float) i /segmentCount,pointA,pointB,distance);
-            Vec3d nextPos = getNodePos((float) (i + 1) /segmentCount,pointA,pointB,distance);
+            Vec3 currentPos = getNodePos((float) i /segmentCount,pointA,pointB,distance);
+            Vec3 nextPos = getNodePos((float) (i + 1) /segmentCount,pointA,pointB,distance);
 
             
             renderCubeFromAToB(pointA,currentPos,nextPos,matrices,vertexConsumer,0.125f);
@@ -50,10 +50,10 @@ public class MetalBindEntityRenderer extends EntityRenderer<MetalBindEntity> {
     }
 
 
-    private static void renderCubeFromAToB(Vec3d origin, Vec3d pointA, Vec3d pointB,MatrixStack matrices, VertexConsumer vertexConsumer, float size){
+    private static void renderCubeFromAToB(Vec3 origin, Vec3 pointA, Vec3 pointB,MatrixStack matrices, VertexConsumer vertexConsumer, float size){
         Matrix4f mat = new Matrix4f();
         matrices.push();
-        Vec3d dir = pointB.subtract(pointA).normalize();
+        Vec3 dir = pointB.subtract(pointA).normalize();
         matrices.translate(pointA.x - origin.x, pointA.y - origin.y,pointA.z - origin.z);
         matrices.scale(size, size, size);
         matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees((float) Math.toDegrees(Math.atan2(dir.x, dir.z))));
@@ -74,7 +74,7 @@ public class MetalBindEntityRenderer extends EntityRenderer<MetalBindEntity> {
         matrices.pop();
     }
     
-    private static Vec3d getNodePos(float delta, Vec3d pointA, Vec3d pointB, double distance){
+    private static Vec3 getNodePos(float delta, Vec3 pointA, Vec3 pointB, double distance){
         return pointA.lerp(pointB, delta).add(0,MathHelper.lerp(distance/18,Math.pow(delta,2),0.5) + 1,0);
     }
 

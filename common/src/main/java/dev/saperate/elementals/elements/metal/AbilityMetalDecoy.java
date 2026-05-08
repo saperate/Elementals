@@ -13,14 +13,14 @@ import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.MovementType;
+import net.minecraft.entity.MoverType;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.boss.dragon.EnderDragonPart;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.decoration.ArmorStandEntity;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.effect.StatusEffects;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.effect.MobEffectInstance;
+import net.minecraft.entity.effect.MobEffects;
+import net.minecraft.entity.player.Player;
 import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.SwordItem;
@@ -39,9 +39,9 @@ import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.Vec3;
 import net.minecraft.world.GameMode;
-import net.minecraft.world.World;
+import net.minecraft.world.Level;
 import org.joml.Vector3f;
 
 import java.util.Iterator;
@@ -62,7 +62,7 @@ public class AbilityMetalDecoy implements Ability {
             }
             return;
         }
-        DecoyPlayerEntity decoy = new DecoyPlayerEntity(bender.player.getWorld(), bender.player);
+        DecoyPlayerEntity decoy = new DecoyPlayerEntity(bender.player.level(), bender.player);
 
         decoy.setCustomName(plr.getName());
 
@@ -80,9 +80,9 @@ public class AbilityMetalDecoy implements Ability {
         decoy.setHealth(40);
         decoy.setPos(plr.getX(), plr.getY() + 1, plr.getZ());
         decoy.setFocusCamera(true);
-        decoy.addStatusEffect(new StatusEffectInstance(StatusEffects.INVISIBILITY, 9999999, 0, false, false, false));
+        decoy.addEffect(new MobEffectInstance(MobEffects.INVISIBILITY, 9999999, 0, false, false, false));
 
-        plr.getWorld().spawnEntity(decoy);
+        plr.level().addFreshEntity(decoy);
 
 
         bender.abilityData = packAbilityData(decoy, -100, null, false);
@@ -96,7 +96,7 @@ public class AbilityMetalDecoy implements Ability {
 
         //doesnt work, idk why
 //        EntityAnimationS2CPacket entityAnimationS2CPacket = new EntityAnimationS2CPacket(decoy, 0);
-//        ServerChunkManager serverChunkManager = ((ServerWorld) decoy.getWorld()).getChunkManager();
+//        ServerChunkManager serverChunkManager = ((ServerWorld) decoy.level()).getChunkManager();
 //        serverChunkManager.sendToNearbyPlayers(decoy, entityAnimationS2CPacket);
 
         HitResult hit = SapsUtils.raycastFull(decoy, 5, false, Entity::isAlive);
@@ -111,10 +111,10 @@ public class AbilityMetalDecoy implements Ability {
             } else if (plrData.canUseUpgrade("metalDecoyDamageI")) {
                 damage = 4;
             }
-            eHit.damage(bender.player.getDamageSources().playerAttack(bender.player), damage);
+            eHit.hurt(bender.player.damageSources().playerAttack(bender.player), damage);
         } else if (hit.getType().equals(HitResult.Type.BLOCK)) {
             if (started) {
-                bender.abilityData = packAbilityData(getDecoy(bender), decoy.age, ((BlockHitResult) hit).getBlockPos(), getShouldRotate(bender));
+                bender.abilityData = packAbilityData(getDecoy(bender), decoy.tickCount, ((BlockHitResult) hit).getOnPos(), getShouldRotate(bender));
             } else {
                 bender.abilityData = packAbilityData(getDecoy(bender), -100, null, getShouldRotate(bender));
             }
@@ -129,9 +129,9 @@ public class AbilityMetalDecoy implements Ability {
     @Override
     public void onTick(Bender bender) {
         DecoyPlayerEntity decoy = getDecoy(bender);
-        PlayerEntity player = bender.player;
+        Player player = bender.player;
 
-        player.addStatusEffect(new StatusEffectInstance(StatusEffects.MINING_FATIGUE, 21, 1, false, false, false));
+        player.addEffect(new MobEffectInstance(MobEffects.MINING_FATIGUE, 21, 1, false, false, false));
 
         if (getShouldRotate(bender)) {
             decoy.setYaw(player.getYaw());
@@ -142,9 +142,9 @@ public class AbilityMetalDecoy implements Ability {
         if (player.isSprinting()) {
 
             float speed = 0.1f;
-            Vec3d velocity = SapsUtils.getEntityLookVector(decoy, 1)
+            Vec3 velocity = SapsUtils.getEntityLookVector(decoy, 1)
                     .subtract(decoy.getEyePos())
-                    .normalize().multiply(speed, 0, speed).add(0, decoy.getVelocity().y, 0);
+                    .normalize().multiply(speed, 0, speed).add(0, decoy.getDeltaMovement().y, 0);
             int range = 25;
             if (bender.plrData.canUseUpgrade("metalDecoyRangeII")) {
                 range = 75;
@@ -154,20 +154,20 @@ public class AbilityMetalDecoy implements Ability {
 
             float distanceToDecoy = player.distanceTo(decoy);
             if (distanceToDecoy > range) {
-                Vec3d dirToPlayer = player.getPos().subtract(decoy.getPos());
+                Vec3 dirToPlayer = player.getPos().subtract(decoy.getPos());
                 if (dirToPlayer.dotProduct(velocity) < 1) {
                     velocity = velocity.multiply(Math.min(1, (0.1) / (distanceToDecoy - range)));
                 }
             }
 
 
-            decoy.setVelocity(velocity);
-            decoy.move(MovementType.SELF, decoy.getVelocity());
+            decoy.setDeltaMovement(velocity);
+            decoy.move(MoverType.SELF, decoy.getDeltaMovement());
 
         }
         if (player.isInSneakingPose() && decoy.isOnGround()) {
-            decoy.setVelocity(0, 0.5, 0);
-            decoy.move(MovementType.SELF, decoy.getVelocity());
+            decoy.setDeltaMovement(0, 0.5, 0);
+            decoy.move(MoverType.SELF, decoy.getDeltaMovement());
         }
 
         if (getStartMiningAge(bender) >= 0) {
@@ -179,11 +179,11 @@ public class AbilityMetalDecoy implements Ability {
             }
 
             BlockPos prevMiningPos = getMiningPos(bender);
-            BlockPos currMiningPos = ((BlockHitResult) hit).getBlockPos();
+            BlockPos currMiningPos = ((BlockHitResult) hit).getOnPos();
             if (prevMiningPos == null || !prevMiningPos.equals(currMiningPos)) {
                 bender.abilityData = packAbilityData(
                         decoy,
-                        decoy.age,
+                        decoy.tickCount,
                         currMiningPos,
                         getShouldRotate(bender));
                 return;
@@ -196,7 +196,7 @@ public class AbilityMetalDecoy implements Ability {
             } else if (plrData.canUseUpgrade("metalDecoyDamageI")) {
                 miningSpeed = 30;
             }
-            SapsUtils.mineBlock(currMiningPos, decoy.getWorld(), decoy.getId(), decoy.age, getStartMiningAge(bender), miningSpeed);
+            SapsUtils.mineBlock(currMiningPos, decoy.level(), decoy.getId(), decoy.tickCount, getStartMiningAge(bender), miningSpeed);
         }
     }
 
@@ -214,7 +214,7 @@ public class AbilityMetalDecoy implements Ability {
     }
 
     @Override
-    public boolean shouldImmobilizePlayer(PlayerEntity player) {
+    public boolean shouldImmobilizePlayer(Player player) {
         return true;
     }
     
@@ -271,7 +271,7 @@ public class AbilityMetalDecoy implements Ability {
             if (!target.handleAttack(decoy)) {
                 float f = (float) 1;
                 ItemStack itemStack = decoy.getEquippedStack(EquipmentSlot.MAINHAND);
-                DamageSource damageSource = decoy.getDamageSources().playerAttack(decoy.getOwner());
+                DamageSource damageSource = decoy.damageSources().playerAttack(decoy.getOwner());
                 float g = f;
                 float h = decoy.getOwner().getAttackCooldownProgress(0.5F);
                 f *= 0.2F + h * h * 0.8F;
@@ -281,7 +281,7 @@ public class AbilityMetalDecoy implements Ability {
                 if (f > 0.0F || g > 0.0F) {
                     boolean bl = h > 0.9F;
 
-                    boolean bl3 = bl && decoy.fallDistance > 0.0F && !decoy.isOnGround() && !decoy.isClimbing() && !decoy.isTouchingWater() && !decoy.hasStatusEffect(StatusEffects.BLINDNESS) && !decoy.hasVehicle() && target instanceof LivingEntity && !decoy.isSprinting();
+                    boolean bl3 = bl && decoy.fallDistance > 0.0F && !decoy.isOnGround() && !decoy.isClimbing() && !decoy.isTouchingWater() && !decoy.hasStatusEffect(MobEffects.BLINDNESS) && !decoy.hasVehicle() && target instanceof LivingEntity && !decoy.isSprinting();
                     if (bl3) {
                         f *= 1.5F;
                     }
@@ -302,8 +302,8 @@ public class AbilityMetalDecoy implements Ability {
                         j = livingEntity.getHealth();
                     }
 
-                    Vec3d vec3d = target.getVelocity();
-                    boolean bl5 = target.damage(damageSource, i * ElementalConfig.get().BENDING_DAMAGE_MULTIPLIER);
+                    Vec3 vec3d = target.getDeltaMovement();
+                    boolean bl5 = target.hurt(damageSource, i * ElementalConfig.get().BENDING_DAMAGE_MULTIPLIER);
                     if (bl5) {
                         float k = 1;
                         if (k > 0.0F) {
@@ -311,17 +311,17 @@ public class AbilityMetalDecoy implements Ability {
                                 LivingEntity livingEntity2 = (LivingEntity) target;
                                 livingEntity2.takeKnockback((double) (k * 0.5F), (double) MathHelper.sin(decoy.getYaw() * 0.017453292F), (double) (-MathHelper.cos(decoy.getYaw() * 0.017453292F)));
                             } else {
-                                target.addVelocity((double) (-MathHelper.sin(decoy.getYaw() * 0.017453292F) * k * 0.5F), 0.1, (double) (MathHelper.cos(decoy.getYaw() * 0.017453292F) * k * 0.5F));
+                                target.addDeltaMovement((double) (-MathHelper.sin(decoy.getYaw() * 0.017453292F) * k * 0.5F), 0.1, (double) (MathHelper.cos(decoy.getYaw() * 0.017453292F) * k * 0.5F));
                             }
 
-                            decoy.setVelocity(decoy.getVelocity().multiply(0.6, 1.0, 0.6));
+                            decoy.setDeltaMovement(decoy.getDeltaMovement().multiply(0.6, 1.0, 0.6));
                             decoy.setSprinting(false);
                         }
 
                         LivingEntity livingEntity3;
                         if (bl4) {
                             float l = 1.0F + f;
-                            List<LivingEntity> list = decoy.getWorld().getNonSpectatingEntities(LivingEntity.class, target.getBoundingBox().expand(1.0, 0.25, 1.0));
+                            List<LivingEntity> list = decoy.level().getNonSpectatingEntities(LivingEntity.class, target.getBoundingBox().expand(1.0, 0.25, 1.0));
                             Iterator var20 = list.iterator();
 
                             label177:
@@ -331,7 +331,7 @@ public class AbilityMetalDecoy implements Ability {
                                         do {
                                             do {
                                                 if (!var20.hasNext()) {
-                                                    decoy.getWorld().playSound((PlayerEntity) null, decoy.getX(), decoy.getY(), decoy.getZ(), SoundEvents.ENTITY_PLAYER_ATTACK_SWEEP, decoy.getSoundCategory(), 1.0F, 1.0F);
+                                                    decoy.level().playSound((Player) null, decoy.getX(), decoy.getY(), decoy.getZ(), SoundEvents.ENTITY_PLAYER_ATTACK_SWEEP, decoy.getSoundCategory(), 1.0F, 1.0F);
                                                     break label177;
                                                 }
 
@@ -344,8 +344,8 @@ public class AbilityMetalDecoy implements Ability {
                                 if (decoy.squaredDistanceTo(livingEntity3) < 9.0) {
                                     float m = l;
                                     livingEntity3.takeKnockback(0.4000000059604645, (double) MathHelper.sin(decoy.getYaw() * 0.017453292F), (double) (-MathHelper.cos(decoy.getYaw() * 0.017453292F)));
-                                    livingEntity3.damage(damageSource, m);
-                                    World var24 = decoy.getWorld();
+                                    livingEntity3.hurt(damageSource, m);
+                                    Level var24 = decoy.level();
                                     if (var24 instanceof ServerWorld) {
                                         ServerWorld serverWorld = (ServerWorld)var24;
                                         EnchantmentHelper.onTargetDamaged(serverWorld ,livingEntity3, damageSource);
@@ -357,18 +357,18 @@ public class AbilityMetalDecoy implements Ability {
                         if (target instanceof ServerPlayerEntity && target.velocityModified) {
                             ((ServerPlayerEntity) target).networkHandler.sendPacket(new EntityVelocityUpdateS2CPacket(target));
                             target.velocityModified = false;
-                            target.setVelocity(vec3d);
+                            target.setDeltaMovement(vec3d);
                         }
 
                         if (bl3) {
-                            decoy.getWorld().playSound((PlayerEntity) null, decoy.getX(), decoy.getY(), decoy.getZ(), SoundEvents.ENTITY_PLAYER_ATTACK_CRIT, decoy.getSoundCategory(), 1.0F, 1.0F);
+                            decoy.level().playSound((Player) null, decoy.getX(), decoy.getY(), decoy.getZ(), SoundEvents.ENTITY_PLAYER_ATTACK_CRIT, decoy.getSoundCategory(), 1.0F, 1.0F);
                         }
 
                         if (!bl3 && !bl4) {
                             if (bl) {
-                                decoy.getWorld().playSound((PlayerEntity) null, decoy.getX(), decoy.getY(), decoy.getZ(), SoundEvents.ENTITY_PLAYER_ATTACK_STRONG, decoy.getSoundCategory(), 1.0F, 1.0F);
+                                decoy.level().playSound((Player) null, decoy.getX(), decoy.getY(), decoy.getZ(), SoundEvents.ENTITY_PLAYER_ATTACK_STRONG, decoy.getSoundCategory(), 1.0F, 1.0F);
                             } else {
-                                decoy.getWorld().playSound((PlayerEntity) null, decoy.getX(), decoy.getY(), decoy.getZ(), SoundEvents.ENTITY_PLAYER_ATTACK_WEAK, decoy.getSoundCategory(), 1.0F, 1.0F);
+                                decoy.level().playSound((Player) null, decoy.getX(), decoy.getY(), decoy.getZ(), SoundEvents.ENTITY_PLAYER_ATTACK_WEAK, decoy.getSoundCategory(), 1.0F, 1.0F);
                             }
                         }
 
@@ -380,7 +380,7 @@ public class AbilityMetalDecoy implements Ability {
                         }
 
                         boolean bl6 = false;
-                        World var33 = decoy.getWorld();
+                        Level var33 = decoy.level();
                         if (var33 instanceof ServerWorld) {
                             ServerWorld serverWorld2 = (ServerWorld) var33;
                             if (entity instanceof LivingEntity) {
@@ -388,21 +388,21 @@ public class AbilityMetalDecoy implements Ability {
                                 itemStack.postHit(livingEntity3, decoy.getOwner());
                             }
 
-                            EnchantmentHelper.onTargetDamaged((ServerWorld) decoy.getWorld() ,target, damageSource);
+                            EnchantmentHelper.onTargetDamaged((ServerWorld) decoy.level() ,target, damageSource);
                         }
 
                         if (target instanceof LivingEntity) {
                             float n = j - ((LivingEntity) target).getHealth();
                             decoy.getOwner().increaseStat(Stats.DAMAGE_DEALT, Math.round(n * 10.0F));
-                            if (decoy.getWorld() instanceof ServerWorld && n > 2.0F) {
+                            if (decoy.level() instanceof ServerWorld && n > 2.0F) {
                                 int o = (int) ((double) n * 0.5);
-                                ((ServerWorld) decoy.getWorld()).spawnParticles(ParticleTypes.DAMAGE_INDICATOR, target.getX(), target.getBodyY(0.5), target.getZ(), o, 0.1, 0.0, 0.1, 0.2);
+                                ((ServerWorld) decoy.level()).spawnParticles(ParticleTypes.DAMAGE_INDICATOR, target.getX(), target.getBodyY(0.5), target.getZ(), o, 0.1, 0.0, 0.1, 0.2);
                             }
                         }
 
                         decoy.getOwner().addExhaustion(0.1F);
                     } else {
-                        decoy.getWorld().playSound((PlayerEntity) null, decoy.getX(), decoy.getY(), decoy.getZ(), SoundEvents.ENTITY_PLAYER_ATTACK_NODAMAGE, decoy.getSoundCategory(), 1.0F, 1.0F);
+                        decoy.level().playSound((Player) null, decoy.getX(), decoy.getY(), decoy.getZ(), SoundEvents.ENTITY_PLAYER_ATTACK_NODAMAGE, decoy.getSoundCategory(), 1.0F, 1.0F);
                     }
                 }
 

@@ -14,10 +14,10 @@ public class AbilityBlood1 implements Ability {
             bender.setCurrAbility(null);
             return;
         }
-        if (bender.player.isSneaking() && deltaT >= 1500 && playerData.canUseUpgrade("bloodControl")) {
+        if (bender.player.isCrouching() && deltaT >= 1500 && playerData.canUseUpgrade("bloodControl")) {
             BloodElement.get().getAbility(2).onCall(bender, deltaT);
             return;
-        } else if (bender.player.isSneaking() && playerData.canUseUpgrade("bloodShield")) {
+        } else if (bender.player.isCrouching() && playerData.canUseUpgrade("bloodShield")) {
             BloodElement.get().getAbility(3).onCall(bender, deltaT);
             return;
         }

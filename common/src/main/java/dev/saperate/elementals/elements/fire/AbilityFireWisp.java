@@ -6,7 +6,7 @@ import dev.saperate.elementals.elements.Ability;
 import dev.saperate.elementals.entities.fire.FireBallEntity;
 import dev.saperate.elementals.entities.fire.FireWispEntity;
 import dev.saperate.elementals.utils.SapsUtils;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.Player;
 import net.minecraft.server.network.ServerPlayerEntity;
 import org.joml.Vector3f;
 
@@ -19,9 +19,9 @@ public class AbilityFireWisp implements Ability {
         Bender bender = originalBender;
         originalBender.setCurrAbility(null);
 
-        if(originalBender.player.isSneaking()){
-            PlayerEntity other = (PlayerEntity) SapsUtils.entityFromHitResult(
-                    raycastFull(originalBender.player,5,true, entity -> entity instanceof PlayerEntity));
+        if(originalBender.player.isCrouching()){
+            Player other = (Player) SapsUtils.entityFromHitResult(
+                    raycastFull(originalBender.player,5,true, entity -> entity instanceof Player));
             if(other != null){
                 bender = Bender.getBender((ServerPlayerEntity) other);
             }
@@ -37,14 +37,14 @@ public class AbilityFireWisp implements Ability {
         if (!originalBender.reduceChi(10)) {
             return;
         }
-        PlayerEntity player = bender.player;
+        Player player = bender.player;
 
         Vector3f pos = player.getEyePos().subtract(0,0.5f,0).toVector3f();
 
-        FireWispEntity entity = new FireWispEntity(player.getWorld(), player, pos.x, pos.y, pos.z);
+        FireWispEntity entity = new FireWispEntity(player.level(), player, pos.x, pos.y, pos.z);
         bender.abilityData = entity;
         entity.setIsBlue(PlayerData.get(player).canUseUpgrade("blueFire"));
-        player.getWorld().spawnEntity(entity);
+        player.level().addFreshEntity(entity);
         bender.addBackgroundAbility(this,entity);
     }
 

@@ -1,67 +1,60 @@
 package dev.saperate.elementals.entities.water;
 
-import dev.saperate.elementals.data.Bender;
-import dev.saperate.elementals.elements.water.AbilityWaterTower;
-import dev.saperate.elementals.elements.water.WaterElement;
 import dev.saperate.elementals.entities.common.AbstractElementalsEntity;
-import net.minecraft.entity.*;
-import net.minecraft.entity.data.DataTracker;
-import net.minecraft.entity.data.TrackedData;
-import net.minecraft.entity.data.TrackedDataHandlerRegistry;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.projectile.ProjectileEntity;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.particle.ParticleTypes;
-import net.minecraft.predicate.entity.EntityPredicates;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.TypeFilter;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
 import static dev.saperate.elementals.entities.ElementalEntities.WATERTOWER;
 import static dev.saperate.elementals.utils.SapsUtils.summonParticles;
 
-public class WaterTowerEntity extends AbstractElementalsEntity<PlayerEntity> {
+public class WaterTowerEntity extends AbstractElementalsEntity<Player> {
     public static final int heightLimit = 10;
-    private static final TrackedData<Float> TOWER_HEIGHT = DataTracker.registerData(WaterTowerEntity.class, TrackedDataHandlerRegistry.FLOAT);
-    private static final TrackedData<Float> MAX_TOWER_HEIGHT = DataTracker.registerData(WaterTowerEntity.class, TrackedDataHandlerRegistry.FLOAT);
-    private static final TrackedData<Boolean> OWNER_COULD_FLY = DataTracker.registerData(WaterTowerEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
+    private static final EntityDataAccessor<Float> TOWER_HEIGHT = SynchedEntityData.defineId(WaterTowerEntity.class, EntityDataSerializers.FLOAT);
+    private static final EntityDataAccessor<Float> MAX_TOWER_HEIGHT = SynchedEntityData.defineId(WaterTowerEntity.class, EntityDataSerializers.FLOAT);
+    private static final EntityDataAccessor<Boolean> OWNER_COULD_FLY = SynchedEntityData.defineId(WaterTowerEntity.class, EntityDataSerializers.BOOLEAN);
 
-    public WaterTowerEntity(EntityType<WaterTowerEntity> type, World world) {
-        super(type, world, PlayerEntity.class);
+    public WaterTowerEntity(EntityType<WaterTowerEntity> type, Level world) {
+        super(type, world, Player.class);
     }
 
-    public WaterTowerEntity(World world, PlayerEntity owner) {
-        super(WATERTOWER, world, PlayerEntity.class);
+    public WaterTowerEntity(Level world, Player owner) {
+        super(WATERTOWER, world, Player.class);
         setOwner(owner);
         setPos(owner.getX(), owner.getY(), owner.getZ());
     }
 
-    public WaterTowerEntity(World world, PlayerEntity owner, double x, double y, double z) {
-        super(WATERTOWER, world, PlayerEntity.class);
+    public WaterTowerEntity(Level world, Player owner, double x, double y, double z) {
+        super(WATERTOWER, world, Player.class);
         setOwner(owner);
         setPos(x, y, z);
         setNoGravity(true);
     }
 
     @Override
-    protected void initDataTracker(DataTracker.Builder builder) {
-        super.initDataTracker(builder);
-        builder.add(TOWER_HEIGHT, 1f);
-        builder.add(MAX_TOWER_HEIGHT, 1f);
-        builder.add(OWNER_COULD_FLY, false);
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(TOWER_HEIGHT, 1f);
+        builder.define(MAX_TOWER_HEIGHT, 1f);
+        builder.define(OWNER_COULD_FLY, false);
     }
 
     @Override
     public void tick() {
         super.tick();
 
-        if (random.nextBetween(0, 40) == 6) {
-            playSound(SoundEvents.ENTITY_PLAYER_SWIM,0.1f,0);
+        if (random.nextInt(0, 40) == 6) {
+            playSound(SoundEvents.PLAYER_SWIM,0.1f,0);
         }
 
-        PlayerEntity owner = getOwner();
+        Player owner = getOwner();
         if(owner == null || isRemoved()){
             return;
         }
@@ -71,9 +64,9 @@ public class WaterTowerEntity extends AbstractElementalsEntity<PlayerEntity> {
         summonParticles(owner, random, ParticleTypes.SPLASH, 0, 2, 0);
         summonParticles(owner, random, ParticleTypes.BUBBLE, 0, 2, 0);
 
-        owner.getAbilities().allowFlying = true;
+        owner.getAbilities().mayfly = true;
         owner.getAbilities().flying = true;
-        owner.getAbilities().setFlySpeed(0.02f);
+        owner.getAbilities().setFlyingSpeed(0.02f);
     }
 
     public void updatePosition(@Nullable Entity owner){
@@ -81,9 +74,9 @@ public class WaterTowerEntity extends AbstractElementalsEntity<PlayerEntity> {
             return;
         }
         setTowerHeight((float) Math.max(0, owner.getY() - getY()));
-        setPosition(owner.getPos().multiply(1,0,1).add(0,getY(),0));
+        setPos(owner.position().multiply(1,0,1).add(0,getY(),0));
         if(getTowerHeight() - 1 > getMaxTowerHeight()){
-            owner.setPosition(owner.getPos().multiply(1,0,1).add(0, getY() + getMaxTowerHeight() - 0.25f, 0));
+            owner.setPos(owner.position().multiply(1,0,1).add(0, getY() + getMaxTowerHeight() - 0.25f, 0));
         }
     }
     
@@ -95,45 +88,45 @@ public class WaterTowerEntity extends AbstractElementalsEntity<PlayerEntity> {
     }
 
     @Override
-    public void onRemoved() {
-        super.onRemoved();
+    public void onClientRemoval() {
+        super.onClientRemoval();
         resetOwner();
     }
 
     public void resetOwner(){
-        PlayerEntity owner = (PlayerEntity) getOwner();
+        Player owner = (Player) getOwner();
         if (owner == null) {
             return;
         }
 
-        owner.getAbilities().allowFlying = getOwnerCouldFly();
+        owner.getAbilities().mayfly = getOwnerCouldFly();
         owner.getAbilities().flying = false;
-        owner.getAbilities().setFlySpeed(0.05f);
+        owner.getAbilities().setFlyingSpeed(0.05f);
     }
 
 
     public void setTowerHeight(float val){
-        this.getDataTracker().set(TOWER_HEIGHT,val);
+        this.getEntityData().set(TOWER_HEIGHT,val);
     }
 
     public float getTowerHeight(){
-        return this.getDataTracker().get(TOWER_HEIGHT);
+        return this.getEntityData().get(TOWER_HEIGHT);
     }
 
     public void setMaxTowerHeight(float val){
-        this.getDataTracker().set(MAX_TOWER_HEIGHT,val);
+        this.getEntityData().set(MAX_TOWER_HEIGHT,val);
     }
 
     public float getMaxTowerHeight(){
-        return this.getDataTracker().get(MAX_TOWER_HEIGHT);
+        return this.getEntityData().get(MAX_TOWER_HEIGHT);
     }
 
     public void setOwnerCouldFly(boolean val){
-        this.getDataTracker().set(OWNER_COULD_FLY,val);
+        this.getEntityData().set(OWNER_COULD_FLY,val);
     }
 
     public boolean getOwnerCouldFly(){
-        return this.getDataTracker().get(OWNER_COULD_FLY);
+        return this.getEntityData().get(OWNER_COULD_FLY);
     }
 
     @Override

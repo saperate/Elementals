@@ -4,8 +4,8 @@ import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.effects.ElementalsStatusEffects;
 import dev.saperate.elementals.elements.Ability;
 import dev.saperate.elementals.entities.air.AirShieldEntity;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.effect.MobEffectInstance;
+import net.minecraft.entity.player.Player;
 
 
 
@@ -20,11 +20,11 @@ public class AbilityAirShield implements Ability {
             }
             return;
         }
-        PlayerEntity player = bender.player;
+        Player player = bender.player;
 
-        AirShieldEntity entity = new AirShieldEntity(player.getWorld(), player, player.getX(), player.getY(), player.getZ());
+        AirShieldEntity entity = new AirShieldEntity(player.level(), player, player.getX(), player.getY(), player.getZ());
         bender.abilityData = entity;
-        player.getWorld().spawnEntity(entity);
+        player.level().addFreshEntity(entity);
 
 
         bender.setCurrAbility(this);
@@ -41,8 +41,8 @@ public class AbilityAirShield implements Ability {
             }
             return;
         }
-        bender.player.addStatusEffect(new StatusEffectInstance(ElementalsStatusEffects.SEISMIC_SENSE,1,1,false,false,false));
-        if(!bender.player.isSneaking()){
+        bender.player.addEffect(new MobEffectInstance(ElementalsStatusEffects.SEISMIC_SENSE,1,1,false,false,false));
+        if(!bender.player.isCrouching()){
             onRemove(bender);
         }
     }

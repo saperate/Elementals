@@ -3,6 +3,7 @@ package dev.saperate.elementals.elements.water;
 import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.elements.Ability;
+import dev.saperate.elementals.entities.water.WaterTowerEntity;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.BlockHitResult;
@@ -88,7 +89,7 @@ public class AbilityWaterTower implements Ability {
         if (entity == null) {
             return;
         }
-        entity.setPosition(hit.getLocation());
+        entity.setPos(hit.getLocation());
     }
 
     @Override

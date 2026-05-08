@@ -31,7 +31,7 @@ public class WaterShieldEntityRenderer extends EntityRenderer<WaterShieldEntity>
             firstTime = System.currentTimeMillis();
         }
         float rot = (float) (System.currentTimeMillis() - firstTime) / 500;
-        int color = BiomeColors.getWaterColor(entity.getWorld(),entity.getBlockPos());
+        int color = BiomeColors.getWaterColor(entity.level(),entity.getOnPos());
 
         matrices.push();
 

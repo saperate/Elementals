@@ -2,43 +2,43 @@ package dev.saperate.elementals.entities.water;
 
 import dev.saperate.elementals.data.ElementalConfig;
 import dev.saperate.elementals.entities.common.AbstractElementalsEntity;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.entity.*;
-import net.minecraft.entity.data.DataTracker;
-import net.minecraft.entity.data.TrackedData;
-import net.minecraft.entity.data.TrackedDataHandlerRegistry;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.projectile.ProjectileEntity;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.particle.ParticleTypes;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.hit.EntityHitResult;
-import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.MoverType;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
 
 import static dev.saperate.elementals.entities.ElementalEntities.WATERJET;
 import static dev.saperate.elementals.utils.SapsUtils.*;
+import static net.minecraft.sounds.SoundEvents.*;
 
-public class WaterJetEntity extends AbstractElementalsEntity<PlayerEntity> {
-    private static final TrackedData<Float> STREAM_SIZE = DataTracker.registerData(WaterJetEntity.class, TrackedDataHandlerRegistry.FLOAT);
-    private static final TrackedData<Float> RANGE = DataTracker.registerData(WaterJetEntity.class, TrackedDataHandlerRegistry.FLOAT);
-    private static final TrackedData<Integer> CHILD_ID = DataTracker.registerData(WaterJetEntity.class, TrackedDataHandlerRegistry.INTEGER);
+public class WaterJetEntity extends AbstractElementalsEntity<Player> {
+    private static final EntityDataAccessor<Float> STREAM_SIZE = SynchedEntityData.defineId(WaterJetEntity.class, EntityDataSerializers.FLOAT);
+    private static final EntityDataAccessor<Float> RANGE = SynchedEntityData.defineId(WaterJetEntity.class, EntityDataSerializers.FLOAT);
+    private static final EntityDataAccessor<Integer> CHILD_ID = SynchedEntityData.defineId(WaterJetEntity.class, EntityDataSerializers.INT);
 
 
-    public WaterJetEntity(EntityType<WaterJetEntity> type, World world) {
-        super(type, world, PlayerEntity.class);
+    public WaterJetEntity(EntityType<WaterJetEntity> type, Level world) {
+        super(type, world, Player.class);
     }
 
-    public WaterJetEntity(World world, PlayerEntity owner) {
+    public WaterJetEntity(Level world, Player owner) {
         this(world, owner, owner.getX(), owner.getY(), owner.getZ());
     }
 
-    public WaterJetEntity(World world, PlayerEntity owner, double x, double y, double z) {
-        super(WATERJET, world, PlayerEntity.class);
+    public WaterJetEntity(Level world, Player owner, double x, double y, double z) {
+        super(WATERJET, world, Player.class);
         setOwner(owner);
         setPos(x, y, z);
         setNoGravity(true);
@@ -46,18 +46,18 @@ public class WaterJetEntity extends AbstractElementalsEntity<PlayerEntity> {
 
 
     @Override
-    protected void initDataTracker(DataTracker.Builder builder) {
-        super.initDataTracker(builder);
-        builder.add(STREAM_SIZE, 1f);
-        builder.add(RANGE, 10f);
-        builder.add(CHILD_ID, 0);
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(STREAM_SIZE, 1f);
+        builder.define(RANGE, 10f);
+        builder.define(CHILD_ID, 0);
     }
 
     @Override
     public void tick() {
         super.tick();
-        if (random.nextBetween(0, 20) == 6) {
-            playSound(SoundEvents.ENTITY_PLAYER_SPLASH,0.25f,0);
+        if (random.nextInt(0, 20) == 6) {
+            playSound(PLAYER_SPLASH,0.25f,0);
         }
 
         Entity owner = getOwner();
@@ -66,56 +66,56 @@ public class WaterJetEntity extends AbstractElementalsEntity<PlayerEntity> {
         }
 
         if (getChild() != null) {
-            setPosition(getEntityLookVector(owner, 0.5f).subtract(0,0.5f,0));
+            setPos(getEntityLookVector(owner, 0.5f).subtract(0,0.5f,0));
         } else {
-            if(getWorld().isClient){
+            if(level().isClientSide){
                 summonParticles(this, random, ParticleTypes.SPLASH, 0, 10);
                 summonParticles(this, random, ParticleTypes.CLOUD, 0, 1);
             }
             HitResult hit = raycastFull(owner, getRange(), true);
             if (hit instanceof BlockHitResult bHit) {
-                BlockState bState = getWorld().getBlockState(bHit.getBlockPos());
+                BlockState bState = level().getBlockState(bHit.getBlockPos());
                 Block bBlock = bState.getBlock();
                 if (bBlock.equals(Blocks.TALL_GRASS) || bBlock.equals(Blocks.SHORT_GRASS)) {
-                    getWorld().setBlockState(bHit.getBlockPos(),Blocks.AIR.getDefaultState());
+                    level().setBlockAndUpdate(bHit.getBlockPos(),Blocks.AIR.defaultBlockState());
                 }
             } else if (hit instanceof EntityHitResult eHit) {
                 Entity victim = eHit.getEntity();
-                Vec3d direction = getOwner().getEyePos().subtract(victim.getPos()).normalize().multiply(-0.075f);
-                victim.addVelocity(direction);
+                Vec3 direction = getOwner().getEyePosition().subtract(victim.position()).normalize().scale(-0.075f);
+                victim.addDeltaMovement(direction);
 
-                victim.damage(getDamageSources().playerAttack(getOwner()), 1.5f * getStreamSize() * ElementalConfig.get().BENDING_DAMAGE_MULTIPLIER);
+                victim.hurt(damageSources().playerAttack(getOwner()), 1.5f * getStreamSize() * ElementalConfig.get().BENDING_DAMAGE_MULTIPLIER);
 
             }
-            setPosition(hit.getPos());
+            setPos(hit.getLocation());
         }
 
-        this.move(MovementType.SELF, this.getVelocity());
+        this.move(MoverType.SELF, this.getDeltaMovement());
     }
 
     public WaterJetEntity getChild() {
-        Entity child = this.getWorld().getEntityById(this.getDataTracker().get(CHILD_ID));
+        Entity child = this.level().getEntity(this.getEntityData().get(CHILD_ID));
         return (child instanceof WaterJetEntity) ? (WaterJetEntity) child : null;
     }
 
     public void setChild(WaterJetEntity child) {
-        this.getDataTracker().set(CHILD_ID, child.getId());
+        this.getEntityData().set(CHILD_ID, child.getId());
     }
 
     public float getStreamSize() {
-        return getDataTracker().get(STREAM_SIZE);
+        return getEntityData().get(STREAM_SIZE);
     }
 
     public void setStreamSize(float val) {
-        this.getDataTracker().set(STREAM_SIZE, val);
+        this.getEntityData().set(STREAM_SIZE, val);
     }
 
     public float getRange() {
-        return getDataTracker().get(RANGE);
+        return getEntityData().get(RANGE);
     }
 
     public void setRange(float val) {
-        this.getDataTracker().set(RANGE, val);
+        this.getEntityData().set(RANGE, val);
     }
 
     @Override

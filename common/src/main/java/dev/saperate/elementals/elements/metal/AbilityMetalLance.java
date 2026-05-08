@@ -11,13 +11,13 @@ import dev.saperate.elementals.entities.water.WaterBladeEntity;
 import dev.saperate.elementals.utils.SapsUtils;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.MovementType;
+import net.minecraft.entity.MoverType;
 import net.minecraft.entity.damage.DamageSources;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.Player;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.Vec3;
 import net.minecraft.world.explosion.Explosion;
 import org.joml.Vector3f;
 
@@ -35,13 +35,13 @@ public class AbilityMetalLance implements Ability {
             }
             return;
         }
-        PlayerEntity player = bender.player;
-        Vec3d pos = SapsUtils.getEntityLookVector(player,1);
+        Player player = bender.player;
+        Vec3 pos = SapsUtils.getEntityLookVector(player,1);
         
-        MetalLanceEntity entity = new MetalLanceEntity(player.getWorld(), player, pos.x, pos.y, pos.z);
+        MetalLanceEntity entity = new MetalLanceEntity(player.level(), player, pos.x, pos.y, pos.z);
         entity.setControlled(true);
         bender.abilityData = packAbilityData(entity,-1,null);
-        player.getWorld().spawnEntity(entity);
+        player.level().addFreshEntity(entity);
 
         bender.setCurrAbility(this);
     }
@@ -56,12 +56,12 @@ public class AbilityMetalLance implements Ability {
         HitResult hitResult = SapsUtils.raycastFull(bender.player, 150, false);
         if(hitResult.getType() != HitResult.Type.MISS){
             bender.abilityData = packAbilityData(lance,getHoldTime(bender),hitResult.getPos());
-            Vec3d dirToTarget = hitResult.getPos().subtract(lance.getPos()).normalize().multiply(2);
-            lance.setVelocity(dirToTarget);
+            Vec3 dirToTarget = hitResult.getPos().subtract(lance.getPos()).normalize().multiply(2);
+            lance.setDeltaMovement(dirToTarget);
         }else {
-            lance.setVelocity(bender.player, bender.player.getPitch(), bender.player.getYaw(), 0, 4, 0);
+            lance.setDeltaMovement(bender.player, bender.player.getPitch(), bender.player.getYaw(), 0, 4, 0);
         }
-        lance.move(MovementType.SELF,lance.getVelocity());
+        lance.move(MoverType.SELF,lance.getDeltaMovement());
         if(!bender.plrData.canUseUpgrade("metalLanceRedirectI")){
             onRemove(bender);
         }
@@ -79,21 +79,21 @@ public class AbilityMetalLance implements Ability {
     @Override
     public void onTick(Bender bender) {
         MetalLanceEntity lance = getLanceEntity(bender);
-        Vec3d thrownPos = getThrownPos(bender);
+        Vec3 thrownPos = getThrownPos(bender);
         
         if(thrownPos != null && lance.getPos().distanceTo(thrownPos) < 2){
             lance.discard();
             
             if(bender.plrData.canUseUpgrade("metalLanceDamageII") 
-                    && lance.getWorld().getGameRules().getBoolean(Elementals.BENDING_GRIEFING)) {
-                Explosion explosion = new Explosion(lance.getWorld(), lance, lance.getX(), lance.getY(), lance.getZ(), 1, false, Explosion.DestructionType.DESTROY);
+                    && lance.level().getGameRules().getBoolean(Elementals.BENDING_GRIEFING)) {
+                Explosion explosion = new Explosion(lance.level(), lance, lance.getX(), lance.getY(), lance.getZ(), 1, false, Explosion.DestructionType.DESTROY);
                 explosion.collectBlocksAndDamageEntities();
                 explosion.affectWorld(true);
             }
             SapsUtils.serverSummonParticles(
-                    (ServerWorld) lance.getWorld(), 
+                    (ServerWorld) lance.level(), 
                     ParticleTypes.EXPLOSION, 
-                    lance,lance.getWorld().getRandom(),
+                    lance,lance.level().getRandom(),
                     0,0,0,
                     0,4, 
                     0, -0.5f, 0, 
@@ -102,7 +102,7 @@ public class AbilityMetalLance implements Ability {
             
             List<LivingEntity> entityList = SapsUtils.getEntitiesInRadius(
                     getThrownPos(bender),1,
-                    lance.getWorld(),lance
+                    lance.level(),lance
             );
             if(entityList.isEmpty()){
                 onRemove(bender);
@@ -116,7 +116,7 @@ public class AbilityMetalLance implements Ability {
             
 
             for (LivingEntity living: entityList) {
-                living.damage(bender.player.getDamageSources().playerAttack(bender.player), damage * ElementalConfig.get().BENDING_DAMAGE_MULTIPLIER);
+                living.hurt(bender.player.damageSources().playerAttack(bender.player), damage * ElementalConfig.get().BENDING_DAMAGE_MULTIPLIER);
             }
             onRemove(bender);
             return;
@@ -133,7 +133,7 @@ public class AbilityMetalLance implements Ability {
 
     //ABILITY DATA STUFF
     
-    public Object packAbilityData(MetalLanceEntity lance, int holdTime, Vec3d thrownPos){
+    public Object packAbilityData(MetalLanceEntity lance, int holdTime, Vec3 thrownPos){
         return new Object[]{lance,holdTime,thrownPos};
     }
     
@@ -148,9 +148,9 @@ public class AbilityMetalLance implements Ability {
         return -1;
     }
 
-    public Vec3d getThrownPos(Bender bender){
+    public Vec3 getThrownPos(Bender bender){
         if (bender.abilityData != null) {
-            return (Vec3d) ((Object[])bender.abilityData)[2];
+            return (Vec3) ((Object[])bender.abilityData)[2];
         }
         return null;
     }

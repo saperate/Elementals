@@ -5,7 +5,7 @@ import dev.saperate.elementals.elements.Ability;
 import dev.saperate.elementals.elements.Element;
 import dev.saperate.elementals.elements.NoneElement;
 import dev.saperate.elementals.elements.Upgrade;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.Player;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -17,7 +17,7 @@ public class ClientBender {
     private ArrayList<Element> elements = new ArrayList<>();
     private int activeElementIndex = 0;
     public Ability currAbility;
-    public PlayerEntity player;
+    public Player player;
     public Object ClientAbilityData;
     public HashMap<Upgrade, Boolean> upgrades = new HashMap<>();
     private double castTime = -1;

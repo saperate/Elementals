@@ -5,8 +5,8 @@ import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.elements.Ability;
 import dev.saperate.elementals.elements.water.WaterElement;
 import dev.saperate.elementals.entities.air.AirBulletEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.entity.player.Player;
+import net.minecraft.util.math.Vec3;
 import org.joml.Vector3f;
 
 import static dev.saperate.elementals.utils.SapsUtils.getEntityLookVector;
@@ -23,9 +23,9 @@ public class AbilityAirBullets implements Ability {
             }
             return;
         }
-        PlayerEntity player = bender.player;
+        Player player = bender.player;
 
-        Vec3d pos = getEntityLookVector(player, 2);
+        Vec3 pos = getEntityLookVector(player, 2);
         PlayerData plrData = PlayerData.get(bender.player);
 
         int bulletCount = 5;
@@ -37,12 +37,12 @@ public class AbilityAirBullets implements Ability {
 
         AirBulletEntity[] bullets = new AirBulletEntity[bulletCount];
         for (int i = 0; i < bulletCount; i++) {
-            AirBulletEntity entity = new AirBulletEntity(player.getWorld(), player, pos.x, pos.y, pos.z);
+            AirBulletEntity entity = new AirBulletEntity(player.level(), player, pos.x, pos.y, pos.z);
             entity.setArrayId(i);
             entity.setArraySize(bulletCount);
             bullets[i] = entity;
 
-            player.getWorld().spawnEntity(entity);
+            player.level().addFreshEntity(entity);
         }
         bender.abilityData = bullets;
         bender.setCurrAbility(this);
@@ -70,7 +70,7 @@ public class AbilityAirBullets implements Ability {
         } else if (plrData.canUseUpgrade("airBulletsSpeedI")) {
             speed = 1.5f;
         }
-        bullet.setVelocity(bender.player, bender.player.getPitch(), bender.player.getYaw(), 0, speed, 0);
+        bullet.setDeltaMovement(bender.player, bender.player.getPitch(), bender.player.getYaw(), 0, speed, 0);
 
         AirBulletEntity[] newArray = new AirBulletEntity[bullets.length - 1];
         for (int i = 0; i < bullets.length - 1; i++) {

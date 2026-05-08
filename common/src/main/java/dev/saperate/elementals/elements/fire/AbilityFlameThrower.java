@@ -8,15 +8,15 @@ import dev.saperate.elementals.utils.SapsUtils;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.decoration.AbstractDecorationEntity;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.Player;
 import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.entity.projectile.thrown.EggEntity;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundSource;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.Box;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.Vec3;
 import org.joml.Vector3f;
 
 import java.util.List;
@@ -25,7 +25,7 @@ import static dev.saperate.elementals.Elementals.WIND_SOUND_EVENT;
 import static dev.saperate.elementals.utils.SapsUtils.*;
 
 public class AbilityFlameThrower implements Ability {
-    public static final Box boundingBox = new Box(new Vec3d(-1, -1, -1), new Vec3d(1, 1, 1));
+    public static final Box boundingBox = new Box(new Vec3(-1, -1, -1), new Vec3(1, 1, 1));
 
     @Override
     public void onCall(Bender bender, long deltaT) {
@@ -75,9 +75,9 @@ public class AbilityFlameThrower implements Ability {
             return;
         }
 
-        PlayerEntity player = bender.player;
+        Player player = bender.player;
         if (bender.abilityData.equals(true)) {
-            serverSummonParticles((ServerWorld) player.getWorld(),
+            serverSummonParticles((ServerWorld) player.level(),
                     PlayerData.get(player).canUseUpgrade("blueFire") ?
                             ParticleTypes.SOUL_FIRE_FLAME : ParticleTypes.FLAME, player, player.getRandom(),
                     0, 0.1f, 0,
@@ -87,7 +87,7 @@ public class AbilityFlameThrower implements Ability {
             Vector3f pos = getEntityLookVector(player, 3).subtract(player.getPos()).normalize().multiply(3).toVector3f();
 
 
-            serverSummonParticles((ServerWorld) player.getWorld(),
+            serverSummonParticles((ServerWorld) player.level(),
                     PlayerData.get(player).canUseUpgrade("blueFire") ?
                             ParticleTypes.SOUL_FIRE_FLAME : ParticleTypes.FLAME, player, player.getRandom(),
                     pos.x - 1,
@@ -97,7 +97,7 @@ public class AbilityFlameThrower implements Ability {
                     0, 0, 0, 2);
             playSoundAtEntity(player,SoundEvents.BLOCK_FIRE_AMBIENT,5);
 
-            List<Entity> hits = player.getWorld().getEntitiesByClass(Entity.class,
+            List<Entity> hits = player.level().getEntitiesByClass(Entity.class,
                     boundingBox.expand(12).offset(player.getPos()),
                     Entity::isAlive);
 
@@ -108,7 +108,7 @@ public class AbilityFlameThrower implements Ability {
                 if (SapsUtils.isLookingAt(bender.player,e,6,0.75f)) {
                     if (!e.isFireImmune()) {
                         e.setOnFireFor(8);
-                        e.damage(e.getDamageSources().playerAttack(player), (PlayerData.get(player).canUseUpgrade("blueFire") ? 3 : 2.5f) * ElementalConfig.get().BENDING_DAMAGE_MULTIPLIER);
+                        e.hurt(e.damageSources().playerAttack(player), (PlayerData.get(player).canUseUpgrade("blueFire") ? 3 : 2.5f) * ElementalConfig.get().BENDING_DAMAGE_MULTIPLIER);
                     }
                 }
             }

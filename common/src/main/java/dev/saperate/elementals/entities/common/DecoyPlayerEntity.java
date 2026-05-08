@@ -13,13 +13,13 @@ import net.minecraft.entity.ai.goal.SwimGoal;
 import net.minecraft.entity.ai.goal.TemptGoal;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.data.DataTracker;
-import net.minecraft.entity.data.TrackedData;
-import net.minecraft.entity.data.TrackedDataHandlerRegistry;
+import net.minecraft.entity.data.SynchedEntityData;
+import net.minecraft.entity.data.EntityDataAccessor;
+import net.minecraft.entity.data.EntityDataSerializers;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.mob.PathAwareEntity;
 import net.minecraft.entity.passive.TameableEntity;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.Player;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.recipe.Ingredient;
@@ -29,10 +29,10 @@ import net.minecraft.util.Arm;
 import net.minecraft.util.Util;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.Box;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.Vec3;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.GameRules;
-import net.minecraft.world.World;
+import net.minecraft.world.Level;
 
 import java.util.*;
 import java.util.function.Predicate;
@@ -43,28 +43,28 @@ import static dev.saperate.elementals.entities.ElementalEntities.DECOYPLAYER;
 public class DecoyPlayerEntity extends PathAwareEntity {
     public double prevCapeX, prevCapeY, prevCapeZ;
     public double capeX, capeY, capeZ;
-    public static final TrackedData<Optional<UUID>> OWNER_ID = DataTracker.registerData(DecoyPlayerEntity.class, TrackedDataHandlerRegistry.OPTIONAL_UUID);
-    public static final TrackedData<String> OWNER_NAME = DataTracker.registerData(DecoyPlayerEntity.class, TrackedDataHandlerRegistry.STRING);
+    public static final EntityDataAccessor<Optional<UUID>> OWNER_ID = SynchedEntityData.defineId(DecoyPlayerEntity.class, EntityDataSerializers.OPTIONAL_UUID);
+    public static final EntityDataAccessor<String> OWNER_NAME = SynchedEntityData.defineId(DecoyPlayerEntity.class, EntityDataSerializers.STRING);
     private DefaultedList<ItemStack> items = DefaultedList.ofSize(7, ItemStack.EMPTY);
-    public static final TrackedData<Integer> RANGE = DataTracker.registerData(DecoyPlayerEntity.class, TrackedDataHandlerRegistry.INTEGER);
-    public static final TrackedData<Boolean> FOCUS_CAMERA = DataTracker.registerData(DecoyPlayerEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
-    public DecoyPlayerEntity(EntityType<? extends PathAwareEntity> entityType, World world) {
+    public static final EntityDataAccessor<Integer> RANGE = SynchedEntityData.defineId(DecoyPlayerEntity.class, EntityDataSerializers.INT);
+    public static final EntityDataAccessor<Boolean> FOCUS_CAMERA = SynchedEntityData.defineId(DecoyPlayerEntity.class, EntityDataSerializers.BOOLEAN);
+    public DecoyPlayerEntity(EntityType<? extends PathAwareEntity> entityType, Level world) {
         super(entityType, world);
     }
 
-    public DecoyPlayerEntity(World world, PlayerEntity owner) {
+    public DecoyPlayerEntity(Level world, Player owner) {
         super(DECOYPLAYER, world);
         setOwner(owner);
         setPos(owner.getX(), owner.getY(), owner.getZ());
     }
 
     @Override
-    protected void initDataTracker(DataTracker.Builder builder) {
-        super.initDataTracker(builder);
-        builder.add(OWNER_ID, Optional.empty());
-        builder.add(OWNER_NAME, "");
-        builder.add(RANGE,5);
-        builder.add(FOCUS_CAMERA,false);
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(OWNER_ID, Optional.empty());
+        builder.define(OWNER_NAME, "");
+        builder.define(RANGE,5);
+        builder.define(FOCUS_CAMERA,false);
     }
 
 
@@ -73,54 +73,54 @@ public class DecoyPlayerEntity extends PathAwareEntity {
         super.tick();
         this.updateCapeAngles();
         if (getOwner() == null) {
-            if (!getWorld().isClient) {
+            if (!level().isClientSide) {
                 discard();
             }
             return;
         }
 
         if(SapsUtils.checkBlockCollision(this,-0.1f,false) != null){//checks if we are INSIDE a block
-            setVelocity(0,0,0);
+            setDeltaMovement(0,0,0);
         }
 
         //I have no idea why, but this prevents the entity from floating and being stuck, so it is staying
-        if (age <= 10 || true) {
+        if (tickCount <= 10 || true) {
             this.prevX = this.getX();
             this.prevY = this.getY();
             this.prevZ = this.getZ();
-            Vec3d vec3d = this.getVelocity();
+            Vec3 vec3d = this.getDeltaMovement();
             float f = this.getStandingEyeHeight() - 0.11111111f;
             if (this.isTouchingWater() && this.getFluidHeight(FluidTags.WATER) > (double) f) {
                 this.applyWaterBuoyancy();
             } else if (this.isInLava() && this.getFluidHeight(FluidTags.LAVA) > (double) f) {
                 this.applyLavaBuoyancy();
-            } else if (!this.hasNoGravity()) {
-                this.setVelocity(this.getVelocity().add(0.0, -0.04, 0.0));
+            } else if (!this.isNoGravity()) {
+                this.setDeltaMovement(this.getDeltaMovement().add(0.0, -0.04, 0.0));
             }
-            if (this.getWorld().isClient) {
+            if (this.level().isClientSide) {
                 this.noClip = false;
             } else {
-                boolean bl = this.noClip = !this.getWorld().isSpaceEmpty(this, this.getBoundingBox().contract(1.0E-7));
+                boolean bl = this.noClip = !this.level().isSpaceEmpty(this, this.getBoundingBox().contract(1.0E-7));
                 if (this.noClip) {
                     this.pushOutOfBlocks(this.getX(), (this.getBoundingBox().minY + this.getBoundingBox().maxY) / 2.0, this.getZ());
                 }
             }
-            if (!this.isOnGround() || this.getVelocity().horizontalLengthSquared() > (double) 1.0E-5f || (this.age + this.getId()) % 4 == 0) {
-                this.move(MovementType.SELF, this.getVelocity());
+            if (!this.isOnGround() || this.getDeltaMovement().horizontalLengthSquared() > (double) 1.0E-5f || (this.tickCount + this.getId()) % 4 == 0) {
+                this.move(MoverType.SELF, this.getDeltaMovement());
                 float g = 0.98f;
                 if (this.isOnGround()) {
-                    g = this.getWorld().getBlockState(this.getVelocityAffectingPos()).getBlock().getSlipperiness() * 0.98f;
+                    g = this.level().getBlockState(this.getVelocityAffectingPos()).getBlock().getSlipperiness() * 0.98f;
                 }
-                this.setVelocity(this.getVelocity().multiply(g, 0.98, g));
+                this.setDeltaMovement(this.getDeltaMovement().multiply(g, 0.98, g));
                 if (this.isOnGround()) {
-                    Vec3d vec3d2 = this.getVelocity();
+                    Vec3 vec3d2 = this.getDeltaMovement();
                     if (vec3d2.y < 0.0) {
-                        this.setVelocity(vec3d2.multiply(1.0, -0.5, 1.0));
+                        this.setDeltaMovement(vec3d2.multiply(1.0, -0.5, 1.0));
                     }
                 }
             }
             this.velocityDirty |= this.updateWaterState();
-            if (!this.getWorld().isClient && this.getVelocity().subtract(vec3d).lengthSquared() > 0.01) {
+            if (!this.level().isClientSide && this.getDeltaMovement().subtract(vec3d).lengthSquared() > 0.01) {
                 this.velocityDirty = true;
             }
         }
@@ -142,16 +142,16 @@ public class DecoyPlayerEntity extends PathAwareEntity {
     }
 
     @Override
-    public boolean damage(DamageSource source, float amount) {
-        if (!getWorld().isClient && getHealth() - amount <= 0) {
-            PlayerEntity owner = getOwner();
+    public boolean hurt(DamageSource source, float amount) {
+        if (!level().isClientSide && getHealth() - amount <= 0) {
+            Player owner = getOwner();
             if(owner == null){
                 discard();
                 return false;
             }
             Bender.getBender((ServerPlayerEntity) owner).currAbility.onRemove(Bender.getBender((ServerPlayerEntity) owner));
         }
-        return super.damage(source, amount);
+        return super.hurt(source, amount);
     }
 
 
@@ -181,29 +181,29 @@ public class DecoyPlayerEntity extends PathAwareEntity {
      * <br>the only times it will not is if the owner is not in spectator, the owner is the client,
      * or we are on the server. Do NOT rely on this too heavily...
      */
-    public PlayerEntity getOwner() {
+    public Player getOwner() {
         UUID uuid = getOwnerUUID();
         if (uuid == null) {
             return null;
         }
-        return getWorld().getPlayerByUuid(uuid);
+        return level().getPlayerByUuid(uuid);
     }
 
     public UUID getOwnerUUID() {
-        return getDataTracker().get(OWNER_ID).orElse(null);
+        return getEntityData().get(OWNER_ID).orElse(null);
     }
 
-    public void setOwner(PlayerEntity owner) {
-        this.getDataTracker().set(OWNER_ID, Optional.of(owner.getUuid()));
+    public void setOwner(Player owner) {
+        this.getEntityData().set(OWNER_ID, Optional.of(owner.getUuid()));
         setOwnerName(owner);
     }
 
     public String getOwnerName() {
-        return getDataTracker().get(OWNER_NAME);
+        return getEntityData().get(OWNER_NAME);
     }
 
-    private void setOwnerName(PlayerEntity owner) {
-        this.getDataTracker().set(OWNER_NAME, owner.getNameForScoreboard());
+    private void setOwnerName(Player owner) {
+        this.getEntityData().set(OWNER_NAME, owner.getNameForScoreboard());
     }
 
     public void equipItemStack() {
@@ -249,29 +249,29 @@ public class DecoyPlayerEntity extends PathAwareEntity {
     }
 
     private void applyWaterBuoyancy() {
-        Vec3d vec3d = this.getVelocity();
-        this.setVelocity(vec3d.x * (double) 0.99f, vec3d.y + (double) (vec3d.y < (double) 0.06f ? 5.0E-4f : 0.0f), vec3d.z * (double) 0.99f);
+        Vec3 vec3d = this.getDeltaMovement();
+        this.setDeltaMovement(vec3d.x * (double) 0.99f, vec3d.y + (double) (vec3d.y < (double) 0.06f ? 5.0E-4f : 0.0f), vec3d.z * (double) 0.99f);
     }
 
     private void applyLavaBuoyancy() {
-        Vec3d vec3d = this.getVelocity();
-        this.setVelocity(vec3d.x * (double) 0.95f, vec3d.y + (double) (vec3d.y < (double) 0.06f ? 5.0E-4f : 0.0f), vec3d.z * (double) 0.95f);
+        Vec3 vec3d = this.getDeltaMovement();
+        this.setDeltaMovement(vec3d.x * (double) 0.95f, vec3d.y + (double) (vec3d.y < (double) 0.06f ? 5.0E-4f : 0.0f), vec3d.z * (double) 0.95f);
     }
 
     public void setRange(int range) {
-        this.dataTracker.set(RANGE, range);
+        this.entityData.set(RANGE, range);
     }
 
     public int getRange() {
-        return this.dataTracker.get(RANGE);
+        return this.entityData.get(RANGE);
     }
 
     public void setFocusCamera(boolean val) {
-        this.dataTracker.set(FOCUS_CAMERA, val);
+        this.entityData.set(FOCUS_CAMERA, val);
     }
 
     public boolean getFocusCamera() {
-        return this.dataTracker.get(FOCUS_CAMERA);
+        return this.entityData.get(FOCUS_CAMERA);
     }
 
     @Override

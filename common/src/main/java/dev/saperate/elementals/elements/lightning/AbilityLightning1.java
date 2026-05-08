@@ -4,7 +4,7 @@ import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.elements.Ability;
 import dev.saperate.elementals.elements.air.AirElement;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.Player;
 
 
 public class AbilityLightning1 implements Ability {
@@ -17,7 +17,7 @@ public class AbilityLightning1 implements Ability {
             return;
         }
 
-        if (bender.player.isSneaking() && playerData.canUseUpgrade("lightningBolt") && deltaT >= 2000) {
+        if (bender.player.isCrouching() && playerData.canUseUpgrade("lightningBolt") && deltaT >= 2000) {
             LightningElement.get().getAbility(1).onCall(bender,deltaT);
             return;
         }
@@ -50,7 +50,7 @@ public class AbilityLightning1 implements Ability {
     }
 
     @Override
-    public boolean shouldImmobilizePlayer(PlayerEntity player) {
+    public boolean shouldImmobilizePlayer(Player player) {
         return true;
     }
 

@@ -9,24 +9,24 @@ import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.MovementType;
-import net.minecraft.entity.data.DataTracker;
-import net.minecraft.entity.data.TrackedData;
-import net.minecraft.entity.data.TrackedDataHandlerRegistry;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.MoverType;
+import net.minecraft.entity.data.SynchedEntityData;
+import net.minecraft.entity.data.EntityDataAccessor;
+import net.minecraft.entity.data.EntityDataSerializers;
+import net.minecraft.entity.player.Player;
 import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.entity.projectile.ProjectileUtil;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.predicate.entity.EntityPredicates;
-import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundSource;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.TypeFilter;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
+import net.minecraft.util.math.Vec3;
+import net.minecraft.world.Level;
 import org.joml.Vector3f;
 
 import static dev.saperate.elementals.Elementals.WIND_BURST_SOUND_EVENT;
@@ -36,37 +36,37 @@ import static dev.saperate.elementals.entities.ElementalEntities.FIREARC;
 import static dev.saperate.elementals.utils.SapsUtils.getEntityLookVector;
 import static dev.saperate.elementals.utils.SapsUtils.summonParticles;
 
-public class AirStreamEntity extends AbstractElementalsEntity<PlayerEntity> {
-    private static final TrackedData<Integer> PARENT_ID = DataTracker.registerData(AirStreamEntity.class, TrackedDataHandlerRegistry.INTEGER);
-    private static final TrackedData<Integer> CHILD_ID = DataTracker.registerData(AirStreamEntity.class, TrackedDataHandlerRegistry.INTEGER);
+public class AirStreamEntity extends AbstractElementalsEntity<Player> {
+    private static final EntityDataAccessor<Integer> PARENT_ID = SynchedEntityData.defineId(AirStreamEntity.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Integer> CHILD_ID = SynchedEntityData.defineId(AirStreamEntity.class, EntityDataSerializers.INT);
     public static final float chainDistance = 0.65f;
     private static final int MAX_CHAIN_LENGTH = 6;
     public int chainLength = 0;
 
 
-    public AirStreamEntity(EntityType<AirStreamEntity> type, World world) {
-        super(type, world, PlayerEntity.class);
+    public AirStreamEntity(EntityType<AirStreamEntity> type, Level world) {
+        super(type, world, Player.class);
     }
 
-    public AirStreamEntity(World world, PlayerEntity owner) {
+    public AirStreamEntity(Level world, Player owner) {
         this(world, owner, owner.getX(), owner.getY(), owner.getZ());
     }
 
-    public AirStreamEntity(World world, PlayerEntity owner, double x, double y, double z) {
-        super(AIRSTREAM, world, PlayerEntity.class);
+    public AirStreamEntity(Level world, Player owner, double x, double y, double z) {
+        super(AIRSTREAM, world, Player.class);
         setOwner(owner);
         setPos(x, y, z);
         setNoGravity(false);
         setControlled(true);
     }
 
-    public void createChain(PlayerEntity owner) {
+    public void createChain(Player owner) {
         if (chainLength < MAX_CHAIN_LENGTH) {
-            AirStreamEntity newArc = new AirStreamEntity(getWorld(), owner, getX(), getY(), getZ());
+            AirStreamEntity newArc = new AirStreamEntity(level(), owner, getX(), getY(), getZ());
             newArc.setParent(this);
             setChild(newArc);
             newArc.setControlled(false);
-            getWorld().spawnEntity(newArc);
+            level().addFreshEntity(newArc);
             chainLength++;
             newArc.chainLength = chainLength;
             newArc.createChain(owner);
@@ -74,10 +74,10 @@ public class AirStreamEntity extends AbstractElementalsEntity<PlayerEntity> {
     }
 
     @Override
-    protected void initDataTracker(DataTracker.Builder builder) {
-        super.initDataTracker(builder);
-        builder.add(PARENT_ID, 0);
-        builder.add(CHILD_ID, 0);
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(PARENT_ID, 0);
+        builder.define(CHILD_ID, 0);
     }
 
     @Override
@@ -89,7 +89,7 @@ public class AirStreamEntity extends AbstractElementalsEntity<PlayerEntity> {
                     ParticleTypes.POOF,
                     0, 1);
             if (getParent() == null) {
-                playSound(WIND_SOUND_EVENT, 1, (1.0f + (this.getWorld().random.nextFloat() - this.getWorld().random.nextFloat()) * 0.2f) * 0.7f);
+                playSound(WIND_SOUND_EVENT, 1, (1.0f + (this.level().random.nextFloat() - this.level().random.nextFloat()) * 0.2f) * 0.7f);
             }
         }
 
@@ -106,7 +106,7 @@ public class AirStreamEntity extends AbstractElementalsEntity<PlayerEntity> {
         if(entity == getOwner() || getParent() != null){
             return;
         }
-        PlayerEntity owner = getOwner();
+        Player owner = getOwner();
         PlayerData plrData = PlayerData.get(owner);
 
         float damage = 2.5f;
@@ -116,12 +116,12 @@ public class AirStreamEntity extends AbstractElementalsEntity<PlayerEntity> {
             damage = 3.5f;
         }
 
-        entity.damage(getDamageSources().playerAttack(owner), damage * ElementalConfig.get().BENDING_DAMAGE_MULTIPLIER);
-        entity.addVelocity(this.getVelocity().multiply(1.2f));
-        entity.move(MovementType.SELF, entity.getVelocity());
+        entity.hurt(damageSources().playerAttack(owner), damage * ElementalConfig.get().BENDING_DAMAGE_MULTIPLIER);
+        entity.addDeltaMovement(this.getDeltaMovement().multiply(1.2f));
+        entity.move(MoverType.SELF, entity.getDeltaMovement());
         entity.velocityModified = true;
         remove();
-        this.getWorld().playSound(getX(), getY(), getZ(), WIND_BURST_SOUND_EVENT, SoundCategory.BLOCKS, 1, (1.0f + (this.getWorld().random.nextFloat() - this.getWorld().random.nextFloat()) * 0.2f) * 0.7f, true);
+        this.level().playSound(getX(), getY(), getZ(), WIND_BURST_SOUND_EVENT, SoundSource.BLOCKS, 1, (1.0f + (this.level().random.nextFloat() - this.level().random.nextFloat()) * 0.2f) * 0.7f, true);
     }
 
     @Override
@@ -130,12 +130,12 @@ public class AirStreamEntity extends AbstractElementalsEntity<PlayerEntity> {
             return;
         }
         remove();
-        this.getWorld().playSound(getX(), getY(), getZ(), WIND_BURST_SOUND_EVENT, SoundCategory.BLOCKS, 1, (1.0f + (this.getWorld().random.nextFloat() - this.getWorld().random.nextFloat()) * 0.2f) * 0.7f, true);
+        this.level().playSound(getX(), getY(), getZ(), WIND_BURST_SOUND_EVENT, SoundSource.BLOCKS, 1, (1.0f + (this.level().random.nextFloat() - this.level().random.nextFloat()) * 0.2f) * 0.7f, true);
     }
 
     @Override
-    public boolean hasNoGravity() {
-        return super.hasNoGravity() || getParent() != null;
+    public boolean isNoGravity() {
+        return super.isNoGravity() || getParent() != null;
     }
 
     private void moveEntity(Entity owner, Entity parent) {
@@ -144,7 +144,7 @@ public class AirStreamEntity extends AbstractElementalsEntity<PlayerEntity> {
             moveEntityTowardsGoal(getEntityLookVector(getOwner(), 3).add(0,0.5,0).toVector3f());
         } else {
             if (parent != null) {
-                Vec3d direction = parent.getPos().subtract(getPos());
+                Vec3 direction = parent.getPos().subtract(getPos());
                 double distance = direction.length();
 
                 if (distance > chainDistance) {
@@ -156,12 +156,12 @@ public class AirStreamEntity extends AbstractElementalsEntity<PlayerEntity> {
         }
 
 
-        this.move(MovementType.SELF, this.getVelocity());
+        this.move(MoverType.SELF, this.getDeltaMovement());
     }
 
 
     @Override
-    public void onRemoved() {
+    public void onClientRemoval() {
         summonParticles(this, random,
                 ParticleTypes.POOF,
                 0.1f, 10);
@@ -171,7 +171,7 @@ public class AirStreamEntity extends AbstractElementalsEntity<PlayerEntity> {
      * Safely despawns the arc along with all of its children
      */
     public void despawn() {
-        if (getWorld().isClient) {
+        if (level().isClientSide) {
             return;
         }
         getHead().remove();
@@ -208,21 +208,21 @@ public class AirStreamEntity extends AbstractElementalsEntity<PlayerEntity> {
     }
 
     public AirStreamEntity getParent() {
-        int parentId = this.getDataTracker().get(PARENT_ID);
-        return parentId != 0 ? (AirStreamEntity) this.getWorld().getEntityById(parentId) : null;
+        int parentId = this.getEntityData().get(PARENT_ID);
+        return parentId != 0 ? (AirStreamEntity) this.level().getEntity(parentId) : null;
     }
 
     public void setParent(AirStreamEntity parent) {
-        this.getDataTracker().set(PARENT_ID, parent != null ? parent.getId() : 0);
+        this.getEntityData().set(PARENT_ID, parent != null ? parent.getId() : 0);
     }
 
     public AirStreamEntity getChild() {
-        int childId = this.getDataTracker().get(CHILD_ID);
-        return childId != 0 ? (AirStreamEntity) this.getWorld().getEntityById(childId) : null;
+        int childId = this.getEntityData().get(CHILD_ID);
+        return childId != 0 ? (AirStreamEntity) this.level().getEntity(childId) : null;
     }
 
     public void setChild(AirStreamEntity child) {
-        this.getDataTracker().set(CHILD_ID, child != null ? child.getId() : 0);
+        this.getEntityData().set(CHILD_ID, child != null ? child.getId() : 0);
     }
 
 }

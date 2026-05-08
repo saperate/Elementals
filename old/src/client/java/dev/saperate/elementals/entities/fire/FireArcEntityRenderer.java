@@ -10,7 +10,7 @@ import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.RotationAxis;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.Vec3;
 import org.joml.Matrix4f;
 
 import static dev.saperate.elementals.entities.utils.RenderUtils.drawCube;
@@ -48,7 +48,7 @@ public class FireArcEntityRenderer extends EntityRenderer<FireArcEntity> {
         int color = 0xFFFFFF;
 
 
-        Vec3d dir = child.getPos().subtract(entity.getPos());
+        Vec3 dir = child.getPos().subtract(entity.getPos());
         float d = (float) dir.length() * 4;
         dir = dir.normalize();
 

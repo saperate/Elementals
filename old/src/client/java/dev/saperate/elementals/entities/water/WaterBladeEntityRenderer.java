@@ -44,7 +44,7 @@ public class WaterBladeEntityRenderer extends EntityRenderer<WaterBladeEntity> i
 
         VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderLayer.getItemEntityTranslucentCull(getTexture(entity)));
 
-        int color = BiomeColors.getWaterColor(entity.getWorld(),entity.getBlockPos());
+        int color = BiomeColors.getWaterColor(entity.level(),entity.getOnPos());
         matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(rot * 20));
 
         WaterBladeModel.getTexturedModelData().createModel().render(

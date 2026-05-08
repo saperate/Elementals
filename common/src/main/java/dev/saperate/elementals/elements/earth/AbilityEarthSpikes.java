@@ -6,7 +6,7 @@ import dev.saperate.elementals.elements.Ability;
 import dev.saperate.elementals.entities.earth.EarthBlockEntity;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.Player;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.random.Random;
@@ -26,11 +26,11 @@ public class AbilityEarthSpikes implements Ability {
             }
             return;
         }
-        PlayerEntity player = bender.player;
+        Player player = bender.player;
         Random rnd = player.getRandom();
         PlayerData plrData = PlayerData.get(player);
         BlockHitResult hit = (BlockHitResult) player.raycast(5, 0, false);
-        BlockPos bPos = hit.getBlockPos();
+        BlockPos bPos = hit.getOnPos();
 
         ArrayList<LivingEntity> damagedEntities = new ArrayList<>();
 
@@ -69,12 +69,12 @@ public class AbilityEarthSpikes implements Ability {
         EarthElement.damageEntityAboveBlock(bender.player,pos,damagedEntities,3.5f);
 
         EarthBlockEntity block = new EarthBlockEntity(
-                bender.player.getWorld(), bender.player,
+                bender.player.level(), bender.player,
                 pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.5f
         );
 
         block.setModelShapeId(2);
-        block.setBlockState(bender.player.getWorld().getBlockState(pos));
+        block.setBlockState(bender.player.level().getBlockState(pos));
         block.setDrops(false);
         block.maxLifeTime = 60;
         block.setMovementSpeed(0.6f);
@@ -82,7 +82,7 @@ public class AbilityEarthSpikes implements Ability {
         block.setShiftToFreeze(false);
         block.setTargetPosition(pos.toCenterPos().toVector3f().add(0,1,0));
 
-        bender.player.getWorld().spawnEntity(block);
+        bender.player.level().addFreshEntity(block);
     }
 
     

@@ -8,8 +8,8 @@ import dev.saperate.elementals.entities.fire.FireArcEntity;
 import dev.saperate.elementals.entities.fire.FireShieldEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityPose;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.effect.MobEffectInstance;
+import net.minecraft.entity.player.Player;
 
 
 public class AbilityFireShield implements Ability {
@@ -23,12 +23,12 @@ public class AbilityFireShield implements Ability {
             }
             return;
         }
-        PlayerEntity player = bender.player;
+        Player player = bender.player;
 
-        FireShieldEntity entity = new FireShieldEntity(player.getWorld(), player, player.getX(), player.getY(), player.getZ());
+        FireShieldEntity entity = new FireShieldEntity(player.level(), player, player.getX(), player.getY(), player.getZ());
         bender.abilityData = entity;
         entity.setIsBlue(PlayerData.get(player).canUseUpgrade("blueFire"));
-        player.getWorld().spawnEntity(entity);
+        player.level().addFreshEntity(entity);
 
 
         bender.setCurrAbility(this);
@@ -44,8 +44,8 @@ public class AbilityFireShield implements Ability {
             }
             return;
         }
-        bender.player.addStatusEffect(new StatusEffectInstance(ElementalsStatusEffects.STATIONARY,1,1,false,false,false));
-        if(!bender.player.isSneaking()){
+        bender.player.addEffect(new MobEffectInstance(ElementalsStatusEffects.STATIONARY,1,1,false,false,false));
+        if(!bender.player.isCrouching()){
             onRemove(bender);
         }
     }

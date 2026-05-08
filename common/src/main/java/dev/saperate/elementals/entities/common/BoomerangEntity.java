@@ -9,7 +9,7 @@ import net.minecraft.component.type.NbtComponent;
 import net.minecraft.entity.*;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.damage.DamageTypes;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.Player;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
 import net.minecraft.entity.projectile.ProjectileUtil;
 import net.minecraft.entity.projectile.thrown.ThrownItemEntity;
@@ -19,8 +19,8 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
+import net.minecraft.util.math.Vec3;
+import net.minecraft.world.Level;
 import org.joml.Vector3f;
 
 import static dev.saperate.elementals.entities.ElementalEntities.BOOMERANGENTITY;
@@ -29,14 +29,14 @@ import static dev.saperate.elementals.items.ElementalItems.BOOMERANG_ITEM;
 import static dev.saperate.elementals.items.ElementalItems.DIRT_BOTTLE_ITEM;
 
 public class BoomerangEntity extends PersistentProjectileEntity {
-    public Vec3d startingPos;
+    public Vec3 startingPos;
     public int time = 0;
 
-    public BoomerangEntity(EntityType<BoomerangEntity> entityType, World world) {
+    public BoomerangEntity(EntityType<BoomerangEntity> entityType, Level world) {
         super(entityType, world);
     }
 
-    public BoomerangEntity(World world, PlayerEntity owner, Vec3d startingPos) {
+    public BoomerangEntity(Level world, Player owner, Vec3 startingPos) {
         super(BOOMERANGENTITY, world);
         setOwner(owner);
         this.startingPos = startingPos;
@@ -44,7 +44,7 @@ public class BoomerangEntity extends PersistentProjectileEntity {
         setSilent(true);
     }
 
-    public BoomerangEntity(World world, Vec3d startingPos, ItemStack stack) {
+    public BoomerangEntity(Level world, Vec3 startingPos, ItemStack stack) {
         super(BOOMERANGENTITY, startingPos.x, startingPos.y, startingPos.z, world, stack, null);
         this.startingPos = startingPos;
         setNoGravity(true);
@@ -54,7 +54,7 @@ public class BoomerangEntity extends PersistentProjectileEntity {
     @Override
     public void tick() {
         super.tick();
-        if (getWorld().isClient) {
+        if (level().isClientSide) {
             return;
         }
         if (startingPos == null) {
@@ -63,35 +63,35 @@ public class BoomerangEntity extends PersistentProjectileEntity {
         }
 
 
-        if (age < 20) {
+        if (tickCount < 20) {
             if (inGround) {
                 inGround = false;
                 inGroundTime = 0;
-                Vec3d dir = this.getPos().subtract(startingPos).normalize().multiply(-0.5);
-                setVelocity(dir);
+                Vec3 dir = this.getPos().subtract(startingPos).normalize().multiply(-0.5);
+                setDeltaMovement(dir);
             }
 
             HitResult hit = ProjectileUtil.getCollision(this, entity -> entity instanceof ItemEntity);
             if (hit instanceof EntityHitResult entityHitResult && entityHitResult.getEntity() != null) {
-                age = 21;
-                Vec3d dir = this.getPos().subtract(startingPos).normalize().multiply(-0.5);
-                setVelocity(dir);
+                tickCount = 21;
+                Vec3 dir = this.getPos().subtract(startingPos).normalize().multiply(-0.5);
+                setDeltaMovement(dir);
             }
-        } else if (age == 20) {
-            Vec3d dir = this.getPos().subtract(startingPos).normalize().multiply(-0.5);
-            setVelocity(dir);
-        } else if (age == 70) {
+        } else if (tickCount == 20) {
+            Vec3 dir = this.getPos().subtract(startingPos).normalize().multiply(-0.5);
+            setDeltaMovement(dir);
+        } else if (tickCount == 70) {
             setNoGravity(false);
-        } else if (age > 70 && inGround && getOwner() == null) {
+        } else if (tickCount > 70 && inGround && getOwner() == null) {
             dropBoomerang();
-        } else if (age > 200 && inGround) {
+        } else if (tickCount > 200 && inGround) {
             dropBoomerang();
         }
     }
 
     public void dropBoomerang(){
-        ItemEntity itemEntity = new ItemEntity(getWorld(), getX(), getY(), getZ(), BOOMERANG_ITEM.getDefaultStack());
-        getWorld().spawnEntity(itemEntity);
+        ItemEntity itemEntity = new ItemEntity(level(), getX(), getY(), getZ(), BOOMERANG_ITEM.getDefaultStack());
+        level().addFreshEntity(itemEntity);
         discard();
     }
 
@@ -100,42 +100,42 @@ public class BoomerangEntity extends PersistentProjectileEntity {
         Entity owner = getOwner();
 
         if (entityHitResult.getEntity().equals(owner)) {
-            if (!tryPickup((PlayerEntity) owner)) {
-                age = 70;
+            if (!tryPickup((Player) owner)) {
+                tickCount = 70;
             } else {
                 discard();
             }
             return;
-        } else if (entityHitResult.getEntity() instanceof PlayerEntity player && owner == null) {
+        } else if (entityHitResult.getEntity() instanceof Player player && owner == null) {
             if (!tryPickup(player)) {
-                age = 70;
+                tickCount = 70;
             } else {
                 discard();
             }
             return;
         }
-        if (age <= 20) {
-            age = 20;
+        if (tickCount <= 20) {
+            tickCount = 20;
         } else {
-            age = 70;
+            tickCount = 70;
         }
 
         if (entityHitResult.getEntity() instanceof LivingEntity living) {
             DamageSource damageSource;
             if (owner == null) {
-                damageSource = this.getDamageSources().arrow(this, this);
+                damageSource = this.damageSources().arrow(this, this);
             } else {
-                damageSource = this.getDamageSources().arrow(this, owner);
+                damageSource = this.damageSources().arrow(this, owner);
                 if (owner instanceof LivingEntity) {
                     ((LivingEntity) owner).onAttacking(living);
                 }
             }
-            living.damage(damageSource, 4);
+            living.hurt(damageSource, 4);
         }
     }
 
     @Override
-    public void onPlayerCollision(PlayerEntity player) {
+    public void onPlayerCollision(Player player) {
         if (player == getOwner()) {
             super.onPlayerCollision(player);
         }
@@ -167,7 +167,7 @@ public class BoomerangEntity extends PersistentProjectileEntity {
 
     @Override
     public void readCustomDataFromNbt(NbtCompound nbt) {
-        startingPos = new Vec3d(
+        startingPos = new Vec3(
                 nbt.getDouble("startX"),
                 nbt.getDouble("startY"),
                 nbt.getDouble("startZ")

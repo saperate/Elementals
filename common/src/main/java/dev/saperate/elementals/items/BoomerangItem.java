@@ -33,8 +33,8 @@ public class BoomerangItem extends Item implements DispenseItemBehavior {
         if (!world.isClientSide) {
             BoomerangEntity entity = new BoomerangEntity(world, user.getEyePosition(), handStack);
             entity.setOwner(user);
-            entity.setVelocity(user, user.getXRot(), user.getYRot(), 0.0f, .75f, 0f);
-            world.spawnEntity(entity);
+            entity.setDeltaMovement(user, user.getXRot(), user.getYRot(), 0.0f, .75f, 0f);
+            world.addFreshEntity(entity);
             user.getInventory().removeItem(handStack);
         }
         user.awardStat(Stats.ITEM_USED.get(this));
@@ -55,7 +55,7 @@ public class BoomerangItem extends Item implements DispenseItemBehavior {
         if (!world.isClientSide) {
             Direction direction = blockSource.state().getValue(DispenserBlock.FACING);
             BoomerangEntity boomerangEntity = getBoomerangEntity(blockSource, world, direction, itemStack);
-            world.spawnEntity(boomerangEntity);
+            world.addFreshEntity(boomerangEntity);
         }
         itemStack.shrink(1);
         return itemStack;
@@ -70,7 +70,7 @@ public class BoomerangItem extends Item implements DispenseItemBehavior {
                 ), stack
         );
 
-        boomerangEntity.setVelocity(
+        boomerangEntity.setDeltaMovement(
                 direction.getStepX(),
                 direction.getStepY(),
                 direction.getStepZ(),

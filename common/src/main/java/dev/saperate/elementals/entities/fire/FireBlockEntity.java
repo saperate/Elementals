@@ -7,15 +7,15 @@ import dev.saperate.elementals.utils.SapsUtils;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.*;
 import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.data.DataTracker;
-import net.minecraft.entity.data.TrackedData;
-import net.minecraft.entity.data.TrackedDataHandlerRegistry;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.data.SynchedEntityData;
+import net.minecraft.entity.data.EntityDataAccessor;
+import net.minecraft.entity.data.EntityDataSerializers;
+import net.minecraft.entity.player.Player;
 import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.sound.SoundEvents;
-import net.minecraft.world.World;
+import net.minecraft.world.Level;
 
 import java.util.List;
 
@@ -23,25 +23,25 @@ import static dev.saperate.elementals.entities.ElementalEntities.FIREBLOCK;
 import static dev.saperate.elementals.utils.SapsUtils.summonParticles;
 import static net.minecraft.entity.projectile.ProjectileUtil.getEntityCollision;
 
-public class FireBlockEntity extends AbstractElementalsEntity<PlayerEntity> {
+public class FireBlockEntity extends AbstractElementalsEntity<Player> {
     public static final int MAX_FLAME_SIZE = 5;
-    private static final TrackedData<Float> FINAL_HEIGHT = DataTracker.registerData(FireBlockEntity.class, TrackedDataHandlerRegistry.FLOAT);
-    private static final TrackedData<Float> HEIGHT = DataTracker.registerData(FireBlockEntity.class, TrackedDataHandlerRegistry.FLOAT);
-    private static final TrackedData<Boolean> IS_BLUE = DataTracker.registerData(FireBlockEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
+    private static final EntityDataAccessor<Float> FINAL_HEIGHT = SynchedEntityData.defineId(FireBlockEntity.class, EntityDataSerializers.FLOAT);
+    private static final EntityDataAccessor<Float> HEIGHT = SynchedEntityData.defineId(FireBlockEntity.class, EntityDataSerializers.FLOAT);
+    private static final EntityDataAccessor<Boolean> IS_BLUE = SynchedEntityData.defineId(FireBlockEntity.class, EntityDataSerializers.BOOLEAN);
     public float prevFlameSize = 0;
     public int heightAdjustSpeed = 10;//Smaller is faster
 
 
-    public FireBlockEntity(EntityType<FireBlockEntity> type, World world) {
-        super(type, world, PlayerEntity.class);
+    public FireBlockEntity(EntityType<FireBlockEntity> type, Level world) {
+        super(type, world, Player.class);
     }
 
-    public FireBlockEntity(World world, PlayerEntity owner) {
+    public FireBlockEntity(Level world, Player owner) {
         this(world, owner, owner.getX(), owner.getY(), owner.getZ());
     }
 
-    public FireBlockEntity(World world, PlayerEntity owner, double x, double y, double z) {
-        super(FIREBLOCK, world, PlayerEntity.class);
+    public FireBlockEntity(Level world, Player owner, double x, double y, double z) {
+        super(FIREBLOCK, world, Player.class);
         setOwner(owner);
         setPos(x, y, z);
         lifeTime = 200;
@@ -50,21 +50,21 @@ public class FireBlockEntity extends AbstractElementalsEntity<PlayerEntity> {
 
 
     @Override
-    public boolean damage(DamageSource source, float amount) {
+    public boolean hurt(DamageSource source, float amount) {
         Entity entity = source.getSource();
         if (entity instanceof ProjectileEntity) {
             entity.discard();
         }
-        return super.damage(source, amount);
+        return super.hurt(source, amount);
 
     }
 
     @Override
-    protected void initDataTracker(DataTracker.Builder builder) {
-        builder.add(HEIGHT, 1f);
-        builder.add(FINAL_HEIGHT, 1.5f);
-        builder.add(IS_BLUE, false);
-        super.initDataTracker(builder);
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        builder.define(HEIGHT, 1f);
+        builder.define(FINAL_HEIGHT, 1.5f);
+        builder.define(IS_BLUE, false);
+        super.defineSynchedData(builder);
     }
 
     @Override
@@ -75,7 +75,7 @@ public class FireBlockEntity extends AbstractElementalsEntity<PlayerEntity> {
         }
 
         lifeTime--;
-        if (lifeTime <= 0 && !getWorld().isClient) {
+        if (lifeTime <= 0 && !level().isClientSide) {
             discard();
             return;
         }
@@ -99,7 +99,7 @@ public class FireBlockEntity extends AbstractElementalsEntity<PlayerEntity> {
             if(SapsUtils.isBeingRainedOn(this)){
                 damage /= 2;
             }
-            entity.damage(getDamageSources().inFire(), damage * ElementalConfig.get().BENDING_DAMAGE_MULTIPLIER);
+            entity.hurt(damageSources().inFire(), damage * ElementalConfig.get().BENDING_DAMAGE_MULTIPLIER);
         }
     }
 
@@ -109,7 +109,7 @@ public class FireBlockEntity extends AbstractElementalsEntity<PlayerEntity> {
     }
 
     @Override
-    public void onDataTrackerUpdate(List<DataTracker.SerializedEntry<?>> dataEntries) {
+    public void onDataTrackerUpdate(List<SynchedEntityData.SerializedEntry<?>> dataEntries) {
         super.onDataTrackerUpdate(dataEntries);
     }
 
@@ -120,34 +120,34 @@ public class FireBlockEntity extends AbstractElementalsEntity<PlayerEntity> {
 
 
     public float getFireHeight() {
-        return this.dataTracker.get(HEIGHT);
+        return this.entityData.get(HEIGHT);
     }
 
     public void setFireHeight(float h) {
-        this.getDataTracker().set(HEIGHT, h);
+        this.getEntityData().set(HEIGHT, h);
     }
 
     public boolean isBlue() {
-        return this.dataTracker.get(IS_BLUE);
+        return this.entityData.get(IS_BLUE);
     }
 
     public void setIsBlue(boolean val) {
-        this.getDataTracker().set(IS_BLUE, val);
+        this.getEntityData().set(IS_BLUE, val);
     }
 
 
     @Override
-    public boolean canHit() {
+    public boolean isPickable() {
         return true;
     }
 
 
     public float getFinalFireHeight() {
-        return this.dataTracker.get(FINAL_HEIGHT);
+        return this.entityData.get(FINAL_HEIGHT);
     }
 
     public void setFinalFireHeight(float h) {
-        this.getDataTracker().set(FINAL_HEIGHT, h);
+        this.getEntityData().set(FINAL_HEIGHT, h);
     }
 
     @Override

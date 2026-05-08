@@ -213,7 +213,6 @@ public class ElementalEntities {
     
     public static void register() {
         FabricDefaultAttributeRegistry.register(DECOYPLAYER, DecoyPlayerEntity.createMobAttributes());
-
         FabricDefaultAttributeRegistry.register(SKYBISON, SkyBisonEntity.createAttributes());
     }
 

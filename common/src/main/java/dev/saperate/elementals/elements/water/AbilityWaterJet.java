@@ -4,6 +4,7 @@ import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.effects.ElementalsStatusEffects;
 import dev.saperate.elementals.elements.Ability;
+import dev.saperate.elementals.entities.water.WaterJetEntity;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -46,7 +47,7 @@ public class AbilityWaterJet implements Ability {
 
             WaterJetEntity parent = new WaterJetEntity(player.level(), player, pos.x, pos.y, pos.z);
             bender.abilityData = parent;
-            player.getWorld().spawnEntity(parent);
+            player.level().addFreshEntity(parent);
 
             WaterJetEntity child = new WaterJetEntity(player.level(), player, pos.x, pos.y, pos.z);
             parent.setChild(child);

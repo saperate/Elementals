@@ -7,7 +7,7 @@ import dev.saperate.elementals.entities.fire.FireArcEntity;
 import dev.saperate.elementals.entities.fire.FireBallEntity;
 import dev.saperate.elementals.entities.water.WaterCubeEntity;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.Player;
 import org.joml.Vector3f;
 
 import static dev.saperate.elementals.utils.SapsUtils.getEntityLookVector;
@@ -23,14 +23,14 @@ public class AbilityFireBall implements Ability {
             }
             return;
         }
-        PlayerEntity player = bender.player;
+        Player player = bender.player;
 
         Vector3f pos = getEntityLookVector(player, 2).toVector3f();
 
-        FireBallEntity entity = new FireBallEntity(player.getWorld(), player, pos.x, pos.y, pos.z);
+        FireBallEntity entity = new FireBallEntity(player.level(), player, pos.x, pos.y, pos.z);
         bender.abilityData = entity;
         entity.setIsBlue(PlayerData.get(player).canUseUpgrade("blueFire"));
-        player.getWorld().spawnEntity(entity);
+        player.level().addFreshEntity(entity);
 
         bender.setCurrAbility(this);
 
@@ -52,7 +52,7 @@ public class AbilityFireBall implements Ability {
         } else if (plrData.canUseUpgrade("fireArcSpeedI")) {
             speed = 1.5f;
         }
-        entity.setVelocity(bender.player, bender.player.getPitch(), bender.player.getYaw(), 0, speed, 0);
+        entity.setDeltaMovement(bender.player, bender.player.getPitch(), bender.player.getYaw(), 0, speed, 0);
     }
 
     @Override

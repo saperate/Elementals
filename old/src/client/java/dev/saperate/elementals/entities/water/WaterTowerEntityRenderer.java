@@ -44,7 +44,7 @@ public class WaterTowerEntityRenderer extends EntityRenderer<WaterTowerEntity> {
 
         VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderLayer.getTranslucentMovingBlock());
 
-        int color = BiomeColors.getWaterColor(entity.getWorld(),entity.getBlockPos());
+        int color = BiomeColors.getWaterColor(entity.level(),entity.getOnPos());
 
 
         for (int i = 0; i < Math.floor(1 + entity.getTowerHeight()); i++) {

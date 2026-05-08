@@ -55,9 +55,9 @@ public class MetalLanceRenderer extends EntityRenderer<MetalLanceEntity> impleme
             matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(-entity.getOwner().getYaw()));
             matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(entity.getOwner().getPitch()));
         }else{
-            double d = entity.getVelocity().horizontalLength();
-            float entityYaw = ((float)(MathHelper.atan2(entity.getVelocity().x, entity.getVelocity().z) * 57.2957763671875));
-            float pitch = ((float)(MathHelper.atan2(entity.getVelocity().y, d) * 57.2957763671875));
+            double d = entity.getDeltaMovement().horizontalLength();
+            float entityYaw = ((float)(MathHelper.atan2(entity.getDeltaMovement().x, entity.getDeltaMovement().z) * 57.2957763671875));
+            float pitch = ((float)(MathHelper.atan2(entity.getDeltaMovement().y, d) * 57.2957763671875));
             
             
             matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(entityYaw));

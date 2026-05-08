@@ -7,24 +7,24 @@ import dev.saperate.elementals.utils.SapsUtils;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.*;
-import net.minecraft.entity.data.DataTracker;
-import net.minecraft.entity.data.TrackedData;
-import net.minecraft.entity.data.TrackedDataHandlerRegistry;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.data.SynchedEntityData;
+import net.minecraft.entity.data.EntityDataAccessor;
+import net.minecraft.entity.data.EntityDataSerializers;
+import net.minecraft.entity.player.Player;
 import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.entity.projectile.ProjectileUtil;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.particle.BlockStateParticleEffect;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.predicate.entity.EntityPredicates;
-import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundSource;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.TypeFilter;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
+import net.minecraft.util.math.Vec3;
+import net.minecraft.world.Level;
 import org.joml.Vector3f;
 
 import java.util.List;
@@ -34,47 +34,47 @@ import static dev.saperate.elementals.entities.ElementalEntities.EARTHBLOCK;
 import static dev.saperate.elementals.utils.SapsUtils.getEntityLookVector;
 import static dev.saperate.elementals.utils.SapsUtils.summonParticles;
 
-public class EarthBlockEntity extends AbstractElementalsEntity<PlayerEntity> {
-    private static final TrackedData<Integer> MODEL_SHAPE_ID = DataTracker.registerData(EarthBlockEntity.class, TrackedDataHandlerRegistry.INTEGER);
-    private static final TrackedData<BlockState> BLOCK_STATE = DataTracker.registerData(EarthBlockEntity.class, TrackedDataHandlerRegistry.BLOCK_STATE);
-    private static final TrackedData<Vector3f> TARGET_POSITION = DataTracker.registerData(EarthBlockEntity.class, TrackedDataHandlerRegistry.VECTOR3F);
-    private static final TrackedData<Boolean> USES_OFFSET = DataTracker.registerData(EarthBlockEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
-    private static final TrackedData<Boolean> IS_COLLIDABLE = DataTracker.registerData(EarthBlockEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
-    private static final TrackedData<Float> MOVEMENT_SPEED = DataTracker.registerData(EarthBlockEntity.class, TrackedDataHandlerRegistry.FLOAT);
-    private static final TrackedData<Float> DAMAGE = DataTracker.registerData(EarthBlockEntity.class, TrackedDataHandlerRegistry.FLOAT);
-    private static final TrackedData<Boolean> SHIFT_FREEZE = DataTracker.registerData(EarthBlockEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
+public class EarthBlockEntity extends AbstractElementalsEntity<Player> {
+    private static final EntityDataAccessor<Integer> MODEL_SHAPE_ID = SynchedEntityData.defineId(EarthBlockEntity.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<BlockState> BLOCK_STATE = SynchedEntityData.defineId(EarthBlockEntity.class, EntityDataSerializers.BLOCK_STATE);
+    private static final EntityDataAccessor<Vector3f> TARGET_POSITION = SynchedEntityData.defineId(EarthBlockEntity.class, EntityDataSerializers.VECTOR3F);
+    private static final EntityDataAccessor<Boolean> USES_OFFSET = SynchedEntityData.defineId(EarthBlockEntity.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Boolean> IS_COLLIDABLE = SynchedEntityData.defineId(EarthBlockEntity.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Float> MOVEMENT_SPEED = SynchedEntityData.defineId(EarthBlockEntity.class, EntityDataSerializers.FLOAT);
+    private static final EntityDataAccessor<Float> DAMAGE = SynchedEntityData.defineId(EarthBlockEntity.class, EntityDataSerializers.FLOAT);
+    private static final EntityDataAccessor<Boolean> SHIFT_FREEZE = SynchedEntityData.defineId(EarthBlockEntity.class, EntityDataSerializers.BOOLEAN);
 
     private boolean drops = true, damageOnTouch = false, dropOnLifeTime = false;
 
 
-    public EarthBlockEntity(EntityType<EarthBlockEntity> type, World world) {
-        super(type, world, PlayerEntity.class);
+    public EarthBlockEntity(EntityType<EarthBlockEntity> type, Level world) {
+        super(type, world, Player.class);
     }
 
-    public EarthBlockEntity(World world, PlayerEntity owner) {
-        super(EARTHBLOCK, world, PlayerEntity.class);
+    public EarthBlockEntity(Level world, Player owner) {
+        super(EARTHBLOCK, world, Player.class);
         setOwner(owner);
         setPos(owner.getX(), owner.getY(), owner.getZ());
     }
 
-    public EarthBlockEntity(World world, PlayerEntity owner, double x, double y, double z) {
-        super(EARTHBLOCK, world, PlayerEntity.class);
+    public EarthBlockEntity(Level world, Player owner, double x, double y, double z) {
+        super(EARTHBLOCK, world, Player.class);
         setOwner(owner);
         setPos(x, y, z);
         setControlled(true);
     }
 
     @Override
-    protected void initDataTracker(DataTracker.Builder builder) {
-        super.initDataTracker(builder);
-        builder.add(MODEL_SHAPE_ID, 0);
-        builder.add(BLOCK_STATE, Blocks.AIR.getDefaultState());
-        builder.add(TARGET_POSITION, new Vector3f(0, -1000, 0));
-        builder.add(USES_OFFSET, false);
-        builder.add(IS_COLLIDABLE, true);
-        builder.add(MOVEMENT_SPEED, 0.1f);
-        builder.add(DAMAGE, 2f);
-        builder.add(SHIFT_FREEZE, true);
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(MODEL_SHAPE_ID, 0);
+        builder.define(BLOCK_STATE, Blocks.AIR.getDefaultState());
+        builder.define(TARGET_POSITION, new Vector3f(0, -1000, 0));
+        builder.define(USES_OFFSET, false);
+        builder.define(IS_COLLIDABLE, true);
+        builder.define(MOVEMENT_SPEED, 0.1f);
+        builder.define(DAMAGE, 2f);
+        builder.define(SHIFT_FREEZE, true);
     }
 
     @Override
@@ -87,7 +87,7 @@ public class EarthBlockEntity extends AbstractElementalsEntity<PlayerEntity> {
         }
 
         LivingEntity owner = getOwner();
-        if (!(owner != null && owner.isSneaking() && isShiftToFreeze())) {
+        if (!(owner != null && owner.isCrouching() && isShiftToFreeze())) {
             moveEntity(owner);
         }
 
@@ -98,7 +98,7 @@ public class EarthBlockEntity extends AbstractElementalsEntity<PlayerEntity> {
             controlEntity(owner);
         }
 
-        this.move(MovementType.SELF, this.getVelocity());
+        this.move(MoverType.SELF, this.getDeltaMovement());
     }
 
     private void controlEntity(Entity owner) {
@@ -108,7 +108,7 @@ public class EarthBlockEntity extends AbstractElementalsEntity<PlayerEntity> {
         }
         Vector3f target = getTargetPosition();
         Vector3f direction = (target.y == -1000 || usesOffset() ?
-                getEntityLookVector(owner, 3) : new Vec3d(target.x, target.y, target.z))
+                getEntityLookVector(owner, 3) : new Vec3(target.x, target.y, target.z))
                 .toVector3f();
 
         if (usesOffset()) {
@@ -124,14 +124,14 @@ public class EarthBlockEntity extends AbstractElementalsEntity<PlayerEntity> {
     }
 
     @Override
-    public boolean canHit() {
+    public boolean isPickable() {
         return true;
     }
 
     @Override
     public void collidesWithGround() {
-        if (!(getModelShapeId() == 1) && drops && getWorld().getGameRules().getBoolean(BENDING_GRIEFING)) {
-            getWorld().setBlockState(
+        if (!(getModelShapeId() == 1) && drops && level().getGameRules().getBoolean(BENDING_GRIEFING)) {
+            level().setBlockState(
                     new BlockPos(
                             getBlockX(),
                             (int) Math.round(getY()),
@@ -148,9 +148,9 @@ public class EarthBlockEntity extends AbstractElementalsEntity<PlayerEntity> {
     }
 
     @Override
-    public void onRemoved() {
-        super.onRemoved();
-        this.getWorld().playSound(getX(), getY(), getZ(), SoundEvents.BLOCK_STONE_BREAK, SoundCategory.BLOCKS, .5f, (1.0f + (this.getWorld().random.nextFloat() - this.getWorld().random.nextFloat()) * 0.2f) * 0.7f, false);
+    public void onClientRemoval() {
+        super.onClientRemoval();
+        this.level().playSound(getX(), getY(), getZ(), SoundEvents.BLOCK_STONE_BREAK, SoundSource.BLOCKS, .5f, (1.0f + (this.level().random.nextFloat() - this.level().random.nextFloat()) * 0.2f) * 0.7f, false);
         //TODO make this drop the block's item or place the block
     }
 
@@ -158,21 +158,21 @@ public class EarthBlockEntity extends AbstractElementalsEntity<PlayerEntity> {
     public void onTouchEntity(Entity entity) {
         LivingEntity owner = getOwner();
         if (!entity.equals(owner)) {
-            entity.damage(this.getDamageSources().playerAttack((PlayerEntity) owner), getDamage() * ElementalConfig.get().BENDING_DAMAGE_MULTIPLIER);
+            entity.hurt(this.damageSources().playerAttack((Player) owner), getDamage() * ElementalConfig.get().BENDING_DAMAGE_MULTIPLIER);
         } else {
             entity.fallDistance = 0;
         }
-        entity.setVelocity(this.getVelocity().multiply(1.2f));
+        entity.setDeltaMovement(this.getDeltaMovement().multiply(1.2f));
         entity.velocityModified = true;
-        entity.move(MovementType.SELF, entity.getVelocity());
+        entity.move(MoverType.SELF, entity.getDeltaMovement());
     }
 
     @Override
     public void onHitEntity(Entity entity) {
         entity.fallDistance = 0;
-        entity.damage(this.getDamageSources().playerAttack((PlayerEntity) getOwner()), getDamage() * ElementalConfig.get().BENDING_DAMAGE_MULTIPLIER);
-        entity.addVelocity(this.getVelocity().multiply(0.5));
-        entity.move(MovementType.SELF, entity.getVelocity());
+        entity.hurt(this.damageSources().playerAttack((Player) getOwner()), getDamage() * ElementalConfig.get().BENDING_DAMAGE_MULTIPLIER);
+        entity.addDeltaMovement(this.getDeltaMovement().multiply(0.5));
+        entity.move(MoverType.SELF, entity.getDeltaMovement());
         entity.velocityModified = true;
         discard();
     }
@@ -192,43 +192,43 @@ public class EarthBlockEntity extends AbstractElementalsEntity<PlayerEntity> {
     }
 
     public BlockState getBlockState() {
-        return this.getDataTracker().get(BLOCK_STATE);
+        return this.getEntityData().get(BLOCK_STATE);
     }
 
     public void setBlockState(BlockState state) {
-        this.getDataTracker().set(BLOCK_STATE, state);
+        this.getEntityData().set(BLOCK_STATE, state);
     }
 
     public void setModelShapeId(int val) {
-        this.getDataTracker().set(MODEL_SHAPE_ID, val);
+        this.getEntityData().set(MODEL_SHAPE_ID, val);
     }
 
     public int getModelShapeId() {
-        return this.getDataTracker().get(MODEL_SHAPE_ID);
+        return this.getEntityData().get(MODEL_SHAPE_ID);
     }
 
     public Vector3f getTargetPosition() {
-        return this.getDataTracker().get(TARGET_POSITION);
+        return this.getEntityData().get(TARGET_POSITION);
     }
 
     public void setTargetPosition(Vector3f pos) {
-        this.getDataTracker().set(TARGET_POSITION, pos);
+        this.getEntityData().set(TARGET_POSITION, pos);
     }
 
     public void setUseOffset(boolean val) {
-        this.getDataTracker().set(USES_OFFSET, val);
+        this.getEntityData().set(USES_OFFSET, val);
     }
 
     public boolean usesOffset() {
-        return this.getDataTracker().get(USES_OFFSET);
+        return this.getEntityData().get(USES_OFFSET);
     }
 
     public void setCollidable(boolean val) {
-        this.getDataTracker().set(IS_COLLIDABLE, val);
+        this.getEntityData().set(IS_COLLIDABLE, val);
     }
 
     public boolean isEntityCollidable() {
-        return this.getDataTracker().get(IS_COLLIDABLE);
+        return this.getEntityData().get(IS_COLLIDABLE);
     }
 
     public void setDrops(boolean val) {
@@ -253,20 +253,20 @@ public class EarthBlockEntity extends AbstractElementalsEntity<PlayerEntity> {
     }
 
     public void setShiftToFreeze(boolean val) {
-        this.getDataTracker().set(SHIFT_FREEZE, val);
+        this.getEntityData().set(SHIFT_FREEZE, val);
     }
 
     public boolean isShiftToFreeze() {
-        return this.getDataTracker().get(SHIFT_FREEZE);
+        return this.getEntityData().get(SHIFT_FREEZE);
     }
 
     @Override
     public float getMovementSpeed() {
-        return getDataTracker().get(MOVEMENT_SPEED);
+        return getEntityData().get(MOVEMENT_SPEED);
     }
 
     public void setMovementSpeed(float speed) {
-        getDataTracker().set(MOVEMENT_SPEED, speed);
+        getEntityData().set(MOVEMENT_SPEED, speed);
     }
 
     public boolean dropsOnEndOfLife() {
@@ -278,11 +278,11 @@ public class EarthBlockEntity extends AbstractElementalsEntity<PlayerEntity> {
     }
 
     public float getDamage() {
-        return getDataTracker().get(DAMAGE);
+        return getEntityData().get(DAMAGE);
     }
 
     public void setDamage(float dmg) {
-        getDataTracker().set(DAMAGE, dmg);
+        getEntityData().set(DAMAGE, dmg);
     }
 
     @Override

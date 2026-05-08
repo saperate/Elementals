@@ -14,7 +14,7 @@ import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.AbstractFurnaceBlockEntity;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.Player;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.particle.ParticleTypes;
@@ -34,7 +34,7 @@ import static dev.saperate.elementals.utils.SapsUtils.*;
 public class AbilityFireIgnite implements Ability {
     @Override
     public void onCall(Bender bender, long deltaT) {
-        PlayerEntity player = bender.player;
+        Player player = bender.player;
         PlayerData playerData = PlayerData.get(player);
 
         if(!playerData.canUseUpgrade("fireIgnition")){
@@ -52,8 +52,8 @@ public class AbilityFireIgnite implements Ability {
         }
 
         BlockHitResult hit = (BlockHitResult) player.raycast(5, 0, true);
-        BlockState blockState = player.getEntityWorld().getBlockState(hit.getBlockPos());
-        BlockPos bPos = hit.getBlockPos();
+        BlockState blockState = player.getEntityWorld().getBlockState(hit.getOnPos());
+        BlockPos bPos = hit.getOnPos();
 
         boolean hasFlareUp = PlayerData.get(player).canUseUpgrade("fireFlareUp");
 
@@ -61,7 +61,7 @@ public class AbilityFireIgnite implements Ability {
         if (hit.getType() == HitResult.Type.BLOCK) {
             if(blockState.getProperties().contains(Properties.LIT)){
 
-                BlockEntity blockEntity = player.getWorld().getBlockEntity(bPos);
+                BlockEntity blockEntity = player.level().getBlockEntity(bPos);
 
                 if (blockEntity instanceof AbstractFurnaceBlockEntity furnace){
                     Elementals.USED_ABILITY.trigger((ServerPlayerEntity) player, "ignite/furnace");
@@ -69,18 +69,18 @@ public class AbilityFireIgnite implements Ability {
                     ((FurnaceBlockEntityAccessor) furnace).setFuelTime(hasFlareUp ? 225 : 100);
                 }
 
-                player.getWorld().setBlockState(bPos, blockState.with(Properties.LIT, true), 11);
-                player.getWorld().emitGameEvent(player, GameEvent.BLOCK_CHANGE, bPos);
+                player.level().setBlockState(bPos, blockState.with(Properties.LIT, true), 11);
+                player.level().emitGameEvent(player, GameEvent.BLOCK_CHANGE, bPos);
                 return;
             }
 
-            if(AbstractFireBlock.canPlaceAt(player.getWorld(),bPos.up(),hit.getSide())){
+            if(AbstractFireBlock.canPlaceAt(player.level(),bPos.up(),hit.getSide())){
                 if(hasFlareUp){
-                    FireBlockEntity entity = new FireBlockEntity(player.getWorld(), player, bPos.getX() + 0.5f, bPos.getY() + 1, bPos.getZ() + 0.5f);
+                    FireBlockEntity entity = new FireBlockEntity(player.level(), player, bPos.getX() + 0.5f, bPos.getY() + 1, bPos.getZ() + 0.5f);
                     entity.setIsBlue(PlayerData.get(player).canUseUpgrade("blueFire"));
-                    player.getWorld().spawnEntity(entity);
+                    player.level().addFreshEntity(entity);
                 }
-                placeFire(hit.getBlockPos(), hit.getSide(), player, blockState);
+                placeFire(hit.getOnPos(), hit.getSide(), player, blockState);
             }
 
         }
