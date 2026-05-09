@@ -22,7 +22,7 @@ import java.util.Map;
 abstract class EntityModelsMixin {
     @Inject(method = "createRoots", at = @At(value = "INVOKE", target = "Lcom/google/common/collect/ImmutableMap$Builder;build()Lcom/google/common/collect/ImmutableMap;", remap = false))
     private static void registerExtraModelData(CallbackInfoReturnable<Map<ModelLayerLocation, LayerDefinition>> info, @Local(name = "builder") ImmutableMap.Builder<ModelLayerLocation, LayerDefinition> builder) {
-        for (Map.Entry<ModelLayerLocation, LayerDefinition> entry : ElementalsClient.MODELS.entrySet()) {
+        for (Map.Entry<ModelLayerLocation, LayerDefinition> entry : ElementalsClient.getModels().entrySet()) {
             builder.put(entry.getKey(), entry.getValue());
         }
     }

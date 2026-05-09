@@ -1,16 +1,17 @@
 package dev.saperate.elementals.client.particle;
 
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.particle.SimpleParticleType;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.random.Random;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 
-public class MetalShardParticle extends AbstractSlowingParticle {
-    private final Random random;
-    MetalShardParticle(ClientWorld clientWorld, double d, double e, double f, double g, double h, double i) {
+public class MetalShardParticle extends RisingParticle {
+    private final RandomSource random;
+    MetalShardParticle(ClientLevel clientWorld, double d, double e, double f, double g, double h, double i) {
         super(clientWorld, d, e, f, g, h + 0.25f, i);
-        random = Random.create();
+        random = RandomSource.create();
         scale(1f + 0.5f * random.nextFloat());
         
     }
@@ -18,28 +19,29 @@ public class MetalShardParticle extends AbstractSlowingParticle {
     @Override
     public void tick() {
         super.tick();
-        velocityY -= 0.05f;
-        scale -= 0.01f;
+        yd -= 0.05f;
+        quadSize -= 0.01f;
     }
 
-    public ParticleTextureSheet getType() {
-        return ParticleTextureSheet.PARTICLE_SHEET_OPAQUE;
+    @Override
+    public ParticleRenderType getRenderType() {
+        return ParticleRenderType.PARTICLE_SHEET_OPAQUE;
     }
 
     public void move(double dx, double dy, double dz) {
-        this.setBoundingBox(this.getBoundingBox().offset(dx, dy, dz));
-        this.repositionFromBoundingBox();
+        this.setBoundingBox(this.getBoundingBox().move(dx, dy, dz));
+        this.setLocationFromBoundingbox();
     }
 
     public float getSize(float tickDelta) {
-        float f = ((float) this.tickCount + tickDelta) / (float) this.maxAge;
-        return this.scale * (1.0F - f * f * 0.5F);
+        float f = ((float) this.age + tickDelta) / (float) this.lifetime;
+        return this.quadSize * (1.0F - f * f * 0.5F);
     }
 
     public int getBrightness(float tint) {
-        float f = ((float) this.tickCount + tint) / (float) this.maxAge;
-        f = MathHelper.clamp(f, 0.0F, 1.0F);
-        int i = super.getBrightness(tint);
+        float f = ((float) this.age + tint) / (float) this.lifetime;
+        f = Mth.clamp(f, 0.0F, 1.0F);
+        int i = super.getLightColor(tint);
         int j = i & 255;
         int k = i >> 16 & 255;
         j += (int) (f * 15.0F * 16.0F);
@@ -50,16 +52,16 @@ public class MetalShardParticle extends AbstractSlowingParticle {
         return j | k << 16;
     }
 
-    public static class Factory implements ParticleFactory<SimpleParticleType> {
-        private final SpriteProvider spriteProvider;
+    public static class Factory implements ParticleProvider<SimpleParticleType> {
+        private final SpriteSet spriteProvider;
 
-        public Factory(SpriteProvider spriteProvider) {
+        public Factory(SpriteSet spriteProvider) {
             this.spriteProvider = spriteProvider;
         }
 
-        public Particle createParticle(SimpleParticleType defaultParticleType, ClientWorld clientWorld, double d, double e, double f, double g, double h, double i) {
+        public Particle createParticle(SimpleParticleType defaultParticleType, ClientLevel clientWorld, double d, double e, double f, double g, double h, double i) {
             MetalShardParticle particle = new MetalShardParticle(clientWorld, d, e, f, g, h, i);
-            particle.setSprite(this.spriteProvider);
+            particle.pickSprite(this.spriteProvider);
             return particle;
         }
     }

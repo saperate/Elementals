@@ -27,4 +27,6 @@ public interface IRegistryHelper {
     
     void registerCommands();
     void registerLootTables();
+    
+    void registerClientParticle();
 }

@@ -1,9 +1,12 @@
 package dev.saperate.elementals.platform;
 
+import dev.saperate.elementals.client.particle.MetalShardParticle;
 import dev.saperate.elementals.commands.BendingCommand;
 import dev.saperate.elementals.commands.ElementalsCommand;
 import dev.saperate.elementals.items.ElementalsItems;
 import dev.saperate.elementals.platform.services.IRegistryHelper;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.particle.FlameParticle;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
@@ -17,6 +20,8 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.LootTableLoadEvent;
 import net.minecraftforge.event.RegisterCommandsEvent;
 
+import static dev.saperate.elementals.Elementals.LIGHTNING_PARTICLE_TYPE;
+import static dev.saperate.elementals.Elementals.METAL_SHARD_PARTICLE_TYPE;
 import static dev.saperate.elementals.items.ElementalsItems.*;
 
 public class ForgeRegistryHelper implements IRegistryHelper {
@@ -69,5 +74,11 @@ public class ForgeRegistryHelper implements IRegistryHelper {
                         .add(LootItem.lootTableItem(BLOOD_SCROLL_ITEM)).build());
             }
         });
+    }
+
+    @Override
+    public void registerClientParticle() {
+        Minecraft.getInstance().particleEngine.register(LIGHTNING_PARTICLE_TYPE, FlameParticle.Provider::new);
+        Minecraft.getInstance().particleEngine.register(METAL_SHARD_PARTICLE_TYPE, MetalShardParticle.Factory::new);
     }
 }

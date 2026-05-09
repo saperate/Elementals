@@ -1,15 +1,18 @@
 package dev.saperate.elementals.platform;
 
 import dev.saperate.elementals.Elementals;
+import dev.saperate.elementals.client.particle.MetalShardParticle;
 import dev.saperate.elementals.commands.BendingCommand;
 import dev.saperate.elementals.commands.ElementalsCommand;
 import dev.saperate.elementals.items.ElementalsItems;
 import dev.saperate.elementals.platform.services.IRegistryHelper;
+import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.gamerule.v1.GameRuleFactory;
 import net.fabricmc.fabric.api.gamerule.v1.GameRuleRegistry;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.fabricmc.fabric.api.loot.v3.LootTableEvents;
+import net.minecraft.client.particle.FlameParticle;
 import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.CreativeModeTab;
@@ -21,6 +24,8 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.storage.loot.BuiltInLootTables;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
 
+import static dev.saperate.elementals.Elementals.LIGHTNING_PARTICLE_TYPE;
+import static dev.saperate.elementals.Elementals.METAL_SHARD_PARTICLE_TYPE;
 import static dev.saperate.elementals.items.ElementalsItems.*;
 
 public class FabricRegistryHelper implements IRegistryHelper {
@@ -71,6 +76,12 @@ public class FabricRegistryHelper implements IRegistryHelper {
                 });
             }
         }));
+    }
+
+    @Override
+    public void registerClientParticle() {
+        ParticleFactoryRegistry.getInstance().register(LIGHTNING_PARTICLE_TYPE, FlameParticle.Provider::new);
+        ParticleFactoryRegistry.getInstance().register(METAL_SHARD_PARTICLE_TYPE, MetalShardParticle.Factory::new);
     }
 
 }
