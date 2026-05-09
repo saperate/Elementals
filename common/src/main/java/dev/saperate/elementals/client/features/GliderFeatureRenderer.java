@@ -9,7 +9,7 @@ import net.minecraft.client.render.entity.feature.FeatureRendererContext;
 import net.minecraft.client.render.entity.model.*;
 import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.client.render.model.json.ModelTransformationMode;
-import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.client.util.math.PoseStack;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.Player;
 import net.minecraft.item.ItemStack;
@@ -23,7 +23,7 @@ public class GliderFeatureRenderer<T extends LivingEntity, M extends EntityModel
     }
 
     @Override
-    public void render(MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, T entity, float limbAngle, float limbDistance, float tickDelta, float animationProgress, float headYaw, float headPitch) {
+    public void render(PoseStack matrices, VertexConsumerProvider vertexConsumers, int light, T entity, float limbAngle, float limbDistance, float tickDelta, float animationProgress, float headYaw, float headPitch) {
         ItemStack stack = SapsUtils.getFirstItemOfTypeInHands((Player) entity, ElementalItems.GLIDER_ITEM);
         if(stack.isEmpty() || !entity.isFallFlying() 
                 || ElementalItems.GLIDER_ITEM.getState(stack) == GliderItem.GliderStates.CLOSED){

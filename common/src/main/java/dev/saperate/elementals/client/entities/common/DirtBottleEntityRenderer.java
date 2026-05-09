@@ -8,7 +8,7 @@ import net.minecraft.client.render.entity.EntityRenderer;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.client.render.model.json.ModelTransformationMode;
-import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.client.util.math.PoseStack;
 import net.minecraft.util.Identifier;
 
 import static dev.saperate.elementals.Elementals.MODID;
@@ -24,7 +24,7 @@ public class DirtBottleEntityRenderer extends EntityRenderer<DirtBottleEntity> {
 
 
     @Override
-    public void render(DirtBottleEntity entity, float yaw, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light) {
+    public void render(DirtBottleEntity entity, float yaw, float tickDelta, PoseStack matrices, VertexConsumerProvider vertexConsumers, int light) {
         matrices.push();
 
         matrices.translate(0.0D, 0.15D, 0.0D);

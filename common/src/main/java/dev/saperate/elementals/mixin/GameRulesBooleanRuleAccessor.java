@@ -7,6 +7,10 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 
 import java.util.function.BiConsumer;
 
+/**
+ * From Fabric-API {5/8/2026}
+ * Use their license for this file
+ */
 @Mixin(GameRules.BooleanValue.class)
 public interface GameRulesBooleanRuleAccessor {
     @Invoker

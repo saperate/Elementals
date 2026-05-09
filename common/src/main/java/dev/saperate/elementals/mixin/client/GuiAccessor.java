@@ -7,7 +7,6 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 
 @Mixin(Gui.class)
 public interface GuiAccessor {
-
     @Accessor("layers")
     LayeredDraw elementals$getLayers();
 

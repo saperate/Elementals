@@ -4,12 +4,13 @@
 
 package dev.saperate.elementals.client.entities.models.metal;
 
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import dev.saperate.elementals.entities.metal.MetalLanceEntity;
 import net.minecraft.client.model.*;
-import net.minecraft.client.render.VertexConsumer;
-import net.minecraft.client.render.entity.model.EntityModel;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.entity.Entity;
+import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.model.geom.PartPose;
+import net.minecraft.client.model.geom.builders.*;
 
 public class MetalLanceModel extends EntityModel<MetalLanceEntity> {
 	private final ModelPart CoreTransition;
@@ -18,24 +19,26 @@ public class MetalLanceModel extends EntityModel<MetalLanceEntity> {
 		this.CoreTransition = root.getChild("CoreTransition");
 		this.SpearHead = root.getChild("SpearHead");
 	}
-	public static TexturedModelData getTexturedModelData() {
-		ModelData modelData = new ModelData();
-		ModelPartData modelPartData = modelData.getRoot();
-		ModelPartData CoreTransition = modelPartData.addChild("CoreTransition", ModelPartBuilder.create().uv(0, 0).cuboid(-0.5F, -2.0F, -15.0F, 1.0F, 2.0F, 29.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, 24.0F, 1.0F));
+	public static LayerDefinition getTexturedModelData() {
+		MeshDefinition modelData = new MeshDefinition();
+		PartDefinition modelPartData = modelData.getRoot();
+		PartDefinition CoreTransition = modelPartData.addOrReplaceChild("CoreTransition", CubeListBuilder.create().texOffs(0, 0).addBox(-0.5F, -2.0F, -15.0F, 1.0F, 2.0F, 29.0F, new CubeDeformation(0.0F)), PartPose.rotation(0.0F, 24.0F, 1.0F));
 
-		ModelPartData SpearHead = modelPartData.addChild("SpearHead", ModelPartBuilder.create(), ModelTransform.of(0.0F, 23.0F, 12.5F, 0.0F, 0.0F, 1.5708F));
+		PartDefinition SpearHead = modelPartData.addOrReplaceChild("SpearHead", CubeListBuilder.create(), PartPose.offsetAndRotation(0.0F, 23.0F, 12.5F, 0.0F, 0.0F, 1.5708F));
 
-		ModelPartData cube_r1 = SpearHead.addChild("cube_r1", ModelPartBuilder.create().uv(14, 31).cuboid(1.0F, -1.01F, -1.0F, 1.0F, 1.0F, 6.0F, new Dilation(0.01F)), ModelTransform.of(0.1F, 0.51F, -2.5F, 0.0F, -0.2094F, 0.0F));
+		PartDefinition cube_r1 = SpearHead.addOrReplaceChild("cube_r1", CubeListBuilder.create().texOffs(14, 31).addBox(1.0F, -1.01F, -1.0F, 1.0F, 1.0F, 6.0F, new CubeDeformation(0.01F)), PartPose.offsetAndRotation(0.1F, 0.51F, -2.5F, 0.0F, -0.2094F, 0.0F));
 
-		ModelPartData cube_r2 = SpearHead.addChild("cube_r2", ModelPartBuilder.create().uv(0, 31).cuboid(-2.0F, -1.01F, -1.0F, 1.0F, 1.0F, 6.0F, new Dilation(0.01F)), ModelTransform.of(-0.1F, 0.51F, -2.5F, 0.0F, 0.2094F, 0.0F));
-		return TexturedModelData.of(modelData, 64, 64);
-	}
-	@Override
-	public void setAngles(MetalLanceEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+		PartDefinition cube_r2 = SpearHead.addOrReplaceChild("cube_r2", CubeListBuilder.create().texOffs(0, 31).addBox(-2.0F, -1.01F, -1.0F, 1.0F, 1.0F, 6.0F, new CubeDeformation(0.01F)), PartPose.offsetAndRotation(-0.1F, 0.51F, -2.5F, 0.0F, 0.2094F, 0.0F));
+		return LayerDefinition.create(modelData, 64, 64);
 	}
 
 	@Override
-	public void render(MatrixStack matrices, VertexConsumer vertices, int light, int overlay, int color) {
+	public void setupAnim(MetalLanceEntity metalLanceEntity, float v, float v1, float v2, float v3, float v4) {
+		
+	}
+
+	@Override
+	public void renderToBuffer(PoseStack matrices, VertexConsumer vertices, int light, int overlay, int color) {
 		CoreTransition.render(matrices, vertices, light, overlay, color);
 		SpearHead.render(matrices, vertices, light, overlay, color);
 	}

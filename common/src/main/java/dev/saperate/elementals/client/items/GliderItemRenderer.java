@@ -5,7 +5,7 @@ import dev.saperate.elementals.items.GliderItem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.model.json.ModelTransformationMode;
-import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.client.util.math.PoseStack;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
 import software.bernie.geckolib.renderer.GeoItemRenderer;
@@ -20,7 +20,7 @@ public class GliderItemRenderer extends GeoItemRenderer<GliderItem> {
     }
 
     @Override
-    public void render(ItemStack stack, ModelTransformationMode transformType, MatrixStack poseStack, VertexConsumerProvider bufferSource, int packedLight, int packedOverlay) {
+    public void render(ItemStack stack, ModelTransformationMode transformType, PoseStack poseStack, VertexConsumerProvider bufferSource, int packedLight, int packedOverlay) {
         
         super.render(stack, transformType, poseStack, bufferSource, packedLight, packedOverlay);
     }

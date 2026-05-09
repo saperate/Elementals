@@ -10,7 +10,7 @@ import static org.lwjgl.opengl.GL11.glRotatef;
 import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.texture.Sprite;
-import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.client.util.math.PoseStack;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
@@ -25,7 +25,7 @@ import java.util.function.Function;
 
 public abstract class RenderUtils {
 
-    public static void drawCube(VertexConsumer vertexConsumer, MatrixStack matrices, int light,
+    public static void drawCube(VertexConsumer vertexConsumer, PoseStack matrices, int light,
                                 float r, float g, float b, float a, Identifier tex, Identifier topTex, float height, Matrix4f rot,
                                 boolean doubleSided, boolean renderTop, boolean renderBottom) {
 
@@ -128,13 +128,13 @@ public abstract class RenderUtils {
         }
     }
 
-    public static void drawCube(VertexConsumer vertexConsumer, MatrixStack matrices, int light,
+    public static void drawCube(VertexConsumer vertexConsumer, PoseStack matrices, int light,
                                 float r, float g, float b, float a, Identifier tex, float height, Matrix4f rot,
                                 boolean doubleSided, boolean renderTop, boolean renderBottom) {
         drawCube(vertexConsumer, matrices, light, r, g, b, a, tex, tex, height, rot, doubleSided, renderTop, renderBottom);
     }
 
-    public static void drawInvertedCube(VertexConsumer vertexConsumer, MatrixStack matrices, int light,
+    public static void drawInvertedCube(VertexConsumer vertexConsumer, PoseStack matrices, int light,
                                         float r, float g, float b, float a, Identifier tex, Identifier topTex, float height, Matrix4f rot,
                                         boolean renderTop, boolean renderBottom) {
 
@@ -221,7 +221,7 @@ public abstract class RenderUtils {
     }
 
 
-    public static void drawQuad(VertexConsumer vertexConsumer, MatrixStack matrices, int light,
+    public static void drawQuad(VertexConsumer vertexConsumer, PoseStack matrices, int light,
                                 float uMin, float uMax, float vMin, float vMax,
                                 float r, float g, float b, float a,
                                 float nx, float ny, float nz,
@@ -236,7 +236,7 @@ public abstract class RenderUtils {
         vertexConsumer.vertex(matrices.peek().getPositionMatrix(), x4, y4, z4).color(r, g, b, a).texture(uMax, vMin).overlay(OverlayTexture.DEFAULT_UV).light(light).normal(nx, ny, nz);
     }
 
-    public static void drawQuad(VertexConsumer vertexConsumer, MatrixStack matrices, int light,
+    public static void drawQuad(VertexConsumer vertexConsumer, PoseStack matrices, int light,
                                 float uMin, float uMax, float vMin, float vMax,
                                 float r, float g, float b, float a,
                                 float nx, float ny, float nz,

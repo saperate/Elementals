@@ -8,7 +8,7 @@ import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRenderer;
 import net.minecraft.client.render.entity.EntityRendererFactory;
-import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.client.util.math.PoseStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.RotationAxis;
 import org.joml.Matrix4f;
@@ -25,7 +25,7 @@ public class AirTornadoEntityRenderer extends EntityRenderer<AirTornadoEntity> {
     }
 
     @Override
-    public void render(AirTornadoEntity entity, float yaw, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light) {
+    public void render(AirTornadoEntity entity, float yaw, float tickDelta, PoseStack matrices, VertexConsumerProvider vertexConsumers, int light) {
         if (firstTime == -1) {
             firstTime = System.currentTimeMillis();
         }

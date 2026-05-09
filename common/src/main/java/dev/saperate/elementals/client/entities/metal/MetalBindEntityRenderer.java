@@ -6,7 +6,7 @@ import net.fabricmc.loader.impl.lib.sat4j.core.Vec;
 import net.minecraft.client.render.*;
 import net.minecraft.client.render.entity.EntityRenderer;
 import net.minecraft.client.render.entity.EntityRendererFactory;
-import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.client.util.math.PoseStack;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
@@ -27,7 +27,7 @@ public class MetalBindEntityRenderer extends EntityRenderer<MetalBindEntity> {
     }
 
     @Override
-    public void render(MetalBindEntity entity, float yaw, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light) {
+    public void render(MetalBindEntity entity, float yaw, float tickDelta, PoseStack matrices, VertexConsumerProvider vertexConsumers, int light) {
         if (entity.getChild() == null) {
             return;
         }
@@ -51,7 +51,7 @@ public class MetalBindEntityRenderer extends EntityRenderer<MetalBindEntity> {
     }
 
 
-    private static void renderCubeFromAToB(Vec3 origin, Vec3 pointA, Vec3 pointB,MatrixStack matrices, VertexConsumer vertexConsumer, float size){
+    private static void renderCubeFromAToB(Vec3 origin, Vec3 pointA, Vec3 pointB,PoseStack matrices, VertexConsumer vertexConsumer, float size){
         Matrix4f mat = new Matrix4f();
         matrices.push();
         Vec3 dir = pointB.subtract(pointA).normalize();

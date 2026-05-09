@@ -18,10 +18,12 @@ import dev.saperate.elementals.entities.air.*;
 import dev.saperate.elementals.items.ElementalsItems;
 import dev.saperate.elementals.items.WaterPouchItem;
 import dev.saperate.elementals.mixin.client.GuiAccessor;
+import dev.saperate.elementals.mixin.client.ModelLayersAccessor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.LayeredDraw;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
+import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.particle.FlameParticle;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.client.renderer.RenderType;
@@ -32,6 +34,8 @@ import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.client.GeoRenderProvider;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 import static dev.saperate.elementals.Elementals.*;
@@ -44,7 +48,7 @@ public class ElementalsClient {
             ResourceLocation.fromNamespaceAndPath(MODID, "water_blade"), "bb_main"));
     public static final ModelLayerLocation MODEL_METAL_LANCE_LAYER = (new ModelLayerLocation(
             ResourceLocation.fromNamespaceAndPath(MODID, "metal_lance"),"bb_main"));
-    
+    public static final Map<ModelLayerLocation, LayerDefinition> MODELS = new HashMap<>();
     
     
     public static void init(){
@@ -62,11 +66,10 @@ public class ElementalsClient {
         hudLayers.add(new CastTimerHudOverlay());
         hudLayers.add(new ChiHudOverlay());
         
-
-
-		EntityModelLayerRegistry.registerModelLayer(MODEL_WATER_BLADE_LAYER, WaterBladeModel::getTexturedModelData);
-		EntityModelLayerRegistry.registerModelLayer(MODEL_DECOY_PLAYER, DecoyPlayerModel::getTexturedModelData);
-		EntityModelLayerRegistry.registerModelLayer(MODEL_METAL_LANCE_LAYER, MetalLanceModel::getTexturedModelData);
+        
+		registerModelLayer(MODEL_WATER_BLADE_LAYER, WaterBladeModel.getTexturedModelData());
+		registerModelLayer(MODEL_DECOY_PLAYER, DecoyPlayerModel.getTexturedModelData());
+		registerModelLayer(MODEL_METAL_LANCE_LAYER, MetalLanceModel.getTexturedModelData());
         
         ParticleFactoryRegistry.getInstance().register(LIGHTNING_PARTICLE_TYPE, FlameParticle.Provider::new);
 		ParticleFactoryRegistry.getInstance().register(METAL_SHARD_PARTICLE_TYPE, MetalShardParticle.Factory::new);
@@ -167,5 +170,10 @@ public class ElementalsClient {
         }
 
         ClientPlayNetworking.send(new SyncVersionPayload(response));
+    }
+    
+    private static void registerModelLayer(ModelLayerLocation location, LayerDefinition definition){
+        MODELS.put(location,definition);
+        Minecraft.getInstance().getEntityModels().bakeLayer(MODEL_METAL_LANCE_LAYER);
     }
 }

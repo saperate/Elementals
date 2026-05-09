@@ -21,7 +21,7 @@ import net.minecraft.client.render.entity.model.*;
 import net.minecraft.client.texture.AbstractTexture;
 import net.minecraft.client.texture.PlayerSkinTexture;
 import net.minecraft.client.util.DefaultSkinHelper;
-import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.client.util.math.PoseStack;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
@@ -42,7 +42,7 @@ public class DecoyPlayerEntityRenderer extends LivingEntityRenderer<DecoyPlayerE
     }
 
     @Override
-    public void render(DecoyPlayerEntity decoy, float f, float g, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i) {
+    public void render(DecoyPlayerEntity decoy, float f, float g, PoseStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i) {
         super.render(decoy, f, g, matrixStack, vertexConsumerProvider, i);
         if(decoy.getOwner().equals(ClientBender.get().player) && decoy.getFocusCamera()){
             ClientBender.get().ClientAbilityData = decoy;

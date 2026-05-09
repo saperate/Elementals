@@ -8,6 +8,10 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 
 import java.util.Map;
 
+/**
+ * From Fabric-API {5/8/2026}
+ * Use their license for this file
+ */
 @Mixin(GameRules.class)
 public class GameRulesAccessor {
     @Invoker("register")

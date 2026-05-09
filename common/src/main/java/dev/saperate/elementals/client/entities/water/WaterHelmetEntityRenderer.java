@@ -5,7 +5,7 @@ import net.minecraft.client.color.world.BiomeColors;
 import net.minecraft.client.render.*;
 import net.minecraft.client.render.entity.EntityRenderer;
 import net.minecraft.client.render.entity.EntityRendererFactory;
-import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.client.util.math.PoseStack;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.Identifier;
@@ -26,7 +26,7 @@ public class WaterHelmetEntityRenderer extends EntityRenderer<WaterHelmetEntity>
     }
 
     @Override
-    public void render(WaterHelmetEntity entity, float yaw, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light) {
+    public void render(WaterHelmetEntity entity, float yaw, float tickDelta, PoseStack matrices, VertexConsumerProvider vertexConsumers, int light) {
         LivingEntity owner = entity.getOwner();
         Vec3 eyePos = owner.getCameraPosVec(tickDelta);
         entity.setPos(eyePos.x,eyePos.y - 0.5f, eyePos.z);

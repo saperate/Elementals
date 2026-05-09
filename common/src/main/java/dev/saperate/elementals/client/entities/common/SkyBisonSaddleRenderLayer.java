@@ -6,7 +6,7 @@ import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.client.util.math.PoseStack;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.cache.object.GeoBone;
 import software.bernie.geckolib.model.GeoModel;
@@ -21,7 +21,7 @@ public class SkyBisonSaddleRenderLayer extends GeoRenderLayer<SkyBisonEntity> {
 
 
     @Override
-    public void render(MatrixStack poseStack, SkyBisonEntity animatable, BakedGeoModel bakedModel, RenderLayer renderType, VertexConsumerProvider bufferSource, VertexConsumer buffer, float partialTick, int packedLight, int packedOverlay) {
+    public void render(PoseStack poseStack, SkyBisonEntity animatable, BakedGeoModel bakedModel, RenderLayer renderType, VertexConsumerProvider bufferSource, VertexConsumer buffer, float partialTick, int packedLight, int packedOverlay) {
         ((SkyBisonEntityRenderer)getRenderer()).saddleRenderer.render(animatable,animatable.bodyYaw,partialTick,poseStack,bufferSource,packedLight);
     }
 }

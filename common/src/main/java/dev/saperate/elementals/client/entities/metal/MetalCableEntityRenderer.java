@@ -7,7 +7,7 @@ import net.fabricmc.loader.impl.lib.sat4j.core.Vec;
 import net.minecraft.client.render.*;
 import net.minecraft.client.render.entity.EntityRenderer;
 import net.minecraft.client.render.entity.EntityRendererFactory;
-import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.client.util.math.PoseStack;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
@@ -28,7 +28,7 @@ public class MetalCableEntityRenderer extends EntityRenderer<MetalCableEntity> {
     }
 
     @Override
-    public void render(MetalCableEntity entity, float yaw, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light) {
+    public void render(MetalCableEntity entity, float yaw, float tickDelta, PoseStack matrices, VertexConsumerProvider vertexConsumers, int light) {
         if (entity.getParent() == null) {
             return;
         }
@@ -48,7 +48,7 @@ public class MetalCableEntityRenderer extends EntityRenderer<MetalCableEntity> {
     }
 
 
-    private static Vec3 renderCubeFromAToB(Vec3 pointA, Vec3 pointB,MatrixStack matrices, VertexConsumer vertexConsumer, float size, Vec3 prevDir, float tickDelta){
+    private static Vec3 renderCubeFromAToB(Vec3 pointA, Vec3 pointB,PoseStack matrices, VertexConsumer vertexConsumer, float size, Vec3 prevDir, float tickDelta){
         Matrix4f mat = new Matrix4f();
 
         Vec3 dir = prevDir.lerp(pointA.subtract(pointB).normalize(),tickDelta);

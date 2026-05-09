@@ -5,7 +5,7 @@ import dev.saperate.elementals.entities.air.AirBallEntity;
 import net.minecraft.client.render.*;
 import net.minecraft.client.render.entity.EntityRenderer;
 import net.minecraft.client.render.entity.EntityRendererFactory;
-import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.client.util.math.PoseStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.RotationAxis;
 import org.joml.Matrix4f;
@@ -23,7 +23,7 @@ public class AirBallEntityRenderer extends EntityRenderer<AirBallEntity> {
     }
 
     @Override
-    public void render(AirBallEntity entity, float yaw, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light) {
+    public void render(AirBallEntity entity, float yaw, float tickDelta, PoseStack matrices, VertexConsumerProvider vertexConsumers, int light) {
         if(firstTime == -1){
             firstTime = System.currentTimeMillis();
         }
