@@ -1,5 +1,5 @@
 # gradle
-
+build
 .gradle/
 build/
 out/
@@ -8,6 +8,9 @@ classes/
 # eclipse
 
 *.launch
+bin
+.settings
+.metadata
 
 # idea
 
@@ -38,3 +41,14 @@ hs_err_*.log
 replay_*.log
 *.hprof
 *.jfr
+
+
+# idea
+out
+.idea/*
+!.idea/scopes
+
+# other
+eclipse
+run
+runs

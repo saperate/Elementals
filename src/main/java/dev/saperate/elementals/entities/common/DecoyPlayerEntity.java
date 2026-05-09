@@ -48,6 +48,7 @@ public class DecoyPlayerEntity extends PathAwareEntity {
     private DefaultedList<ItemStack> items = DefaultedList.ofSize(6, ItemStack.EMPTY);
     public static final TrackedData<Integer> RANGE = DataTracker.registerData(DecoyPlayerEntity.class, TrackedDataHandlerRegistry.INTEGER);
     public static final TrackedData<Boolean> FOCUS_CAMERA = DataTracker.registerData(DecoyPlayerEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
+
     public DecoyPlayerEntity(EntityType<? extends PathAwareEntity> entityType, World world) {
         super(entityType, world);
     }
@@ -64,8 +65,8 @@ public class DecoyPlayerEntity extends PathAwareEntity {
         super.initDataTracker();
         this.getDataTracker().startTracking(OWNER_ID, Optional.empty());
         this.getDataTracker().startTracking(OWNER_NAME, "");
-        this.getDataTracker().startTracking(RANGE,5);
-        this.getDataTracker().startTracking(FOCUS_CAMERA,false);
+        this.getDataTracker().startTracking(RANGE, 5);
+        this.getDataTracker().startTracking(FOCUS_CAMERA, false);
     }
 
 
@@ -80,8 +81,8 @@ public class DecoyPlayerEntity extends PathAwareEntity {
             return;
         }
 
-        if(SapsUtils.checkBlockCollision(this,-0.1f,false) != null){//checks if we are INSIDE a block
-            setVelocity(0,0,0);
+        if (SapsUtils.checkBlockCollision(this, -0.1f, false) != null) {//checks if we are INSIDE a block
+            setVelocity(0, 0, 0);
         }
 
         //I have no idea why, but this prevents the entity from floating and being stuck, so it is staying
@@ -98,13 +99,9 @@ public class DecoyPlayerEntity extends PathAwareEntity {
             } else if (!this.hasNoGravity()) {
                 this.setVelocity(this.getVelocity().add(0.0, -0.04, 0.0));
             }
-            if (this.getWorld().isClient) {
-                this.noClip = false;
-            } else {
-                boolean bl = this.noClip = !this.getWorld().isSpaceEmpty(this, this.getBoundingBox().contract(1.0E-7));
-                if (this.noClip) {
-                    this.pushOutOfBlocks(this.getX(), (this.getBoundingBox().minY + this.getBoundingBox().maxY) / 2.0, this.getZ());
-                }
+            noClip =  !this.getWorld().isSpaceEmpty(this, this.getBoundingBox().contract(1.0E-7));
+            if (noClip) {
+                setVelocity(Vec3d.ZERO);
             }
             if (!this.isOnGround() || this.getVelocity().horizontalLengthSquared() > (double) 1.0E-5f || (this.age + this.getId()) % 4 == 0) {
                 this.move(MovementType.SELF, this.getVelocity());
@@ -147,7 +144,7 @@ public class DecoyPlayerEntity extends PathAwareEntity {
     public boolean damage(DamageSource source, float amount) {
         if (!getWorld().isClient && getHealth() - amount <= 0) {
             PlayerEntity owner = getOwner();
-            if(owner == null){
+            if (owner == null) {
                 discard();
                 return false;
             }
