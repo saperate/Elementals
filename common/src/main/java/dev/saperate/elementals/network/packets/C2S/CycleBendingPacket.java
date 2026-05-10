@@ -9,7 +9,7 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 
-public record CycleBendingPacket(boolean data) {
+public record CycleBendingPacket(boolean back) {
     public static final StreamCodec<FriendlyByteBuf, CycleBendingPacket> STREAM_CODEC = StreamCodec.ofMember(CycleBendingPacket::encode, CycleBendingPacket::new);
     
     
@@ -24,7 +24,7 @@ public record CycleBendingPacket(boolean data) {
 
     public void encode(FriendlyByteBuf buf)
     {
-        buf.writeBoolean(data);
+        buf.writeBoolean(back);
     }
 
     public static void handle(PacketContext<CycleBendingPacket> ctx)
@@ -35,7 +35,7 @@ public record CycleBendingPacket(boolean data) {
         Bender bender = Bender.getBender(ctx.sender());
         PlayerData data = bender.getData();
 
-        int nextIndex = data.activeElementIndex + (ctx.sender().isCrouching() ? -1 : 1);
+        int nextIndex = data.activeElementIndex + (packet.back ? -1 : 1);
         if(nextIndex > data.elements.size() - 1){
             nextIndex = 0;
         } else if (nextIndex < 0) {

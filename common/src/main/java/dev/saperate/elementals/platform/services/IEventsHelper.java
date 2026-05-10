@@ -13,4 +13,5 @@ public interface IEventsHelper {
     void onServerClose(Consumer<MinecraftServer> method);
     void onServerTick(Consumer<MinecraftServer> method);
     void onClientJoin(Consumer<Minecraft> method);
+    void onClientTick(Consumer<Minecraft> method);
 }

@@ -10,18 +10,18 @@ import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.option.KeyBinding;
+import net.minecraft.client.option.KeyMapping;
 import net.minecraft.client.util.InputUtil;
 import org.lwjgl.glfw.GLFW;
 
 import static dev.saperate.elementals.network.ModMessages.CYCLE_BENDING_PACKET_ID;
 
 public class KeyCycleBending extends KeyInput {
-    private final KeyBinding keyBinding;
+    private final KeyMapping keyBinding;
     public boolean lastFrameWasHolding;
 
     public KeyCycleBending() {
-        keyBinding = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+        keyBinding = KeyBindingHelper.registerKeyBinding(new KeyMapping(
                 "key.elementals.cycle",
                 InputUtil.Type.KEYSYM,
                 GLFW.GLFW_KEY_Z,

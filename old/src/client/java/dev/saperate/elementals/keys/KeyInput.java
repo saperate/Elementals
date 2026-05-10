@@ -6,7 +6,7 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
-import net.minecraft.client.option.KeyBinding;
+import net.minecraft.client.option.KeyMapping;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
@@ -17,8 +17,8 @@ import java.util.List;
 
 public abstract class KeyInput {
     public static final List<KeyInput> keyInputs = new ArrayList<>();
-    public static final List<KeyBinding> bindings = new ArrayList<>();
-    public KeyBinding keyBinding;
+    public static final List<KeyMapping> bindings = new ArrayList<>();
+    public KeyMapping keyBinding;
     public boolean lastFrameWasHolding;
 
     public KeyInput() {
@@ -26,7 +26,7 @@ public abstract class KeyInput {
     }
 
     public void registerAbilityInput(int GLFWKey, int abilityIndex, String translationKey, String category) {
-        keyBinding = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+        keyBinding = KeyBindingHelper.registerKeyBinding(new KeyMapping(
                 translationKey,
                 InputUtil.Type.KEYSYM,
                 GLFWKey,

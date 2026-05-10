@@ -1,32 +1,31 @@
 package dev.saperate.elementals.client.keys.gui;
 
-import dev.saperate.elementals.keys.KeyInput;
-import dev.saperate.elementals.gui.UpgradeTreeScreen;
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
+import com.mojang.blaze3d.platform.InputConstants;
+import dev.saperate.elementals.client.gui.UpgradeTreeScreen;
+import dev.saperate.elementals.client.keys.KeyInput;
+import dev.saperate.elementals.platform.Services;
+import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.option.KeyBinding;
-import net.minecraft.client.util.InputUtil;
 import org.lwjgl.glfw.GLFW;
 
 public class GuiKey extends KeyInput {
-    private final KeyBinding keyBinding;
+    private final KeyMapping keyBinding;
     public boolean lastFrameWasHolding;
 
     public GuiKey() {
-        keyBinding = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+        keyBinding = Services.REGISTRY.registerKeyBinding(new KeyMapping(
                 "key.elementals.guiKey",
-                InputUtil.Type.KEYSYM,
+                InputConstants.Type.KEYSYM,
                 GLFW.GLFW_KEY_MINUS,
                 "category.elementals"
         ));
-        ClientTickEvents.END_CLIENT_TICK.register(client -> {
-            if (keyBinding.isPressed() && !lastFrameWasHolding) {
+        Services.EVENTS.onClientTick(client -> {
+            if (keyBinding.isDown() && !lastFrameWasHolding) {
                 lastFrameWasHolding = true;
             }
-            if (!keyBinding.isPressed() && lastFrameWasHolding) {
+            if (!keyBinding.isDown() && lastFrameWasHolding) {
                 lastFrameWasHolding = false;
-                Minecraft.getInstance().setScreen(new UpgradeTreeScreen(null));
+                client.setScreen(new UpgradeTreeScreen(null));
             }
         });
     }

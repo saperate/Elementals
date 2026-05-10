@@ -7,6 +7,7 @@ import dev.saperate.elementals.commands.ElementalsCommand;
 import dev.saperate.elementals.items.ElementalsItems;
 import dev.saperate.elementals.items.WaterPouchItem;
 import dev.saperate.elementals.platform.services.IRegistryHelper;
+import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.FlameParticle;
 import net.minecraft.network.chat.Component;
@@ -19,6 +20,7 @@ import net.minecraft.world.level.storage.loot.BuiltInLootTables;
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
 import net.minecraftforge.client.event.RegisterColorHandlersEvent;
+import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.LootTableLoadEvent;
 import net.minecraftforge.event.RegisterCommandsEvent;
@@ -100,5 +102,13 @@ public class ForgeRegistryHelper implements IRegistryHelper {
                             0x4253ed,
                     ElementalsBlocks.MOON_PEACH_LEAVES);
         });
+    }
+
+    @Override
+    public KeyMapping registerKeyBinding(KeyMapping keyMapping) {
+        MinecraftForge.EVENT_BUS.addListener(((RegisterKeyMappingsEvent event) -> {
+            event.register(keyMapping);
+        }));
+        return keyMapping;
     }
 }

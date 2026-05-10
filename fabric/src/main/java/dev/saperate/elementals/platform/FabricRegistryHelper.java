@@ -8,6 +8,7 @@ import dev.saperate.elementals.commands.ElementalsCommand;
 import dev.saperate.elementals.items.ElementalsItems;
 import dev.saperate.elementals.items.WaterPouchItem;
 import dev.saperate.elementals.platform.services.IRegistryHelper;
+import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
@@ -15,6 +16,7 @@ import net.fabricmc.fabric.api.gamerule.v1.GameRuleFactory;
 import net.fabricmc.fabric.api.gamerule.v1.GameRuleRegistry;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.fabricmc.fabric.api.loot.v3.LootTableEvents;
+import net.minecraft.client.KeyMapping;
 import net.minecraft.client.particle.FlameParticle;
 import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
@@ -100,6 +102,11 @@ public class FabricRegistryHelper implements IRegistryHelper {
                         0x4253ed, 
                 ElementalsBlocks.MOON_PEACH_LEAVES
         );
+    }
+
+    @Override
+    public KeyMapping registerKeyBinding(KeyMapping keyMapping) {
+        return KeyBindingHelper.registerKeyBinding(keyMapping);
     }
 
 }

@@ -1,7 +1,6 @@
 package dev.saperate.elementals.client.keys.abilities;
 
-import dev.saperate.elementals.keys.KeyInput;
-import dev.saperate.elementals.network.ModMessages;
+import dev.saperate.elementals.client.keys.KeyInput;
 import org.lwjgl.glfw.GLFW;
 
 public class KeyAbility1 extends KeyInput {

@@ -1,37 +1,31 @@
 package dev.saperate.elementals.client.keys;
 
-import dev.saperate.elementals.gui.UpgradeTreeScreen;
-import dev.saperate.elementals.keys.KeyInput;
-import dev.saperate.elementals.network.ModMessages;
-import dev.saperate.elementals.network.payload.C2S.AbilityPayload;
-import dev.saperate.elementals.network.payload.C2S.CycleBendingPayload;
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.option.KeyBinding;
-import net.minecraft.client.util.InputUtil;
+import com.mojang.blaze3d.platform.InputConstants;
+import commonnetwork.api.Network;
+import dev.saperate.elementals.network.packets.C2S.CycleBendingPacket;
+import dev.saperate.elementals.platform.Services;
+import net.minecraft.client.KeyMapping;
 import org.lwjgl.glfw.GLFW;
 
-import static dev.saperate.elementals.network.ModMessages.CYCLE_BENDING_PACKET_ID;
 
 public class KeyCycleBending extends KeyInput {
-    private final KeyBinding keyBinding;
+    private final KeyMapping keyBinding;
     public boolean lastFrameWasHolding;
 
     public KeyCycleBending() {
-        keyBinding = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+        keyBinding = Services.REGISTRY.registerKeyBinding(new KeyMapping(
                 "key.elementals.cycle",
-                InputUtil.Type.KEYSYM,
+                InputConstants.Type.KEYSYM,
                 GLFW.GLFW_KEY_Z,
                 "category.elementals"
         ));
-        ClientTickEvents.END_CLIENT_TICK.register(client -> {
-            if (keyBinding.isPressed() && !lastFrameWasHolding) {
+        
+        Services.EVENTS.onClientTick(client -> {
+            if (keyBinding.isDown() && !lastFrameWasHolding) {
                 lastFrameWasHolding = true;
-                ClientPlayNetworking.send(new CycleBendingPayload(false));
-            } else if (!keyBinding.isPressed() && lastFrameWasHolding) {
+                boolean back = client.player != null && client.player.isCrouching();
+                Network.getNetworkHandler().sendToServer(new CycleBendingPacket(back));
+            } else if (!keyBinding.isDown() && lastFrameWasHolding) {
                 lastFrameWasHolding = false;
             }
         });
