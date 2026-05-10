@@ -1,5 +1,6 @@
 package dev.saperate.elementals.client;
 
+import commonnetwork.api.Network;
 import dev.saperate.elementals.Elementals;
 import dev.saperate.elementals.blocks.ElementalsBlocks;
 import dev.saperate.elementals.client.entities.models.common.DecoyPlayerModel;
@@ -17,6 +18,8 @@ import dev.saperate.elementals.client.particle.MetalShardParticle;
 import dev.saperate.elementals.items.ElementalsItems;
 import dev.saperate.elementals.items.WaterPouchItem;
 import dev.saperate.elementals.mixin.client.GuiAccessor;
+import dev.saperate.elementals.network.packets.C2S.SyncVersionPacket;
+import dev.saperate.elementals.platform.Services;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.LayeredDraw;
 import net.minecraft.client.model.HumanoidModel;
@@ -65,13 +68,11 @@ public class ElementalsClient {
         LayeredDraw hudLayers = ((GuiAccessor) Minecraft.getInstance().gui).elementals$getLayers();
         hudLayers.add(new CastTimerHudOverlay());
         hudLayers.add(new ChiHudOverlay());
+
+        Services.EVENTS.onClientJoin(ElementalsClient::onClientJoin);
         
-        ClientPlayConnectionEvents.JOIN.register(ElementalsClient::onClientJoin);
-        
-        ColorProviderRegistry.ITEM.register(
-                (stack, tintIndex) -> tintIndex == 0 ? ((WaterPouchItem) stack.getItem()).getColor(stack) : 0xFFFFFFFF,
-                ElementalsItems.WATER_POUCH_ITEM
-        );
+        Services.REGISTRY.registerClientParticles();
+        Services.REGISTRY.registerClientColorProviders();
 
         Elementals.GLIDER_ITEM_RENDER_PROVIDER = () -> new GeoRenderProvider(){
             private final GliderItemRenderer renderer = new GliderItemRenderer();
@@ -93,9 +94,6 @@ public class ElementalsClient {
                 return renderer;
             }
         };
-        
-        BlockRenderLayerMap.INSTANCE.putBlock(ElementalsBlocks.MOON_PEACH_LEAVES, RenderType.cutout());
-        ColorProviderRegistry.BLOCK.register((state, view, pos, tintIndex) -> 0x4253ed, ElementalsBlocks.MOON_PEACH_LEAVES);
     }
 
 
@@ -150,18 +148,8 @@ public class ElementalsClient {
 		EntityRendererRegistry.register(METALLANCE, MetalLanceRenderer::new);
 	}
 
-    private static void onClientJoin(ClientPlayNetworkHandler clientPlayNetworkHandler, PacketSender packetSender, Minecraft client) {
-        String response;
-
-        Optional<ModContainer> container = FabricLoader.getInstance().getModContainer(Elementals.MODID);
-        if (container.isPresent()) {
-            Version modVersion = container.get().getMetadata().getVersion();
-            response = modVersion.getFriendlyString();
-        } else {
-            response = "No ModContainer found";
-        }
-
-        ClientPlayNetworking.send(new SyncVersionPayload(response));
+    private static void onClientJoin(Minecraft client) {
+        Network.getNetworkHandler().sendToServer(new SyncVersionPacket(SyncVersionPacket.getModVersion()));
     }
     
     private static void registerModelLayer(ModelLayerLocation location, LayerDefinition definition){

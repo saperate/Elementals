@@ -1,11 +1,12 @@
 package dev.saperate.elementals.platform;
 
-import dev.saperate.elementals.Elementals;
 import dev.saperate.elementals.platform.services.IEventsHelper;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
+import net.minecraft.client.Minecraft;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 
@@ -42,5 +43,13 @@ public class FabricEventsHelper implements IEventsHelper {
     @Override
     public void onServerTick(Consumer<MinecraftServer> method) {
         ServerTickEvents.END_SERVER_TICK.register(method::accept);
+    }
+
+    @Override
+    public void onClientJoin(Consumer<Minecraft> method) {
+        ClientPlayConnectionEvents.JOIN.register(
+                (packetListener, packetSender, minecraft)->{
+            method.accept(minecraft);
+        });
     }
 }

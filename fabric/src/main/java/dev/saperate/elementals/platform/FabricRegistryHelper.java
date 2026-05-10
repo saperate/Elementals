@@ -1,12 +1,15 @@
 package dev.saperate.elementals.platform;
 
 import dev.saperate.elementals.Elementals;
+import dev.saperate.elementals.blocks.ElementalsBlocks;
 import dev.saperate.elementals.client.particle.MetalShardParticle;
 import dev.saperate.elementals.commands.BendingCommand;
 import dev.saperate.elementals.commands.ElementalsCommand;
 import dev.saperate.elementals.items.ElementalsItems;
+import dev.saperate.elementals.items.WaterPouchItem;
 import dev.saperate.elementals.platform.services.IRegistryHelper;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.gamerule.v1.GameRuleFactory;
 import net.fabricmc.fabric.api.gamerule.v1.GameRuleRegistry;
@@ -79,9 +82,24 @@ public class FabricRegistryHelper implements IRegistryHelper {
     }
 
     @Override
-    public void registerClientParticle() {
+    public void registerClientParticles() {
         ParticleFactoryRegistry.getInstance().register(LIGHTNING_PARTICLE_TYPE, FlameParticle.Provider::new);
         ParticleFactoryRegistry.getInstance().register(METAL_SHARD_PARTICLE_TYPE, MetalShardParticle.Factory::new);
+    }
+
+    @Override
+    public void registerClientColorProviders() {
+        ColorProviderRegistry.ITEM.register(
+                (stack, tintIndex) -> 
+                        tintIndex == 0 ? ((WaterPouchItem) stack.getItem()).getColor(stack) : 0xFFFFFFFF,
+                ElementalsItems.WATER_POUCH_ITEM
+        );
+
+        ColorProviderRegistry.BLOCK.register(
+                (state, view, pos, tintIndex) -> 
+                        0x4253ed, 
+                ElementalsBlocks.MOON_PEACH_LEAVES
+        );
     }
 
 }

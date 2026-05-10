@@ -14,8 +14,7 @@ public interface IRegistryHelper {
     // BlockEntitySupplier is private here, but not on Fabric, Forge or NeoForge.
     // So we just let them handle it
     <T extends BlockEntity> BlockEntityType<T> createBlockEntityType(BlockEntityTypeFactory<T> factory, Block... validBlocks);
-
-
+    
     /**
      * Helper interface for {@link #createBlockEntityType}
      * @param <T> A type that extends BlockEntity
@@ -28,5 +27,7 @@ public interface IRegistryHelper {
     void registerCommands();
     void registerLootTables();
     
-    void registerClientParticle();
+    void registerClientParticles();
+
+    void registerClientColorProviders();
 }

@@ -33,7 +33,6 @@
     "client.ModelLayersAccessor",
     "client.MouseMixin",
     "client.OverlayMixin",
-    "client.ParticleEngineMixin",
     "client.PlayerEntityRendererMixin",
     "client.SpectatorMenuCommandMixin"
   ],

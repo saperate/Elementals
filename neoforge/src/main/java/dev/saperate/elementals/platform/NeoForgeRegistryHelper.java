@@ -1,9 +1,11 @@
 package dev.saperate.elementals.platform;
 
+import dev.saperate.elementals.blocks.ElementalsBlocks;
 import dev.saperate.elementals.client.particle.MetalShardParticle;
 import dev.saperate.elementals.commands.BendingCommand;
 import dev.saperate.elementals.commands.ElementalsCommand;
 import dev.saperate.elementals.items.ElementalsItems;
+import dev.saperate.elementals.items.WaterPouchItem;
 import dev.saperate.elementals.platform.services.IRegistryHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.FlameParticle;
@@ -16,6 +18,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.storage.loot.BuiltInLootTables;
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
+import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.LootTableLoadEvent;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
@@ -77,8 +80,25 @@ public class NeoForgeRegistryHelper implements IRegistryHelper {
     }
 
     @Override
-    public void registerClientParticle() {
+    public void registerClientParticles() {
         Minecraft.getInstance().particleEngine.register(LIGHTNING_PARTICLE_TYPE, FlameParticle.Provider::new);
         Minecraft.getInstance().particleEngine.register(METAL_SHARD_PARTICLE_TYPE, MetalShardParticle.Factory::new);
+    }
+
+    @Override
+    public void registerClientColorProviders() {
+        NeoForge.EVENT_BUS.addListener((RegisterColorHandlersEvent.Item event) -> {
+            event.register(
+                    (stack, tintIndex) ->
+                            tintIndex == 0 ? ((WaterPouchItem) stack.getItem()).getColor(stack) : 0xFFFFFFFF,
+                    WATER_POUCH_ITEM);
+        });
+
+        NeoForge.EVENT_BUS.addListener((RegisterColorHandlersEvent.Block event) -> {
+            event.register(
+                    (state, view, pos, tintIndex) ->
+                            0x4253ed,
+                    ElementalsBlocks.MOON_PEACH_LEAVES);
+        });
     }
 }
