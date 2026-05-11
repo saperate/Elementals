@@ -1,31 +1,31 @@
 package dev.saperate.elementals.client.entities.water;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.math.Axis;
 import dev.saperate.elementals.entities.water.WaterTowerEntity;
-import net.minecraft.client.color.world.BiomeColors;
-import net.minecraft.client.render.GameRenderer;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.VertexConsumer;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.entity.EntityRenderer;
-import net.minecraft.client.render.entity.EntityRendererFactory;
-import net.minecraft.client.util.math.PoseStack;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.RotationAxis;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.minecraft.client.renderer.BiomeColors;
+import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.entity.EntityRenderer;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.resources.ResourceLocation;
 import org.joml.Matrix4f;
 
-import static dev.saperate.elementals.entities.utils.RenderUtils.drawCube;
+import static dev.saperate.elementals.client.entities.utils.RenderUtils.drawCube;
 
 public class WaterTowerEntityRenderer extends EntityRenderer<WaterTowerEntity> {
-    private static final Identifier texture = Identifier.of("minecraft", "block/water_flow");
+    private static final ResourceLocation texture = ResourceLocation.fromNamespaceAndPath("minecraft", "block/water_flow");
     public static long firstTime = -1;
 
-    public WaterTowerEntityRenderer(EntityRendererFactory.Context context) {
+    public WaterTowerEntityRenderer(EntityRendererProvider.Context context) {
         super(context);
     }
 
     @Override
-    public void render(WaterTowerEntity entity, float yaw, float tickDelta, PoseStack matrices, VertexConsumerProvider vertexConsumers, int light) {
+    public void render(WaterTowerEntity entity, float yaw, float tickDelta, PoseStack matrices, MultiBufferSource vertexConsumers, int light) {
 
         entity.updatePosition(entity.getOwner());
 
@@ -34,18 +34,18 @@ public class WaterTowerEntityRenderer extends EntityRenderer<WaterTowerEntity> {
         }
         float rot = (float) (System.currentTimeMillis() - firstTime) / 1000;
 
-        matrices.push();
+        matrices.pushPose();
         matrices.translate(0, 1f, 0);
 
-        RenderSystem.setShader(GameRenderer::getPositionColorProgram);
+        RenderSystem.setShader(GameRenderer::getPositionColorShader);
         RenderSystem.enableDepthTest();
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
 
 
-        VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderLayer.getTranslucentMovingBlock());
+        VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderType.translucentMovingBlock());
 
-        int color = BiomeColors.getWaterColor(entity.level(),entity.getOnPos());
+        int color = BiomeColors.getAverageWaterColor(entity.level(),entity.getOnPos());
 
 
         for (int i = 0; i < Math.floor(1 + entity.getTowerHeight()); i++) {
@@ -61,7 +61,7 @@ public class WaterTowerEntityRenderer extends EntityRenderer<WaterTowerEntity> {
                     1,
                     new Matrix4f().rotate((float) Math.toRadians(90),1,0,0)
                             .translate(0,0,-i)//For some weird ass reason -z is the +y in game with these
-                            .rotate(RotationAxis.POSITIVE_Z.rotationDegrees(
+                            .rotate(Axis.ZP.rotationDegrees(
                                     (float) Math.toDegrees(rot
                                             * (i % 2 == 0 ? -5.5 : 5)
                                             + 1 - ((double) i / entity.getMaxTowerHeight()))
@@ -77,11 +77,11 @@ public class WaterTowerEntityRenderer extends EntityRenderer<WaterTowerEntity> {
 
 
         RenderSystem.disableBlend();
-        matrices.pop();
+        matrices.popPose();
     }
 
     @Override
-    public Identifier getTexture(WaterTowerEntity entity) {
+    public ResourceLocation getTextureLocation(WaterTowerEntity entity) {
         return texture;
     }
 }

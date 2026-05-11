@@ -1,50 +1,50 @@
 package dev.saperate.elementals.client.entities.air;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.math.Axis;
 import dev.saperate.elementals.entities.air.AirShieldEntity;
-import net.minecraft.client.render.GameRenderer;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.VertexConsumer;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.entity.EntityRenderer;
-import net.minecraft.client.render.entity.EntityRendererFactory;
-import net.minecraft.client.util.math.PoseStack;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.RotationAxis;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.entity.EntityRenderer;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.resources.ResourceLocation;
 import org.joml.Matrix4f;
 
-import static dev.saperate.elementals.entities.utils.RenderUtils.drawCube;
+import static dev.saperate.elementals.client.entities.utils.RenderUtils.drawCube;
 
 public class AirShieldEntityRenderer extends EntityRenderer<AirShieldEntity> {
     public static long firstTime = -1;
-    private static final Identifier texture = Identifier.of("elementals", "block/air_block");
-    private static final Identifier topTexture = Identifier.of("elementals", "block/air_block_top");
+    private static final ResourceLocation texture = ResourceLocation.fromNamespaceAndPath("elementals", "block/air_block");
+    private static final ResourceLocation topTexture = ResourceLocation.fromNamespaceAndPath("elementals", "block/air_block_top");
 
 
-    public AirShieldEntityRenderer(EntityRendererFactory.Context context) {
+    public AirShieldEntityRenderer(EntityRendererProvider.Context context) {
         super(context);
     }
 
     @Override
-    public void render(AirShieldEntity entity, float yaw, float tickDelta, PoseStack matrices, VertexConsumerProvider vertexConsumers, int light) {
+    public void render(AirShieldEntity entity, float yaw, float tickDelta, PoseStack matrices, MultiBufferSource vertexConsumers, int light) {
         if(firstTime == -1){
             firstTime = System.currentTimeMillis();
         }
         float rot = (float) (System.currentTimeMillis() - firstTime) / 500;
 
-        matrices.push();
+        matrices.pushPose();
 
-        RenderSystem.setShader(GameRenderer::getPositionColorProgram);
+        RenderSystem.setShader(GameRenderer::getPositionColorShader);
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
 
-        VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderLayer.getTranslucentMovingBlock());
+        VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderType.translucentMovingBlock());
 
 
         Matrix4f mat = new Matrix4f();
         mat.translate(0,0,0.5f);
-        mat.rotate(RotationAxis.POSITIVE_Y.rotationDegrees((float) Math.toDegrees(rot * 4)));
-        mat.rotate(RotationAxis.POSITIVE_X.rotationDegrees(90));//(float) Math.toDegrees(rot)));
+        mat.rotate(Axis.YP.rotationDegrees((float) Math.toDegrees(rot * 4)));
+        mat.rotate(Axis.XP.rotationDegrees(90));//(float) Math.toDegrees(rot)));
         mat.translate(0,0,-0.5f);
         matrices.scale(2.5f,2.5f,2.5f);
         matrices.translate(0,0.65f,-0.5f);
@@ -65,10 +65,10 @@ public class AirShieldEntityRenderer extends EntityRenderer<AirShieldEntity> {
 
         Matrix4f mat2 = new Matrix4f();
         mat2.translate(0,0,0.5f);
-        mat2.rotate(RotationAxis.POSITIVE_X.rotationDegrees(0));//(float) Math.toDegrees(-(rot + 2) * 2)));
-        mat2.rotate(RotationAxis.POSITIVE_Y.rotationDegrees((float) Math.toDegrees(rot * -2)));
-        mat2.rotate(RotationAxis.POSITIVE_Z.rotationDegrees((float) Math.toDegrees(rot * 2)));
-        //mat2.rotate(RotationAxis.POSITIVE_Z.rotationDegrees((float) Math.toDegrees(-(rot + 2))));
+        mat2.rotate(Axis.XP.rotationDegrees(0));//(float) Math.toDegrees(-(rot + 2) * 2)));
+        mat2.rotate(Axis.YP.rotationDegrees((float) Math.toDegrees(rot * -2)));
+        mat2.rotate(Axis.ZP.rotationDegrees((float) Math.toDegrees(rot * 2)));
+        //mat2.rotate(Axis.ZP.rotationDegrees((float) Math.toDegrees(-(rot + 2))));
 
         mat2.translate(0,0,-0.5f);
 
@@ -88,7 +88,7 @@ public class AirShieldEntityRenderer extends EntityRenderer<AirShieldEntity> {
 
 
         RenderSystem.disableBlend();
-        matrices.pop();
+        matrices.popPose();
 
 
     }
@@ -96,7 +96,7 @@ public class AirShieldEntityRenderer extends EntityRenderer<AirShieldEntity> {
 
 
     @Override
-    public Identifier getTexture(AirShieldEntity entity) {
+    public ResourceLocation getTextureLocation(AirShieldEntity entity) {
         return null;
     }
 }

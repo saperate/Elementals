@@ -1,29 +1,36 @@
 package dev.saperate.elementals.client.gui;
 
-
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.*;
+import commonnetwork.api.Network;
 import dev.saperate.elementals.client.data.ClientBender;
+import dev.saperate.elementals.client.keys.KeyInput;
 import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.elements.Element;
 import dev.saperate.elementals.elements.Upgrade;
+import dev.saperate.elementals.network.packets.C2S.BuyUpgradePacket;
+import dev.saperate.elementals.network.packets.C2S.ToggleUpgradePacket;
+import dev.saperate.elementals.network.packets.common.SyncLevelPacket;
+import dev.saperate.elementals.network.packets.common.SyncUpgradeListPacket;
+import dev.saperate.elementals.utils.SapsUtils;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.client.renderer.texture.TextureManager;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix4f;
 
-import javax.swing.*;
 import java.awt.*;
-import java.awt.geom.Point2D;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static dev.saperate.elementals.Elementals.MODID;
-import static dev.saperate.elementals.network.ModMessages.*;
 
 public class UpgradeTreeScreen extends Screen {
     private ClientBender bender;
@@ -48,10 +55,13 @@ public class UpgradeTreeScreen extends Screen {
     @Override
     protected void init() {
         super.init();
-        originX = width / 2 - tileSize / 2;
-        originY = height / 2 - tileSize / 2;
-        SyncUpgradeListS2CPacket.send();
-        SyncLevelS2CPacket.send();
+        originX = (double) width / 2 - (double) tileSize / 2;
+        originY = (double) height / 2 - (double) tileSize / 2;
+        
+        //We pass in dummy values, since the server doesn't read them before sending what we need back
+        Network.getNetworkHandler().sendToServer(new SyncUpgradeListPacket(new CompoundTag()));
+        Network.getNetworkHandler().sendToServer(new SyncLevelPacket(0,0));
+        
         bender = ClientBender.get();
         bender.getElement().root.calculateXPos();
         lineColor = bender.getElement().getColor();
@@ -61,20 +71,20 @@ public class UpgradeTreeScreen extends Screen {
     
 
     @Override
-    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        super.render(guiGraphics, mouseX, mouseY, delta);
-        int oX = MathHelper.floor(originX);
-        int oY = MathHelper.floor(originY);
+    public void render(GuiGraphics context, int mouseX, int mouseY, float partialTick) {
+        super.render(context, mouseX, mouseY, partialTick);
+        int oX = Mth.floor(originX);
+        int oY = Mth.floor(originY);
 
         Element element = bender.getElement();
         String[] backgroundTextures = element.getBackgroundTextures();
         TextureManager texManager = Minecraft.getInstance().getTextureManager();
         for (String texName : backgroundTextures){
-            Identifier identifier = Identifier.of(MODID,"textures/gui/backgrounds/" + element.name.toLowerCase(Locale.ROOT) + "/" + texName);
-            context.drawTexture(identifier, 0, 0, -6, -oX, -oY, width, height, 16, 16);
+            ResourceLocation resourceLocation = ResourceLocation.fromNamespaceAndPath(MODID,"textures/gui/backgrounds/" + element.name.toLowerCase(Locale.ROOT) + "/" + texName);
+            context.blit(resourceLocation, 0, 0, -6, -oX, -oY, width, height, 16, 16);
         }
         if(element.getOverlayTexture() != null){
-            context.drawTexture(element.getOverlayTexture(), 0, 0, -4, 0, 0, width, height, context.getScaledWindowWidth() , context.getScaledWindowHeight());
+            context.blit(element.getOverlayTexture(), 0, 0, -4, 0, 0, width, height, context.guiWidth() , context.guiHeight());
         }
 
         Upgrade root = element.root;
@@ -142,13 +152,13 @@ public class UpgradeTreeScreen extends Screen {
             drawTree(root.children[3], context, oX + root.children[1].mod, oY - spacing, -1);
         }
 
-        context.drawTexture(Identifier.of(MODID, "textures/gui/" + ClientBender.get().getElement().getName().toLowerCase(Locale.ROOT) + "_upgrade_button.png"),
+        context.blit(ResourceLocation.fromNamespaceAndPath(MODID, "textures/gui/" + ClientBender.get().getElement().getName().toLowerCase(Locale.ROOT) + "_upgrade_button.png"),
                 oX - 2, oY - 2, 0, 0, tileSize + 4, tileSize + 4, tileSize + 4, tileSize + 4);
-        Identifier symbolID = Identifier.of(MODID, "textures/gui/symbol/" + ClientBender.get().getElement().getName().toLowerCase(Locale.ROOT) + ".png");
-        context.drawTexture(symbolID,
+        ResourceLocation symbolID = ResourceLocation.fromNamespaceAndPath(MODID, "textures/gui/symbol/" + ClientBender.get().getElement().getName().toLowerCase(Locale.ROOT) + ".png");
+        context.blit(symbolID,
                 oX - 2, oY - 2, 0, 0, tileSize + 4, tileSize + 4, tileSize + 4, tileSize + 4);
         renderExperienceBar(context);
-        renderTitle(context, mouseX, mouseY, delta);
+        renderTitle(context, mouseX, mouseY, partialTick);
     }
 
     public Upgrade mouseOnUpgrade(double mouseX, double mouseY) {
@@ -174,16 +184,11 @@ public class UpgradeTreeScreen extends Screen {
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         Upgrade upgrade = mouseOnUpgrade(mouseX, mouseY);
         if (upgrade != null) {
-            PacketByteBuf buf = PacketByteBufs.create();
-            buf.writeString(upgrade.name);
-
             if(PlayerData.canBuyUpgrade(bender.upgrades, bender.getElement(), upgrade.name, new AtomicInteger(ClientBender.get().level))) {
-                ClientPlayNetworking.send(new BuyUpgradePayload(upgrade.name));
+                Network.getNetworkHandler().sendToServer(new BuyUpgradePacket(upgrade.name));
             }else{
-                ClientPlayNetworking.send(new ToggleUpgradePayload(upgrade.name));
+                Network.getNetworkHandler().sendToServer(new ToggleUpgradePacket(upgrade.name));
             }
-
-
         }
         
         return super.mouseClicked(mouseX, mouseY, button);
@@ -202,16 +207,16 @@ public class UpgradeTreeScreen extends Screen {
         hoveredUpgrade = mouseOnUpgrade(mouseX, mouseY);
     }
 
-    public void renderTitle(DrawContext graphics, int mouseX, int mouseY, float delta) {
+    public void renderTitle(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
         String upgradeName = hoveredUpgrade == null ? "" : hoveredUpgrade.name;
 
-        //graphics.drawCenteredTextWithShadow(this.textRenderer, bender.element.name, this.width / 2, 8, 0xFFFFFFFF);
+        //graphics.drawCenteredString(this.textRenderer, bender.element.name, this.width / 2, 8, 0xFFFFFFFF);
 
         //Use this when you wanna know what the upgrade name is
-        graphics.drawCenteredTextWithShadow(this.textRenderer, upgradeName, this.width / 2, 24, 0xFFc4c4c4);
+        graphics.drawCenteredString(this.font, upgradeName, this.width / 2, 24, 0xFFc4c4c4);
 
         if (!upgradeName.isEmpty()) {
-            ArrayList<Text> tooltip = new ArrayList<>();
+            ArrayList<Component> tooltip = new ArrayList<>();
             SapsUtils.addTranslatable(tooltip, "upgrade.elementals." + upgradeName);
             SapsUtils.addTranslatableAutomaticLineBreaks(tooltip, "upgrade.elementals." + upgradeName + ".description", 5);
 
@@ -225,8 +230,8 @@ public class UpgradeTreeScreen extends Screen {
             if (hoveredUpgrade.parent.exclusive) {
                 SapsUtils.addTranslatableAutomaticLineBreaks(tooltip, "upgrade.elementals.exclusive", 5);
             }
-
-            graphics.drawTooltip(this.textRenderer, tooltip, mouseX, mouseY);
+            
+            graphics.renderTooltip(this.font, tooltip, Optional.empty(), mouseX, mouseY);
         }
     }
 
@@ -234,10 +239,10 @@ public class UpgradeTreeScreen extends Screen {
      * Slightly modified vanilla code to render bending levels
      * @author Mojang
      */
-    public void renderExperienceBar(DrawContext context) {
-        Identifier ICONS = Identifier.of(MODID, "textures/gui/icons.png");
+    public void renderExperienceBar(GuiGraphics context) {
+        ResourceLocation ICONS = ResourceLocation.fromNamespaceAndPath(MODID, "textures/gui/icons.png");
 
-        int scaledWidth = context.getScaledWindowWidth();
+        int scaledWidth = context.guiWidth();
 
         int x = scaledWidth / 2 - 91;
         int y = 6;
@@ -245,53 +250,53 @@ public class UpgradeTreeScreen extends Screen {
         int level = ClientBender.get().level;
         int progressWidth = (int) (ClientBender.get().xp / Bender.getMaxXp(level) * 183.0F);
 
-        context.drawTexture(ICONS, x, y, 0, 0.0f, 64.0f, 182, 5, 256, 256);
+        context.blit(ICONS, x, y, 0, 0.0f, 64.0f, 182, 5, 256, 256);
         if (progressWidth > 0) {
-            context.drawTexture(ICONS, x, y, 0, 69, progressWidth, 5);
+            context.blit(ICONS, x, y, 0, 69, progressWidth, 5);
         }
 
         if (level > 0) {
             String title = "" + level;
-            progressWidth = (scaledWidth - textRenderer.getWidth(title)) / 2;
+            progressWidth = (scaledWidth - font.width(title)) / 2;
             y = 5;
 
-            context.drawText(textRenderer, title, progressWidth + 1, y, 0, false);
-            context.drawText(textRenderer, title, progressWidth - 1, y, 0, false);
-            context.drawText(textRenderer, title, progressWidth, y + 1, 0, false);
-            context.drawText(textRenderer, title, progressWidth, y - 1, 0, false);
-            context.drawText(textRenderer, title, progressWidth, y, 0x47e2dd, false);
+            context.drawString(font, title, progressWidth + 1, y, 0, false);
+            context.drawString(font, title, progressWidth - 1, y, 0, false);
+            context.drawString(font, title, progressWidth, y + 1, 0, false);
+            context.drawString(font, title, progressWidth, y - 1, 0, false);
+            context.drawString(font, title, progressWidth, y, 0x47e2dd, false);
         }
 
     }
 
-    public void drawUpgradeButton(int x1, int y1, DrawContext context, Upgrade upgrade) {
-        String icon = Text.translatable("upgrade.elementals." + upgrade.name + ".icon").getString();
+    public void drawUpgradeButton(int x1, int y1, GuiGraphics context, Upgrade upgrade) {
+        String icon = Component.translatable("upgrade.elementals." + upgrade.name + ".icon").getString();
         float color = bender.upgrades.containsKey(upgrade) ? 1 : 0.25f;
         boolean hasIcon = !icon.equals("upgrade.elementals." + upgrade.name + ".icon");
 
-        drawTexturedQuad(context, Identifier.of(MODID, "textures/gui/" + ClientBender.get().getElement().getName().toLowerCase() + "_" + (hasIcon ? "" : "plain_") + "upgrade_button.png"),
+        drawTexture(context, ResourceLocation.fromNamespaceAndPath(MODID, "textures/gui/" + ClientBender.get().getElement().getName().toLowerCase() + "_" + (hasIcon ? "" : "plain_") + "upgrade_button.png"),
                 x1, y1, (int) textureSize, (int) textureSize, (float) 0, (float) 0, (int) textureSize, color, color, color, 1
                 , 0);
 
         if (hasIcon) {
 
-            drawTexturedQuad(context, Identifier.of(MODID, "textures/gui/" + icon + "_icon.png"),
+            drawTexture(context, ResourceLocation.fromNamespaceAndPath(MODID, "textures/gui/" + icon + "_icon.png"),
                     x1, y1, (int) textureSize, (int) textureSize, (float) 0, (float) 0, (int) textureSize, color, color, color, 1
                     , 0);
 
         } else if (upgrade.name.contains("IV")) {
-            drawTexturedQuad(context, Identifier.of(MODID, "textures/gui/iv_icon.png"),
+            drawTexture(context, ResourceLocation.fromNamespaceAndPath(MODID, "textures/gui/iv_icon.png"),
                     x1, y1, (int) textureSize, (int) textureSize, (float) 0, (float) 0, (int) textureSize, color, color, color, 1, 0);
         } else if (upgrade.name.contains("III")) {
-            drawTexturedQuad(context, Identifier.of(MODID, "textures/gui/iii_icon.png"),
+            drawTexture(context, ResourceLocation.fromNamespaceAndPath(MODID, "textures/gui/iii_icon.png"),
                     x1, y1, (int) textureSize, (int) textureSize, (float) 0, (float) 0, (int) textureSize, color, color, color, 1
                     , 0);
         } else if (upgrade.name.contains("II")) {
-            drawTexturedQuad(context, Identifier.of(MODID, "textures/gui/ii_icon.png"),
+            drawTexture(context, ResourceLocation.fromNamespaceAndPath(MODID, "textures/gui/ii_icon.png"),
                     x1, y1, (int) textureSize, (int) textureSize, (float) 0, (float) 0, (int) textureSize, color, color, color, 1
                     , 0);
         } else if (upgrade.name.contains("I")) {
-            drawTexturedQuad(context, Identifier.of(MODID, "textures/gui/i_icon.png"),
+            drawTexture(context, ResourceLocation.fromNamespaceAndPath(MODID, "textures/gui/i_icon.png"),
                     x1, y1, (int) textureSize, (int) textureSize, (float) 0, (float) 0, (int) textureSize, color, color, color, 1
                     , 0);
         }
@@ -302,7 +307,7 @@ public class UpgradeTreeScreen extends Screen {
 
 
     //BEWARE: beyond this point is shitty code that might be hard to understand, read at your own peril traveller
-    public void drawTree(Upgrade parent, DrawContext context, int oX, int oY, int mult) {
+    public void drawTree(Upgrade parent, GuiGraphics context, int oX, int oY, int mult) {
         //Draw the node
         if (parent.children.length == 0) {
             drawUpgradeButton((int) ((oX + tileSize / 2) - textureSize / 2), oY - pathSize * 2, context, parent);
@@ -382,7 +387,7 @@ public class UpgradeTreeScreen extends Screen {
     }
 
 
-    public void drawMirroredTree(Upgrade parent, DrawContext context, int oX, int oY, int mult) {
+    public void drawMirroredTree(Upgrade parent, GuiGraphics context, int oX, int oY, int mult) {
         //Draw the node
         if (parent.children.length == 0) {
             drawUpgradeButton(oX - pathSize * 2, (int) ((oY + tileSize / 2) - textureSize / 2), context, parent);
@@ -465,26 +470,26 @@ public class UpgradeTreeScreen extends Screen {
         drawUpgradeButton(oX - pathSize * 2, (int) ((oY + tileSize / 2) - textureSize / 2), context, parent);
     }
 
-    public void drawTexturedQuad(DrawContext context, Identifier texture, int x, int y, int width, int height, float u1, float v1, int textureSize, float red, float green, float blue, float alpha, float z) {
+    public void drawTexture(GuiGraphics context, ResourceLocation texture, int x, int y, int width, int height, float u1, float v1, int textureSize, float red, float green, float blue, float alpha, float z) {
         float u2 = (u1 + width) / textureSize;
         float v2 = (v1 + height) / textureSize;
 
         RenderSystem.setShaderTexture(0, texture);
-        RenderSystem.setShader(GameRenderer::getPositionTexColorProgram);
+        RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
         RenderSystem.enableBlend();
-        Matrix4f matrix4f = context.getMatrices().peek().getPositionMatrix();
-        BufferBuilder bufferBuilder = Tessellator.getInstance().begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_TEXTURE_COLOR);
-        bufferBuilder.vertex(matrix4f, (float) x, (float) y, (float) z).color(red, green, blue, alpha).texture(u1, v1);
-        bufferBuilder.vertex(matrix4f, (float) x, (float) y + height, (float) z).color(red, green, blue, alpha).texture(u1, v2);
-        bufferBuilder.vertex(matrix4f, (float) x + width, (float) y + height, (float) z).color(red, green, blue, alpha).texture(u2, v2);
-        bufferBuilder.vertex(matrix4f, (float) x + width, (float) y, (float) z).color(red, green, blue, alpha).texture(u2, v1);
-        BufferRenderer.drawWithGlobalProgram(bufferBuilder.end());
+        Matrix4f matrix4f = context.pose().last().pose();
+        BufferBuilder bufferBuilder = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
+        bufferBuilder.addVertex(matrix4f, (float) x, (float) y, (float) z).setColor(red, green, blue, alpha).setUv(u1, v1);
+        bufferBuilder.addVertex(matrix4f, (float) x, (float) y + height, (float) z).setColor(red, green, blue, alpha).setUv(u1, v2);
+        bufferBuilder.addVertex(matrix4f, (float) x + width, (float) y + height, (float) z).setColor(red, green, blue, alpha).setUv(u2, v2);
+        bufferBuilder.addVertex(matrix4f, (float) x + width, (float) y, (float) z).setColor(red, green, blue, alpha).setUv(u2, v1);
+        BufferUploader.drawWithShader(bufferBuilder.build());
         RenderSystem.disableBlend();
     }
 
     private String getKeyName(){
-        String key = KeyInput.bindings.get(keybindID).getBoundKeyTranslationKey();
-        String raw = Text.translatable(key).getString();
+        String key = KeyInput.bindings.get(keybindID).getName();
+        String raw = Component.translatable(key).getString();
 
         //if we were able to find a translation
         if(!raw.equals(key)){

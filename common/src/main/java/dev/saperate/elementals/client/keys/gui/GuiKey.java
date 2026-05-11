@@ -5,7 +5,6 @@ import dev.saperate.elementals.client.gui.UpgradeTreeScreen;
 import dev.saperate.elementals.client.keys.KeyInput;
 import dev.saperate.elementals.platform.Services;
 import net.minecraft.client.KeyMapping;
-import net.minecraft.client.Minecraft;
 import org.lwjgl.glfw.GLFW;
 
 public class GuiKey extends KeyInput {
@@ -13,7 +12,7 @@ public class GuiKey extends KeyInput {
     public boolean lastFrameWasHolding;
 
     public GuiKey() {
-        keyBinding = Services.REGISTRY.registerKeyBinding(new KeyMapping(
+        keyBinding = Services.REGISTRY.registerClientKeyBinding(new KeyMapping(
                 "key.elementals.guiKey",
                 InputConstants.Type.KEYSYM,
                 GLFW.GLFW_KEY_MINUS,

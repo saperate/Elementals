@@ -1,48 +1,40 @@
 package dev.saperate.elementals.client.entities.common;
 
-import dev.saperate.elementals.data.ClientBender;
+import dev.saperate.elementals.client.data.ClientBender;
+import dev.saperate.elementals.client.entities.features.ElementalsCapeFeatureRenderer;
+import dev.saperate.elementals.client.entities.models.common.DecoyPlayerModel;
 import dev.saperate.elementals.entities.common.DecoyPlayerEntity;
-import dev.saperate.elementals.entities.models.common.DecoyPlayerModel;
-import dev.saperate.elementals.entities.features.ElementalsCapeFeatureRenderer;
-import dev.saperate.elementals.network.ModMessages;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.network.AbstractClientPlayerEntity;
-import net.minecraft.client.network.ClientPlayNetworkHandler;
-import net.minecraft.client.network.LocalPlayer;
-import net.minecraft.client.network.PlayerListEntry;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.entity.EntityRendererFactory;
-import net.minecraft.client.render.entity.LivingEntityRenderer;
-import net.minecraft.client.render.entity.feature.*;
-import net.minecraft.client.render.entity.model.*;
-import net.minecraft.client.texture.AbstractTexture;
-import net.minecraft.client.texture.PlayerSkinTexture;
-import net.minecraft.client.util.DefaultSkinHelper;
-import net.minecraft.client.util.math.PoseStack;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.model.HumanoidArmorModel;
+import net.minecraft.client.model.PlayerModel;
+import net.minecraft.client.model.geom.ModelLayers;
+import net.minecraft.client.multiplayer.ClientPacketListener;
+import net.minecraft.client.multiplayer.PlayerInfo;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.client.renderer.entity.LivingEntityRenderer;
+import net.minecraft.client.renderer.entity.layers.*;
+import net.minecraft.client.resources.DefaultPlayerSkin;
+import net.minecraft.resources.ResourceLocation;
 
 
-public class DecoyPlayerEntityRenderer extends LivingEntityRenderer<DecoyPlayerEntity, PlayerEntityModel<DecoyPlayerEntity>> {
-    public DecoyPlayerEntityRenderer(EntityRendererFactory.Context ctx, boolean slimArms) {
-        super(ctx, new DecoyPlayerModel(ctx.getPart( EntityModelLayers.PLAYER),slimArms), 0.5f);
-        this.addFeature(new ArmorFeatureRenderer<>(this,
-                new ArmorEntityModel<>(ctx.getPart(EntityModelLayers.PLAYER_INNER_ARMOR)),
-                new ArmorEntityModel<>(ctx.getPart(EntityModelLayers.PLAYER_OUTER_ARMOR)),
+public class DecoyPlayerEntityRenderer extends LivingEntityRenderer<DecoyPlayerEntity, PlayerModel<DecoyPlayerEntity>> {
+    public DecoyPlayerEntityRenderer(EntityRendererProvider.Context ctx, boolean slimArms) {
+        super(ctx, new DecoyPlayerModel(ctx.bakeLayer(ModelLayers.PLAYER),slimArms), 0.5f);
+        this.addLayer(new HumanoidArmorLayer<>(this,
+                new HumanoidArmorModel<>(ctx.bakeLayer(ModelLayers.PLAYER_INNER_ARMOR)),
+                new HumanoidArmorModel<>(ctx.bakeLayer(ModelLayers.PLAYER_OUTER_ARMOR)),
                 ctx.getModelManager()));
-        this.addFeature(new HeldItemFeatureRenderer<>(this, ctx.getHeldItemRenderer()));
-        this.addFeature(new ElytraFeatureRenderer<>(this,ctx.getModelLoader()));
-        this.addFeature(new HeadFeatureRenderer<>(this, ctx.getModelLoader(), ctx.getHeldItemRenderer()));
-        this.addFeature(new ElementalsCapeFeatureRenderer(this));
-        this.addFeature(new StuckArrowsFeatureRenderer<>(ctx, this));
+        this.addLayer(new ItemInHandLayer<>(this, ctx.getItemInHandRenderer()));
+        this.addLayer(new ElytraLayer<>(this,ctx.getModelSet()));
+        this.addLayer(new CustomHeadLayer<>(this, ctx.getModelSet(), ctx.getItemInHandRenderer()));
+        this.addLayer(new ElementalsCapeFeatureRenderer(this));
+        this.addLayer(new ArrowLayer<>(ctx, this));
     }
 
     @Override
-    public void render(DecoyPlayerEntity decoy, float f, float g, PoseStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i) {
+    public void render(DecoyPlayerEntity decoy, float f, float g, PoseStack matrixStack, MultiBufferSource vertexConsumerProvider, int i) {
         super.render(decoy, f, g, matrixStack, vertexConsumerProvider, i);
         if(decoy.getOwner().equals(ClientBender.get().player) && decoy.getFocusCamera()){
             ClientBender.get().ClientAbilityData = decoy;
@@ -50,15 +42,15 @@ public class DecoyPlayerEntityRenderer extends LivingEntityRenderer<DecoyPlayerE
     }
 
     @Override
-    public Identifier getTexture(DecoyPlayerEntity decoy) {
-       ClientPlayNetworkHandler handler = Minecraft.getInstance().getNetworkHandler();
+    public ResourceLocation getTextureLocation(DecoyPlayerEntity decoy) {
+       ClientPacketListener handler = Minecraft.getInstance().getConnection();
        if(handler == null){
-           return DefaultSkinHelper.getTexture();
+           return DefaultPlayerSkin.getDefaultTexture();
        }
-        PlayerListEntry entry = handler.getPlayerListEntry(decoy.getOwnerUUID());
+        PlayerInfo entry = handler.getPlayerInfo(decoy.getOwnerUUID());
         if(entry == null){
-            return DefaultSkinHelper.getTexture();
+            return DefaultPlayerSkin.getDefaultTexture();
         }
-        return entry.getSkinTextures().texture();
+        return entry.getSkin().texture();
     }
 }

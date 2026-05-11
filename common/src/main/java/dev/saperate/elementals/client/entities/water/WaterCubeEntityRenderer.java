@@ -2,37 +2,40 @@ package dev.saperate.elementals.client.entities.water;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import dev.saperate.elementals.entities.water.WaterCubeEntity;
-import net.minecraft.client.color.world.BiomeColors;
-import net.minecraft.client.render.*;
-import net.minecraft.client.render.entity.EntityRenderer;
-import net.minecraft.client.render.entity.EntityRendererFactory;
-import net.minecraft.client.util.math.PoseStack;
-import net.minecraft.util.Identifier;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.minecraft.client.renderer.BiomeColors;
+import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.entity.EntityRenderer;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.resources.ResourceLocation;
 import org.joml.Matrix4f;
 
-import static dev.saperate.elementals.entities.utils.RenderUtils.drawCube;
+import static dev.saperate.elementals.client.entities.utils.RenderUtils.drawCube;
 
 public class WaterCubeEntityRenderer extends EntityRenderer<WaterCubeEntity> {
-    private static final Identifier texture = Identifier.of("minecraft", "block/water_flow");
+    private static final ResourceLocation texture = ResourceLocation.fromNamespaceAndPath("minecraft", "block/water_flow");
 
-    public WaterCubeEntityRenderer(EntityRendererFactory.Context context) {
+    public WaterCubeEntityRenderer(EntityRendererProvider.Context context) {
         super(context);
     }
 
     @Override
-    public void render(WaterCubeEntity entity, float yaw, float tickDelta, PoseStack matrices, VertexConsumerProvider vertexConsumers, int light) {
-        matrices.push();
+    public void render(WaterCubeEntity entity, float yaw, float tickDelta, PoseStack matrices, MultiBufferSource vertexConsumers, int light) {
+        matrices.pushPose();
         matrices.translate(0, 0.9f, 0);
 
-        RenderSystem.setShader(GameRenderer::getPositionColorProgram);
+        RenderSystem.setShader(GameRenderer::getPositionColorShader);
         RenderSystem.enableDepthTest();
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
 
 
-        VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderLayer.getTranslucentMovingBlock());
+        VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderType.translucentMovingBlock());
 
-        int color = BiomeColors.getWaterColor(entity.level(),entity.getOnPos());
+        int color = BiomeColors.getAverageWaterColor(entity.level(),entity.getOnPos());
 
 
 
@@ -53,11 +56,11 @@ public class WaterCubeEntityRenderer extends EntityRenderer<WaterCubeEntity> {
 
 
         RenderSystem.disableBlend();
-        matrices.pop();
+        matrices.popPose();
     }
 
     @Override
-    public Identifier getTexture(WaterCubeEntity entity) {
+    public ResourceLocation getTextureLocation(WaterCubeEntity entity) {
         return texture;
     }
 }

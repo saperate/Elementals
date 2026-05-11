@@ -263,7 +263,7 @@ public class BendingCommand {
         if (plrData.upgrades.remove(temp) == null) {//true if the player didn't have the specified upgrade
             context.getSource().sendFailure(Component.literal(
                     bender.player.getScoreboardName() + " did not have the specified upgrade (" + upgradeName + ")!")
-            ));
+            );
             return -1;
         } else {
             context.getSource().sendSuccess((() -> Component.literal(
@@ -283,7 +283,7 @@ public class BendingCommand {
         if (plrData.upgrades.remove(temp) == null) {//true if the player didn't have the specified upgrade
             context.getSource().sendFailure(Component.literal(
                     bender.player.getScoreboardName() + " did not have the specified upgrade (" + upgradeName + ")!")
-            ));
+            );
             return -1;
         } else {
             context.getSource().sendSuccess((() -> Component.literal(

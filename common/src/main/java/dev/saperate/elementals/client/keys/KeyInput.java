@@ -21,7 +21,7 @@ public abstract class KeyInput {
     }
 
     public void registerAbilityInput(int GLFWKey, int abilityIndex, String translationKey, String category) {
-        keyBinding = Services.REGISTRY.registerKeyBinding(new KeyMapping(
+        keyBinding = Services.REGISTRY.registerClientKeyBinding(new KeyMapping(
                 translationKey,
                 InputConstants.Type.KEYSYM,
                 GLFWKey,

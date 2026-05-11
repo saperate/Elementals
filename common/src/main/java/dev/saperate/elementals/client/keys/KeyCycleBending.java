@@ -13,7 +13,7 @@ public class KeyCycleBending extends KeyInput {
     public boolean lastFrameWasHolding;
 
     public KeyCycleBending() {
-        keyBinding = Services.REGISTRY.registerKeyBinding(new KeyMapping(
+        keyBinding = Services.REGISTRY.registerClientKeyBinding(new KeyMapping(
                 "key.elementals.cycle",
                 InputConstants.Type.KEYSYM,
                 GLFW.GLFW_KEY_Z,

@@ -10,7 +10,10 @@ import dev.saperate.elementals.platform.services.IRegistryHelper;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.FlameParticle;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
@@ -19,6 +22,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.storage.loot.BuiltInLootTables;
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
+import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.RegisterColorHandlersEvent;
 import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
 import net.minecraftforge.common.MinecraftForge;
@@ -105,10 +109,17 @@ public class ForgeRegistryHelper implements IRegistryHelper {
     }
 
     @Override
-    public KeyMapping registerKeyBinding(KeyMapping keyMapping) {
+    public KeyMapping registerClientKeyBinding(KeyMapping keyMapping) {
         MinecraftForge.EVENT_BUS.addListener(((RegisterKeyMappingsEvent event) -> {
             event.register(keyMapping);
         }));
         return keyMapping;
+    }
+
+    @Override
+    public <T extends Entity> void registerClientEntityRenderer(EntityType<T> type, EntityRendererProvider<T> provider) {
+        MinecraftForge.EVENT_BUS.addListener(((EntityRenderersEvent.RegisterRenderers event) -> {
+            event.registerEntityRenderer(type, provider);
+        }));
     }
 }

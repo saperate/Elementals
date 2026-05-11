@@ -1,41 +1,37 @@
 package dev.saperate.elementals.client.entities.blood;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import dev.saperate.elementals.entities.blood.BloodShotEntity;
-import dev.saperate.elementals.entities.water.WaterArcEntity;
-import net.minecraft.client.color.world.BiomeColors;
-import net.minecraft.client.render.GameRenderer;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.VertexConsumer;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.entity.EntityRenderer;
-import net.minecraft.client.render.entity.EntityRendererFactory;
-import net.minecraft.client.util.math.PoseStack;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.RotationAxis;
-import net.minecraft.util.math.Vec3;
+import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.entity.EntityRenderer;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.resources.ResourceLocation;
 import org.joml.Matrix4f;
 
-import static dev.saperate.elementals.entities.utils.RenderUtils.drawCube;
+import static dev.saperate.elementals.client.entities.utils.RenderUtils.drawCube;
 
 
 public class BloodShotEntityRenderer extends EntityRenderer<BloodShotEntity> {
-    private static final Identifier texture = Identifier.of("minecraft", "block/water_still");
+    private static final ResourceLocation texture = ResourceLocation.fromNamespaceAndPath("minecraft", "block/water_still");
 
-    public BloodShotEntityRenderer(EntityRendererFactory.Context context) {
+    public BloodShotEntityRenderer(EntityRendererProvider.Context context) {
         super(context);
     }
 
     @Override
-    public void render(BloodShotEntity entity, float yaw, float tickDelta, PoseStack matrices, VertexConsumerProvider vertexConsumers, int light) {
+    public void render(BloodShotEntity entity, float yaw, float tickDelta, PoseStack matrices, MultiBufferSource vertexConsumers, int light) {
 
-        RenderSystem.setShader(GameRenderer::getPositionColorProgram);
+        RenderSystem.setShader(GameRenderer::getPositionColorShader);
         RenderSystem.enableDepthTest();
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
 
 
-        VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderLayer.getTranslucentMovingBlock());
+        VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderType.translucentMovingBlock());
 
         int color = 0xf50f00;
 
@@ -61,7 +57,7 @@ public class BloodShotEntityRenderer extends EntityRenderer<BloodShotEntity> {
     }
 
     @Override
-    public Identifier getTexture(BloodShotEntity entity) {
+    public ResourceLocation getTextureLocation(BloodShotEntity entity) {
         return texture;
     }
 }

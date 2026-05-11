@@ -2,15 +2,15 @@ package dev.saperate.elementals.client.entities.common;
 
 import dev.saperate.elementals.entities.common.BoomerangEntity;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.render.OverlayTexture;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.entity.EntityRenderer;
-import net.minecraft.client.render.entity.EntityRendererFactory;
-import net.minecraft.client.render.item.ItemRenderer;
-import net.minecraft.client.render.model.json.ModelTransformationMode;
-import net.minecraft.client.util.math.PoseStack;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.RotationAxis;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Axis;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.entity.EntityRenderer;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.client.renderer.entity.ItemRenderer;
+import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemDisplayContext;
 
 import static dev.saperate.elementals.Elementals.MODID;
 
@@ -18,22 +18,22 @@ public class BoomerangEntityRenderer extends EntityRenderer<BoomerangEntity> {
     private final ItemRenderer itemRenderer;
 
 
-    public BoomerangEntityRenderer(EntityRendererFactory.Context context) {
+    public BoomerangEntityRenderer(EntityRendererProvider.Context context) {
         super(context);
         this.itemRenderer = Minecraft.getInstance().getItemRenderer();
     }
 
 
     @Override
-    public void render(BoomerangEntity entity, float yaw, float tickDelta, PoseStack matrices, VertexConsumerProvider vertexConsumers, int light) {
-        matrices.push();
+    public void render(BoomerangEntity entity, float yaw, float tickDelta, PoseStack matrices, MultiBufferSource vertexConsumers, int light) {
+        matrices.pushPose();
 
-        matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(90));
-        matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(entity.time));
+        matrices.mulPose(Axis.XP.rotationDegrees(90));
+        matrices.mulPose(Axis.ZP.rotationDegrees(entity.time));
 
-        this.itemRenderer.renderItem(entity.asItemStack(), ModelTransformationMode.GROUND, light, OverlayTexture.DEFAULT_UV, matrices, vertexConsumers, entity.level(), entity.getId());
+        this.itemRenderer.renderStatic(entity.getPickupItem(), ItemDisplayContext.GROUND, light, OverlayTexture.NO_OVERLAY, matrices, vertexConsumers, entity.level(), entity.getId());
 
-        matrices.pop();
+        matrices.popPose();
         if(!entity.getInGround()){
             entity.time += 5;
         }
@@ -44,8 +44,8 @@ public class BoomerangEntityRenderer extends EntityRenderer<BoomerangEntity> {
     }
 
     @Override
-    public Identifier getTexture(BoomerangEntity entity) {
-        return Identifier.of(MODID, "textures/item/boomerang.png");
+    public ResourceLocation getTextureLocation(BoomerangEntity entity) {
+        return ResourceLocation.fromNamespaceAndPath(MODID, "textures/item/boomerang.png");
     }
 
 }

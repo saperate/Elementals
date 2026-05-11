@@ -1,63 +1,65 @@
 package dev.saperate.elementals.client.entities.earth;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import dev.saperate.elementals.client.entities.models.earth.ShrapnelModel;
+import dev.saperate.elementals.client.entities.models.earth.SpikeModel;
 import dev.saperate.elementals.entities.earth.EarthBlockEntity;
-import dev.saperate.elementals.entities.models.earth.ShrapnelModel;
-import dev.saperate.elementals.entities.models.earth.SpikeModel;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.render.*;
-import net.minecraft.client.render.entity.EntityRenderer;
-import net.minecraft.client.render.entity.EntityRendererFactory;
-import net.minecraft.client.util.math.PoseStack;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.RotationAxis;
-import net.minecraft.util.math.Vec3;
+import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.entity.EntityRenderer;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 
 public class EarthBlockEntityRenderer extends EntityRenderer<EarthBlockEntity> {
-    private static final Identifier texture = Identifier.of("minecraft", "textures/block/dirt.png");
+    private static final ResourceLocation texture = ResourceLocation.fromNamespaceAndPath("minecraft", "textures/block/dirt.png");
 
-    public EarthBlockEntityRenderer(EntityRendererFactory.Context context) {
+    public EarthBlockEntityRenderer(EntityRendererProvider.Context context) {
         super(context);
     }
 
     @Override
-    public void render(EarthBlockEntity entity, float yaw, float tickDelta, PoseStack matrices, VertexConsumerProvider vertexConsumers, int light) {
-        matrices.push();
+    public void render(EarthBlockEntity entity, float yaw, float tickDelta, PoseStack matrices, MultiBufferSource vertexConsumers, int light) {
+        matrices.pushPose();
         matrices.translate(-0.5f, 0, -0.5f);
 
 
-        RenderSystem.setShader(GameRenderer::getPositionColorProgram);
+        RenderSystem.setShader(GameRenderer::getPositionColorShader);
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
 
         switch (entity.getModelShapeId()) {
             case 1 -> {
                 matrices.translate(0.5f, -1, 0.5f);
-                VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderLayer.getItemEntityTranslucentCull(getTexture(entity)));
+                VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderType.itemEntityTranslucentCull(getTextureLocation(entity)));
 
                 Vec3 dir = entity.getDeltaMovement();
-                matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees((float) Math.toDegrees(Math.atan2(dir.x, dir.z))));
-                matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees((float) Math.toDegrees(Math.asin(-dir.y))));
+                matrices.mulPose(Axis.YP.rotationDegrees((float) Math.toDegrees(Math.atan2(dir.x, dir.z))));
+                matrices.mulPose(Axis.XP.rotationDegrees((float) Math.toDegrees(Math.asin(-dir.y))));
 
-                ShrapnelModel.getTexturedModelData().createModel().render(
+                ShrapnelModel.getTexturedModelData().bakeRoot().render(
                         matrices, vertexConsumer, light, 0, 0xFFFFFFFF);
             }
             case 2 -> {
-                VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderLayer.getItemEntityTranslucentCull(getTexture(entity)));
+                VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderType.itemEntityTranslucentCull(getTextureLocation(entity)));
 
-                matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180));
+                matrices.mulPose(Axis.XP.rotationDegrees(180));
                 matrices.scale(2, 2, 2);
                 matrices.translate(0.25f, -1.5f, -0.25f);
 
-                SpikeModel.getTexturedModelData().createModel().render(
+                SpikeModel.getTexturedModelData().bakeRoot().render(
                         matrices, vertexConsumer, light, 0, 0xFFFFFFFF);
             }
             default -> {
                 BlockState state = entity.getBlockState();
-                VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderLayers.getMovingBlockLayer(state));
-                Minecraft.getInstance().getBlockRenderManager().renderBlock(state, entity.getOnPos(), entity.level(), matrices, vertexConsumer, false, entity.getEntityWorld().random);
+                VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderType.translucentMovingBlock());
+                Minecraft.getInstance().getBlockRenderer().renderBatched(state, entity.getOnPos(), entity.level(), matrices, vertexConsumer, false, entity.level().random);
             }
 
 
@@ -65,12 +67,12 @@ public class EarthBlockEntityRenderer extends EntityRenderer<EarthBlockEntity> {
 
 
         RenderSystem.disableBlend();
-        matrices.pop();
+        matrices.popPose();
     }
 
 
     @Override
-    public Identifier getTexture(EarthBlockEntity entity) {
+    public ResourceLocation getTextureLocation(EarthBlockEntity entity) {
         return texture;
     }
 }

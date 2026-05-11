@@ -2,56 +2,56 @@ package dev.saperate.elementals.client.entities.fire;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import dev.saperate.elementals.entities.fire.FireWispEntity;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.render.GameRenderer;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.VertexConsumer;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.entity.EntityRenderer;
-import net.minecraft.client.render.entity.EntityRendererFactory;
-import net.minecraft.client.util.math.PoseStack;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.RotationAxis;
+import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.entity.EntityRenderer;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
 import org.joml.Matrix4f;
 
-import static dev.saperate.elementals.entities.utils.RenderUtils.drawCube;
+import static dev.saperate.elementals.client.entities.utils.RenderUtils.drawCube;
 
 public class FireWispEntityRenderer extends EntityRenderer<FireWispEntity> {
     public static long firstTime = -1;
 
-    private static final Identifier fireCoreTex = Identifier.of("minecraft", "block/shroomlight");
-    private static final Identifier blueFireCoreTex = Identifier.of("elementals", "block/bluefire_core");
+    private static final ResourceLocation fireCoreTex = ResourceLocation.fromNamespaceAndPath("minecraft", "block/shroomlight");
+    private static final ResourceLocation blueFireCoreTex = ResourceLocation.fromNamespaceAndPath("elementals", "block/bluefire_core");
 
-    public FireWispEntityRenderer(EntityRendererFactory.Context context) {
+    public FireWispEntityRenderer(EntityRendererProvider.Context context) {
         super(context);
     }
 
     @Override
-    public void render(FireWispEntity entity, float yaw, float tickDelta, PoseStack matrices, VertexConsumerProvider vertexConsumers, int light) {
+    public void render(FireWispEntity entity, float yaw, float tickDelta, PoseStack matrices, MultiBufferSource vertexConsumers, int light) {
         if(firstTime == -1){
             firstTime = System.currentTimeMillis();
         }
         float rot = (float) (System.currentTimeMillis() - firstTime) / 1000;
 
-        matrices.push();
+        matrices.pushPose();
         matrices.scale(0.25f,0.25f,0.25f);
 
 
-        RenderSystem.setShader(GameRenderer::getPositionColorProgram);
+        RenderSystem.setShader(GameRenderer::getPositionColorShader);
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
 
-        VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderLayer.getCutout());
+        VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderType.cutout());
         //Use soul fire for blue fire
 
-        BlockState state = entity.isBlue() ? Blocks.SOUL_FIRE.getDefaultState() : Blocks.FIRE.getDefaultState();
+        BlockState state = entity.isBlue() ? Blocks.SOUL_FIRE.defaultBlockState() : Blocks.FIRE.defaultBlockState();
 
 
-        matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees((float) Math.toDegrees(-rot)));
+        matrices.mulPose(Axis.YP.rotationDegrees((float) Math.toDegrees(-rot)));
         matrices.translate(-0.5f, 0, -0.5f);
-        Minecraft.getInstance().getBlockRenderManager().renderBlock(state, entity.getOnPos(), entity.level(), matrices, vertexConsumer, false, entity.getEntityWorld().random);
+        Minecraft.getInstance().getBlockRenderer().renderBatched(state, entity.getOnPos(), entity.level(), matrices, vertexConsumer, false, entity.level().random);
 
         Matrix4f mat = new Matrix4f();
 
@@ -59,8 +59,8 @@ public class FireWispEntityRenderer extends EntityRenderer<FireWispEntity> {
 
         matrices.translate(0.5f,.5f,0);
         mat.translate(0,0,.5f);
-        mat.rotate(RotationAxis.POSITIVE_Y.rotationDegrees((float) Math.toDegrees(rot * 2)));
-        mat.rotate(RotationAxis.POSITIVE_X.rotationDegrees((float) Math.toDegrees(rot)));
+        mat.rotate(Axis.YP.rotationDegrees((float) Math.toDegrees(rot * 2)));
+        mat.rotate(Axis.XP.rotationDegrees((float) Math.toDegrees(rot)));
         mat.translate(0,0,-.5f);
 
         matrices.scale(.9f,.9f,.9f);
@@ -79,12 +79,12 @@ public class FireWispEntityRenderer extends EntityRenderer<FireWispEntity> {
         );
 
         RenderSystem.disableBlend();
-        matrices.pop();
+        matrices.popPose();
     }
 
 
     @Override
-    public Identifier getTexture(FireWispEntity entity) {
+    public ResourceLocation getTextureLocation(FireWispEntity entity) {
         return null;
     }
 }

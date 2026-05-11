@@ -2,11 +2,17 @@ package dev.saperate.elementals.client;
 
 import commonnetwork.api.Network;
 import dev.saperate.elementals.Elementals;
-import dev.saperate.elementals.blocks.ElementalsBlocks;
 import dev.saperate.elementals.client.entities.models.common.DecoyPlayerModel;
 import dev.saperate.elementals.client.entities.models.metal.MetalLanceModel;
 import dev.saperate.elementals.client.entities.models.water.WaterBladeModel;
-import dev.saperate.elementals.client.entities.water.WaterShieldEntityRenderer;
+import dev.saperate.elementals.client.entities.water.*;
+import dev.saperate.elementals.client.entities.earth.*;
+import dev.saperate.elementals.client.entities.fire.*;
+import dev.saperate.elementals.client.entities.air.*;
+import dev.saperate.elementals.client.entities.common.*;
+import dev.saperate.elementals.client.entities.blood.*;
+import dev.saperate.elementals.client.entities.lightning.*;
+import dev.saperate.elementals.client.entities.metal.*;
 import dev.saperate.elementals.client.features.MetalArmorRenderer;
 import dev.saperate.elementals.client.gui.CastTimerHudOverlay;
 import dev.saperate.elementals.client.gui.ChiHudOverlay;
@@ -14,9 +20,6 @@ import dev.saperate.elementals.client.items.GliderItemRenderer;
 import dev.saperate.elementals.client.keys.KeyCycleBending;
 import dev.saperate.elementals.client.keys.abilities.*;
 import dev.saperate.elementals.client.keys.gui.GuiKey;
-import dev.saperate.elementals.client.particle.MetalShardParticle;
-import dev.saperate.elementals.items.ElementalsItems;
-import dev.saperate.elementals.items.WaterPouchItem;
 import dev.saperate.elementals.mixin.client.GuiAccessor;
 import dev.saperate.elementals.network.packets.C2S.SyncVersionPacket;
 import dev.saperate.elementals.platform.Services;
@@ -25,11 +28,7 @@ import net.minecraft.client.gui.LayeredDraw;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
-import net.minecraft.client.particle.FlameParticle;
-import net.minecraft.client.particle.SpriteSet;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
@@ -39,7 +38,6 @@ import software.bernie.geckolib.animatable.client.GeoRenderProvider;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 import static dev.saperate.elementals.Elementals.*;
 import static dev.saperate.elementals.entities.ElementalEntities.*;
@@ -99,53 +97,53 @@ public class ElementalsClient {
 
     public static void registerEntityRenderers() {
         //WATER
-        EntityRendererRegistry.register(WATERCUBE, WaterCubeEntityRenderer::new);
-        EntityRendererRegistry.register(WATERHELMET, WaterHelmetEntityRenderer::new);
-        EntityRendererRegistry.register(WATERSHIELD, WaterShieldEntityRenderer::new);
-        EntityRendererRegistry.register(WATERARC, WaterArcEntityRenderer::new);
-        EntityRendererRegistry.register(WATERJET, WaterJetEntityRenderer::new);
-        EntityRendererRegistry.register(WATERARM, WaterArmEntityRenderer::new);
-        EntityRendererRegistry.register(WATERBLADE, WaterBladeEntityRenderer::new);
-        EntityRendererRegistry.register(WATERBULLET, WaterBulletEntityRenderer::new);
-        EntityRendererRegistry.register(WATERHEALING, WaterHealingEntityRenderer::new);
-        EntityRendererRegistry.register(WATERTOWER, WaterTowerEntityRenderer::new);
+        Services.REGISTRY.registerClientEntityRenderer(WATERCUBE, WaterCubeEntityRenderer::new);
+        Services.REGISTRY.registerClientEntityRenderer(WATERHELMET, WaterHelmetEntityRenderer::new);
+        Services.REGISTRY.registerClientEntityRenderer(WATERSHIELD, WaterShieldEntityRenderer::new);
+        Services.REGISTRY.registerClientEntityRenderer(WATERARC, WaterArcEntityRenderer::new);
+        Services.REGISTRY.registerClientEntityRenderer(WATERJET, WaterJetEntityRenderer::new);
+        Services.REGISTRY.registerClientEntityRenderer(WATERARM, WaterArmEntityRenderer::new);
+        Services.REGISTRY.registerClientEntityRenderer(WATERBLADE, WaterBladeEntityRenderer::new);
+        Services.REGISTRY.registerClientEntityRenderer(WATERBULLET, WaterBulletEntityRenderer::new);
+        Services.REGISTRY.registerClientEntityRenderer(WATERHEALING, WaterHealingEntityRenderer::new);
+        Services.REGISTRY.registerClientEntityRenderer(WATERTOWER, WaterTowerEntityRenderer::new);
 
         //FIRE
-        EntityRendererRegistry.register(FIREBLOCK, FireBlockEntityRenderer::new);
-        EntityRendererRegistry.register(FIREARC, FireArcEntityRenderer::new);
-        EntityRendererRegistry.register(FIREBALL, FireBallEntityRenderer::new);
-        EntityRendererRegistry.register(FIRESHIELD, FireShieldEntityRenderer::new);
-        EntityRendererRegistry.register(FIREWISP, FireWispEntityRenderer::new);
+        Services.REGISTRY.registerClientEntityRenderer(FIREBLOCK, FireBlockEntityRenderer::new);
+        Services.REGISTRY.registerClientEntityRenderer(FIREARC, FireArcEntityRenderer::new);
+        Services.REGISTRY.registerClientEntityRenderer(FIREBALL, FireBallEntityRenderer::new);
+        Services.REGISTRY.registerClientEntityRenderer(FIRESHIELD, FireShieldEntityRenderer::new);
+        Services.REGISTRY.registerClientEntityRenderer(FIREWISP, FireWispEntityRenderer::new);
 
         //EARTH
-        EntityRendererRegistry.register(EARTHBLOCK, EarthBlockEntityRenderer::new);
+        Services.REGISTRY.registerClientEntityRenderer(EARTHBLOCK, EarthBlockEntityRenderer::new);
 
         //AIR
-        EntityRendererRegistry.register(AIRSHIELD, AirShieldEntityRenderer::new);
-        EntityRendererRegistry.register(AIRTORNADO, AirTornadoEntityRenderer::new);
-        EntityRendererRegistry.register(AIRSTREAM, AirStreamEntityRenderer::new);
-        EntityRendererRegistry.register(AIRBALL, AirBallEntityRenderer::new);
-        EntityRendererRegistry.register(AIRBULLET, AirBulletEntityRenderer::new);
-        EntityRendererRegistry.register(AIRSCOOTER, AirScooterEntityRenderer::new);
+        Services.REGISTRY.registerClientEntityRenderer(AIRSHIELD, AirShieldEntityRenderer::new);
+        Services.REGISTRY.registerClientEntityRenderer(AIRTORNADO, AirTornadoEntityRenderer::new);
+        Services.REGISTRY.registerClientEntityRenderer(AIRSTREAM, AirStreamEntityRenderer::new);
+        Services.REGISTRY.registerClientEntityRenderer(AIRBALL, AirBallEntityRenderer::new);
+        Services.REGISTRY.registerClientEntityRenderer(AIRBULLET, AirBulletEntityRenderer::new);
+        Services.REGISTRY.registerClientEntityRenderer(AIRSCOOTER, AirScooterEntityRenderer::new);
 
         //COMMON
-        EntityRendererRegistry.register(DECOYPLAYER, (context) -> new DecoyPlayerEntityRenderer(context, true));
-        EntityRendererRegistry.register(DIRTBOTTLEENTITY, DirtBottleEntityRenderer::new);
-        EntityRendererRegistry.register(BOOMERANGENTITY, BoomerangEntityRenderer::new);
-		EntityRendererRegistry.register(SKYBISON, SkyBisonEntityRenderer::new);
+        Services.REGISTRY.registerClientEntityRenderer(DECOYPLAYER, (context) -> new DecoyPlayerEntityRenderer(context, true));
+        Services.REGISTRY.registerClientEntityRenderer(DIRTBOTTLEENTITY, DirtBottleEntityRenderer::new);
+        Services.REGISTRY.registerClientEntityRenderer(BOOMERANGENTITY, BoomerangEntityRenderer::new);
+		Services.REGISTRY.registerClientEntityRenderer(SKYBISON, SkyBisonEntityRenderer::new);
         
         //LIGHTNING
-        EntityRendererRegistry.register(LIGHTNINGARC, LightningArcEntityRenderer::new);
-        EntityRendererRegistry.register(VOLTARC, VoltArcEntityRenderer::new);
+        Services.REGISTRY.registerClientEntityRenderer(LIGHTNINGARC, LightningArcEntityRenderer::new);
+        Services.REGISTRY.registerClientEntityRenderer(VOLTARC, VoltArcEntityRenderer::new);
 
         //BLOOD
-        EntityRendererRegistry.register(BLOODSHOT, BloodShotEntityRenderer::new);
+        Services.REGISTRY.registerClientEntityRenderer(BLOODSHOT, BloodShotEntityRenderer::new);
 
 		//METAL
-		EntityRendererRegistry.register(METALCABLE, MetalCableEntityRenderer::new);
-		EntityRendererRegistry.register(METALBIND, MetalBindEntityRenderer::new);
-		EntityRendererRegistry.register(METALBULLET, MetalBulletEntityRenderer::new);
-		EntityRendererRegistry.register(METALLANCE, MetalLanceRenderer::new);
+		Services.REGISTRY.registerClientEntityRenderer(METALCABLE, MetalCableEntityRenderer::new);
+		Services.REGISTRY.registerClientEntityRenderer(METALBIND, MetalBindEntityRenderer::new);
+		Services.REGISTRY.registerClientEntityRenderer(METALBULLET, MetalBulletEntityRenderer::new);
+		Services.REGISTRY.registerClientEntityRenderer(METALLANCE, MetalLanceRenderer::new);
 	}
 
     private static void onClientJoin(Minecraft client) {

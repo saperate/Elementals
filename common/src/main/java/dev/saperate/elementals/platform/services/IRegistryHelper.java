@@ -1,12 +1,17 @@
 package dev.saperate.elementals.platform.services;
 
 import net.minecraft.client.KeyMapping;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+
+import java.util.function.Consumer;
 
 public interface IRegistryHelper {
 
@@ -27,5 +32,6 @@ public interface IRegistryHelper {
     void registerLootTables();
     void registerClientParticles();
     void registerClientColorProviders();
-    KeyMapping registerKeyBinding(KeyMapping keyMapping);
+    KeyMapping registerClientKeyBinding(KeyMapping keyMapping);
+    <T extends Entity> void registerClientEntityRenderer(EntityType<T> type, EntityRendererProvider<T> provider);
 }

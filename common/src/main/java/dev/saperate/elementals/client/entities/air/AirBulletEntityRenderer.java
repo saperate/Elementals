@@ -2,38 +2,38 @@ package dev.saperate.elementals.client.entities.air;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import dev.saperate.elementals.entities.air.AirBulletEntity;
-import net.minecraft.client.render.GameRenderer;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.VertexConsumer;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.entity.EntityRenderer;
-import net.minecraft.client.render.entity.EntityRendererFactory;
-import net.minecraft.client.util.math.PoseStack;
-import net.minecraft.util.Identifier;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.entity.EntityRenderer;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.resources.ResourceLocation;
 import org.joml.Matrix4f;
 
-import static dev.saperate.elementals.entities.utils.RenderUtils.drawCube;
+import static dev.saperate.elementals.client.entities.utils.RenderUtils.drawCube;
 
 public class AirBulletEntityRenderer extends EntityRenderer<AirBulletEntity> {
-    private static final Identifier texture = Identifier.of("elementals", "block/air_block");
-    private static final Identifier topTexture = Identifier.of("elementals", "block/air_block_top");
+    private static final ResourceLocation texture = ResourceLocation.fromNamespaceAndPath("elementals", "block/air_block");
+    private static final ResourceLocation topTexture = ResourceLocation.fromNamespaceAndPath("elementals", "block/air_block_top");
 
-    public AirBulletEntityRenderer(EntityRendererFactory.Context context) {
+    public AirBulletEntityRenderer(EntityRendererProvider.Context context) {
         super(context);
     }
 
     @Override
-    public void render(AirBulletEntity entity, float yaw, float tickDelta, PoseStack matrices, VertexConsumerProvider vertexConsumers, int light) {
-        matrices.push();
+    public void render(AirBulletEntity entity, float yaw, float tickDelta, PoseStack matrices, MultiBufferSource vertexConsumers, int light) {
+        matrices.pushPose();
         matrices.translate(0, 0.25f, 0);
 
-        RenderSystem.setShader(GameRenderer::getPositionColorProgram);
+        RenderSystem.setShader(GameRenderer::getPositionColorShader);
         RenderSystem.enableDepthTest();
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
 
 
-        VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderLayer.getTranslucentMovingBlock());
+        VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderType.translucentMovingBlock());
 
         drawCube(vertexConsumer, matrices, light,
                 1,
@@ -52,11 +52,11 @@ public class AirBulletEntityRenderer extends EntityRenderer<AirBulletEntity> {
 
 
         RenderSystem.disableBlend();
-        matrices.pop();
+        matrices.popPose();
     }
 
     @Override
-    public Identifier getTexture(AirBulletEntity entity) {
+    public ResourceLocation getTextureLocation(AirBulletEntity entity) {
         return texture;
     }
 }

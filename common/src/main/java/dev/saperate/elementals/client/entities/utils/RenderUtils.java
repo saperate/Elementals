@@ -1,52 +1,29 @@
 package dev.saperate.elementals.client.entities.utils;
 
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Minecraft;
 
-import static dev.saperate.elementals.utils.SapsUtils.calculatePitch;
-import static dev.saperate.elementals.utils.SapsUtils.calculateYaw;
-import static java.lang.Math.*;
-import static org.lwjgl.opengl.GL11.glRotatef;
-
-import net.minecraft.client.render.OverlayTexture;
-import net.minecraft.client.render.VertexConsumer;
-import net.minecraft.client.texture.Sprite;
-import net.minecraft.client.util.math.PoseStack;
-import net.minecraft.entity.Entity;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.RotationAxis;
-import net.minecraft.util.math.Vec3;
+import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.resources.ResourceLocation;
 import org.joml.*;
-import org.lwjgl.opengl.GL11;
-
-import java.lang.Math;
-import java.util.Vector;
 import java.util.function.Function;
 
 public abstract class RenderUtils {
 
     public static void drawCube(VertexConsumer vertexConsumer, PoseStack matrices, int light,
-                                float r, float g, float b, float a, Identifier tex, Identifier topTex, float height, Matrix4f rot,
+                                float r, float g, float b, float a, ResourceLocation tex, ResourceLocation topTex, float height, Matrix4f rot,
                                 boolean doubleSided, boolean renderTop, boolean renderBottom) {
 
-        Function<Identifier, Sprite> func = Minecraft.getInstance().getSpriteAtlas(Identifier.of("minecraft", "textures/atlas/blocks.png"));
+        Function<ResourceLocation, TextureAtlasSprite> func = Minecraft.getInstance()
+                .getTextureAtlas(ResourceLocation.fromNamespaceAndPath("minecraft", "textures/atlas/blocks.png"));
 
 
-        Sprite sprite = func.apply(tex);
-        float uMin = sprite.getMinU(), uMax = sprite.getMaxU();
-        float vMin = sprite.getMinV(), vMax = sprite.getMaxV();
-
-        if (tex != topTex) {
-            Function<Identifier, Sprite> topFunc = Minecraft.getInstance().getSpriteAtlas(Identifier.of("minecraft", "textures/atlas/blocks.png"));
-            Sprite topSprite = func.apply(tex);
-            float topUMin = sprite.getMinU(), topUMax = sprite.getMaxU();
-            float topVMin = sprite.getMinV(), topVMax = sprite.getMaxV();
-        } else {
-            float topUMin = uMin, topUMax = uMax;
-            float topVMin = vMin, topVMax = uMin;
-        }
-
-
+        TextureAtlasSprite sprite = func.apply(tex);
+        float uMin = sprite.getU0(), uMax = sprite.getU1();
+        float vMin = sprite.getV0(), vMax = sprite.getV1();
+        
         float m = 0.5f;
         Vector4f v1 = new Vector4f(-m, m, height, 1).mul(rot);
         Vector4f v2 = new Vector4f(-m, -m, height, 1).mul(rot);
@@ -94,12 +71,11 @@ public abstract class RenderUtils {
         );
 
         if (tex != topTex) {
-            Function<Identifier, Sprite> topFunc = Minecraft.getInstance().getSpriteAtlas(Identifier.of("minecraft", "textures/atlas/blocks.png"));
-            Sprite topSprite = topFunc.apply(topTex);
-            uMin = topSprite.getMinU();
-            uMax = topSprite.getMaxU();
-            vMin = topSprite.getMinV();
-            vMax = topSprite.getMaxV();
+            TextureAtlasSprite topSprite = func.apply(topTex);
+            uMin = topSprite.getU0();
+            uMax = topSprite.getU1();
+            vMin = topSprite.getV0();
+            vMax = topSprite.getV1();
         }
 
         if (renderTop) {
@@ -129,21 +105,21 @@ public abstract class RenderUtils {
     }
 
     public static void drawCube(VertexConsumer vertexConsumer, PoseStack matrices, int light,
-                                float r, float g, float b, float a, Identifier tex, float height, Matrix4f rot,
+                                float r, float g, float b, float a, ResourceLocation tex, float height, Matrix4f rot,
                                 boolean doubleSided, boolean renderTop, boolean renderBottom) {
         drawCube(vertexConsumer, matrices, light, r, g, b, a, tex, tex, height, rot, doubleSided, renderTop, renderBottom);
     }
 
     public static void drawInvertedCube(VertexConsumer vertexConsumer, PoseStack matrices, int light,
-                                        float r, float g, float b, float a, Identifier tex, Identifier topTex, float height, Matrix4f rot,
+                                        float r, float g, float b, float a, ResourceLocation tex, ResourceLocation topTex, float height, Matrix4f rot,
                                         boolean renderTop, boolean renderBottom) {
 
 
-        Function<Identifier, Sprite> func = Minecraft.getInstance().getSpriteAtlas(Identifier.of("minecraft", "textures/atlas/blocks.png"));
+        Function<ResourceLocation, TextureAtlasSprite> func = Minecraft.getInstance().getTextureAtlas(ResourceLocation.fromNamespaceAndPath("minecraft", "textures/atlas/blocks.png"));
 
-        Sprite sprite = func.apply(tex);
-        float uMin = sprite.getMinU(), uMax = sprite.getMaxU();
-        float vMin = sprite.getMinV(), vMax = sprite.getMaxV();
+        TextureAtlasSprite sprite = func.apply(tex);
+        float uMin = sprite.getU0(), uMax = sprite.getU1();
+        float vMin = sprite.getV0(), vMax = sprite.getV1();
         float m = 0.5f;
 
         Vector4f v1 = new Vector4f(-m, m, height, 1).mul(rot);
@@ -191,12 +167,11 @@ public abstract class RenderUtils {
 
 
         if (tex != topTex) {
-            Function<Identifier, Sprite> topFunc = Minecraft.getInstance().getSpriteAtlas(Identifier.of("minecraft", "textures/atlas/blocks.png"));
-            Sprite topSprite = topFunc.apply(topTex);
-            uMin = topSprite.getMinU();
-            uMax = topSprite.getMaxU();
-            vMin = topSprite.getMinV();
-            vMax = topSprite.getMaxV();
+            TextureAtlasSprite topSprite = func.apply(topTex);
+            uMin = topSprite.getU0();
+            uMax = topSprite.getU1();
+            vMin = topSprite.getV0();
+            vMax = topSprite.getV1();
         }
 
         if (renderTop) {
@@ -230,10 +205,10 @@ public abstract class RenderUtils {
                                 float x3, float y3, float z3,
                                 float x4, float y4, float z4) {
 
-        vertexConsumer.vertex(matrices.peek().getPositionMatrix(), x1, y1, z1).color(r, g, b, a).texture(uMin, vMin).overlay(OverlayTexture.DEFAULT_UV).light(light).normal(nx, ny, nz);
-        vertexConsumer.vertex(matrices.peek().getPositionMatrix(), x2, y2, z2).color(r, g, b, a).texture(uMin, vMax).overlay(OverlayTexture.DEFAULT_UV).light(light).normal(nx, ny, nz);
-        vertexConsumer.vertex(matrices.peek().getPositionMatrix(), x3, y3, z3).color(r, g, b, a).texture(uMax, vMax).overlay(OverlayTexture.DEFAULT_UV).light(light).normal(nx, ny, nz);
-        vertexConsumer.vertex(matrices.peek().getPositionMatrix(), x4, y4, z4).color(r, g, b, a).texture(uMax, vMin).overlay(OverlayTexture.DEFAULT_UV).light(light).normal(nx, ny, nz);
+        vertexConsumer.addVertex(matrices.last().pose(), x1, y1, z1).setColor(r, g, b, a).setUv(uMin, vMin).setOverlay(OverlayTexture.NO_OVERLAY).setLight(light).setNormal(nx, ny, nz);
+        vertexConsumer.addVertex(matrices.last().pose(), x2, y2, z2).setColor(r, g, b, a).setUv(uMin, vMax).setOverlay(OverlayTexture.NO_OVERLAY).setLight(light).setNormal(nx, ny, nz);
+        vertexConsumer.addVertex(matrices.last().pose(), x3, y3, z3).setColor(r, g, b, a).setUv(uMax, vMax).setOverlay(OverlayTexture.NO_OVERLAY).setLight(light).setNormal(nx, ny, nz);
+        vertexConsumer.addVertex(matrices.last().pose(), x4, y4, z4).setColor(r, g, b, a).setUv(uMax, vMin).setOverlay(OverlayTexture.NO_OVERLAY).setLight(light).setNormal(nx, ny, nz);
     }
 
     public static void drawQuad(VertexConsumer vertexConsumer, PoseStack matrices, int light,

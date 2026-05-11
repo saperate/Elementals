@@ -11,6 +11,7 @@ import dev.saperate.elementals.platform.services.IRegistryHelper;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.gamerule.v1.GameRuleFactory;
 import net.fabricmc.fabric.api.gamerule.v1.GameRuleRegistry;
@@ -18,8 +19,11 @@ import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.fabricmc.fabric.api.loot.v3.LootTableEvents;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.particle.FlameParticle;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.GameRules;
@@ -28,6 +32,8 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.storage.loot.BuiltInLootTables;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
+
+import java.util.function.Consumer;
 
 import static dev.saperate.elementals.Elementals.LIGHTNING_PARTICLE_TYPE;
 import static dev.saperate.elementals.Elementals.METAL_SHARD_PARTICLE_TYPE;
@@ -105,8 +111,13 @@ public class FabricRegistryHelper implements IRegistryHelper {
     }
 
     @Override
-    public KeyMapping registerKeyBinding(KeyMapping keyMapping) {
+    public KeyMapping registerClientKeyBinding(KeyMapping keyMapping) {
         return KeyBindingHelper.registerKeyBinding(keyMapping);
+    }
+
+    @Override
+    public <T extends Entity> void registerClientEntityRenderer(EntityType<T> type, EntityRendererProvider<T> provider) {
+        EntityRendererRegistry.register(type, provider);
     }
 
 }

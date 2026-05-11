@@ -1,54 +1,54 @@
 package dev.saperate.elementals.client.entities.water;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import dev.saperate.elementals.entities.models.water.WaterBladeModel;
+import com.mojang.math.Axis;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import dev.saperate.elementals.client.entities.models.water.WaterBladeModel;
 import dev.saperate.elementals.entities.water.WaterBladeEntity;
-import net.minecraft.client.color.world.BiomeColors;
-import net.minecraft.client.render.GameRenderer;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.VertexConsumer;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.entity.EntityRenderer;
-import net.minecraft.client.render.entity.EntityRendererFactory;
-import net.minecraft.client.render.entity.feature.FeatureRendererContext;
-import net.minecraft.client.util.math.PoseStack;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.RotationAxis;
+import net.minecraft.client.renderer.BiomeColors;
+import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.entity.EntityRenderer;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.client.renderer.entity.RenderLayerParent;
+import net.minecraft.resources.ResourceLocation;
 
 import static dev.saperate.elementals.Elementals.MODID;
-import static dev.saperate.elementals.ElementalsClient.MODEL_WATER_BLADE_LAYER;
+import static dev.saperate.elementals.client.ElementalsClient.MODEL_WATER_BLADE_LAYER;
 
-public class WaterBladeEntityRenderer extends EntityRenderer<WaterBladeEntity> implements FeatureRendererContext<WaterBladeEntity, WaterBladeModel> {
-    private static final Identifier texture = Identifier.of(MODID, "textures/entity/water.png");
+public class WaterBladeEntityRenderer extends EntityRenderer<WaterBladeEntity> implements RenderLayerParent<WaterBladeEntity, WaterBladeModel> {
+    private static final ResourceLocation texture = ResourceLocation.fromNamespaceAndPath(MODID, "textures/entity/water.png");
     private final WaterBladeModel model;
     public static long firstTime = -1;
 
-    public WaterBladeEntityRenderer(EntityRendererFactory.Context context) {
+    public WaterBladeEntityRenderer(EntityRendererProvider.Context context) {
         super(context);
-        model = new WaterBladeModel(context.getPart(MODEL_WATER_BLADE_LAYER));
+        model = new WaterBladeModel(context.bakeLayer(MODEL_WATER_BLADE_LAYER));
     }
 
     @Override
-    public void render(WaterBladeEntity entity, float yaw, float tickDelta, PoseStack matrices, VertexConsumerProvider vertexConsumers, int light) {
+    public void render(WaterBladeEntity entity, float yaw, float tickDelta, PoseStack matrices, MultiBufferSource vertexConsumers, int light) {
         if(firstTime == -1){
             firstTime = System.currentTimeMillis();
         }
         float rot = (float) (System.currentTimeMillis() - firstTime);
-        matrices.push();
+        matrices.pushPose();
         matrices.translate(0, -1.42125f, 0);
 
-        RenderSystem.setShader(GameRenderer::getPositionColorProgram);
+        RenderSystem.setShader(GameRenderer::getPositionColorShader);
         RenderSystem.enableDepthTest();
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
 
 
-        VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderLayer.getItemEntityTranslucentCull(getTexture(entity)));
+        VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderType.itemEntityTranslucentCull(getTextureLocation(entity)));
 
-        int color = BiomeColors.getWaterColor(entity.level(),entity.getOnPos());
-        matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(rot * 20));
+        int color = BiomeColors.getAverageWaterColor(entity.level(),entity.getOnPos());
+        matrices.mulPose(Axis.YP.rotationDegrees(rot * 20));
 
-        WaterBladeModel.getTexturedModelData().createModel().render(
+        WaterBladeModel.getTexturedModelData().bakeRoot().render(
                 matrices,vertexConsumer,light,0,
                 0x88000000 | color
         );
@@ -57,12 +57,12 @@ public class WaterBladeEntityRenderer extends EntityRenderer<WaterBladeEntity> i
 
 
         RenderSystem.disableBlend();
-        matrices.pop();
+        matrices.popPose();
 
     }
 
     @Override
-    public Identifier getTexture(WaterBladeEntity entity) {
+    public ResourceLocation getTextureLocation(WaterBladeEntity entity) {
         return texture;
     }
 
