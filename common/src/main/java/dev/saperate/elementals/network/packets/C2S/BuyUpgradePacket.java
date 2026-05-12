@@ -1,13 +1,16 @@
 package dev.saperate.elementals.network.packets.C2S;
 
+import commonnetwork.api.Network;
 import commonnetwork.networking.data.PacketContext;
 import commonnetwork.networking.data.Side;
 import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.data.StateDataSaverAndLoader;
+import dev.saperate.elementals.elements.Element;
+import dev.saperate.elementals.elements.Upgrade;
 import dev.saperate.elementals.network.ElementalsNetworking;
-import dev.saperate.elementals.network.packets.GetUpgradeListC2SPacket;
-import dev.saperate.elementals.network.packets.SyncLevelC2SPacket;
+import dev.saperate.elementals.network.packets.common.SyncLevelPacket;
+import dev.saperate.elementals.network.packets.common.SyncUpgradeListPacket;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
@@ -42,7 +45,7 @@ public record BuyUpgradePacket(String name) {
         if (name.startsWith("bending")) {
             bender.addElement(Element.getElement(name.replace("bending", "")), true);
             bender.bindDefaultAbilities();
-            StateDataSaverAndLoader.getServerState(player.server).setChanged();
+            StateDataSaverAndLoader.getServerState(player.server).setDirty();
             return;
         }
 
@@ -58,8 +61,8 @@ public record BuyUpgradePacket(String name) {
                 //Will disable sister upgrades
                 plrData.setUpgrade(upgrade,true);
             }
-            GetUpgradeListC2SPacket.send(player);
-            SyncLevelC2SPacket.send(player);
+            Network.getNetworkHandler().sendToClient(SyncUpgradeListPacket.createFromBender(bender), player);
+            Network.getNetworkHandler().sendToClient(SyncLevelPacket.createFromBender(bender), player);
         }
     }
 }

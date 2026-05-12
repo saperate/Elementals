@@ -3,6 +3,7 @@ package dev.saperate.elementals.items;
 import com.google.common.collect.Lists;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import dev.saperate.elementals.Constants;
 import dev.saperate.elementals.Elementals;
 import dev.saperate.elementals.data.ElementalConfig;
 import net.minecraft.resources.ResourceLocation;
@@ -30,7 +31,7 @@ public class ElementalsDynamicRecipes {
                         "dpd",
                         "dcd"
                 ), 
-                ResourceLocation.fromNamespaceAndPath(Elementals.MODID, "fire_scroll")
+                ResourceLocation.fromNamespaceAndPath(Constants.MODID, "fire_scroll")
         ));
 
 
@@ -45,7 +46,7 @@ public class ElementalsDynamicRecipes {
                         "dpd",
                         "dcd"
                 ),
-                ResourceLocation.fromNamespaceAndPath(Elementals.MODID, "water_scroll")
+                ResourceLocation.fromNamespaceAndPath(Constants.MODID, "water_scroll")
         ));
 
 
@@ -60,7 +61,7 @@ public class ElementalsDynamicRecipes {
                         "dpd",
                         "dcd"
                 ),
-                ResourceLocation.fromNamespaceAndPath(Elementals.MODID, "earth_scroll")
+                ResourceLocation.fromNamespaceAndPath(Constants.MODID, "earth_scroll")
         ));
 
 
@@ -75,7 +76,7 @@ public class ElementalsDynamicRecipes {
                         "dpd",
                         "dcd"
                 ),
-                ResourceLocation.fromNamespaceAndPath(Elementals.MODID, "air_scroll")
+                ResourceLocation.fromNamespaceAndPath(Constants.MODID, "air_scroll")
         ));
     }
     

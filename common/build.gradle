@@ -24,6 +24,12 @@ dependencies {
 
     implementation "mysticdrew:common-networking-common:${common_network_version}"
     implementation "software.bernie.geckolib:geckolib-common-${minecraft_version}:${geckolib_version}"
+
+    //javax.annotation
+    compileOnly 'org.projectlombok:lombok:1.18.30'
+    annotationProcessor 'org.projectlombok:lombok:1.18.30'
+    testCompileOnly 'org.projectlombok:lombok:1.18.30'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.30'
 }
 
 configurations {

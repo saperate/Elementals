@@ -23,10 +23,10 @@ public class BurnoutStatusEffect extends MobEffect {
     @Override
     public boolean applyEffectTick(LivingEntity entity, int amplifier) {
         entity.setSprinting(false);
-        if(entity.hasEffect(ElementalsStatusEffects.OVERCHARGED)){
-            entity.removeEffect(ElementalsStatusEffects.OVERCHARGED);
+        if(entity.hasEffect(ElementalsStatusEffects.OVERCHARGED.get())){
+            entity.removeEffect(ElementalsStatusEffects.OVERCHARGED.get());
         }
-        entity.addEffect(new MobEffectInstance(ElementalsStatusEffects.DENSE, 8, 1, false, false, false));
+        entity.addEffect(new MobEffectInstance(ElementalsStatusEffects.DENSE.get(), 8, 1, false, false, false));
         entity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 8, amplifier, false, false, false));
         return true;
     }

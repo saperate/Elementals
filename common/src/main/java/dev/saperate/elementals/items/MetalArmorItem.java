@@ -51,8 +51,8 @@ public class MetalArmorItem extends ArmorItem implements GeoItem {
         if(entity instanceof LivingEntity living){//Not inlining since i might need that later
             if(entity instanceof Player player){
                 player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN,60, 3, false, false, false));
-                player.addEffect(new MobEffectInstance(ElementalsStatusEffects.SEISMIC_SENSE,120,0, false, false, false));
-                player.addEffect(new MobEffectInstance(ElementalsStatusEffects.DENSE,120,10, false, false, false));
+                player.addEffect(new MobEffectInstance(ElementalsStatusEffects.SEISMIC_SENSE.get(),120,0, false, false, false));
+                player.addEffect(new MobEffectInstance(ElementalsStatusEffects.DENSE.get(),120,10, false, false, false));
             }
             //TODO figure out how to add armor points
         }
@@ -131,7 +131,7 @@ public class MetalArmorItem extends ArmorItem implements GeoItem {
     }
     
     @Override
-    public boolean hasGlint(ItemStack stack) {
+    public boolean isFoil(ItemStack stack) {
         return false;
     }
 

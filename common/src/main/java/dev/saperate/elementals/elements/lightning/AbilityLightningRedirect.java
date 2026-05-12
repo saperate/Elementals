@@ -28,7 +28,7 @@ public class AbilityLightningRedirect implements Ability {
         }
 
 
-        if(!SapsUtils.safeHasStatusEffect(ElementalsStatusEffects.SHOCKED,player)){
+        if(!SapsUtils.safeHasStatusEffect(ElementalsStatusEffects.SHOCKED.get(),player)){
             return;
         }
 
@@ -37,8 +37,8 @@ public class AbilityLightningRedirect implements Ability {
         lightning.setPos(pos.x,pos.y,pos.z);
         player.level().addFreshEntity(lightning);
 
-        player.heal((float) player.getEffect(ElementalsStatusEffects.SHOCKED).getAmplifier() / 10);
-        player.removeEffect(ElementalsStatusEffects.SHOCKED);
+        player.heal((float) player.getEffect(ElementalsStatusEffects.SHOCKED.get()).getAmplifier() / 10);
+        player.removeEffect(ElementalsStatusEffects.SHOCKED.get());
     }
 
 

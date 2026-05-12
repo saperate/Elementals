@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import static dev.saperate.elementals.utils.SapsUtils.safeHasStatusEffect;
 
@@ -25,7 +25,7 @@ public abstract class SpectatorMenuCommandMixin {
 
     @Inject(at = @At("HEAD"), method = "renderPage", cancellable = true)
     private void closeMenuIfFakeSpectatorMode(GuiGraphics guiGraphics, float alpha, int x, int y, SpectatorPage spectatorPage, CallbackInfo ci) {
-        if(menu != null && safeHasStatusEffect(ElementalsStatusEffects.SPIRIT_PROJECTION, Minecraft.getInstance().player)){
+        if(menu != null && safeHasStatusEffect(ElementalsStatusEffects.SPIRIT_PROJECTION.get(), Minecraft.getInstance().player)){
             menu.exit();
             ci.cancel();
         }

@@ -1,5 +1,9 @@
 package dev.saperate.elementals.items.scrolls;
 
+import dev.saperate.elementals.elements.Element;
+import dev.saperate.elementals.elements.earth.EarthElement;
+import dev.saperate.elementals.elements.metal.MetalElement;
+
 public class MetalScrollItem extends AbstractScrollItem {
 
     public MetalScrollItem(Properties settings) {

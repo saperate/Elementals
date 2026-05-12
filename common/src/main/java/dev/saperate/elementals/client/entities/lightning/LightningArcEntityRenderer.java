@@ -4,6 +4,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
+import dev.saperate.elementals.Constants;
 import dev.saperate.elementals.entities.lightning.LightningArcEntity;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -14,12 +15,11 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Matrix4f;
 
-import static dev.saperate.elementals.Elementals.MODID;
 import static dev.saperate.elementals.client.entities.utils.RenderUtils.drawCube;
 
 
 public class LightningArcEntityRenderer extends EntityRenderer<LightningArcEntity> {
-    private static final ResourceLocation tex = ResourceLocation.fromNamespaceAndPath(MODID, "block/lightning_block");//"block/fire_0");
+    private static final ResourceLocation tex = ResourceLocation.fromNamespaceAndPath(Constants.MODID, "block/lightning_block");//"block/fire_0");
 
     public LightningArcEntityRenderer(EntityRendererProvider.Context context) {
         super(context);

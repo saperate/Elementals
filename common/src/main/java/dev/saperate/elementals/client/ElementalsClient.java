@@ -2,7 +2,6 @@ package dev.saperate.elementals.client;
 
 import commonnetwork.api.Network;
 import dev.saperate.elementals.Elementals;
-import dev.saperate.elementals.client.entities.models.common.DecoyPlayerModel;
 import dev.saperate.elementals.client.entities.models.metal.MetalLanceModel;
 import dev.saperate.elementals.client.entities.models.water.WaterBladeModel;
 import dev.saperate.elementals.client.entities.water.*;
@@ -20,14 +19,11 @@ import dev.saperate.elementals.client.items.GliderItemRenderer;
 import dev.saperate.elementals.client.keys.KeyCycleBending;
 import dev.saperate.elementals.client.keys.abilities.*;
 import dev.saperate.elementals.client.keys.gui.GuiKey;
-import dev.saperate.elementals.mixin.client.GuiAccessor;
 import dev.saperate.elementals.network.packets.C2S.SyncVersionPacket;
 import dev.saperate.elementals.platform.Services;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.LayeredDraw;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
-import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -36,20 +32,14 @@ import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.client.GeoRenderProvider;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import static dev.saperate.elementals.Elementals.*;
+import static dev.saperate.elementals.Constants.MODID;
 import static dev.saperate.elementals.entities.ElementalEntities.*;
 
 public class ElementalsClient {
-    public static final ModelLayerLocation MODEL_DECOY_PLAYER = new ModelLayerLocation(
-            ResourceLocation.fromNamespaceAndPath(MODID, "decoy_player"), "main");
     public static final ModelLayerLocation MODEL_WATER_BLADE_LAYER = (new ModelLayerLocation(
             ResourceLocation.fromNamespaceAndPath(MODID, "water_blade"), "bb_main"));
     public static final ModelLayerLocation MODEL_METAL_LANCE_LAYER = (new ModelLayerLocation(
             ResourceLocation.fromNamespaceAndPath(MODID, "metal_lance"),"bb_main"));
-    private static Map<ModelLayerLocation, LayerDefinition> MODELS;
     
     
     public static void init(){
@@ -62,15 +52,14 @@ public class ElementalsClient {
         new GuiKey();
         new KeyCycleBending();
 
-
-        LayeredDraw hudLayers = ((GuiAccessor) Minecraft.getInstance().gui).elementals$getLayers();
-        hudLayers.add(new CastTimerHudOverlay());
-        hudLayers.add(new ChiHudOverlay());
-
+        Services.EVENTS.onClientRenderOverlay(new CastTimerHudOverlay());
+        Services.EVENTS.onClientRenderOverlay(new ChiHudOverlay());
         Services.EVENTS.onClientJoin(ElementalsClient::onClientJoin);
         
         Services.REGISTRY.registerClientParticles();
         Services.REGISTRY.registerClientColorProviders();
+        Services.REGISTRY.registerClientModelLayer(MODEL_WATER_BLADE_LAYER, WaterBladeModel::getTexturedModelData);
+        Services.REGISTRY.registerClientModelLayer(MODEL_METAL_LANCE_LAYER, MetalLanceModel::getTexturedModelData);
 
         Elementals.GLIDER_ITEM_RENDER_PROVIDER = () -> new GeoRenderProvider(){
             private final GliderItemRenderer renderer = new GliderItemRenderer();
@@ -148,21 +137,6 @@ public class ElementalsClient {
 
     private static void onClientJoin(Minecraft client) {
         Network.getNetworkHandler().sendToServer(new SyncVersionPacket(SyncVersionPacket.getModVersion()));
-    }
-    
-    private static void registerModelLayer(ModelLayerLocation location, LayerDefinition definition){
-        MODELS.put(location,definition);
-        Minecraft.getInstance().getEntityModels().bakeLayer(MODEL_METAL_LANCE_LAYER);
-    }
-    
-    public static Map<ModelLayerLocation, LayerDefinition> getModels(){
-        if(MODELS == null){
-            MODELS = new HashMap<>();
-            registerModelLayer(MODEL_WATER_BLADE_LAYER, WaterBladeModel.getTexturedModelData());
-            registerModelLayer(MODEL_DECOY_PLAYER, DecoyPlayerModel.getTexturedModelData());
-            registerModelLayer(MODEL_METAL_LANCE_LAYER, MetalLanceModel.getTexturedModelData());
-        }
-        return MODELS;
     }
     
 }

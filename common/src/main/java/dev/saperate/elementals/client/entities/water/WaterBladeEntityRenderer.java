@@ -4,6 +4,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.math.Axis;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import dev.saperate.elementals.Constants;
 import dev.saperate.elementals.client.entities.models.water.WaterBladeModel;
 import dev.saperate.elementals.entities.water.WaterBladeEntity;
 import net.minecraft.client.renderer.BiomeColors;
@@ -15,11 +16,10 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.resources.ResourceLocation;
 
-import static dev.saperate.elementals.Elementals.MODID;
 import static dev.saperate.elementals.client.ElementalsClient.MODEL_WATER_BLADE_LAYER;
 
 public class WaterBladeEntityRenderer extends EntityRenderer<WaterBladeEntity> implements RenderLayerParent<WaterBladeEntity, WaterBladeModel> {
-    private static final ResourceLocation texture = ResourceLocation.fromNamespaceAndPath(MODID, "textures/entity/water.png");
+    private static final ResourceLocation texture = ResourceLocation.fromNamespaceAndPath(Constants.MODID, "textures/entity/water.png");
     private final WaterBladeModel model;
     public static long firstTime = -1;
 

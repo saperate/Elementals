@@ -22,13 +22,13 @@ import java.util.Set;
 
 public class ElementalsItems {
 
-    public static final TagKey<BannerPattern> AIR_BANNER_PATTERN_TAG = TagKey.create(Registries.BANNER_PATTERN, ResourceLocation.fromNamespaceAndPath("assets/elementals","pattern_item/air_banner_pattern"));
+    public static final TagKey<BannerPattern> AIR_BANNER_PATTERN_TAG = TagKey.create(Registries.BANNER_PATTERN, ResourceLocation.fromNamespaceAndPath(Constants.MODID,"air_banner_pattern"));
     
     public static final FoodProperties LIGHTNING_BOTTLE_FOOD_COMPONENT = new FoodProperties.Builder()
             .alwaysEdible()
             .saturationModifier(-1.2f)
             .nutrition(-6)
-            .effect(new MobEffectInstance(ElementalsStatusEffects.OVERCHARGED,400,0,false,false,true), 1)
+            .effect(new MobEffectInstance(ElementalsStatusEffects.OVERCHARGED.get(),400,0,false,false,true), 1)
             .build();
 
 

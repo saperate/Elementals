@@ -3,6 +3,7 @@ package dev.saperate.elementals.network.packets.common;
 import commonnetwork.api.Network;
 import commonnetwork.networking.data.PacketContext;
 import commonnetwork.networking.data.Side;
+import dev.saperate.elementals.client.data.ClientBender;
 import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.network.ElementalsNetworking;
@@ -20,6 +21,10 @@ public record SyncUpgradeListPacket(CompoundTag data) {
     {
         return new CustomPacketPayload.Type<>(ElementalsNetworking.SYNC_UPGRADE_LIST_PACKET_ID);
     }
+    
+    public static SyncUpgradeListPacket createFromBender(Bender bender){
+        return new SyncUpgradeListPacket(bender.getElement().onSave(bender.plrData.upgrades));
+    }
 
     public SyncUpgradeListPacket(FriendlyByteBuf buf) {
         this(buf.readNbt());
@@ -34,7 +39,6 @@ public record SyncUpgradeListPacket(CompoundTag data) {
     {
         if(ctx.side().equals(Side.CLIENT)){
             SyncUpgradeListPacket packet = ctx.message();
-
             ClientBender bender = ClientBender.get();
             if(bender.getElement() == null){
                 return;
@@ -45,10 +49,7 @@ public record SyncUpgradeListPacket(CompoundTag data) {
         }else{
             ServerPlayer player = ctx.sender();
             Bender bender = Bender.getBender(player);
-            Network.getNetworkHandler().sendToClient(
-                    new SyncUpgradeListPacket
-                            (bender.getElement().onSave(PlayerData.get(player).upgrades)), 
-                    player);
+            Network.getNetworkHandler().sendToClient(createFromBender(bender), player);
         }
     }
 }

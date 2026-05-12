@@ -1,5 +1,6 @@
 package dev.saperate.elementals.platform;
 
+import dev.saperate.elementals.ElementalsForge;
 import dev.saperate.elementals.blocks.ElementalsBlocks;
 import dev.saperate.elementals.client.particle.MetalShardParticle;
 import dev.saperate.elementals.commands.BendingCommand;
@@ -9,13 +10,19 @@ import dev.saperate.elementals.items.WaterPouchItem;
 import dev.saperate.elementals.platform.services.IRegistryHelper;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.particle.FlameParticle;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.core.Holder;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -28,7 +35,15 @@ import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.LootTableLoadEvent;
 import net.minecraftforge.event.RegisterCommandsEvent;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegistryObject;
+import org.jetbrains.annotations.NotNull;
 
+import java.util.Optional;
+
+import static dev.saperate.elementals.Constants.MODID;
 import static dev.saperate.elementals.Elementals.LIGHTNING_PARTICLE_TYPE;
 import static dev.saperate.elementals.Elementals.METAL_SHARD_PARTICLE_TYPE;
 import static dev.saperate.elementals.items.ElementalsItems.*;
@@ -121,5 +136,36 @@ public class ForgeRegistryHelper implements IRegistryHelper {
         MinecraftForge.EVENT_BUS.addListener(((EntityRenderersEvent.RegisterRenderers event) -> {
             event.registerEntityRenderer(type, provider);
         }));
+    }
+
+    @Override
+    public <T extends GameRules.Value<T>> GameRules.Key<T> registerGameRule(String name, GameRules.Category category, GameRules.Type<T> defaultValue) {
+        return GameRules.register(name, category, defaultValue);
+    }
+
+    public GameRules.Type<GameRules.BooleanValue> createGameruleIntegerType(boolean defaultValue){
+        return GameRules.BooleanValue.create(defaultValue);
+    }
+
+    public GameRules.Type<GameRules.IntegerValue> createGameruleIntegerType(int defaultValue){
+        return GameRules.IntegerValue.create(defaultValue);
+    }
+
+    @Override
+    public void registerClientModelLayer(ModelLayerLocation modelMetalLanceLayer, TexturedModelDataProvider provider) {
+        MinecraftForge.EVENT_BUS.addListener((EntityRenderersEvent.RegisterLayerDefinitions event) -> {
+            event.registerLayerDefinition(modelMetalLanceLayer, provider::create);
+        });
+    }
+    @Override
+    public @NotNull MobEffectHolder registerEffect(String name, MobEffect effect) {
+        RegistryObject<MobEffect> holder = ElementalsForge.MOB_EFFECTS.register(name, () -> effect);
+        return () -> {
+            Optional<Holder<MobEffect>> optionalHolder = holder.getHolder();
+            if(optionalHolder.isEmpty()){
+                throw new RuntimeException("Tried to get status effect [" + name + "] before it got registered!");
+            }
+            return optionalHolder.get();
+        };
     }
 }

@@ -2,6 +2,7 @@ package dev.saperate.elementals.network.packets.S2C;
 
 import commonnetwork.networking.data.PacketContext;
 import commonnetwork.networking.data.Side;
+import dev.saperate.elementals.client.data.ClientBender;
 import dev.saperate.elementals.network.ElementalsNetworking;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;

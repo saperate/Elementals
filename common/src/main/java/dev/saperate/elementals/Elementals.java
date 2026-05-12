@@ -23,8 +23,6 @@ import dev.saperate.elementals.misc.BlockRestoreManager;
 import dev.saperate.elementals.misc.ElementalsSounds;
 import dev.saperate.elementals.misc.IItemRenderProvider;
 import dev.saperate.elementals.mixin.CriteriaTriggersAccessor;
-import dev.saperate.elementals.mixin.GameRulesAccessor;
-import dev.saperate.elementals.mixin.GameRulesBooleanRuleAccessor;
 import dev.saperate.elementals.mixin.SimpleParticleTypeAccessor;
 import dev.saperate.elementals.network.ElementalsNetworking;
 import dev.saperate.elementals.platform.Services;
@@ -39,22 +37,19 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class Elementals {
-    public static final String MODID = "assets/elementals"; //TODO remove
-    public static final Logger LOGGER = LoggerFactory.getLogger(MODID);
+    public static final Logger LOGGER = LoggerFactory.getLogger(Constants.MODID);
     public static HasElementCriterion HAS_ELEMENT = CriteriaTriggersAccessor.callRegister(HasElementCriterion.getName(), new HasElementCriterion());
     public static UsedAbilityCriterion USED_ABILITY = CriteriaTriggersAccessor.callRegister(UsedAbilityCriterion.getName(), new UsedAbilityCriterion());
     public static final SimpleParticleType LIGHTNING_PARTICLE_TYPE = SimpleParticleTypeAccessor.callConstructor(false);
     public static final SimpleParticleType METAL_SHARD_PARTICLE_TYPE = SimpleParticleTypeAccessor.callConstructor(false);
     public static IItemRenderProvider GLIDER_ITEM_RENDER_PROVIDER = () -> null;
     public static IItemRenderProvider METAL_ARMOR_RENDER_PROVIDER = () -> null;
-    public static GameRules.Key<GameRules.BooleanValue> BENDING_GRIEFING = GameRulesAccessor.callRegister(
+    public static GameRules.Key<GameRules.BooleanValue> BENDING_GRIEFING = Services.REGISTRY.registerGameRule(
             "bendingGriefing",
             GameRules.Category.MISC,
-            GameRulesBooleanRuleAccessor.invokeCreate(true,
-                    (server, rule) -> {
-                    })
+            Services.REGISTRY.createGameruleIntegerType(true)
     );
-
+    
     public static void init() {
         LOGGER.info("Initialising the cool stuff...");
         ElementalConfig.get().loadConfig();
@@ -78,8 +73,8 @@ public class Elementals {
         Services.EVENTS.onServerClose(Elementals::onServerStop);
         Services.EVENTS.onServerTick(Elementals::onServerTick);
 
-        Registry.register(BuiltInRegistries.PARTICLE_TYPE, ResourceLocation.fromNamespaceAndPath(MODID, "lightning"), LIGHTNING_PARTICLE_TYPE);
-        Registry.register(BuiltInRegistries.PARTICLE_TYPE, ResourceLocation.fromNamespaceAndPath(MODID, "metal_shard"), METAL_SHARD_PARTICLE_TYPE);
+        Registry.register(BuiltInRegistries.PARTICLE_TYPE, ResourceLocation.fromNamespaceAndPath(Constants.MODID, "lightning"), LIGHTNING_PARTICLE_TYPE);
+        Registry.register(BuiltInRegistries.PARTICLE_TYPE, ResourceLocation.fromNamespaceAndPath(Constants.MODID, "metal_shard"), METAL_SHARD_PARTICLE_TYPE);
     }
 
 

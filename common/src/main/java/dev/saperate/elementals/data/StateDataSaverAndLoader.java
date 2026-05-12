@@ -74,7 +74,7 @@ public class StateDataSaverAndLoader extends SavedData {
         assert world != null;
         DimensionDataStorage persistentStateManager = world.getDataStorage();
 
-        StateDataSaverAndLoader state = persistentStateManager.get(type, Constants.MODID);
+        StateDataSaverAndLoader state = persistentStateManager.computeIfAbsent(type, Constants.MODID);
         state.setDirty();
         return state;
     }

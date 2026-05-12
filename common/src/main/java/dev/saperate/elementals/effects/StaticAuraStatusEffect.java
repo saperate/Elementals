@@ -21,7 +21,7 @@ public class StaticAuraStatusEffect extends MobEffect {
     @Override
     public boolean applyEffectTick(LivingEntity entity, int amplifier) {
         if(entity.isInWaterOrRain()){
-            entity.removeEffect(ElementalsStatusEffects.STATIC_AURA);
+            entity.removeEffect(ElementalsStatusEffects.STATIC_AURA.get());
         }
         return true;
     }

@@ -28,11 +28,11 @@ public class AbilityLightning3 implements Ability {
         } else if (plrData.canUseUpgrade("lightningOverchargeStrengthI")) {
             duration = 600;
         }
-        if (!safeHasStatusEffect(ElementalsStatusEffects.OVERCHARGED, player) && !safeHasStatusEffect(ElementalsStatusEffects.BURNOUT, player) ) {
+        if (!safeHasStatusEffect(ElementalsStatusEffects.OVERCHARGED.get(), player) && !safeHasStatusEffect(ElementalsStatusEffects.BURNOUT.get(), player) ) {
             if (!bender.reduceChi(15)) {
                 return;
             }
-            player.addEffect(new MobEffectInstance(ElementalsStatusEffects.OVERCHARGED, duration, 0, false, false, true));
+            player.addEffect(new MobEffectInstance(ElementalsStatusEffects.OVERCHARGED.get(), duration, 0, false, false, true));
         }
         bender.setCurrAbility(null);
     }

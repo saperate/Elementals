@@ -99,7 +99,7 @@ public class WaterHelmetEntity extends AbstractElementalsEntity<LivingEntity> {
             if (caster == null) {
                 return;
             }
-            owner.addEffect(new MobEffectInstance(ElementalsStatusEffects.DROWNING, 10, 1, false, false, false));
+            owner.addEffect(new MobEffectInstance(ElementalsStatusEffects.DROWNING.get(), 10, 1, false, false, false));
             Vec3 direction = caster.position().subtract(owner.position());
             double distance = direction.length();
             if (distance > range) {

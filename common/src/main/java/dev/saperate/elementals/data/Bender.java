@@ -91,14 +91,14 @@ public class Bender {
         
         plrData.chi = Math.min(ElementalConfig.get().MAX_CHI,
                 plrData.chi + (ElementalConfig.get().CHI_REGENERATION_RATE
-                        * (safeHasStatusEffect(ElementalsStatusEffects.OVERCHARGED, player) ? 4 : 1)
-                        * (safeHasStatusEffect(ElementalsStatusEffects.BURNOUT, player) ? 0.25f : 1)
+                        * (safeHasStatusEffect(ElementalsStatusEffects.OVERCHARGED.get(), player) ? 4 : 1)
+                        * (safeHasStatusEffect(ElementalsStatusEffects.BURNOUT.get(), player) ? 0.25f : 1)
                 ));
 
         backgroundAbilities.forEach((Ability ability, Object data) -> ability.onBackgroundTick(this, data));
 
         if(player.tickCount % 20 == 0 && currAbility != null && currAbility.shouldImmobilizePlayer(player)){
-            player.addEffect(new MobEffectInstance(ElementalsStatusEffects.STATIONARY,20,0,false,false,true));
+            player.addEffect(new MobEffectInstance(ElementalsStatusEffects.STATIONARY.get(),20,0,false,false,true));
         }
 
         Elementals.HAS_ELEMENT.trigger((ServerPlayer) player);
@@ -339,9 +339,9 @@ public class Bender {
 
         float newChi = plrData.chi - val;
         if (newChi < 0) {
-            if(newChi >= -10 && !safeHasStatusEffect(ElementalsStatusEffects.BURNOUT,player)){
+            if(newChi >= -10 && !safeHasStatusEffect(ElementalsStatusEffects.BURNOUT.get(),player)){
                 newChi = 0;
-                player.addEffect(new MobEffectInstance(ElementalsStatusEffects.BURNOUT,200,0,false,false,true));
+                player.addEffect(new MobEffectInstance(ElementalsStatusEffects.BURNOUT.get(),200,0,false,false,true));
             }else {
                 return false;
             }

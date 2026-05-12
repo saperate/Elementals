@@ -33,8 +33,8 @@ public class OverlayMixin {
         if (bender != null && bender.player != null) {
             if (bender.currAbility instanceof AbilityWaterShield) {
                 elementals$renderUnderwaterOverlay(client, matrices);
-            } else if (bender.player.hasEffect(ElementalsStatusEffects.DROWNING)) {
-                int colorId = bender.player.getEffect(ElementalsStatusEffects.DROWNING).getAmplifier();
+            } else if (bender.player.hasEffect(ElementalsStatusEffects.DROWNING.get())) {
+                int colorId = bender.player.getEffect(ElementalsStatusEffects.DROWNING.get()).getAmplifier();
                 if(colorId == 100){
                     return;
                 }

@@ -4,6 +4,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
+import dev.saperate.elementals.Constants;
 import dev.saperate.elementals.client.entities.models.metal.MetalLanceModel;
 import dev.saperate.elementals.entities.metal.MetalLanceEntity;
 import net.minecraft.client.renderer.GameRenderer;
@@ -15,11 +16,10 @@ import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 
-import static dev.saperate.elementals.Elementals.MODID;
 import static dev.saperate.elementals.client.ElementalsClient.MODEL_METAL_LANCE_LAYER;
 
 public class MetalLanceRenderer extends EntityRenderer<MetalLanceEntity> implements RenderLayerParent<MetalLanceEntity, MetalLanceModel> {
-    private static final ResourceLocation texture = ResourceLocation.fromNamespaceAndPath(MODID, "textures/entity/metal_lance.png");
+    private static final ResourceLocation texture = ResourceLocation.fromNamespaceAndPath(Constants.MODID, "textures/entity/metal_lance.png");
     private final MetalLanceModel model;
     public static long firstTime = -1;
 

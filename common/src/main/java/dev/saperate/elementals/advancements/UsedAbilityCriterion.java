@@ -24,7 +24,7 @@ public class UsedAbilityCriterion extends SimpleCriterionTrigger<UsedAbilityCrit
     }
 
     public static String getName() {
-        return Constants.MODID + "/" + "usedAbility";
+        return Constants.MODID + "/" + "used_ability";
     }
 
     public void trigger(ServerPlayer player, String usedAbility) {
@@ -49,7 +49,7 @@ public class UsedAbilityCriterion extends SimpleCriterionTrigger<UsedAbilityCrit
         }
 
         public static Criterion<Conditions> any() {
-            return Elementals.USED_ABILITY.create(new Conditions(Optional.empty(), Optional.empty()));
+            return Elementals.USED_ABILITY.createCriterion(new Conditions(Optional.empty(), Optional.empty()));
         }
 
         boolean requirementsMet(String usedAbility) {

@@ -52,7 +52,7 @@ public class AbilityAirStream implements Ability {
         } else if (plrData.canUseUpgrade("airStreamSpeedI")) {
             speed = 1.5f;
         }
-        entity.setDeltaMovement(bender.player, bender.player.getPitch(), bender.player.getYaw(), 0, speed, 0);
+        entity.setDeltaMovement(bender.player, bender.player.getXRot(), bender.player.getYRot(), 0, speed, 0);
     }
     @Override
     public void onRightClick(Bender bender, boolean started) {

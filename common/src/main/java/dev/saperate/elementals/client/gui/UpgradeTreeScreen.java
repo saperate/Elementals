@@ -30,7 +30,7 @@ import java.awt.*;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static dev.saperate.elementals.Elementals.MODID;
+import static dev.saperate.elementals.Constants.MODID;
 
 public class UpgradeTreeScreen extends Screen {
     private ClientBender bender;

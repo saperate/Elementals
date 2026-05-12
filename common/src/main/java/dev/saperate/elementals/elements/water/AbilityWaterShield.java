@@ -3,6 +3,7 @@ package dev.saperate.elementals.elements.water;
 import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.effects.ElementalsStatusEffects;
 import dev.saperate.elementals.elements.Ability;
+import dev.saperate.elementals.entities.water.WaterShieldEntity;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.player.Player;
 
@@ -43,7 +44,7 @@ public class AbilityWaterShield implements Ability {
             }
             return;
         }
-        bender.player.addEffect(new MobEffectInstance(ElementalsStatusEffects.STATIONARY,1,1,false,false,false));
+        bender.player.addEffect(new MobEffectInstance(ElementalsStatusEffects.STATIONARY.get(),1,1,false,false,false));
         if(!bender.player.isCrouching()){
             onRemove(bender);
         }

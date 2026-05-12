@@ -26,8 +26,8 @@ public class AbilityLightning2 implements Ability {
             return;
         }
         if (player.isCrouching() && playerData.canUseUpgrade("lightningStaticAura")) {
-            if (safeHasStatusEffect(ElementalsStatusEffects.STATIC_AURA, player)) {
-                player.removeEffect(ElementalsStatusEffects.STATIC_AURA);
+            if (safeHasStatusEffect(ElementalsStatusEffects.STATIC_AURA.get(), player)) {
+                player.removeEffect(ElementalsStatusEffects.STATIC_AURA.get());
             } else {
                 int duration = 200;
                 PlayerData plrData = PlayerData.get(player);
@@ -36,7 +36,7 @@ public class AbilityLightning2 implements Ability {
                 } else if (plrData.canUseUpgrade("lightningStaticAuraStrengthI")) {
                     duration = 400;
                 }
-                player.addEffect(new MobEffectInstance(ElementalsStatusEffects.STATIC_AURA, duration, 0, false, false, true));
+                player.addEffect(new MobEffectInstance(ElementalsStatusEffects.STATIC_AURA.get(), duration, 0, false, false, true));
             }
             bender.setCurrAbility(null);
             return;

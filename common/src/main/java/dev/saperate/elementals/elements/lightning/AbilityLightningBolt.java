@@ -66,7 +66,7 @@ public class AbilityLightningBolt implements Ability {
         if(!bender.player.isCrouching()){
             onRemove(bender);
         }
-        bender.player.addEffect(new MobEffectInstance(ElementalsStatusEffects.STATIONARY,20, 0, false, false, false));
+        bender.player.addEffect(new MobEffectInstance(ElementalsStatusEffects.STATIONARY.get(),20, 0, false, false, false));
     }
 
     @Override

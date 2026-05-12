@@ -2,6 +2,8 @@ package dev.saperate.elementals.network.packets.S2C;
 
 import commonnetwork.networking.data.PacketContext;
 import commonnetwork.networking.data.Side;
+import dev.saperate.elementals.client.data.ClientBender;
+import dev.saperate.elementals.client.gui.UpgradeTreeScreen;
 import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.network.ElementalsNetworking;
 import net.minecraft.client.Minecraft;
@@ -39,9 +41,10 @@ public record SyncElementsPacket(String packedElements, int activeElementIndex) 
         
         bender.setElements(Bender.unpackElementsFromString(elements));
         bender.setActiveElementIndex(activeElementIndex);
-        if (Minecraft.getInstance().screen instanceof UpgradeTreeScreen treeScreen) {
-            treeScreen.close();
-        }
+        //TODO check if necessary
+//        if (Minecraft.getInstance().screen instanceof UpgradeTreeScreen treeScreen) {
+//            treeScreen.close();
+//        }
         if(bender.chi > 100){
             bender.chi = 100;
         }

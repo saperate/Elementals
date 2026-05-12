@@ -15,7 +15,7 @@ import static dev.saperate.elementals.utils.SapsUtils.safeHasStatusEffect;
 public abstract class MinecraftClientMixin {
     @Inject(at = @At("HEAD"), method = "shouldEntityAppearGlowing", cancellable = true)
     private void closeMenuIfFakeSpectatorMode(Entity entity, CallbackInfoReturnable<Boolean> cir) {
-        if (safeHasStatusEffect(ElementalsStatusEffects.SPIRIT_PROJECTION, Minecraft.getInstance().player)) {
+        if (safeHasStatusEffect(ElementalsStatusEffects.SPIRIT_PROJECTION.get(), Minecraft.getInstance().player)) {
             cir.setReturnValue(entity.isCurrentlyGlowing()
                     || (entity instanceof DecoyPlayerEntity decoy
                     && decoy.getOwnerUUID().equals(Minecraft.getInstance().player.getUUID()))

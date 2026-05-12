@@ -16,7 +16,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import static dev.saperate.elementals.Elementals.MODID;
+import static dev.saperate.elementals.Constants.MODID;
 import static dev.saperate.elementals.utils.SapsUtils.safeHasStatusEffect;
 
 @Mixin(GameRenderer.class)
@@ -40,7 +40,7 @@ public abstract class GameRendererMixin {
 
 
 
-        boolean hasStatusEffect = safeHasStatusEffect(ElementalsStatusEffects.SEISMIC_SENSE,plr);
+        boolean hasStatusEffect = safeHasStatusEffect(ElementalsStatusEffects.SEISMIC_SENSE.get(),plr);
         boolean customShaderEnabled = elementals$customPostProcessorEnabled(renderer,MODID + ":shaders/post/seismicsense.json");
 
         if(hasStatusEffect && !customShaderEnabled){

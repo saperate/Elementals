@@ -8,8 +8,10 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.DynamicCommandExceptionType;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
+import dev.saperate.elementals.elements.Element;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.SharedSuggestionProvider;
+import net.minecraft.network.chat.Component;
 
 import java.util.Collection;
 import java.util.List;
@@ -22,7 +24,9 @@ public class ElementArgumentType implements ArgumentType<Element> {
             "fire",
             "earth"
     );
-    public static final DynamicCommandExceptionType INVALID_ELEMENT = new DynamicCommandExceptionType(o -> Text.literal("Invalid element: " + o));
+    public static final DynamicCommandExceptionType INVALID_ELEMENT = new DynamicCommandExceptionType(
+            o -> Component.literal("Invalid element: " + o)
+    );
     @Override
     public Element parse(StringReader reader) throws CommandSyntaxException {
         int argBeginning = reader.getCursor();

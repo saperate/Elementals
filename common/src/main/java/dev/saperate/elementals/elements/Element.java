@@ -1,13 +1,12 @@
 package dev.saperate.elementals.elements;
 
+import dev.saperate.elementals.Constants;
 import dev.saperate.elementals.data.Bender;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
 import java.util.*;
-
-import static dev.saperate.elementals.Elementals.MODID;
 
 public abstract class Element{
     private static final HashMap<String,Element> elements = new HashMap<>();
@@ -112,7 +111,7 @@ public abstract class Element{
     }
 
     public ResourceLocation getGuiBackgroundIdentifier(){
-        return ResourceLocation.fromNamespaceAndPath(MODID,"textures/gui/default_gui_background.png");
+        return ResourceLocation.fromNamespaceAndPath(Constants.MODID,"textures/gui/default_gui_background.png");
     }
 
     public int getTertiaryColor(){

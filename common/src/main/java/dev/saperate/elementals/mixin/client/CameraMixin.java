@@ -37,7 +37,7 @@ public abstract class CameraMixin {
     @Inject(at = @At("TAIL"), method = "setup")
     private void render(BlockGetter level, Entity entity, boolean detached, boolean thirdPersonReverse, float partialTick, CallbackInfo ci) {
         Minecraft minecraftClient = Minecraft.getInstance();
-        if (safeHasStatusEffect(ElementalsStatusEffects.SPIRIT_PROJECTION, minecraftClient.player)) {
+        if (safeHasStatusEffect(ElementalsStatusEffects.SPIRIT_PROJECTION.get(), minecraftClient.player)) {
             this.detached = false;
         }
         ClientBender bender = ClientBender.get();

@@ -1,6 +1,7 @@
 package dev.saperate.elementals.items;
 
 
+import dev.saperate.elementals.entities.common.DirtBottleEntity;
 import net.minecraft.core.Direction;
 import net.minecraft.core.dispenser.BlockSource;
 import net.minecraft.core.dispenser.DispenseItemBehavior;
@@ -34,7 +35,7 @@ public class DirtBottleItem extends Item implements DispenseItemBehavior {
         if (!level.isClientSide) {
             DirtBottleEntity entity = new DirtBottleEntity(level, user);
             entity.setItem(handStack);
-            entity.setDeltaMovement(user, user.getXRot(), user.getYRot(), 0.0f, .75f, 0f);
+            entity.shootFromRotation(user, user.getXRot(), user.getYRot(), 0.0f, .75f, 0f);
             level.addFreshEntity(entity);
         }
         user.awardStat(Stats.ITEM_USED.get(this));
@@ -70,7 +71,7 @@ public class DirtBottleItem extends Item implements DispenseItemBehavior {
                 )
         );
 
-        dirtBottleEntity.setDeltaMovement(
+        dirtBottleEntity.shoot(
                 direction.getStepX(),
                 direction.getStepY(),
                 direction.getStepZ(),

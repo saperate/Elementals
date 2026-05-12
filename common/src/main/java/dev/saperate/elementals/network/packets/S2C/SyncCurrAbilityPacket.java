@@ -2,6 +2,7 @@ package dev.saperate.elementals.network.packets.S2C;
 
 import commonnetwork.networking.data.PacketContext;
 import commonnetwork.networking.data.Side;
+import dev.saperate.elementals.client.data.ClientBender;
 import dev.saperate.elementals.network.ElementalsNetworking;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
@@ -13,7 +14,7 @@ public record SyncCurrAbilityPacket(int abilityIndex) {
     
     public static CustomPacketPayload.Type<CustomPacketPayload> type()
     {
-        return new CustomPacketPayload.Type<>(ElementalsNetworking.SYNC_CHI_PACKET_ID);
+        return new CustomPacketPayload.Type<>(ElementalsNetworking.SYNC_CURR_ABILITY_PACKET_ID);
     }
     
     public SyncCurrAbilityPacket(FriendlyByteBuf buf) {

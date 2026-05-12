@@ -11,7 +11,7 @@ import net.minecraft.resources.ResourceLocation;
 
 import java.util.Locale;
 
-import static dev.saperate.elementals.Elementals.MODID;
+import static dev.saperate.elementals.Constants.MODID;
 
 public class ChiHudOverlay implements LayeredDraw.Layer {
 

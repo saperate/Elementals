@@ -28,7 +28,7 @@ public class AbilityLightningStorm implements Ability {
             return;
         }
         bender.addBackgroundAbility(this, new Object[]{0, bender.player.position()});
-        bender.player.addEffect(new MobEffectInstance(ElementalsStatusEffects.BURNOUT,200,0,false,false,true));
+        bender.player.addEffect(new MobEffectInstance(ElementalsStatusEffects.BURNOUT.get(),200,0,false,false,true));
     }
 
 

@@ -38,8 +38,8 @@ public class EarthArmorItem extends ArmorItem {
             return;
         }
         if(entity instanceof LivingEntity living){
-            living.addEffect(new MobEffectInstance(ElementalsStatusEffects.SEISMIC_SENSE,60, 0, false, false, true));
-            living.addEffect(new MobEffectInstance(ElementalsStatusEffects.DENSE,120,10, false, false, false));
+            living.addEffect(new MobEffectInstance(ElementalsStatusEffects.SEISMIC_SENSE.get(),60, 0, false, false, true));
+            living.addEffect(new MobEffectInstance(ElementalsStatusEffects.DENSE.get(),120,10, false, false, false));
         }
         //TODO figure out how to add armor points
     }

@@ -84,7 +84,7 @@ public class BendingCommand {
                                                         .executes(BendingCommand::removeSelfElement))
                                         )
                         )
-                .then(Commands.literal("debug").executes(BendingCommand::debug)).requires(source -> source.hasPermissionLevel(2))
+                .then(Commands.literal("debug").executes(BendingCommand::debug)).requires(source -> source.hasPermission(2))
 
         );
     }
@@ -116,9 +116,9 @@ public class BendingCommand {
         Element element = ElementArgumentType.getElement(context, "element");
 
         if (bender.hasElement(element)) {
-            context.getSource().sendFailure((() -> Component.literal(
+            context.getSource().sendFailure((Component.literal(
                     "You could already bend: " + element.name)
-            ), false);
+            ));
             return 1;
         }
 
@@ -138,9 +138,9 @@ public class BendingCommand {
         Element element = ElementArgumentType.getElement(context, "element");
 
         if (bender.hasElement(element)) {
-            context.getSource().sendFailure((() -> Component.literal(
+            context.getSource().sendFailure(Component.literal(
                     "You could already bend: " + element.name)
-            ), false);
+            );
             return 1;
         }
 
@@ -160,9 +160,9 @@ public class BendingCommand {
         Element element = ElementArgumentType.getElement(context, "element");
 
         if (!bender.hasElement(element)) {
-            context.getSource().sendFailure((() -> Component.literal(
+            context.getSource().sendFailure(Component.literal(
                     "You couldn't bend: " + element.name)
-            ), false);
+            );
             return 1;
         }
 
@@ -183,9 +183,9 @@ public class BendingCommand {
         Element element = ElementArgumentType.getElement(context, "element");
 
         if (!bender.hasElement(element)) {
-            context.getSource().sendFailure((() -> Component.literal(
+            context.getSource().sendFailure(Component.literal(
                     "You couldn't bend: " + element.name)
-            ), false);
+            );
             return 1;
         }
 

@@ -1,6 +1,10 @@
 package dev.saperate.elementals.items.scrolls;
 
 
+import dev.saperate.elementals.elements.Element;
+import dev.saperate.elementals.elements.fire.FireElement;
+import dev.saperate.elementals.elements.lightning.LightningElement;
+
 public class LightningScrollItem extends AbstractScrollItem {
 
     public LightningScrollItem(Properties settings) {

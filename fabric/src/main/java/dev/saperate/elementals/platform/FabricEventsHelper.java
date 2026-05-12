@@ -1,12 +1,15 @@
 package dev.saperate.elementals.platform;
 
 import dev.saperate.elementals.platform.services.IEventsHelper;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
+import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.LayeredDraw;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 
@@ -51,5 +54,15 @@ public class FabricEventsHelper implements IEventsHelper {
                 (packetListener, packetSender, minecraft)->{
             method.accept(minecraft);
         });
+    }
+
+    @Override
+    public void onClientTick(Consumer<Minecraft> method) {
+        ClientTickEvents.END_CLIENT_TICK.register(method::accept);
+    }
+
+    @Override
+    public void onClientRenderOverlay(LayeredDraw.Layer layer) {
+        HudRenderCallback.EVENT.register(layer::render);
     }
 }

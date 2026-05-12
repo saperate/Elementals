@@ -35,10 +35,10 @@ public class AbilityBlood4 implements Ability {
 
         for (LivingEntity living : entities) {
             if (living instanceof Player && !isNight) {
-                living.addEffect(new MobEffectInstance(ElementalsStatusEffects.STUNNED, 100, 0, false, false, true));
+                living.addEffect(new MobEffectInstance(ElementalsStatusEffects.STUNNED.get(), 100, 0, false, false, true));
                 continue;
             }
-            living.addEffect(new MobEffectInstance(ElementalsStatusEffects.STATIONARY, 120, 2, true, false, true));
+            living.addEffect(new MobEffectInstance(ElementalsStatusEffects.STATIONARY.get(), 120, 2, true, false, true));
         }
     }
 

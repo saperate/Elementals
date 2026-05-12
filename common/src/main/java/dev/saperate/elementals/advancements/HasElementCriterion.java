@@ -50,7 +50,7 @@ public class HasElementCriterion extends SimpleCriterionTrigger<HasElementCriter
         }
 
         public static Criterion<Conditions> any() {
-            return Elementals.HAS_ELEMENT.create(new Conditions(Optional.empty(), Optional.empty()));
+            return Elementals.HAS_ELEMENT.createCriterion(new Conditions(Optional.empty(), Optional.empty()));
         }
 
         boolean requirementsMet(Bender bender) {

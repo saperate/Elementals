@@ -1,5 +1,6 @@
 package dev.saperate.elementals.client.items;
 
+import dev.saperate.elementals.Constants;
 import dev.saperate.elementals.Elementals;
 import dev.saperate.elementals.items.GliderItem;
 import net.minecraft.client.Minecraft;
@@ -7,8 +8,8 @@ import net.minecraft.resources.ResourceLocation;
 import software.bernie.geckolib.renderer.GeoItemRenderer;
 
 public class GliderItemRenderer extends GeoItemRenderer<GliderItem> {
-    private final ResourceLocation textureOpen = ResourceLocation.fromNamespaceAndPath(Elementals.MODID, "textures/item/glider_open.png");
-    private final ResourceLocation textureClosed = ResourceLocation.fromNamespaceAndPath(Elementals.MODID, "textures/item/glider_closed.png");
+    private final ResourceLocation textureOpen = ResourceLocation.fromNamespaceAndPath(Constants.MODID, "textures/item/glider_open.png");
+    private final ResourceLocation textureClosed = ResourceLocation.fromNamespaceAndPath(Constants.MODID, "textures/item/glider_closed.png");
     public GliderItemRenderer() {
         super(new GliderGeoModel());
     }

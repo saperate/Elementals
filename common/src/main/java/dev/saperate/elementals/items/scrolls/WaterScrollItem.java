@@ -1,6 +1,8 @@
 package dev.saperate.elementals.items.scrolls;
 
 
+import dev.saperate.elementals.elements.Element;
+import dev.saperate.elementals.elements.water.WaterElement;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;

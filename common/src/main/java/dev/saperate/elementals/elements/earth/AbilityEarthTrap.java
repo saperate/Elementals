@@ -77,8 +77,8 @@ public class AbilityEarthTrap implements Ability {
                 .position().subtract(bender.player.position()).length();
 
         block.setTargetPosition(victim.position().toVector3f());
-        bender.player.addEffect(new MobEffectInstance(ElementalsStatusEffects.STATIONARY, 5, 1, false, false, false));
-        victim.addEffect(new MobEffectInstance(ElementalsStatusEffects.STATIONARY, 60, 1, false, false, true));
+        bender.player.addEffect(new MobEffectInstance(ElementalsStatusEffects.STATIONARY.get(), 5, 1, false, false, false));
+        victim.addEffect(new MobEffectInstance(ElementalsStatusEffects.STATIONARY.get(), 60, 1, false, false, true));
 
 
         if (!bender.player.isCrouching()

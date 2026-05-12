@@ -1,6 +1,9 @@
 package dev.saperate.elementals.items.scrolls;
 
 
+import dev.saperate.elementals.data.Bender;
+import dev.saperate.elementals.elements.Element;
+import dev.saperate.elementals.elements.metal.MetalElement;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
@@ -28,7 +31,7 @@ public abstract class AbstractScrollItem extends Item {
             if(!bender.hasElement(getElement()) 
                     && (getParentElement() != null && getParentElement().isSkillTreeComplete(bender))){
                 if(bender.addElement(MetalElement.get(), true)){
-                    user.getInventory().removeOne(user.getStackInHand(hand));
+                    user.getInventory().removeItem(user.getItemInHand(hand));
                 }
             }
         }

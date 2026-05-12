@@ -1,5 +1,6 @@
 package dev.saperate.elementals.platform;
 
+import dev.saperate.elementals.Constants;
 import dev.saperate.elementals.Elementals;
 import dev.saperate.elementals.blocks.ElementalsBlocks;
 import dev.saperate.elementals.client.particle.MetalShardParticle;
@@ -11,6 +12,7 @@ import dev.saperate.elementals.platform.services.IRegistryHelper;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.gamerule.v1.GameRuleFactory;
@@ -18,10 +20,15 @@ import net.fabricmc.fabric.api.gamerule.v1.GameRuleRegistry;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.fabricmc.fabric.api.loot.v3.LootTableEvents;
 import net.minecraft.client.KeyMapping;
+import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.particle.FlameParticle;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.CreativeModeTab;
@@ -32,6 +39,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.storage.loot.BuiltInLootTables;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
 
@@ -118,6 +126,31 @@ public class FabricRegistryHelper implements IRegistryHelper {
     @Override
     public <T extends Entity> void registerClientEntityRenderer(EntityType<T> type, EntityRendererProvider<T> provider) {
         EntityRendererRegistry.register(type, provider);
+    }
+    
+    @Override
+    public <T extends GameRules.Value<T>> GameRules.Key<T> registerGameRule(String name, GameRules.Category category, GameRules.Type<T> defaultValue) {
+        return GameRuleRegistry.register(name, category, defaultValue);
+    }
+
+    public GameRules.Type<GameRules.BooleanValue> createGameruleIntegerType(boolean defaultValue){
+        return GameRuleFactory.createBooleanRule(defaultValue);
+    }
+
+    public GameRules.Type<GameRules.IntegerValue> createGameruleIntegerType(int defaultValue){
+        return GameRuleFactory.createIntRule(defaultValue);
+    }
+
+    @Override
+    public void registerClientModelLayer(ModelLayerLocation modelMetalLanceLayer, TexturedModelDataProvider provider) {
+        EntityModelLayerRegistry.registerModelLayer(modelMetalLanceLayer, provider::create);
+    }
+
+    @Override
+    public @NotNull MobEffectHolder registerEffect(String name, MobEffect effect) {
+        Holder<MobEffect> holder = Registry.registerForHolder(BuiltInRegistries.MOB_EFFECT,
+                ResourceLocation.fromNamespaceAndPath(Constants.MODID, name), effect);
+        return () -> holder;
     }
 
 }

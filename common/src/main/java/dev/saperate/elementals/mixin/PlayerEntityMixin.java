@@ -55,7 +55,7 @@ public abstract class PlayerEntityMixin {
     @Inject(at = @At("TAIL"), method = "tick")
     private void tick(CallbackInfo ci) {
         Player player = ((Player) (Object) this);
-        if (safeHasStatusEffect(ElementalsStatusEffects.SPIRIT_PROJECTION, player)) {
+        if (safeHasStatusEffect(ElementalsStatusEffects.SPIRIT_PROJECTION.get(), player)) {
             //checks if we are inside a wall
             float f = player.getDimensions(player.getPose()).width() * 0.8f;
             AABB box = AABB.ofSize(player.getEyePosition(), f, 1.0E-6, f);

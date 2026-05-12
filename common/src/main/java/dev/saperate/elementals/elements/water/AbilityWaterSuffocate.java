@@ -3,6 +3,7 @@ package dev.saperate.elementals.elements.water;
 import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.elements.Ability;
+import dev.saperate.elementals.entities.water.WaterHelmetEntity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.EntityHitResult;
@@ -71,7 +72,7 @@ public class AbilityWaterSuffocate implements Ability {
         }
 
         double distance = ((WaterHelmetEntity)bender.abilityData)
-                .getOwner().getPos().subtract(bender.player.position()).length();
+                .getOwner().position().subtract(bender.player.position()).length();
 
 
         if (!bender.player.isCrouching()

@@ -79,7 +79,7 @@ public class AbilityAir4 implements Ability {
         bender.abilityData = new Object[]{plr.gameMode.getGameModeForPlayer(), decoy};
 
         bender.player.addEffect(
-                new MobEffectInstance(ElementalsStatusEffects.SPIRIT_PROJECTION,
+                new MobEffectInstance(ElementalsStatusEffects.SPIRIT_PROJECTION.get(),
                         -1,
                         SpiritProjectionStatusEffect.convertGameModeToAmplifier(plr.gameMode.getGameModeForPlayer()),
                         false, false, true)
@@ -160,7 +160,7 @@ public class AbilityAir4 implements Ability {
             decoy.discard();
         }
 
-        bender.player.removeEffect(ElementalsStatusEffects.SPIRIT_PROJECTION);
+        bender.player.removeEffect(ElementalsStatusEffects.SPIRIT_PROJECTION.get());
         bender.setCurrAbility(null);
         bender.abilityData = null;
     }

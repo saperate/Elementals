@@ -78,7 +78,7 @@ public class AbilityWaterJet implements Ability {
                     0.1f, 1,
                     0, 0, 0, 0);
         } else {
-            bender.player.addEffect(new MobEffectInstance(ElementalsStatusEffects.STATIONARY, 1, 1, false, false, false));
+            bender.player.addEffect(new MobEffectInstance(ElementalsStatusEffects.STATIONARY.get(), 1, 1, false, false, false));
             if (!bender.reduceChi(0.2f)) {
                 if (bender.abilityData == null) {
                     bender.setCurrAbility(null);

@@ -29,8 +29,8 @@ public class AbilityEarth4 implements Ability {
             return;
         }
 
-        if (bender.player.hasEffect(ElementalsStatusEffects.SEISMIC_SENSE)) {
-            bender.player.removeEffect(ElementalsStatusEffects.SEISMIC_SENSE);
+        if (bender.player.hasEffect(ElementalsStatusEffects.SEISMIC_SENSE.get())) {
+            bender.player.removeEffect(ElementalsStatusEffects.SEISMIC_SENSE.get());
         } else {
             if (!bender.reduceChi(15)) {
                 if (bender.abilityData == null) {
@@ -41,7 +41,7 @@ public class AbilityEarth4 implements Ability {
                 return;
             }
             Elementals.USED_ABILITY.trigger((ServerPlayer) bender.player, "seismic_sense");
-            bender.player.addEffect(new MobEffectInstance(ElementalsStatusEffects.SEISMIC_SENSE, 2400));
+            bender.player.addEffect(new MobEffectInstance(ElementalsStatusEffects.SEISMIC_SENSE.get(), 2400));
         }
     }
 

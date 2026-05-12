@@ -25,7 +25,7 @@ public abstract class GlowMixin {
     private void render(CallbackInfoReturnable<Boolean> cir) {
         Player player = Minecraft.getInstance().player;
         LivingEntity e = ((LivingEntity) (Object) this);
-        if (safeHasStatusEffect(ElementalsStatusEffects.SEISMIC_SENSE, player) && e.level().isClientSide && e.onGround()
+        if (safeHasStatusEffect(ElementalsStatusEffects.SEISMIC_SENSE.get(), player) && e.level().isClientSide && e.onGround()
                 && player.onGround()
                 && !player.equals(e)
                 && e.position().subtract(player.position()).length() <= 60) { //TODO add upgrades for range

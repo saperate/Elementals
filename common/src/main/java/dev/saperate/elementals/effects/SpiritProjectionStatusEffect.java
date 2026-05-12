@@ -34,8 +34,8 @@ public class SpiritProjectionStatusEffect extends MobEffect {
             Bender bender = Bender.getBender((ServerPlayer) player);
             if(!(bender.currAbility instanceof AbilityAir4)){
                 //this is true when the world was closed before spirit projection could finish
-                ((ServerPlayer) bender.player).changeGameMode(convertAmplifierToGameMode(amplifier));
-                player.removeEffect(ElementalsStatusEffects.SPIRIT_PROJECTION);
+                ((ServerPlayer) bender.player).setGameMode(convertAmplifierToGameMode(amplifier));
+                player.removeEffect(ElementalsStatusEffects.SPIRIT_PROJECTION.get());
             }
         }
         return true;
@@ -43,11 +43,10 @@ public class SpiritProjectionStatusEffect extends MobEffect {
 
     public static GameType convertAmplifierToGameMode(int amplifier){
         return switch (amplifier) {
-            case 0 -> SURVIVAL;
             case 1 -> CREATIVE;
             case 2 -> SPECTATOR;
             case 3 -> ADVENTURE;
-            default -> null;
+            default -> SURVIVAL;
         };
     }
 

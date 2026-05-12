@@ -1,5 +1,6 @@
 package dev.saperate.elementals.client.features;
 
+import dev.saperate.elementals.Constants;
 import dev.saperate.elementals.Elementals;
 import dev.saperate.elementals.items.MetalArmorItem;
 import net.minecraft.resources.ResourceLocation;
@@ -11,7 +12,7 @@ import software.bernie.geckolib.util.Color;
 
 public class MetalArmorRenderer extends DyeableGeoArmorRenderer<MetalArmorItem> {
     public MetalArmorRenderer() {
-        super(new DefaultedItemGeoModel<>(ResourceLocation.fromNamespaceAndPath(Elementals.MODID, "armor/metal_armor")));
+        super(new DefaultedItemGeoModel<>(ResourceLocation.fromNamespaceAndPath(Constants.MODID, "armor/metal_armor")));
     }
 
     @Override

@@ -234,7 +234,7 @@ public class EarthElement extends Element {
             }
             damagedEntities.add(entity);
             entity.hurt(player.damageSources().playerAttack(player), 2.5f);
-            entity.addEffect(new MobEffectInstance(ElementalsStatusEffects.STUNNED, 200, 1, false,false,true));
+            entity.addEffect(new MobEffectInstance(ElementalsStatusEffects.STUNNED.get(), 200, 1, false,false,true));
         }
     }
 

@@ -107,7 +107,7 @@ public class StunExplosion extends Explosion {
             double ab;
             if (entity instanceof LivingEntity livingEntity) {
                 ab = aa * (1.0 - livingEntity.getAttributeValue(Attributes.EXPLOSION_KNOCKBACK_RESISTANCE));
-                livingEntity.addEffect(new MobEffectInstance(ElementalsStatusEffects.STUNNED,200,0,false,false,true));
+                livingEntity.addEffect(new MobEffectInstance(ElementalsStatusEffects.STUNNED.get(),200,0,false,false,true));
             } else {
                 ab = aa;
             }

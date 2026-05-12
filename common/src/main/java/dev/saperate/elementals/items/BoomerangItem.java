@@ -1,5 +1,6 @@
 package dev.saperate.elementals.items;
 
+import dev.saperate.elementals.entities.common.BoomerangEntity;
 import net.minecraft.core.Direction;
 import net.minecraft.core.dispenser.BlockSource;
 import net.minecraft.core.dispenser.DispenseItemBehavior;
@@ -33,7 +34,7 @@ public class BoomerangItem extends Item implements DispenseItemBehavior {
         if (!world.isClientSide) {
             BoomerangEntity entity = new BoomerangEntity(world, user.getEyePosition(), handStack);
             entity.setOwner(user);
-            entity.setDeltaMovement(user, user.getXRot(), user.getYRot(), 0.0f, .75f, 0f);
+            entity.shootFromRotation(user, user.getXRot(), user.getYRot(), 0.0f, .75f, 0f);
             world.addFreshEntity(entity);
             user.getInventory().removeItem(handStack);
         }
@@ -70,7 +71,7 @@ public class BoomerangItem extends Item implements DispenseItemBehavior {
                 ), stack
         );
 
-        boomerangEntity.setDeltaMovement(
+        boomerangEntity.shoot(
                 direction.getStepX(),
                 direction.getStepY(),
                 direction.getStepZ(),

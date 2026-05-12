@@ -1,5 +1,6 @@
 package dev.saperate.elementals.client.entities.common;
 
+import dev.saperate.elementals.Constants;
 import dev.saperate.elementals.entities.common.BoomerangEntity;
 import net.minecraft.client.Minecraft;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -11,8 +12,6 @@ import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemDisplayContext;
-
-import static dev.saperate.elementals.Elementals.MODID;
 
 public class BoomerangEntityRenderer extends EntityRenderer<BoomerangEntity> {
     private final ItemRenderer itemRenderer;
@@ -45,7 +44,7 @@ public class BoomerangEntityRenderer extends EntityRenderer<BoomerangEntity> {
 
     @Override
     public ResourceLocation getTextureLocation(BoomerangEntity entity) {
-        return ResourceLocation.fromNamespaceAndPath(MODID, "textures/item/boomerang.png");
+        return ResourceLocation.fromNamespaceAndPath(Constants.MODID, "textures/item/boomerang.png");
     }
 
 }

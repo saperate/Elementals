@@ -28,8 +28,8 @@ public class AbilityEarthArmor implements Ability {
         if (player.getInventory().hasAnyOf(EARTH_ARMOR_SET)) {
             removeArmorSet(inv);
 
-            player.removeEffect(ElementalsStatusEffects.SEISMIC_SENSE);
-            player.removeEffect(ElementalsStatusEffects.DENSE);
+            player.removeEffect(ElementalsStatusEffects.SEISMIC_SENSE.get());
+            player.removeEffect(ElementalsStatusEffects.DENSE.get());
             player.removeEffect(MobEffects.NIGHT_VISION);
             player.removeEffect(MobEffects.BLINDNESS);
             return;

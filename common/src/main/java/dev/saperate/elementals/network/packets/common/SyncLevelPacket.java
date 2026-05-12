@@ -3,9 +3,10 @@ package dev.saperate.elementals.network.packets.common;
 import commonnetwork.api.Network;
 import commonnetwork.networking.data.PacketContext;
 import commonnetwork.networking.data.Side;
+import dev.saperate.elementals.client.data.ClientBender;
+import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.network.ElementalsNetworking;
-import dev.saperate.elementals.network.payload.S2C.SyncLevelPayload;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
@@ -18,6 +19,10 @@ public record SyncLevelPacket(int level, float xp) {
     public static CustomPacketPayload.Type<CustomPacketPayload> type()
     {
         return new CustomPacketPayload.Type<>(ElementalsNetworking.SYNC_LEVEL_PACKET_ID);
+    }
+
+    public static SyncLevelPacket createFromBender(Bender bender){
+        return new SyncLevelPacket(bender.plrData.level, bender.plrData.xp);
     }
 
     public SyncLevelPacket(FriendlyByteBuf buf) {
@@ -39,9 +44,7 @@ public record SyncLevelPacket(int level, float xp) {
             ClientBender.get().xp = packet.xp;
         }else{
             ServerPlayer player = ctx.sender();
-            PlayerData data = PlayerData.get(player);
-
-            Network.getNetworkHandler().sendToClient(new SyncLevelPacket(data.level, data.xp), player);
+            Network.getNetworkHandler().sendToClient(createFromBender(Bender.getBender(player)), player);
         }
     }
 }

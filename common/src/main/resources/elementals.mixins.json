@@ -9,8 +9,6 @@
     "DefaultAttributeRegistryAccessor",
     "ElementalsLivingEntityAccessor",
     "FurnaceBlockEntityAccessor",
-    "GameRulesAccessor",
-    "GameRulesBooleanRuleAccessor",
     "ItemEntityMixin",
     "LivingEntityMixin",
     "MobEffectInstanceAccessor",
@@ -23,10 +21,8 @@
   "client": [
     "client.CameraMixin",
     "client.ClientPlayerEntityMixin",
-    "client.EntityModelsMixin",
     "client.GameRendererMixin",
     "client.GlowMixin",
-    "client.GuiAccessor",
     "client.HeldItemRendererMixin",
     "client.LivingEntityRendererMixin",
     "client.MinecraftClientMixin",
@@ -34,7 +30,7 @@
     "client.MouseMixin",
     "client.OverlayMixin",
     "client.PlayerEntityRendererMixin",
-    "client.SpectatorMenuCommandMixin"
+    "client.SpectatorMenuCommandMixin",
   ],
   "server": [],
   "injectors": {
