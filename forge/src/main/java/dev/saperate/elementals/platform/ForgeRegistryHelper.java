@@ -1,9 +1,11 @@
 package dev.saperate.elementals.platform;
 
+import dev.saperate.elementals.Constants;
 import dev.saperate.elementals.ElementalsForge;
 import dev.saperate.elementals.blocks.ElementalsBlocks;
 import dev.saperate.elementals.client.particle.MetalShardParticle;
 import dev.saperate.elementals.commands.BendingCommand;
+import dev.saperate.elementals.commands.ElementArgumentType;
 import dev.saperate.elementals.commands.ElementalsCommand;
 import dev.saperate.elementals.items.ElementalsItems;
 import dev.saperate.elementals.items.WaterPouchItem;
@@ -13,7 +15,11 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.particle.FlameParticle;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.commands.synchronization.ArgumentTypeInfo;
+import net.minecraft.commands.synchronization.ArgumentTypeInfos;
+import net.minecraft.commands.synchronization.SingletonArgumentInfo;
 import net.minecraft.core.Holder;
+import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -83,6 +89,14 @@ public class ForgeRegistryHelper implements IRegistryHelper {
             BendingCommand.register(event.getDispatcher(), event.getBuildContext(), event.getCommandSelection());
             ElementalsCommand.register(event.getDispatcher(), event.getBuildContext(), event.getCommandSelection());
         }));
+
+        //Both are needed to properly register an argument type
+        Registry.register(
+                BuiltInRegistries.COMMAND_ARGUMENT_TYPE,
+                ResourceLocation.fromNamespaceAndPath(Constants.MODID, "bending"),
+                SingletonArgumentInfo.contextFree(ElementArgumentType::element)
+        );
+        ArgumentTypeInfos.registerByClass(ElementArgumentType.class, SingletonArgumentInfo.contextFree(ElementArgumentType::element));
     }
 
     @Override

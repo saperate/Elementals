@@ -42,8 +42,7 @@ public class ChiHudOverlay implements LayeredDraw.Layer {
             graphics.blit(ResourceLocation.fromNamespaceAndPath(MODID, "textures/gui/chi_foam.png"), x + 4, y - height + 10, 0, 0, 16, 16, 16, 16);
 
         graphics.blit(ResourceLocation.fromNamespaceAndPath(MODID, "textures/gui/chi_frame.png"), x, y - maxHeight + 7, 0, 0, 22, maxHeight + 6, 32, 56);
-
-        graphics.blit(ResourceLocation.fromNamespaceAndPath(MODID, "textures/gui/chi_frame.png"), x, y - maxHeight + 5, 0, 0, 22, maxHeight + 6, 32, 56);
+        
 
         
         //TODO add config that toggles between number and bar

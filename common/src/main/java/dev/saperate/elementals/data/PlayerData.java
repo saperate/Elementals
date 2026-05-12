@@ -89,7 +89,7 @@ public class PlayerData {
      */
     public void setUpgrade(Upgrade upgrade, boolean val){
         if (upgrades.containsKey(upgrade)) {
-            if(!upgrades.get(upgrade.parent) && upgrade.parent.parent != null)
+            if(upgrades.get(upgrade.parent) != null && !upgrades.get(upgrade.parent) && upgrade.parent.parent != null)
                 return;
             
             upgrades.put(upgrade, val);

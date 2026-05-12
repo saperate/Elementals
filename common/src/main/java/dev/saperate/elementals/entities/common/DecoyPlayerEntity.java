@@ -23,7 +23,7 @@ public class DecoyPlayerEntity extends PathfinderMob {
     public double capeX, capeY, capeZ;
     public static final EntityDataAccessor<Optional<UUID>> OWNER_ID = SynchedEntityData.defineId(DecoyPlayerEntity.class, EntityDataSerializers.OPTIONAL_UUID);
     public static final EntityDataAccessor<String> OWNER_NAME = SynchedEntityData.defineId(DecoyPlayerEntity.class, EntityDataSerializers.STRING);
-    private final NonNullList<ItemStack> items = NonNullList.of(ItemStack.EMPTY);
+    private final NonNullList<ItemStack> items = NonNullList.withSize(6,ItemStack.EMPTY);;
     public static final EntityDataAccessor<Integer> RANGE = SynchedEntityData.defineId(DecoyPlayerEntity.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<Boolean> FOCUS_CAMERA = SynchedEntityData.defineId(DecoyPlayerEntity.class, EntityDataSerializers.BOOLEAN);
     public DecoyPlayerEntity(EntityType<? extends PathfinderMob> entityType, Level world) {
@@ -253,4 +253,5 @@ public class DecoyPlayerEntity extends PathfinderMob {
     public float maxUpStep() {
         return 1.1f;
     }
+
 }

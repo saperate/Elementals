@@ -42,9 +42,9 @@ public record SyncElementsPacket(String packedElements, int activeElementIndex) 
         bender.setElements(Bender.unpackElementsFromString(elements));
         bender.setActiveElementIndex(activeElementIndex);
         //TODO check if necessary
-//        if (Minecraft.getInstance().screen instanceof UpgradeTreeScreen treeScreen) {
-//            treeScreen.close();
-//        }
+        if (Minecraft.getInstance().screen instanceof UpgradeTreeScreen treeScreen) {
+            treeScreen.onClose();
+        }
         if(bender.chi > 100){
             bender.chi = 100;
         }

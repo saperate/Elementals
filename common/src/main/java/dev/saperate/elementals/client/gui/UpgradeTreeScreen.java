@@ -488,8 +488,8 @@ public class UpgradeTreeScreen extends Screen {
     }
 
     private String getKeyName(){
-        String key = KeyInput.bindings.get(keybindID).getName();
-        String raw = Component.translatable(key).getString();
+        Component key = KeyInput.bindings.get(keybindID).getTranslatedKeyMessage();
+        String raw = key.getString();
 
         //if we were able to find a translation
         if(!raw.equals(key)){

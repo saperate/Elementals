@@ -4,6 +4,7 @@ import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.data.ElementalConfig;
 import dev.saperate.elementals.elements.Element;
 import dev.saperate.elementals.elements.Upgrade;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -75,13 +76,13 @@ public class MetalElement extends Element {
     /**
      * This method checks if the player has the metal required to cast an ability. 
      * It <b>WILL</b> take the metal from the inventory if it is able to.
-     * If the player is in creative, it will always return true.
+     * If the player is in creative and on the server, it will always return true.
      * @param cost The cost, in iron nuggets, to be able to bend
      * @return True if the player has had metal taken from their inventory
      */
     //TODO Refactor this monolith
     public static boolean canBend(Player player, int cost) {
-        if (player.getAbilities().instabuild) {
+        if (player instanceof ServerPlayer serverPlayer && serverPlayer.gameMode.isCreative()) {
             return true;
         }
 

@@ -23,7 +23,7 @@ public record AbilityPacket(int index, boolean isStart) {
 
     public void encode(FriendlyByteBuf buf)
     {
-        buf.writeFloat(index);
+        buf.writeInt(index);
         buf.writeBoolean(isStart);
     }
 
