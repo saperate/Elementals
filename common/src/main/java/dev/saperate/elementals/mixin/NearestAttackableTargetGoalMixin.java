@@ -46,6 +46,9 @@ public abstract class NearestAttackableTargetGoalMixin<T extends LivingEntity> {
     @Inject(at = @At("HEAD"), method = "findTarget", cancellable = true)
     private void findClosestTargetIncludeDecoys(CallbackInfo ci) {
         //TODO maybe add a config that disables this
+        if(target == null){
+            return;
+        }
         if(targetType.equals(Player.class) || targetType.equals(ServerPlayer.class)) {
             Player plr = target.level().getNearestPlayer(this.targetConditions, this.target, this.target.getX(), this.target.getEyeY(), this.target.getZ());
             LivingEntity decoy = target.level().getNearestEntity(this.target.level().getEntitiesOfClass(DecoyPlayerEntity.class, getTargetSearchArea(this.elementals$customGetFollowRange()), livingEntity -> true), targetConditions, this.target, this.target.getX(), this.target.getEyeY(), this.target.getZ());
