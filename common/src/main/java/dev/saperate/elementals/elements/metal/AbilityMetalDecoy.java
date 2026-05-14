@@ -39,10 +39,10 @@ public class AbilityMetalDecoy implements Ability {
 
         decoy.setCustomName(plr.getName());
 
-        decoy.setItemSlot(EquipmentSlot.HEAD, ElementalsItems.METAL_HELMET.getDefaultInstance());
-        decoy.setItemSlot(EquipmentSlot.CHEST, ElementalsItems.METAL_CHESTPLATE.getDefaultInstance());
-        decoy.setItemSlot(EquipmentSlot.LEGS, ElementalsItems.METAL_LEGGINGS.getDefaultInstance());
-        decoy.setItemSlot(EquipmentSlot.FEET, ElementalsItems.METAL_BOOTS.getDefaultInstance());
+        decoy.setItemSlot(EquipmentSlot.HEAD, ElementalsItems.METAL_HELMET.get().getDefaultInstance());
+        decoy.setItemSlot(EquipmentSlot.CHEST, ElementalsItems.METAL_CHESTPLATE.get().getDefaultInstance());
+        decoy.setItemSlot(EquipmentSlot.LEGS, ElementalsItems.METAL_LEGGINGS.get().getDefaultInstance());
+        decoy.setItemSlot(EquipmentSlot.FEET, ElementalsItems.METAL_BOOTS.get().getDefaultInstance());
         decoy.setItemSlot(EquipmentSlot.MAINHAND, ItemStack.EMPTY);
         decoy.setItemSlot(EquipmentSlot.OFFHAND, ItemStack.EMPTY);
 

@@ -5,11 +5,9 @@ import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.effects.ElementalsStatusEffects;
 import dev.saperate.elementals.elements.Ability;
+import dev.saperate.elementals.items.ElementalsItems;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffectInstance;
-
-
-import static dev.saperate.elementals.items.ElementalsItems.EARTH_ARMOR_SET;
 
 public class AbilityEarth4 implements Ability {
     @Override
@@ -25,7 +23,7 @@ public class AbilityEarth4 implements Ability {
             return;
         }
 
-        if(bender.player.getInventory().hasAnyOf(EARTH_ARMOR_SET)){
+        if(bender.player.getInventory().hasAnyOf(ElementalsItems.getEarthArmorSet())){
             return;
         }
 

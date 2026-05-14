@@ -19,8 +19,8 @@ public abstract class HeldItemRendererMixin<T extends LivingEntity, M extends En
 	
 	@Inject(at = @At("HEAD"), method = "renderItem", cancellable = true)
 	private void renderItem(LivingEntity entity, ItemStack itemStack, ItemDisplayContext displayContext, boolean leftHand, PoseStack poseStack, MultiBufferSource buffer, int seed, CallbackInfo ci) {
-		if(itemStack.is(ElementalsItems.GLIDER_ITEM) 
-				&& ElementalsItems.GLIDER_ITEM.getState(itemStack) == GliderItem.GliderStates.OPEN
+		if(itemStack.is(ElementalsItems.GLIDER_ITEM.get()) 
+				&& ElementalsItems.GLIDER_ITEM.get().getState(itemStack) == GliderItem.GliderStates.OPEN
 				&& entity.isFallFlying()){
 			ci.cancel();
 		}

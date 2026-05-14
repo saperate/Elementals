@@ -29,7 +29,7 @@ public abstract class ItemEntityMixin {
                 ItemEntity lightningBottleEntity = new ItemEntity(
                         entity.level(),
                         entity.getX(), entity.getY(), entity.getZ(),
-                        ElementalsItems.LIGHTNING_BOTTLE_ITEM.getDefaultInstance()
+                        ElementalsItems.LIGHTNING_BOTTLE_ITEM.get().getDefaultInstance()
                 );
                 entity.level().addFreshEntity(lightningBottleEntity);
                 cir.setReturnValue(true);

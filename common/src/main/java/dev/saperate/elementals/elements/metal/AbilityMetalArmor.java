@@ -21,7 +21,7 @@ public class AbilityMetalArmor implements Ability {
         Player player = bender.player;
         NonNullList<ItemStack> inv = player.getInventory().armor;
 
-        if (player.getInventory().hasAnyOf(METAL_ARMOR_SET)) {
+        if (player.getInventory().hasAnyOf(getMetalArmorSet())) {
             
             removeArmorSet(inv);
             player.removeEffect(ElementalsStatusEffects.SEISMIC_SENSE.get());
@@ -44,10 +44,10 @@ public class AbilityMetalArmor implements Ability {
         }
 
         Level world = bender.player.level();
-        inv.set(EquipmentSlot.HEAD.getIndex(), METAL_HELMET.getItemStack(inv.get(3), 0xFFFFFF, world));
-        inv.set(EquipmentSlot.CHEST.getIndex(), METAL_CHESTPLATE.getItemStack(inv.get(2), 0xFFFFFF, world));
-        inv.set(EquipmentSlot.LEGS.getIndex(), METAL_LEGGINGS.getItemStack(inv.get(1), 0xFFFFFF, world));
-        inv.set(EquipmentSlot.FEET.getIndex(), METAL_BOOTS.getItemStack(inv.get(0), 0xFFFFFF, world));
+        inv.set(EquipmentSlot.HEAD.getIndex(), METAL_HELMET.get().getItemStack(inv.get(3), 0xFFFFFF, world));
+        inv.set(EquipmentSlot.CHEST.getIndex(), METAL_CHESTPLATE.get().getItemStack(inv.get(2), 0xFFFFFF, world));
+        inv.set(EquipmentSlot.LEGS.getIndex(), METAL_LEGGINGS.get().getItemStack(inv.get(1), 0xFFFFFF, world));
+        inv.set(EquipmentSlot.FEET.getIndex(), METAL_BOOTS.get().getItemStack(inv.get(0), 0xFFFFFF, world));
 
 
     }

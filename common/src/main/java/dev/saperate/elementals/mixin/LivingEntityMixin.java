@@ -114,8 +114,8 @@ public abstract class LivingEntityMixin {
     private void fallFlying(CallbackInfo ci) {
         LivingEntity living = ((LivingEntity) (Object) this);
         if(living instanceof Player player){
-            ItemStack stack = SapsUtils.getFirstItemOfTypeInHands(player, ElementalsItems.GLIDER_ITEM);
-            if (!stack.isEmpty() && ElementalsItems.GLIDER_ITEM.getState(stack) == GliderItem.GliderStates.OPEN 
+            ItemStack stack = SapsUtils.getFirstItemOfTypeInHands(player, ElementalsItems.GLIDER_ITEM.get());
+            if (!stack.isEmpty() && ElementalsItems.GLIDER_ITEM.get().getState(stack) == GliderItem.GliderStates.OPEN 
                     && player.isFallFlying() && !player.onGround() && !player.isPassenger() && !player.hasEffect(MobEffects.LEVITATION)) {
                     int i = fallFlyTicks + 1;
                     if (!player.level().isClientSide && i % 10 == 0) {

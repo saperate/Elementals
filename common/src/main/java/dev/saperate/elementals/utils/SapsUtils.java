@@ -428,7 +428,7 @@ public final class SapsUtils {
 
     public static void launchEntity(Entity entity, float power, boolean reduceYVelocity) {
         if (entity instanceof Player player && !player.onGround()
-                && hasItemInEitherHands(player, ElementalsItems.GLIDER_ITEM)) {
+                && hasItemInEitherHands(player, ElementalsItems.GLIDER_ITEM.get())) {
             power *= 0.5f;
         }
 

@@ -10,6 +10,7 @@ import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
+import net.minecraft.core.dispenser.DispenseItemBehavior;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -32,8 +33,6 @@ public interface IRegistryHelper {
     CreativeModeTab createItemTab();
     
     <T extends BlockEntity> BlockEntityType<T> createBlockEntityType(BlockEntityTypeFactory<T> factory, Block... validBlocks);
-
-
 
     /**
      * Helper interface for {@link #createBlockEntityType}
@@ -69,9 +68,8 @@ public interface IRegistryHelper {
         T get();
     }
     Supplier<Holder<ArmorMaterial>> registerArmorMaterial(String id, ArmorMaterial material);
-    Supplier<Item> registerItem(String name, Supplier<Item> item);
-    @FunctionalInterface
-    interface ItemHolder {
-        Item get();
-    }
+    <T extends Item> Supplier<T>  registerItem(String name, Supplier<T> item);
+    
+    <T extends Item, U extends DispenseItemBehavior> void registerDispenserBehavior(Supplier<T> item, Supplier<U> behavior);
+    void registerCreativeTab(String name, CreativeModeTab creativeModeTab);
 }

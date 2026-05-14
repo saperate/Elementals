@@ -25,7 +25,7 @@ public class AbilityEarthArmor implements Ability {
         Player player = bender.player;
         NonNullList<ItemStack> inv = player.getInventory().armor;
 
-        if (player.getInventory().hasAnyOf(EARTH_ARMOR_SET)) {
+        if (player.getInventory().hasAnyOf(getEarthArmorSet())) {
             removeArmorSet(inv);
 
             player.removeEffect(ElementalsStatusEffects.SEISMIC_SENSE.get());
@@ -52,10 +52,10 @@ public class AbilityEarthArmor implements Ability {
         Block standingBlock = player.level().getBlockState(hit.getBlockPos()).getBlock();
         Level world = player.level();
 
-        inv.set(EquipmentSlot.HEAD.getIndex(), EARTH_HELMET.getItemStack(inv.get(3), standingBlock, world));
-        inv.set(EquipmentSlot.CHEST.getIndex(), EARTH_CHESTPLATE.getItemStack(inv.get(2), standingBlock, world));
-        inv.set(EquipmentSlot.LEGS.getIndex(), EARTH_LEGGINGS.getItemStack(inv.get(1), standingBlock, world));
-        inv.set(EquipmentSlot.FEET.getIndex(), EARTH_BOOTS.getItemStack(inv.get(0), standingBlock, world));
+        inv.set(EquipmentSlot.HEAD.getIndex(), EARTH_HELMET.get().getItemStack(inv.get(3), standingBlock, world));
+        inv.set(EquipmentSlot.CHEST.getIndex(), EARTH_CHESTPLATE.get().getItemStack(inv.get(2), standingBlock, world));
+        inv.set(EquipmentSlot.LEGS.getIndex(), EARTH_LEGGINGS.get().getItemStack(inv.get(1), standingBlock, world));
+        inv.set(EquipmentSlot.FEET.getIndex(), EARTH_BOOTS.get().getItemStack(inv.get(0), standingBlock, world));
     }
 
     public static void removeArmorSet(NonNullList<ItemStack> inv) {

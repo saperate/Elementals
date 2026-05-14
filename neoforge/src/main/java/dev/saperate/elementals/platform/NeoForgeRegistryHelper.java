@@ -21,6 +21,7 @@ import net.minecraft.commands.synchronization.ArgumentTypeInfos;
 import net.minecraft.commands.synchronization.SingletonArgumentInfo;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
+import net.minecraft.core.dispenser.DispenseItemBehavior;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -32,12 +33,16 @@ import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.GameRules;
+import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.storage.loot.BuiltInLootTables;
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
 import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
@@ -54,26 +59,27 @@ import static dev.saperate.elementals.Elementals.METAL_SHARD_PARTICLE_TYPE;
 import static dev.saperate.elementals.items.ElementalsItems.*;
 
 public class NeoForgeRegistryHelper implements IRegistryHelper {
+    public static IEventBus eventBus;
 
     @Override
     public CreativeModeTab createItemTab() {
         return CreativeModeTab.builder()
-                .icon(() -> new ItemStack(SCROLL_ITEM))
+                .icon(() -> new ItemStack((ItemLike) SCROLL_ITEM))
                 .title(Component.literal("Elementals"))
-                .displayItems((context,entries) -> {
-                    entries.accept(SCROLL_ITEM);
-                    entries.accept(FIRE_SCROLL_ITEM);
-                    entries.accept(WATER_SCROLL_ITEM);
-                    entries.accept(EARTH_SCROLL_ITEM);
-                    entries.accept(AIR_SCROLL_ITEM);
-                    entries.accept(LIGHTNING_SCROLL_ITEM);
-                    entries.accept(BLOOD_SCROLL_ITEM);
-                    entries.accept(METAL_SCROLL_ITEM);
-                    entries.accept(DIRT_BOTTLE_ITEM);
-                    entries.accept(LIGHTNING_BOTTLE_ITEM);
-                    entries.accept(BOOMERANG_ITEM);
-                    entries.accept(WATER_POUCH_ITEM);
-                    entries.accept(GLIDER_ITEM);
+                .displayItems((context, entries) -> {
+                    entries.accept(SCROLL_ITEM.get());
+                    entries.accept(FIRE_SCROLL_ITEM.get());
+                    entries.accept(WATER_SCROLL_ITEM.get());
+                    entries.accept(EARTH_SCROLL_ITEM.get());
+                    entries.accept(AIR_SCROLL_ITEM.get());
+                    entries.accept(LIGHTNING_SCROLL_ITEM.get());
+                    entries.accept(BLOOD_SCROLL_ITEM.get());
+                    entries.accept(METAL_SCROLL_ITEM.get());
+                    entries.accept(DIRT_BOTTLE_ITEM.get());
+                    entries.accept(LIGHTNING_BOTTLE_ITEM.get());
+                    entries.accept(BOOMERANG_ITEM.get());
+                    entries.accept(WATER_POUCH_ITEM.get());
+                    entries.accept(GLIDER_ITEM.get());
                 }).build();
     }
 
@@ -101,14 +107,14 @@ public class NeoForgeRegistryHelper implements IRegistryHelper {
     @Override
     public void registerLootTables() {
         NeoForge.EVENT_BUS.addListener((LootTableLoadEvent event) -> {
-            if (event.getTable().getLootTableId().equals(BuiltInLootTables.DESERT_PYRAMID_ARCHAEOLOGY.location())){
+            if (event.getTable().getLootTableId().equals(BuiltInLootTables.DESERT_PYRAMID_ARCHAEOLOGY.location())) {
                 event.getTable().addPool(LootPool.lootPool()
-                        .add(LootItem.lootTableItem(ElementalsItems.LIGHTNING_SCROLL_ITEM)).build());
+                        .add(LootItem.lootTableItem(ElementalsItems.LIGHTNING_SCROLL_ITEM.get())).build());
             }
 
-            if (event.getTable().getLootTableId().equals(BuiltInLootTables.FISHING_TREASURE.location())){
+            if (event.getTable().getLootTableId().equals(BuiltInLootTables.FISHING_TREASURE.location())) {
                 event.getTable().addPool(LootPool.lootPool()
-                        .add(LootItem.lootTableItem(BLOOD_SCROLL_ITEM)).build());
+                        .add(LootItem.lootTableItem(BLOOD_SCROLL_ITEM.get())).build());
             }
         });
     }
@@ -125,7 +131,7 @@ public class NeoForgeRegistryHelper implements IRegistryHelper {
             event.register(
                     (stack, tintIndex) ->
                             tintIndex == 0 ? ((WaterPouchItem) stack.getItem()).getColor(stack) : 0xFFFFFFFF,
-                    WATER_POUCH_ITEM);
+                    WATER_POUCH_ITEM.get());
         });
 
         NeoForge.EVENT_BUS.addListener((RegisterColorHandlersEvent.Block event) -> {
@@ -156,11 +162,11 @@ public class NeoForgeRegistryHelper implements IRegistryHelper {
         return GameRules.register(name, category, defaultValue);
     }
 
-    public GameRules.Type<GameRules.BooleanValue> createGameruleIntegerType(boolean defaultValue){
+    public GameRules.Type<GameRules.BooleanValue> createGameruleIntegerType(boolean defaultValue) {
         return GameRules.BooleanValue.create(defaultValue);
     }
 
-    public GameRules.Type<GameRules.IntegerValue> createGameruleIntegerType(int defaultValue){
+    public GameRules.Type<GameRules.IntegerValue> createGameruleIntegerType(int defaultValue) {
         return GameRules.IntegerValue.create(defaultValue);
     }
 
@@ -170,7 +176,7 @@ public class NeoForgeRegistryHelper implements IRegistryHelper {
             event.registerLayerDefinition(modelMetalLanceLayer, provider::create);
         });
     }
-    
+
     @Override
     public @NotNull MobEffectHolder registerEffect(String name, MobEffect effect) {
         DeferredHolder<MobEffect, MobEffect> holder = ElementalsNeoForge.MOB_EFFECTS.register(name, () -> effect);
@@ -178,7 +184,7 @@ public class NeoForgeRegistryHelper implements IRegistryHelper {
     }
 
     @Override
-    public <U extends SimpleCriterionTrigger.SimpleInstance, T extends SimpleCriterionTrigger<U>> TriggerHolder<U,T> registerCriterion(String name, T criterion) {
+    public <U extends SimpleCriterionTrigger.SimpleInstance, T extends SimpleCriterionTrigger<U>> TriggerHolder<U, T> registerCriterion(String name, T criterion) {
         DeferredHolder<CriterionTrigger<?>, T> holder = ElementalsNeoForge.TRIGGERS.register(name, () -> criterion);
         return holder::get;
     }
@@ -190,8 +196,21 @@ public class NeoForgeRegistryHelper implements IRegistryHelper {
     }
 
     @Override
-    public Supplier<Item> registerItem(String name, Supplier<Item> item) {
-        DeferredHolder<Item, Item> holder = ElementalsNeoForge.ITEMS.register(name, item);
+    public <T extends Item> Supplier<T> registerItem(String name, Supplier<T> item) {
+        DeferredHolder<Item, T> holder = ElementalsNeoForge.ITEMS.register(name, item);
         return holder::get;
     }
+
+    @Override
+    public <T extends Item, U extends DispenseItemBehavior> void registerDispenserBehavior(Supplier<T> item, Supplier<U> behavior) {
+        eventBus.addListener((FMLCommonSetupEvent event) -> {
+            event.enqueueWork(() -> DispenserBlock.registerBehavior(item.get(), behavior.get()));
+        });
+    }
+
+    @Override
+    public void registerCreativeTab(String name, CreativeModeTab creativeModeTab) {
+        ElementalsNeoForge.CREATIVE_TABS.register(name, () -> creativeModeTab);
+    }
+
 }

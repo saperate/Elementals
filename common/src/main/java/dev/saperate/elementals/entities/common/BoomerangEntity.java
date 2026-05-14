@@ -84,7 +84,7 @@ public class BoomerangEntity extends AbstractArrow {
     }
 
     public void dropBoomerang(){
-        ItemEntity itemEntity = new ItemEntity(level(), getX(), getY(), getZ(), BOOMERANG_ITEM.getDefaultInstance());
+        ItemEntity itemEntity = new ItemEntity(level(), getX(), getY(), getZ(), BOOMERANG_ITEM.get().getDefaultInstance());
         level().addFreshEntity(itemEntity);
         discard();
     }
@@ -138,7 +138,7 @@ public class BoomerangEntity extends AbstractArrow {
 
     @Override
     public ItemStack getPickupItem() {
-        ItemStack stack = new ItemStack(BOOMERANG_ITEM);
+        ItemStack stack = new ItemStack(BOOMERANG_ITEM.get());
         CompoundTag tag = new CompoundTag();
         tag.putUUID("EntityUUID", this.getUUID());
         stack.set(DataComponents.CUSTOM_DATA, CustomData.of(tag));
@@ -147,7 +147,7 @@ public class BoomerangEntity extends AbstractArrow {
 
     @Override
     protected ItemStack getDefaultPickupItem() {
-        return new ItemStack(BOOMERANG_ITEM);
+        return new ItemStack(BOOMERANG_ITEM.get());
     }
 
 

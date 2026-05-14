@@ -30,6 +30,7 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.commands.synchronization.SingletonArgumentInfo;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
+import net.minecraft.core.dispenser.DispenseItemBehavior;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -42,6 +43,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.storage.loot.BuiltInLootTables;
@@ -60,22 +62,22 @@ public class FabricRegistryHelper implements IRegistryHelper {
     @Override
     public CreativeModeTab createItemTab() {
         return FabricItemGroup.builder()
-                .icon(() -> new ItemStack(SCROLL_ITEM))
+                .icon(() -> new ItemStack(SCROLL_ITEM.get()))
                 .title(Component.literal("Elementals"))
                 .displayItems((context,entries) -> {
-                    entries.accept(SCROLL_ITEM);
-                    entries.accept(FIRE_SCROLL_ITEM);
-                    entries.accept(WATER_SCROLL_ITEM);
-                    entries.accept(EARTH_SCROLL_ITEM);
-                    entries.accept(AIR_SCROLL_ITEM);
-                    entries.accept(LIGHTNING_SCROLL_ITEM);
-                    entries.accept(BLOOD_SCROLL_ITEM);
-                    entries.accept(METAL_SCROLL_ITEM);
-                    entries.accept(DIRT_BOTTLE_ITEM);
-                    entries.accept(LIGHTNING_BOTTLE_ITEM);
-                    entries.accept(BOOMERANG_ITEM);
-                    entries.accept(WATER_POUCH_ITEM);
-                    entries.accept(GLIDER_ITEM);
+                    entries.accept(SCROLL_ITEM.get());
+                    entries.accept(FIRE_SCROLL_ITEM.get());
+                    entries.accept(WATER_SCROLL_ITEM.get());
+                    entries.accept(EARTH_SCROLL_ITEM.get());
+                    entries.accept(AIR_SCROLL_ITEM.get());
+                    entries.accept(LIGHTNING_SCROLL_ITEM.get());
+                    entries.accept(BLOOD_SCROLL_ITEM.get());
+                    entries.accept(METAL_SCROLL_ITEM.get());
+                    entries.accept(DIRT_BOTTLE_ITEM.get());
+                    entries.accept(LIGHTNING_BOTTLE_ITEM.get());
+                    entries.accept(BOOMERANG_ITEM.get());
+                    entries.accept(WATER_POUCH_ITEM.get());
+                    entries.accept(GLIDER_ITEM.get());
                 }).build();
     }
 
@@ -100,11 +102,11 @@ public class FabricRegistryHelper implements IRegistryHelper {
         LootTableEvents.MODIFY.register(((key, tableBuilder, source, registries) -> {
             if(source.isBuiltin() && (BuiltInLootTables.DESERT_PYRAMID_ARCHAEOLOGY.equals(key))){
                 tableBuilder.modifyPools((builder)->{
-                    builder.with(LootItem.lootTableItem(ElementalsItems.LIGHTNING_SCROLL_ITEM).build());
+                    builder.with(LootItem.lootTableItem(ElementalsItems.LIGHTNING_SCROLL_ITEM.get()).build());
                 });
             }else if(source.isBuiltin() && (BuiltInLootTables.FISHING_TREASURE.equals(key))){
                 tableBuilder.modifyPools((builder)->{
-                    builder.with(LootItem.lootTableItem(ElementalsItems.BLOOD_SCROLL_ITEM).build());
+                    builder.with(LootItem.lootTableItem(ElementalsItems.BLOOD_SCROLL_ITEM.get()).build());
                 });
             }
         }));
@@ -121,7 +123,7 @@ public class FabricRegistryHelper implements IRegistryHelper {
         ColorProviderRegistry.ITEM.register(
                 (stack, tintIndex) -> 
                         tintIndex == 0 ? ((WaterPouchItem) stack.getItem()).getColor(stack) : 0xFFFFFFFF,
-                ElementalsItems.WATER_POUCH_ITEM
+                ElementalsItems.WATER_POUCH_ITEM.get()
         );
 
         ColorProviderRegistry.BLOCK.register(
@@ -181,9 +183,23 @@ public class FabricRegistryHelper implements IRegistryHelper {
     }
 
     @Override
-    public Supplier<Item> registerItem(String name, Supplier<Item> item) {
-        Item holder = Registry.register(BuiltInRegistries.ITEM, ResourceLocation.fromNamespaceAndPath(Constants.MODID,name), item.get());
+    public <T extends Item> Supplier<T>  registerItem(String name, Supplier<T> item){
+        T holder = Registry.register(BuiltInRegistries.ITEM, ResourceLocation.fromNamespaceAndPath(Constants.MODID,name), item.get());
         return () -> holder;
     }
+
+    @Override
+    public <T extends Item, U extends DispenseItemBehavior> void registerDispenserBehavior(Supplier<T> item, Supplier<U> behavior) {
+        DispenserBlock.registerBehavior(item.get(), behavior.get());
+    }
+
+    @Override
+    public void registerCreativeTab(String name, CreativeModeTab creativeModeTab) {
+        Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, 
+                ResourceLocation.fromNamespaceAndPath(Constants.MODID,name) , 
+                creativeModeTab
+        );
+    }
+
 
 }

@@ -39,7 +39,7 @@ public class DirtBottleEntity extends ThrowableItemProjectile {
 
     @Override
     protected Item getDefaultItem() {
-        return DIRT_BOTTLE_ITEM;
+        return DIRT_BOTTLE_ITEM.get();
     }
 
 
@@ -73,7 +73,7 @@ public class DirtBottleEntity extends ThrowableItemProjectile {
     }
     
     public ItemStack asItemStack() {
-        ItemStack stack = new ItemStack(DIRT_BOTTLE_ITEM);
+        ItemStack stack = new ItemStack(DIRT_BOTTLE_ITEM.get());
         CompoundTag tag = new CompoundTag();
         tag.putUUID("EntityUUID", this.getUUID());
         stack.set(DataComponents.CUSTOM_DATA, CustomData.of(tag));

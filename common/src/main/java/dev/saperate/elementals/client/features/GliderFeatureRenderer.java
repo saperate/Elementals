@@ -25,9 +25,9 @@ public class GliderFeatureRenderer<T extends LivingEntity, M extends EntityModel
 
     @Override
     public void render(PoseStack matrices, MultiBufferSource vertexConsumers, int light, T entity, float limbAngle, float limbDistance, float tickDelta, float animationProgress, float headYaw, float headPitch) {
-        ItemStack stack = SapsUtils.getFirstItemOfTypeInHands((Player) entity, ElementalsItems.GLIDER_ITEM);
+        ItemStack stack = SapsUtils.getFirstItemOfTypeInHands((Player) entity, ElementalsItems.GLIDER_ITEM.get());
         if(stack.isEmpty() || !entity.isFallFlying() 
-                || ElementalsItems.GLIDER_ITEM.getState(stack) == GliderItem.GliderStates.CLOSED){
+                || ElementalsItems.GLIDER_ITEM.get().getState(stack) == GliderItem.GliderStates.CLOSED){
             return;
         }
         matrices.pushPose();
