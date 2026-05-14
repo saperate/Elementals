@@ -1,6 +1,7 @@
 package dev.saperate.elementals.platform.services;
 
 import dev.saperate.elementals.advancements.HasElementCriterion;
+import dev.saperate.elementals.blocks.blockEntities.LitAirBlockEntity;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.advancements.CriterionTrigger;
 import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
@@ -32,17 +33,6 @@ public interface IRegistryHelper {
 
     CreativeModeTab createItemTab();
     
-    <T extends BlockEntity> BlockEntityType<T> createBlockEntityType(BlockEntityTypeFactory<T> factory, Block... validBlocks);
-
-    /**
-     * Helper interface for {@link #createBlockEntityType}
-     * @param <T> A type that extends BlockEntity
-     */
-    @FunctionalInterface
-    interface BlockEntityTypeFactory<T extends BlockEntity> {
-        T create(BlockPos blockPos, BlockState blockState);
-    }
-    
     void registerCommands();
     void registerLootTables();
     void registerClientParticles();
@@ -72,4 +62,16 @@ public interface IRegistryHelper {
     
     <T extends Item, U extends DispenseItemBehavior> void registerDispenserBehavior(Supplier<T> item, Supplier<U> behavior);
     void registerCreativeTab(String name, CreativeModeTab creativeModeTab);
+    Supplier<Block> registerBlock(String name, Supplier<Block> block);
+
+    <T extends BlockEntity> Supplier<BlockEntityType<T>> registerBlockEntityType(String name, Supplier<Block> block, BlockEntityTypeFactory<T> factory);
+
+    /**
+     * Helper interface for {@link #registerBlockEntityType}
+     * @param <T> A type that extends BlockEntity
+     */
+    @FunctionalInterface
+    interface BlockEntityTypeFactory<T extends BlockEntity> {
+        T create(BlockPos blockPos, BlockState blockState);
+    }
 }

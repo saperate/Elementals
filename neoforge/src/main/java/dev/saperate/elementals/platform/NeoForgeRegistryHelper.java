@@ -82,12 +82,6 @@ public class NeoForgeRegistryHelper implements IRegistryHelper {
                     entries.accept(GLIDER_ITEM.get());
                 }).build();
     }
-
-    @Override
-    public <T extends BlockEntity> BlockEntityType<T> createBlockEntityType(BlockEntityTypeFactory<T> factory, Block... validBlocks) {
-        return BlockEntityType.Builder.of(factory::create, validBlocks).build(null);
-    }
-
     @Override
     public void registerCommands() {
         NeoForge.EVENT_BUS.addListener(((RegisterCommandsEvent event) -> {
@@ -138,7 +132,7 @@ public class NeoForgeRegistryHelper implements IRegistryHelper {
             event.register(
                     (state, view, pos, tintIndex) ->
                             0x4253ed,
-                    ElementalsBlocks.MOON_PEACH_LEAVES);
+                    ElementalsBlocks.MOON_PEACH_LEAVES.get());
         });
     }
 
@@ -197,8 +191,7 @@ public class NeoForgeRegistryHelper implements IRegistryHelper {
 
     @Override
     public <T extends Item> Supplier<T> registerItem(String name, Supplier<T> item) {
-        DeferredHolder<Item, T> holder = ElementalsNeoForge.ITEMS.register(name, item);
-        return holder::get;
+        return ElementalsNeoForge.ITEMS.register(name, item);
     }
 
     @Override
@@ -212,5 +205,18 @@ public class NeoForgeRegistryHelper implements IRegistryHelper {
     public void registerCreativeTab(String name, CreativeModeTab creativeModeTab) {
         ElementalsNeoForge.CREATIVE_TABS.register(name, () -> creativeModeTab);
     }
+
+    @Override
+    public Supplier<Block> registerBlock(String name, Supplier<Block> block) {
+        return ElementalsNeoForge.BLOCKS.register(name, block);
+    }
+
+
+    @Override
+    public <T extends BlockEntity> Supplier<BlockEntityType<T>> registerBlockEntityType(String name, Supplier<Block> block, BlockEntityTypeFactory<T> factory) {
+        return ElementalsNeoForge.BLOCK_ENTITY_TYPES.register(name, 
+                () -> BlockEntityType.Builder.of(factory::create, block.get()).build(null));
+    }
+
 
 }

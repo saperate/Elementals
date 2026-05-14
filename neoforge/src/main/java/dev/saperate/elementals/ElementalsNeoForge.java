@@ -9,6 +9,9 @@ import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -22,6 +25,8 @@ public class ElementalsNeoForge {
     public static final DeferredRegister<ArmorMaterial> ARMOR_MATERIALS = DeferredRegister.create(BuiltInRegistries.ARMOR_MATERIAL, MODID);
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(BuiltInRegistries.ITEM, MODID);
     public static final DeferredRegister<CreativeModeTab> CREATIVE_TABS = DeferredRegister.create(BuiltInRegistries.CREATIVE_MODE_TAB, MODID);
+    public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(BuiltInRegistries.BLOCK, MODID);
+    public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITY_TYPES = DeferredRegister.create(BuiltInRegistries.BLOCK_ENTITY_TYPE, MODID);
     public ElementalsNeoForge(IEventBus eventBus) {
         NeoForgeRegistryHelper.eventBus = eventBus;
         
@@ -30,6 +35,8 @@ public class ElementalsNeoForge {
         ARMOR_MATERIALS.register(eventBus);
         ITEMS.register(eventBus);
         CREATIVE_TABS.register(eventBus);
+        BLOCKS.register(eventBus);
+        BLOCK_ENTITY_TYPES.register(eventBus);
 
         Elementals.init();
     }

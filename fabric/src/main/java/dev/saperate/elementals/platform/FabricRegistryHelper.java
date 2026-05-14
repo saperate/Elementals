@@ -82,11 +82,6 @@ public class FabricRegistryHelper implements IRegistryHelper {
     }
 
     @Override
-    public <T extends BlockEntity> BlockEntityType<T> createBlockEntityType(BlockEntityTypeFactory<T> factory, Block... validBlocks) {
-        return BlockEntityType.Builder.of(factory::create, validBlocks).build();
-    }
-
-    @Override
     public void registerCommands() {
         CommandRegistrationCallback.EVENT.register(BendingCommand::register);
         CommandRegistrationCallback.EVENT.register(ElementalsCommand::register);
@@ -129,7 +124,7 @@ public class FabricRegistryHelper implements IRegistryHelper {
         ColorProviderRegistry.BLOCK.register(
                 (state, view, pos, tintIndex) -> 
                         0x4253ed, 
-                ElementalsBlocks.MOON_PEACH_LEAVES
+                ElementalsBlocks.MOON_PEACH_LEAVES.get()
         );
     }
 
@@ -199,6 +194,21 @@ public class FabricRegistryHelper implements IRegistryHelper {
                 ResourceLocation.fromNamespaceAndPath(Constants.MODID,name) , 
                 creativeModeTab
         );
+    }
+
+    @Override
+    public Supplier<Block> registerBlock(String name, Supplier<Block> block) {
+        Block holder = Registry.register(BuiltInRegistries.BLOCK,
+                ResourceLocation.fromNamespaceAndPath(Constants.MODID, name), block.get());
+        return () -> holder;
+    }
+
+    @Override
+    public <T extends BlockEntity> Supplier<BlockEntityType<T>> registerBlockEntityType(String name, Supplier<Block> block, BlockEntityTypeFactory<T> factory) {
+        BlockEntityType<T> holder = Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, 
+                ResourceLocation.fromNamespaceAndPath(Constants.MODID, name),
+                BlockEntityType.Builder.of(factory::create, block.get()).build());
+        return () -> holder;
     }
 
 

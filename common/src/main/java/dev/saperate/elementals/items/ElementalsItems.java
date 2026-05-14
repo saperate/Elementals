@@ -109,16 +109,16 @@ public class ElementalsItems {
     //BLOCK ITEMS
     public static final Supplier<BlockItem> MOON_PEACH_LEAVES_ITEM = registerItem(
             "moon_peach_leaves",
-            () -> new BlockItem(ElementalsBlocks.MOON_PEACH_LEAVES, new Item.Properties()));
+            () -> new BlockItem(ElementalsBlocks.MOON_PEACH_LEAVES.get(), new Item.Properties()));
     public static final Supplier<BlockItem> MOON_LOG = registerItem(
             "moon_log",
-            () -> new BlockItem(ElementalsBlocks.MOON_LOG, new Item.Properties()));
+            () -> new BlockItem(ElementalsBlocks.MOON_LOG.get(), new Item.Properties()));
     public static final Supplier<BlockItem> MOON_STRIPPED_LOG = registerItem(
             "moon_stripped_log",
-            () -> new BlockItem(ElementalsBlocks.MOON_STRIPPED_LOG, new Item.Properties()));
+            () -> new BlockItem(ElementalsBlocks.MOON_STRIPPED_LOG.get(), new Item.Properties()));
     public static final Supplier<BlockItem> MOON_PLANKS = registerItem(
             "moon_planks",
-            () -> new BlockItem(ElementalsBlocks.MOON_PLANKS, new Item.Properties()));
+            () -> new BlockItem(ElementalsBlocks.MOON_PLANKS.get(), new Item.Properties()));
     public static final CreativeModeTab ELEMENTALS_TAB = Services.REGISTRY.createItemTab();
 
     private static <T extends Item> Supplier<T> registerItem(String name, Supplier<T> item) {

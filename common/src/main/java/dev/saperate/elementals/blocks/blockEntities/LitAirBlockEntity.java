@@ -13,7 +13,7 @@ public class LitAirBlockEntity extends BlockEntity {
     private int lifetime = 0;
 
     public LitAirBlockEntity(BlockPos pos, BlockState state) {
-        super(LIT_AIR_BLOCK_ENTITY, pos, state);
+        super(LIT_AIR_BLOCK_ENTITY.get(), pos, state);
     }
 
     public void resetTimer(){

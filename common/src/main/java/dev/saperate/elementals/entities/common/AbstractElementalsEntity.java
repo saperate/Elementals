@@ -49,7 +49,7 @@ public abstract class AbstractElementalsEntity<OwnerType extends Entity> extends
                     && level().getBlockEntity(pos) instanceof LitAirBlockEntity litAirBlockEntity) {
                 litAirBlockEntity.resetTimer();
             } else if (state.isAir()) {
-                level().setBlockAndUpdate(pos, ElementalsBlocks.LIT_AIR.defaultBlockState());
+                level().setBlockAndUpdate(pos, ElementalsBlocks.LIT_AIR.get().defaultBlockState());
             }
         }
 

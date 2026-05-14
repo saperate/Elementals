@@ -16,54 +16,58 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 
+import java.util.function.Supplier;
 import java.util.function.ToIntFunction;
 
 import static dev.saperate.elementals.Constants.MODID;
 
 public class ElementalsBlocks {
 
-    public static final Block LIT_AIR = Registry.register(BuiltInRegistries.BLOCK, 
-            ResourceLocation.fromNamespaceAndPath(MODID, "lit_air"), 
-            new LitAir(BlockBehaviour.Properties.of()
-            .strength(0f).lightLevel(value -> 15).noOcclusion().noCollission()
-            .emissiveRendering(ElementalsBlocks::always).isViewBlocking(ElementalsBlocks::never)
-    ));
+    public static final Supplier<Block> LIT_AIR = Services.REGISTRY.registerBlock(
+            "lit_air",
+            () -> new LitAir(BlockBehaviour.Properties.of()
+                    .strength(0f).lightLevel(value -> 15).noOcclusion().noCollission()
+                    .emissiveRendering(ElementalsBlocks::always).isViewBlocking(ElementalsBlocks::never)
+            ));
 
-    public static final BlockEntityType<LitAirBlockEntity> LIT_AIR_BLOCK_ENTITY = Registry.register(
-            BuiltInRegistries.BLOCK_ENTITY_TYPE,
-            ResourceLocation.fromNamespaceAndPath(MODID, "lit_air_block_entity"),
-            Services.REGISTRY.createBlockEntityType(LitAirBlockEntity::new, LIT_AIR)
-    );
-    
-    public static final Block SOUL_FIRE_CORE = Registry.register(BuiltInRegistries.BLOCK,
-            ResourceLocation.fromNamespaceAndPath(MODID,"soul_fire_core"), 
-            new SoulFireCore(BlockBehaviour.Properties.of().strength(1f)));
-    
-    public static final Block WATER_RAPID = Registry.register(BuiltInRegistries.BLOCK,
-            ResourceLocation.fromNamespaceAndPath(MODID,"water_rapid"), 
-            new WaterRapid(BlockBehaviour.Properties.of().strength(1f)));
+    public static final Supplier<BlockEntityType<LitAirBlockEntity>> LIT_AIR_BLOCK_ENTITY =
+            Services.REGISTRY.registerBlockEntityType(
+                    "lit_air_block_entity",
+                    LIT_AIR, LitAirBlockEntity::new
+            );
 
-    public static final Block MOON_PEACH_LEAVES = Registry.register(BuiltInRegistries.BLOCK,
-            ResourceLocation.fromNamespaceAndPath(MODID,"moon_leaves"),
-            new LeavesBlock(BlockBehaviour.Properties.of().strength(1f).noOcclusion()));
+    public static final Supplier<Block> SOUL_FIRE_CORE = Services.REGISTRY.registerBlock(
+            "soul_fire_core",
+            () -> new SoulFireCore(BlockBehaviour.Properties.of().strength(1f)));
 
-    public static final Block MOON_LOG = Registry.register(BuiltInRegistries.BLOCK,
-            ResourceLocation.fromNamespaceAndPath(MODID,"moon_log"),
-            new RotatedPillarBlock(BlockBehaviour.Properties.of().strength(1f).noOcclusion().sound(SoundType.WOOD).ignitedByLava()));
+    public static final Supplier<Block> WATER_RAPID = Services.REGISTRY.registerBlock(
+            "water_rapid",
+            () -> new WaterRapid(BlockBehaviour.Properties.of().strength(1f)));
 
-    public static final Block MOON_STRIPPED_LOG = Registry.register(BuiltInRegistries.BLOCK,
-            ResourceLocation.fromNamespaceAndPath(MODID,"moon_stripped_log"),
-            new RotatedPillarBlock(BlockBehaviour.Properties.of().strength(1f).noOcclusion().sound(SoundType.WOOD).ignitedByLava()));
+    public static final Supplier<Block> MOON_PEACH_LEAVES = Services.REGISTRY.registerBlock(
+            "moon_leaves",
+            () -> new LeavesBlock(BlockBehaviour.Properties.of()
+                    .strength(1f).noOcclusion()));
 
-    public static final Block MOON_PLANKS = Registry.register(BuiltInRegistries.BLOCK,
-            ResourceLocation.fromNamespaceAndPath(MODID,"moon_planks"),
-            new Block(BlockBehaviour.Properties.of().strength(1f).noOcclusion()));
-    
-    
-    public static void register(){
+    public static final Supplier<Block> MOON_LOG = Services.REGISTRY.registerBlock(
+            "moon_log",
+            () -> new RotatedPillarBlock(BlockBehaviour.Properties.of()
+                    .strength(1f).noOcclusion().sound(SoundType.WOOD).ignitedByLava()));
+
+    public static final Supplier<Block> MOON_STRIPPED_LOG = Services.REGISTRY.registerBlock(
+            "moon_stripped_log",
+            () -> new RotatedPillarBlock(BlockBehaviour.Properties.of()
+                    .strength(1f).noOcclusion().sound(SoundType.WOOD).ignitedByLava()));
+
+    public static final Supplier<Block> MOON_PLANKS = Services.REGISTRY.registerBlock(
+            "moon_planks",
+            () -> new Block(BlockBehaviour.Properties.of().strength(1f).noOcclusion()));
+
+
+    public static void register() {
         System.out.println("Registering elementals blocks..");
     }
-    
+
     private static ToIntFunction<BlockState> always15() {
         return value -> 15;
     }
