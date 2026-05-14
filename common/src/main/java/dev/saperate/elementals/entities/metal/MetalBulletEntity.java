@@ -32,7 +32,7 @@ public class MetalBulletEntity extends AbstractElementalsEntity<Player> {
         super(type, world, Player.class);
     }
     public MetalBulletEntity(Level world, Player owner, double x, double y, double z) {
-        super(METALBULLET, world, Player.class);
+        super(METALBULLET.get(), world, Player.class);
         setOwner(owner);
         setPos(x, y, z);
         setControlled(true);

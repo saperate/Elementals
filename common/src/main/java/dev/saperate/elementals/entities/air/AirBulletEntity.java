@@ -32,13 +32,13 @@ public class AirBulletEntity extends AbstractElementalsEntity<Player> {
     }
 
     public AirBulletEntity(Level world, Player owner) {
-        super(AIRBULLET, world, Player.class);
+        super(AIRBULLET.get(), world, Player.class);
         setOwner(owner);
         setPos(owner.getX(), owner.getY(), owner.getZ());
     }
 
     public AirBulletEntity(Level world, Player owner, double x, double y, double z) {
-        super(AIRBULLET, world, Player.class);
+        super(AIRBULLET.get(), world, Player.class);
         setOwner(owner);
         setPos(x, y, z);
         setControlled(true);

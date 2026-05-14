@@ -31,7 +31,7 @@ public class DecoyPlayerEntity extends PathfinderMob {
     }
 
     public DecoyPlayerEntity(Level world, Player owner) {
-        super(DECOYPLAYER, world);
+        super(DECOYPLAYER.get(), world);
         setOwner(owner);
         setPos(owner.getX(), owner.getY(), owner.getZ());
     }

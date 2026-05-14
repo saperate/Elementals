@@ -39,7 +39,7 @@ public class WaterArcEntity extends AbstractElementalsEntity<Player> {
     }
 
     public WaterArcEntity(Level world, Player owner, double x, double y, double z) {
-        super(WATERARC, world, Player.class);
+        super(WATERARC.get(), world, Player.class);
         setOwner(owner);
         setPos(x, y, z);
         setNoGravity(false);

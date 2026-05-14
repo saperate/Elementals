@@ -2,6 +2,7 @@ package dev.saperate.elementals.platform.services;
 
 import dev.saperate.elementals.advancements.HasElementCriterion;
 import dev.saperate.elementals.blocks.blockEntities.LitAirBlockEntity;
+import dev.saperate.elementals.entities.common.DecoyPlayerEntity;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.advancements.CriterionTrigger;
 import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
@@ -15,6 +16,8 @@ import net.minecraft.core.dispenser.DispenseItemBehavior;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
@@ -43,6 +46,7 @@ public interface IRegistryHelper {
     GameRules.Type<GameRules.BooleanValue> createGameruleIntegerType(boolean defaultValue);
     GameRules.Type<GameRules.IntegerValue> createGameruleIntegerType(int defaultValue);
     void registerClientModelLayer(ModelLayerLocation modelMetalLanceLayer, TexturedModelDataProvider provider);
+
     @FunctionalInterface
     interface TexturedModelDataProvider {
         LayerDefinition create();
@@ -74,4 +78,6 @@ public interface IRegistryHelper {
     interface BlockEntityTypeFactory<T extends BlockEntity> {
         T create(BlockPos blockPos, BlockState blockState);
     }
+    <T extends Entity> Supplier<EntityType<T>> registerEntity(String name, EntityType.EntityFactory<T> factory, float width, float height);
+    <T extends LivingEntity> void registerDefaultEntityAttribute(Supplier<EntityType<T>> entity, Supplier<AttributeSupplier.Builder> attributeSupplier);
 }

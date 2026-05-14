@@ -42,7 +42,7 @@ public class FireArcEntity extends AbstractElementalsEntity<Player> {
     }
 
     public FireArcEntity(Level world, Player owner, double x, double y, double z) {
-        super(FIREARC, world, Player.class);
+        super(FIREARC.get(), world, Player.class);
         setOwner(owner);
         setPos(x, y, z);
         setNoGravity(false);

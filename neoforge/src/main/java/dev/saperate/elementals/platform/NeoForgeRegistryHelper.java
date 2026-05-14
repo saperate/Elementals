@@ -28,6 +28,9 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
@@ -49,6 +52,7 @@ import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.LootTableLoadEvent;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
+import net.neoforged.neoforge.event.entity.EntityAttributeCreationEvent;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import org.jetbrains.annotations.NotNull;
 
@@ -215,7 +219,23 @@ public class NeoForgeRegistryHelper implements IRegistryHelper {
     @Override
     public <T extends BlockEntity> Supplier<BlockEntityType<T>> registerBlockEntityType(String name, Supplier<Block> block, BlockEntityTypeFactory<T> factory) {
         return ElementalsNeoForge.BLOCK_ENTITY_TYPES.register(name, 
-                () -> BlockEntityType.Builder.of(factory::create, block.get()).build(null));
+                () -> BlockEntityType.Builder.of(factory::create, block.get())
+                        .build(null));
+    }
+
+    @Override
+    public <T extends Entity> Supplier<EntityType<T>> registerEntity(String name, EntityType.EntityFactory<T> factory, float width, float height) {
+        return ElementalsNeoForge.ENTITY_TYPES.register(name, 
+                ()-> EntityType.Builder.of(factory, MobCategory.MISC)
+                .noSummon()
+                .sized(width, height).build(name));
+    }
+
+    @Override
+    public <T extends LivingEntity> void registerDefaultEntityAttribute(Supplier<EntityType<T>> entity, Supplier<AttributeSupplier.Builder> attributeSupplier) {
+        eventBus.addListener((EntityAttributeCreationEvent event) -> {
+            event.put(entity.get(), attributeSupplier.get().build());
+        });
     }
 
 

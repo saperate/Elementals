@@ -28,13 +28,13 @@ public class WaterBulletEntity extends AbstractElementalsEntity<Player> {
     }
 
     public WaterBulletEntity(Level world, Player owner) {
-        super(WATERBULLET, world, Player.class);
+        super(WATERBULLET.get(), world, Player.class);
         setOwner(owner);
         setPos(owner.getX(), owner.getY(), owner.getZ());
     }
 
     public WaterBulletEntity(Level world, Player owner, double x, double y, double z) {
-        super(WATERBULLET, world, Player.class);
+        super(WATERBULLET.get(), world, Player.class);
         setOwner(owner);
         setPos(x, y, z);
         setControlled(true);

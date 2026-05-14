@@ -36,7 +36,7 @@ public class FireBlockEntity extends AbstractElementalsEntity<Player> {
     }
 
     public FireBlockEntity(Level world, Player owner, double x, double y, double z) {
-        super(FIREBLOCK, world, Player.class);
+        super(FIREBLOCK.get(), world, Player.class);
         setOwner(owner);
         setPos(x, y, z);
         lifeTime = 200;

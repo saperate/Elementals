@@ -24,7 +24,7 @@ public class WaterShieldEntity extends AbstractElementalsEntity<Player> {
     }
 
     public WaterShieldEntity(Level world, Player owner, double x, double y, double z) {
-        super(WATERSHIELD, world, Player.class);
+        super(WATERSHIELD.get(), world, Player.class);
         setPos(x, y, z);
         setOwner(owner);
     }

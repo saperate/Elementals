@@ -27,13 +27,13 @@ public class FireWispEntity extends AbstractElementalsEntity<Player> {
     }
 
     public FireWispEntity(Level world, Player owner) {
-        super(FIREWISP, world, Player.class);
+        super(FIREWISP.get(), world, Player.class);
         setOwner(owner);
         setPos(owner.getX(), owner.getY(), owner.getZ());
     }
 
     public FireWispEntity(Level world, Player owner, double x, double y, double z) {
-        super(FIREWISP, world, Player.class);
+        super(FIREWISP.get(), world, Player.class);
         setOwner(owner);
         setPos(x, y, z);
         setControlled(true);

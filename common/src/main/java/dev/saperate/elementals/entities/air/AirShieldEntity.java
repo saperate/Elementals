@@ -23,7 +23,7 @@ public class AirShieldEntity extends AbstractElementalsEntity<Player> {
     }
 
     public AirShieldEntity(Level world, Player owner, double x, double y, double z) {
-        super(AIRSHIELD, world, Player.class);
+        super(AIRSHIELD.get(), world, Player.class);
         setPos(x, y, z);
         setOwner(owner);
     }

@@ -21,6 +21,7 @@ import net.fabricmc.fabric.api.gamerule.v1.GameRuleFactory;
 import net.fabricmc.fabric.api.gamerule.v1.GameRuleRegistry;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.fabricmc.fabric.api.loot.v3.LootTableEvents;
+import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
 import net.minecraft.client.KeyMapping;
@@ -37,6 +38,9 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
@@ -209,6 +213,22 @@ public class FabricRegistryHelper implements IRegistryHelper {
                 ResourceLocation.fromNamespaceAndPath(Constants.MODID, name),
                 BlockEntityType.Builder.of(factory::create, block.get()).build());
         return () -> holder;
+    }
+
+    @Override
+    public <T extends Entity> Supplier<EntityType<T>> registerEntity(String name, EntityType.EntityFactory<T> factory, float width, float height) {
+        EntityType<T> entityType = Registry.register(
+                BuiltInRegistries.ENTITY_TYPE,
+                ResourceLocation.fromNamespaceAndPath(Constants.MODID, name),
+                EntityType.Builder.of(factory, MobCategory.MISC)
+                        .noSummon()
+                        .sized(width, height).build(name));
+        return () -> entityType;
+    }
+
+    @Override
+    public <T extends LivingEntity> void registerDefaultEntityAttribute(Supplier<EntityType<T>> entity, Supplier<AttributeSupplier.Builder> attributeSupplier) {
+        FabricDefaultAttributeRegistry.register(entity.get(), attributeSupplier.get());
     }
 
 

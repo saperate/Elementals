@@ -227,7 +227,7 @@ public class EarthElement extends Element {
      */
     public static void damageEntityAboveBlock(Player player, BlockPos pos, ArrayList<LivingEntity> damagedEntities, float amount) {
         List<LivingEntity> hits = player.level().getEntitiesOfClass(LivingEntity.class,
-                EARTHBLOCK.getSpawnAABB(pos.getX(), pos.getY() + 1, pos.getZ()), LivingEntity::onGround);
+                EARTHBLOCK.get().getSpawnAABB(pos.getX(), pos.getY() + 1, pos.getZ()), LivingEntity::onGround);
         for (LivingEntity entity : hits) {
             if (entity == player) {
                 continue;

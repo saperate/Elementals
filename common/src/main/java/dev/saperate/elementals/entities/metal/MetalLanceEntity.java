@@ -19,7 +19,7 @@ public class MetalLanceEntity extends AbstractElementalsEntity<LivingEntity> {
     }
 
     public MetalLanceEntity(Level world, LivingEntity owner, double x, double y, double z) {
-        super(METALLANCE, world, LivingEntity.class);
+        super(METALLANCE.get(), world, LivingEntity.class);
         setOwner(owner);
         setPos(x, y, z);
         setControlled(true);

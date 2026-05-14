@@ -6,6 +6,7 @@ import net.minecraft.advancements.CriterionTrigger;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
@@ -27,6 +28,7 @@ public class ElementalsNeoForge {
     public static final DeferredRegister<CreativeModeTab> CREATIVE_TABS = DeferredRegister.create(BuiltInRegistries.CREATIVE_MODE_TAB, MODID);
     public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(BuiltInRegistries.BLOCK, MODID);
     public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITY_TYPES = DeferredRegister.create(BuiltInRegistries.BLOCK_ENTITY_TYPE, MODID);
+    public static final DeferredRegister<EntityType<?>> ENTITY_TYPES = DeferredRegister.create(BuiltInRegistries.ENTITY_TYPE, MODID);
     public ElementalsNeoForge(IEventBus eventBus) {
         NeoForgeRegistryHelper.eventBus = eventBus;
         
@@ -37,6 +39,7 @@ public class ElementalsNeoForge {
         CREATIVE_TABS.register(eventBus);
         BLOCKS.register(eventBus);
         BLOCK_ENTITY_TYPES.register(eventBus);
+        ENTITY_TYPES.register(eventBus);
 
         Elementals.init();
     }

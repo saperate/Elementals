@@ -44,13 +44,13 @@ public class EarthBlockEntity extends AbstractElementalsEntity<Player> {
     }
 
     public EarthBlockEntity(Level world, Player owner) {
-        super(EARTHBLOCK, world, Player.class);
+        super(EARTHBLOCK.get(), world, Player.class);
         setOwner(owner);
         setPos(owner.getX(), owner.getY(), owner.getZ());
     }
 
     public EarthBlockEntity(Level world, Player owner, double x, double y, double z) {
-        super(EARTHBLOCK, world, Player.class);
+        super(EARTHBLOCK.get(), world, Player.class);
         setOwner(owner);
         setPos(x, y, z);
         setControlled(true);

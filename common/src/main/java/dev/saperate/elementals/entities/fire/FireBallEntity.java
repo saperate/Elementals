@@ -32,13 +32,13 @@ public class FireBallEntity extends AbstractElementalsEntity<Player> {
     }
 
     public FireBallEntity(Level world, Player owner) {
-        super(FIREBALL, world, Player.class);
+        super(FIREBALL.get(), world, Player.class);
         setOwner(owner);
         setPos(owner.getX(), owner.getY(), owner.getZ());
     }
 
     public FireBallEntity(Level world, Player owner, double x, double y, double z) {
-        super(FIREBALL, world, Player.class);
+        super(FIREBALL.get(), world, Player.class);
         setOwner(owner);
         setPos(x, y, z);
         setControlled(true);

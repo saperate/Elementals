@@ -31,7 +31,7 @@ public class BoomerangEntity extends AbstractArrow {
     }
 
     public BoomerangEntity(Level world, Player owner, Vec3 startingPos) {
-        super(BOOMERANGENTITY, world);
+        super(BOOMERANGENTITY.get(), world);
         setOwner(owner);
         this.startingPos = startingPos;
         setNoGravity(true);
@@ -39,7 +39,7 @@ public class BoomerangEntity extends AbstractArrow {
     }
 
     public BoomerangEntity(Level world, Vec3 startingPos, ItemStack stack) {
-        super(BOOMERANGENTITY, startingPos.x, startingPos.y, startingPos.z, world, stack, null);
+        super(BOOMERANGENTITY.get(), startingPos.x, startingPos.y, startingPos.z, world, stack, null);
         this.startingPos = startingPos;
         setNoGravity(true);
         setSilent(true);

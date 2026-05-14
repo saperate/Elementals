@@ -45,7 +45,7 @@ public class WaterHelmetEntity extends AbstractElementalsEntity<LivingEntity> {
     }
 
     public WaterHelmetEntity(Level world, LivingEntity owner, double x, double y, double z, boolean suffocate) {
-        super(WATERHELMET, world, LivingEntity.class);
+        super(WATERHELMET.get(), world, LivingEntity.class);
         setPos(x, owner.getEyeY(), z);
         setOwner(owner);
         this.suffocate = suffocate;

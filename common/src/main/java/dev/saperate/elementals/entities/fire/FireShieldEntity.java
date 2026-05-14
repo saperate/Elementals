@@ -32,7 +32,7 @@ public class FireShieldEntity extends AbstractElementalsEntity<Player> {
     }
 
     public FireShieldEntity(Level world, Player owner, double x, double y, double z) {
-        super(FIRESHIELD, world, Player.class);
+        super(FIRESHIELD.get(), world, Player.class);
         setPos(x, y, z);
         setFireHeight(MAX_FLAME_SIZE);
         setOwner(owner);

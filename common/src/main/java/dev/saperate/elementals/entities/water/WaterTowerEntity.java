@@ -26,13 +26,13 @@ public class WaterTowerEntity extends AbstractElementalsEntity<Player> {
     }
 
     public WaterTowerEntity(Level world, Player owner) {
-        super(WATERTOWER, world, Player.class);
+        super(WATERTOWER.get(), world, Player.class);
         setOwner(owner);
         setPos(owner.getX(), owner.getY(), owner.getZ());
     }
 
     public WaterTowerEntity(Level world, Player owner, double x, double y, double z) {
-        super(WATERTOWER, world, Player.class);
+        super(WATERTOWER.get(), world, Player.class);
         setOwner(owner);
         setPos(x, y, z);
         setNoGravity(true);

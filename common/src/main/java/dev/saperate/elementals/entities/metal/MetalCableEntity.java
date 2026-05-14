@@ -29,7 +29,7 @@ public class MetalCableEntity extends AbstractElementalsEntity<LivingEntity> {
     }
 
     public MetalCableEntity(Level world, LivingEntity owner, double x, double y, double z) {
-        super(METALCABLE, world, LivingEntity.class);
+        super(METALCABLE.get(), world, LivingEntity.class);
         setOwner(owner);
         setPos(x, y, z);
 

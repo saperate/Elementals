@@ -36,7 +36,7 @@ public class VoltArcEntity extends AbstractElementalsEntity<Player> {
     }
 
     public VoltArcEntity(Level world, Player owner, double x, double y, double z) {
-        super(VOLTARC, world, Player.class);
+        super(VOLTARC.get(), world, Player.class);
         setOwner(owner);
         setPos(x, y, z);
 

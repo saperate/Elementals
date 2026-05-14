@@ -25,13 +25,13 @@ public class WaterCubeEntity extends AbstractElementalsEntity<Player> {
     }
 
     public WaterCubeEntity(Level world, Player owner) {
-        super(WATERCUBE, world, Player.class);
+        super(WATERCUBE.get(), world, Player.class);
         setOwner(owner);
         setPos(owner.getX(), owner.getY(), owner.getZ());
     }
 
     public WaterCubeEntity(Level world, Player owner, double x, double y, double z) {
-        super(WATERCUBE, world, Player.class);
+        super(WATERCUBE.get(), world, Player.class);
         setOwner(owner);
         setPos(x, y, z);
         setControlled(true);

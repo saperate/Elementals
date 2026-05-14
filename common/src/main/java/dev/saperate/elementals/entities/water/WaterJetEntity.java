@@ -38,7 +38,7 @@ public class WaterJetEntity extends AbstractElementalsEntity<Player> {
     }
 
     public WaterJetEntity(Level world, Player owner, double x, double y, double z) {
-        super(WATERJET, world, Player.class);
+        super(WATERJET.get(), world, Player.class);
         setOwner(owner);
         setPos(x, y, z);
         setNoGravity(true);

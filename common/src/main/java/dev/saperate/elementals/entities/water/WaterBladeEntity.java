@@ -36,13 +36,13 @@ public class WaterBladeEntity extends AbstractElementalsEntity<Player> {
     }
 
     public WaterBladeEntity(Level world, Player owner) {
-        super(WATERBLADE, world, Player.class);
+        super(WATERBLADE.get(), world, Player.class);
         setOwner(owner);
         setPos(owner.getX(), owner.getY(), owner.getZ());
     }
 
     public WaterBladeEntity(Level world, Player owner, double x, double y, double z) {
-        super(WATERBLADE, world, Player.class);
+        super(WATERBLADE.get(), world, Player.class);
         setOwner(owner);
         setPos(x, y, z);
         setControlled(true);

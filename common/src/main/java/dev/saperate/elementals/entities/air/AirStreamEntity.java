@@ -39,7 +39,7 @@ public class AirStreamEntity extends AbstractElementalsEntity<Player> {
     }
 
     public AirStreamEntity(Level world, Player owner, double x, double y, double z) {
-        super(AIRSTREAM, world, Player.class);
+        super(AIRSTREAM.get(), world, Player.class);
         setOwner(owner);
         setPos(x, y, z);
         setNoGravity(false);

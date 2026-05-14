@@ -30,7 +30,7 @@ public class LightningArcEntity extends AbstractElementalsEntity<Player> {
     }
 
     public LightningArcEntity(Level world, Player owner, double x, double y, double z) {
-        super(LIGHTNINGARC, world, Player.class);
+        super(LIGHTNINGARC.get(), world, Player.class);
         setOwner(owner);
         setPos(x, y, z);
 

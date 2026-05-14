@@ -27,7 +27,7 @@ public class MetalBindEntity extends AbstractElementalsEntity<LivingEntity> {
     }
 
     public MetalBindEntity(Level world, LivingEntity owner, double x, double y, double z) {
-        super(METALBIND, world, LivingEntity.class);
+        super(METALBIND.get(), world, LivingEntity.class);
         setOwner(owner);
         setPos(x, y, z);
 

@@ -25,13 +25,13 @@ public class AirBallEntity extends AbstractElementalsEntity<Player> {
     }
 
     public AirBallEntity(Level world, Player owner) {
-        super(AIRBALL, world, Player.class);
+        super(AIRBALL.get(), world, Player.class);
         setOwner(owner);
         setPos(owner.getX(), owner.getY(), owner.getZ());
     }
 
     public AirBallEntity(Level world, Player owner, double x, double y, double z) {
-        super(AIRBALL, world, Player.class);
+        super(AIRBALL.get(), world, Player.class);
         setOwner(owner);
         setPos(x, y, z);
         setControlled(true);

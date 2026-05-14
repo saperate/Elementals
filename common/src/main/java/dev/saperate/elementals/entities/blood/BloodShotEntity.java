@@ -36,7 +36,7 @@ public class BloodShotEntity extends AbstractElementalsEntity<Player> {
 
 
     public BloodShotEntity(Level world, Player owner, double x, double y, double z, Collection<MobEffectInstance> ownerEffects) {
-        super(BLOODSHOT, world, Player.class);
+        super(BLOODSHOT.get(), world, Player.class);
         setOwner(owner);
         setPos(x, y, z);
         setControlled(true);

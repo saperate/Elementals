@@ -35,7 +35,7 @@ public class WaterArmEntity extends AbstractElementalsEntity<Player> {
     }
 
     public WaterArmEntity(Level world, Player owner, double x, double y, double z) {
-        super(WATERARM, world, Player.class);
+        super(WATERARM.get(), world, Player.class);
         setOwner(owner);
         setPos(x, y, z);
         setNoGravity(false);

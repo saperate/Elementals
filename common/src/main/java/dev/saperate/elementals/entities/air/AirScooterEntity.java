@@ -32,7 +32,7 @@ public class AirScooterEntity extends AbstractElementalsEntity<Player> {
     }
 
     public AirScooterEntity(Level world, Player owner, double x, double y, double z) {
-        super(AIRSCOOTER, world, Player.class);
+        super(AIRSCOOTER.get(), world, Player.class);
         setPos(x, y, z);
         setOwner(owner);
         setNoGravity(true);

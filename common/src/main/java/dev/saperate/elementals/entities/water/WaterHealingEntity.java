@@ -29,13 +29,13 @@ public class WaterHealingEntity extends AbstractElementalsEntity<Player> {
     }
 
     public WaterHealingEntity(Level world, Player owner) {
-        super(WATERHEALING, world, Player.class);
+        super(WATERHEALING.get(), world, Player.class);
         setOwner(owner);
         setPos(owner.getX(), owner.getY(), owner.getZ());
     }
 
     public WaterHealingEntity(Level world, Player owner, double x, double y, double z) {
-        super(WATERHEALING, world, Player.class);
+        super(WATERHEALING.get(), world, Player.class);
         setOwner(owner);
         setPos(x, y, z);
         setControlled(true);

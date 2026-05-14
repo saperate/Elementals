@@ -31,7 +31,7 @@ public class AirTornadoEntity extends AbstractElementalsEntity<Player> {
     }
 
     public AirTornadoEntity(Level world, Player owner, double x, double y, double z) {
-        super(AIRTORNADO, world, Player.class);
+        super(AIRTORNADO.get(), world, Player.class);
         setOwner(owner);
         setPos(x, y, z);
         setNoGravity(true);

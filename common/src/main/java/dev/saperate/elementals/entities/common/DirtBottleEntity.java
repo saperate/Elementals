@@ -29,11 +29,11 @@ public class DirtBottleEntity extends ThrowableItemProjectile {
     }
 
     public DirtBottleEntity(Level world, LivingEntity owner) {
-        super(DIRTBOTTLEENTITY, owner, world);
+        super(DIRTBOTTLEENTITY.get(), owner, world);
     }
 
     public DirtBottleEntity(Level world, Vec3 position) {
-        super(DIRTBOTTLEENTITY, position.x, position.y, position.z, world);
+        super(DIRTBOTTLEENTITY.get(), position.x, position.y, position.z, world);
     }
 
 
