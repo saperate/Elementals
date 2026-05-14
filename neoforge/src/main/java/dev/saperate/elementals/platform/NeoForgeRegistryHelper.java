@@ -1,6 +1,7 @@
 package dev.saperate.elementals.platform;
 
 import dev.saperate.elementals.Constants;
+import dev.saperate.elementals.Elementals;
 import dev.saperate.elementals.ElementalsNeoForge;
 import dev.saperate.elementals.blocks.ElementalsBlocks;
 import dev.saperate.elementals.client.particle.MetalShardParticle;
@@ -14,6 +15,7 @@ import net.minecraft.advancements.CriterionTrigger;
 import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.LayeredDraw;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.particle.FlameParticle;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
@@ -22,9 +24,11 @@ import net.minecraft.commands.synchronization.SingletonArgumentInfo;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.dispenser.DispenseItemBehavior;
+import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -46,9 +50,7 @@ import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.neoforged.neoforge.client.event.EntityRenderersEvent;
-import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
-import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
+import net.neoforged.neoforge.client.event.*;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.LootTableLoadEvent;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
@@ -94,10 +96,8 @@ public class NeoForgeRegistryHelper implements IRegistryHelper {
         }));
 
         //Both are needed to properly register an argument type
-        Registry.register(
-                BuiltInRegistries.COMMAND_ARGUMENT_TYPE,
-                ResourceLocation.fromNamespaceAndPath(Constants.MODID, "bending"),
-                SingletonArgumentInfo.contextFree(ElementArgumentType::element)
+        ElementalsNeoForge.COMMAND_ARGUMENT_TYPES.register(
+                "bending", () -> SingletonArgumentInfo.contextFree(ElementArgumentType::element)
         );
         ArgumentTypeInfos.registerByClass(ElementArgumentType.class, SingletonArgumentInfo.contextFree(ElementArgumentType::element));
     }
@@ -119,20 +119,22 @@ public class NeoForgeRegistryHelper implements IRegistryHelper {
 
     @Override
     public void registerClientParticles() {
-        Minecraft.getInstance().particleEngine.register(LIGHTNING_PARTICLE_TYPE, FlameParticle.Provider::new);
-        Minecraft.getInstance().particleEngine.register(METAL_SHARD_PARTICLE_TYPE, MetalShardParticle.Factory::new);
+        eventBus.addListener((RegisterParticleProvidersEvent event) -> {
+            event.registerSpriteSet(LIGHTNING_PARTICLE_TYPE, FlameParticle.Provider::new);
+            event.registerSpriteSet(METAL_SHARD_PARTICLE_TYPE, MetalShardParticle.Provider::new);
+        });
     }
 
     @Override
     public void registerClientColorProviders() {
-        NeoForge.EVENT_BUS.addListener((RegisterColorHandlersEvent.Item event) -> {
+        eventBus.addListener((RegisterColorHandlersEvent.Item event) -> {
             event.register(
                     (stack, tintIndex) ->
                             tintIndex == 0 ? ((WaterPouchItem) stack.getItem()).getColor(stack) : 0xFFFFFFFF,
                     WATER_POUCH_ITEM.get());
         });
 
-        NeoForge.EVENT_BUS.addListener((RegisterColorHandlersEvent.Block event) -> {
+        eventBus.addListener((RegisterColorHandlersEvent.Block event) -> {
             event.register(
                     (state, view, pos, tintIndex) ->
                             0x4253ed,
@@ -142,17 +144,14 @@ public class NeoForgeRegistryHelper implements IRegistryHelper {
 
     @Override
     public KeyMapping registerClientKeyBinding(KeyMapping keyMapping) {
-        NeoForge.EVENT_BUS.addListener(((RegisterKeyMappingsEvent event) -> {
-            event.register(keyMapping);
-        }));
+        eventBus.addListener(((RegisterKeyMappingsEvent event) -> event.register(keyMapping)));
         return keyMapping;
     }
 
     @Override
-    public <T extends Entity> void registerClientEntityRenderer(EntityType<T> type, EntityRendererProvider<T> provider) {
-        NeoForge.EVENT_BUS.addListener(((EntityRenderersEvent.RegisterRenderers event) -> {
-            event.registerEntityRenderer(type, provider);
-        }));
+    public <T extends Entity> void registerClientEntityRenderer(Supplier<EntityType<T>> type, EntityRendererProvider<T> provider) {
+        eventBus.addListener(((EntityRenderersEvent.RegisterRenderers event) -> 
+                event.registerEntityRenderer(type.get(), provider)));
     }
 
     @Override
@@ -170,7 +169,7 @@ public class NeoForgeRegistryHelper implements IRegistryHelper {
 
     @Override
     public void registerClientModelLayer(ModelLayerLocation modelMetalLanceLayer, TexturedModelDataProvider provider) {
-        NeoForge.EVENT_BUS.addListener((EntityRenderersEvent.RegisterLayerDefinitions event) -> {
+        eventBus.addListener((EntityRenderersEvent.RegisterLayerDefinitions event) -> {
             event.registerLayerDefinition(modelMetalLanceLayer, provider::create);
         });
     }
@@ -238,5 +237,19 @@ public class NeoForgeRegistryHelper implements IRegistryHelper {
         });
     }
 
+    @Override
+    public void registerSoundEvent(ResourceLocation id, SoundEvent event) {
+        ElementalsNeoForge.SOUND_EVENTS.register(id.getPath(), () -> event);
+    }
+
+    @Override
+    public void registerParticleType(String name, SimpleParticleType type) {
+        ElementalsNeoForge.PARTICLE_TYPES.register(name, () -> type);
+    }
+
+    @Override
+    public void registerClientOverlay(ResourceLocation id, LayeredDraw.Layer layer) {
+        eventBus.addListener((RegisterGuiLayersEvent event) -> event.registerAboveAll(id, layer));
+    }
 
 }

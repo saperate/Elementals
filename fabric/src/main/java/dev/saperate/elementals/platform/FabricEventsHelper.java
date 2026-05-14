@@ -10,6 +10,7 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.LayeredDraw;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 
@@ -59,10 +60,5 @@ public class FabricEventsHelper implements IEventsHelper {
     @Override
     public void onClientTick(Consumer<Minecraft> method) {
         ClientTickEvents.END_CLIENT_TICK.register(method::accept);
-    }
-
-    @Override
-    public void onClientRenderOverlay(LayeredDraw.Layer layer) {
-        HudRenderCallback.EVENT.register(layer::render);
     }
 }

@@ -7,12 +7,16 @@ import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.advancements.CriterionTrigger;
 import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
 import net.minecraft.client.KeyMapping;
+import net.minecraft.client.gui.LayeredDraw;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.dispenser.DispenseItemBehavior;
+import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -41,12 +45,11 @@ public interface IRegistryHelper {
     void registerClientParticles();
     void registerClientColorProviders();
     KeyMapping registerClientKeyBinding(KeyMapping keyMapping);
-    <T extends Entity> void registerClientEntityRenderer(EntityType<T> type, EntityRendererProvider<T> provider);
+    <T extends Entity> void registerClientEntityRenderer(Supplier<EntityType<T>> type, EntityRendererProvider<T> provider);
     <T extends GameRules.Value<T>> GameRules.Key<T> registerGameRule(String name, GameRules.Category category, GameRules.Type<T> defaultValue);
     GameRules.Type<GameRules.BooleanValue> createGameruleIntegerType(boolean defaultValue);
     GameRules.Type<GameRules.IntegerValue> createGameruleIntegerType(int defaultValue);
     void registerClientModelLayer(ModelLayerLocation modelMetalLanceLayer, TexturedModelDataProvider provider);
-
     @FunctionalInterface
     interface TexturedModelDataProvider {
         LayerDefinition create();
@@ -80,4 +83,7 @@ public interface IRegistryHelper {
     }
     <T extends Entity> Supplier<EntityType<T>> registerEntity(String name, EntityType.EntityFactory<T> factory, float width, float height);
     <T extends LivingEntity> void registerDefaultEntityAttribute(Supplier<EntityType<T>> entity, Supplier<AttributeSupplier.Builder> attributeSupplier);
+    void registerSoundEvent(ResourceLocation id, SoundEvent event);
+    void registerParticleType(String name, SimpleParticleType type);
+    void registerClientOverlay(ResourceLocation id, LayeredDraw.Layer layer);
 }

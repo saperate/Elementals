@@ -4,10 +4,13 @@ import dev.saperate.elementals.platform.services.IEventsHelper;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.LayeredDraw;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
+import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.client.event.CustomizeGuiOverlayEvent;
+import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.server.ServerStoppingEvent;
@@ -52,7 +55,7 @@ public class NeoForgeEventsHelper implements IEventsHelper {
 
     @Override
     public void onServerTick(Consumer<MinecraftServer> method) {
-        NeoForge.EVENT_BUS.addListener((ServerTickEvent event) -> {
+        NeoForge.EVENT_BUS.addListener((ServerTickEvent.Post event) -> {
             method.accept(event.getServer());
         });
     }
@@ -68,16 +71,8 @@ public class NeoForgeEventsHelper implements IEventsHelper {
 
     @Override
     public void onClientTick(Consumer<Minecraft> method) {
-        NeoForge.EVENT_BUS.addListener((ClientTickEvent event) -> {
+        NeoForge.EVENT_BUS.addListener((ClientTickEvent.Post event) -> {
             method.accept(Minecraft.getInstance());
-        });
-    }
-
-    @Override
-    public void onClientRenderOverlay(LayeredDraw.Layer layer) {
-        NeoForge.EVENT_BUS.addListener((CustomizeGuiOverlayEvent event) -> {
-            //Might cause some issues if we want animations, figure out how to get a DeltaTracker here
-            layer.render(event.getGuiGraphics(), DeltaTracker.ZERO);
         });
     }
 

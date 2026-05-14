@@ -1,6 +1,7 @@
 package dev.saperate.elementals.misc;
 
 import dev.saperate.elementals.Constants;
+import dev.saperate.elementals.platform.Services;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
@@ -19,8 +20,8 @@ public class ElementalsSounds {
     public static SoundEvent METAL_BREAK_SOUND_EVENT = SoundEvent.createVariableRangeEvent(METAL_BREAK_SOUND_ID);
     
     public static void register(){
-        Registry.register(BuiltInRegistries.SOUND_EVENT, WIND_SOUND_ID, WIND_SOUND_EVENT);
-        Registry.register(BuiltInRegistries.SOUND_EVENT, WIND_BURST_SOUND_ID, WIND_BURST_SOUND_EVENT);
-        Registry.register(BuiltInRegistries.SOUND_EVENT, METAL_BREAK_SOUND_ID, METAL_BREAK_SOUND_EVENT);
+        Services.REGISTRY.registerSoundEvent(WIND_SOUND_ID, WIND_SOUND_EVENT);
+        Services.REGISTRY.registerSoundEvent(WIND_BURST_SOUND_ID, WIND_BURST_SOUND_EVENT);
+        Services.REGISTRY.registerSoundEvent(METAL_BREAK_SOUND_ID, METAL_BREAK_SOUND_EVENT);
     }
 }

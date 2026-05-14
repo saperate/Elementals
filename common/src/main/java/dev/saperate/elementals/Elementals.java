@@ -2,6 +2,7 @@ package dev.saperate.elementals;
 
 import dev.saperate.elementals.advancements.HasElementCriterion;
 import dev.saperate.elementals.advancements.UsedAbilityCriterion;
+import dev.saperate.elementals.armors.materials.ElementalsArmorMaterial;
 import dev.saperate.elementals.blocks.ElementalsBlocks;
 import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.data.ElementalConfig;
@@ -58,6 +59,7 @@ public class Elementals {
 
         ElementalsStatusEffects.register();
         ElementalsItems.register();
+        ElementalsArmorMaterial.register();
         ElementalsBlocks.register();
         ElementalsEnchantments.register();
         ElementalEntities.register();
@@ -67,6 +69,8 @@ public class Elementals {
         
         Services.REGISTRY.registerLootTables();
         Services.REGISTRY.registerCommands();
+        Services.REGISTRY.registerParticleType("lightning", LIGHTNING_PARTICLE_TYPE);
+        Services.REGISTRY.registerParticleType("metal_shard", METAL_SHARD_PARTICLE_TYPE);
         registerElements();
 
         Services.EVENTS.onPlayerJoin(Elementals::onPlayerJoin);
@@ -74,9 +78,6 @@ public class Elementals {
         Services.EVENTS.onPlayerRespawn(Elementals::onPlayerRespawn);
         Services.EVENTS.onServerClose(Elementals::onServerStop);
         Services.EVENTS.onServerTick(Elementals::onServerTick);
-
-        Registry.register(BuiltInRegistries.PARTICLE_TYPE, ResourceLocation.fromNamespaceAndPath(Constants.MODID, "lightning"), LIGHTNING_PARTICLE_TYPE);
-        Registry.register(BuiltInRegistries.PARTICLE_TYPE, ResourceLocation.fromNamespaceAndPath(Constants.MODID, "metal_shard"), METAL_SHARD_PARTICLE_TYPE);
     }
 
 

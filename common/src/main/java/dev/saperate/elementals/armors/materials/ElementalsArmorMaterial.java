@@ -47,7 +47,7 @@ public class ElementalsArmorMaterial {
     );
 
 
-    public static Holder<ArmorMaterial> registerMaterial(String id, Map<ArmorItem.Type, Integer> defensePoints, int enchantability, Holder<SoundEvent> equipSound, Supplier<Ingredient> repairIngredientSupplier, float toughness, float knockbackResistance, boolean dyeable) {
+    private static Holder<ArmorMaterial> registerMaterial(String id, Map<ArmorItem.Type, Integer> defensePoints, int enchantability, Holder<SoundEvent> equipSound, Supplier<Ingredient> repairIngredientSupplier, float toughness, float knockbackResistance, boolean dyeable) {
         List<ArmorMaterial.Layer> layers = List.of(
                 new ArmorMaterial.Layer(ResourceLocation.fromNamespaceAndPath(Constants.MODID, id), "", dyeable)
         );
@@ -55,4 +55,6 @@ public class ElementalsArmorMaterial {
         ArmorMaterial material = new ArmorMaterial(defensePoints, enchantability, equipSound, repairIngredientSupplier, layers, toughness, knockbackResistance);
         return Services.REGISTRY.registerArmorMaterial(id, material).get();
     }
+    
+    public static void register(){}
 }

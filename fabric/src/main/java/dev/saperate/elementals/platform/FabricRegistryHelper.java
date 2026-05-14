@@ -15,6 +15,7 @@ import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.fabricmc.fabric.api.command.v2.ArgumentTypeRegistry;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.gamerule.v1.GameRuleFactory;
@@ -25,6 +26,7 @@ import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRe
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
 import net.minecraft.client.KeyMapping;
+import net.minecraft.client.gui.LayeredDraw;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.particle.FlameParticle;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
@@ -32,9 +34,11 @@ import net.minecraft.commands.synchronization.SingletonArgumentInfo;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.dispenser.DispenseItemBehavior;
+import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -138,8 +142,8 @@ public class FabricRegistryHelper implements IRegistryHelper {
     }
 
     @Override
-    public <T extends Entity> void registerClientEntityRenderer(EntityType<T> type, EntityRendererProvider<T> provider) {
-        EntityRendererRegistry.register(type, provider);
+    public <T extends Entity> void registerClientEntityRenderer(Supplier<EntityType<T>> type, EntityRendererProvider<T> provider) {
+        EntityRendererRegistry.register(type.get(), provider);
     }
     
     @Override
@@ -231,5 +235,18 @@ public class FabricRegistryHelper implements IRegistryHelper {
         FabricDefaultAttributeRegistry.register(entity.get(), attributeSupplier.get());
     }
 
+    @Override
+    public void registerSoundEvent(ResourceLocation id, SoundEvent event) {
+        Registry.register(BuiltInRegistries.SOUND_EVENT, id, event);
+    }
 
+    @Override
+    public void registerParticleType(String name, SimpleParticleType type) {
+        Registry.register(BuiltInRegistries.PARTICLE_TYPE, name, type);
+    }
+
+    @Override
+    public void registerClientOverlay(ResourceLocation id, LayeredDraw.Layer layer) {
+        HudRenderCallback.EVENT.register(layer::render);
+    }
 }

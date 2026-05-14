@@ -1,6 +1,7 @@
 package dev.saperate.elementals.client;
 
 import commonnetwork.api.Network;
+import dev.saperate.elementals.Constants;
 import dev.saperate.elementals.Elementals;
 import dev.saperate.elementals.client.entities.models.metal.MetalLanceModel;
 import dev.saperate.elementals.client.entities.models.water.WaterBladeModel;
@@ -52,9 +53,12 @@ public class ElementalsClient {
         new GuiKey();
         new KeyCycleBending();
 
-        Services.EVENTS.onClientRenderOverlay(new CastTimerHudOverlay());
-        Services.EVENTS.onClientRenderOverlay(new ChiHudOverlay());
         Services.EVENTS.onClientJoin(ElementalsClient::onClientJoin);
+        
+        Services.REGISTRY.registerClientOverlay(
+                ResourceLocation.fromNamespaceAndPath(MODID, "cast_timer"), new CastTimerHudOverlay());
+        Services.REGISTRY.registerClientOverlay(
+                ResourceLocation.fromNamespaceAndPath(MODID, "chi_hud"), new ChiHudOverlay());
         
         Services.REGISTRY.registerClientParticles();
         Services.REGISTRY.registerClientColorProviders();
@@ -86,53 +90,53 @@ public class ElementalsClient {
 
     public static void registerEntityRenderers() {
         //WATER
-        Services.REGISTRY.registerClientEntityRenderer(WATERCUBE.get(), WaterCubeEntityRenderer::new);
-        Services.REGISTRY.registerClientEntityRenderer(WATERHELMET.get(), WaterHelmetEntityRenderer::new);
-        Services.REGISTRY.registerClientEntityRenderer(WATERSHIELD.get(), WaterShieldEntityRenderer::new);
-        Services.REGISTRY.registerClientEntityRenderer(WATERARC.get(), WaterArcEntityRenderer::new);
-        Services.REGISTRY.registerClientEntityRenderer(WATERJET.get(), WaterJetEntityRenderer::new);
-        Services.REGISTRY.registerClientEntityRenderer(WATERARM.get(), WaterArmEntityRenderer::new);
-        Services.REGISTRY.registerClientEntityRenderer(WATERBLADE.get(), WaterBladeEntityRenderer::new);
-        Services.REGISTRY.registerClientEntityRenderer(WATERBULLET.get(), WaterBulletEntityRenderer::new);
-        Services.REGISTRY.registerClientEntityRenderer(WATERHEALING.get(), WaterHealingEntityRenderer::new);
-        Services.REGISTRY.registerClientEntityRenderer(WATERTOWER.get(), WaterTowerEntityRenderer::new);
+        Services.REGISTRY.registerClientEntityRenderer(WATERCUBE, WaterCubeEntityRenderer::new);
+        Services.REGISTRY.registerClientEntityRenderer(WATERHELMET, WaterHelmetEntityRenderer::new);
+        Services.REGISTRY.registerClientEntityRenderer(WATERSHIELD, WaterShieldEntityRenderer::new);
+        Services.REGISTRY.registerClientEntityRenderer(WATERARC, WaterArcEntityRenderer::new);
+        Services.REGISTRY.registerClientEntityRenderer(WATERJET, WaterJetEntityRenderer::new);
+        Services.REGISTRY.registerClientEntityRenderer(WATERARM, WaterArmEntityRenderer::new);
+        Services.REGISTRY.registerClientEntityRenderer(WATERBLADE, WaterBladeEntityRenderer::new);
+        Services.REGISTRY.registerClientEntityRenderer(WATERBULLET, WaterBulletEntityRenderer::new);
+        Services.REGISTRY.registerClientEntityRenderer(WATERHEALING, WaterHealingEntityRenderer::new);
+        Services.REGISTRY.registerClientEntityRenderer(WATERTOWER, WaterTowerEntityRenderer::new);
 
         //FIRE
-        Services.REGISTRY.registerClientEntityRenderer(FIREBLOCK.get(), FireBlockEntityRenderer::new);
-        Services.REGISTRY.registerClientEntityRenderer(FIREARC.get(), FireArcEntityRenderer::new);
-        Services.REGISTRY.registerClientEntityRenderer(FIREBALL.get(), FireBallEntityRenderer::new);
-        Services.REGISTRY.registerClientEntityRenderer(FIRESHIELD.get(), FireShieldEntityRenderer::new);
-        Services.REGISTRY.registerClientEntityRenderer(FIREWISP.get(), FireWispEntityRenderer::new);
+        Services.REGISTRY.registerClientEntityRenderer(FIREBLOCK, FireBlockEntityRenderer::new);
+        Services.REGISTRY.registerClientEntityRenderer(FIREARC, FireArcEntityRenderer::new);
+        Services.REGISTRY.registerClientEntityRenderer(FIREBALL, FireBallEntityRenderer::new);
+        Services.REGISTRY.registerClientEntityRenderer(FIRESHIELD, FireShieldEntityRenderer::new);
+        Services.REGISTRY.registerClientEntityRenderer(FIREWISP, FireWispEntityRenderer::new);
 
         //EARTH
-        Services.REGISTRY.registerClientEntityRenderer(EARTHBLOCK.get(), EarthBlockEntityRenderer::new);
+        Services.REGISTRY.registerClientEntityRenderer(EARTHBLOCK, EarthBlockEntityRenderer::new);
 
         //AIR
-        Services.REGISTRY.registerClientEntityRenderer(AIRSHIELD.get(), AirShieldEntityRenderer::new);
-        Services.REGISTRY.registerClientEntityRenderer(AIRTORNADO.get(), AirTornadoEntityRenderer::new);
-        Services.REGISTRY.registerClientEntityRenderer(AIRSTREAM.get(), AirStreamEntityRenderer::new);
-        Services.REGISTRY.registerClientEntityRenderer(AIRBALL.get(), AirBallEntityRenderer::new);
-        Services.REGISTRY.registerClientEntityRenderer(AIRBULLET.get(), AirBulletEntityRenderer::new);
-        Services.REGISTRY.registerClientEntityRenderer(AIRSCOOTER.get(), AirScooterEntityRenderer::new);
+        Services.REGISTRY.registerClientEntityRenderer(AIRSHIELD, AirShieldEntityRenderer::new);
+        Services.REGISTRY.registerClientEntityRenderer(AIRTORNADO, AirTornadoEntityRenderer::new);
+        Services.REGISTRY.registerClientEntityRenderer(AIRSTREAM, AirStreamEntityRenderer::new);
+        Services.REGISTRY.registerClientEntityRenderer(AIRBALL, AirBallEntityRenderer::new);
+        Services.REGISTRY.registerClientEntityRenderer(AIRBULLET, AirBulletEntityRenderer::new);
+        Services.REGISTRY.registerClientEntityRenderer(AIRSCOOTER, AirScooterEntityRenderer::new);
 
         //COMMON
-        Services.REGISTRY.registerClientEntityRenderer(DECOYPLAYER.get(), (context) -> new DecoyPlayerEntityRenderer(context, true));
-        Services.REGISTRY.registerClientEntityRenderer(DIRTBOTTLEENTITY.get(), DirtBottleEntityRenderer::new);
-        Services.REGISTRY.registerClientEntityRenderer(BOOMERANGENTITY.get(), BoomerangEntityRenderer::new);
-		Services.REGISTRY.registerClientEntityRenderer(SKYBISON.get(), SkyBisonEntityRenderer::new);
+        Services.REGISTRY.registerClientEntityRenderer(DECOYPLAYER, (context) -> new DecoyPlayerEntityRenderer(context, true));
+        Services.REGISTRY.registerClientEntityRenderer(DIRTBOTTLEENTITY, DirtBottleEntityRenderer::new);
+        Services.REGISTRY.registerClientEntityRenderer(BOOMERANGENTITY, BoomerangEntityRenderer::new);
+		Services.REGISTRY.registerClientEntityRenderer(SKYBISON, SkyBisonEntityRenderer::new);
         
         //LIGHTNING
-        Services.REGISTRY.registerClientEntityRenderer(LIGHTNINGARC.get(), LightningArcEntityRenderer::new);
-        Services.REGISTRY.registerClientEntityRenderer(VOLTARC.get(), VoltArcEntityRenderer::new);
+        Services.REGISTRY.registerClientEntityRenderer(LIGHTNINGARC, LightningArcEntityRenderer::new);
+        Services.REGISTRY.registerClientEntityRenderer(VOLTARC, VoltArcEntityRenderer::new);
 
         //BLOOD
-        Services.REGISTRY.registerClientEntityRenderer(BLOODSHOT.get(), BloodShotEntityRenderer::new);
+        Services.REGISTRY.registerClientEntityRenderer(BLOODSHOT, BloodShotEntityRenderer::new);
 
 		//METAL
-		Services.REGISTRY.registerClientEntityRenderer(METALCABLE.get(), MetalCableEntityRenderer::new);
-		Services.REGISTRY.registerClientEntityRenderer(METALBIND.get(), MetalBindEntityRenderer::new);
-		Services.REGISTRY.registerClientEntityRenderer(METALBULLET.get(), MetalBulletEntityRenderer::new);
-		Services.REGISTRY.registerClientEntityRenderer(METALLANCE.get(), MetalLanceRenderer::new);
+		Services.REGISTRY.registerClientEntityRenderer(METALCABLE, MetalCableEntityRenderer::new);
+		Services.REGISTRY.registerClientEntityRenderer(METALBIND, MetalBindEntityRenderer::new);
+		Services.REGISTRY.registerClientEntityRenderer(METALBULLET, MetalBulletEntityRenderer::new);
+		Services.REGISTRY.registerClientEntityRenderer(METALLANCE, MetalLanceRenderer::new);
 	}
 
     private static void onClientJoin(Minecraft client) {

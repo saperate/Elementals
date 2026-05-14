@@ -2,6 +2,7 @@ package dev.saperate.elementals.platform.services;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.LayeredDraw;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 
@@ -15,5 +16,4 @@ public interface IEventsHelper {
     void onServerTick(Consumer<MinecraftServer> method);
     void onClientJoin(Consumer<Minecraft> method);
     void onClientTick(Consumer<Minecraft> method);
-    void onClientRenderOverlay(LayeredDraw.Layer layer);
 }
