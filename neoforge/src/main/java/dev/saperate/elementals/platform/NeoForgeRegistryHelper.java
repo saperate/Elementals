@@ -27,7 +27,9 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.block.Block;
@@ -44,6 +46,8 @@ import net.neoforged.neoforge.event.LootTableLoadEvent;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.function.Supplier;
 
 import static dev.saperate.elementals.Elementals.LIGHTNING_PARTICLE_TYPE;
 import static dev.saperate.elementals.Elementals.METAL_SHARD_PARTICLE_TYPE;
@@ -169,13 +173,25 @@ public class NeoForgeRegistryHelper implements IRegistryHelper {
     
     @Override
     public @NotNull MobEffectHolder registerEffect(String name, MobEffect effect) {
-        Holder<MobEffect> holder = ElementalsNeoForge.MOB_EFFECTS.register(name, () -> effect);
-        return () -> holder;
+        DeferredHolder<MobEffect, MobEffect> holder = ElementalsNeoForge.MOB_EFFECTS.register(name, () -> effect);
+        return holder::getDelegate;
     }
 
     @Override
     public <U extends SimpleCriterionTrigger.SimpleInstance, T extends SimpleCriterionTrigger<U>> TriggerHolder<U,T> registerCriterion(String name, T criterion) {
-        DeferredHolder<CriterionTrigger<?>, T> trigger = ElementalsNeoForge.TRIGGERS.register(name, () -> criterion);
-        return trigger::get;
+        DeferredHolder<CriterionTrigger<?>, T> holder = ElementalsNeoForge.TRIGGERS.register(name, () -> criterion);
+        return holder::get;
+    }
+
+    @Override
+    public Supplier<Holder<ArmorMaterial>> registerArmorMaterial(String id, ArmorMaterial material) {
+        DeferredHolder<ArmorMaterial, ArmorMaterial> holder = ElementalsNeoForge.ARMOR_MATERIALS.register(id, () -> material);
+        return holder::getDelegate;
+    }
+
+    @Override
+    public Supplier<Item> registerItem(String name, Supplier<Item> item) {
+        DeferredHolder<Item, Item> holder = ElementalsNeoForge.ITEMS.register(name, item);
+        return holder::get;
     }
 }

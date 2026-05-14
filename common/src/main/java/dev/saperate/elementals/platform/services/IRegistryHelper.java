@@ -13,7 +13,9 @@ import net.minecraft.core.Holder;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -23,12 +25,14 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 public interface IRegistryHelper {
 
     CreativeModeTab createItemTab();
     
     <T extends BlockEntity> BlockEntityType<T> createBlockEntityType(BlockEntityTypeFactory<T> factory, Block... validBlocks);
+
 
 
     /**
@@ -63,5 +67,11 @@ public interface IRegistryHelper {
     @FunctionalInterface
     interface TriggerHolder<U extends SimpleCriterionTrigger.SimpleInstance, T extends SimpleCriterionTrigger<U>>{
         T get();
+    }
+    Supplier<Holder<ArmorMaterial>> registerArmorMaterial(String id, ArmorMaterial material);
+    Supplier<Item> registerItem(String name, Supplier<Item> item);
+    @FunctionalInterface
+    interface ItemHolder {
+        Item get();
     }
 }

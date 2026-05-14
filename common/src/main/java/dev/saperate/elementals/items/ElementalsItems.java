@@ -19,6 +19,7 @@ import net.minecraft.world.level.block.entity.BannerPattern;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.function.Supplier;
 
 public class ElementalsItems {
 
@@ -30,7 +31,9 @@ public class ElementalsItems {
             .nutrition(-6)
             .build();
 
-
+    public static final ScrollItem SCROLL_ITEM = (ScrollItem) registerItem("scroll",
+            () -> new ScrollItem(new Item.Properties()
+                    .stacksTo(1)));
     public static final Set<Item> EARTH_ARMOR_SET = new HashSet<>();
     public static final EarthArmorItem EARTH_HELMET = (EarthArmorItem) registerItem("earth_helmet",
             new EarthArmorItem(ElementalsArmorMaterial.EARTH_ARMOR, ArmorItem.Type.HELMET, new Item.Properties()));
@@ -51,9 +54,7 @@ public class ElementalsItems {
     public static final MetalArmorItem METAL_BOOTS = (MetalArmorItem) registerItem("metal_boots",
             new MetalArmorItem(ElementalsArmorMaterial.METAL_ARMOR, ArmorItem.Type.BOOTS, new Item.Properties()));
 
-    public static final ScrollItem SCROLL_ITEM = (ScrollItem) registerItem("scroll",
-            new ScrollItem(new Item.Properties()
-                    .stacksTo(1)));
+
 
     public static final FireScrollItem FIRE_SCROLL_ITEM = (FireScrollItem) registerItem("fire_scroll",
             new FireScrollItem(new Item.Properties()
@@ -120,8 +121,13 @@ public class ElementalsItems {
             new BlockItem(ElementalsBlocks.MOON_PLANKS, new Item.Properties()));
     public static final CreativeModeTab ELEMENTALS_TAB = Services.REGISTRY.createItemTab();
 
+    private static Supplier<Item> registerItem(String name, Supplier<Item> item) {
+        Services.REGISTRY.registerItem(name, item);
+        return null;
+    }
+    
     private static Item registerItem(String name, Item item) {
-        return Registry.register(BuiltInRegistries.ITEM, ResourceLocation.fromNamespaceAndPath(Constants.MODID,name), item);
+        return null;
     }
 
     public static void register() {

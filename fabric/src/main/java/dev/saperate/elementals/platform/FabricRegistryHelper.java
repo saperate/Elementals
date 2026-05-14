@@ -36,7 +36,9 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.block.Block;
@@ -47,6 +49,7 @@ import net.minecraft.world.level.storage.loot.entries.LootItem;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 import static dev.saperate.elementals.Elementals.LIGHTNING_PARTICLE_TYPE;
 import static dev.saperate.elementals.Elementals.METAL_SHARD_PARTICLE_TYPE;
@@ -167,6 +170,20 @@ public class FabricRegistryHelper implements IRegistryHelper {
     public <U extends SimpleCriterionTrigger.SimpleInstance, T extends SimpleCriterionTrigger<U>> TriggerHolder<U, T> registerCriterion(String name, T criterion) {
         T trigger = CriteriaTriggers.register(name, criterion);
         return () -> trigger;
+    }
+
+    @Override
+    public Supplier<Holder<ArmorMaterial>> registerArmorMaterial(String id, ArmorMaterial material) {
+        Holder<ArmorMaterial> holder = Registry.registerForHolder(BuiltInRegistries.ARMOR_MATERIAL,
+                ResourceLocation.fromNamespaceAndPath(Constants.MODID, id),
+                material);
+        return () -> holder;
+    }
+
+    @Override
+    public Supplier<Item> registerItem(String name, Supplier<Item> item) {
+        Item holder = Registry.register(BuiltInRegistries.ITEM, ResourceLocation.fromNamespaceAndPath(Constants.MODID,name), item.get());
+        return () -> holder;
     }
 
 }

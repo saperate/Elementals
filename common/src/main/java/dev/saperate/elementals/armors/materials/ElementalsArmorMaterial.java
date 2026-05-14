@@ -1,10 +1,8 @@
 package dev.saperate.elementals.armors.materials;
 
 import dev.saperate.elementals.Constants;
-import dev.saperate.elementals.Elementals;
+import dev.saperate.elementals.platform.Services;
 import net.minecraft.core.Holder;
-import net.minecraft.core.Registry;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -55,8 +53,6 @@ public class ElementalsArmorMaterial {
         );
 
         ArmorMaterial material = new ArmorMaterial(defensePoints, enchantability, equipSound, repairIngredientSupplier, layers, toughness, knockbackResistance);
-        material = Registry.register(BuiltInRegistries.ARMOR_MATERIAL, ResourceLocation.fromNamespaceAndPath(Constants.MODID, id), material);
-
-        return Holder.direct(material);
+        return Services.REGISTRY.registerArmorMaterial(id, material).get();
     }
 }
