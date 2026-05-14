@@ -101,7 +101,7 @@ public class Bender {
             player.addEffect(new MobEffectInstance(ElementalsStatusEffects.STATIONARY.get(),20,0,false,false,true));
         }
 
-        Elementals.HAS_ELEMENT.trigger((ServerPlayer) player);
+        Elementals.HAS_ELEMENT.get().trigger((ServerPlayer) player);
 
         if(holdTime >= 0){
             holdTime++;

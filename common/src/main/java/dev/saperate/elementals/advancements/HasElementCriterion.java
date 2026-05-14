@@ -49,10 +49,6 @@ public class HasElementCriterion extends SimpleCriterionTrigger<HasElementCriter
             this.elementName = elementName;
         }
 
-        public static Criterion<Conditions> any() {
-            return Elementals.HAS_ELEMENT.createCriterion(new Conditions(Optional.empty(), Optional.empty()));
-        }
-
         boolean requirementsMet(Bender bender) {
             if(elementName.isEmpty()){
                 return false;

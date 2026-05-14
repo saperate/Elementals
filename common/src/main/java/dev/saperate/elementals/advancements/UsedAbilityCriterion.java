@@ -49,7 +49,7 @@ public class UsedAbilityCriterion extends SimpleCriterionTrigger<UsedAbilityCrit
         }
 
         public static Criterion<Conditions> any() {
-            return Elementals.USED_ABILITY.createCriterion(new Conditions(Optional.empty(), Optional.empty()));
+            return Elementals.USED_ABILITY.get().createCriterion(new Conditions(Optional.empty(), Optional.empty()));
         }
 
         boolean requirementsMet(String usedAbility) {

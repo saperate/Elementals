@@ -53,7 +53,7 @@ public class AbilityFireIgnite implements Ability {
                 BlockEntity blockEntity = player.level().getBlockEntity(bPos);
 
                 if (blockEntity instanceof AbstractFurnaceBlockEntity furnace){
-                    Elementals.USED_ABILITY.trigger((ServerPlayer) player, "ignite/furnace");
+                    Elementals.USED_ABILITY.get().trigger((ServerPlayer) player, "ignite/furnace");
                     ((FurnaceBlockEntityAccessor) furnace).setBurnTime(hasFlareUp ? 225 : 100);
                     ((FurnaceBlockEntityAccessor) furnace).setFuelTime(hasFlareUp ? 225 : 100);
                 }

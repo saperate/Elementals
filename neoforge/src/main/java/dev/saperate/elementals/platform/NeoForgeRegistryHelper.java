@@ -10,6 +10,8 @@ import dev.saperate.elementals.commands.ElementalsCommand;
 import dev.saperate.elementals.items.ElementalsItems;
 import dev.saperate.elementals.items.WaterPouchItem;
 import dev.saperate.elementals.platform.services.IRegistryHelper;
+import net.minecraft.advancements.CriterionTrigger;
+import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.geom.ModelLayerLocation;
@@ -34,20 +36,15 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.storage.loot.BuiltInLootTables;
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
-import net.neoforged.fml.ModLoadingContext;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
 import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.LootTableLoadEvent;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
-import net.neoforged.neoforge.registries.DeferredRegister;
-import net.neoforged.neoforge.registries.NeoForgeRegistries;
+import net.neoforged.neoforge.registries.DeferredHolder;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Optional;
-
-import static dev.saperate.elementals.Constants.MODID;
 import static dev.saperate.elementals.Elementals.LIGHTNING_PARTICLE_TYPE;
 import static dev.saperate.elementals.Elementals.METAL_SHARD_PARTICLE_TYPE;
 import static dev.saperate.elementals.items.ElementalsItems.*;
@@ -174,5 +171,11 @@ public class NeoForgeRegistryHelper implements IRegistryHelper {
     public @NotNull MobEffectHolder registerEffect(String name, MobEffect effect) {
         Holder<MobEffect> holder = ElementalsNeoForge.MOB_EFFECTS.register(name, () -> effect);
         return () -> holder;
+    }
+
+    @Override
+    public <U extends SimpleCriterionTrigger.SimpleInstance, T extends SimpleCriterionTrigger<U>> TriggerHolder<U,T> registerCriterion(String name, T criterion) {
+        DeferredHolder<CriterionTrigger<?>, T> trigger = ElementalsNeoForge.TRIGGERS.register(name, () -> criterion);
+        return trigger::get;
     }
 }

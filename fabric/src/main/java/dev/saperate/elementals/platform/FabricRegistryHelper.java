@@ -21,6 +21,8 @@ import net.fabricmc.fabric.api.gamerule.v1.GameRuleFactory;
 import net.fabricmc.fabric.api.gamerule.v1.GameRuleRegistry;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.fabricmc.fabric.api.loot.v3.LootTableEvents;
+import net.minecraft.advancements.CriteriaTriggers;
+import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.particle.FlameParticle;
@@ -159,6 +161,12 @@ public class FabricRegistryHelper implements IRegistryHelper {
         Holder<MobEffect> holder = Registry.registerForHolder(BuiltInRegistries.MOB_EFFECT,
                 ResourceLocation.fromNamespaceAndPath(Constants.MODID, name), effect);
         return () -> holder;
+    }
+
+    @Override
+    public <U extends SimpleCriterionTrigger.SimpleInstance, T extends SimpleCriterionTrigger<U>> TriggerHolder<U, T> registerCriterion(String name, T criterion) {
+        T trigger = CriteriaTriggers.register(name, criterion);
+        return () -> trigger;
     }
 
 }

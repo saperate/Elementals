@@ -28,7 +28,6 @@ public class ElementalsItems {
             .alwaysEdible()
             .saturationModifier(-1.2f)
             .nutrition(-6)
-            .effect(new MobEffectInstance(ElementalsStatusEffects.OVERCHARGED.get(),400,0,false,false,true), 1)
             .build();
 
 

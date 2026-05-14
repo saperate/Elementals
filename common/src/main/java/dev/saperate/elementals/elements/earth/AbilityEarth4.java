@@ -40,7 +40,7 @@ public class AbilityEarth4 implements Ability {
                 }
                 return;
             }
-            Elementals.USED_ABILITY.trigger((ServerPlayer) bender.player, "seismic_sense");
+            Elementals.USED_ABILITY.get().trigger((ServerPlayer) bender.player, "seismic_sense");
             bender.player.addEffect(new MobEffectInstance(ElementalsStatusEffects.SEISMIC_SENSE.get(), 2400));
         }
     }

@@ -22,10 +22,10 @@ import dev.saperate.elementals.items.ElementalsDynamicRecipes;
 import dev.saperate.elementals.misc.BlockRestoreManager;
 import dev.saperate.elementals.misc.ElementalsSounds;
 import dev.saperate.elementals.misc.IItemRenderProvider;
-import dev.saperate.elementals.mixin.CriteriaTriggersAccessor;
 import dev.saperate.elementals.mixin.SimpleParticleTypeAccessor;
 import dev.saperate.elementals.network.ElementalsNetworking;
 import dev.saperate.elementals.platform.Services;
+import dev.saperate.elementals.platform.services.IRegistryHelper.TriggerHolder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -38,8 +38,10 @@ import org.slf4j.LoggerFactory;
 
 public class Elementals {
     public static final Logger LOGGER = LoggerFactory.getLogger(Constants.MODID);
-    public static HasElementCriterion HAS_ELEMENT = CriteriaTriggersAccessor.callRegister(HasElementCriterion.getName(), new HasElementCriterion());
-    public static UsedAbilityCriterion USED_ABILITY = CriteriaTriggersAccessor.callRegister(UsedAbilityCriterion.getName(), new UsedAbilityCriterion());
+    public static TriggerHolder<HasElementCriterion.Conditions, HasElementCriterion> HAS_ELEMENT 
+            = Services.REGISTRY.registerCriterion(HasElementCriterion.getName(), new HasElementCriterion());
+    public static TriggerHolder<UsedAbilityCriterion.Conditions, UsedAbilityCriterion> USED_ABILITY 
+            = Services.REGISTRY.registerCriterion(UsedAbilityCriterion.getName(), new UsedAbilityCriterion());
     public static final SimpleParticleType LIGHTNING_PARTICLE_TYPE = SimpleParticleTypeAccessor.callConstructor(false);
     public static final SimpleParticleType METAL_SHARD_PARTICLE_TYPE = SimpleParticleTypeAccessor.callConstructor(false);
     public static IItemRenderProvider GLIDER_ITEM_RENDER_PROVIDER = () -> null;

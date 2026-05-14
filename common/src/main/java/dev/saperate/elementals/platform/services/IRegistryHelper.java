@@ -1,5 +1,9 @@
 package dev.saperate.elementals.platform.services;
 
+import dev.saperate.elementals.advancements.HasElementCriterion;
+import net.minecraft.advancements.CriteriaTriggers;
+import net.minecraft.advancements.CriterionTrigger;
+import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
@@ -25,7 +29,7 @@ public interface IRegistryHelper {
     CreativeModeTab createItemTab();
     
     <T extends BlockEntity> BlockEntityType<T> createBlockEntityType(BlockEntityTypeFactory<T> factory, Block... validBlocks);
-    
+
 
     /**
      * Helper interface for {@link #createBlockEntityType}
@@ -54,5 +58,10 @@ public interface IRegistryHelper {
     @FunctionalInterface
     interface MobEffectHolder {
         Holder<MobEffect> get();
+    }
+    <U extends SimpleCriterionTrigger.SimpleInstance, T extends SimpleCriterionTrigger<U>> TriggerHolder<U,T> registerCriterion(String name, T criterion);
+    @FunctionalInterface
+    interface TriggerHolder<U extends SimpleCriterionTrigger.SimpleInstance, T extends SimpleCriterionTrigger<U>>{
+        T get();
     }
 }

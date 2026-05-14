@@ -1,11 +1,13 @@
 package dev.saperate.elementals.items;
 
 
+import dev.saperate.elementals.effects.ElementalsStatusEffects;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.stats.Stats;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -27,6 +29,7 @@ public class LightningBottleItem extends Item {
         if (user instanceof ServerPlayer serverPlayer) {
             CriteriaTriggers.CONSUME_ITEM.trigger(serverPlayer, stack);
             serverPlayer.awardStat(Stats.ITEM_USED.get(this));
+            serverPlayer.addEffect(new MobEffectInstance(ElementalsStatusEffects.OVERCHARGED.get(),400,0,false,false,true));
         }
 
         if (stack.isEmpty()) {

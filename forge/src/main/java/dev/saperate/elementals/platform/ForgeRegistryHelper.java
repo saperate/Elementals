@@ -10,6 +10,7 @@ import dev.saperate.elementals.commands.ElementalsCommand;
 import dev.saperate.elementals.items.ElementalsItems;
 import dev.saperate.elementals.items.WaterPouchItem;
 import dev.saperate.elementals.platform.services.IRegistryHelper;
+import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.geom.ModelLayerLocation;
@@ -181,5 +182,10 @@ public class ForgeRegistryHelper implements IRegistryHelper {
             }
             return optionalHolder.get();
         };
+    }
+
+    @Override
+    public <U extends SimpleCriterionTrigger.SimpleInstance, T extends SimpleCriterionTrigger<U>> T registerCriterion(String name, T criterion) {
+        return null;
     }
 }
