@@ -16,7 +16,7 @@ public class AbilityLightning1 implements Ability {
             return;
         }
 
-        if (bender.player.isCrouching() && playerData.canUseUpgrade("lightningBolt") && deltaT >= 2000) {
+        if (bender.player.isShiftKeyDown() && playerData.canUseUpgrade("lightningBolt") && deltaT >= 2000) {
             LightningElement.get().getAbility(1).onCall(bender,deltaT);
             return;
         }

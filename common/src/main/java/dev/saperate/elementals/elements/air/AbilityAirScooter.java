@@ -37,7 +37,7 @@ public class AbilityAirScooter implements Ability {
 
     @Override
     public void onTick(Bender bender) {
-        if(bender.player.isCrouching()){
+        if(bender.player.isShiftKeyDown()){
             ((AirScooterEntity)bender.abilityData).discard();
             bender.setCurrAbility(null);
             return;

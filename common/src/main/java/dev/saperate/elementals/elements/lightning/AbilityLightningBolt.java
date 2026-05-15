@@ -63,7 +63,7 @@ public class AbilityLightningBolt implements Ability {
 
     @Override
     public void onTick(Bender bender) {
-        if(!bender.player.isCrouching()){
+        if(!bender.player.isShiftKeyDown()){
             onRemove(bender);
         }
         bender.player.addEffect(new MobEffectInstance(ElementalsStatusEffects.STATIONARY.get(),20, 0, false, false, false));

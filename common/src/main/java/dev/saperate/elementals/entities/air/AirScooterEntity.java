@@ -67,7 +67,7 @@ public class AirScooterEntity extends AbstractElementalsEntity<Player> {
             return;
         }
 
-        if (isOnFire() || player.isCrouching()) {
+        if (isOnFire() || player.isShiftKeyDown()) {
             player.setShiftKeyDown(false);
             discard();
             return;

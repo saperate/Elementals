@@ -35,7 +35,6 @@ public class WaterBladeEntityRenderer extends EntityRenderer<WaterBladeEntity> i
         }
         float rot = (float) (System.currentTimeMillis() - firstTime);
         matrices.pushPose();
-        matrices.translate(0, -1.42125f, 0);
 
         RenderSystem.setShader(GameRenderer::getPositionColorShader);
         RenderSystem.enableDepthTest();

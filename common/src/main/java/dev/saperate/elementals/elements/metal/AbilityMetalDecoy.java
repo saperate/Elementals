@@ -132,7 +132,7 @@ public class AbilityMetalDecoy implements Ability {
             decoy.move(MoverType.SELF, decoy.getDeltaMovement());
 
         }
-        if (player.isCrouching() && decoy.onGround()) {
+        if (player.isShiftKeyDown() && decoy.onGround()) {
             decoy.setDeltaMovement(0, 0.5, 0);
             decoy.move(MoverType.SELF, decoy.getDeltaMovement());
         }

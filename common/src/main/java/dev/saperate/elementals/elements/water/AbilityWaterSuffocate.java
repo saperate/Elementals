@@ -75,7 +75,7 @@ public class AbilityWaterSuffocate implements Ability {
                 .getOwner().position().subtract(bender.player.position()).length();
 
 
-        if (!bender.player.isCrouching()
+        if (!bender.player.isShiftKeyDown()
                 || distance > 15) {
             onRemove(bender);
         }

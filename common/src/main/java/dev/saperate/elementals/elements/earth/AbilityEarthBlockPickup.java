@@ -66,7 +66,7 @@ public class AbilityEarthBlockPickup implements Ability {
 
         EarthBlockEntity blockEntity = (EarthBlockEntity) bender.abilityData;
         onRemove(bender);
-        if (blockEntity == null || !PlayerData.get(player).canUseUpgrade("earthBlockShrapnel") || !player.isCrouching()) {
+        if (blockEntity == null || !PlayerData.get(player).canUseUpgrade("earthBlockShrapnel") || !player.isShiftKeyDown()) {
             return;
         }
         PlayerData plrData = PlayerData.get(bender.player);

@@ -118,7 +118,7 @@ public class AbilityEarthWall implements Ability {
         }
 
         for (EarthBlockEntity entity : entities){
-            if((!canUseTimer && bender.player.isCrouching()) || !canUseTimer){
+            if((!canUseTimer && bender.player.isShiftKeyDown()) || !canUseTimer){
                 entity.setControlled(false);
             }else {
                 entity.setShiftToFreeze(false);

@@ -40,7 +40,7 @@ public class AbilityWaterSurf implements Ability {
             return;
         }
 
-        if(bender.player.isCrouching()){
+        if(bender.player.isShiftKeyDown()){
             onRemove(bender);
         }
 

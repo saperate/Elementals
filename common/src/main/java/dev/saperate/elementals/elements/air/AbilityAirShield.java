@@ -40,7 +40,7 @@ public class AbilityAirShield implements Ability {
             return;
         }
         bender.player.addEffect(new MobEffectInstance(ElementalsStatusEffects.SEISMIC_SENSE.get(),1,1,false,false,false));
-        if(!bender.player.isCrouching()){
+        if(!bender.player.isShiftKeyDown()){
             onRemove(bender);
         }
     }

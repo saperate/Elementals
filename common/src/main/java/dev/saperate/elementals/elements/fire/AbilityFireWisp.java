@@ -17,7 +17,7 @@ public class AbilityFireWisp implements Ability {
         Bender bender = originalBender;
         originalBender.setCurrAbility(null);
 
-        if(originalBender.player.isCrouching()){
+        if(originalBender.player.isShiftKeyDown()){
             Player other = (Player) SapsUtils.entityFromHitResult(
                     raycastFull(originalBender.player,5,true, entity -> entity instanceof Player));
             if(other != null){

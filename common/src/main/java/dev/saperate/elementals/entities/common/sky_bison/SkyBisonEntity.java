@@ -109,7 +109,7 @@ public class SkyBisonEntity extends Animal implements GeoEntity {
     @Override
     public InteractionResult mobInteract(Player player, InteractionHand hand) {
         ItemStack handStack = player.getItemInHand(hand);
-        if(player.isCrouching()) {
+        if(player.isShiftKeyDown()) {
             if (handStack.getItem() == Items.SADDLE) {
                 setSaddle(handStack);
                 player.setItemInHand(hand, ItemStack.EMPTY);

@@ -23,7 +23,7 @@ public class KeyCycleBending extends KeyInput {
         Services.EVENTS.onClientTick(client -> {
             if (keyBinding.isDown() && !lastFrameWasHolding) {
                 lastFrameWasHolding = true;
-                boolean back = client.player != null && client.player.isCrouching();
+                boolean back = client.player != null && client.player.isShiftKeyDown();
                 Network.getNetworkHandler().sendToServer(new CycleBendingPacket(back));
             } else if (!keyBinding.isDown() && lastFrameWasHolding) {
                 lastFrameWasHolding = false;

@@ -74,7 +74,7 @@ public class AbilityMetalCable implements Ability {
         player.stopFallFlying();
 
         MetalCableEntity entity = getEntity(data);
-        if (player.isCrouching() && bender.plrData.canUseUpgrade("metalCablePrecisionI")) {
+        if (player.isShiftKeyDown() && bender.plrData.canUseUpgrade("metalCablePrecisionI")) {
             entity.setDistance((float) Math.max(Math.min(entity.getDistance() + (pullMode(data) ? -0.1 : 0.1), 20), 0.1));
         }
     }

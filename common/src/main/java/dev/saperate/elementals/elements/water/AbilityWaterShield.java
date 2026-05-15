@@ -45,7 +45,7 @@ public class AbilityWaterShield implements Ability {
             return;
         }
         bender.player.addEffect(new MobEffectInstance(ElementalsStatusEffects.STATIONARY.get(),1,1,false,false,false));
-        if(!bender.player.isCrouching()){
+        if(!bender.player.isShiftKeyDown()){
             onRemove(bender);
         }
     }

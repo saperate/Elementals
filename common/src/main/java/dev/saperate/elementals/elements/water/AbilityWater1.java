@@ -14,7 +14,7 @@ public class AbilityWater1 implements Ability {
             return;
         }
 
-        if (bender.player.isCrouching()) {
+        if (bender.player.isShiftKeyDown()) {
             if ((playerData.canUseUpgrade("waterShieldHelmetPath")
                     || playerData.canUseUpgrade("waterShieldSuffocatePath"))  && deltaT >= 1000) {
                 WaterElement.get().getAbility(5).onCall(bender, deltaT);

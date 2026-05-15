@@ -97,7 +97,7 @@ public class AbilityFire3 implements Ability {
             } else if (bender.abilityData.equals(false)) {
                 bender.abilityData = player.getRootVehicle().onGround();
                 count = 8;
-                if (player.isCrouching()) {
+                if (player.isShiftKeyDown()) {
                     //bomb jump upgrade will enable it to be canceled
                     //bender.setCurrAbility(null);
                 }

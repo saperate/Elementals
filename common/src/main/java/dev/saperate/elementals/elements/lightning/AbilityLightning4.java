@@ -16,7 +16,7 @@ public class AbilityLightning4 implements Ability {
             return;
         }
 
-        if (deltaT >= 3000 && player.isCrouching()) {
+        if (deltaT >= 3000 && player.isShiftKeyDown()) {
             LightningElement.get().getAbility(8).onCall(bender, deltaT);
             return;
         }

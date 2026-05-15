@@ -81,7 +81,7 @@ public class AbilityEarthTrap implements Ability {
         victim.addEffect(new MobEffectInstance(ElementalsStatusEffects.STATIONARY.get(), 60, 1, false, false, true));
 
 
-        if (!bender.player.isCrouching()
+        if (!bender.player.isShiftKeyDown()
                 || victim.isRemoved()
                 || distance > 15) {
             block.discard();

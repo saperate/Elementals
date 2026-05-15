@@ -49,7 +49,7 @@ public class AbilityBloodControl implements Ability {
             bender.setCurrAbility(null);
             return;
         }
-        float power = player.isCrouching() ? -3 : 3;
+        float power = player.isShiftKeyDown() ? -3 : 3;
         if(bender.plrData.canUseUpgrade("bloodControlPowerI")){
             power *= 1.5f;
         }
@@ -70,7 +70,7 @@ public class AbilityBloodControl implements Ability {
 
     @Override
     public void onMiddleClick(Bender bender, boolean started) {
-        if(bender.player.isCrouching()){
+        if(bender.player.isShiftKeyDown()){
             decrementDistance(bender);
         }else {
             incrementDistance(bender);

@@ -70,7 +70,7 @@ public class NeoForgeRegistryHelper implements IRegistryHelper {
     @Override
     public CreativeModeTab createItemTab() {
         return CreativeModeTab.builder()
-                .icon(() -> new ItemStack((ItemLike) SCROLL_ITEM))
+                .icon(() -> new ItemStack(SCROLL_ITEM::get))
                 .title(Component.literal("Elementals"))
                 .displayItems((context, entries) -> {
                     entries.accept(SCROLL_ITEM.get());

@@ -13,7 +13,7 @@ public class AbilityEarth1 implements Ability {
             return;
         }
 
-        if (bender.player.isCrouching()) {
+        if (bender.player.isShiftKeyDown()) {
             if (playerData.canUseUpgrade("earthWall")) {
                 EarthElement.get().getAbility(2).onCall(bender,deltaT);
                 return;

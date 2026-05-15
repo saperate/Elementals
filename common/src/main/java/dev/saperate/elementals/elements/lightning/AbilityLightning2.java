@@ -25,7 +25,7 @@ public class AbilityLightning2 implements Ability {
             LightningElement.get().getAbility(5).onCall(bender, deltaT);
             return;
         }
-        if (player.isCrouching() && playerData.canUseUpgrade("lightningStaticAura")) {
+        if (player.isShiftKeyDown() && playerData.canUseUpgrade("lightningStaticAura")) {
             if (safeHasStatusEffect(ElementalsStatusEffects.STATIC_AURA.get(), player)) {
                 player.removeEffect(ElementalsStatusEffects.STATIC_AURA.get());
             } else {

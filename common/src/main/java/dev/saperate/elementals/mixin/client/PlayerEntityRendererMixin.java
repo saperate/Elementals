@@ -14,7 +14,7 @@ public abstract class PlayerEntityRendererMixin {
 	private void modelPose(AbstractClientPlayer player, CallbackInfo ci) {
 		//Quick dirty bug fix
 		PlayerRenderer plrRenderer = ((PlayerRenderer)(Object) this);
-		plrRenderer.getModel().crouching = player.isCrouching();
+		plrRenderer.getModel().crouching = player.isShiftKeyDown();
 	}
 
 
