@@ -6,9 +6,11 @@ import dev.saperate.elementals.effects.ElementalsStatusEffects;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ArmorItem;
@@ -49,8 +51,8 @@ public class MetalArmorItem extends ArmorItem implements GeoItem {
             return;
         }
         if(entity instanceof LivingEntity living){//Not inlining since i might need that later
-            if(entity instanceof Player player){
-                player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN,60, 3, false, false, false));
+            if(entity instanceof ServerPlayer player){
+                player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN,60, 1, false, false, false));
                 player.addEffect(new MobEffectInstance(ElementalsStatusEffects.SEISMIC_SENSE.get(),120,0, false, false, false));
                 player.addEffect(new MobEffectInstance(ElementalsStatusEffects.DENSE.get(),120,10, false, false, false));
             }

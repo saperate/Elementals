@@ -36,7 +36,7 @@ public class DecoyPlayerEntityRenderer extends LivingEntityRenderer<DecoyPlayerE
     @Override
     public void render(DecoyPlayerEntity decoy, float f, float g, PoseStack matrixStack, MultiBufferSource vertexConsumerProvider, int i) {
         super.render(decoy, f, g, matrixStack, vertexConsumerProvider, i);
-        if(decoy.getOwner().equals(ClientBender.get().player) && decoy.getFocusCamera()){
+        if(ClientBender.get().player.equals(decoy.getOwner()) && decoy.getFocusCamera()){
             ClientBender.get().ClientAbilityData = decoy;
         }
     }

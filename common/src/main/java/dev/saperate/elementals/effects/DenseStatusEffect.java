@@ -18,7 +18,6 @@ public class DenseStatusEffect extends MobEffect {
                 MobEffectCategory.NEUTRAL,
                 0x454545);
         addAttributeModifier(Attributes.STEP_HEIGHT, ResourceLocation.fromNamespaceAndPath(Constants.MODID,"dense_step"),0.4f, AttributeModifier.Operation.ADD_VALUE);
-        addAttributeModifier(Attributes.MOVEMENT_SPEED, ResourceLocation.fromNamespaceAndPath(Constants.MODID,"dense_speed"),-0.20f, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
         addAttributeModifier(Attributes.JUMP_STRENGTH, ResourceLocation.fromNamespaceAndPath(Constants.MODID,"dense_jump"),-0.5f, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
 
     }
@@ -49,7 +48,7 @@ public class DenseStatusEffect extends MobEffect {
             return true;
         }
 
-        entity.setDeltaMovement(new Vec3(entity.getDeltaMovement().x * 0.90, currV, entity.getDeltaMovement().z * 0.90));
+        entity.setDeltaMovement(new Vec3(entity.getDeltaMovement().x * 0.5, currV, entity.getDeltaMovement().z * 0.5));
         return true;
     }
 

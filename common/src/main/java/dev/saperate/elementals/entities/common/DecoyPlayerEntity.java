@@ -74,13 +74,9 @@ public class DecoyPlayerEntity extends PathfinderMob {
         } else if (!this.isNoGravity()) {
             this.setDeltaMovement(this.getDeltaMovement().add(0.0, -0.04, 0.0));
         }
-        if (this.level().isClientSide) {
-            this.noPhysics = false;
-        } else {
-            boolean bl = this.noPhysics = !this.level().noCollision(this, this.getBoundingBox().contract(1.0E-7,1.0E-7,1.0E-7));
-            if (this.noPhysics) {
-                this.moveTowardsClosestSpace(this.getX(), (this.getBoundingBox().minY + this.getBoundingBox().maxY) / 2.0, this.getZ());
-            }
+        noPhysics  =  !this.level().noCollision(this, this.getBoundingBox().contract(1.0E-7, 1.0E-7, 1.0E-7));
+        if (noPhysics) {
+            setDeltaMovement(Vec3.ZERO);
         }
         if (!this.onGround() || this.getDeltaMovement().horizontalDistanceSqr() > (double) 1.0E-5f || (this.tickCount + this.getId()) % 4 == 0) {
             this.move(MoverType.SELF, this.getDeltaMovement());

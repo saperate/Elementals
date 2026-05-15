@@ -83,13 +83,13 @@ public class PlayerData {
      * Changes the status of an upgrade between on and off. 
      * Disabled, the upgrade will act as if it was not bought
      * It takes into account exclusive upgrades
-     * Does nothing if it is missing
+     * Does nothing if it is missing or if the parent is disabled (or missing)
      * @param upgrade The upgrade to change the status of
      * @param val True if enabling, False if disabling
      */
     public void setUpgrade(Upgrade upgrade, boolean val){
         if (upgrades.containsKey(upgrade)) {
-            if(upgrades.get(upgrade.parent) != null && !upgrades.get(upgrade.parent) && upgrade.parent.parent != null)
+            if(!upgrades.getOrDefault(upgrade.parent, false) && upgrade.parent.parent != null)
                 return;
             
             upgrades.put(upgrade, val);

@@ -118,6 +118,8 @@ public class MetalBulletEntity extends AbstractElementalsEntity<Player> {
 
     @Override
     public void onClientRemoval() {
+        if(!level().isClientSide)
+            return;
         summonParticles(this, random, METAL_SHARD_PARTICLE_TYPE, 
                 0.1f, 5);
         this.level().playSound(this, getOnPos(),

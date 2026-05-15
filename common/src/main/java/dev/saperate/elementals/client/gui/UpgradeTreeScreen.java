@@ -271,7 +271,7 @@ public class UpgradeTreeScreen extends Screen {
 
     public void drawUpgradeButton(int x1, int y1, GuiGraphics context, Upgrade upgrade) {
         String icon = Component.translatable("upgrade.elementals." + upgrade.name + ".icon").getString();
-        float color = bender.upgrades.containsKey(upgrade) ? 1 : 0.25f;
+        float color = bender.upgrades.getOrDefault(upgrade, false) ? 1 : 0.25f;
         boolean hasIcon = !icon.equals("upgrade.elementals." + upgrade.name + ".icon");
 
         drawTexture(context, ResourceLocation.fromNamespaceAndPath(MODID, "textures/gui/" + ClientBender.get().getElement().getName().toLowerCase() + "_" + (hasIcon ? "" : "plain_") + "upgrade_button.png"),
