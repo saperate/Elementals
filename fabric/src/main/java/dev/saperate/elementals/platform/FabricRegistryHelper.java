@@ -118,7 +118,7 @@ public class FabricRegistryHelper implements IRegistryHelper {
     @Override
     public void registerClientParticles() {
         ParticleFactoryRegistry.getInstance().register(LIGHTNING_PARTICLE_TYPE, FlameParticle.Provider::new);
-        ParticleFactoryRegistry.getInstance().register(METAL_SHARD_PARTICLE_TYPE, MetalShardParticle.Factory::new);
+        ParticleFactoryRegistry.getInstance().register(METAL_SHARD_PARTICLE_TYPE, MetalShardParticle.Provider::new);
     }
 
     @Override

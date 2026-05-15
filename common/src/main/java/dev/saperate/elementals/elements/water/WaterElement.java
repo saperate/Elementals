@@ -233,7 +233,7 @@ public class WaterElement extends Element {
                 player.getInventory().removeItem(stack);
                 player.getInventory().add(Items.GLASS_BOTTLE.getDefaultInstance());
                 return true;
-            } else if (stack.getItem().equals(ElementalsItems.WATER_POUCH_ITEM)) {
+            } else if (stack.is(ElementalsItems.WATER_POUCH_ITEM.get())) {
                 WaterPouchItem item = (WaterPouchItem) stack.getItem();
                 return item.emptyPouch(stack,1);
             }
