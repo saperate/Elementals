@@ -1,0 +1,14 @@
+{
+  "structures": [
+    {
+      "structure": "elementals:witch_stake",
+      "weight": 1
+    }
+  ],
+  "placement": {
+    "type": "minecraft:random_spread",
+    "salt": 904068927,
+    "spacing": 8,
+    "separation": 4
+  }
+}
