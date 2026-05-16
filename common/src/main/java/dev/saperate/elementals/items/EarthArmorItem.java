@@ -34,7 +34,7 @@ public class EarthArmorItem extends ArmorItem {
     @Override
     public void inventoryTick(ItemStack stack, Level world, Entity entity, int slot, boolean selected) {
         super.inventoryTick(stack, world, entity, slot, selected);
-        if (slot != 0) {
+        if (stack.is(ElementalsItems.EARTH_CHESTPLATE.get())) {
             return;
         }
         if(entity instanceof LivingEntity living){

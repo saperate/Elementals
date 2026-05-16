@@ -47,7 +47,7 @@ public class MetalArmorItem extends ArmorItem implements GeoItem {
     @Override
     public void inventoryTick(ItemStack stack, Level level, Entity entity, int slot, boolean selected) {
         super.inventoryTick(stack, level, entity, slot, selected);
-        if(slot != 0){
+        if(stack.is(ElementalsItems.METAL_CHESTPLATE.get())){
             return;
         }
         if(entity instanceof LivingEntity living){//Not inlining since i might need that later

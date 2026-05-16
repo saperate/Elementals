@@ -139,7 +139,7 @@ public class EarthElement extends Element {
                     ));
                 }
             }
-            return new Object[]{hit.getBlockPos(), blockState, hit.getBlockPos(), hit.getDirection()};
+            return new Object[]{hit.getLocation(), blockState, hit.getBlockPos(), hit.getDirection()};
         }
 
 

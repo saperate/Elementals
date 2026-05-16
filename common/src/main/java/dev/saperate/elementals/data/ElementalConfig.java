@@ -97,7 +97,7 @@ public final class ElementalConfig {
             for (Item item : METAL_COST_VALUE.keySet()) {
                 JsonObject entry = new JsonObject();
                 entry.addProperty("ITEM",
-                        BuiltInRegistries.ITEM.getResourceKey(item).toString());
+                        BuiltInRegistries.ITEM.getResourceKey(item).get().location().toString());
                 entry.addProperty("VALUE",
                         METAL_COST_VALUE.get(item));
                 metalCostValue.add(entry);
@@ -109,9 +109,9 @@ public final class ElementalConfig {
             for (Item item : METAL_LOWER_VALUE_STACK.keySet()) {
                 JsonObject entry = new JsonObject();
                 entry.addProperty("ITEM_BEFORE", 
-                        BuiltInRegistries.ITEM.getResourceKey(item).toString());
+                        BuiltInRegistries.ITEM.getResourceKey(item).get().location().toString());
                 entry.addProperty("ITEM_AFTER",
-                        BuiltInRegistries.ITEM.getResourceKey(METAL_LOWER_VALUE_STACK.get(item)).toString());
+                        BuiltInRegistries.ITEM.getResourceKey(METAL_LOWER_VALUE_STACK.get(item)).get().location().toString());
                 metalLowerValueStack.add(entry);
             }
             root.add("METAL_LOWER_VALUE_STACK", metalLowerValueStack);
