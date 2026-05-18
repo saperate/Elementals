@@ -72,7 +72,7 @@ public class AbilityBloodShield implements Ability {
             Entity vehicle = entity.getRootVehicle();
 
             vehicle.addDeltaMovement(new Vec3(velocity.x, velocity.y, velocity.z));
-            vehicle.hasImpulse = true;
+            vehicle.hurtMarked = true;
             vehicle.move(MoverType.PLAYER, vehicle.getDeltaMovement());
         }
     }

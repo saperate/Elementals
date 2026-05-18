@@ -63,7 +63,7 @@ public class AbilityBloodControl implements Ability {
         vehicle.setDeltaMovement(velocity.x,
                 velocity.y,
                 velocity.z);
-        vehicle.hasImpulse = true;
+        vehicle.hurtMarked = true;
         vehicle.move(MoverType.PLAYER, vehicle.getDeltaMovement());
         bender.setCurrAbility(null);
     }
@@ -111,7 +111,7 @@ public class AbilityBloodControl implements Ability {
         }
 
         living.addDeltaMovement(new Vec3(direction.x, direction.y, direction.z));
-        living.hasImpulse = true;
+        living.hurtMarked = true;
         living.move(MoverType.PLAYER, living.getDeltaMovement());
     }
 

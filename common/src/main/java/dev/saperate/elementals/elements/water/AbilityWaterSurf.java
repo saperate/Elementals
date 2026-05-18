@@ -91,7 +91,7 @@ public class AbilityWaterSurf implements Ability {
                 .subtract(player.getEyePosition()).multiply(1,yMult,1)
                 .normalize().scale(power).toVector3f();
         player.setDeltaMovement(velocity.x, velocity.y, velocity.z);
-        player.hasImpulse = true;
+        player.hurtMarked = true;
         player.move(MoverType.PLAYER, player.getDeltaMovement());
         bender.abilityData = true;
     }

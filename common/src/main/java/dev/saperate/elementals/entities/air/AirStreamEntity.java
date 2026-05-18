@@ -105,7 +105,7 @@ public class AirStreamEntity extends AbstractElementalsEntity<Player> {
         entity.hurt(damageSources().playerAttack(owner), damage * ElementalConfig.get().BENDING_DAMAGE_MULTIPLIER);
         entity.addDeltaMovement(this.getDeltaMovement().scale(1.2f));
         entity.move(MoverType.SELF, entity.getDeltaMovement());
-        entity.hasImpulse = true;
+        entity.hurtMarked = true;
         remove();
         this.level().playSound(this, getOnPos(), WIND_BURST_SOUND_EVENT, SoundSource.BLOCKS, 1, (1.0f + (this.level().random.nextFloat() - this.level().random.nextFloat()) * 0.2f) * 0.7f);
     }

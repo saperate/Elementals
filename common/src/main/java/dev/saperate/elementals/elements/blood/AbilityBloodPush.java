@@ -43,7 +43,7 @@ public class AbilityBloodPush implements Ability {
             vehicle.setDeltaMovement(velocity.x,
                     velocity.y,
                     velocity.z);
-            vehicle.hasImpulse = true;
+            vehicle.hurtMarked = true;
             vehicle.move(MoverType.PLAYER, vehicle.getDeltaMovement());
 
         }

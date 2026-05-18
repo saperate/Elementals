@@ -45,7 +45,6 @@ public class AirTornadoEntity extends AbstractElementalsEntity<Player> {
     @Override
     public void tick() {
         super.tick();
-        System.out.println("asdf");
         if (random.nextInt(0, 40) == 6) {
             summonParticles(this, random,
                     ParticleTypes.POOF,
@@ -88,7 +87,7 @@ public class AirTornadoEntity extends AbstractElementalsEntity<Player> {
         }
         entity.hurt(this.damageSources().playerAttack((Player) getOwner()), 5 * ElementalConfig.get().BENDING_DAMAGE_MULTIPLIER);//TODO maybe add a debris upgrade for more dmg
         entity.addDeltaMovement(new Vec3(0, 0.50f, 0));
-        entity.hasImpulse = true;
+        entity.hurtMarked = true;
         entity.move(MoverType.SELF, entity.getDeltaMovement());
     }
 

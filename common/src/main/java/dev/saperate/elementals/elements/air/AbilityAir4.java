@@ -127,7 +127,7 @@ public class AbilityAir4 implements Ability {
 
             bender.player.addDeltaMovement(new Vec3(direction.x,direction.y,direction.z));
             bender.player.move(MoverType.SELF, bender.player.getDeltaMovement());
-            bender.player.hasImpulse = true;
+            bender.player.hurtMarked = true;
             
         }
     }

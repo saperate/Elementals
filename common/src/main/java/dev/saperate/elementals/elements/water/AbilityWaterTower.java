@@ -35,7 +35,7 @@ public class AbilityWaterTower implements Ability {
 
             if (player.isInWaterOrRain()) {
                 player.addDeltaMovement(new Vec3(0, 1, 0));
-                player.hasImpulse = true; //TODO Verify this works
+                player.hurtMarked = true; //TODO Verify this works
                 player.move(MoverType.PLAYER, player.getDeltaMovement());
             }
 

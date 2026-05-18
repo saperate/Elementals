@@ -155,7 +155,7 @@ public class EarthBlockEntity extends AbstractElementalsEntity<Player> {
             entity.fallDistance = 0;
         }
         entity.setDeltaMovement(this.getDeltaMovement().scale(1.2f));
-        entity.hasImpulse = true;
+        entity.hurtMarked = true;
         entity.move(MoverType.SELF, entity.getDeltaMovement());
     }
 
@@ -165,7 +165,7 @@ public class EarthBlockEntity extends AbstractElementalsEntity<Player> {
         entity.hurt(this.damageSources().playerAttack((Player) getOwner()), getDamage() * ElementalConfig.get().BENDING_DAMAGE_MULTIPLIER);
         entity.addDeltaMovement(this.getDeltaMovement().scale(0.5));
         entity.move(MoverType.SELF, entity.getDeltaMovement());
-        entity.hasImpulse = true;
+        entity.hurtMarked = true;
         discard();
     }
 

@@ -91,7 +91,7 @@ public class AbilityAirGust implements Ability {
             if(player.getDeltaMovement().y <= -0.020f){
                 player.fallDistance = 0;
             }
-            player.hasImpulse = true;
+            player.hurtMarked = true;
 
 
 

@@ -92,9 +92,9 @@ public class DecoyPlayerEntity extends PathfinderMob {
                 }
             }
         }
-        this.hasImpulse |= this.updateInWaterStateAndDoFluidPushing();
+        this.hurtMarked |= this.updateInWaterStateAndDoFluidPushing();
         if (!this.level().isClientSide && this.getDeltaMovement().subtract(vec3d).lengthSqr() > 0.01) {
-            this.hasImpulse = true;
+            this.hurtMarked = true;
         }
     }
     
