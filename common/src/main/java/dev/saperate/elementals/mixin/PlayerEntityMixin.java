@@ -1,42 +1,41 @@
 package dev.saperate.elementals.mixin;
 
-import com.mojang.datafixers.util.Either;
 import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.effects.ElementalsStatusEffects;
 import dev.saperate.elementals.elements.metal.AbilityMetalDecoy;
 import dev.saperate.elementals.entities.earth.EarthBlockEntity;
+import dev.saperate.elementals.items.ElementalsItems;
 import dev.saperate.elementals.items.GliderItem;
 import dev.saperate.elementals.utils.SapsUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.util.Unit;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.List;
-import java.util.OptionalInt;
 
 import static dev.saperate.elementals.utils.SapsUtils.safeHasStatusEffect;
 
 @Mixin(Player.class)
 public abstract class PlayerEntityMixin {
-    private boolean gliderStartedGlidingState = false; 
-    
     @Shadow
     public abstract void startFallFlying();
 
-    @Shadow public abstract void stopFallFlying();
+    @Shadow
+    public abstract void stopFallFlying();
 
     @Inject(at = @At("HEAD"), method = "causeFallDamage", cancellable = true)
     private void fall(float fallDistance, float damageMultiplier, DamageSource damageSource, CallbackInfoReturnable<Boolean> cir) {
@@ -50,7 +49,7 @@ public abstract class PlayerEntityMixin {
             cir.cancel();
         }
     }
-    
+
 
     @Inject(at = @At("TAIL"), method = "tick")
     private void tick(CallbackInfo ci) {
@@ -64,11 +63,11 @@ public abstract class PlayerEntityMixin {
                 player.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 21, 0, false, false, false));
             }
         }
-        
+
         if (player.level().isClientSide) { // Below is serverside only
             return;
         }
-        
+
         Bender bender = Bender.getBender((ServerPlayer) player);
         bender.tick();
         if (bender.castTime != null) {
@@ -89,5 +88,18 @@ public abstract class PlayerEntityMixin {
         }
     }
 
-    
+    //We inject right before minecraft checks if its an elytra, 
+    // that way we still get the vanilla check + any mixins that may have come before
+    @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;getItemBySlot(Lnet/minecraft/world/entity/EquipmentSlot;)Lnet/minecraft/world/item/ItemStack;"),
+            method = "tryToStartFallFlying", cancellable = true)
+    private void tryFallFlyingGlider(CallbackInfoReturnable<Boolean> cir) {
+        Player player = ((Player) (Object) this);
+        ItemStack stack = SapsUtils.getFirstItemOfTypeInHands(player, ElementalsItems.GLIDER_ITEM.get());
+        if (!stack.isEmpty()
+                && ElementalsItems.GLIDER_ITEM.get().getState(stack) == GliderItem.GliderStates.OPEN) {
+            this.startFallFlying();
+            cir.setReturnValue(true);
+            cir.cancel();
+        }
+    }
 }

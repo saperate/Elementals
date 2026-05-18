@@ -24,7 +24,6 @@
     "client.HeldItemRendererMixin",
     "client.LivingEntityRendererMixin",
     "client.MinecraftClientMixin",
-    "client.ModelLayersAccessor",
     "client.MouseMixin",
     "client.OverlayMixin",
     "client.PlayerEntityRendererMixin",

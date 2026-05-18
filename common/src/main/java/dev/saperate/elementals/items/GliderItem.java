@@ -1,12 +1,14 @@
 package dev.saperate.elementals.items;
 
 import dev.saperate.elementals.Elementals;
+import dev.saperate.elementals.mixin.ElementalsLivingEntityAccessor;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.*;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -47,16 +49,16 @@ public class GliderItem extends Item implements GeoItem {
             switch (getState(stack)) { //Handles the switch between open and closed.
                 case OPEN -> {
                     setState(stack, GliderStates.CLOSED, (ServerLevel) level);
-                    
-                    triggerAnim(user,GeoItem.getOrAssignId(stack, (ServerLevel) level),
-                            "controller","close"
+
+                    triggerAnim(user, GeoItem.getOrAssignId(stack, (ServerLevel) level),
+                            "controller", "close"
                     );
                 }
                 case CLOSED -> {
                     setState(stack, GliderStates.OPEN, (ServerLevel) level);
 
-                    triggerAnim(user,GeoItem.getOrAssignId(stack, (ServerLevel) level),
-                            "controller","open"
+                    triggerAnim(user, GeoItem.getOrAssignId(stack, (ServerLevel) level),
+                            "controller", "open"
                     );
                 }
                 default -> {
@@ -78,7 +80,7 @@ public class GliderItem extends Item implements GeoItem {
     private PlayState animationPredicate(AnimationState<GliderItem> animationState) {
         ItemStack stack = animationState.getData(DataTickets.ITEMSTACK);
         GliderStates gliderState = getState(stack);
-        
+
         switch (gliderState) {
             case OPEN -> animationState.setAnimation(OPENED_ANIM);
             case CLOSED -> animationState.setAnimation(CLOSED_ANIM);
@@ -115,23 +117,23 @@ public class GliderItem extends Item implements GeoItem {
     public void setState(ItemStack stack, GliderStates state, ServerLevel world) {
         CustomData component = stack.get(DataComponents.CUSTOM_DATA);
         CompoundTag data;
-        if(component != null){
+        if (component != null) {
             data = component.copyTag();
-        }else{
+        } else {
             data = new CompoundTag();
         }
         data.putString("state", state.id);
         stack.set(DataComponents.CUSTOM_DATA, CustomData.of(data));
         updateStateChangeTick(stack, world);
     }
-    
+
 
     private void updateStateChangeTick(ItemStack stack, Level level) {
         CustomData component = stack.get(DataComponents.CUSTOM_DATA);
         CompoundTag data;
-        if(component != null){
+        if (component != null) {
             data = component.copyTag();
-        }else{
+        } else {
             data = new CompoundTag();
         }
         data.putDouble("tickAtStateChange", level.getGameTime());
@@ -145,7 +147,7 @@ public class GliderItem extends Item implements GeoItem {
         }
         return Math.max(world.getGameTime() - customData.copyTag().getDouble("tickAtStateChange"), 0);
     }
-    
+
 
     public enum GliderStates {
         OPEN("open"),
