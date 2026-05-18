@@ -21,12 +21,12 @@ public class AbilityAirTornado implements Ability {
 
         AirTornadoEntity entity = new AirTornadoEntity(player.level(), player, player.getX(), player.getY(), player.getZ());
         PlayerData plrData = PlayerData.get(player);
-        float speed = 0.01f;
+        float speed = 0.02f;
 
         if (plrData.canUseUpgrade("airTornadoSpeedII")) {
-            speed = 0.05f;
+            speed = 0.1f;
         } else if (plrData.canUseUpgrade("airTornadoSpeedI")) {
-            speed = 0.02f;
+            speed = 0.05f;
         }
         entity.setSpeed(speed);
         entity.setControlled(true);
@@ -37,22 +37,7 @@ public class AbilityAirTornado implements Ability {
 
         bender.setCurrAbility(this);
     }
-
-    @Override
-    public void onLeftClick(Bender bender, boolean started) {
-
-    }
-
-    @Override
-    public void onMiddleClick(Bender bender, boolean started) {
-
-    }
-
-    @Override
-    public void onRightClick(Bender bender, boolean started) {
-
-    }
-
+    
     @Override
     public void onTick(Bender bender) {
         if (!bender.reduceChi(0.1f)) {
@@ -76,9 +61,8 @@ public class AbilityAirTornado implements Ability {
             return;
         }
         entity.setControlled(false);
-        entity.setDeltaMovement(bender.player, bender.player.getXRot(), bender.player.getYRot(), 0, 0.2f, 0);
+        entity.setDeltaMovement(bender.player, bender.player.getXRot(), bender.player.getYRot(), 0, 0.5f, 0);
         entity.setDeltaMovement(entity.getDeltaMovement().multiply(1, 0, 1));//We can't fling tornadoes upwards
         entity.maxLifeTime = 120;
-        //entity.setStepHeight(1f); fixme
     }
 }

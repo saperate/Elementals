@@ -26,10 +26,6 @@ public class AirTornadoEntity extends AbstractElementalsEntity<Player> {
         super(type, world, Player.class);
     }
 
-    public AirTornadoEntity(Level world, Player owner) {
-        this(world, owner, owner.getX(), owner.getY(), owner.getZ());
-    }
-
     public AirTornadoEntity(Level world, Player owner, double x, double y, double z) {
         super(AIRTORNADO.get(), world, Player.class);
         setOwner(owner);
@@ -43,12 +39,13 @@ public class AirTornadoEntity extends AbstractElementalsEntity<Player> {
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
         builder.define(RANGE, 20f);
-        builder.define(SPEED, 0.001f);
+        builder.define(SPEED, 0.01f);
     }
 
     @Override
     public void tick() {
         super.tick();
+        System.out.println("asdf");
         if (random.nextInt(0, 40) == 6) {
             summonParticles(this, random,
                     ParticleTypes.POOF,
