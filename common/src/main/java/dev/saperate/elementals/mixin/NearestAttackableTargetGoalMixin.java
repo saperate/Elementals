@@ -3,7 +3,6 @@ package dev.saperate.elementals.mixin;
 
 import dev.saperate.elementals.entities.common.DecoyPlayerEntity;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -34,7 +33,8 @@ public abstract class NearestAttackableTargetGoalMixin<T extends LivingEntity> {
     protected Class<T> targetType;
     
     @Unique
-    protected Mob mob;
+    @Nullable
+    protected Mob elementals$mob;
 
     @Shadow
     protected abstract AABB getTargetSearchArea(double p_26069_);
@@ -44,7 +44,7 @@ public abstract class NearestAttackableTargetGoalMixin<T extends LivingEntity> {
 
     @Inject(at = @At("TAIL"), method = "<init>(Lnet/minecraft/world/entity/Mob;Ljava/lang/Class;ZLjava/util/function/Predicate;)V")
     private void init(Mob mob, Class targetType, boolean mustSee, Predicate targetPredicate, CallbackInfo ci) {
-        this.mob = mob;
+        this.elementals$mob = mob;
     }
 
     @Inject(at = @At("HEAD"), method = "findTarget", cancellable = true)
@@ -75,10 +75,10 @@ public abstract class NearestAttackableTargetGoalMixin<T extends LivingEntity> {
 
     @Unique
     protected double elementals$customGetFollowRange() {
-        if(mob == null){
+        if(elementals$mob == null){
             return 0;
         }
-        return mob.getAttributeValue(Attributes.FOLLOW_RANGE);
+        return elementals$mob.getAttributeValue(Attributes.FOLLOW_RANGE);
     }
 
 }

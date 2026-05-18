@@ -409,7 +409,7 @@ public class Bender {
 
     /**
      * Checks if the given mouse button is held.
-     * <br\>Left = 0, Middle = 1, Right = 2
+     * <br>Left = 0, Middle = 1, Right = 2
      * @param button Which mouse button should be held
      */
     public boolean isHolding(int button){
@@ -420,7 +420,7 @@ public class Bender {
      * Checks if the given mouse button is held.
      * Also checks for a minimum amount of time
      * you need to hold any button before something happens (in ticks)
-     * <br\>Left = 0, Middle = 1, Right = 2
+     * <br>Left = 0, Middle = 1, Right = 2
      * @param button Which mouse button should be held
      */
     public boolean isHolding(int button, int minimumHoldTime){

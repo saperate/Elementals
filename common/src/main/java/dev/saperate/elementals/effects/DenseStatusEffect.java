@@ -17,8 +17,8 @@ public class DenseStatusEffect extends MobEffect {
         super(
                 MobEffectCategory.NEUTRAL,
                 0x454545);
-        addAttributeModifier(Attributes.STEP_HEIGHT, ResourceLocation.fromNamespaceAndPath(Constants.MODID,"dense_step"),0.4f, AttributeModifier.Operation.ADD_VALUE);
-        addAttributeModifier(Attributes.JUMP_STRENGTH, ResourceLocation.fromNamespaceAndPath(Constants.MODID,"dense_jump"),-0.5f, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
+        addAttributeModifier(Attributes.STEP_HEIGHT, ResourceLocation.fromNamespaceAndPath(Constants.MODID, "dense_step"), 0.4f, AttributeModifier.Operation.ADD_VALUE);
+        addAttributeModifier(Attributes.JUMP_STRENGTH, ResourceLocation.fromNamespaceAndPath(Constants.MODID, "dense_jump"), -0.5f, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
 
     }
 
@@ -35,20 +35,17 @@ public class DenseStatusEffect extends MobEffect {
 
 
         double currV = entity.getDeltaMovement().y;
-        if (((ElementalsLivingEntityAccessor) entity).isJumping() && entity.onGround() && entity.isUnderWater()) {
-            currV += 2;
-        } else {
-            currV = -0.25;
-        }
 
-        
+        currV = -0.25;
+
+
         //Prevent slow fall when midair
-        HitResult hit = SapsUtils.raycastBlockCustomRotation(entity,2.5f,false,new Vec3(0,-1,0));
-        if(!entity.onGround() && hit.getType().equals(HitResult.Type.MISS) && !entity.isInWater()){
+        HitResult hit = SapsUtils.raycastBlockCustomRotation(entity, 2.5f, false, new Vec3(0, -1, 0));
+        if (!entity.onGround() && hit.getType().equals(HitResult.Type.MISS) && !entity.isInWater()) {
             return true;
         }
 
-        entity.setDeltaMovement(new Vec3(entity.getDeltaMovement().x * 0.5, currV, entity.getDeltaMovement().z * 0.5));
+        entity.setDeltaMovement(new Vec3(entity.getDeltaMovement().x * 0.7, currV, entity.getDeltaMovement().z * 0.7));
         return true;
     }
 
