@@ -22,7 +22,7 @@ public class LitAirBlockEntity extends BlockEntity {
 
     public static void tick(Level world, BlockPos pos, BlockState state, LitAirBlockEntity blockEntity) {
         blockEntity.lifetime++;
-        if(blockEntity.lifetime >= 10){
+        if(blockEntity.lifetime >= 20){
             world.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
         }
     }
