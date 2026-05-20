@@ -25,7 +25,7 @@ public class FireExplosion extends Explosion {
     private static final ExplosionDamageCalculator DEFAULT_BEHAVIOR = new ExplosionDamageCalculator();
     private Level world;
     private double x, y, z;
-    private float power, maxDamage, velocityMultiplier = 1;
+    private float maxDamage, velocityMultiplier = 1;
     private ExplosionDamageCalculator behavior;
     private DamageSource damageSource;
     private final Entity owner;
@@ -51,124 +51,105 @@ public class FireExplosion extends Explosion {
 
     @Override
     public void explode() {
-        this.world.gameEvent(getDirectSourceEntity(), GameEvent.EXPLODE, new Vec3(this.x, this.y, this.z));
+        this.world.gameEvent(this.getDirectSourceEntity(), GameEvent.EXPLODE, new Vec3(this.x, this.y, this.z));
         Set<BlockPos> set = Sets.newHashSet();
+        int i = 16;
 
-        int k;
-        int l;
         for(int j = 0; j < 16; ++j) {
-            for(k = 0; k < 16; ++k) {
-                for(l = 0; l < 16; ++l) {
+            for(int k = 0; k < 16; ++k) {
+                for(int l = 0; l < 16; ++l) {
                     if (j == 0 || j == 15 || k == 0 || k == 15 || l == 0 || l == 15) {
-                        double d = (double)((float)j / 15.0F * 2.0F - 1.0F);
-                        double e = (double)((float)k / 15.0F * 2.0F - 1.0F);
-                        double f = (double)((float)l / 15.0F * 2.0F - 1.0F);
-                        double g = Math.sqrt(d * d + e * e + f * f);
-                        d /= g;
-                        e /= g;
-                        f /= g;
-                        float h = this.power * (0.7F + this.world.random.nextFloat() * 0.6F);
-                        double m = this.x;
-                        double n = this.y;
-                        double o = this.z;
+                        double d0 = (double)((float)j / 15.0F * 2.0F - 1.0F);
+                        double d1 = (double)((float)k / 15.0F * 2.0F - 1.0F);
+                        double d2 = (double)((float)l / 15.0F * 2.0F - 1.0F);
+                        double d3 = Math.sqrt(d0 * d0 + d1 * d1 + d2 * d2);
+                        d0 /= d3;
+                        d1 /= d3;
+                        d2 /= d3;
+                        float f = this.radius() * (0.7F + this.world.random.nextFloat() * 0.6F);
+                        double d4 = this.x;
+                        double d6 = this.y;
+                        double d8 = this.z;
 
-                        for(float p = 0.3F; h > 0.0F; h -= 0.22500001F) {
-                            BlockPos blockPos = BlockPos.containing(m, n, o);
-                            BlockState blockState = this.world.getBlockState(blockPos);
-                            FluidState fluidState = this.world.getFluidState(blockPos);
-                            if (this.world.isOutsideBuildHeight(blockPos)) {
+                        for(float f1 = 0.3F; f > 0.0F; f -= 0.22500001F) {
+                            BlockPos blockpos = BlockPos.containing(d4, d6, d8);
+                            BlockState blockstate = this.world.getBlockState(blockpos);
+                            FluidState fluidstate = this.world.getFluidState(blockpos);
+                            if (!this.world.isInWorldBounds(blockpos)) {
                                 break;
                             }
 
-                            Optional<Float> optional = this.behavior.getBlockExplosionResistance(this, this.world, blockPos, blockState, fluidState);
+                            Optional<Float> optional = this.behavior.getBlockExplosionResistance(this, this.world, blockpos, blockstate, fluidstate);
                             if (optional.isPresent()) {
-                                h -= ((Float)optional.get() + 0.3F) * 0.3F;
+                                f -= ((Float)optional.get() + 0.3F) * 0.3F;
                             }
 
-                            if (h > 0.0F && this.behavior.shouldBlockExplode(this, this.world, blockPos, blockState, h)) {
-                                set.add(blockPos);
+                            if (f > 0.0F && this.behavior.shouldBlockExplode(this, this.world, blockpos, blockstate, f)) {
+                                set.add(blockpos);
                             }
 
-                            m += d * 0.30000001192092896;
-                            n += e * 0.30000001192092896;
-                            o += f * 0.30000001192092896;
+                            d4 += d0 * (double)0.3F;
+                            d6 += d1 * (double)0.3F;
+                            d8 += d2 * (double)0.3F;
                         }
                     }
                 }
             }
         }
 
-        //FIXME verify this works
-        //getAffectedBlocks.addAll(set);
-        float q = this.power * 2.0F;
-        k = Mth.floor(this.x - (double)q - 1.0);
-        l = Mth.floor(this.x + (double)q + 1.0);
-        int r = Mth.floor(this.y - (double)q - 1.0);
-        int s = Mth.floor(this.y + (double)q + 1.0);
-        int t = Mth.floor(this.z - (double)q - 1.0);
-        int u = Mth.floor(this.z + (double)q + 1.0);
-        List<Entity> list = this.world.getEntities(getDirectSourceEntity(), new AABB((double)k, (double)r, (double)t, (double)l, (double)s, (double)u));
-        Vec3 vec3d = new Vec3(this.x, this.y, this.z);
-        Iterator var34 = list.iterator();
+        this.getToBlow().addAll(set);
+        float f2 = this.radius() * 2.0F;
+        int k1 = Mth.floor(this.x - (double)f2 - (double)1.0F);
+        int l1 = Mth.floor(this.x + (double)f2 + (double)1.0F);
+        int i2 = Mth.floor(this.y - (double)f2 - (double)1.0F);
+        int i1 = Mth.floor(this.y + (double)f2 + (double)1.0F);
+        int j2 = Mth.floor(this.z - (double)f2 - (double)1.0F);
+        int j1 = Mth.floor(this.z + (double)f2 + (double)1.0F);
+        List<Entity> list = this.world.getEntities(this.getDirectSourceEntity(), new AABB((double)k1, (double)i2, (double)j2, (double)l1, (double)i1, (double)j1));
+        Vec3 vec3 = new Vec3(this.x, this.y, this.z);
 
-        while(true) {
-            Entity entity;
-            double w;
-            double x;
-            double y;
-            double v;
-            double z;
-            do {
-                do {
-                    do {
-                        if (!var34.hasNext()) {
-                            return;
+        for(Entity entity : list) {
+            if (!entity.ignoreExplosion(this)) {
+                double d11 = Math.sqrt(entity.distanceToSqr(vec3)) / (double)f2;
+                if (d11 <= (double)1.0F) {
+                    double d5 = entity.getX() - this.x;
+                    double d7 = (entity instanceof PrimedTnt ? entity.getY() : entity.getEyeY()) - this.y;
+                    double d9 = entity.getZ() - this.z;
+                    double d12 = Math.sqrt(d5 * d5 + d7 * d7 + d9 * d9);
+                    if (d12 != (double)0.0F) {
+                        d5 /= d12;
+                        d7 /= d12;
+                        d9 /= d12;
+                        if (this.behavior.shouldDamageEntity(this, entity) && entity != owner) {
+                            entity.hurt(this.damageSource, 
+                                    Math.min(this.behavior.getEntityDamageAmount(this, entity), maxDamage));
                         }
 
-                        entity = (Entity)var34.next();
-                    } while(entity.ignoreExplosion(this));
+                        double d13 = ((double)1.0F - d11) * (double)getSeenPercent(vec3, entity) * (double)this.behavior.getKnockbackMultiplier(entity);
+                        double d10;
+                        if (entity instanceof LivingEntity) {
+                            LivingEntity livingentity = (LivingEntity)entity;
+                            d10 = d13 * ((double)1.0F - livingentity.getAttributeValue(Attributes.EXPLOSION_KNOCKBACK_RESISTANCE));
+                        } else {
+                            d10 = d13;
+                        }
 
-                    v = Math.sqrt(entity.distanceToSqr(vec3d)) / (double)q;
-                } while(!(v <= 1.0));
+                        d5 *= d10;
+                        d7 *= d10;
+                        d9 *= d10;
+                        Vec3 vec31 = new Vec3(d5, d7, d9);
+                        entity.setDeltaMovement(entity.getDeltaMovement().add(vec31).scale(velocityMultiplier));
+                        if (entity instanceof Player) {
+                            Player player = (Player)entity;
+                            if (!player.isSpectator() && (!player.isCreative() || !player.getAbilities().flying)) {
+                                player.hurtMarked = true;
+                            }
+                        }
 
-                w = entity.getX() - this.x;
-                x = (entity instanceof PrimedTnt ? entity.getY() : entity.getEyeY()) - this.y;
-                y = entity.getZ() - this.z;
-                z = Math.sqrt(w * w + x * x + y * y);
-            } while(z == 0.0);
-
-            w /= z;
-            x /= z;
-            y /= z;
-            if (this.behavior.shouldDamageEntity(this, entity)) {
-                entity.hurt(this.damageSource, Math.min(maxDamage, this.behavior.getEntityDamageAmount(this, entity)));
-            }
-
-            double aa = (1.0 - v) * (double)getSeenPercent(vec3d, entity) * (double)this.behavior.getKnockbackMultiplier(entity);
-            double ab;
-            if (entity instanceof LivingEntity livingEntity) {
-                ab = aa * (1.0 - livingEntity.getAttributeValue(Attributes.EXPLOSION_KNOCKBACK_RESISTANCE));
-            } else {
-                ab = aa;
-            }
-
-            w *= ab;
-            x *= ab;
-            y *= ab;
-            Vec3 vec3d2 = new Vec3(w, x, y);
-            entity.setDeltaMovement(entity.getDeltaMovement().add(vec3d2));
-            if (entity instanceof Player playerEntity) {
-                if (!playerEntity.isSpectator() && (!playerEntity.isCreative() || !playerEntity.getAbilities().flying)) {
-                    getHitPlayers().put(playerEntity, vec3d2);
+                        entity.onExplosionHit(this.getDirectSourceEntity());
+                    }
                 }
             }
-
-            //entity.onExplodedBy(getEntity()); fixme
-            entity.setDeltaMovement(entity.getDeltaMovement().add(vec3d2));
-            if (!(entity instanceof Player playerEntity) || (playerEntity = (Player) entity).isSpectator() || playerEntity.isCreative() && playerEntity.getAbilities().flying){
-                continue;
-            }
-            playerEntity.hurtMarked = true;
         }
     }
 

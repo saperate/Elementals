@@ -1,9 +1,11 @@
 package dev.saperate.elementals.entities.air;
 
 import dev.saperate.elementals.data.ElementalConfig;
+import dev.saperate.elementals.misc.ElementalsSounds;
 import dev.saperate.elementals.misc.FireExplosion;
 import dev.saperate.elementals.entities.common.AbstractElementalsEntity;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -79,7 +81,7 @@ public class AirBallEntity extends AbstractElementalsEntity<Player> {
     }
 
     public void onCollision() {
-        FireExplosion explosion = new FireExplosion(level(), getOwner(), getX(), getY(), getZ(), 2.5f, false, Explosion.BlockInteraction.KEEP, 8 * ElementalConfig.get().BENDING_DAMAGE_MULTIPLIER, 4, getOwner());
+        FireExplosion explosion = new FireExplosion(level(), this, getX(), getY(), getZ(), 2.5f, false, Explosion.BlockInteraction.KEEP, 8 * ElementalConfig.get().BENDING_DAMAGE_MULTIPLIER, 4, getOwner());
         explosion.explode();
         explosion.finalizeExplosion(true);
         discard();
@@ -95,7 +97,7 @@ public class AirBallEntity extends AbstractElementalsEntity<Player> {
         summonParticles(this, random,
                 ParticleTypes.POOF,
                 0.25f, 25);
-        this.level().playSound(this, getOnPos(), WIND_BURST_SOUND_EVENT, SoundSource.BLOCKS, 4.0f, (1.0f + (this.level().random.nextFloat() - this.level().random.nextFloat()) * 0.2f) * 0.7f);
+        level().playLocalSound(this.getX(), this.getY(), this.getZ(), WIND_BURST_SOUND_EVENT, SoundSource.BLOCKS, 4.0F, (1.0F + (level().random.nextFloat() - level().random.nextFloat()) * 0.2F) * 0.7F, false);
     }
     @Override
     public float touchGroundFrictionMultiplier() {

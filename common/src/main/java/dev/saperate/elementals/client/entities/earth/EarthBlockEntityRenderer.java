@@ -36,7 +36,7 @@ public class EarthBlockEntityRenderer extends EntityRenderer<EarthBlockEntity> {
 
         switch (entity.getModelShapeId()) {
             case 1 -> {
-                matrices.translate(0.5f, -1, 0.5f);
+                matrices.translate(0.25, 0.5, 0.5);
                 VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderType.itemEntityTranslucentCull(getTextureLocation(entity)));
 
                 Vec3 dir = entity.getDeltaMovement();
@@ -51,7 +51,7 @@ public class EarthBlockEntityRenderer extends EntityRenderer<EarthBlockEntity> {
 
                 matrices.mulPose(Axis.XP.rotationDegrees(180));
                 matrices.scale(2, 2, 2);
-                matrices.translate(0.25f, -1.5f, -0.25f);
+                matrices.translate(0.25f, 0, -0.25f);
 
                 SpikeModel.getTexturedModelData().bakeRoot().render(
                         matrices, vertexConsumer, light, 0, 0xFFFFFFFF);

@@ -9,6 +9,7 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
@@ -114,6 +115,7 @@ public class FireBallEntity extends AbstractElementalsEntity<Player> {
         FireExplosion explosion = new FireExplosion(level(), getOwner(), getX(), getY(), getZ(), 2.5f, true, Explosion.BlockInteraction.KEEP, 12 * ElementalConfig.get().BENDING_DAMAGE_MULTIPLIER, getOwner());
         explosion.explode();
         explosion.finalizeExplosion(true);
+        
         discard();
     }
 
@@ -125,7 +127,7 @@ public class FireBallEntity extends AbstractElementalsEntity<Player> {
         summonParticles(this, random,
                 isBlue() ? ParticleTypes.SOUL_FIRE_FLAME : ParticleTypes.FLAME,
                 0.25f, 25);
-        this.level().playSound(this, getOnPos(), SoundEvents.GENERIC_EXPLODE.value(), SoundSource.BLOCKS, 4.0f, (1.0f + (this.level().random.nextFloat() - this.level().random.nextFloat()) * 0.2f) * 0.7f);
+        level().playLocalSound(this.getX(), this.getY(), this.getZ(), SoundEvents.GENERIC_EXPLODE.value(), SoundSource.BLOCKS, 4.0F, (1.0F + (level().random.nextFloat() - level().random.nextFloat()) * 0.2F) * 0.7F, false);
     }
 
     public boolean isBlue() {
