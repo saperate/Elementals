@@ -173,7 +173,10 @@ public class FabricRegistryHelper implements IRegistryHelper {
 
     @Override
     public <U extends SimpleCriterionTrigger.SimpleInstance, T extends SimpleCriterionTrigger<U>> TriggerHolder<U, T> registerCriterion(String name, T criterion) {
-        T trigger = CriteriaTriggers.register(name, criterion);
+        T trigger = Registry.register(
+                BuiltInRegistries.TRIGGER_TYPES,
+                ResourceLocation.fromNamespaceAndPath(Constants.MODID, name), 
+                criterion);
         return () -> trigger;
     }
 

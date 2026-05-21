@@ -26,7 +26,7 @@ public class HasElementCriterion extends SimpleCriterionTrigger<HasElementCriter
     }
 
     public static String getName() {//TODO test if this works
-        return Constants.MODID + "/" + "has_element";
+        return "has_element";
     }
 
     public void trigger(ServerPlayer player) {

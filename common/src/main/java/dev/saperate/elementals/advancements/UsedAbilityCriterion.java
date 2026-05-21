@@ -24,7 +24,7 @@ public class UsedAbilityCriterion extends SimpleCriterionTrigger<UsedAbilityCrit
     }
 
     public static String getName() {
-        return Constants.MODID + "/" + "used_ability";
+        return "used_ability";
     }
 
     public void trigger(ServerPlayer player, String usedAbility) {

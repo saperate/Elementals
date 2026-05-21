@@ -38,7 +38,6 @@ public class FireExplosion extends Explosion {
         this.y = y;
         this.z = z;
         this.world = world;
-        this.power = power;
         this.behavior = chooseBehavior(entity);
         this.maxDamage = maxDamage;
         this.owner = owner;
