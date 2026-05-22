@@ -30,7 +30,7 @@ public abstract class AbstractScrollItem extends Item {
             Bender bender = Bender.getBender((ServerPlayer) user);
             if(!bender.hasElement(getElement()) 
                     && (getParentElement() != null && getParentElement().isSkillTreeComplete(bender))){
-                if(bender.addElement(MetalElement.get(), true)){
+                if(bender.addElement(getElement(), true)){
                     user.getInventory().removeItem(user.getItemInHand(hand));
                 }
             }
