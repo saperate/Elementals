@@ -9,10 +9,12 @@ import com.mojang.brigadier.exceptions.DynamicCommandExceptionType;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import dev.saperate.elementals.elements.Element;
+import dev.saperate.elementals.elements.NoneElement;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.network.chat.Component;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -27,6 +29,7 @@ public class ElementArgumentType implements ArgumentType<Element> {
     public static final DynamicCommandExceptionType INVALID_ELEMENT = new DynamicCommandExceptionType(
             o -> Component.literal("Invalid element: " + o)
     );
+
     @Override
     public Element parse(StringReader reader) throws CommandSyntaxException {
         int argBeginning = reader.getCursor();
@@ -49,14 +52,12 @@ public class ElementArgumentType implements ArgumentType<Element> {
 
     @Override
     public <S> CompletableFuture<Suggestions> listSuggestions(CommandContext<S> context, SuggestionsBuilder builder) {
-        final String remaining = builder.getRemaining();
-        if (context.getSource() instanceof CommandSourceStack source) {
-            return SharedSuggestionProvider.suggest(
-                    Lists.transform(Element.getElementList(), Element::getName),
-                    builder
-            );
-        }
-        return Suggestions.empty();
+        ArrayList<Element> elements = new ArrayList<>(Element.getElementList());
+        elements.remove(NoneElement.get());
+        return SharedSuggestionProvider.suggest(
+                Lists.transform(elements, Element::getName),
+                builder
+        );
     }
 
 

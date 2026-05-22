@@ -26,6 +26,7 @@ import net.minecraft.core.Registry;
 import net.minecraft.core.dispenser.DispenseItemBehavior;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
@@ -94,12 +95,13 @@ public class NeoForgeRegistryHelper implements IRegistryHelper {
             BendingCommand.register(event.getDispatcher(), event.getBuildContext(), event.getCommandSelection());
             ElementalsCommand.register(event.getDispatcher(), event.getBuildContext(), event.getCommandSelection());
         }));
-
-        //Both are needed to properly register an argument type
+        
         ElementalsNeoForge.COMMAND_ARGUMENT_TYPES.register(
-                "bending", () -> SingletonArgumentInfo.contextFree(ElementArgumentType::element)
+                "bending", () -> ArgumentTypeInfos.registerByClass(
+                        ElementArgumentType.class,
+                        SingletonArgumentInfo.contextFree(ElementArgumentType::element)
+                )
         );
-        ArgumentTypeInfos.registerByClass(ElementArgumentType.class, SingletonArgumentInfo.contextFree(ElementArgumentType::element));
     }
 
     @Override
