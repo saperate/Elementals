@@ -245,7 +245,8 @@ public class FabricRegistryHelper implements IRegistryHelper {
 
     @Override
     public void registerParticleType(String name, SimpleParticleType type) {
-        Registry.register(BuiltInRegistries.PARTICLE_TYPE, name, type);
+        Registry.register(BuiltInRegistries.PARTICLE_TYPE, 
+                ResourceLocation.fromNamespaceAndPath(Constants.MODID, name), type);
     }
 
     @Override
