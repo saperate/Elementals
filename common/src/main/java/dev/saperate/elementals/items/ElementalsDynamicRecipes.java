@@ -109,7 +109,7 @@ public class ElementalsDynamicRecipes {
         json.add("key", keyList);
         
         JsonObject result = new JsonObject();
-        result.addProperty("item", output.toString());
+        result.addProperty("id", output.toString());
         result.addProperty("count", 1);
         json.add("result", result);
         return new RecipeEntry(json, output);

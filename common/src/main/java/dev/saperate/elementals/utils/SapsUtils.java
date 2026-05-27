@@ -477,7 +477,6 @@ public final class SapsUtils {
         }
         dir = dir.normalize();
         float dot = -pos.normalize().dot(dir);
-        System.out.println(Math.cos(dot));
 
         return (Math.cos(dot) <= angle && dot >= 0);
     }

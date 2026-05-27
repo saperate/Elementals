@@ -63,10 +63,10 @@ public final class ElementalConfig {
             CHI_OVERLAY_THRESHOLD = root.get("CHI_OVERLAY_THRESHOLD").getAsInt();
             CHI_OVERLAY_TEXT = root.get("CHI_OVERLAY_TEXT").getAsBoolean();
             HIDE_TIMER = root.get("HIDE_TIMER").getAsBoolean();
-            METAL_COST_VALUE = getMetalCostValue(root);
-            METAL_LOWER_VALUE_STACK = getMetalLowerValueStack(root);
             CRAFTABLE_SCROLLS = root.get("CRAFTABLE_SCROLLS").getAsBoolean();
             BENDING_DAMAGE_MULTIPLIER = root.get("BENDING_DAMAGE_MULTIPLIER").getAsFloat();
+            METAL_COST_VALUE = getMetalCostValue(root);
+            METAL_LOWER_VALUE_STACK = getMetalLowerValueStack(root);
             
         }catch (Exception e){
             // This doesn't override the file, just makes it so we don't use what we loaded
@@ -91,6 +91,7 @@ public final class ElementalConfig {
             root.addProperty("CHI_OVERLAY_TEXT", false);
             root.addProperty("HIDE_TIMER", false);
             root.addProperty("BENDING_DAMAGE_MULTIPLIER", 1.0f);
+            root.addProperty("CRAFTABLE_SCROLLS", false);
 
             
             JsonArray metalCostValue = new JsonArray();
@@ -115,9 +116,6 @@ public final class ElementalConfig {
                 metalLowerValueStack.add(entry);
             }
             root.add("METAL_LOWER_VALUE_STACK", metalLowerValueStack);
-
-
-            root.addProperty("CRAFTABLE_SCROLLS", false);
 
             writer.append(gson.toJson(root));
             writer.close();
