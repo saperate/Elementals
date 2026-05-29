@@ -21,7 +21,7 @@ public class AbilityLightningStorm implements Ability {
     @Override
     public void onCall(Bender bender, long deltaT) {
         bender.setCurrAbility(null);
-        if (bender.isAbilityInBackground(this) || !bender.player.level().canSeeSky(bender.player.getOnPos())) {
+        if (bender.isAbilityInBackground(this) || !bender.player.level().canSeeSky(bender.player.getOnPos().above())) {
             return;
         }
         if (!bender.reduceChi(100)) {
