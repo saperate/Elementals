@@ -28,8 +28,12 @@ public abstract class AbstractScrollItem extends Item {
     public @NotNull InteractionResultHolder<ItemStack> use(Level level, @NotNull Player user, @NotNull InteractionHand hand) {
         if (!level.isClientSide) {
             Bender bender = Bender.getBender((ServerPlayer) user);
-            if(!bender.hasElement(getElement()) 
-                    && (getParentElement() != null && getParentElement().isSkillTreeComplete(bender))){
+            Bender.
+            if(!bender.hasElement(getElement())){
+                if((getParentElement() != null && !getParentElement().isSkillTreeComplete(bender))){
+                    //TODO tell the player they need to complete their base bending first
+                    return super.use(level, user, hand);
+                }
                 if(bender.addElement(getElement(), true)){
                     user.getInventory().removeItem(user.getItemInHand(hand));
                 }
