@@ -16,7 +16,7 @@ public class AbilityEarthMine implements Ability {
         //TODO make it so it consumes more chi if the block is harder to break
 
         Object[] vars = EarthElement.canBend(player, false);
-        if (vars == null || !player.level().getGameRules().getBoolean(BENDING_GRIEFING)) {
+        if (vars == null) {
             bender.setCurrAbility(null);
             return;
         }

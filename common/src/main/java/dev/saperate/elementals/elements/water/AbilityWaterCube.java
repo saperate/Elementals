@@ -40,7 +40,7 @@ public class AbilityWaterCube implements Ability {
         if (entity == null) {
             return;
         }
-
+        entity.wasThrown = true;
         entity.setDeltaMovement(bender.player, bender.player.getXRot(), bender.player.getYRot(), 0, 1, 0);
     }
     

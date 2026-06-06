@@ -251,7 +251,7 @@ public class WaterElement extends Element {
      * @return whether water was placed
      */
     public static boolean placeWater(BlockPos pos, Level world){
-        if(world.dimension().equals(Level.NETHER) || !world.getGameRules().getBoolean(BENDING_GRIEFING)){
+        if(world.dimension().equals(Level.NETHER)){
             //TODO add smoke particles or smth
             return true;
         }

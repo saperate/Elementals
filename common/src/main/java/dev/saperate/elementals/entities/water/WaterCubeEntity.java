@@ -4,6 +4,9 @@ import dev.saperate.elementals.data.ElementalConfig;
 import dev.saperate.elementals.elements.water.WaterElement;
 import dev.saperate.elementals.entities.common.AbstractElementalsEntity;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
@@ -19,7 +22,9 @@ import static dev.saperate.elementals.utils.SapsUtils.getEntityLookVector;
 import static dev.saperate.elementals.utils.SapsUtils.summonParticles;
 
 public class WaterCubeEntity extends AbstractElementalsEntity<Player> {
-
+    //We don't need to sync this with the client, since it's only used on the server when we check if we can place water
+    public boolean wasThrown = false;
+    
     public WaterCubeEntity(EntityType<WaterCubeEntity> type, Level world) {
         super(type, world, Player.class);
     }
@@ -70,7 +75,7 @@ public class WaterCubeEntity extends AbstractElementalsEntity<Player> {
 
     @Override
     public void collidesWithGround() {
-        if (level().getGameRules().getBoolean(BENDING_GRIEFING)) {
+        if (level().getGameRules().getBoolean(BENDING_GRIEFING) || !wasThrown) {
             WaterElement.placeWater(getOnPos(), level());
         }
         discard();
