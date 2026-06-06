@@ -24,6 +24,11 @@
   "item.elementals.water_pouch" : "Water Pouch",
   "item.elementals.water_pouch.tooltip" : "Water level: %d",
 
+  "item.elementals.earth_helmet" : "Earth Helmet",
+  "item.elementals.earth_chestplate" : "Earth Chestplate",
+  "item.elementals.earth_leggings" : "Earth Leggings",
+  "item.elementals.earth_boots" : "Earth Boots",
+  
   "entity.elementals.boomerang" : "Boomerang",
   "entity.elementals.dirt_bottle" : "Dirt Bottle",
 
@@ -47,10 +52,17 @@
   "effect.elementals.overcharged" : "Overcharged",
   "effect.elementals.burnout" : "Burnout",
 
-  "item.elementals.earth_helmet" : "Earth Helmet",
-  "item.elementals.earth_chestplate" : "Earth Chestplate",
-  "item.elementals.earth_leggings" : "Earth Leggings",
-  "item.elementals.earth_boots" : "Earth Boots",
+  "painting.elementals.peaceful_ocean.title" : "Peaceful Ocean",
+  "painting.elementals.peaceful_ocean.author" : "Saperate",
+  
+  "painting.elementals.jasmine_fields.title" : "Jasmine Fields",
+  "painting.elementals.jasmine_fields.author" : "Cosmicnull",
+  
+  "painting.elementals.serene_season.title" : "Serene Season",
+  "painting.elementals.serene_season.author" : "Cosmicnull",
+  
+  "painting.elementals.mountain_bison.title" : "Mountain Bison",
+  "painting.elementals.mountain_bison.author" : "Cosmicnull",
 
   "upgrade.elementals.exclusive": " IMPORTANT NOTICE: this upgrade is exclusive with its sister upgrades.",
   "upgrade.elementals.price": " Price: %d levels",
