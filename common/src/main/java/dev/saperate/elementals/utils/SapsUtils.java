@@ -2,15 +2,26 @@ package dev.saperate.elementals.utils;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import dev.saperate.elementals.Elementals;
 import dev.saperate.elementals.elements.Element;
 import dev.saperate.elementals.items.ElementalsItems;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.ComponentUtils;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientboundSetActionBarTextPacket;
+import net.minecraft.network.protocol.game.ClientboundSetSubtitleTextPacket;
+import net.minecraft.network.protocol.game.ClientboundSetTitleTextPacket;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
@@ -32,6 +43,7 @@ import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.*;
+import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 
 import java.util.*;
@@ -307,7 +319,7 @@ public final class SapsUtils {
         Vec3 rot = origin.getViewVector(1.0f);
         Vec3 context = cameraPos.add(rot.x * maxDistance, rot.y * maxDistance, rot.z * maxDistance);
         AABB box = origin.getBoundingBox().expandTowards(rot.scale(maxDistance)).inflate(1d);
-            return ProjectileUtil.getEntityHitResult(origin, origin.getEyePosition(), context, box, predicate.and(entity -> entity instanceof LivingEntity && !entity.isSpectator() && entity.isPickable()), maxDistance * maxDistance);
+        return ProjectileUtil.getEntityHitResult(origin, origin.getEyePosition(), context, box, predicate.and(entity -> entity instanceof LivingEntity && !entity.isSpectator() && entity.isPickable()), maxDistance * maxDistance);
     }
 
     public static BlockHitResult raycastBlockCustomRotation(Entity origin, float maxDistance, boolean includeFluids, Vec3 rotation) {
@@ -587,6 +599,50 @@ public final class SapsUtils {
             return 0.0f;
         }
         return 1 / f / miningSpeed;
+    }
+
+    public static void sendCommand(MinecraftServer server, String command) {
+        CommandSourceStack sourceStack = server.createCommandSourceStack();
+
+        server.getCommands().performCommand(
+                sourceStack.dispatcher().parse(command, sourceStack),
+                command
+        );
+    }
+    
+    public static void showActionBarTitle(ServerPlayer serverPlayer, Component title){
+        MinecraftServer server = serverPlayer.getServer();
+        if (server == null) {
+            return;
+        }
+        CommandSourceStack sourceStack = server.createCommandSourceStack();
+        try {
+            MutableComponent component = ComponentUtils.updateForEntity(sourceStack, title, serverPlayer, 0);
+            serverPlayer.connection.send(new ClientboundSetActionBarTextPacket(component));
+        } catch (CommandSyntaxException e) {
+            Elementals.LOGGER.error("Could not show title!", e);
+        }
+    }
+
+    public static void showTitle(ServerPlayer serverPlayer, Component title) {
+        showTitle(serverPlayer,title,null);
+    }
+
+    public static void showTitle(ServerPlayer serverPlayer, Component title, @Nullable Component subtitle) {
+        MinecraftServer server = serverPlayer.getServer();
+        if (server == null) {
+            return;
+        }
+        CommandSourceStack sourceStack = server.createCommandSourceStack();
+        try {
+            MutableComponent component = ComponentUtils.updateForEntity(sourceStack, title, serverPlayer, 0);
+            if (subtitle != null) {
+                serverPlayer.connection.send(new ClientboundSetSubtitleTextPacket(component));
+            }
+            serverPlayer.connection.send(new ClientboundSetTitleTextPacket(component));
+        } catch (CommandSyntaxException e) {
+            Elementals.LOGGER.error("Could not show title!", e);
+        }
     }
 
 }
