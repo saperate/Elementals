@@ -339,6 +339,11 @@ public class Bender {
             return true;
         }
 
+        // Mastery reward: once the active element's entire skill tree is completed,
+        // its abilities no longer drain chi.
+        if (getElement().isSkillTreeComplete(this)) {
+            return true;
+        }
 
         float newChi = plrData.chi - val;
         if (newChi < 0) {
