@@ -76,7 +76,7 @@ public class AbilityFlameThrower implements Ability {
         } else {
             PlayerData plrData = PlayerData.get(player);
 
-            float range = 6;
+            int range = 6;
             if (plrData.canUseUpgrade("flameThrowerRangeII")) {
                 range = 10;
             } else if (plrData.canUseUpgrade("flameThrowerRangeI")) {

@@ -535,7 +535,7 @@ public final class SapsUtils {
         }
 
         Holder<Biome> biome = level.getBiome(blockPos);
-        return biome.value().getPrecipitationAt(blockPos, level.getSeaLevel()) == Biome.Precipitation.SNOW;
+        return biome.value().getPrecipitationAt(blockPos) == Biome.Precipitation.SNOW;
     }
 
     /**
