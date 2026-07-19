@@ -131,6 +131,11 @@ public class WaterElement extends Element {
         registerUpgradeKeybind("waterSuffocate", 5);
         registerUpgradeKeybind("waterBlade", 6);
         registerUpgradeKeybind("waterCannon", 7);
+        // Water Shield isn't its own bound ability - it's triggered by holding
+        // the base Water1 key (slot 0) for >= 1s, so its two upgrade paths
+        // must point back at slot 0 instead of inheriting their parent's slot.
+        registerUpgradeKeybind("waterShieldHelmetPath", 0);
+        registerUpgradeKeybind("waterShieldSuffocatePath", 0);
     }
 
     public static Vector3f canBend(Player player, boolean consumeWater) {//todo make it so some abilities still consume water, even though you might have efficiency unlocked
