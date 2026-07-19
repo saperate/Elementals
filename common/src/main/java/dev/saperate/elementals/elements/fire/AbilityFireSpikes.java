@@ -41,18 +41,16 @@ public class AbilityFireSpikes implements Ability {
         int countMod = PlayerData.get(player).canUseUpgrade("fireSpikesCountI") ? 2 : 1;
 
         for (int i = 1; i <= range; i++) {
-
             if(rnd.nextInt(0,6 / countMod) == 0){
                 placeFire(bender, bPos.offset(dx * i, 0, dz * i), hit, plrData);
             }
-
             for (int j = -i; j < i; j++) {
                 if(rnd.nextInt(0,4 / countMod) == 0) {
                     placeFire(bender, bPos.offset(dz * j + (i * dx), 0,  - (dx * j - (i * dz))), hit, plrData);
                 }
             }
-
         }
+        bender.setCurrAbility(null);
     }
 
     public void placeFire(Bender bender, BlockPos bPos, BlockHitResult hit, PlayerData plrData) {

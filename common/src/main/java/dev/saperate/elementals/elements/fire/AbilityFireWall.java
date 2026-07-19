@@ -38,10 +38,10 @@ public class AbilityFireWall implements Ability {
         for (int i = 1; i <= (plrData.canUseUpgrade("fireWallWideI") ? 8 : 4); i++) {
             int dxScaled = (int) Math.round(dx * i);
             int dzScaled = (int) Math.round(dz * i);
-
             placeFire(bender,bPos.offset(dxScaled, 0, dzScaled), hit, plrData);
             placeFire(bender,bPos.offset(-dxScaled, 0, -dzScaled), hit, plrData);
         }
+        bender.setCurrAbility(null);
     }
 
     public void placeFire(Bender bender, BlockPos bPos, BlockHitResult hit, PlayerData plrData){
