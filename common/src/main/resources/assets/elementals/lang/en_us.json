@@ -827,8 +827,7 @@
   "upgrade.elementals.metalDecoy.description": " Remotely control an armor of metal, which is capable of mining, attacking and tricking your opponents.",
   "upgrade.elementals.metalDecoy.use": " Use: %d + hold (1.5s)",
   "upgrade.elementals.metalDecoy.icon": "metal_decoy",
-
-  "upgrade.elementals.metalDecoyRangeI": "Range I",
+  "upgrade.elementals.metalDecoyRangeI": "Range ",
   "upgrade.elementals.metalDecoyRangeI.description": " Allows your decoy to go farther.",
 
   "upgrade.elementals.metalDecoyRangeII": "Range II",
