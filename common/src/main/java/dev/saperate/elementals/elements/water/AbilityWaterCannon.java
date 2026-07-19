@@ -19,6 +19,10 @@ import static dev.saperate.elementals.utils.SapsUtils.serverSummonParticles;
 public class AbilityWaterCannon implements Ability {
     @Override
     public void onCall(Bender bender, long deltaT) {
+        if (!PlayerData.get(bender.player).canUseUpgrade("waterCannon")) {
+            bender.setCurrAbility(null);
+            return;
+        }
         if (!bender.reduceChi(20)) {
             if (bender.abilityData == null) {
                 bender.setCurrAbility(null);

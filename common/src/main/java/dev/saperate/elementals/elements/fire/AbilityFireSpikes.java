@@ -13,6 +13,10 @@ import net.minecraft.world.phys.BlockHitResult;
 public class AbilityFireSpikes implements Ability {
     @Override
     public void onCall(Bender bender, long deltaT) {
+        if (!PlayerData.get(bender.player).canUseUpgrade("fireSpikes")) {
+            bender.setCurrAbility(null);
+            return;
+        }
         if (!bender.reduceChi(15)) {
             if (bender.abilityData == null) {
                 bender.setCurrAbility(null);
@@ -61,7 +65,7 @@ public class AbilityFireSpikes implements Ability {
             FireElement.placeFire(hit.getBlockPos(), hit.getDirection(), player, player.level().getBlockState(bPos));
         }
     }
-    
+
     @Override
     public void onRemove(Bender bender) {
         bender.setCurrAbility(null);

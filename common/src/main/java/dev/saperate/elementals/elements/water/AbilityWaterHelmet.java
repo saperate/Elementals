@@ -10,6 +10,10 @@ import net.minecraft.world.entity.player.Player;
 public class AbilityWaterHelmet implements Ability {
     @Override
     public void onCall(Bender bender, long deltaT) {
+        if (!PlayerData.get(bender.player).canUseUpgrade("waterHelmet")) {
+            bender.setCurrAbility(null);
+            return;
+        }
         if (!bender.reduceChi(25)) {
             if (bender.abilityData == null) {
                 bender.setCurrAbility(null);

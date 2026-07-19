@@ -1,6 +1,7 @@
 package dev.saperate.elementals.elements.air;
 
 import dev.saperate.elementals.data.Bender;
+import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.effects.ElementalsStatusEffects;
 import dev.saperate.elementals.elements.Ability;
 import dev.saperate.elementals.entities.air.AirShieldEntity;
@@ -10,6 +11,10 @@ import net.minecraft.world.entity.player.Player;
 public class AbilityAirShield implements Ability {
     @Override
     public void onCall(Bender bender, long deltaT) {
+        if (!PlayerData.get(bender.player).canUseUpgrade("airShield")) {
+            bender.setCurrAbility(null);
+            return;
+        }
         if (!bender.reduceChi(5)) {
             if (bender.abilityData == null) {
                 bender.setCurrAbility(null);

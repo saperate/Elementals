@@ -11,6 +11,10 @@ public class AbilityWaterBlade implements Ability {
 
     @Override
     public void onCall(Bender bender, long deltaT) {
+        if (!PlayerData.get(bender.player).canUseUpgrade("waterBlade")) {
+            bender.setCurrAbility(null);
+            return;
+        }
         if (!bender.reduceChi(15)) {
             if (bender.abilityData == null) {
                 bender.setCurrAbility(null);

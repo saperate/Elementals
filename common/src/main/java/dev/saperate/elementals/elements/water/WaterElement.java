@@ -108,9 +108,9 @@ public class WaterElement extends Element {
                         }, 3)//This is priced higher than 2 since we don't want players to soft-lock themselves
 
                 });
-        addAbility(new AbilityWater1(), true);
+        addAbility(new AbilityWater1(), 0);
         addAbility(new AbilityWaterCube());
-        addAbility(new AbilityWater2(), true);
+        addAbility(new AbilityWater2(), 1);
         addAbility(new AbilityWaterArc());
         addAbility(new AbilityWaterHelmet(), 4);
         addAbility(new AbilityWaterShield());
@@ -120,9 +120,9 @@ public class WaterElement extends Element {
         addAbility(new AbilityWaterBlade(), 6);
         addAbility(new AbilityWaterBullet());
         addAbility(new AbilityWaterCannon(), 7);
-        addAbility(new AbilityWater3(), true);
+        addAbility(new AbilityWater3(), 2);
         addAbility(new AbilityWaterSurf());
-        addAbility(new AbilityWater4(), true);
+        addAbility(new AbilityWater4(), 3);
         addAbility(new AbilityWaterHealing());
         addAbility(new AbilityWaterTower());
         addAbility(new AbilityWaterJump());

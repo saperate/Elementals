@@ -13,6 +13,10 @@ import net.minecraft.world.phys.BlockHitResult;
 public class AbilityFireWall implements Ability {
     @Override
     public void onCall(Bender bender, long deltaT) {
+        if (!PlayerData.get(bender.player).canUseUpgrade("fireWall")) {
+            bender.setCurrAbility(null);
+            return;
+        }
         if (!bender.reduceChi(15)) {
             if (bender.abilityData == null) {
                 bender.setCurrAbility(null);
@@ -51,7 +55,7 @@ public class AbilityFireWall implements Ability {
 
         }
     }
-    
+
     @Override
     public void onRemove(Bender bender) {
         bender.setCurrAbility(null);

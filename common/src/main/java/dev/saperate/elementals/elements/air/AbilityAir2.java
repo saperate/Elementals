@@ -19,15 +19,6 @@ public class AbilityAir2 implements Ability {
             AirElement.get().getAbility(6).onCall(bender, deltaT);
             return;
         }
-        if (bender.player.isShiftKeyDown()) {
-            if (playerData.canUseUpgrade("airBullets")) {
-                AirElement.get().getAbility(7).onCall(bender, deltaT);
-                return;
-            } else if (playerData.canUseUpgrade("airSuffocate")) {
-                AirElement.get().getAbility(8).onCall(bender, deltaT);
-                return;
-            }
-        }
 
         AirElement.get().getAbility(5).onCall(bender, deltaT);
     }

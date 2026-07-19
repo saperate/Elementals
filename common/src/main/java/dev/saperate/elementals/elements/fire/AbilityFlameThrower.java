@@ -25,6 +25,10 @@ public class AbilityFlameThrower implements Ability {
 
     @Override
     public void onCall(Bender bender, long deltaT) {
+        if (!PlayerData.get(bender.player).canUseUpgrade("flameThrower")) {
+            bender.setCurrAbility(null);
+            return;
+        }
         if (!bender.reduceChi(5)) {
             if (bender.abilityData == null) {
                 bender.setCurrAbility(null);

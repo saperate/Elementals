@@ -4,7 +4,7 @@ import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.elements.Element;
 import dev.saperate.elementals.elements.Upgrade;
-import dev.saperate.elementals.elements.fire.*;
+
 public class AirElement extends Element {
     public AirElement() {
         super("Air", new Upgrade[]{
@@ -65,19 +65,24 @@ public class AirElement extends Element {
                         }, 1)
                 }, 4)
         });
-        addAbility(new AbilityAir1(), true);
+        addAbility(new AbilityAir1(), 0);
         addAbility(new AbilityAirGust());
-        addAbility(new AbilityAirShield());
-        addAbility(new AbilityAirTornado());
-        addAbility(new AbilityAir2(), true);
+        addAbility(new AbilityAirShield(), 4);
+        addAbility(new AbilityAirTornado(), 5);
+        addAbility(new AbilityAir2(), 1);
         addAbility(new AbilityAirStream());
         addAbility(new AbilityAirBall());
-        addAbility(new AbilityAirBullets());
-        addAbility(new AbilityAirSuffocate());
-        addAbility(new AbilityAir3(), true);
+        addAbility(new AbilityAirBullets(), 6);
+        addAbility(new AbilityAirSuffocate(), 7);
+        addAbility(new AbilityAir3(), 2);
         addAbility(new AbilityAirScooter());
         addAbility(new AbilityAirJump());
-        addAbility(new AbilityAir4(), true);
+        addAbility(new AbilityAir4(), 3);
+
+        registerUpgradeKeybind("airShield", 4);
+        registerUpgradeKeybind("airTornado", 5);
+        registerUpgradeKeybind("airBullets", 6);
+        registerUpgradeKeybind("airSuffocate", 7);
     }
 
     public static Element get() {
@@ -116,6 +121,6 @@ public class AirElement extends Element {
                 && plrData.canUseUpgrade("airJumpRangeII")
                 && plrData.canUseUpgrade("airScooterSpeedII")
                 && plrData.canUseUpgrade("airSpiritProjectionRangeIV")
-        ;
+                ;
     }
 }

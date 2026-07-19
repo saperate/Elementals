@@ -11,6 +11,10 @@ import net.minecraft.world.entity.player.Player;
 public class AbilityFireShield implements Ability {
     @Override
     public void onCall(Bender bender, long deltaT) {
+        if (!PlayerData.get(bender.player).canUseUpgrade("fireShield")) {
+            bender.setCurrAbility(null);
+            return;
+        }
         if (!bender.reduceChi(5)) {
             if (bender.abilityData == null) {
                 bender.setCurrAbility(null);

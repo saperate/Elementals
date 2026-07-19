@@ -1,6 +1,7 @@
 package dev.saperate.elementals.elements.air;
 
 import dev.saperate.elementals.data.Bender;
+import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.elements.Ability;
 import dev.saperate.elementals.entities.water.WaterHelmetEntity;
 import net.minecraft.world.entity.LivingEntity;
@@ -13,6 +14,10 @@ import static dev.saperate.elementals.utils.SapsUtils.raycastFull;
 public class AbilityAirSuffocate implements Ability {
     @Override
     public void onCall(Bender bender, long deltaT) {
+        if (!PlayerData.get(bender.player).canUseUpgrade("airSuffocate")) {
+            bender.setCurrAbility(null);
+            return;
+        }
         if (!bender.reduceChi(5)) {
             if (bender.abilityData == null) {
                 bender.setCurrAbility(null);

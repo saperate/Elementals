@@ -15,16 +15,6 @@ public class AbilityFire2 implements Ability {
             return;
         }
 
-        if (bender.player.isShiftKeyDown()) {
-            if(playerData.canUseUpgrade("fireShield")){
-                FireElement.get().getAbility(7).onCall(bender,deltaT);
-                return;
-            } else if (playerData.canUseUpgrade("flameThrower")) {
-                FireElement.get().getAbility(8).onCall(bender,deltaT);
-                return;
-            }
-        }
-
         if(playerData.canUseUpgrade("fireArc")){
             FireElement.get().getAbility(5).onCall(bender,deltaT);
             return;

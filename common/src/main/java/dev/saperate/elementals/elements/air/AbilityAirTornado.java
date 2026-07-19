@@ -9,6 +9,10 @@ import net.minecraft.world.entity.player.Player;
 public class AbilityAirTornado implements Ability {
     @Override
     public void onCall(Bender bender, long deltaT) {
+        if (!PlayerData.get(bender.player).canUseUpgrade("airTornado")) {
+            bender.setCurrAbility(null);
+            return;
+        }
         if (!bender.reduceChi(15)) {
             if (bender.abilityData == null) {
                 bender.setCurrAbility(null);
@@ -37,7 +41,7 @@ public class AbilityAirTornado implements Ability {
 
         bender.setCurrAbility(this);
     }
-    
+
     @Override
     public void onTick(Bender bender) {
         if (!bender.reduceChi(0.1f)) {

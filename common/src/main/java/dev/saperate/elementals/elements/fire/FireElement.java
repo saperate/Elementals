@@ -61,17 +61,17 @@ public class FireElement extends Element {
                 },2),
                 new Upgrade("fireWisp",4)
         });
-        addAbility(new AbilityFire1(),true);
+        addAbility(new AbilityFire1(), 0);
         addAbility(new AbilityFireIgnite());
         addAbility(new AbilityFireWall(), 4);
         addAbility(new AbilityFireSpikes(), 5);
-        addAbility(new AbilityFire2(), true);
+        addAbility(new AbilityFire2(), 1);
         addAbility(new AbilityFireArc());
         addAbility(new AbilityFireBall());
         addAbility(new AbilityFireShield(), 6);
         addAbility(new AbilityFlameThrower(), 7);
-        addAbility(new AbilityFire3(), true);
-        addAbility(new AbilityFire4(), true);
+        addAbility(new AbilityFire3(), 2);
+        addAbility(new AbilityFire4(), 3);
         addAbility(new AbilityFireWisp());
 
         registerUpgradeKeybind("fireWall", 4);

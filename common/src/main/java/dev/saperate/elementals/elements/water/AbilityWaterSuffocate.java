@@ -9,13 +9,17 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 
-import static dev.saperate.elementals.utils.SapsUtils.*;
+import static dev.saperate.elementals.utils.SapsUtils.raycastFull;
 
 public class AbilityWaterSuffocate implements Ability {
     @Override
     public void onCall(Bender bender, long deltaT) {
         Player player = bender.player;
         PlayerData plrData = PlayerData.get(player);
+        if (!plrData.canUseUpgrade("waterSuffocate")) {
+            bender.setCurrAbility(null);
+            return;
+        }
         if (!bender.reduceChi(5)) {
             if (bender.abilityData == null) {
                 bender.setCurrAbility(null);
