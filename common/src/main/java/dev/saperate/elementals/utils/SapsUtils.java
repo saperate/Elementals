@@ -15,7 +15,6 @@ import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentUtils;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientboundSetActionBarTextPacket;
 import net.minecraft.network.protocol.game.ClientboundSetSubtitleTextPacket;
 import net.minecraft.network.protocol.game.ClientboundSetTitleTextPacket;
@@ -39,6 +38,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
@@ -46,7 +46,10 @@ import net.minecraft.world.phys.*;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Random;
 import java.util.function.Predicate;
 
 /**
@@ -515,7 +518,24 @@ public final class SapsUtils {
 
     public static boolean isBeingRainedOn(Entity entity) {
         BlockPos blockPos = entity.getOnPos();
-        return entity.level().isRainingAt(blockPos) || entity.level().isRainingAt(BlockPos.containing(blockPos.getX(), entity.getBoundingBox().maxY, (double) blockPos.getZ()));
+        return entity.level().isRainingAt(blockPos) || entity.level().isRainingAt(BlockPos.containing(blockPos.getX(), entity.getBoundingBox().maxY, blockPos.getZ()));
+    }
+
+    /**
+     * Checks whether the entity is currently standing in an area where it's snowing
+     * (i.e. it's precipitating AND the biome's precipitation type at that spot is snow).
+     */
+    public static boolean isBeingSnowedOn(Entity entity) {
+        BlockPos blockPos = entity.getOnPos();
+        Level level = entity.level();
+        BlockPos topPos = BlockPos.containing(blockPos.getX(), entity.getBoundingBox().maxY, blockPos.getZ());
+
+        if (!level.isRainingAt(blockPos) && !level.isRainingAt(topPos)) {
+            return false;
+        }
+
+        Holder<Biome> biome = level.getBiome(blockPos);
+        return biome.value().getPrecipitationAt(blockPos, level.getSeaLevel()) == Biome.Precipitation.SNOW;
     }
 
     /**
@@ -609,7 +629,7 @@ public final class SapsUtils {
                 command
         );
     }
-    
+
     public static void showActionBarTitle(ServerPlayer serverPlayer, Component title){
         MinecraftServer server = serverPlayer.getServer();
         if (server == null) {

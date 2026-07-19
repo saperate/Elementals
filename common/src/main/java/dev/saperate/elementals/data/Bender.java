@@ -7,6 +7,7 @@ import dev.saperate.elementals.effects.ElementalsStatusEffects;
 import dev.saperate.elementals.elements.Ability;
 import dev.saperate.elementals.elements.Element;
 import dev.saperate.elementals.elements.NoneElement;
+import dev.saperate.elementals.elements.water.WaterElement;
 import dev.saperate.elementals.network.packets.S2C.SyncChiPacket;
 import dev.saperate.elementals.network.packets.S2C.SyncCurrAbilityPacket;
 import dev.saperate.elementals.network.packets.S2C.SyncElementsPacket;
@@ -17,6 +18,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.GameType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -342,6 +344,11 @@ public class Bender {
         // Mastery reward: once the active element's entire skill tree is completed,
         // its abilities no longer drain chi.
         if (getElement().isSkillTreeComplete(this)) {
+            return true;
+        }
+
+
+        if (getElement() == WaterElement.get() && SapsUtils.isBeingSnowedOn(player)) {
             return true;
         }
 

@@ -36,6 +36,7 @@ public class AbilityWaterBlade implements Ability {
             if (plrData.canUseUpgrade("waterBladeDamageI")) {
                 entity.setDamage(10);
             }
+            entity.setDamage(entity.getDamage() * WaterElement.getPowerMultiplier(player));
 
             bender.setCurrAbility(this);
         } else {
@@ -59,6 +60,7 @@ public class AbilityWaterBlade implements Ability {
         } else if (plrData.canUseUpgrade("waterBladeSpeedI")) {
             speed = 1.5f;
         }
+        speed *= WaterElement.getPowerMultiplier(bender.player);
         entity.setDeltaMovement(bender.player, bender.player.getXRot(), bender.player.getYRot(), 0, speed, 0);
     }
 

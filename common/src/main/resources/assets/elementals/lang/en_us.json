@@ -28,7 +28,7 @@
   "item.elementals.earth_chestplate" : "Earth Chestplate",
   "item.elementals.earth_leggings" : "Earth Leggings",
   "item.elementals.earth_boots" : "Earth Boots",
-  
+
   "entity.elementals.boomerang" : "Boomerang",
   "entity.elementals.dirt_bottle" : "Dirt Bottle",
 
@@ -60,13 +60,10 @@
 
   "painting.elementals.peaceful_ocean.title" : "Peaceful Ocean",
   "painting.elementals.peaceful_ocean.author" : "Saperate",
-  
   "painting.elementals.jasmine_fields.title" : "Jasmine Fields",
   "painting.elementals.jasmine_fields.author" : "Cosmicnull",
-  
   "painting.elementals.serene_season.title" : "Serene Season",
   "painting.elementals.serene_season.author" : "Cosmicnull",
-  
   "painting.elementals.mountain_bison.title" : "Mountain Bison",
   "painting.elementals.mountain_bison.author" : "Cosmicnull",
 
@@ -93,7 +90,6 @@
   "upgrade.elementals.waterBubble.description": " A basic move allowing you to transport water or attack enemies.",
   "upgrade.elementals.waterBubble.use": " Use: %d",
   "upgrade.elementals.waterBubble.icon": "water_bubble",
-  
   "upgrade.elementals.waterHelmet": "Water Helmet",
   "upgrade.elementals.waterHelmet.description": " By making an air pocket with your water bending, you can allow yourself to breathe underwater just like a fish.",
   "upgrade.elementals.waterHelmet.use": " Use: %d + sneak submerged in water",
@@ -114,7 +110,6 @@
   "upgrade.elementals.waterHelmetMastery": "Water Helmet Mastery",
   "upgrade.elementals.waterHelmetMastery.description": " Allows you to stay underwater indefinitely!",
   "upgrade.elementals.waterHelmetMastery.icon": "v",
-  
   "upgrade.elementals.waterHelmetStealth": "Stealthy",
   "upgrade.elementals.waterHelmetStealth.description": " By using refraction, you can make it so you are invisible while using water helmet and barely moving.",
   "upgrade.elementals.waterHelmetStealth.use": " Use: sneak",
@@ -142,7 +137,6 @@
   "upgrade.elementals.waterArc.description": " An arc of water that can knock back enemies and damage them from a distance.",
   "upgrade.elementals.waterArc.use": " Use: %d",
   "upgrade.elementals.waterArc.icon": "water_arc",
-  
   "upgrade.elementals.waterArcDamageI": "Damage I",
   "upgrade.elementals.waterArcDamageI.description": " Allows you to deal a little bit more damage.",
 
@@ -158,7 +152,6 @@
   "upgrade.elementals.waterArcMastery": "Water Arc Mastery",
   "upgrade.elementals.waterArcMastery.description": " Mastery of the water arc ability allows you to deal more damage.",
   "upgrade.elementals.waterArcMastery.icon": "iii",
-  
   "upgrade.elementals.waterJet": "Water Jet",
   "upgrade.elementals.waterJet.description": " A concentrated stream of water that can be used to attack enemies.",
   "upgrade.elementals.waterJet.use": " Use: %d + hold (1s)",
@@ -307,7 +300,6 @@
   "upgrade.elementals.fireArcMastery": "Fire Arc Mastery",
   "upgrade.elementals.fireArcMastery.description": " Mastery of the fire arc ability allows you to deal more damage.",
   "upgrade.elementals.fireArcMastery.icon": "iii",
-  
   "upgrade.elementals.fireBall": "Fireball",
   "upgrade.elementals.fireBall.description": " By compressing a lot of fire in a tight space, you can create a fireball with devastating power.",
   "upgrade.elementals.fireBall.use": " Use: %d + hold (1s)",
@@ -323,6 +315,16 @@
   "upgrade.elementals.flameThrower.description": " Makes a stream of fire to incinerate enemies in front of you.",
   "upgrade.elementals.flameThrower.use": " Use: %d + sneak -> then r-click",
   "upgrade.elementals.flameThrower.icon": "fire_flamethrower",
+  "upgrade.elementals.flameThrowerRangeI": "Extended Flamethrower",
+  "upgrade.elementals.flameThrowerRangeI.description": " Increases the reach of your flamethrower's stream.",
+  "upgrade.elementals.flameThrowerRangeII": "Extended Flamethrower II",
+  "upgrade.elementals.flameThrowerRangeII.description": " Further increases the reach of your flamethrower's stream.",
+  "upgrade.elementals.flameThrowerDamageI": "Scorching Flamethrower",
+  "upgrade.elementals.flameThrowerDamageI.description": " Increases the damage dealt by your flamethrower.",
+  "upgrade.elementals.flameThrowerDamageII": "Scorching Flamethrower II",
+  "upgrade.elementals.flameThrowerDamageII.description": " Further increases the damage dealt by your flamethrower.",
+  "upgrade.elementals.flameThrowerIgniteI": "Searing Flamethrower",
+  "upgrade.elementals.flameThrowerIgniteI.description": " Keeps enemies burning for longer after being hit by your flamethrower.",
 
   "upgrade.elementals.fireShield": "Fire Shield",
   "upgrade.elementals.fireShield.description": " By rapidly spinning fire around you, you can incinerate any projectile or enemy coming your way.",
@@ -399,7 +401,6 @@
   "upgrade.elementals.earthWallAutoTimer": "Auto Timer",
   "upgrade.elementals.earthWallAutoTimer.description": " Automatically dismisses walls when casting Earth Wall, allows you to cast walls in quick succession.",
   "upgrade.elementals.earthWallAutoTimer.icon": "v",
-  
   "upgrade.elementals.earthChunk": "Chunk Pickup",
   "upgrade.elementals.earthChunk.description": " Pickup large amounts of earth to throw at your enemies or terraform the landscape.",
   "upgrade.elementals.earthChunk.use": " Use: %d + sneak",
@@ -517,7 +518,6 @@
   "upgrade.elementals.airStreamMastery": "Air Stream Mastery",
   "upgrade.elementals.airStreamMastery.description": " Mastery of the air stream ability allows you to deal more damage.",
   "upgrade.elementals.airStreamMastery.icon": "iii",
-  
   "upgrade.elementals.airBall": "Air Ball",
   "upgrade.elementals.airBall.description": " By compressing a lot of air in a tight space, you can create an air ball with devastating power.",
   "upgrade.elementals.airBall.use": " Use: %d + hold (1s)",
@@ -546,7 +546,6 @@
   "upgrade.elementals.airBulletsMastery": "Air Bullets Mastery",
   "upgrade.elementals.airBulletsMastery.description": " Mastery of the air bullets ability allows you to deal more damage.",
   "upgrade.elementals.airBulletsMastery.icon": "ii",
-  
   "upgrade.elementals.airBulletsCountI": "Count I",
   "upgrade.elementals.airBulletsCountI.description": " Increases the number of bullets you can throw to 10.",
 
@@ -731,7 +730,6 @@
   "upgrade.elementals.bloodBag": "Blood bag",
   "upgrade.elementals.bloodBag.description": " By sacrificing some of your blood, you are able to water bend anywhere.",
   "upgrade.elementals.bloodBag.icon": "blood_bag",
-  
   "upgrade.elementals.bloodParalysis": "Paralysis",
   "upgrade.elementals.bloodParalysis.description": " This forbidden ability allows you to stop every living thing in a radius allowing you to escape or attack.",
   "upgrade.elementals.bloodParalysis.use": " Use: %d + hold (1.5s)",
@@ -774,7 +772,6 @@
 
   "upgrade.elementals.metalLanceDamageII": "Damage II",
   "upgrade.elementals.metalLanceDamageII.description": " Further increases the damage dealt by metal lance.",
-  
   "upgrade.elementals.metalLanceRedirectI": "Lance Redirect",
   "upgrade.elementals.metalLanceRedirectI.description": " Allows you to redirect the lance after having thrown it.",
   "upgrade.elementals.metalLanceRedirectI.use": " Use: L-Click to redirect, R-Click to dismiss",

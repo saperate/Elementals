@@ -53,6 +53,7 @@ public class AbilityWaterArc implements Ability {
         } else if (plrData.canUseUpgrade("waterArcSpeedI")) {
             speed = 1.5f;
         }
+        speed *= WaterElement.getPowerMultiplier(bender.player);
         entity.setDeltaMovement(bender.player, bender.player.getXRot(), bender.player.getYRot(), 0, speed, 0);
     }
 
@@ -70,7 +71,7 @@ public class AbilityWaterArc implements Ability {
         }
         onRemove(bender);
     }
-    
+
 
     @Override
     public void onRemove(Bender bender) {

@@ -38,7 +38,15 @@ public class FireElement extends Element {
                                 },1)
                         }, false, -1,2),
                         new Upgrade("fireArcDamageI", new Upgrade[]{
-                                new Upgrade("flameThrower",2),
+                                new Upgrade("flameThrower", new Upgrade[]{
+                                        new Upgrade("flameThrowerRangeI", new Upgrade[]{
+                                                new Upgrade("flameThrowerRangeII", 1)
+                                        }, 1),
+                                        new Upgrade("flameThrowerDamageI", new Upgrade[]{
+                                                new Upgrade("flameThrowerDamageII", 1)
+                                        }, 1),
+                                        new Upgrade("flameThrowerIgniteI", 1)
+                                }, 2),
                                 new Upgrade("fireShield", 2)
                         }, true, 1),
                         new Upgrade("fireArcEfficiencyI", new Upgrade[]{

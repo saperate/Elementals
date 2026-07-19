@@ -74,11 +74,29 @@ public class AbilityFlameThrower implements Ability {
                     0.1f, 1,
                     0, 0, 0, 0);
         } else {
+            PlayerData plrData = PlayerData.get(player);
+
+            float range = 6;
+            if (plrData.canUseUpgrade("flameThrowerRangeII")) {
+                range = 10;
+            } else if (plrData.canUseUpgrade("flameThrowerRangeI")) {
+                range = 8;
+            }
+
+            float damage = plrData.canUseUpgrade("blueFire") ? 3 : 2.5f;
+            if (plrData.canUseUpgrade("flameThrowerDamageII")) {
+                damage += 3f;
+            } else if (plrData.canUseUpgrade("flameThrowerDamageI")) {
+                damage += 1.5f;
+            }
+
+            int igniteSeconds = plrData.canUseUpgrade("flameThrowerIgniteI") ? 14 : 8;
+
             Vector3f pos = getEntityLookVector(player, 3).subtract(player.position()).normalize().scale(3).toVector3f();
 
 
             serverSummonParticles((ServerLevel) player.level(),
-                    PlayerData.get(player).canUseUpgrade("blueFire") ?
+                    plrData.canUseUpgrade("blueFire") ?
                             ParticleTypes.SOUL_FIRE_FLAME : ParticleTypes.FLAME, player, player.getRandom(),
                     pos.x - 1,
                     pos.y - 1.6f,
@@ -88,17 +106,17 @@ public class AbilityFlameThrower implements Ability {
             playSoundAtEntity(player, SoundEvents.FIRE_AMBIENT,5);
 
             List<Entity> hits = player.level().getEntitiesOfClass(Entity.class,
-                    boundingBox.inflate(12).move(player.position()),
+                    boundingBox.inflate(range * 2).move(player.position()),
                     Entity::isAlive);
 
             for (Entity e : hits) {
                 if (e.equals(player)  || e instanceof ItemEntity || e instanceof HangingEntity) {
                     continue;
                 }
-                if (SapsUtils.isLookingAt(bender.player,e,6,0.75f)) {
+                if (SapsUtils.isLookingAt(bender.player, e, range, 0.75f)) {
                     if (!e.fireImmune()) {
-                        e.igniteForSeconds(8);
-                        e.hurt(e.damageSources().playerAttack(player), (PlayerData.get(player).canUseUpgrade("blueFire") ? 3 : 2.5f) * ElementalConfig.get().BENDING_DAMAGE_MULTIPLIER);
+                        e.igniteForSeconds(igniteSeconds);
+                        e.hurt(e.damageSources().playerAttack(player), damage * ElementalConfig.get().BENDING_DAMAGE_MULTIPLIER);
                     }
                 }
             }

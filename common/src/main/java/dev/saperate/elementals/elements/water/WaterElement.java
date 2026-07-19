@@ -280,6 +280,46 @@ public class WaterElement extends Element {
         return false;
     }
 
+    /**
+     * Scans a horizontal ring around the player for water source blocks, to detect whether
+     * they're standing near a large body of water (lake/ocean/river) rather than just a small
+     * puddle or bucket's worth. Stops early once the threshold is reached for performance.
+     */
+    public static boolean isNearLargeBodyOfWater(Player player) {
+        final int horizontalRadius = 8;
+        final int verticalRadius = 3;
+        final int requiredWaterBlocks = 40;
+
+        Level level = player.level();
+        BlockPos center = player.blockPosition();
+        BlockPos.MutableBlockPos mutable = new BlockPos.MutableBlockPos();
+        int waterBlocks = 0;
+
+        for (int x = -horizontalRadius; x <= horizontalRadius; x++) {
+            for (int z = -horizontalRadius; z <= horizontalRadius; z++) {
+                for (int y = -verticalRadius; y <= verticalRadius; y++) {
+                    mutable.set(center.getX() + x, center.getY() + y, center.getZ() + z);
+                    if (level.getFluidState(mutable).is(Fluids.WATER)) {
+                        waterBlocks++;
+                        if (waterBlocks >= requiredWaterBlocks) {
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Power multiplier applied to Water abilities (speed, damage, range, etc.) when the
+     * player is near a large body of water. 1.0 = no bonus.
+     */
+    public static float getPowerMultiplier(Player player) {
+        return isNearLargeBodyOfWater(player) ? 1.5f : 1f;
+    }
+
     public static Element get() {
         return getElement("Water");
     }

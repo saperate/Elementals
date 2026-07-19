@@ -74,6 +74,10 @@ public class AbilityWaterCannon implements Ability {
                 child.setStreamSize(6);
             }
 
+            float waterMultiplier = WaterElement.getPowerMultiplier(player);
+            parent.setStreamSize(parent.getStreamSize() * waterMultiplier);
+            child.setStreamSize(child.getStreamSize() * waterMultiplier);
+
         } else if (chargeTime == -60) {//Reached end of life
             onRemove(bender);
         } else if (chargeTime > 0) {//charging
