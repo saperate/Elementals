@@ -25,36 +25,10 @@ public class AbilityEarthSurf implements Ability {
 
     @Override
     public void onCall(Bender bender, long deltaT) {
-        Player player = bender.player;
-        PlayerData plrData = PlayerData.get(player);
-
-        if (!plrData.canUseUpgrade("earthSurf")) {
-            bender.setCurrAbility(null);
-            return;
-        }
-
-        if (!player.getRootVehicle().onGround() || !player.isSprinting()) {
-            bender.setCurrAbility(null);
-            return;
-        }
-
-        BlockState groundState = player.level().getBlockState(player.blockPosition().below());
-        if (!EarthElement.isBlockBendable(groundState, bender)) {
-            bender.setCurrAbility(null);
-            return;
-        }
-
-        if (!bender.reduceChi(10)) {
-            bender.setCurrAbility(null);
-            return;
-        }
-
-        EarthBlockEntity[] skates = new EarthBlockEntity[]{
-                spawnSkate(bender, groundState),
-                spawnSkate(bender, groundState)
-        };
-
-        bender.abilityData = skates;
+        // Only marks the ability as active. The actual activation checks and skate
+        // spawning happen lazily on the first onTick, since onCall only fires when
+        // the key is released (bend() already sets currAbility on key press, and
+        // onTick starts running immediately after that, before onCall ever runs).
         bender.setCurrAbility(this);
     }
 
@@ -76,6 +50,40 @@ public class AbilityEarthSurf implements Ability {
     @Override
     public void onTick(Bender bender) {
         Player player = bender.player;
+        PlayerData plrData = PlayerData.get(player);
+
+        // Lazy initialization: the first tick after activation actually performs the
+        // validity checks and spawns the skates, since onCall (where this logic used
+        // to live) doesn't run until the key is released.
+        if (!(bender.abilityData instanceof EarthBlockEntity[])) {
+            if (!plrData.canUseUpgrade("earthSurf")) {
+                onRemove(bender);
+                return;
+            }
+
+            if (!player.getRootVehicle().onGround() || !player.isSprinting()) {
+                onRemove(bender);
+                return;
+            }
+
+            BlockState groundState = player.level().getBlockState(player.blockPosition().below());
+            if (!EarthElement.isBlockBendable(groundState, bender)) {
+                onRemove(bender);
+                return;
+            }
+
+            if (!bender.reduceChi(10)) {
+                onRemove(bender);
+                return;
+            }
+
+            bender.abilityData = new EarthBlockEntity[]{
+                    spawnSkate(bender, groundState),
+                    spawnSkate(bender, groundState)
+            };
+        }
+
+        EarthBlockEntity[] skates = (EarthBlockEntity[]) bender.abilityData;
 
         if (!bender.reduceChi(0.2f)) {
             onRemove(bender);
@@ -87,9 +95,7 @@ public class AbilityEarthSurf implements Ability {
             return;
         }
 
-        Object data = bender.abilityData;
-        if (!(data instanceof EarthBlockEntity[] skates) || skates.length != 2
-                || !skates[0].isAlive() || !skates[1].isAlive()) {
+        if (!skates[0].isAlive() || !skates[1].isAlive()) {
             onRemove(bender);
             return;
         }
@@ -109,7 +115,6 @@ public class AbilityEarthSurf implements Ability {
                 (float) pos.y + 0.05f - bob,
                 (float) (pos.z - Math.sin(angleRad) * sideOffset)));
 
-        PlayerData plrData = PlayerData.get(player);
         float power = plrData.canUseUpgrade("earthSurfSpeedI") ? 1.5f : 1.3f;
 
         Vec3 lookDir = getEntityLookVectorIgnorePitch(player, 2).subtract(player.getEyePosition());
