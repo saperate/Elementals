@@ -53,18 +53,18 @@ public class Bender {
 
     public void bindAbility(Ability ability, int index) {
         if ((plrData.elements.get(plrData.activeElementIndex).contains(ability) || ability == null)
-                && index >= 0 && index <= 10) {
+                && index >= 0 && index < Ability.MAX_KEYBINDS) {
             plrData.boundAbilities[index] = ability;
         }
     }
 
 
     public void clearBindings() {
-        plrData.boundAbilities = new Ability[10];
+        plrData.boundAbilities = new Ability[Ability.MAX_KEYBINDS];
     }
 
     public void bend(int index, boolean isStart) {
-        if (index >= 0 && index < 10 && plrData.boundAbilities[index] != null) {
+        if (index >= 0 && index < Ability.MAX_KEYBINDS && plrData.boundAbilities[index] != null) {
             if (currAbility == null && isStart) {
                 castTime = System.currentTimeMillis();
                 setCurrAbility(plrData.boundAbilities[index]);
@@ -91,7 +91,7 @@ public class Bender {
 
 
     public void tick() {
-        
+
         plrData.chi = Math.min(ElementalConfig.get().MAX_CHI,
                 plrData.chi + (ElementalConfig.get().CHI_REGENERATION_RATE
                         * (safeHasStatusEffect(ElementalsStatusEffects.OVERCHARGED.get(), player) ? 4 : 1)
@@ -252,7 +252,7 @@ public class Bender {
         if (player.level().isClientSide || player.getServer() == null) {
             return;
         }
-        
+
         Network.getNetworkHandler().sendToClient(new SyncElementsPacket(
                 packageElementsIntoString(plrData.elements),
                 plrData.activeElementIndex
@@ -303,7 +303,7 @@ public class Bender {
         clearBindings();
 
         int abilitySize = plrData.elements.get(plrData.activeElementIndex).bindableAbilities.size();
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < Ability.MAX_KEYBINDS; i++) {
             if (i < abilitySize) {
                 bindAbility(plrData.elements.get(plrData.activeElementIndex).getBindableAbility(i), i);
             }
