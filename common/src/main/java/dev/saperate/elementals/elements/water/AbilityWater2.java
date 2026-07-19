@@ -17,15 +17,6 @@ public class AbilityWater2 implements Ability {
             WaterElement.get().getAbility(7).onCall(bender, deltaT);
             return;
         }
-        if (bender.player.isShiftKeyDown()) {
-            if (playerData.canUseUpgrade("waterBlade")) {
-                WaterElement.get().getAbility(9).onCall(bender, deltaT);
-                return;
-            } else if (playerData.canUseUpgrade("waterCannon")) {
-                WaterElement.get().getAbility(11).onCall(bender, deltaT);
-                return;
-            }
-        }
         WaterElement.get().getAbility(3).onCall(bender, deltaT);
     }
 

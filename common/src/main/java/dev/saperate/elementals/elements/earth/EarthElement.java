@@ -100,6 +100,11 @@ public class EarthElement extends Element {
         addAbility(new AbilityEarthChunkPickup(), true);
         addAbility(new AbilityEarthRavine(), true);
         addAbility(new AbilityEarthSpikes(), true);
+
+        registerUpgradeKeybind("earthWall", 4);
+        registerUpgradeKeybind("earthChunk", 5);
+        registerUpgradeKeybind("earthRavine", 6);
+        registerUpgradeKeybind("earthSpikes", 7);
     }
 
     public static Element get() {

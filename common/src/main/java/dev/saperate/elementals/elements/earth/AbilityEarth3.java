@@ -16,14 +16,14 @@ public class AbilityEarth3 implements Ability {
         Object[] vars = EarthElement.canBend(bender.player, false);
 
         if (vars != null) {
-            EarthElement.get().getAbility(10).onCall(bender,deltaT);
+            EarthElement.get().getAbility(6).onCall(bender, deltaT);
         } else if (playerData.canUseUpgrade("earthJump")) {
-            EarthElement.get().getAbility(11).onCall(bender,deltaT);
+            EarthElement.get().getAbility(7).onCall(bender, deltaT);
         }
 
 
     }
-    
+
     @Override
     public void onRemove(Bender bender) {
 

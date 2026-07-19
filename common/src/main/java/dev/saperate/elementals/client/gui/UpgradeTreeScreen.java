@@ -35,9 +35,12 @@ import static dev.saperate.elementals.Constants.MODID;
 public class UpgradeTreeScreen extends Screen {
     private ClientBender bender;
     private final Screen parent;
-    private int tileSize = 32, pathSize = 2;
-    private int spacing = tileSize * 2;
-    private double originX = 0, originY = 0, textureSize = tileSize * 1.25f;
+    private final int tileSize = 32;
+    private final int pathSize = 2;
+    private final int spacing = tileSize * 2;
+    private double originX = 0;
+    private double originY = 0;
+    private final double textureSize = tileSize * 1.25f;
 
     //we only need to store the center point since all the upgrade buttons are of equal sizes
     public HashMap<Upgrade, Point> upgradeButtons = new HashMap<>();
@@ -57,18 +60,18 @@ public class UpgradeTreeScreen extends Screen {
         super.init();
         originX = (double) width / 2 - (double) tileSize / 2;
         originY = (double) height / 2 - (double) tileSize / 2;
-        
+
         //We pass in dummy values, since the server doesn't read them before sending what we need back
         Network.getNetworkHandler().sendToServer(new SyncUpgradeListPacket(new CompoundTag()));
         Network.getNetworkHandler().sendToServer(new SyncLevelPacket(0,0));
-        
+
         bender = ClientBender.get();
         bender.getElement().root.calculateXPos();
         lineColor = bender.getElement().getColor();
         secondaryColor = bender.getElement().getSecondaryColor();
         tertiaryColor = bender.getElement().getTertiaryColor();
     }
-    
+
 
     @Override
     public void render(GuiGraphics context, int mouseX, int mouseY, float partialTick) {
@@ -166,13 +169,7 @@ public class UpgradeTreeScreen extends Screen {
         for (Map.Entry<Upgrade, Point> entry : upgradeButtons.entrySet()) {
             if (entry.getValue().distanceSq(mousePos) <= tileSize * tileSize) {
                 if (hoveredUpgrade != entry.getKey()) {
-                    Upgrade head = entry.getKey().getHead();
-                    Upgrade[] root = ClientBender.get().getElement().root.children;
-                    for (int i = 0; i < root.length; i++) {
-                        if (root[i].equals(head)) {
-                            keybindID = i;
-                        }
-                    }
+                    keybindID = ClientBender.get().getElement().getKeybindSlotForUpgrade(entry.getKey());
                 }
                 return entry.getKey();
             }
@@ -190,7 +187,7 @@ public class UpgradeTreeScreen extends Screen {
                 Network.getNetworkHandler().sendToServer(new ToggleUpgradePacket(upgrade.name));
             }
         }
-        
+
         return super.mouseClicked(mouseX, mouseY, button);
     }
 
@@ -230,7 +227,7 @@ public class UpgradeTreeScreen extends Screen {
             if (hoveredUpgrade.parent.exclusive) {
                 SapsUtils.addTranslatableAutomaticLineBreaks(tooltip, "upgrade.elementals.exclusive", 5);
             }
-            
+
             graphics.renderTooltip(this.font, tooltip, Optional.empty(), mouseX, mouseY);
         }
     }
@@ -479,10 +476,10 @@ public class UpgradeTreeScreen extends Screen {
         RenderSystem.enableBlend();
         Matrix4f matrix4f = context.pose().last().pose();
         BufferBuilder bufferBuilder = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
-        bufferBuilder.addVertex(matrix4f, (float) x, (float) y, (float) z).setColor(red, green, blue, alpha).setUv(u1, v1);
-        bufferBuilder.addVertex(matrix4f, (float) x, (float) y + height, (float) z).setColor(red, green, blue, alpha).setUv(u1, v2);
-        bufferBuilder.addVertex(matrix4f, (float) x + width, (float) y + height, (float) z).setColor(red, green, blue, alpha).setUv(u2, v2);
-        bufferBuilder.addVertex(matrix4f, (float) x + width, (float) y, (float) z).setColor(red, green, blue, alpha).setUv(u2, v1);
+        bufferBuilder.addVertex(matrix4f, (float) x, (float) y, z).setColor(red, green, blue, alpha).setUv(u1, v1);
+        bufferBuilder.addVertex(matrix4f, (float) x, (float) y + height, z).setColor(red, green, blue, alpha).setUv(u1, v2);
+        bufferBuilder.addVertex(matrix4f, (float) x + width, (float) y + height, z).setColor(red, green, blue, alpha).setUv(u2, v2);
+        bufferBuilder.addVertex(matrix4f, (float) x + width, (float) y, z).setColor(red, green, blue, alpha).setUv(u2, v1);
         BufferUploader.drawWithShader(bufferBuilder.build());
         RenderSystem.disableBlend();
     }

@@ -10,7 +10,6 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.block.BaseFireBlock;
-import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.gameevent.GameEvent;
@@ -64,16 +63,21 @@ public class FireElement extends Element {
         });
         addAbility(new AbilityFire1(),true);
         addAbility(new AbilityFireIgnite());
-        addAbility(new AbilityFireWall());
-        addAbility(new AbilityFireSpikes());
+        addAbility(new AbilityFireWall(), 4);
+        addAbility(new AbilityFireSpikes(), 5);
         addAbility(new AbilityFire2(), true);
         addAbility(new AbilityFireArc());
         addAbility(new AbilityFireBall());
-        addAbility(new AbilityFireShield());
-        addAbility(new AbilityFlameThrower());
+        addAbility(new AbilityFireShield(), 6);
+        addAbility(new AbilityFlameThrower(), 7);
         addAbility(new AbilityFire3(), true);
         addAbility(new AbilityFire4(), true);
         addAbility(new AbilityFireWisp());
+
+        registerUpgradeKeybind("fireWall", 4);
+        registerUpgradeKeybind("fireSpikes", 5);
+        registerUpgradeKeybind("fireShield", 6);
+        registerUpgradeKeybind("flameThrower", 7);
     }
 
     public static void placeFire(BlockPos pos, Direction side, Entity entity, BlockState state){
@@ -113,7 +117,7 @@ public class FireElement extends Element {
     public String[] getBackgroundTextures() {
         return new String[]{"bottom.png"};
     }
-    
+
 
     @Override
     public boolean isSkillTreeComplete(Bender bender) {

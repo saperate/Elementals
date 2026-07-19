@@ -112,20 +112,25 @@ public class WaterElement extends Element {
         addAbility(new AbilityWaterCube());
         addAbility(new AbilityWater2(), true);
         addAbility(new AbilityWaterArc());
-        addAbility(new AbilityWaterHelmet());
+        addAbility(new AbilityWaterHelmet(), 4);
         addAbility(new AbilityWaterShield());
-        addAbility(new AbilityWaterSuffocate());
+        addAbility(new AbilityWaterSuffocate(), 5);
         addAbility(new AbilityWaterJet());
         addAbility(new AbilityWaterArms());
-        addAbility(new AbilityWaterBlade());
+        addAbility(new AbilityWaterBlade(), 6);
         addAbility(new AbilityWaterBullet());
-        addAbility(new AbilityWaterCannon());
+        addAbility(new AbilityWaterCannon(), 7);
         addAbility(new AbilityWater3(), true);
         addAbility(new AbilityWaterSurf());
         addAbility(new AbilityWater4(), true);
         addAbility(new AbilityWaterHealing());
         addAbility(new AbilityWaterTower());
         addAbility(new AbilityWaterJump());
+
+        registerUpgradeKeybind("waterHelmet", 4);
+        registerUpgradeKeybind("waterSuffocate", 5);
+        registerUpgradeKeybind("waterBlade", 6);
+        registerUpgradeKeybind("waterCannon", 7);
     }
 
     public static Vector3f canBend(Player player, boolean consumeWater) {//todo make it so some abilities still consume water, even though you might have efficiency unlocked
@@ -288,7 +293,7 @@ public class WaterElement extends Element {
     public int getTertiaryColor() {
         return 0xFF000b49;
     }
-    
+
 
     @Override
     public String[] getBackgroundTextures() {

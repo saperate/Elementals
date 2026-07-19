@@ -14,11 +14,11 @@ public class AbilityEarth2 implements Ability {
         }
 
         if (bender.player.isShiftKeyDown() && deltaT >= 500 && playerData.canUseUpgrade("earthTrap")) {
-            EarthElement.get().getAbility(6).onCall(bender, deltaT);
+            EarthElement.get().getAbility(4).onCall(bender, deltaT);
             return;
         }
 
-        EarthElement.get().getAbility(5).onCall(bender, deltaT);
+        EarthElement.get().getAbility(3).onCall(bender, deltaT);
     }
 
     @Override
