@@ -19,7 +19,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -47,6 +46,16 @@ public abstract class PlayerEntityMixin {
         if (entities.size() > 1) {
             cir.setReturnValue(false);
             cir.cancel();
+            return;
+        }
+
+        if (!player.level().isClientSide && player instanceof ServerPlayer serverPlayer) {
+            Bender bender = Bender.getBender(serverPlayer);
+            if (bender.ignoreNextFallDamage) {
+                bender.ignoreNextFallDamage = false;
+                cir.setReturnValue(false);
+                cir.cancel();
+            }
         }
     }
 

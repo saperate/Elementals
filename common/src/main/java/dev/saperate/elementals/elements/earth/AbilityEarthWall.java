@@ -9,6 +9,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import org.joml.Vector3f;
 
 import java.util.LinkedList;
 
@@ -96,7 +97,41 @@ public class AbilityEarthWall implements Ability {
             entities.add(entity);
         }
     }
-    
+
+
+    @Override
+    public void onLeftClick(Bender bender, boolean started) {
+        if (!started) {
+            return;
+        }
+        Object data = bender.abilityData;
+        if (!(data instanceof LinkedList<?> raw)) {
+            return;
+        }
+
+        PlayerData plrData = PlayerData.get(bender.player);
+        float damage = plrData.canUseUpgrade("earthBlockDamageI") ? 5 : 3;
+
+        for (Object obj : raw) {
+            if (!(obj instanceof EarthBlockEntity entity)) {
+                continue;
+            }
+            //Switch from "rising into wall formation" to "punched forward, homing on the player's aim"
+            entity.setControlled(true);
+            entity.setUseOffset(true);
+            entity.setTargetPosition(new Vector3f(0, 0, 0));
+            entity.setMovementSpeed(0.5f);
+            entity.setDamageOnTouch(true);
+            entity.setDamage(damage);
+            entity.setCollidable(true);
+            entity.setShiftToFreeze(false);
+            entity.setDropOnEndOfLife(false);
+            entity.maxLifeTime = 30; //crumbles apart shortly after being thrown
+        }
+
+        bender.abilityData = null;
+        bender.setCurrAbility(null);
+    }
 
     @Override
     public void onRightClick(Bender bender, boolean started) {

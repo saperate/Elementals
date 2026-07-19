@@ -19,7 +19,6 @@ import net.minecraft.world.level.GameType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -39,6 +38,11 @@ public class Bender {
     public Ability currAbility;
     @Nullable
     public Object abilityData;
+    /**
+     * One-shot flag: when true, the next fall damage instance is cancelled and the flag resets.
+     * Used by abilities like Earth Jump that launch the player and shouldn't punish the landing.
+     */
+    public boolean ignoreNextFallDamage = false;
     private final boolean[] isHolding = new boolean[3];
     /**
      * How much time we have been holding any mouse button in ticks
@@ -347,7 +351,7 @@ public class Bender {
             return true;
         }
 
-
+        // Waterbenders draw power from falling snow: chi is free while it's snowing on you.
         if (getElement() == WaterElement.get() && SapsUtils.isBeingSnowedOn(player)) {
             return true;
         }

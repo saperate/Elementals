@@ -76,6 +76,9 @@ public class EarthElement extends Element {
                                         new Upgrade("earthJumpRangeII", 1),
                                 }, 1)
                         }, 2),
+                        new Upgrade("earthSurf", new Upgrade[]{
+                                new Upgrade("earthSurfSpeedI", 1)
+                        }, 2),
                         new Upgrade("earthPillarTallI", 1)
                 }, 2),
                 new Upgrade("earthPickupRangeI", new Upgrade[]{
@@ -100,6 +103,7 @@ public class EarthElement extends Element {
         addAbility(new AbilityEarthChunkPickup(), true);
         addAbility(new AbilityEarthRavine(), true);
         addAbility(new AbilityEarthSpikes(), true);
+        addAbility(new AbilityEarthSurf());
 
         registerUpgradeKeybind("earthWall", 4);
         registerUpgradeKeybind("earthChunk", 5);

@@ -7,7 +7,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 
-import static dev.saperate.elementals.utils.SapsUtils.*;
+import static dev.saperate.elementals.utils.SapsUtils.launchEntity;
+import static dev.saperate.elementals.utils.SapsUtils.raycastBlockCustomRotation;
 
 public class AbilityEarthJump implements Ability {
 
@@ -39,10 +40,11 @@ public class AbilityEarthJump implements Ability {
         } else if (plrData.canUseUpgrade("earthJumpRangeI")) {
             power = 4;
         }
+        bender.ignoreNextFallDamage = true;
         launchEntity(player,power);
 
     }
-    
+
     @Override
     public void onRemove(Bender bender) {
 
