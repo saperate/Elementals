@@ -7,7 +7,7 @@ public class KeyAbility9 extends KeyInput {
     public KeyAbility9(){
         registerAbilityInput(
                 GLFW.GLFW_KEY_J,
-                4,
+                8,
                 "key.elementals.Ability9",
                 "category.elementals"
         );
