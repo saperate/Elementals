@@ -94,13 +94,14 @@ public class PlayerData {
         if (upgrades.containsKey(upgrade)) {
             if(!upgrades.getOrDefault(upgrade.parent, false) && upgrade.parent.parent != null)
                 return;
-            
+
             upgrades.put(upgrade, val);
             fixUpgradeChildrenRecursive(upgrade,val);
 
-            if(val && upgrade.parent.exclusive){ //Fixes the siblings
-                fixExclusiveUpgrades(upgrade);
-            }
+            // Exclusividade removida — a árvore fica livre, dá pra ter os dois lados ativos ao mesmo tempo
+            // if(val && upgrade.parent.exclusive){
+            //     fixExclusiveUpgrades(upgrade);
+            // }
         }
     }
     
