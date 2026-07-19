@@ -63,6 +63,7 @@
 
   "painting.elementals.jasmine_fields.title" : "Jasmine Fields",
   "painting.elementals.jasmine_fields.author" : "Cosmicnull",
+
   "painting.elementals.serene_season.title" : "Serene Season",
   "painting.elementals.serene_season.author" : "Cosmicnull",
   "painting.elementals.mountain_bison.title" : "Mountain Bison",
@@ -451,7 +452,7 @@
   "upgrade.elementals.earthPillarTallI.description": " Your pillars are taller.",
   "upgrade.elementals.earthSurf": "Earth Surf",
   "upgrade.elementals.earthSurf.description": " Conjures two chips of ground beneath your feet, letting you skate forward while sprinting.",
-  "upgrade.elementals.earthSurf.use": " Use: sprint on bendable ground",
+  "upgrade.elementals.earthSurf.use": " Use: %d while sprinting",
   "upgrade.elementals.earthSurfSpeedI": "Faster Surfing",
   "upgrade.elementals.earthSurfSpeedI.description": " Increases the speed boost granted by Earth Surf.",
 

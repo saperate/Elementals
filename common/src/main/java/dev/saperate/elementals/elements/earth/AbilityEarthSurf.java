@@ -26,8 +26,14 @@ public class AbilityEarthSurf implements Ability {
     @Override
     public void onCall(Bender bender, long deltaT) {
         Player player = bender.player;
+        PlayerData plrData = PlayerData.get(player);
 
-        if (!player.getRootVehicle().onGround()) {
+        if (!plrData.canUseUpgrade("earthSurf")) {
+            bender.setCurrAbility(null);
+            return;
+        }
+
+        if (!player.getRootVehicle().onGround() || !player.isSprinting()) {
             bender.setCurrAbility(null);
             return;
         }
