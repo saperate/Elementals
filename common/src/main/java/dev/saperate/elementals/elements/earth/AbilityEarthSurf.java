@@ -134,6 +134,10 @@ public class AbilityEarthSurf implements Ability {
     }
 
     @Override
+    public boolean activatesOnPress() {
+        return true;
+    }
+    @Override
     public void onRemove(Bender bender) {
         bender.setCurrAbility(null);
         Object data = bender.abilityData;

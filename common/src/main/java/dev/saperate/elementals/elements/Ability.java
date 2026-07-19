@@ -34,6 +34,10 @@ public interface Ability {
 
     default boolean shouldImmobilizePlayer(Player player) {return false;}
 
+    default boolean activatesOnPress() {
+        return false;
+    }
+
     /**
      * Takes in an ability as a parameter and returns the class name with the word "Ability" removed
      * for better readability. If the ability passes is null, this method will return "null"

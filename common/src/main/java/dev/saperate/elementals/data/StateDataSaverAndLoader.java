@@ -24,7 +24,7 @@ public class StateDataSaverAndLoader extends SavedData {
     );
     public HashMap<UUID, PlayerData> players = new HashMap<>();
 
-    
+
     public static StateDataSaverAndLoader load(CompoundTag tag, HolderLookup.Provider provider) {
         StateDataSaverAndLoader state = new StateDataSaverAndLoader();
 
@@ -38,16 +38,12 @@ public class StateDataSaverAndLoader extends SavedData {
             playerData.activeElementIndex = nbt.getInt("elementIndex");
 
             Element element = playerData.getElement();
-            playerData.boundAbilities[0] = element.getBindableAbility(nbt.getInt("bind1"));
-            playerData.boundAbilities[1] = element.getBindableAbility(nbt.getInt("bind2"));
-            playerData.boundAbilities[2] = element.getBindableAbility(nbt.getInt("bind3"));
-            playerData.boundAbilities[3] = element.getBindableAbility(nbt.getInt("bind4"));
-            playerData.boundAbilities[4] = element.getBindableAbility(nbt.getInt("bind5"));
-            playerData.boundAbilities[5] = element.getBindableAbility(nbt.getInt("bind6"));
-            playerData.boundAbilities[6] = element.getBindableAbility(nbt.getInt("bind7"));
-            playerData.boundAbilities[7] = element.getBindableAbility(nbt.getInt("bind8"));
-            playerData.boundAbilities[8] = element.getBindableAbility(nbt.getInt("bind9"));
-            playerData.boundAbilities[9] = element.getBindableAbility(nbt.getInt("bind10"));
+            for (int i = 0; i < 10; i++) {
+                String bindTag = "bind" + (i + 1);
+                playerData.boundAbilities[i] = nbt.contains(bindTag)
+                        ? element.getBindableAbility(nbt.getInt(bindTag))
+                        : element.getBindableAbility(i);
+            }
 
             //Legacy system, this is here for compatibility
             if (!nbt.getCompound("upgrades").isEmpty()) {
@@ -101,7 +97,6 @@ public class StateDataSaverAndLoader extends SavedData {
             playerNbt.putString("element", Bender.packageElementsIntoString(playerData.elements));
             playerNbt.putInt("elementIndex", playerData.activeElementIndex);
 
-            // no save (por volta da linha 98)
             playerNbt.putInt("bind1", playerData.getElement().bindableAbilities.indexOf(playerData.boundAbilities[0]));
             playerNbt.putInt("bind2", playerData.getElement().bindableAbilities.indexOf(playerData.boundAbilities[1]));
             playerNbt.putInt("bind3", playerData.getElement().bindableAbilities.indexOf(playerData.boundAbilities[2]));

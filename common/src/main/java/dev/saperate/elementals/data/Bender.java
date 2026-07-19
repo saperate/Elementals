@@ -72,9 +72,15 @@ public class Bender {
     public void bend(int index, boolean isStart) {
         if (index >= 0 && index < Ability.MAX_KEYBINDS && plrData.boundAbilities[index] != null) {
             if (currAbility == null && isStart) {
-                castTime = System.currentTimeMillis();
-                setCurrAbility(plrData.boundAbilities[index]);
+                Ability ability = plrData.boundAbilities[index];
+                setCurrAbility(ability);
                 abilityData = null;
+                if (ability.activatesOnPress()) {
+                    castTime = null;
+                    ability.onCall(this, 0);
+                } else {
+                    castTime = System.currentTimeMillis();
+                }
                 return;
             }
             if (currAbility != null && castTime != null && !isStart) {
@@ -82,7 +88,7 @@ public class Bender {
                 castTime = null;
                 return;
             }
-            if(currAbility != null){
+            if (currAbility != null) {
                 currAbility.onAbilityPress(this, index);
             }
         }
