@@ -13,19 +13,9 @@ public class AbilityEarth2 implements Ability {
             return;
         }
 
-        if (bender.player.isShiftKeyDown()) {
-            if (deltaT >= 500 && playerData.canUseUpgrade("earthTrap")) {
-                EarthElement.get().getAbility(6).onCall(bender, deltaT);
-                return;
-            }
-
-            if (playerData.canUseUpgrade("earthRavine")) {
-                EarthElement.get().getAbility(7).onCall(bender, deltaT);
-                return;
-            } else if (playerData.canUseUpgrade("earthSpikes")) {
-                EarthElement.get().getAbility(8).onCall(bender, deltaT);
-                return;
-            }
+        if (bender.player.isShiftKeyDown() && deltaT >= 500 && playerData.canUseUpgrade("earthTrap")) {
+            EarthElement.get().getAbility(6).onCall(bender, deltaT);
+            return;
         }
 
         EarthElement.get().getAbility(5).onCall(bender, deltaT);

@@ -91,8 +91,6 @@ public class EarthElement extends Element {
         addAbility(new AbilityEarth2(), true);
         addAbility(new AbilityEarthMine());
         addAbility(new AbilityEarthTrap());
-        addAbility(new AbilityEarthRavine(), true);
-        addAbility(new AbilityEarthSpikes(), true);
         addAbility(new AbilityEarth3(), true);
         addAbility(new AbilityEarthPillar());
         addAbility(new AbilityEarthJump());
@@ -100,6 +98,8 @@ public class EarthElement extends Element {
         addAbility(new AbilityEarthArmor());
         addAbility(new AbilityEarthWall(), true);
         addAbility(new AbilityEarthChunkPickup(), true);
+        addAbility(new AbilityEarthRavine(), true);
+        addAbility(new AbilityEarthSpikes(), true);
     }
 
     public static Element get() {

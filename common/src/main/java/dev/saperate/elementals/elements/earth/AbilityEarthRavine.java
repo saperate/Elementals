@@ -16,10 +16,12 @@ import static dev.saperate.elementals.elements.earth.EarthElement.makeHole;
 public class AbilityEarthRavine implements Ability {
     @Override
     public void onCall(Bender bender, long deltaT) {
-        if (!PlayerData.get(bender.player).canUseUpgrade("earthRavine")) { // ou "earthSpikes"
+        PlayerData plrData = PlayerData.get(bender.player);
+        if (!plrData.canUseUpgrade("earthRavine")) {
             bender.setCurrAbility(null);
             return;
         }
+
         if (!bender.reduceChi(15)) {
             if (bender.abilityData == null) {
                 bender.setCurrAbility(null);
@@ -30,9 +32,9 @@ public class AbilityEarthRavine implements Ability {
         }
         Player player = bender.player;
         RandomSource rnd = player.getRandom();
-        PlayerData plrData = PlayerData.get(player);
         BlockHitResult hit = (BlockHitResult) player.pick(5, 0, false);
         BlockPos bPos = hit.getBlockPos();
+        // ... resto do método continua igual
 
         ArrayList<LivingEntity> damagedEntities = new ArrayList<>();
 

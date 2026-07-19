@@ -16,11 +16,13 @@ import java.util.ArrayList;
 public class AbilityEarthSpikes implements Ability {
     @Override
     public void onCall(Bender bender, long deltaT) {
-        if (!PlayerData.get(bender.player).canUseUpgrade("earthRavine")) { // ou "earthSpikes"
+        PlayerData plrData = PlayerData.get(bender.player);
+        if (!plrData.canUseUpgrade("earthSpikes")) {
             bender.setCurrAbility(null);
             return;
         }
-        if (!bender.reduceChi(20)) {
+
+        if (!bender.reduceChi(15)) {
             if (bender.abilityData == null) {
                 bender.setCurrAbility(null);
             } else {
@@ -30,7 +32,6 @@ public class AbilityEarthSpikes implements Ability {
         }
         Player player = bender.player;
         RandomSource rnd = player.getRandom();
-        PlayerData plrData = PlayerData.get(player);
         BlockHitResult hit = (BlockHitResult) player.pick(5, 0, false);
         BlockPos bPos = hit.getBlockPos();
 
