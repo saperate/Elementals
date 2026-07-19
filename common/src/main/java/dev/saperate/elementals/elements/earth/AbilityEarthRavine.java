@@ -16,6 +16,10 @@ import static dev.saperate.elementals.elements.earth.EarthElement.makeHole;
 public class AbilityEarthRavine implements Ability {
     @Override
     public void onCall(Bender bender, long deltaT) {
+        if (!PlayerData.get(bender.player).canUseUpgrade("earthRavine")) { // ou "earthSpikes"
+            bender.setCurrAbility(null);
+            return;
+        }
         if (!bender.reduceChi(15)) {
             if (bender.abilityData == null) {
                 bender.setCurrAbility(null);

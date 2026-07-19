@@ -20,6 +20,11 @@ public class AbilityEarthWall implements Ability {
         Player player = bender.player;
         PlayerData plrData = PlayerData.get(player);
 
+        if (!plrData.canUseUpgrade("earthWall")) {
+            bender.setCurrAbility(null);
+            return;
+        }
+
         Object[] vars = EarthElement.canBend(player, false);
         if (vars == null) {
             bender.setCurrAbility(null);

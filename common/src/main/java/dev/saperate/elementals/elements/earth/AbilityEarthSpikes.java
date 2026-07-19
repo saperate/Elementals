@@ -16,6 +16,10 @@ import java.util.ArrayList;
 public class AbilityEarthSpikes implements Ability {
     @Override
     public void onCall(Bender bender, long deltaT) {
+        if (!PlayerData.get(bender.player).canUseUpgrade("earthRavine")) { // ou "earthSpikes"
+            bender.setCurrAbility(null);
+            return;
+        }
         if (!bender.reduceChi(20)) {
             if (bender.abilityData == null) {
                 bender.setCurrAbility(null);

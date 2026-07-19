@@ -20,7 +20,8 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 import static dev.saperate.elementals.Elementals.BENDING_GRIEFING;
 import static dev.saperate.elementals.entities.ElementalEntities.EARTHBLOCK;
@@ -87,18 +88,18 @@ public class EarthElement extends Element {
         });
         addAbility(new AbilityEarth1(), true);
         addAbility(new AbilityEarthBlockPickup());
-        addAbility(new AbilityEarthWall());
-        addAbility(new AbilityEarthChunkPickup());
         addAbility(new AbilityEarth2(), true);
         addAbility(new AbilityEarthMine());
         addAbility(new AbilityEarthTrap());
-        addAbility(new AbilityEarthRavine());
-        addAbility(new AbilityEarthSpikes());
+        addAbility(new AbilityEarthRavine(), true);
+        addAbility(new AbilityEarthSpikes(), true);
         addAbility(new AbilityEarth3(), true);
         addAbility(new AbilityEarthPillar());
         addAbility(new AbilityEarthJump());
         addAbility(new AbilityEarth4(), true);
         addAbility(new AbilityEarthArmor());
+        addAbility(new AbilityEarthWall(), true);
+        addAbility(new AbilityEarthChunkPickup(), true);
     }
 
     public static Element get() {
