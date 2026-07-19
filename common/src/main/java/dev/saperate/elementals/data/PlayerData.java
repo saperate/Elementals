@@ -4,15 +4,18 @@ import dev.saperate.elementals.elements.Ability;
 import dev.saperate.elementals.elements.Element;
 import dev.saperate.elementals.elements.NoneElement;
 import dev.saperate.elementals.elements.Upgrade;
+import dev.saperate.elementals.network.packets.common.SyncLevelPacket;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
-import dev.saperate.elementals.network.packets.common.SyncLevelPacket;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Stack;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class PlayerData {
-    public Ability[] boundAbilities = new Ability[4];
+    public Ability[] boundAbilities = new Ability[10];
     //the upgrades in these are incomplete, meaning that most methods in them won't work because they lack
     //parents & children. However, they are equal to their complete counterparts so use that if you need the methods.
     public HashMap<Upgrade, Boolean> upgrades = new HashMap<>();

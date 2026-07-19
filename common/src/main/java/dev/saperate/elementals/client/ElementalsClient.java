@@ -1,18 +1,24 @@
 package dev.saperate.elementals.client;
 
 import commonnetwork.api.Network;
-import dev.saperate.elementals.Constants;
 import dev.saperate.elementals.Elementals;
+import dev.saperate.elementals.client.entities.air.*;
+import dev.saperate.elementals.client.entities.blood.BloodShotEntityRenderer;
+import dev.saperate.elementals.client.entities.common.BoomerangEntityRenderer;
+import dev.saperate.elementals.client.entities.common.DecoyPlayerEntityRenderer;
+import dev.saperate.elementals.client.entities.common.DirtBottleEntityRenderer;
+import dev.saperate.elementals.client.entities.common.SkyBisonEntityRenderer;
+import dev.saperate.elementals.client.entities.earth.EarthBlockEntityRenderer;
+import dev.saperate.elementals.client.entities.fire.*;
+import dev.saperate.elementals.client.entities.lightning.LightningArcEntityRenderer;
+import dev.saperate.elementals.client.entities.lightning.VoltArcEntityRenderer;
+import dev.saperate.elementals.client.entities.metal.MetalBindEntityRenderer;
+import dev.saperate.elementals.client.entities.metal.MetalBulletEntityRenderer;
+import dev.saperate.elementals.client.entities.metal.MetalCableEntityRenderer;
+import dev.saperate.elementals.client.entities.metal.MetalLanceRenderer;
 import dev.saperate.elementals.client.entities.models.metal.MetalLanceModel;
 import dev.saperate.elementals.client.entities.models.water.WaterBladeModel;
 import dev.saperate.elementals.client.entities.water.*;
-import dev.saperate.elementals.client.entities.earth.*;
-import dev.saperate.elementals.client.entities.fire.*;
-import dev.saperate.elementals.client.entities.air.*;
-import dev.saperate.elementals.client.entities.common.*;
-import dev.saperate.elementals.client.entities.blood.*;
-import dev.saperate.elementals.client.entities.lightning.*;
-import dev.saperate.elementals.client.entities.metal.*;
 import dev.saperate.elementals.client.features.MetalArmorRenderer;
 import dev.saperate.elementals.client.gui.CastTimerHudOverlay;
 import dev.saperate.elementals.client.gui.ChiHudOverlay;
@@ -50,6 +56,12 @@ public class ElementalsClient {
         new KeyAbility2();
         new KeyAbility3();
         new KeyAbility4();
+        new KeyAbility5();
+        new KeyAbility6();
+        new KeyAbility7();
+        new KeyAbility8();
+        new KeyAbility9();
+        new KeyAbility10();
         new GuiKey();
         new KeyCycleBending();
 

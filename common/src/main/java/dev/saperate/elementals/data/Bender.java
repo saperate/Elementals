@@ -2,11 +2,11 @@ package dev.saperate.elementals.data;
 
 import commonnetwork.api.Network;
 import dev.saperate.elementals.Elementals;
+import dev.saperate.elementals.commands.BendingCommand;
 import dev.saperate.elementals.effects.ElementalsStatusEffects;
 import dev.saperate.elementals.elements.Ability;
 import dev.saperate.elementals.elements.Element;
 import dev.saperate.elementals.elements.NoneElement;
-import dev.saperate.elementals.commands.BendingCommand;
 import dev.saperate.elementals.network.packets.S2C.SyncChiPacket;
 import dev.saperate.elementals.network.packets.S2C.SyncCurrAbilityPacket;
 import dev.saperate.elementals.network.packets.S2C.SyncElementsPacket;
@@ -18,7 +18,10 @@ import net.minecraft.world.level.GameType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static dev.saperate.elementals.utils.SapsUtils.safeHasStatusEffect;
@@ -50,18 +53,18 @@ public class Bender {
 
     public void bindAbility(Ability ability, int index) {
         if ((plrData.elements.get(plrData.activeElementIndex).contains(ability) || ability == null)
-                && index >= 0 && index <= 4) {
+                && index >= 0 && index <= 10) {
             plrData.boundAbilities[index] = ability;
         }
     }
 
 
     public void clearBindings() {
-        plrData.boundAbilities = new Ability[4];
+        plrData.boundAbilities = new Ability[10];
     }
 
     public void bend(int index, boolean isStart) {
-        if (index >= 0 && index < 5 && plrData.boundAbilities[index] != null) {
+        if (index >= 0 && index < 10 && plrData.boundAbilities[index] != null) {
             if (currAbility == null && isStart) {
                 castTime = System.currentTimeMillis();
                 setCurrAbility(plrData.boundAbilities[index]);
@@ -300,7 +303,7 @@ public class Bender {
         clearBindings();
 
         int abilitySize = plrData.elements.get(plrData.activeElementIndex).bindableAbilities.size();
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < 10; i++) {
             if (i < abilitySize) {
                 bindAbility(plrData.elements.get(plrData.activeElementIndex).getBindableAbility(i), i);
             }

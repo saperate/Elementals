@@ -17,7 +17,7 @@ import java.util.Map;
 import java.util.UUID;
 
 public class StateDataSaverAndLoader extends SavedData {
-    private static SavedData.Factory<StateDataSaverAndLoader> type = new SavedData.Factory<>(
+    private static final SavedData.Factory<StateDataSaverAndLoader> type = new SavedData.Factory<>(
             StateDataSaverAndLoader::new,
             StateDataSaverAndLoader::load,
             null
@@ -42,6 +42,12 @@ public class StateDataSaverAndLoader extends SavedData {
             playerData.boundAbilities[1] = element.getBindableAbility(nbt.getInt("bind2"));
             playerData.boundAbilities[2] = element.getBindableAbility(nbt.getInt("bind3"));
             playerData.boundAbilities[3] = element.getBindableAbility(nbt.getInt("bind4"));
+            playerData.boundAbilities[4] = element.getBindableAbility(nbt.getInt("bind5"));
+            playerData.boundAbilities[5] = element.getBindableAbility(nbt.getInt("bind6"));
+            playerData.boundAbilities[6] = element.getBindableAbility(nbt.getInt("bind7"));
+            playerData.boundAbilities[7] = element.getBindableAbility(nbt.getInt("bind8"));
+            playerData.boundAbilities[8] = element.getBindableAbility(nbt.getInt("bind9"));
+            playerData.boundAbilities[9] = element.getBindableAbility(nbt.getInt("bind10"));
 
             //Legacy system, this is here for compatibility
             if (!nbt.getCompound("upgrades").isEmpty()) {
@@ -95,10 +101,17 @@ public class StateDataSaverAndLoader extends SavedData {
             playerNbt.putString("element", Bender.packageElementsIntoString(playerData.elements));
             playerNbt.putInt("elementIndex", playerData.activeElementIndex);
 
+            // no save (por volta da linha 98)
             playerNbt.putInt("bind1", playerData.getElement().bindableAbilities.indexOf(playerData.boundAbilities[0]));
             playerNbt.putInt("bind2", playerData.getElement().bindableAbilities.indexOf(playerData.boundAbilities[1]));
             playerNbt.putInt("bind3", playerData.getElement().bindableAbilities.indexOf(playerData.boundAbilities[2]));
             playerNbt.putInt("bind4", playerData.getElement().bindableAbilities.indexOf(playerData.boundAbilities[3]));
+            playerNbt.putInt("bind5", playerData.getElement().bindableAbilities.indexOf(playerData.boundAbilities[4]));
+            playerNbt.putInt("bind6", playerData.getElement().bindableAbilities.indexOf(playerData.boundAbilities[5]));
+            playerNbt.putInt("bind7", playerData.getElement().bindableAbilities.indexOf(playerData.boundAbilities[6]));
+            playerNbt.putInt("bind8", playerData.getElement().bindableAbilities.indexOf(playerData.boundAbilities[7]));
+            playerNbt.putInt("bind9", playerData.getElement().bindableAbilities.indexOf(playerData.boundAbilities[8]));
+            playerNbt.putInt("bind10", playerData.getElement().bindableAbilities.indexOf(playerData.boundAbilities[9]));
 
 
             CompoundTag upgradesNbt = new CompoundTag();
