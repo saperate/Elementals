@@ -4,6 +4,7 @@ import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.data.ElementalConfig;
 import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.elements.Ability;
+import dev.saperate.elementals.entities.fire.FireWhipEntity;
 import dev.saperate.elementals.utils.SapsUtils;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
@@ -60,6 +61,15 @@ public class AbilityFireWhip implements Ability {
 
         playSoundAtEntity(player, SoundEvents.FIRECHARGE_USE, 5);
 
+        //real 3D "whip crack" visual - a fan of fire-textured planes swinging across
+        //in front of the player, oriented to match where they're aiming
+        Vec3 whipSpawnPos = getEntityLookVector(player, 2);
+        FireWhipEntity whipVisual = new FireWhipEntity(player.level(), player,
+                whipSpawnPos.x, whipSpawnPos.y - 0.3, whipSpawnPos.z,
+                player.getYRot(), player.getXRot(),
+                plrData.canUseUpgrade("blueFire"));
+        player.level().addFreshEntity(whipVisual);
+
         List<Entity> hits = player.level().getEntitiesOfClass(Entity.class,
                 boundingBox.inflate(range * 2).move(player.position()),
                 Entity::isAlive);
@@ -80,7 +90,7 @@ public class AbilityFireWhip implements Ability {
             }
         }
 
-        //instant ability, nothing to hold onto afterward
+        //instant ability, nothing to hold onto afterwards
         bender.setCurrAbility(null);
     }
 

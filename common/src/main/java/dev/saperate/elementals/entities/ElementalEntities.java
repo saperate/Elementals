@@ -1,9 +1,9 @@
 package dev.saperate.elementals.entities;
 
+import dev.saperate.elementals.entities.air.*;
 import dev.saperate.elementals.entities.blood.BloodShotEntity;
 import dev.saperate.elementals.entities.common.BoomerangEntity;
 import dev.saperate.elementals.entities.common.DecoyPlayerEntity;
-import dev.saperate.elementals.entities.air.*;
 import dev.saperate.elementals.entities.common.DirtBottleEntity;
 import dev.saperate.elementals.entities.common.sky_bison.SkyBisonEntity;
 import dev.saperate.elementals.entities.earth.EarthBlockEntity;
@@ -16,7 +16,7 @@ import dev.saperate.elementals.entities.metal.MetalCableEntity;
 import dev.saperate.elementals.entities.metal.MetalLanceEntity;
 import dev.saperate.elementals.entities.water.*;
 import dev.saperate.elementals.platform.Services;
-import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.EntityType;
 
 import java.util.function.Supplier;
 
@@ -56,6 +56,8 @@ public class ElementalEntities {
             "fire_shield", FireShieldEntity::new, 3.5f, 3f);
     public static final Supplier<EntityType<FireWispEntity>> FIREWISP = Services.REGISTRY.registerEntity(
             "fire_wisp", FireWispEntity::new, 0.25f, 0.25f);
+    public static final Supplier<EntityType<FireWhipEntity>> FIREWHIP = Services.REGISTRY.registerEntity(
+            "fire_whip", FireWhipEntity::new, 2f, 2f);
 
     //Earth
     public static final Supplier<EntityType<EarthBlockEntity>> EARTHBLOCK = Services.REGISTRY.registerEntity(
@@ -73,6 +75,8 @@ public class ElementalEntities {
             "air_ball", AirBallEntity::new, 1, 1);
     public static final Supplier<EntityType<AirBulletEntity>> AIRBULLET = Services.REGISTRY.registerEntity(
             "air_bullet", AirBulletEntity::new, 0.25f, 0.25f);
+    public static final Supplier<EntityType<AirBladeEntity>> AIRBLADE = Services.REGISTRY.registerEntity(
+            "air_blade", AirBladeEntity::new, 1.4f, 0.3f);
     public static final Supplier<EntityType<AirScooterEntity>> AIRSCOOTER = Services.REGISTRY.registerEntity(
             "air_scooter", AirScooterEntity::new, 1, 1);
 
@@ -105,7 +109,7 @@ public class ElementalEntities {
             "boomerang", BoomerangEntity::new, .6f, .2f);
     public static final Supplier<EntityType<SkyBisonEntity>> SKYBISON = Services.REGISTRY.registerEntity(
             "sky_bison", SkyBisonEntity::new, 3.25f, 3.25f);
-    
+
     public static void register() {
         Services.REGISTRY.registerDefaultEntityAttribute(DECOYPLAYER, DecoyPlayerEntity::createMobAttributes);
         Services.REGISTRY.registerDefaultEntityAttribute(SKYBISON, SkyBisonEntity::createMobAttributes);

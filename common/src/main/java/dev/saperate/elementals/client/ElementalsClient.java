@@ -16,6 +16,7 @@ import dev.saperate.elementals.client.entities.metal.MetalBindEntityRenderer;
 import dev.saperate.elementals.client.entities.metal.MetalBulletEntityRenderer;
 import dev.saperate.elementals.client.entities.metal.MetalCableEntityRenderer;
 import dev.saperate.elementals.client.entities.metal.MetalLanceRenderer;
+import dev.saperate.elementals.client.entities.models.air.AirBladeModel;
 import dev.saperate.elementals.client.entities.models.metal.MetalLanceModel;
 import dev.saperate.elementals.client.entities.models.water.WaterBladeModel;
 import dev.saperate.elementals.client.entities.water.*;
@@ -47,10 +48,12 @@ public class ElementalsClient {
             ResourceLocation.fromNamespaceAndPath(MODID, "water_blade"), "bb_main"));
     public static final ModelLayerLocation MODEL_METAL_LANCE_LAYER = (new ModelLayerLocation(
             ResourceLocation.fromNamespaceAndPath(MODID, "metal_lance"),"bb_main"));
-    
-    
+    public static final ModelLayerLocation MODEL_AIR_BLADE_LAYER = (new ModelLayerLocation(
+            ResourceLocation.fromNamespaceAndPath(MODID, "air_blade"), "bb_main"));
+
+
     public static void init(){
-		registerEntityRenderers();
+        registerEntityRenderers();
 
         new KeyAbility1();
         new KeyAbility2();
@@ -66,16 +69,17 @@ public class ElementalsClient {
         new KeyCycleBending();
 
         Services.EVENTS.onClientJoin(ElementalsClient::onClientJoin);
-        
+
         Services.REGISTRY.registerClientOverlay(
                 ResourceLocation.fromNamespaceAndPath(MODID, "cast_timer"), new CastTimerHudOverlay());
         Services.REGISTRY.registerClientOverlay(
                 ResourceLocation.fromNamespaceAndPath(MODID, "chi_hud"), new ChiHudOverlay());
-        
+
         Services.REGISTRY.registerClientParticles();
         Services.REGISTRY.registerClientColorProviders();
         Services.REGISTRY.registerClientModelLayer(MODEL_WATER_BLADE_LAYER, WaterBladeModel::getTexturedModelData);
         Services.REGISTRY.registerClientModelLayer(MODEL_METAL_LANCE_LAYER, MetalLanceModel::getTexturedModelData);
+        Services.REGISTRY.registerClientModelLayer(MODEL_AIR_BLADE_LAYER, AirBladeModel::getTexturedModelData);
 
         Elementals.GLIDER_ITEM_RENDER_PROVIDER = () -> new GeoRenderProvider(){
             private final GliderItemRenderer renderer = new GliderItemRenderer();
@@ -88,7 +92,7 @@ public class ElementalsClient {
 
         Elementals.METAL_ARMOR_RENDER_PROVIDER = () -> new GeoRenderProvider(){
             private MetalArmorRenderer renderer;
-            
+
             @Override
             public <T extends LivingEntity> HumanoidModel<?> getGeoArmorRenderer(@Nullable T livingEntity, ItemStack itemStack, @Nullable EquipmentSlot equipmentSlot, @Nullable HumanoidModel<T> original) {
                 if(this.renderer == null)
@@ -119,6 +123,7 @@ public class ElementalsClient {
         Services.REGISTRY.registerClientEntityRenderer(FIREBALL, FireBallEntityRenderer::new);
         Services.REGISTRY.registerClientEntityRenderer(FIRESHIELD, FireShieldEntityRenderer::new);
         Services.REGISTRY.registerClientEntityRenderer(FIREWISP, FireWispEntityRenderer::new);
+        Services.REGISTRY.registerClientEntityRenderer(FIREWHIP, FireWhipEntityRenderer::new);
 
         //EARTH
         Services.REGISTRY.registerClientEntityRenderer(EARTHBLOCK, EarthBlockEntityRenderer::new);
@@ -129,14 +134,15 @@ public class ElementalsClient {
         Services.REGISTRY.registerClientEntityRenderer(AIRSTREAM, AirStreamEntityRenderer::new);
         Services.REGISTRY.registerClientEntityRenderer(AIRBALL, AirBallEntityRenderer::new);
         Services.REGISTRY.registerClientEntityRenderer(AIRBULLET, AirBulletEntityRenderer::new);
+        Services.REGISTRY.registerClientEntityRenderer(AIRBLADE, AirBladeEntityRenderer::new);
         Services.REGISTRY.registerClientEntityRenderer(AIRSCOOTER, AirScooterEntityRenderer::new);
 
         //COMMON
         Services.REGISTRY.registerClientEntityRenderer(DECOYPLAYER, (context) -> new DecoyPlayerEntityRenderer(context, true));
         Services.REGISTRY.registerClientEntityRenderer(DIRTBOTTLEENTITY, DirtBottleEntityRenderer::new);
         Services.REGISTRY.registerClientEntityRenderer(BOOMERANGENTITY, BoomerangEntityRenderer::new);
-		Services.REGISTRY.registerClientEntityRenderer(SKYBISON, SkyBisonEntityRenderer::new);
-        
+        Services.REGISTRY.registerClientEntityRenderer(SKYBISON, SkyBisonEntityRenderer::new);
+
         //LIGHTNING
         Services.REGISTRY.registerClientEntityRenderer(LIGHTNINGARC, LightningArcEntityRenderer::new);
         Services.REGISTRY.registerClientEntityRenderer(VOLTARC, VoltArcEntityRenderer::new);
@@ -144,15 +150,15 @@ public class ElementalsClient {
         //BLOOD
         Services.REGISTRY.registerClientEntityRenderer(BLOODSHOT, BloodShotEntityRenderer::new);
 
-		//METAL
-		Services.REGISTRY.registerClientEntityRenderer(METALCABLE, MetalCableEntityRenderer::new);
-		Services.REGISTRY.registerClientEntityRenderer(METALBIND, MetalBindEntityRenderer::new);
-		Services.REGISTRY.registerClientEntityRenderer(METALBULLET, MetalBulletEntityRenderer::new);
-		Services.REGISTRY.registerClientEntityRenderer(METALLANCE, MetalLanceRenderer::new);
-	}
+        //METAL
+        Services.REGISTRY.registerClientEntityRenderer(METALCABLE, MetalCableEntityRenderer::new);
+        Services.REGISTRY.registerClientEntityRenderer(METALBIND, MetalBindEntityRenderer::new);
+        Services.REGISTRY.registerClientEntityRenderer(METALBULLET, MetalBulletEntityRenderer::new);
+        Services.REGISTRY.registerClientEntityRenderer(METALLANCE, MetalLanceRenderer::new);
+    }
 
     private static void onClientJoin(Minecraft client) {
         Network.getNetworkHandler().sendToServer(new SyncVersionPacket(SyncVersionPacket.getModVersion()));
     }
-    
+
 }

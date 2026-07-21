@@ -3,11 +3,12 @@ package dev.saperate.elementals.client.entities.utils;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Minecraft;
-
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.resources.ResourceLocation;
-import org.joml.*;
+import org.joml.Matrix4f;
+import org.joml.Vector4f;
+
 import java.util.function.Function;
 
 public abstract class RenderUtils {
@@ -23,7 +24,7 @@ public abstract class RenderUtils {
         TextureAtlasSprite sprite = func.apply(tex);
         float uMin = sprite.getU0(), uMax = sprite.getU1();
         float vMin = sprite.getV0(), vMax = sprite.getV1();
-        
+
         float m = 0.5f;
         Vector4f v1 = new Vector4f(-m, m, height, 1).mul(rot);
         Vector4f v2 = new Vector4f(-m, -m, height, 1).mul(rot);

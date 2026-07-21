@@ -486,14 +486,19 @@ public final class SapsUtils {
      */
     public static boolean isLookingAt(Entity looker, Entity observed, int maxDistance, float angle) {
         Vector3f pos = getEntityLookVector(looker, 3).subtract(looker.position()).normalize().scale(3).toVector3f();
-        Vector3f dir = looker.position().subtract(observed.position()).toVector3f();
+        Vector3f dir = observed.position().add(0, observed.getBbHeight() / 2f, 0)
+                .subtract(looker.getEyePosition()).toVector3f();
         if (dir.length() > maxDistance && maxDistance >= 0) {
             return false;
         }
         dir = dir.normalize();
-        float dot = -pos.normalize().dot(dir);
+        //dot is the cosine of the angle between where we're looking and the direction towards the target.
+        //1 means looking dead-on, 0 means perpendicular. This is compared directly against the angle
+        //threshold (itself a cosine value) instead of being re-wrapped in Math.cos(), which previously
+        //shrank the cone to a near-unusable sliver regardless of the angle passed in.
+        float dot = pos.normalize().dot(dir);
 
-        return (Math.cos(dot) <= angle && dot >= 0);
+        return dot >= angle;
     }
 
     /**

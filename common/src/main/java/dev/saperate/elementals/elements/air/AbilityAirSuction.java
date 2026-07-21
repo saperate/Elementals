@@ -1,6 +1,7 @@
 package dev.saperate.elementals.elements.air;
 
 import dev.saperate.elementals.data.Bender;
+import dev.saperate.elementals.data.ElementalConfig;
 import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.elements.Ability;
 import dev.saperate.elementals.utils.SapsUtils;
@@ -16,13 +17,13 @@ import java.util.List;
 
 import static dev.saperate.elementals.misc.ElementalsSounds.WIND_SOUND_EVENT;
 import static dev.saperate.elementals.utils.SapsUtils.playSoundAtEntity;
-import static dev.saperate.elementals.utils.SapsUtils.serverSummonParticles;
 
 /**
  * The reverse of AirGust: while held (hold shift to sustain, same as AirShield), pulls every
- * entity within radius steadily toward the player - a localized vacuum. Doesn't damage
- * anything by itself; it's a setup tool to drag enemies into range, off a ledge, or into
- * another ability like FireWhip or AirBlade.
+ * entity within radius steadily toward the player - a localized vacuum - while also chipping
+ * away real damage every few ticks, so it isn't just a repositioning tool anymore. The pull is
+ * made visible with a continuous, concentrated beam of white particles running from the player
+ * to every entity being dragged in.
  */
 public class AbilityAirSuction implements Ability {
     @Override
@@ -57,8 +58,9 @@ public class AbilityAirSuction implements Ability {
         Player player = bender.player;
         PlayerData plrData = PlayerData.get(player);
         float radius = plrData.canUseUpgrade("airSuctionRangeI") ? 10 : 6;
+        float damage = plrData.canUseUpgrade("airSuctionRangeI") ? 1.5f : 1f;
 
-        serverSummonParticles((ServerLevel) player.level(),
+        SapsUtils.serverSummonParticles((ServerLevel) player.level(),
                 ParticleTypes.CLOUD, player, player.getRandom(),
                 0, 0.1f, 0,
                 0.1f, 2,
@@ -77,10 +79,40 @@ public class AbilityAirSuction implements Ability {
             dir = dir.normalize();
             e.addDeltaMovement(dir.scale(0.12));
             e.hurtMarked = true;
+
+            //continuous, concentrated beam of white particles from the player to the entity
+            //being pulled - makes the vacuum visible instead of just an invisible force
+            drawParticleBeam((ServerLevel) player.level(), player.getEyePosition(),
+                    e.position().add(0, e.getBbHeight() / 2f, 0), player.getRandom());
+
+            //real damage while being dragged in, applied periodically (like other bending
+            //damage-over-time effects in this mod) so vanilla hit-invulnerability doesn't just
+            //eat every tick's damage
+            if (e.tickCount % 10 == 0) {
+                e.hurt(e.damageSources().playerAttack(player), damage * ElementalConfig.get().BENDING_DAMAGE_MULTIPLIER);
+            }
         }
 
         if (!player.isShiftKeyDown()) {
             onRemove(bender);
+        }
+    }
+
+    /**
+     * Draws a short, dense line of concentrated white cloud particles between two points,
+     * used to make the AirSuction pull visually read as a beam rather than ambient particles.
+     */
+    private void drawParticleBeam(ServerLevel level, Vec3 from, Vec3 to, net.minecraft.util.RandomSource rnd) {
+        double distance = from.distanceTo(to);
+        int steps = Math.max(2, (int) (distance * 2));
+        for (int i = 0; i <= steps; i++) {
+            double t = (double) i / steps;
+            Vec3 point = from.lerp(to, t);
+            level.sendParticles(ParticleTypes.CLOUD,
+                    point.x + (rnd.nextDouble() - 0.5) * 0.08,
+                    point.y + (rnd.nextDouble() - 0.5) * 0.08,
+                    point.z + (rnd.nextDouble() - 0.5) * 0.08,
+                    1, 0, 0, 0, 0);
         }
     }
 
