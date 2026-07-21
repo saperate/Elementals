@@ -80,7 +80,7 @@ public class AbilityFireWhip implements Ability {
             }
         }
 
-        //instant ability, nothing to hold onto afterwards
+        //instant ability, nothing to hold onto afterward
         bender.setCurrAbility(null);
     }
 
