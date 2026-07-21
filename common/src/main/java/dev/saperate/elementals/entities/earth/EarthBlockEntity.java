@@ -106,7 +106,7 @@ public class EarthBlockEntity extends AbstractElementalsEntity<Player> {
         if (usesOffset()) {
             direction.add(target);
         }
-        
+
         moveEntityTowardsGoal(direction);
     }
 
@@ -162,7 +162,7 @@ public class EarthBlockEntity extends AbstractElementalsEntity<Player> {
     @Override
     public void onHitEntity(Entity entity) {
         entity.fallDistance = 0;
-        entity.hurt(this.damageSources().playerAttack((Player) getOwner()), getDamage() * ElementalConfig.get().BENDING_DAMAGE_MULTIPLIER);
+        entity.hurt(this.damageSources().playerAttack(getOwner()), getDamage() * ElementalConfig.get().BENDING_DAMAGE_MULTIPLIER);
         entity.addDeltaMovement(this.getDeltaMovement().scale(0.5));
         entity.move(MoverType.SELF, entity.getDeltaMovement());
         entity.hurtMarked = true;

@@ -16,6 +16,30 @@ import net.minecraft.world.phys.Vec3;
 import static dev.saperate.elementals.Elementals.BENDING_GRIEFING;
 
 public class AbilityEarthPillar implements Ability {
+    public static void placeBlock(BlockPos startPos, Vec3 endPos, Player player){
+        BlockState state = player.level().getBlockState(startPos);
+
+        if (!EarthElement.isBlockBendable(state, Bender.getBender((ServerPlayer) player))) {
+            return;
+        }
+        if (player.level().getGameRules().getBoolean(BENDING_GRIEFING)) {
+            player.level().setBlockAndUpdate(startPos, Blocks.AIR.defaultBlockState());
+        }
+
+
+        EarthBlockEntity entity = new EarthBlockEntity(player.level(), player, startPos.getX() + 0.5f, startPos.getY(), startPos.getZ() + 0.5f);
+        entity.setBlockState(state);
+        entity.setTargetPosition(endPos.toVector3f());
+        entity.setShiftToFreeze(false);
+        entity.setDamageOnTouch(true);//TODO replace with damage above block
+        entity.setDamage(1);
+        entity.maxLifeTime = 20;
+        entity.setDropOnEndOfLife(true);
+        entity.setMovementSpeed(0.5f);
+
+        player.level().addFreshEntity(entity);
+    }
+
     @Override
     public void onCall(Bender bender, long deltaT) {
 
@@ -40,8 +64,7 @@ public class AbilityEarthPillar implements Ability {
         Direction dir = ((Direction) vars[3]).getOpposite();
 
 
-
-        int height = (plrData.canUseUpgrade("earthPillarTallI") ? 5 : 3);
+        int height = plrData.canUseUpgrade("earthPillarTallII") ? 7 : (plrData.canUseUpgrade("earthPillarTallI") ? 5 : 3);
         for (int i = 0; i < height; i++) {
             if (dir.equals(Direction.UP)){
                 BlockPos bPos = startPos.relative(dir,i);
@@ -62,30 +85,6 @@ public class AbilityEarthPillar implements Ability {
         bender.setCurrAbility(null);
     }
 
-    public static void placeBlock(BlockPos startPos, Vec3 endPos, Player player){
-            BlockState state = player.level().getBlockState(startPos);
-
-            if(!EarthElement.isBlockBendable(state, Bender.getBender((ServerPlayer) player))){
-                return;
-            }
-            if(player.level().getGameRules().getBoolean(BENDING_GRIEFING)){
-                player.level().setBlockAndUpdate(startPos, Blocks.AIR.defaultBlockState());
-            }
-
-
-            EarthBlockEntity entity = new EarthBlockEntity(player.level(), player, startPos.getX() + 0.5f, startPos.getY(), startPos.getZ() + 0.5f);
-            entity.setBlockState(state);
-            entity.setTargetPosition(endPos.toVector3f());
-            entity.setShiftToFreeze(false);
-            entity.setDamageOnTouch(true);//TODO replace with damage above block
-            entity.setDamage(1);
-            entity.maxLifeTime = 20;
-            entity.setDropOnEndOfLife(true);
-            entity.setMovementSpeed(0.5f);
-
-            player.level().addFreshEntity(entity);
-    }
-    
     @Override
     public void onRemove(Bender bender) {
         bender.setCurrAbility(null);

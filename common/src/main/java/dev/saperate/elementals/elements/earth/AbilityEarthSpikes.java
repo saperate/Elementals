@@ -68,8 +68,9 @@ public class AbilityEarthSpikes implements Ability {
                 return;
             }
         }
-        
-        EarthElement.damageEntityAboveBlock(bender.player,pos,damagedEntities,3.5f);
+
+        float damage = PlayerData.get(bender.player).canUseUpgrade("earthSpikesDamageI") ? 5f : 3.5f;
+        EarthElement.damageEntityAboveBlock(bender.player, pos, damagedEntities, damage);
 
         EarthBlockEntity block = new EarthBlockEntity(
                 bender.player.level(), bender.player,
@@ -88,7 +89,6 @@ public class AbilityEarthSpikes implements Ability {
         bender.player.level().addFreshEntity(block);
     }
 
-    
 
     @Override
     public void onRemove(Bender bender) {

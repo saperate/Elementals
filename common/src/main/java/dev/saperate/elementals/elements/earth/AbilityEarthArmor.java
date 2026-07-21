@@ -1,10 +1,12 @@
 package dev.saperate.elementals.elements.earth;
 
 import dev.saperate.elementals.data.Bender;
+import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.effects.ElementalsStatusEffects;
 import dev.saperate.elementals.elements.Ability;
 import dev.saperate.elementals.items.EarthArmorItem;
 import net.minecraft.core.NonNullList;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
@@ -32,6 +34,7 @@ public class AbilityEarthArmor implements Ability {
             player.removeEffect(ElementalsStatusEffects.DENSE.get());
             player.removeEffect(MobEffects.NIGHT_VISION);
             player.removeEffect(MobEffects.BLINDNESS);
+            player.removeEffect(MobEffects.ABSORPTION);
             return;
         }
 
@@ -56,6 +59,10 @@ public class AbilityEarthArmor implements Ability {
         inv.set(EquipmentSlot.CHEST.getIndex(), EARTH_CHESTPLATE.get().getItemStack(inv.get(2), standingBlock, world));
         inv.set(EquipmentSlot.LEGS.getIndex(), EARTH_LEGGINGS.get().getItemStack(inv.get(1), standingBlock, world));
         inv.set(EquipmentSlot.FEET.getIndex(), EARTH_BOOTS.get().getItemStack(inv.get(0), standingBlock, world));
+
+        if (PlayerData.get(player).canUseUpgrade("earthArmorFortify")) {
+            player.addEffect(new MobEffectInstance(MobEffects.ABSORPTION, 12000, 1, false, true, true));
+        }
     }
 
     public static void removeArmorSet(NonNullList<ItemStack> inv) {
