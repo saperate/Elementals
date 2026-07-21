@@ -6,7 +6,6 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import dev.saperate.elementals.Constants;
 import dev.saperate.elementals.client.entities.models.air.AirBladeModel;
-import dev.saperate.elementals.entities.air.AirBladeEntity;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
