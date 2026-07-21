@@ -14,6 +14,9 @@ public class AirElement extends Element {
                                 new Upgrade("airTornadoSpeedI", new Upgrade[]{
                                         new Upgrade("airTornadoSpeedII", 1)
                                 }, 1)
+                        }, 2),
+                        new Upgrade("airSuction", new Upgrade[]{
+                                new Upgrade("airSuctionRangeI", 1)
                         }, 2)
                 }, true, 2),
                 new Upgrade("airStream", new Upgrade[]{
@@ -35,7 +38,11 @@ public class AirElement extends Element {
                                                 new Upgrade("airBulletsCountII", 1)
                                         }, 1)
                                 }, 2),
-                                new Upgrade("airSuffocate", 2)
+                                new Upgrade("airSuffocate", 2),
+                                new Upgrade("airBlade", new Upgrade[]{
+                                        new Upgrade("airBladeRangeI", 1),
+                                        new Upgrade("airBladeDamageI", 1)
+                                }, 2)
                         }, true, 1),
                         new Upgrade("airStreamSpeedI", new Upgrade[]{
                                 new Upgrade("airStreamSpeedII", new Upgrade[]{
@@ -78,11 +85,15 @@ public class AirElement extends Element {
         addAbility(new AbilityAirScooter());
         addAbility(new AbilityAirJump());
         addAbility(new AbilityAir4(), 3);
+        addAbility(new AbilityAirSuction(), 8);
+        addAbility(new AbilityAirBlade(), 9);
 
         registerUpgradeKeybind("airShield", 4);
         registerUpgradeKeybind("airTornado", 5);
         registerUpgradeKeybind("airBullets", 6);
         registerUpgradeKeybind("airSuffocate", 7);
+        registerUpgradeKeybind("airSuction", 8);
+        registerUpgradeKeybind("airBlade", 9);
     }
 
     public static Element get() {
@@ -114,9 +125,9 @@ public class AirElement extends Element {
     public boolean isSkillTreeComplete(Bender bender) {
         PlayerData plrData = bender.plrData;
         return bender.hasElement(this)
-                && (plrData.canUseUpgrade("airTornadoSpeedII") || plrData.canUseUpgrade("airShield"))
+                && (plrData.canUseUpgrade("airTornadoSpeedII") || plrData.canUseUpgrade("airShield") || plrData.canUseUpgrade("airSuction"))
                 && plrData.canUseUpgrade("airBallSpeedII")
-                && ((plrData.canUseUpgrade("airBulletsMastery") && plrData.canUseUpgrade("airBulletsCountII")) || plrData.canUseUpgrade("airSuffocate"))
+                && ((plrData.canUseUpgrade("airBulletsMastery") && plrData.canUseUpgrade("airBulletsCountII")) || plrData.canUseUpgrade("airSuffocate") || (plrData.canUseUpgrade("airBladeRangeI") && plrData.canUseUpgrade("airBladeDamageI")))
                 && plrData.canUseUpgrade("airStreamMastery")
                 && plrData.canUseUpgrade("airJumpRangeII")
                 && plrData.canUseUpgrade("airScooterSpeedII")

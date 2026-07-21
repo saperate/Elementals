@@ -47,7 +47,11 @@ public class FireElement extends Element {
                                         }, 1),
                                         new Upgrade("flameThrowerIgniteI", 1)
                                 }, 2),
-                                new Upgrade("fireShield", 2)
+                                new Upgrade("fireShield", 2),
+                                new Upgrade("fireWhip", new Upgrade[]{
+                                        new Upgrade("fireWhipRangeI", 1),
+                                        new Upgrade("fireWhipDamageI", 1)
+                                }, 2)
                         }, true, 1),
                         new Upgrade("fireArcEfficiencyI", new Upgrade[]{
                                 new Upgrade("fireArcSpeedI", new Upgrade[]{
@@ -81,11 +85,13 @@ public class FireElement extends Element {
         addAbility(new AbilityFire3(), 2);
         addAbility(new AbilityFire4(), 3);
         addAbility(new AbilityFireWisp());
+        addAbility(new AbilityFireWhip(), 8);
 
         registerUpgradeKeybind("fireWall", 4);
         registerUpgradeKeybind("fireSpikes", 5);
         registerUpgradeKeybind("fireShield", 6);
         registerUpgradeKeybind("flameThrower", 7);
+        registerUpgradeKeybind("fireWhip", 8);
     }
 
     public static void placeFire(BlockPos pos, Direction side, Entity entity, BlockState state){
@@ -133,7 +139,7 @@ public class FireElement extends Element {
         return bender.hasElement(this)
                 && (plrData.canUseUpgrade("blueFire") || plrData.canUseUpgrade("fireWallWideI")|| plrData.canUseUpgrade("fireWallTallI") || (plrData.canUseUpgrade("fireSpikesCountI") && plrData.canUseUpgrade("fireSpikesRangeI")))
                 && plrData.canUseUpgrade("fireBallSpeedII")
-                && (plrData.canUseUpgrade("flameThrower") || plrData.canUseUpgrade("fireShield"))
+                && (plrData.canUseUpgrade("flameThrower") || plrData.canUseUpgrade("fireShield") || (plrData.canUseUpgrade("fireWhipRangeI") && plrData.canUseUpgrade("fireWhipDamageI")))
                 && plrData.canUseUpgrade("fireArcMastery")
                 && plrData.canUseUpgrade("fireJetSpeedII")
                 && plrData.canUseUpgrade("fireJumpRangeII")
