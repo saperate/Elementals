@@ -72,6 +72,11 @@ public class WaterElement extends Element {
                                                         new Upgrade("waterCannonRangeI", new Upgrade[]{
                                                                 new Upgrade("waterCannonDamageI", 1)
                                                         }, 1)
+                                                }, 2),
+                                                new Upgrade("waterRiptide", new Upgrade[]{
+                                                        new Upgrade("waterRiptideDamageI", new Upgrade[]{
+                                                                new Upgrade("waterRiptideRangeI", 1)
+                                                        }, 1)
                                                 }, 2)
                                         }, true, 1),
                                         new Upgrade("waterArcSpeedI", new Upgrade[]{
@@ -126,6 +131,7 @@ public class WaterElement extends Element {
         addAbility(new AbilityWaterHealing());
         addAbility(new AbilityWaterTower());
         addAbility(new AbilityWaterJump());
+        addAbility(new AbilityWaterRiptide(), 8);
 
         registerUpgradeKeybind("waterHelmet", 4);
         registerUpgradeKeybind("waterSuffocate", 5);
@@ -136,6 +142,7 @@ public class WaterElement extends Element {
         // must point back at slot 0 instead of inheriting their parent's slot.
         registerUpgradeKeybind("waterShieldHelmetPath", 0);
         registerUpgradeKeybind("waterShieldSuffocatePath", 0);
+        registerUpgradeKeybind("waterRiptide", 8);
     }
 
     public static Vector3f canBend(Player player, boolean consumeWater) {//todo make it so some abilities still consume water, even though you might have efficiency unlocked

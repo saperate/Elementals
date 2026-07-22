@@ -195,6 +195,14 @@
 
   "upgrade.elementals.waterCannonDamageI": "Damage I",
   "upgrade.elementals.waterCannonDamageI.description": " Allows you to deal a little bit more damage.",
+  "upgrade.elementals.waterRiptide": "Riptide",
+  "upgrade.elementals.waterRiptide.description": " Pull a surge of water into a wave that crashes forward, knocking back and damaging every enemy caught in its path.",
+  "upgrade.elementals.waterRiptide.use": " Use: %d",
+  "upgrade.elementals.waterRiptide.icon": "water_riptide",
+  "upgrade.elementals.waterRiptideDamageI": "Damage I",
+  "upgrade.elementals.waterRiptideDamageI.description": " Allows you to deal a little bit more damage.",
+  "upgrade.elementals.waterRiptideRangeI": "Range I",
+  "upgrade.elementals.waterRiptideRangeI.description": " Increases how far the wave reaches before dissipating.",
 
   "upgrade.elementals.waterJump": "Water Jump",
   "upgrade.elementals.waterJump.description": " Use a burst of water to propel yourself high into the air.",
@@ -385,6 +393,14 @@
 
   "upgrade.elementals.earthBlockDamageI": "Damage I",
   "upgrade.elementals.earthBlockDamageI.description": " Deal more damage using Earth Pickup and Shrapnel.",
+  "upgrade.elementals.earthBoulder": "Boulder Throw",
+  "upgrade.elementals.earthBoulder.description": " Instantly conjure a heavy boulder of terrain and hurl it forward, dealing heavy damage on impact.",
+  "upgrade.elementals.earthBoulder.use": " Use: %d",
+  "upgrade.elementals.earthBoulder.icon": "earth_boulder",
+  "upgrade.elementals.earthBoulderDamageI": "Damage I",
+  "upgrade.elementals.earthBoulderDamageI.description": " Allows you to deal a little bit more damage.",
+  "upgrade.elementals.earthBoulderRangeI": "Range I",
+  "upgrade.elementals.earthBoulderRangeI.description": " Increases how far the boulder can travel before dissipating.",
 
   "upgrade.elementals.earthWall": "Wall",
   "upgrade.elementals.earthWall.description": " Allows you to rise a wall of earth to protect yourself in combat.",

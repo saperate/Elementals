@@ -53,7 +53,12 @@ public class EarthElement extends Element {
                         }, true, 2),
                         new Upgrade("earthBlockSpeedI", new Upgrade[]{
                                 new Upgrade("earthBlockDamageI", new Upgrade[]{
-                                        new Upgrade("earthBlockSpeedII", 1)
+                                        new Upgrade("earthBlockSpeedII", 1),
+                                        new Upgrade("earthBoulder", new Upgrade[]{
+                                                new Upgrade("earthBoulderDamageI", new Upgrade[]{
+                                                        new Upgrade("earthBoulderRangeI", 1)
+                                                }, 1)
+                                        }, 2)
                                 }, 1)
                         }, false, 1, 1)
                 }, 2),
@@ -104,12 +109,14 @@ public class EarthElement extends Element {
         addAbility(new AbilityEarthRavine(), true);
         addAbility(new AbilityEarthSpikes(), true);
         addAbility(new AbilityEarthSurf(), 8);
+        addAbility(new AbilityEarthBoulder(), 9);
 
         registerUpgradeKeybind("earthWall", 4);
         registerUpgradeKeybind("earthChunk", 5);
         registerUpgradeKeybind("earthRavine", 6);
         registerUpgradeKeybind("earthSpikes", 7);
         registerUpgradeKeybind("earthSurf", 8);
+        registerUpgradeKeybind("earthBoulder", 9);
     }
 
     public static Element get() {
