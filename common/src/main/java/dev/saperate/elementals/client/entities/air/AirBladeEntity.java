@@ -1,4 +1,4 @@
-package dev.saperate.elementals.entities.air;
+package dev.saperate.elementals.client.entities.air;
 
 import dev.saperate.elementals.data.ElementalConfig;
 import dev.saperate.elementals.entities.common.AbstractElementalsEntity;
