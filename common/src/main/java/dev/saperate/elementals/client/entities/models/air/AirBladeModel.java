@@ -21,24 +21,16 @@ public class AirBladeModel extends EntityModel<AirBladeEntity> {
         MeshDefinition modelData = new MeshDefinition();
         PartDefinition modelPartData = modelData.getRoot();
 
-        //long, thin horizontal blade pointing forward (+Z), like a flat sliver of cut air
+        //horizontal cut: a long, thin flat plane pointing forward (+Z), like a flat sliver of cut air
         PartDefinition bb_main = modelPartData.addOrReplaceChild("bb_main",
                 CubeListBuilder.create().texOffs(0, 10).addBox(-1.0F, -0.5F, -7.0F, 2.0F, 0.5F, 14.0F, new CubeDeformation(0.0F)),
                 PartPose.rotation(0.0F, 0.0F, 0.0F));
 
-        //cross the plane on the vertical axis so the blade still reads as a shape when seen edge-on
+        //vertical cut: same plane rotated 90 degrees, so the blade reads as a "+" cross
+        //when seen edge-on, instead of relying on diagonal fillers
         bb_main.addOrReplaceChild("cube_r1",
                 CubeListBuilder.create().texOffs(0, 5).addBox(-1.0F, -0.5F, -7.0F, 2.0F, 0.5F, 14.0F, new CubeDeformation(0.0F)),
                 PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, 1.5708F, 0.0F, 0.0F));
-
-        //a slimmer diagonal cross to fill in the silhouette further
-        bb_main.addOrReplaceChild("cube_r2",
-                CubeListBuilder.create().texOffs(0, 0).addBox(-0.75F, -0.35F, -7.0F, 1.5F, 0.35F, 14.0F, new CubeDeformation(0.0F)),
-                PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, 0.7854F, 0.0F, 0.0F));
-
-        bb_main.addOrReplaceChild("cube_r3",
-                CubeListBuilder.create().texOffs(0, 15).addBox(-0.75F, -0.35F, -7.0F, 1.5F, 0.35F, 14.0F, new CubeDeformation(0.0F)),
-                PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, -0.7854F, 0.0F, 0.0F));
 
         return LayerDefinition.create(modelData, 32, 32);
     }
