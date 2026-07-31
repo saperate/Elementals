@@ -44,7 +44,6 @@ public record BuyUpgradePacket(String name) {
 
         if (name.startsWith("bending")) {
             bender.addElement(Element.getElement(name.replace("bending", "")), true);
-            bender.bindDefaultAbilities();
             StateDataSaverAndLoader.getServerState(player.server).setDirty();
             return;
         }

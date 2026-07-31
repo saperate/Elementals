@@ -47,24 +47,12 @@ public class Bender {
         benders.put(player.getUUID(), this);
         plrData = getData();
     }
-
-    public void bindAbility(Ability ability, int index) {
-        if ((plrData.elements.get(plrData.activeElementIndex).contains(ability) || ability == null)
-                && index >= 0 && index <= 4) {
-            plrData.boundAbilities[index] = ability;
-        }
-    }
-
-
-    public void clearBindings() {
-        plrData.boundAbilities = new Ability[4];
-    }
-
-    public void bend(int index, boolean isStart) {
-        if (index >= 0 && index < 5 && plrData.boundAbilities[index] != null) {
+    
+    public void bend(int keybind_index, boolean isStart) {
+        if (plrData.getElement().bindableAbilities.size() > keybind_index) {
             if (currAbility == null && isStart) {
                 castTime = System.currentTimeMillis();
-                setCurrAbility(plrData.boundAbilities[index]);
+                setCurrAbility(keybind_index);
                 abilityData = null;
                 return;
             }
@@ -74,7 +62,7 @@ public class Bender {
                 return;
             }
             if(currAbility != null){
-                currAbility.onAbilityPress(this, index);
+                currAbility.onAbilityPress(this, keybind_index);
             }
         }
     }
@@ -115,10 +103,12 @@ public class Bender {
         this.currAbility = ability;
         syncAbility(this);
     }
-
-    public void setCurrAbility(int i) {
-        setCurrAbility(plrData.boundAbilities[i]);
-        syncAbility(this);
+    
+    public void setCurrAbility(int bind_index){
+        if(bind_index >= plrData.getElement().bindableAbilities.size()){
+            return;
+        }
+        setCurrAbility(plrData.getElement().bindableAbilities.get(bind_index));
     }
 
     /**
@@ -184,7 +174,6 @@ public class Bender {
      */
     public void setElement(int elementIndex, boolean sync) {
         plrData.activeElementIndex = elementIndex;
-        bindDefaultAbilities();
         if (currAbility != null) {
             currAbility.onRemove(this);
             currAbility = null;
@@ -207,7 +196,6 @@ public class Bender {
             changed = true;
             if (hasElement(NoneElement.get())) {
                 plrData.elements.remove(NoneElement.get());
-                bindDefaultAbilities();
             }
         }
 
@@ -226,7 +214,6 @@ public class Bender {
             if (plrData.activeElementIndex >= plrData.elements.size() - 1) {
                 plrData.activeElementIndex = 0;
             }
-            bindDefaultAbilities();
         }
 
         if (sync) {
@@ -288,23 +275,11 @@ public class Bender {
         builder.append("\n    Chi = ").append(plrData.chi);
 
         PlayerData data = getData();
-        for (int i = 0; i < data.boundAbilities.length; i++) {
-            builder.append("\n    bind ").append(i).append(" = ").append(Ability.getName(data.boundAbilities[i]));
+        for (Ability ability : data.getElement().bindableAbilities) {
+            builder.append("\n").append(Ability.getName(ability));
         }
 
         return builder;
-    }
-
-
-    public void bindDefaultAbilities() {
-        clearBindings();
-
-        int abilitySize = plrData.elements.get(plrData.activeElementIndex).bindableAbilities.size();
-        for (int i = 0; i < 4; i++) {
-            if (i < abilitySize) {
-                bindAbility(plrData.elements.get(plrData.activeElementIndex).getBindableAbility(i), i);
-            }
-        }
     }
 
     /**

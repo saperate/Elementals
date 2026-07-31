@@ -12,7 +12,6 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class PlayerData {
-    public Ability[] boundAbilities = new Ability[4];
     //the upgrades in these are incomplete, meaning that most methods in them won't work because they lack
     //parents & children. However, they are equal to their complete counterparts so use that if you need the methods.
     public HashMap<Upgrade, Boolean> upgrades = new HashMap<>();

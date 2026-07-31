@@ -38,10 +38,6 @@ public class StateDataSaverAndLoader extends SavedData {
             playerData.activeElementIndex = nbt.getInt("elementIndex");
 
             Element element = playerData.getElement();
-            playerData.boundAbilities[0] = element.getBindableAbility(nbt.getInt("bind1"));
-            playerData.boundAbilities[1] = element.getBindableAbility(nbt.getInt("bind2"));
-            playerData.boundAbilities[2] = element.getBindableAbility(nbt.getInt("bind3"));
-            playerData.boundAbilities[3] = element.getBindableAbility(nbt.getInt("bind4"));
 
             //Legacy system, this is here for compatibility
             if (!nbt.getCompound("upgrades").isEmpty()) {
@@ -94,12 +90,6 @@ public class StateDataSaverAndLoader extends SavedData {
 
             playerNbt.putString("element", Bender.packageElementsIntoString(playerData.elements));
             playerNbt.putInt("elementIndex", playerData.activeElementIndex);
-
-            playerNbt.putInt("bind1", playerData.getElement().bindableAbilities.indexOf(playerData.boundAbilities[0]));
-            playerNbt.putInt("bind2", playerData.getElement().bindableAbilities.indexOf(playerData.boundAbilities[1]));
-            playerNbt.putInt("bind3", playerData.getElement().bindableAbilities.indexOf(playerData.boundAbilities[2]));
-            playerNbt.putInt("bind4", playerData.getElement().bindableAbilities.indexOf(playerData.boundAbilities[3]));
-
 
             CompoundTag upgradesNbt = new CompoundTag();
             upgradesNbt.putInt("upgradesCount", playerData.upgrades.size());
