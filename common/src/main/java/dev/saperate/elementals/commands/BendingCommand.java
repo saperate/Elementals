@@ -26,64 +26,94 @@ public class BendingCommand {
 
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher, CommandBuildContext commandRegistryAccess, Commands.CommandSelection registrationEnvironment) {
         dispatcher.register(Commands.literal("bending")
-                        .then(Commands.literal("get").executes(BendingCommand::getSelfElement)).requires(source -> source.hasPermission(2))
-                        .then(Commands.literal("upgrade")
-                                .then(Commands.literal("list").then(
-                                        Commands.argument("player", EntityArgument.player()).executes(BendingCommand::listUpgrades)
-                                ).executes(BendingCommand::listSelfUpgrades))
-                                .then(Commands.literal("clear").then(
-                                        Commands.argument("player", EntityArgument.player()).executes(BendingCommand::clearUpgrades)
-                                ).executes(BendingCommand::clearSelfUpgrades))
-                                .then(Commands.literal("remove").then(
-                                        Commands.argument("upgradeName", StringArgumentType.string())
-                                                .then(Commands.argument("player", EntityArgument.player()).executes(BendingCommand::removeUpgrade))
-                                ).executes(BendingCommand::removeSelfUpgrade))
+                .then(Commands.literal("get").executes(BendingCommand::getSelfElement)).requires(source -> source.hasPermission(2))
+                .then(Commands.literal("upgrade")
+                        .then(Commands.literal("list").then(
+                                Commands.argument("player", EntityArgument.player()).executes(BendingCommand::listUpgrades)
+                        ).executes(BendingCommand::listSelfUpgrades))
+                        .then(Commands.literal("clear").then(
+                                Commands.argument("player", EntityArgument.player()).executes(BendingCommand::clearUpgrades)
+                        ).executes(BendingCommand::clearSelfUpgrades))
+                        .then(Commands.literal("remove").then(
+                                Commands.argument("upgradeName", StringArgumentType.string())
+                                        .then(Commands.argument("player", EntityArgument.player()).executes(BendingCommand::removeUpgrade))
+                        ).executes(BendingCommand::removeSelfUpgrade))
+                )
+                .then(Commands.literal("status")
+                        .then(Commands.argument("player", EntityArgument.player()).executes(BendingCommand::status))
+                        .executes(BendingCommand::statusSelf)
+                )
+                .then(Commands.literal("level")
+                        .then(Commands.literal("set")
+                                .then(Commands.argument("value", IntegerArgumentType.integer(0, Integer.MAX_VALUE))
+                                        .then(Commands.argument("player", EntityArgument.player())
+                                                .executes(BendingCommand::levelSet)
+                                        )
+                                        .executes(BendingCommand::levelSetSelf)
+                                )
                         )
-                        .then(Commands.literal("status")
-                                .then(Commands.argument("player", EntityArgument.player()).executes(BendingCommand::status))
-                                .executes(BendingCommand::statusSelf)
-                        )
-                        .then(Commands.literal("level")
-                                .then(Commands.literal("set")
-                                        .then(Commands.argument("value", IntegerArgumentType.integer(0, Integer.MAX_VALUE))
-                                                .then(Commands.argument("player", EntityArgument.player())
-                                                        .executes(BendingCommand::levelSet)
-                                                )
-                                                .executes(BendingCommand::levelSetSelf)
+                        .then(Commands.literal("add")
+                                .then(Commands.argument("amount", IntegerArgumentType.integer())
+                                        .then(Commands.argument("player", EntityArgument.player())
+                                                .executes(BendingCommand::levelAdd)
                                         )
                                 )
-                                .then(Commands.literal("add")
-                                        .then(Commands.argument("amount", IntegerArgumentType.integer())
-                                                .then(Commands.argument("player", EntityArgument.player())
-                                                        .executes(BendingCommand::levelAdd)
-                                                )
+                        )
+                        .then(Commands.literal("remove")
+                                .then(Commands.argument("amount", IntegerArgumentType.integer())
+                                        .then(Commands.argument("player", EntityArgument.player())
+                                                .executes(BendingCommand::levelRemove)
                                         )
                                 )
-                                .then(Commands.literal("get").then(
-                                        Commands.argument("player", EntityArgument.player()).executes(BendingCommand::levelGet)
-                                ).executes(BendingCommand::levelSelfGet))
                         )
-                        .then(Commands.literal("reset")
-                                .then(Commands.argument("player", EntityArgument.player())
-                                        .executes(BendingCommand::reset)
-                                )
-                                .executes(BendingCommand::resetSelf)
+                        .then(Commands.literal("get").then(
+                                Commands.argument("player", EntityArgument.player()).executes(BendingCommand::levelGet)
+                        ).executes(BendingCommand::levelSelfGet))
+                )
+                .then(Commands.literal("reset")
+                        .then(Commands.argument("player", EntityArgument.player())
+                                .executes(BendingCommand::reset)
                         )
-                        .then(Commands.literal("element")
-                                        .then(Commands.literal("add").then(
-                                                Commands.argument("element", ElementArgumentType.element())
-                                                        .then(Commands.argument("player", EntityArgument.player())
-                                                                .executes(BendingCommand::addElement))
-                                                        .executes(BendingCommand::addSelfElement))
+                        .executes(BendingCommand::resetSelf)
+                )
+                .then(Commands.literal("element")
+                        .then(Commands.literal("add").then(
+                                Commands.argument("element", ElementArgumentType.element())
+                                        .then(Commands.argument("player", EntityArgument.player())
+                                                .executes(BendingCommand::addElement))
+                                        .executes(BendingCommand::addSelfElement))
 
+                        )
+                        .then(Commands.literal("remove").then(
+                                Commands.argument("element", ElementArgumentType.element())
+                                        .then(Commands.argument("player", EntityArgument.player())
+                                                .executes(BendingCommand::removeElement))
+                                        .executes(BendingCommand::removeSelfElement))
+                        )
+                )
+                .then(Commands.literal("chi")
+                        .then(Commands.literal("add").then(
+                                                Commands.argument("amount", IntegerArgumentType.integer())
+                                                        .then(Commands.argument("player", EntityArgument.player())
+                                                                .executes(BendingCommand::chiAdd)
+                                                        )
                                         )
                                         .then(Commands.literal("remove").then(
-                                                Commands.argument("element", ElementArgumentType.element())
-                                                        .then(Commands.argument("player", EntityArgument.player())
-                                                                .executes(BendingCommand::removeElement))
-                                                        .executes(BendingCommand::removeSelfElement))
+                                                        Commands.argument("amount", IntegerArgumentType.integer())
+                                                                .then(Commands.argument("player", EntityArgument.player())
+                                                                        .executes(BendingCommand::chiRemove)
+                                                                )
+                                                )
+                                        )
+                                        .then(Commands.literal("set").then(
+                                                        Commands.argument("amount", IntegerArgumentType.integer())
+                                                                .then(Commands.argument("player", EntityArgument.player())
+                                                                        .executes(BendingCommand::chiSet)
+                                                                )
+                                                )
                                         )
                         )
+                )
                 .then(Commands.literal("debug").executes(BendingCommand::debug)).requires(source -> source.hasPermission(2))
 
         );
@@ -347,6 +377,16 @@ public class BendingCommand {
         return 1;
     }
 
+    private static int levelRemove(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
+        Player plr = EntityArgument.getPlayer(context, "player");
+        if (plr.level().isClientSide) {
+            return 1;
+        }
+        int amount = IntegerArgumentType.getInteger(context, "amount");
+        PlayerData.get(plr).level = Math.max(0, PlayerData.get(plr).level - amount);
+        return 1;
+    }
+
     private static int levelGet(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         Player plr = EntityArgument.getPlayer(context, "player");
         if (plr.level().isClientSide) {
@@ -402,6 +442,36 @@ public class BendingCommand {
         context.getSource().sendSuccess((() -> Component.literal(
                 plr.getScoreboardName() + " has been reset")
         ), true);
+        return 1;
+    }
+
+    private static int chiAdd(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
+        Player plr = EntityArgument.getPlayer(context, "player");
+        if (plr.level().isClientSide) {
+            return 1;
+        }
+        int amount = IntegerArgumentType.getInteger(context, "amount");
+        PlayerData.get(plr).chi += amount;
+        return 1;
+    }
+
+    private static int chiRemove(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
+        Player plr = EntityArgument.getPlayer(context, "player");
+        if (plr.level().isClientSide) {
+            return 1;
+        }
+        int amount = IntegerArgumentType.getInteger(context, "amount");
+        PlayerData.get(plr).chi = Math.max(0, PlayerData.get(plr).chi - amount);
+        return 1;
+    }
+
+    private static int chiSet(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
+        Player plr = EntityArgument.getPlayer(context, "player");
+        if (plr.level().isClientSide) {
+            return 1;
+        }
+        int amount = IntegerArgumentType.getInteger(context, "amount");
+        PlayerData.get(plr).level = amount;
         return 1;
     }
 

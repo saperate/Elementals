@@ -68,7 +68,8 @@ public class AbilityLightningStorm implements Ability {
             );
 
             if(!entities.isEmpty()){
-                Entity victim = entities.get(player.getRandom().nextInt(0,entities.size()) - 1);
+                int entity_index = entities.size() == 1 ? 0 : player.getRandom().nextInt(0,entities.size() - 1);  
+                Entity victim = entities.get(entity_index);
                 range = 0;
                 pos = victim.position();
             }
