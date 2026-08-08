@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "pie_type=plain": {
+      "model": "elementals:block/uncooked_plain_pie"
+    }
+  }
+}

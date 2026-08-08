@@ -3,18 +3,14 @@ package dev.saperate.elementals.items;
 import dev.saperate.elementals.Constants;
 import dev.saperate.elementals.armors.materials.ElementalsArmorMaterial;
 import dev.saperate.elementals.blocks.ElementalsBlocks;
-import dev.saperate.elementals.effects.ElementalsStatusEffects;
+import dev.saperate.elementals.items.foods.ElementalsFoods;
+import dev.saperate.elementals.items.foods.PieBlockItem;
 import dev.saperate.elementals.items.scrolls.*;
 import dev.saperate.elementals.platform.Services;
-import net.minecraft.core.Registry;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
-import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.*;
-import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraft.world.level.block.entity.BannerPattern;
 
 import java.util.HashSet;
@@ -24,12 +20,6 @@ import java.util.function.Supplier;
 public class ElementalsItems {
 
     public static final TagKey<BannerPattern> AIR_BANNER_PATTERN_TAG = TagKey.create(Registries.BANNER_PATTERN, ResourceLocation.fromNamespaceAndPath(Constants.MODID,"air_banner_pattern"));
-    
-    public static final FoodProperties LIGHTNING_BOTTLE_FOOD_COMPONENT = new FoodProperties.Builder()
-            .alwaysEdible()
-            .saturationModifier(-1.2f)
-            .nutrition(-6)
-            .build();
 
     private static final Set<Item> EARTH_ARMOR_SET = new HashSet<>();
     public static final Supplier<EarthArmorItem> EARTH_HELMET = registerItem("earth_helmet",
@@ -78,7 +68,7 @@ public class ElementalsItems {
     public static final Supplier<LightningBottleItem> LIGHTNING_BOTTLE_ITEM = registerItem("lightning_bottle",
             () -> new LightningBottleItem(new Item.Properties()
                     .stacksTo(1)
-                    .food(LIGHTNING_BOTTLE_FOOD_COMPONENT)
+                    .food(ElementalsFoods.LIGHTNING_BOTTLE_FOOD_COMPONENT)
             ));
     public static final Supplier<BloodScrollItem> BLOOD_SCROLL_ITEM = registerItem("blood_scroll",
             () -> new BloodScrollItem(new Item.Properties()
@@ -107,18 +97,49 @@ public class ElementalsItems {
                     .stacksTo(1)));
     
     //BLOCK ITEMS
-    public static final Supplier<BlockItem> MOON_PEACH_LEAVES_ITEM = registerItem(
-            "moon_peach_leaves",
+    public static final Supplier<BlockItem> MOONPEACH_LEAVES_ITEM = registerItem(
+            "moonpeach_leaves",
             () -> new BlockItem(ElementalsBlocks.MOON_PEACH_LEAVES.get(), new Item.Properties()));
-    public static final Supplier<BlockItem> MOON_LOG = registerItem(
-            "moon_log",
-            () -> new BlockItem(ElementalsBlocks.MOON_LOG.get(), new Item.Properties()));
-    public static final Supplier<BlockItem> MOON_STRIPPED_LOG = registerItem(
-            "moon_stripped_log",
-            () -> new BlockItem(ElementalsBlocks.MOON_STRIPPED_LOG.get(), new Item.Properties()));
-    public static final Supplier<BlockItem> MOON_PLANKS = registerItem(
-            "moon_planks",
-            () -> new BlockItem(ElementalsBlocks.MOON_PLANKS.get(), new Item.Properties()));
+    public static final Supplier<BlockItem> MOON_PEACH_LOG_ITEM = registerItem(
+            "moonpeach_log",
+            () -> new BlockItem(ElementalsBlocks.MOON_PEACH_LOG.get(), new Item.Properties()));
+    public static final Supplier<BlockItem> MOON_PEACH_STRIPPED_LOG_ITEM = registerItem(
+            "moonpeach_stripped_log",
+            () -> new BlockItem(ElementalsBlocks.MOON_PEACH_STRIPPED_LOG.get(), new Item.Properties()));
+    public static final Supplier<BlockItem> MOON_PEACH_PLANKS_ITEM = registerItem(
+            "moonpeach_planks",
+            () -> new BlockItem(ElementalsBlocks.MOON_PEACH_PLANKS.get(), new Item.Properties()));
+    
+    // FOODS 
+    public static final Supplier<PieBlockItem> UNCOOKED_PLAIN_PIE_ITEM = registerItem(
+            "uncooked_plain_pie",
+            () -> new PieBlockItem(false, "plain"));
+
+    public static final Supplier<PieBlockItem> COOKED_PLAIN_PIE_ITEM = registerItem(
+            "cooked_plain_pie",
+            () -> new PieBlockItem(true, "plain"));
+    public static final Supplier<PieBlockItem> UNCOOKED_MOONPEACH_PIE_ITEM = registerItem(
+            "uncooked_moonpeach_pie",
+            () -> new PieBlockItem(false, "moonpeach"));
+
+    public static final Supplier<PieBlockItem> COOKED_MOONPEACH_PIE_ITEM = registerItem(
+            "cooked_moonpeach_pie",
+            () -> new PieBlockItem(true, "moonpeach"));
+    public static final Supplier<PieBlockItem> UNCOOKED_STARBERRY_PIE_ITEM = registerItem(
+            "uncooked_starberry_pie",
+            () -> new PieBlockItem(false, "starberry"));
+
+    public static final Supplier<PieBlockItem> COOKED_STARBERRY_PIE_ITEM = registerItem(
+            "cooked_starberry_pie",
+            () -> new PieBlockItem(true, "starberry"));
+    public static final Supplier<PieBlockItem> UNCOOKED_SWEETBERRY_PIE_ITEM = registerItem(
+            "uncooked_sweetberry_pie",
+            () -> new PieBlockItem(false, "sweetberry"));
+
+    public static final Supplier<PieBlockItem> COOKED_SWEETBERRY_PIE_ITEM = registerItem(
+            "cooked_sweetberry_pie",
+            () -> new PieBlockItem(true, "sweetberry"));
+    
     public static final CreativeModeTab ELEMENTALS_TAB = Services.REGISTRY.createItemTab();
 
     private static <T extends Item> Supplier<T> registerItem(String name, Supplier<T> item) {

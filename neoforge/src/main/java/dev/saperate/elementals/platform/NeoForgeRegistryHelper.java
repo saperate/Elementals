@@ -87,6 +87,14 @@ public class NeoForgeRegistryHelper implements IRegistryHelper {
                     entries.accept(BOOMERANG_ITEM.get());
                     entries.accept(WATER_POUCH_ITEM.get());
                     entries.accept(GLIDER_ITEM.get());
+//                    entries.accept(UNCOOKED_PLAIN_PIE_ITEM.get());
+//                    entries.accept(COOKED_PLAIN_PIE_ITEM.get());
+//                    entries.accept(UNCOOKED_MOONPEACH_PIE_ITEM.get());
+//                    entries.accept(COOKED_MOONPEACH_PIE_ITEM.get());
+//                    entries.accept(UNCOOKED_STARBERRY_PIE_ITEM.get());
+//                    entries.accept(COOKED_STARBERRY_PIE_ITEM.get());
+//                    entries.accept(UNCOOKED_SWEETBERRY_PIE_ITEM.get());
+//                    entries.accept(COOKED_SWEETBERRY_PIE_ITEM.get());
                 }).build();
     }
     @Override

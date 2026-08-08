@@ -45,23 +45,32 @@ public class ElementalsBlocks {
             () -> new WaterRapid(BlockBehaviour.Properties.of().strength(1f)));
 
     public static final Supplier<Block> MOON_PEACH_LEAVES = Services.REGISTRY.registerBlock(
-            "moon_leaves",
+            "moonpeach_leaves",
             () -> new LeavesBlock(BlockBehaviour.Properties.of()
                     .strength(1f).noOcclusion()));
 
-    public static final Supplier<Block> MOON_LOG = Services.REGISTRY.registerBlock(
-            "moon_log",
+    public static final Supplier<Block> MOON_PEACH_LOG = Services.REGISTRY.registerBlock(
+            "moonpeach_log",
             () -> new RotatedPillarBlock(BlockBehaviour.Properties.of()
                     .strength(1f).noOcclusion().sound(SoundType.WOOD).ignitedByLava()));
 
-    public static final Supplier<Block> MOON_STRIPPED_LOG = Services.REGISTRY.registerBlock(
-            "moon_stripped_log",
+    public static final Supplier<Block> MOON_PEACH_STRIPPED_LOG = Services.REGISTRY.registerBlock(
+            "moonpeach_stripped_log",
             () -> new RotatedPillarBlock(BlockBehaviour.Properties.of()
                     .strength(1f).noOcclusion().sound(SoundType.WOOD).ignitedByLava()));
 
-    public static final Supplier<Block> MOON_PLANKS = Services.REGISTRY.registerBlock(
-            "moon_planks",
+    public static final Supplier<Block> MOON_PEACH_PLANKS = Services.REGISTRY.registerBlock(
+            "moonpeach_planks",
             () -> new Block(BlockBehaviour.Properties.of().strength(1f).noOcclusion()));
+
+    public static final Supplier<Block> UNCOOKED_PIE_BLOCK = Services.REGISTRY.registerBlock(
+            "uncooked_pie",
+            UncookedPieBlock::new);
+
+    public static final Supplier<Block> COOKED_PIE_BLOCK = Services.REGISTRY.registerBlock(
+            "cooked_pie",
+            CookedPieBlock::new);
+    
 
 
     public static void register() {

@@ -4,6 +4,7 @@ import dev.saperate.elementals.advancements.HasElementCriterion;
 import dev.saperate.elementals.advancements.UsedAbilityCriterion;
 import dev.saperate.elementals.armors.materials.ElementalsArmorMaterial;
 import dev.saperate.elementals.blocks.ElementalsBlocks;
+import dev.saperate.elementals.blocks.blockstates.ElementalsProperties;
 import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.data.ElementalConfig;
 import dev.saperate.elementals.data.PlayerData;
@@ -20,6 +21,7 @@ import dev.saperate.elementals.enchantments.ElementalsEnchantments;
 import dev.saperate.elementals.entities.ElementalEntities;
 import dev.saperate.elementals.items.ElementalsItems;
 import dev.saperate.elementals.items.ElementalsDynamicRecipes;
+import dev.saperate.elementals.items.foods.ElementalsFoods;
 import dev.saperate.elementals.misc.BlockRestoreManager;
 import dev.saperate.elementals.misc.ElementalsSounds;
 import dev.saperate.elementals.misc.IItemRenderProvider;
@@ -57,6 +59,7 @@ public class Elementals {
         LOGGER.info("Initialising the cool stuff...");
         ElementalConfig.get().loadConfig();
 
+        ElementalsProperties.register();
         ElementalsStatusEffects.register();
         ElementalsItems.register();
         ElementalsArmorMaterial.register();
@@ -66,6 +69,7 @@ public class Elementals {
         ElementalsSounds.register();
         ElementalsNetworking.register();
         ElementalsDynamicRecipes.register();
+        ElementalsFoods.register();
         
         Services.REGISTRY.registerLootTables();
         Services.REGISTRY.registerCommands();
