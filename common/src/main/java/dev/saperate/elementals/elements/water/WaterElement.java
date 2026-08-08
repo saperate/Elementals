@@ -211,7 +211,7 @@ public class WaterElement extends Element {
                 stack.shrink(1);
                 player.getInventory().add(Items.POTION.getDefaultInstance());
                 return true;
-            } else if (stack.getItem().equals(ElementalsItems.WATER_POUCH_ITEM)) {
+            } else if (stack.getItem().equals(ElementalsItems.WATER_POUCH_ITEM.get())) {
                 WaterPouchItem item = (WaterPouchItem) stack.getItem();
                 return item.fillPouch(stack,1);
             }
