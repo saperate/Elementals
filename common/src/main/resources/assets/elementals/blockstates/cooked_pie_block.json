@@ -1,7 +1,16 @@
 {
   "variants": {
     "pie_type=plain": {
-      "model": "elementals:block/cooked_plain_pie"
+      "model": "elementals:block/plain_filled_pie"
+    },
+    "pie_type=moonpeach": {
+      "model": "elementals:block/moonpeach_filled_pie"
+    },
+    "pie_type=starberry": {
+      "model": "elementals:block/starberry_filled_pie"
+    },
+    "pie_type=sweetberry": {
+      "model": "elementals:block/sweetberry_filled_pie"
     }
   }
 }
