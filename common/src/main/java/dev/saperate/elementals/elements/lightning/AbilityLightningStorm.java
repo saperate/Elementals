@@ -4,6 +4,7 @@ import dev.saperate.elementals.data.Bender;
 import dev.saperate.elementals.data.PlayerData;
 import dev.saperate.elementals.effects.ElementalsStatusEffects;
 import dev.saperate.elementals.elements.Ability;
+import dev.saperate.elementals.utils.SapsUtils;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -66,22 +67,20 @@ public class AbilityLightningStorm implements Ability {
                         return false;
                     }
             );
-
             if(!entities.isEmpty()){
-                int entity_index = entities.size() == 1 ? 0 : player.getRandom().nextInt(0,entities.size() - 1);  
-                Entity victim = entities.get(entity_index);
+                Entity victim = entities.get(SapsUtils.nextIntSafe(player.getRandom(),0,entities.size() - 1));
                 range = 0;
                 pos = victim.position();
             }
 
         }
 
-
+        
         LightningBolt lightning = new LightningBolt(EntityType.LIGHTNING_BOLT, world);
         lightning.setPos(
-                pos.x + player.getRandom().nextInt(-range, range),
+                pos.x + SapsUtils.nextIntSafe(player.getRandom(),-range, range),
                 pos.y,
-                pos.z + player.getRandom().nextInt(-range, range)
+                pos.z + SapsUtils.nextIntSafe(player.getRandom(),-range, range)
         );
         world.addFreshEntity(lightning);
 

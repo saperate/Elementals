@@ -541,6 +541,18 @@ public final class SapsUtils {
         );
     }
 
+    /// Returns the next int within the range <br>
+    /// It is considered "safe" compared to RandomSource.nextInt(), because the origin CAN be the same as the bound <br>
+    /// Throws an error if the origin was greater than the bound <br>
+    public static int nextIntSafe(RandomSource random, int origin, int bound){
+        if(origin > bound){
+            throw new RuntimeException("Origin cannot be greater than bound");
+        }else if (origin == bound){
+            return origin;
+        }
+        return random.nextInt(origin, bound);
+    }
+    
     public static boolean isLookingForwards(Vector3f direction) {
         double dot = Math.acos(new Vector3f(0, 0, 1).dot(direction) / direction.length());
         return dot >= 1.5;
