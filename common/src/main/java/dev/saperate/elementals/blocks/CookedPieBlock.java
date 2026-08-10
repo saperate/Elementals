@@ -4,7 +4,7 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 
 public class CookedPieBlock extends AbstractPieBlock {
     public CookedPieBlock() {
-        this(BlockBehaviour.Properties.of().strength(1f));
+        super();
     }
 
     public CookedPieBlock(BlockBehaviour.Properties properties) {

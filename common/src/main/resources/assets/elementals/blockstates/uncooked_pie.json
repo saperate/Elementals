@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "pie_type=plain": {
+      "model": "elementals:block/pies/empty_pie"
+    },
+    "pie_type=moonpeach": {
+      "model": "elementals:block/pies/uncooked_moonpeach_filled_pie"
+    },
+    "pie_type=starberry": {
+      "model": "elementals:block/pies/uncooked_starberry_filled_pie"
+    },
+    "pie_type=sweetberry": {
+      "model": "elementals:block/pies/uncooked_sweetberry_filled_pie"
+    }
+  }
+}
