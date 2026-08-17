@@ -40,7 +40,7 @@ public class AbilityWaterJet implements Ability {
 
     @Override
     public void onRightClick(Bender bender, boolean started) {
-        if (started) {
+        if (started && bender.abilityData == null) {
             Player player = bender.player;
 
             Vec3 pos = getEntityLookVector(player, .5f);
@@ -93,13 +93,14 @@ public class AbilityWaterJet implements Ability {
     @Override
     public void onRemove(Bender bender) {
         WaterJetEntity entity = (WaterJetEntity) bender.abilityData;
+        bender.setCurrAbility(null);
+        bender.abilityData = null;
+        
         if (entity == null) {
             return;
         }
         entity.discard();
         entity.getChild().discard();
-        bender.setCurrAbility(null);
-        bender.abilityData = null;
     }
 
 }
