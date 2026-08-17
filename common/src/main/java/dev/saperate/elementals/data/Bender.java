@@ -77,11 +77,7 @@ public class Bender {
 
     public void tick() {
         
-        plrData.chi = Math.min(ElementalConfig.get().MAX_CHI,
-                plrData.chi + (ElementalConfig.get().CHI_REGENERATION_RATE
-                        * (safeHasStatusEffect(ElementalsStatusEffects.OVERCHARGED.get(), player) ? 4 : 1)
-                        * (safeHasStatusEffect(ElementalsStatusEffects.BURNOUT.get(), player) ? 0.25f : 1)
-                ));
+        plrData.chi = Math.min(ElementalConfig.get().MAX_CHI, plrData.chi + getChiRegen());
 
         backgroundAbilities.forEach((Ability ability, Object data) -> ability.onBackgroundTick(this, data));
 
@@ -338,6 +334,20 @@ public class Bender {
         ), (ServerPlayer) player);
     }
 
+    /**
+     * Calculates the chi regen for the bender.
+     * This does not take into account whether it will surpass the max chi or not
+     * it takes into account status effects and the config
+     * @return the amount by which the chi should be increased
+     */
+    public float getChiRegen(){
+        return (ElementalConfig.get().CHI_REGENERATION_RATE
+                * (safeHasStatusEffect(ElementalsStatusEffects.OVERCHARGED.get(), player) ? 4 : 1)
+                * (safeHasStatusEffect(ElementalsStatusEffects.BURNOUT.get(), player) ? 0.25f : 1)
+                + (plrData.level * ElementalConfig.get().LEVEL_CHI_REGEN_MULTIPLIER)
+        );
+    }
+    
     public float xpAddedByChi(float chi) {
         return ElementalConfig.get().XP_MULTIPLIER * chi; //y = ax + b
     }
