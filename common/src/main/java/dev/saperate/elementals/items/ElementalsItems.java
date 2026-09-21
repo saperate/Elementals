@@ -3,6 +3,7 @@ package dev.saperate.elementals.items;
 import dev.saperate.elementals.Constants;
 import dev.saperate.elementals.armors.materials.ElementalsArmorMaterial;
 import dev.saperate.elementals.blocks.ElementalsBlocks;
+import dev.saperate.elementals.blocks.blockstates.PieTypeProperty;
 import dev.saperate.elementals.items.foods.ElementalsFoods;
 import dev.saperate.elementals.items.foods.PieBlockItem;
 import dev.saperate.elementals.items.scrolls.*;
@@ -13,6 +14,7 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.block.entity.BannerPattern;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Supplier;
@@ -109,6 +111,10 @@ public class ElementalsItems {
     public static final Supplier<BlockItem> MOON_PEACH_PLANKS_ITEM = registerItem(
             "moonpeach_planks",
             () -> new BlockItem(ElementalsBlocks.MOON_PEACH_PLANKS.get(), new Item.Properties()));
+
+    public static final Supplier<BlockItem> GRILL_ITEM = registerItem(
+            "grill",
+            () -> new BlockItem(ElementalsBlocks.GRILL_BLOCK.get(), new Item.Properties()));
     
     // FOODS 
     public static final Supplier<PieBlockItem> UNCOOKED_PLAIN_PIE_ITEM = registerItem(

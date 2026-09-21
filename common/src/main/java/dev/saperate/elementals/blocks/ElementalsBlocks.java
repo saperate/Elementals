@@ -1,6 +1,7 @@
 package dev.saperate.elementals.blocks;
 
 import dev.saperate.elementals.Constants;
+import dev.saperate.elementals.blocks.blockEntities.GrillBlockEntity;
 import dev.saperate.elementals.blocks.blockEntities.LitAirBlockEntity;
 import dev.saperate.elementals.platform.Services;
 import dev.saperate.elementals.platform.services.IRegistryHelper;
@@ -70,7 +71,18 @@ public class ElementalsBlocks {
     public static final Supplier<Block> COOKED_PIE_BLOCK = Services.REGISTRY.registerBlock(
             "cooked_pie",
             CookedPieBlock::new);
-    
+
+    public static final Supplier<Block> GRILL_BLOCK = Services.REGISTRY.registerBlock(
+            "grill",
+            () -> new GrillBlock(BlockBehaviour.Properties.of()
+                    .strength(1f).noOcclusion()
+            ));
+
+    public static final Supplier<BlockEntityType<GrillBlockEntity>> GRILL_BLOCK_ENTITY =
+            Services.REGISTRY.registerBlockEntityType(
+                    "grill_block_entity",
+                    GRILL_BLOCK, GrillBlockEntity::new
+            );
 
 
     public static void register() {

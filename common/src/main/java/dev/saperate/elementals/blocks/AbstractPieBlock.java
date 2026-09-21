@@ -2,6 +2,7 @@ package dev.saperate.elementals.blocks;
 
 import dev.saperate.elementals.blocks.blockstates.PieTypeProperty;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
@@ -40,5 +41,22 @@ public abstract class AbstractPieBlock extends Block {
     @Override
     protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
         return shape;
+    }
+
+    public static BlockState getCookedBlockstate(String type){
+        BlockState state = ElementalsBlocks.COOKED_PIE_BLOCK.get().defaultBlockState();
+        state.setValue(PIE_TYPE, type);
+        return state;
+    }
+
+    public static BlockState getUncookedBlockstate(String type){
+        BlockState state = ElementalsBlocks.UNCOOKED_PIE_BLOCK.get().defaultBlockState();
+        state.setValue(PIE_TYPE, type);
+        return state;
+    }
+
+    @Override
+    public Item asItem() {
+        return super.asItem();
     }
 }

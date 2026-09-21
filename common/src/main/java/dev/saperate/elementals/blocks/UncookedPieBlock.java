@@ -1,5 +1,6 @@
 package dev.saperate.elementals.blocks;
 
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 
 public class UncookedPieBlock extends AbstractPieBlock {
