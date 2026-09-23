@@ -34,7 +34,9 @@ public class GrillBlockEntity extends BlockEntity {
             return; // No processing needed if we can't cook
         }
         blockEntity.cookTime++;
+        System.out.println("cooking! "+ blockEntity.cookTime + " : " + blockEntity.containedBlock.getBlock().getName());
         if (blockEntity.containedBlock.getBlock() instanceof UncookedPieBlock && blockEntity.cookTime >= 300){
+            System.out.println("cooked!");
             blockEntity.cookTime = 0;
             // Basically just sets the pie to be cooked while keeping the same pie type
             blockEntity.containedBlock = AbstractPieBlock.getCookedBlockstate(blockEntity.containedBlock.getValue(AbstractPieBlock.PIE_TYPE));
@@ -57,7 +59,7 @@ public class GrillBlockEntity extends BlockEntity {
      * @param block the block to add
      * @return Whether the block was placed or not
      */
-    public boolean setBlock(BlockState block){
+    public boolean addBlock(BlockState block){
         if(!hasBlock() && isPlaceable(block.getBlock())){
             containedBlock = block;
             cookTime = 0;
@@ -80,10 +82,10 @@ public class GrillBlockEntity extends BlockEntity {
     
 
     /**
-     * @return True if it has a campfire and a block
+     * @return True if it has a campfire and a block and the campfire is lit
      */
     public boolean canCook(){
-        return hasCampfire() && hasBlock();
+        return hasCampfire() && hasBlock() && isCampfireLit();
     }
 
     /**
@@ -101,7 +103,7 @@ public class GrillBlockEntity extends BlockEntity {
      * @param campfire the campfire to add
      * @return Whether the campfire was placed or not
      */
-    public boolean setCampfire(BlockState campfire){
+    public boolean addCampfire(BlockState campfire){
         if(!hasCampfire() || !(campfire.getBlock() instanceof CampfireBlock)){
             this.campfire = campfire;
             setChanged();
@@ -120,11 +122,29 @@ public class GrillBlockEntity extends BlockEntity {
         setChanged();
         return out;
     }
+    
+    public void setCampfireLit(boolean val){
+        campfire = campfire.setValue(CampfireBlock.LIT, val);
+        cookTime = 0;
+        setChanged();
+    }
+    
+    public boolean isCampfireLit(){
+        return campfire.getValue(CampfireBlock.LIT);
+    }
 
     @Override
     protected void saveAdditional(CompoundTag tag, HolderLookup.@NotNull Provider registries) {
-        tag.put("campfire_block", NbtUtils.writeBlockState(campfire));
-        tag.put("contained_block", NbtUtils.writeBlockState(containedBlock));
+        tag.putBoolean("has_campfire_block", hasCampfire());
+        if(hasCampfire()) {
+            tag.put("campfire_block", NbtUtils.writeBlockState(campfire));
+        }
+
+        tag.putBoolean("has_contained_block", hasBlock());
+        if(hasBlock()) {
+            tag.put("contained_block", NbtUtils.writeBlockState(containedBlock));
+        }
+        
         tag.putInt("cook_time", cookTime);
         
         super.saveAdditional(tag, registries);
@@ -137,8 +157,12 @@ public class GrillBlockEntity extends BlockEntity {
                 ? this.level.holderLookup(Registries.BLOCK)
                 : BuiltInRegistries.BLOCK.asLookup();
         
-        campfire = NbtUtils.readBlockState(holdergetter, tag.getCompound("campfire_block"));
-        campfire = NbtUtils.readBlockState(holdergetter, tag.getCompound("contained_block"));
+        campfire = tag.getBoolean("has_campfire_block") 
+                ? NbtUtils.readBlockState(holdergetter, tag.getCompound("campfire_block"))
+                : null;
+        containedBlock = tag.getBoolean("has_contained_block")
+                ? NbtUtils.readBlockState(holdergetter, tag.getCompound("contained_block"))
+                : null;
         cookTime = tag.getInt("cook_time");
         
         super.loadAdditional(tag, registries);

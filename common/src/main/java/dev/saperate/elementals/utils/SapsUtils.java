@@ -31,6 +31,8 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MoverType;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.item.Item;
@@ -656,5 +658,10 @@ public final class SapsUtils {
             Elementals.LOGGER.error("Could not show title!", e);
         }
     }
-
+    
+    public static void addOrDropItem(Player player, Level level, ItemStack stack){
+        if(!player.getInventory().add(stack)){
+            level.addFreshEntity(new ItemEntity(level, player.getX(), player.getY(), player.getZ(), stack));
+        }
+    }
 }
