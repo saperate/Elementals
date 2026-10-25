@@ -1,12 +1,19 @@
 package dev.saperate.elementals.client.blocks;
 
+import com.mojang.authlib.minecraft.client.MinecraftClient;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Axis;
 import dev.saperate.elementals.blocks.GrillBlock;
 import dev.saperate.elementals.blocks.blockEntities.GrillBlockEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.core.Direction;
+import net.minecraft.world.phys.Vec3;
+import org.joml.Quaternionf;
+
+import java.time.Instant;
 
 public class GrillBlockEntityRenderer implements BlockEntityRenderer<GrillBlockEntity> {
 
@@ -17,7 +24,16 @@ public class GrillBlockEntityRenderer implements BlockEntityRenderer<GrillBlockE
     @Override
     public void render(GrillBlockEntity blockEntity, float v, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, int packedOverlay) {
         poseStack.pushPose();
-        //poseStack.mulPose(GrillBlock.getDirection(blockEntity).getRotation());
+
+        // We this instead of toYRot() because west and east have to be reversed to be consistent
+        Direction dir = GrillBlock.getDirection(blockEntity);
+        if(dir.getAxis() == Direction.Axis.X){
+            dir = dir.getOpposite();
+        }
+        
+        poseStack.translate(0.5f, 0 ,0.5f);
+        poseStack.mulPose(Axis.YP.rotation((float) (Math.toRadians(dir.toYRot()))));
+        poseStack.translate(-0.5f, 0, -0.5f);
         
         if(blockEntity.hasCampfire()) {
             Minecraft.getInstance().getBlockRenderer().renderSingleBlock(blockEntity.getCampfire(), poseStack, bufferSource, packedLight, packedOverlay);
