@@ -1,8 +1,11 @@
 package dev.saperate.elementals.blocks;
 
+import com.mojang.datafixers.util.Pair;
 import dev.saperate.elementals.Constants;
 import dev.saperate.elementals.blocks.blockEntities.GrillBlockEntity;
 import dev.saperate.elementals.blocks.blockEntities.LitAirBlockEntity;
+import dev.saperate.elementals.items.foods.ElementalsFoods;
+import dev.saperate.elementals.items.foods.PieBlockItem;
 import dev.saperate.elementals.platform.Services;
 import dev.saperate.elementals.platform.services.IRegistryHelper;
 import net.minecraft.core.BlockPos;
@@ -17,6 +20,8 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.function.Supplier;
 import java.util.function.ToIntFunction;
 
@@ -64,18 +69,14 @@ public class ElementalsBlocks {
             "moonpeach_planks",
             () -> new Block(BlockBehaviour.Properties.of().strength(1f).noOcclusion()));
 
-    public static final Supplier<Block> UNCOOKED_PIE_BLOCK = Services.REGISTRY.registerBlock(
-            "uncooked_pie",
-            UncookedPieBlock::new);
-
-    public static final Supplier<Block> COOKED_PIE_BLOCK = Services.REGISTRY.registerBlock(
-            "cooked_pie",
-            CookedPieBlock::new);
-
+    /// Relates the pie type (string) and cooked status (boolean) to its corresponding block
+    public static final HashMap<Pair<String, Boolean>, Supplier<Block>> PIE_BLOCKS = registerPieBlocks();
+    
     public static final Supplier<Block> GRILL_BLOCK = Services.REGISTRY.registerBlock(
             "grill",
             () -> new GrillBlock(BlockBehaviour.Properties.of()
                     .strength(1f).noOcclusion()
+                    .lightLevel(GrillBlock::getLightLevel)
             ));
 
     public static final Supplier<BlockEntityType<GrillBlockEntity>> GRILL_BLOCK_ENTITY =
@@ -83,12 +84,23 @@ public class ElementalsBlocks {
                     "grill_block_entity",
                     GRILL_BLOCK, GrillBlockEntity::new
             );
-
-
+    
     public static void register() {
         System.out.println("Registering elementals blocks..");
     }
 
+    public static HashMap<Pair<String, Boolean>, Supplier<Block>> registerPieBlocks(){
+        HashMap<Pair<String, Boolean>, Supplier<Block>> map = new HashMap<>(8);
+        HashSet<String> types = ElementalsFoods.getPieTypes();
+
+        for (String type : types){
+            map.put(new Pair<>(type, true), Services.REGISTRY.registerBlock("cooked_" + type + "_pie", CookedPieBlock::new));
+            map.put(new Pair<>(type, false), Services.REGISTRY.registerBlock("uncooked_" + type + "_pie", UncookedPieBlock::new));
+        }
+
+        return map;
+    }
+    
     private static ToIntFunction<BlockState> always15() {
         return value -> 15;
     }

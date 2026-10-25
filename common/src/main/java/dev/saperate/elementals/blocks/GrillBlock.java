@@ -90,7 +90,7 @@ public class GrillBlock extends BaseEntityBlock {
                     return ItemInteractionResult.CONSUME;
                 }
             } else if (blockEntity.isPlaceable(blockItem) && !blockEntity.hasContainedBlock()) {
-                if (blockEntity.putContainedBlock(((IGrillableItem) blockItem).getBlockState())) {
+                if (blockEntity.putContainedBlock(blockItem.getBlock().defaultBlockState())) {
                     stack.shrink(1);
                     return ItemInteractionResult.CONSUME;
                 }
@@ -138,6 +138,11 @@ public class GrillBlock extends BaseEntityBlock {
     public static Direction getDirection(GrillBlockEntity blockEntity){
         return blockEntity.getBlockState().getValue(FACING);
     }
+    
+    public static int getLightLevel(BlockState state){
+        return 15;
+    }
+    
 
     @Nullable
     @Override

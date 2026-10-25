@@ -1,9 +1,9 @@
 package dev.saperate.elementals.items;
 
+import com.mojang.datafixers.util.Pair;
 import dev.saperate.elementals.Constants;
 import dev.saperate.elementals.armors.materials.ElementalsArmorMaterial;
 import dev.saperate.elementals.blocks.ElementalsBlocks;
-import dev.saperate.elementals.blocks.blockstates.PieTypeProperty;
 import dev.saperate.elementals.items.foods.ElementalsFoods;
 import dev.saperate.elementals.items.foods.PieBlockItem;
 import dev.saperate.elementals.items.scrolls.*;
@@ -117,34 +117,8 @@ public class ElementalsItems {
             () -> new BlockItem(ElementalsBlocks.GRILL_BLOCK.get(), new Item.Properties()));
     
     // FOODS 
-    public static final Supplier<PieBlockItem> UNCOOKED_PLAIN_PIE_ITEM = registerItem(
-            "uncooked_plain_pie",
-            () -> new PieBlockItem(false, "plain"));
-
-    public static final Supplier<PieBlockItem> COOKED_PLAIN_PIE_ITEM = registerItem(
-            "cooked_plain_pie",
-            () -> new PieBlockItem(true, "plain"));
-    public static final Supplier<PieBlockItem> UNCOOKED_MOONPEACH_PIE_ITEM = registerItem(
-            "uncooked_moonpeach_pie",
-            () -> new PieBlockItem(false, "moonpeach"));
-
-    public static final Supplier<PieBlockItem> COOKED_MOONPEACH_PIE_ITEM = registerItem(
-            "cooked_moonpeach_pie",
-            () -> new PieBlockItem(true, "moonpeach"));
-    public static final Supplier<PieBlockItem> UNCOOKED_STARBERRY_PIE_ITEM = registerItem(
-            "uncooked_starberry_pie",
-            () -> new PieBlockItem(false, "starberry"));
-
-    public static final Supplier<PieBlockItem> COOKED_STARBERRY_PIE_ITEM = registerItem(
-            "cooked_starberry_pie",
-            () -> new PieBlockItem(true, "starberry"));
-    public static final Supplier<PieBlockItem> UNCOOKED_SWEETBERRY_PIE_ITEM = registerItem(
-            "uncooked_sweetberry_pie",
-            () -> new PieBlockItem(false, "sweetberry"));
-
-    public static final Supplier<PieBlockItem> COOKED_SWEETBERRY_PIE_ITEM = registerItem(
-            "cooked_sweetberry_pie",
-            () -> new PieBlockItem(true, "sweetberry"));
+    /// Relates the pie type (string) and cooked status (boolean) to its corresponding blockItem
+    public static final HashMap<Pair<String, Boolean>, Supplier<PieBlockItem>> PIE_ITEMS = registerPieItems();
     
     public static final CreativeModeTab ELEMENTALS_TAB = Services.REGISTRY.createItemTab();
 
@@ -156,6 +130,18 @@ public class ElementalsItems {
         Services.REGISTRY.registerDispenserBehavior(BOOMERANG_ITEM, BOOMERANG_ITEM);
         Services.REGISTRY.registerDispenserBehavior(DIRT_BOTTLE_ITEM, DIRT_BOTTLE_ITEM);
         Services.REGISTRY.registerCreativeTab("elementals_tab", ELEMENTALS_TAB);
+    }
+    
+    public static HashMap<Pair<String, Boolean>, Supplier<PieBlockItem>> registerPieItems(){
+        HashMap<Pair<String, Boolean>, Supplier<PieBlockItem>> map = new HashMap<>(8);
+        HashSet<String> types = ElementalsFoods.getPieTypes();
+        
+        for (String type : types){
+            map.put(new Pair<>(type, true), registerItem("cooked_" + type + "_pie", () -> new PieBlockItem(type, true)));
+            map.put(new Pair<>(type, false), registerItem("uncooked_" + type + "_pie", () -> new PieBlockItem(type, false)));
+        }
+        
+        return map;
     }
     
     public static Set<Item> getEarthArmorSet(){

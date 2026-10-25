@@ -1,13 +1,11 @@
 package dev.saperate.elementals.items.foods;
 
+import com.mojang.datafixers.util.Pair;
 import dev.saperate.elementals.blocks.AbstractPieBlock;
-import dev.saperate.elementals.blocks.blockstates.PieTypeProperty;
 import net.minecraft.world.food.FoodProperties;
-import oshi.util.tuples.Pair;
 
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Set;
 
 public class ElementalsFoods {
     
@@ -18,5 +16,14 @@ public class ElementalsFoods {
             .build();
     
     public static void register(){
+    }
+    
+    public static HashSet<String> getPieTypes(){
+        HashSet<String> set = new HashSet<>(4);
+        set.add("plain");
+        set.add("moonpeach");
+        set.add("starberry");
+        set.add("sweetberry");
+        return set;
     }
 }

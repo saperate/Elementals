@@ -58,7 +58,7 @@ public class GrillBlockEntity extends BlockEntity {
             System.out.println("cooked!");
             blockEntity.cookTime = 0;
             // Basically just sets the pie to be cooked while keeping the same pie type
-            blockEntity.containedBlock = AbstractPieBlock.getCookedBlockstate(blockEntity.containedBlock.getValue(AbstractPieBlock.PIE_TYPE));
+            blockEntity.containedBlock = AbstractPieBlock.getWithCooked(blockEntity.containedBlock, true);
             setChanged(level, pos, state);
         }
     }

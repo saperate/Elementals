@@ -1,5 +1,6 @@
 package dev.saperate.elementals.platform;
 
+import com.mojang.datafixers.util.Pair;
 import dev.saperate.elementals.Constants;
 import dev.saperate.elementals.Elementals;
 import dev.saperate.elementals.ElementalsNeoForge;
@@ -10,6 +11,8 @@ import dev.saperate.elementals.commands.ElementArgumentType;
 import dev.saperate.elementals.commands.ElementalsCommand;
 import dev.saperate.elementals.items.ElementalsItems;
 import dev.saperate.elementals.items.WaterPouchItem;
+import dev.saperate.elementals.items.foods.ElementalsFoods;
+import dev.saperate.elementals.items.foods.PieBlockItem;
 import dev.saperate.elementals.platform.services.IRegistryHelper;
 import net.minecraft.advancements.CriterionTrigger;
 import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
@@ -89,14 +92,12 @@ public class NeoForgeRegistryHelper implements IRegistryHelper {
                     entries.accept(BOOMERANG_ITEM.get());
                     entries.accept(WATER_POUCH_ITEM.get());
                     entries.accept(GLIDER_ITEM.get());
-                    entries.accept(UNCOOKED_PLAIN_PIE_ITEM.get());
-                    entries.accept(COOKED_PLAIN_PIE_ITEM.get());
-                    entries.accept(UNCOOKED_MOONPEACH_PIE_ITEM.get());
-                    entries.accept(COOKED_MOONPEACH_PIE_ITEM.get());
-                    entries.accept(UNCOOKED_STARBERRY_PIE_ITEM.get());
-                    entries.accept(COOKED_STARBERRY_PIE_ITEM.get());
-                    entries.accept(UNCOOKED_SWEETBERRY_PIE_ITEM.get());
-                    entries.accept(COOKED_SWEETBERRY_PIE_ITEM.get());
+                    // We do it like this so that it groups cooked and uncooked together
+                    for (int i = 0; i <= 1; i++) {
+                        for (String type : ElementalsFoods.getPieTypes()) {
+                            entries.accept(PIE_ITEMS.get(new Pair<>(type, i == 0)).get());
+                        }
+                    }
                     entries.accept(GRILL_ITEM.get());
                 }).build();
     }

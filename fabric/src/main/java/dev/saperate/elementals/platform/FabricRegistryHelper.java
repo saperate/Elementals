@@ -1,5 +1,6 @@
 package dev.saperate.elementals.platform;
 
+import com.mojang.datafixers.util.Pair;
 import dev.saperate.elementals.Constants;
 import dev.saperate.elementals.Elementals;
 import dev.saperate.elementals.blocks.ElementalsBlocks;
@@ -9,6 +10,8 @@ import dev.saperate.elementals.commands.ElementArgumentType;
 import dev.saperate.elementals.commands.ElementalsCommand;
 import dev.saperate.elementals.items.ElementalsItems;
 import dev.saperate.elementals.items.WaterPouchItem;
+import dev.saperate.elementals.items.foods.ElementalsFoods;
+import dev.saperate.elementals.items.foods.PieBlockItem;
 import dev.saperate.elementals.platform.services.IRegistryHelper;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
@@ -59,7 +62,6 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.storage.loot.BuiltInLootTables;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -89,14 +91,12 @@ public class FabricRegistryHelper implements IRegistryHelper {
                     entries.accept(BOOMERANG_ITEM.get());
                     entries.accept(WATER_POUCH_ITEM.get());
                     entries.accept(GLIDER_ITEM.get());
-                    entries.accept(UNCOOKED_PLAIN_PIE_ITEM.get());
-                    entries.accept(COOKED_PLAIN_PIE_ITEM.get());
-                    entries.accept(UNCOOKED_MOONPEACH_PIE_ITEM.get());
-                    entries.accept(COOKED_MOONPEACH_PIE_ITEM.get());
-                    entries.accept(UNCOOKED_STARBERRY_PIE_ITEM.get());
-                    entries.accept(COOKED_STARBERRY_PIE_ITEM.get());
-                    entries.accept(UNCOOKED_SWEETBERRY_PIE_ITEM.get());
-                    entries.accept(COOKED_SWEETBERRY_PIE_ITEM.get());
+                    // We do it like this so that it groups cooked and uncooked together
+                    for (int i = 0; i <= 1; i++) {
+                        for (String type : ElementalsFoods.getPieTypes()) {
+                            entries.accept(PIE_ITEMS.get(new Pair<>(type, i == 0)).get());
+                        }
+                    }
                     entries.accept(GRILL_ITEM.get());
                 }).build();
     }
@@ -182,7 +182,7 @@ public class FabricRegistryHelper implements IRegistryHelper {
     }
 
     @Override
-    public @NotNull MobEffectHolder registerEffect(String name, MobEffect effect) {
+    public MobEffectHolder registerEffect(String name, MobEffect effect) {
         Holder<MobEffect> holder = Registry.registerForHolder(BuiltInRegistries.MOB_EFFECT,
                 ResourceLocation.fromNamespaceAndPath(Constants.MODID, name), effect);
         return () -> holder;
