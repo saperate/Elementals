@@ -1,6 +1,7 @@
 package dev.saperate.elementals.blocks;
 
 import dev.saperate.elementals.blocks.blockstates.PieTypeProperty;
+import dev.saperate.elementals.items.foods.PieBlockItem;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.BlockGetter;

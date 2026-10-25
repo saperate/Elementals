@@ -3,6 +3,8 @@ package dev.saperate.elementals.client;
 import commonnetwork.api.Network;
 import dev.saperate.elementals.Constants;
 import dev.saperate.elementals.Elementals;
+import dev.saperate.elementals.blocks.ElementalsBlocks;
+import dev.saperate.elementals.client.blocks.GrillBlockEntityRenderer;
 import dev.saperate.elementals.client.entities.models.metal.MetalLanceModel;
 import dev.saperate.elementals.client.entities.models.water.WaterBladeModel;
 import dev.saperate.elementals.client.entities.water.*;
@@ -26,6 +28,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
@@ -45,6 +48,7 @@ public class ElementalsClient {
     
     public static void init(){
 		registerEntityRenderers();
+        registerBlockEntityRenderers();
 
         new KeyAbility1();
         new KeyAbility2();
@@ -85,8 +89,13 @@ public class ElementalsClient {
                 return renderer;
             }
         };
+        
+        
     }
 
+    public static void registerBlockEntityRenderers(){
+        Services.REGISTRY.registerClientBlockEntityRenderer(ElementalsBlocks.GRILL_BLOCK_ENTITY, GrillBlockEntityRenderer::new);
+    }
 
     public static void registerEntityRenderers() {
         //WATER

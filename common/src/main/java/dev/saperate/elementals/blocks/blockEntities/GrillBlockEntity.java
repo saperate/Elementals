@@ -3,6 +3,7 @@ package dev.saperate.elementals.blocks.blockEntities;
 import dev.saperate.elementals.blocks.AbstractPieBlock;
 import dev.saperate.elementals.blocks.ElementalsBlocks;
 import dev.saperate.elementals.blocks.UncookedPieBlock;
+import dev.saperate.elementals.items.IGrillableItem;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.HolderLookup;
@@ -10,6 +11,8 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -27,9 +30,25 @@ public class GrillBlockEntity extends BlockEntity {
 
     public GrillBlockEntity(BlockPos pos, BlockState state) {
         super(ElementalsBlocks.GRILL_BLOCK_ENTITY.get(), pos, state);
+        setChanged();
+    }
+
+    public static void clientTick(Level level, BlockPos pos, BlockState state, GrillBlockEntity blockEntity) {
+        // When there is a hay block below, produce more smoke
+        boolean hasHay = level.getBlockState(pos.below()).getBlock() == Blocks.HAY_BLOCK;
+        
+        if(blockEntity.hasCampfire() && blockEntity.isCampfireLit()){
+            RandomSource randomsource = level.random;
+            if (randomsource.nextFloat() < (hasHay ? 0.05 : 0.11F)) {
+                for (int i = 0; i < (hasHay ? 1 : randomsource.nextInt(2) + 2); i++) {
+                    CampfireBlock.makeParticles(level, pos, false, false);
+                }
+            }
+        }
     }
 
     public static void tick(Level level, BlockPos pos, BlockState state, GrillBlockEntity blockEntity) {
+        setChanged(level, pos, state);
         if(!blockEntity.canCook()){
             return; // No processing needed if we can't cook
         }
@@ -47,7 +66,7 @@ public class GrillBlockEntity extends BlockEntity {
     /**
      * @return Whether there is a block on the grill or not
      */
-    public boolean hasBlock(){
+    public boolean hasContainedBlock(){
         return containedBlock != null;
     }
 
@@ -59,8 +78,8 @@ public class GrillBlockEntity extends BlockEntity {
      * @param block the block to add
      * @return Whether the block was placed or not
      */
-    public boolean addBlock(BlockState block){
-        if(!hasBlock() && isPlaceable(block.getBlock())){
+    public boolean putContainedBlock(BlockState block){
+        if(!hasContainedBlock() && isPlaceable((BlockItem) block.getBlock().asItem())){
             containedBlock = block;
             cookTime = 0;
             setChanged();
@@ -72,20 +91,26 @@ public class GrillBlockEntity extends BlockEntity {
     /**
      * Removes the block from the grill and resets the cookTime then returns it
      */
-    public BlockState removeBlock(){
+    public BlockState removeContainedBlock(){
         BlockState out = containedBlock;
         containedBlock = null;
         cookTime = 0;
         setChanged();
         return out;
     }
-    
+
+    public BlockState getContainedBlock(){
+        if(!hasContainedBlock()){
+            throw new RuntimeException("Tried to get contained block whilst having none!");
+        }
+        return containedBlock;
+    }
 
     /**
      * @return True if it has a campfire and a block and the campfire is lit
      */
     public boolean canCook(){
-        return hasCampfire() && hasBlock() && isCampfireLit();
+        return hasCampfire() && hasContainedBlock() && isCampfireLit();
     }
 
     /**
@@ -103,7 +128,7 @@ public class GrillBlockEntity extends BlockEntity {
      * @param campfire the campfire to add
      * @return Whether the campfire was placed or not
      */
-    public boolean addCampfire(BlockState campfire){
+    public boolean putCampfire(BlockState campfire){
         if(!hasCampfire() || !(campfire.getBlock() instanceof CampfireBlock)){
             this.campfire = campfire;
             setChanged();
@@ -124,13 +149,26 @@ public class GrillBlockEntity extends BlockEntity {
     }
     
     public void setCampfireLit(boolean val){
+        if(campfire == null){
+            throw new RuntimeException("Tried to set campfire litness whilst having none!");
+        }
         campfire = campfire.setValue(CampfireBlock.LIT, val);
         cookTime = 0;
         setChanged();
     }
     
     public boolean isCampfireLit(){
+        if(campfire == null){
+            throw new RuntimeException("Tried to get campfire litness whilst having none!");
+        }
         return campfire.getValue(CampfireBlock.LIT);
+    }
+    
+    public BlockState getCampfire(){
+        if(!hasCampfire()){
+            throw new RuntimeException("Tried to get campfire whilst having none!");
+        }
+        return campfire;
     }
 
     @Override
@@ -140,8 +178,8 @@ public class GrillBlockEntity extends BlockEntity {
             tag.put("campfire_block", NbtUtils.writeBlockState(campfire));
         }
 
-        tag.putBoolean("has_contained_block", hasBlock());
-        if(hasBlock()) {
+        tag.putBoolean("has_contained_block", hasContainedBlock());
+        if(hasContainedBlock()) {
             tag.put("contained_block", NbtUtils.writeBlockState(containedBlock));
         }
         
@@ -169,9 +207,9 @@ public class GrillBlockEntity extends BlockEntity {
     }
 
     /**
-     * Checks whether a block can be placed in the grill or not
+     * Checks whether an item can be placed in the grill or not
      */
-    public boolean isPlaceable(Block block){
-        return block instanceof AbstractPieBlock;
+    public boolean isPlaceable(BlockItem item){
+        return item instanceof IGrillableItem;
     }
 }

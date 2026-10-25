@@ -18,6 +18,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.LayeredDraw;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.particle.FlameParticle;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.commands.synchronization.ArgumentTypeInfos;
 import net.minecraft.commands.synchronization.SingletonArgumentInfo;
@@ -87,14 +89,15 @@ public class NeoForgeRegistryHelper implements IRegistryHelper {
                     entries.accept(BOOMERANG_ITEM.get());
                     entries.accept(WATER_POUCH_ITEM.get());
                     entries.accept(GLIDER_ITEM.get());
-//                    entries.accept(UNCOOKED_PLAIN_PIE_ITEM.get());
-//                    entries.accept(COOKED_PLAIN_PIE_ITEM.get());
-//                    entries.accept(UNCOOKED_MOONPEACH_PIE_ITEM.get());
-//                    entries.accept(COOKED_MOONPEACH_PIE_ITEM.get());
-//                    entries.accept(UNCOOKED_STARBERRY_PIE_ITEM.get());
-//                    entries.accept(COOKED_STARBERRY_PIE_ITEM.get());
-//                    entries.accept(UNCOOKED_SWEETBERRY_PIE_ITEM.get());
-//                    entries.accept(COOKED_SWEETBERRY_PIE_ITEM.get());
+                    entries.accept(UNCOOKED_PLAIN_PIE_ITEM.get());
+                    entries.accept(COOKED_PLAIN_PIE_ITEM.get());
+                    entries.accept(UNCOOKED_MOONPEACH_PIE_ITEM.get());
+                    entries.accept(COOKED_MOONPEACH_PIE_ITEM.get());
+                    entries.accept(UNCOOKED_STARBERRY_PIE_ITEM.get());
+                    entries.accept(COOKED_STARBERRY_PIE_ITEM.get());
+                    entries.accept(UNCOOKED_SWEETBERRY_PIE_ITEM.get());
+                    entries.accept(COOKED_SWEETBERRY_PIE_ITEM.get());
+                    entries.accept(GRILL_ITEM.get());
                 }).build();
     }
     @Override
@@ -162,6 +165,12 @@ public class NeoForgeRegistryHelper implements IRegistryHelper {
     public <T extends Entity> void registerClientEntityRenderer(Supplier<EntityType<T>> type, EntityRendererProvider<T> provider) {
         eventBus.addListener(((EntityRenderersEvent.RegisterRenderers event) -> 
                 event.registerEntityRenderer(type.get(), provider)));
+    }
+
+    @Override
+    public <T extends BlockEntity> void registerClientBlockEntityRenderer(Supplier<BlockEntityType<T>> type, BlockEntityRendererProvider<T> renderProvider) {
+        eventBus.addListener(((EntityRenderersEvent.RegisterRenderers event) ->
+                event.registerBlockEntityRenderer(type.get(), renderProvider)));
     }
 
     @Override

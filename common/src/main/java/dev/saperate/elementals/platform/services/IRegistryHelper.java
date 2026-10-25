@@ -1,6 +1,7 @@
 package dev.saperate.elementals.platform.services;
 
 import dev.saperate.elementals.advancements.HasElementCriterion;
+import dev.saperate.elementals.blocks.blockEntities.GrillBlockEntity;
 import dev.saperate.elementals.blocks.blockEntities.LitAirBlockEntity;
 import dev.saperate.elementals.entities.common.DecoyPlayerEntity;
 import net.minecraft.advancements.CriteriaTriggers;
@@ -10,6 +11,8 @@ import net.minecraft.client.KeyMapping;
 import net.minecraft.client.gui.LayeredDraw;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
@@ -46,10 +49,12 @@ public interface IRegistryHelper {
     void registerClientColorProviders();
     KeyMapping registerClientKeyBinding(KeyMapping keyMapping);
     <T extends Entity> void registerClientEntityRenderer(Supplier<EntityType<T>> type, EntityRendererProvider<T> provider);
+    <T extends BlockEntity> void registerClientBlockEntityRenderer(Supplier<BlockEntityType<T>> type, BlockEntityRendererProvider<T> renderProvider);
     <T extends GameRules.Value<T>> GameRules.Key<T> registerGameRule(String name, GameRules.Category category, GameRules.Type<T> defaultValue);
     GameRules.Type<GameRules.BooleanValue> createGameruleIntegerType(boolean defaultValue);
     GameRules.Type<GameRules.IntegerValue> createGameruleIntegerType(int defaultValue);
     void registerClientModelLayer(ModelLayerLocation modelMetalLanceLayer, TexturedModelDataProvider provider);
+
     @FunctionalInterface
     interface TexturedModelDataProvider {
         LayerDefinition create();

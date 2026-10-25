@@ -23,12 +23,15 @@ import net.fabricmc.fabric.api.gamerule.v1.GameRuleRegistry;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.fabricmc.fabric.api.loot.v3.LootTableEvents;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
+import net.fabricmc.fabric.mixin.client.rendering.BlockEntityRendererFactoriesMixin;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.gui.LayeredDraw;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.particle.FlameParticle;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.commands.synchronization.SingletonArgumentInfo;
 import net.minecraft.core.Holder;
@@ -86,14 +89,15 @@ public class FabricRegistryHelper implements IRegistryHelper {
                     entries.accept(BOOMERANG_ITEM.get());
                     entries.accept(WATER_POUCH_ITEM.get());
                     entries.accept(GLIDER_ITEM.get());
-//                    entries.accept(UNCOOKED_PLAIN_PIE_ITEM.get());
-//                    entries.accept(COOKED_PLAIN_PIE_ITEM.get());
-//                    entries.accept(UNCOOKED_MOONPEACH_PIE_ITEM.get());
-//                    entries.accept(COOKED_MOONPEACH_PIE_ITEM.get());
-//                    entries.accept(UNCOOKED_STARBERRY_PIE_ITEM.get());
-//                    entries.accept(COOKED_STARBERRY_PIE_ITEM.get());
-//                    entries.accept(UNCOOKED_SWEETBERRY_PIE_ITEM.get());
-//                    entries.accept(COOKED_SWEETBERRY_PIE_ITEM.get());
+                    entries.accept(UNCOOKED_PLAIN_PIE_ITEM.get());
+                    entries.accept(COOKED_PLAIN_PIE_ITEM.get());
+                    entries.accept(UNCOOKED_MOONPEACH_PIE_ITEM.get());
+                    entries.accept(COOKED_MOONPEACH_PIE_ITEM.get());
+                    entries.accept(UNCOOKED_STARBERRY_PIE_ITEM.get());
+                    entries.accept(COOKED_STARBERRY_PIE_ITEM.get());
+                    entries.accept(UNCOOKED_SWEETBERRY_PIE_ITEM.get());
+                    entries.accept(COOKED_SWEETBERRY_PIE_ITEM.get());
+                    entries.accept(GRILL_ITEM.get());
                 }).build();
     }
 
@@ -153,7 +157,12 @@ public class FabricRegistryHelper implements IRegistryHelper {
     public <T extends Entity> void registerClientEntityRenderer(Supplier<EntityType<T>> type, EntityRendererProvider<T> provider) {
         EntityRendererRegistry.register(type.get(), provider);
     }
-    
+
+    @Override
+    public <T extends BlockEntity> void registerClientBlockEntityRenderer(Supplier<BlockEntityType<T>> type, BlockEntityRendererProvider<T> renderProvider) {
+        BlockEntityRenderers.register(type.get(), renderProvider);
+    }
+
     @Override
     public <T extends GameRules.Value<T>> GameRules.Key<T> registerGameRule(String name, GameRules.Category category, GameRules.Type<T> defaultValue) {
         return GameRuleRegistry.register(name, category, defaultValue);
