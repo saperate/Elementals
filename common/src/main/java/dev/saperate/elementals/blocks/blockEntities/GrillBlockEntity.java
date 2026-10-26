@@ -61,7 +61,7 @@ public class GrillBlockEntity extends BlockEntity {
         }
         setChanged(level, pos, state);
         blockEntity.cookTime++;
-        if (blockEntity.containedBlock.getBlock() instanceof UncookedPieBlock && blockEntity.cookTime >= 40){
+        if (blockEntity.containedBlock.getBlock() instanceof UncookedPieBlock && blockEntity.cookTime >= 300){
             blockEntity.cookTime = 0;
             // Basically just sets the pie to be cooked while keeping the same pie type
             blockEntity.containedBlock = AbstractPieBlock.getWithCooked(blockEntity.containedBlock, true);
