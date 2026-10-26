@@ -10,9 +10,11 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -25,10 +27,14 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static dev.saperate.elementals.blocks.ElementalsBlocks.GRILL_BLOCK_ENTITY;
 
@@ -102,9 +108,11 @@ public class GrillBlock extends BaseEntityBlock {
         }
 
         if (stack.getItem() instanceof ShovelItem) {
+            if(blockEntity.hasCampfire())
                 blockEntity.setCampfireLit(false);
             return ItemInteractionResult.SUCCESS;
         } else if (stack.getItem() instanceof FlintAndSteelItem) {
+            if(blockEntity.hasCampfire())
                 blockEntity.setCampfireLit(true);
             return ItemInteractionResult.SUCCESS;
         }
@@ -153,6 +161,22 @@ public class GrillBlock extends BaseEntityBlock {
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return new GrillBlockEntity(pos, state);
     }
+
+    @Override
+    protected void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean isMoving) {
+        if (!(level.getBlockEntity(pos) instanceof GrillBlockEntity blockEntity) || state.is(newState.getBlock())) {
+            super.onRemove(state, level, pos, newState, isMoving);
+            return;
+        }
+        if(blockEntity.hasContainedBlock())
+            level.addFreshEntity(new ItemEntity(level, pos.getX(), pos.getY(), pos.getZ(), blockEntity.getContainedBlock().getBlock().asItem().getDefaultInstance()));
+        if(blockEntity.hasCampfire())
+            level.addFreshEntity(new ItemEntity(level, pos.getX(), pos.getY(), pos.getZ(), blockEntity.getCampfire().getBlock().asItem().getDefaultInstance()));
+        
+        level.addFreshEntity(new ItemEntity(level, pos.getX(), pos.getY(), pos.getZ(), state.getBlock().asItem().getDefaultInstance()));
+        super.onRemove(state, level, pos, newState, isMoving);
+    }
+
 
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level world, BlockState state, BlockEntityType<T> type) {
