@@ -14,6 +14,16 @@ public class ElementalsFoods {
             .saturationModifier(-1.2f)
             .nutrition(-6)
             .build();
+
+    public static final FoodProperties UNCOOKED_PIE_FOOD_COMPONENT = new FoodProperties.Builder()
+            .saturationModifier(2)
+            .nutrition(4)
+            .build();
+
+    public static final FoodProperties COOKED_PIE_FOOD_COMPONENT = new FoodProperties.Builder()
+            .saturationModifier(15)
+            .nutrition(8)
+            .build();
     
     public static void register(){
     }

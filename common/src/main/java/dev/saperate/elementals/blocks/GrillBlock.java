@@ -2,7 +2,6 @@ package dev.saperate.elementals.blocks;
 
 import com.mojang.serialization.MapCodec;
 import dev.saperate.elementals.blocks.blockEntities.GrillBlockEntity;
-import dev.saperate.elementals.items.IGrillableItem;
 import dev.saperate.elementals.utils.SapsUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -10,7 +9,6 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.ItemInteractionResult;
@@ -27,14 +25,10 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
-import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import static dev.saperate.elementals.blocks.ElementalsBlocks.GRILL_BLOCK_ENTITY;
 
@@ -68,14 +62,14 @@ public class GrillBlock extends BaseEntityBlock {
 
         if (player.isCrouching()) { // We are looking to remove the campfire
             if (blockEntity.hasCampfire()) {
-                    ItemStack stack = blockEntity.removeCampfire().getBlock().asItem().getDefaultInstance();
-                    SapsUtils.addOrDropItem(player, level, stack);
+                ItemStack stack = blockEntity.removeCampfire().getBlock().asItem().getDefaultInstance();
+                SapsUtils.addOrDropItem(player, level, stack);
                 return InteractionResult.sidedSuccess(level.isClientSide);
             }
         } else { // We are looking to remove the contained block
-            if (blockEntity.hasContainedBlock()) {
-                    ItemStack stack = blockEntity.removeContainedBlock().getBlock().asItem().getDefaultInstance();
-                    SapsUtils.addOrDropItem(player, level, stack);
+            if (blockEntity.hasContainedStack()) {
+                ItemStack stack = blockEntity.removeContainedStack();
+                SapsUtils.addOrDropItem(player, level, stack);
                 return InteractionResult.sidedSuccess(level.isClientSide);
             }
         }
@@ -89,30 +83,28 @@ public class GrillBlock extends BaseEntityBlock {
             return super.useItemOn(stack, state, level, pos, player, hand, hit);
         }
 
-        if (stack.getItem() instanceof BlockItem blockItem) {
-            if (blockItem.getBlock() instanceof CampfireBlock && !blockEntity.hasCampfire()) {
-                if (blockEntity.putCampfire(blockItem.getBlock().defaultBlockState())) {
-                    if (!player.isCreative()) {
-                        stack.shrink(1);
-                    }
-                    return ItemInteractionResult.sidedSuccess(level.isClientSide);
+        if (stack.getItem() instanceof BlockItem blockItem && blockItem.getBlock() instanceof CampfireBlock && !blockEntity.hasCampfire()) {
+            if (blockEntity.putCampfire(blockItem.getBlock().defaultBlockState())) {
+                if (!player.isCreative()) {
+                    stack.shrink(1);
                 }
-            } else if (blockEntity.isPlaceable(blockItem) && !blockEntity.hasContainedBlock()) {
-                if (blockEntity.putContainedBlock(blockItem.getBlock().defaultBlockState())) {
-                    if (!player.isCreative()) {
-                        stack.shrink(1);
-                    }
-                    return ItemInteractionResult.sidedSuccess(level.isClientSide);
+                return ItemInteractionResult.sidedSuccess(level.isClientSide);
+            }
+        } else if (blockEntity.isPlaceable(stack.getItem()) && !blockEntity.hasContainedStack()) {
+            if (blockEntity.putContainedStack(stack)) {
+                if (!player.isCreative()) {
+                    stack.shrink(1);
                 }
+                return ItemInteractionResult.sidedSuccess(level.isClientSide);
             }
         }
 
         if (stack.getItem() instanceof ShovelItem) {
-            if(blockEntity.hasCampfire())
+            if (blockEntity.hasCampfire())
                 blockEntity.setCampfireLit(false);
             return ItemInteractionResult.SUCCESS;
         } else if (stack.getItem() instanceof FlintAndSteelItem) {
-            if(blockEntity.hasCampfire())
+            if (blockEntity.hasCampfire())
                 blockEntity.setCampfireLit(true);
             return ItemInteractionResult.SUCCESS;
         }
@@ -168,11 +160,11 @@ public class GrillBlock extends BaseEntityBlock {
             super.onRemove(state, level, pos, newState, isMoving);
             return;
         }
-        if(blockEntity.hasContainedBlock())
-            level.addFreshEntity(new ItemEntity(level, pos.getX(), pos.getY(), pos.getZ(), blockEntity.getContainedBlock().getBlock().asItem().getDefaultInstance()));
-        if(blockEntity.hasCampfire())
+        if (blockEntity.hasContainedStack())
+            level.addFreshEntity(new ItemEntity(level, pos.getX(), pos.getY(), pos.getZ(), blockEntity.getContainedStack()));
+        if (blockEntity.hasCampfire())
             level.addFreshEntity(new ItemEntity(level, pos.getX(), pos.getY(), pos.getZ(), blockEntity.getCampfire().getBlock().asItem().getDefaultInstance()));
-        
+
         level.addFreshEntity(new ItemEntity(level, pos.getX(), pos.getY(), pos.getZ(), state.getBlock().asItem().getDefaultInstance()));
         super.onRemove(state, level, pos, newState, isMoving);
     }

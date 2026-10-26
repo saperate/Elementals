@@ -137,8 +137,10 @@ public class ElementalsItems {
         HashSet<String> types = ElementalsFoods.getPieTypes();
         
         for (String type : types){
-            map.put(new Pair<>(type, true), registerItem("cooked_" + type + "_pie", () -> new PieBlockItem(type, true)));
-            map.put(new Pair<>(type, false), registerItem("uncooked_" + type + "_pie", () -> new PieBlockItem(type, false)));
+            map.put(new Pair<>(type, true), registerItem("cooked_" + type + "_pie", 
+                    () -> new PieBlockItem(type, true)));
+            map.put(new Pair<>(type, false), registerItem("uncooked_" + type + "_pie", 
+                    () -> new PieBlockItem(type, false)));
         }
         
         return map;

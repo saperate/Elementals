@@ -1,8 +1,6 @@
 package dev.saperate.elementals.blocks.blockEntities;
 
-import dev.saperate.elementals.blocks.AbstractPieBlock;
 import dev.saperate.elementals.blocks.ElementalsBlocks;
-import dev.saperate.elementals.blocks.UncookedPieBlock;
 import dev.saperate.elementals.items.IGrillableItem;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderGetter;
@@ -15,7 +13,7 @@ import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -25,12 +23,10 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.awt.*;
-
 public class GrillBlockEntity extends BlockEntity {
     private BlockState campfire = null;
-    private BlockState containedBlock = Blocks.AIR.defaultBlockState();
-    /// The time in ticks since we added a block onto the GrillBlockEntity <br>
+    private ItemStack containedStack = ItemStack.EMPTY;
+    /// The time in ticks since we added a stack onto the GrillBlockEntity <br>
     /// This will only go up if canCook returns true
     private int cookTime = 0;
 
@@ -44,8 +40,8 @@ public class GrillBlockEntity extends BlockEntity {
         
         if(blockEntity.hasCampfire() && blockEntity.isCampfireLit()){
             RandomSource randomsource = level.random;
-            if (randomsource.nextFloat() < (hasHay ? 0.05 : 0.11F)) {
-                for (int i = 0; i < (hasHay ? 1 : randomsource.nextInt(2) + 2); i++) {
+            if (randomsource.nextFloat() < (hasHay ? 0.11 : 0.05F)) {
+                for (int i = 0; i < (hasHay ? randomsource.nextInt(2) + 2 : 1); i++) {
                     CampfireBlock.makeParticles(level, pos, false, false);
                 }
             }
@@ -56,37 +52,37 @@ public class GrillBlockEntity extends BlockEntity {
         if(level.isClientSide){
             clientTick(level, pos, state, blockEntity);
         }
-        if(!blockEntity.canCook()){
+        if(!blockEntity.canCook() || !(blockEntity.containedStack.getItem() instanceof IGrillableItem grillable)){
             return; // No processing needed if we can't cook
         }
-        setChanged(level, pos, state);
         blockEntity.cookTime++;
-        if (blockEntity.containedBlock.getBlock() instanceof UncookedPieBlock && blockEntity.cookTime >= 300){
-            blockEntity.cookTime = 0;
-            // Basically just sets the pie to be cooked while keeping the same pie type
-            blockEntity.containedBlock = AbstractPieBlock.getWithCooked(blockEntity.containedBlock, true);
-            setChanged(level, pos, state);
+        if(!blockEntity.containedStack.isEmpty())
+            grillable.grillTick(blockEntity.containedStack, blockEntity.cookTime, level, pos, state, blockEntity);
+    }
+
+    /**
+     * @return Whether there is an item stack on the grill or not
+     */
+    public boolean hasContainedStack(){
+        return containedStack != null && !containedStack.isEmpty();
+    }
+
+    /**
+     * Sets the item stack contained within the grill and resets the cookTime. <br>
+     * It will throw an error if there is already one placed. <br>
+     * To remove the stack contained, use removeStack() <br>
+     * It will do nothing if the stack is not placeable on the grill
+     * @param stack the item stack to add
+     * @return Whether the item stack was placed or not
+     */
+    public boolean putContainedStack(ItemStack stack){
+        if(hasContainedStack()){
+            throw new RuntimeException("Tried to put a stack on grill whilst it was full!");
         }
-    }
-
-    /**
-     * @return Whether there is a block on the grill or not
-     */
-    public boolean hasContainedBlock(){
-        return containedBlock != null && !containedBlock.isAir();
-    }
-
-    /**
-     * Sets the block contained within the grill and resets the cookTime. <br>
-     * It will not set any if there is already one placed. <br>
-     * To remove the block contained, use removeBlock() <br>
-     * It will do nothing if the block is not placeable on the grill
-     * @param block the block to add
-     * @return Whether the block was placed or not
-     */
-    public boolean putContainedBlock(BlockState block){
-        if(!hasContainedBlock() && isPlaceable((BlockItem) block.getBlock().asItem())){
-            containedBlock = block;
+        
+        if(isPlaceable(stack.getItem())){
+            containedStack = stack.copy();
+            containedStack.setCount(1);
             cookTime = 0;
             setChanged();
             return true;
@@ -95,28 +91,28 @@ public class GrillBlockEntity extends BlockEntity {
     }
 
     /**
-     * Removes the block from the grill and resets the cookTime then returns it
+     * Removes the item stack from the grill and resets the cookTime then returns it
      */
-    public BlockState removeContainedBlock(){
-        BlockState out = containedBlock;
-        containedBlock = null;
+    public ItemStack removeContainedStack(){
+        ItemStack out = containedStack;
+        containedStack = ItemStack.EMPTY;
         cookTime = 0;
         setChanged();
         return out;
     }
 
-    public BlockState getContainedBlock(){
-        if(!hasContainedBlock()){
-            throw new RuntimeException("Tried to get contained block whilst having none!");
+    public ItemStack getContainedStack(){
+        if(!hasContainedStack()){
+            throw new RuntimeException("Tried to get contained stack whilst having none!");
         }
-        return containedBlock;
+        return containedStack;
     }
 
     /**
      * @return True if it has a campfire and a block and the campfire is lit
      */
     public boolean canCook(){
-        return hasCampfire() && hasContainedBlock() && isCampfireLit();
+        return hasCampfire() && hasContainedStack() && isCampfireLit();
     }
 
     /**
@@ -148,7 +144,7 @@ public class GrillBlockEntity extends BlockEntity {
      */
     public BlockState removeCampfire(){
         BlockState out = campfire;
-        campfire = null;
+        campfire = Blocks.AIR.defaultBlockState();
         cookTime = 0;
         setChanged();
         return out;
@@ -184,9 +180,9 @@ public class GrillBlockEntity extends BlockEntity {
             tag.put("campfire_block", NbtUtils.writeBlockState(campfire));
         }
 
-        tag.putBoolean("has_contained_block", hasContainedBlock());
-        if(hasContainedBlock()) {
-            tag.put("contained_block", NbtUtils.writeBlockState(containedBlock));
+        tag.putBoolean("has_contained_block", hasContainedStack());
+        if(hasContainedStack()) {
+            tag.put("contained_block", containedStack.save(registries));
         }
         
         tag.putInt("cook_time", cookTime);
@@ -204,8 +200,8 @@ public class GrillBlockEntity extends BlockEntity {
         campfire = tag.getBoolean("has_campfire_block") 
                 ? NbtUtils.readBlockState(holdergetter, tag.getCompound("campfire_block"))
                 : null;
-        containedBlock = tag.getBoolean("has_contained_block")
-                ? NbtUtils.readBlockState(holdergetter, tag.getCompound("contained_block"))
+        containedStack = tag.getBoolean("has_contained_block")
+                ? ItemStack.parse(registries, tag.getCompound("contained_block")).orElse(ItemStack.EMPTY)
                 : null;
         cookTime = tag.getInt("cook_time");
         
@@ -233,7 +229,7 @@ public class GrillBlockEntity extends BlockEntity {
     /**
      * Checks whether an item can be placed in the grill or not
      */
-    public boolean isPlaceable(BlockItem item){
+    public boolean isPlaceable(Item item){ // TODO add a blacklist from config
         return item instanceof IGrillableItem;
     }
 }

@@ -1,6 +1,5 @@
 package dev.saperate.elementals.client.blocks;
 
-import com.mojang.authlib.minecraft.client.MinecraftClient;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import dev.saperate.elementals.blocks.GrillBlock;
@@ -10,10 +9,8 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.Direction;
-import net.minecraft.world.phys.Vec3;
-import org.joml.Quaternionf;
-
-import java.time.Instant;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.ItemStack;
 
 public class GrillBlockEntityRenderer implements BlockEntityRenderer<GrillBlockEntity> {
 
@@ -39,9 +36,16 @@ public class GrillBlockEntityRenderer implements BlockEntityRenderer<GrillBlockE
             Minecraft.getInstance().getBlockRenderer().renderSingleBlock(blockEntity.getCampfire(), poseStack, bufferSource, packedLight, packedOverlay);
         }
         
-        if(blockEntity.hasContainedBlock()){
+        if(blockEntity.hasContainedStack()){
             poseStack.translate(0, 12f/16f, 0);
-            Minecraft.getInstance().getBlockRenderer().renderSingleBlock(blockEntity.getContainedBlock(), poseStack, bufferSource, packedLight, packedOverlay);
+            ItemStack stack = blockEntity.getContainedStack();
+            
+            if(stack.getItem() instanceof BlockItem blockItem){
+                Minecraft.getInstance().getBlockRenderer().renderSingleBlock(blockItem.getBlock().defaultBlockState(), poseStack, bufferSource, packedLight, packedOverlay);
+            }else{
+                //Not rendering for now, later though, it will place the item on a 90* rotation on top of the grill
+            }
+            
         }
         
         poseStack.popPose();
