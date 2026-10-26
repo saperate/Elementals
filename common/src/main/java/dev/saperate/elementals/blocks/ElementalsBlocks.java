@@ -19,6 +19,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -76,7 +77,7 @@ public class ElementalsBlocks {
             "grill",
             () -> new GrillBlock(BlockBehaviour.Properties.of()
                     .strength(1f).noOcclusion()
-                    .lightLevel(GrillBlock::getLightLevel)
+                    .lightLevel(litBlockEmission(15))
             ));
 
     public static final Supplier<BlockEntityType<GrillBlockEntity>> GRILL_BLOCK_ENTITY =
@@ -111,6 +112,10 @@ public class ElementalsBlocks {
 
     private static boolean never(BlockState state, BlockGetter blockGetter, BlockPos pos) {
         return false;
+    }
+
+    private static ToIntFunction<BlockState> litBlockEmission(int lightValue) {
+        return (p_50763_) -> (Boolean)p_50763_.getValue(BlockStateProperties.LIT) ? lightValue : 0;
     }
 
 }

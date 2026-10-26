@@ -24,6 +24,8 @@ import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -39,15 +41,17 @@ public class GrillBlock extends BaseEntityBlock {
     private static final VoxelShape SHAPE_EW = Block.box(0.0F, 0.0F, 2.0F, 16.0F, 13.0F, 14.0F);
 
     public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
+    public static final BooleanProperty LIT = BlockStateProperties.LIT;
 
     public GrillBlock(Properties settings) {
         super(settings);
-        registerDefaultState(defaultBlockState().setValue(FACING, Direction.NORTH));
+        registerDefaultState(defaultBlockState().setValue(FACING, Direction.NORTH).setValue(LIT, false));
     }
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(FACING);
+        builder.add(LIT);
     }
 
     /**
@@ -64,6 +68,7 @@ public class GrillBlock extends BaseEntityBlock {
             if (blockEntity.hasCampfire()) {
                 ItemStack stack = blockEntity.removeCampfire().getBlock().asItem().getDefaultInstance();
                 SapsUtils.addOrDropItem(player, level, stack);
+                setLit(false, state, level, pos);
                 return InteractionResult.sidedSuccess(level.isClientSide);
             }
         } else { // We are looking to remove the contained block
@@ -88,6 +93,7 @@ public class GrillBlock extends BaseEntityBlock {
                 if (!player.isCreative()) {
                     stack.shrink(1);
                 }
+                setLit(true, state, level, pos);
                 return ItemInteractionResult.sidedSuccess(level.isClientSide);
             }
         } else if (blockEntity.isPlaceable(stack.getItem()) && !blockEntity.hasContainedStack()) {
@@ -100,12 +106,16 @@ public class GrillBlock extends BaseEntityBlock {
         }
 
         if (stack.getItem() instanceof ShovelItem) {
-            if (blockEntity.hasCampfire())
+            if (blockEntity.hasCampfire()) {
                 blockEntity.setCampfireLit(false);
+                setLit(false, state, level, pos);
+            }
             return ItemInteractionResult.SUCCESS;
         } else if (stack.getItem() instanceof FlintAndSteelItem) {
-            if (blockEntity.hasCampfire())
+            if (blockEntity.hasCampfire()) {
                 blockEntity.setCampfireLit(true);
+                setLit(true, state, level, pos);
+            }
             return ItemInteractionResult.SUCCESS;
         }
 
@@ -143,8 +153,8 @@ public class GrillBlock extends BaseEntityBlock {
         return blockEntity.getBlockState().getValue(FACING);
     }
 
-    public static int getLightLevel(BlockState state) {
-        return 15;
+    public void setLit(boolean lit, BlockState state, Level level, BlockPos pos) {
+        level.setBlockAndUpdate(pos, state.setValue(LIT, lit));
     }
 
 
