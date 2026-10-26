@@ -11,6 +11,9 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.level.Level;
@@ -20,6 +23,9 @@ import net.minecraft.world.level.block.CampfireBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.awt.*;
 
 public class GrillBlockEntity extends BlockEntity {
     private BlockState campfire = null;
@@ -30,7 +36,6 @@ public class GrillBlockEntity extends BlockEntity {
 
     public GrillBlockEntity(BlockPos pos, BlockState state) {
         super(ElementalsBlocks.GRILL_BLOCK_ENTITY.get(), pos, state);
-        setChanged();
     }
 
     public static void clientTick(Level level, BlockPos pos, BlockState state, GrillBlockEntity blockEntity) {
@@ -48,14 +53,15 @@ public class GrillBlockEntity extends BlockEntity {
     }
 
     public static void tick(Level level, BlockPos pos, BlockState state, GrillBlockEntity blockEntity) {
-        setChanged(level, pos, state);
+        if(level.isClientSide){
+            clientTick(level, pos, state, blockEntity);
+        }
         if(!blockEntity.canCook()){
             return; // No processing needed if we can't cook
         }
+        setChanged(level, pos, state);
         blockEntity.cookTime++;
-        System.out.println("cooking! "+ blockEntity.cookTime + " : " + blockEntity.containedBlock.getBlock().getName());
-        if (blockEntity.containedBlock.getBlock() instanceof UncookedPieBlock && blockEntity.cookTime >= 300){
-            System.out.println("cooked!");
+        if (blockEntity.containedBlock.getBlock() instanceof UncookedPieBlock && blockEntity.cookTime >= 40){
             blockEntity.cookTime = 0;
             // Basically just sets the pie to be cooked while keeping the same pie type
             blockEntity.containedBlock = AbstractPieBlock.getWithCooked(blockEntity.containedBlock, true);
@@ -67,7 +73,7 @@ public class GrillBlockEntity extends BlockEntity {
      * @return Whether there is a block on the grill or not
      */
     public boolean hasContainedBlock(){
-        return containedBlock != null;
+        return containedBlock != null && !containedBlock.isAir();
     }
 
     /**
@@ -117,7 +123,7 @@ public class GrillBlockEntity extends BlockEntity {
      * @return Whether there is a campfire on the grill or not
      */
     public boolean hasCampfire(){
-        return campfire != null;
+        return campfire != null && !campfire.isAir();
     }
 
     /**
@@ -204,6 +210,24 @@ public class GrillBlockEntity extends BlockEntity {
         cookTime = tag.getInt("cook_time");
         
         super.loadAdditional(tag, registries);
+    }
+
+    @Override
+    public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
+        CompoundTag tag = new CompoundTag();
+        saveAdditional(tag, registries);
+        return tag;
+    }
+
+    @Override
+    public @Nullable Packet<ClientGamePacketListener> getUpdatePacket() {
+        return ClientboundBlockEntityDataPacket.create(this);
+    }
+
+    @Override
+    public void setChanged() {
+        super.setChanged();
+        level.blockUpdated(getBlockPos(), getBlockState().getBlock());
     }
 
     /**

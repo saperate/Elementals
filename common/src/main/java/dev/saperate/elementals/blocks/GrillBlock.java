@@ -62,15 +62,15 @@ public class GrillBlock extends BaseEntityBlock {
 
         if (player.isCrouching()) { // We are looking to remove the campfire
             if (blockEntity.hasCampfire()) {
-                ItemStack stack = blockEntity.removeCampfire().getBlock().asItem().getDefaultInstance();
-                SapsUtils.addOrDropItem(player, level, stack);
-                return InteractionResult.SUCCESS;
+                    ItemStack stack = blockEntity.removeCampfire().getBlock().asItem().getDefaultInstance();
+                    SapsUtils.addOrDropItem(player, level, stack);
+                return InteractionResult.sidedSuccess(level.isClientSide);
             }
         } else { // We are looking to remove the contained block
             if (blockEntity.hasContainedBlock()) {
-                ItemStack stack = blockEntity.removeContainedBlock().getBlock().asItem().getDefaultInstance();
-                SapsUtils.addOrDropItem(player, level, stack);
-                return InteractionResult.SUCCESS;
+                    ItemStack stack = blockEntity.removeContainedBlock().getBlock().asItem().getDefaultInstance();
+                    SapsUtils.addOrDropItem(player, level, stack);
+                return InteractionResult.sidedSuccess(level.isClientSide);
             }
         }
 
@@ -86,23 +86,27 @@ public class GrillBlock extends BaseEntityBlock {
         if (stack.getItem() instanceof BlockItem blockItem) {
             if (blockItem.getBlock() instanceof CampfireBlock && !blockEntity.hasCampfire()) {
                 if (blockEntity.putCampfire(blockItem.getBlock().defaultBlockState())) {
-                    stack.shrink(1);
-                    return ItemInteractionResult.CONSUME;
+                    if (!player.isCreative()) {
+                        stack.shrink(1);
+                    }
+                    return ItemInteractionResult.sidedSuccess(level.isClientSide);
                 }
             } else if (blockEntity.isPlaceable(blockItem) && !blockEntity.hasContainedBlock()) {
                 if (blockEntity.putContainedBlock(blockItem.getBlock().defaultBlockState())) {
-                    stack.shrink(1);
-                    return ItemInteractionResult.CONSUME;
+                    if (!player.isCreative()) {
+                        stack.shrink(1);
+                    }
+                    return ItemInteractionResult.sidedSuccess(level.isClientSide);
                 }
             }
         }
 
         if (stack.getItem() instanceof ShovelItem) {
-            blockEntity.setCampfireLit(false);
-            return ItemInteractionResult.CONSUME;
+                blockEntity.setCampfireLit(false);
+            return ItemInteractionResult.SUCCESS;
         } else if (stack.getItem() instanceof FlintAndSteelItem) {
-            blockEntity.setCampfireLit(true);
-            return ItemInteractionResult.CONSUME;
+                blockEntity.setCampfireLit(true);
+            return ItemInteractionResult.SUCCESS;
         }
 
         return super.useItemOn(stack, state, level, pos, player, hand, hit);
@@ -117,7 +121,7 @@ public class GrillBlock extends BaseEntityBlock {
     protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
         if (state.getValue(FACING).getAxis() == Direction.Axis.X) {
             return SHAPE_NS;
-        }else{
+        } else {
             return SHAPE_EW;
         }
     }
@@ -126,23 +130,23 @@ public class GrillBlock extends BaseEntityBlock {
     protected RenderShape getRenderShape(BlockState state) {
         return RenderShape.MODEL;
     }
-    
+
     public BlockState getStateForPlacement(BlockPlaceContext context) {
         return this.defaultBlockState().setValue(FACING, context.getHorizontalDirection().getOpposite());
     }
-    
-    public static Direction getDirection(BlockState state){
+
+    public static Direction getDirection(BlockState state) {
         return state.getValue(FACING);
     }
 
-    public static Direction getDirection(GrillBlockEntity blockEntity){
+    public static Direction getDirection(GrillBlockEntity blockEntity) {
         return blockEntity.getBlockState().getValue(FACING);
     }
-    
-    public static int getLightLevel(BlockState state){
+
+    public static int getLightLevel(BlockState state) {
         return 15;
     }
-    
+
 
     @Nullable
     @Override
@@ -152,9 +156,6 @@ public class GrillBlock extends BaseEntityBlock {
 
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level world, BlockState state, BlockEntityType<T> type) {
-        if (world.isClientSide()) {
-            return createTickerHelper(type, GRILL_BLOCK_ENTITY.get(), GrillBlockEntity::clientTick);
-        }
         return createTickerHelper(type, GRILL_BLOCK_ENTITY.get(), GrillBlockEntity::tick);
     }
 
