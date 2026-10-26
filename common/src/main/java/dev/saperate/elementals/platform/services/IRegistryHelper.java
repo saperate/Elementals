@@ -1,5 +1,6 @@
 package dev.saperate.elementals.platform.services;
 
+import com.mojang.serialization.Codec;
 import dev.saperate.elementals.advancements.HasElementCriterion;
 import dev.saperate.elementals.blocks.blockEntities.GrillBlockEntity;
 import dev.saperate.elementals.blocks.blockEntities.LitAirBlockEntity;
@@ -16,8 +17,11 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
+import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.dispenser.DispenseItemBehavior;
 import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.effect.MobEffect;
@@ -54,6 +58,7 @@ public interface IRegistryHelper {
     GameRules.Type<GameRules.BooleanValue> createGameruleIntegerType(boolean defaultValue);
     GameRules.Type<GameRules.IntegerValue> createGameruleIntegerType(int defaultValue);
     void registerClientModelLayer(ModelLayerLocation modelMetalLanceLayer, TexturedModelDataProvider provider);
+    Supplier<DataComponentType<?>> registerDataComponent(String name, Codec<?> codec, StreamCodec<RegistryFriendlyByteBuf, ?> streamCodec);
 
     @FunctionalInterface
     interface TexturedModelDataProvider {

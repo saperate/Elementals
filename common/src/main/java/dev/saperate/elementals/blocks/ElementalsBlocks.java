@@ -3,6 +3,7 @@ package dev.saperate.elementals.blocks;
 import com.mojang.datafixers.util.Pair;
 import dev.saperate.elementals.Constants;
 import dev.saperate.elementals.blocks.blockEntities.GrillBlockEntity;
+import dev.saperate.elementals.blocks.blockEntities.KettleBlockEntity;
 import dev.saperate.elementals.blocks.blockEntities.LitAirBlockEntity;
 import dev.saperate.elementals.items.foods.ElementalsFoods;
 import dev.saperate.elementals.items.foods.PieBlockItem;
@@ -84,6 +85,18 @@ public class ElementalsBlocks {
             Services.REGISTRY.registerBlockEntityType(
                     "grill_block_entity",
                     GRILL_BLOCK, GrillBlockEntity::new
+            );
+
+    public static final Supplier<Block> KETTLE_BLOCK = Services.REGISTRY.registerBlock(
+            "kettle",
+            () -> new KettleBlock(BlockBehaviour.Properties.of()
+                    .strength(1f).noOcclusion()
+            ));
+
+    public static final Supplier<BlockEntityType<KettleBlockEntity>> KETTLE_BLOCK_ENTITY =
+            Services.REGISTRY.registerBlockEntityType(
+                    "kettle_block_entity",
+                    KETTLE_BLOCK, KettleBlockEntity::new
             );
     
     public static void register() {

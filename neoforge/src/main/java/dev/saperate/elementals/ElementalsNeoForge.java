@@ -5,6 +5,8 @@ import dev.saperate.elementals.platform.NeoForgeEventsHelper;
 import dev.saperate.elementals.platform.NeoForgeRegistryHelper;
 import net.minecraft.advancements.CriterionTrigger;
 import net.minecraft.commands.synchronization.ArgumentTypeInfo;
+import net.minecraft.core.component.DataComponentType;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -35,6 +37,7 @@ public class ElementalsNeoForge {
     public static final DeferredRegister<SoundEvent> SOUND_EVENTS = DeferredRegister.create(BuiltInRegistries.SOUND_EVENT, MODID);
     public static final DeferredRegister<ArgumentTypeInfo<?,?>> COMMAND_ARGUMENT_TYPES = DeferredRegister.create(BuiltInRegistries.COMMAND_ARGUMENT_TYPE, MODID);
     public static final DeferredRegister<ParticleType<?>> PARTICLE_TYPES = DeferredRegister.create(BuiltInRegistries.PARTICLE_TYPE, MODID);
+    public static final DeferredRegister.DataComponents DATA_COMPONENT_TYPE = DeferredRegister.createDataComponents(Registries.DATA_COMPONENT_TYPE, MODID);
     public ElementalsNeoForge(IEventBus eventBus) {
         NeoForgeRegistryHelper.eventBus = eventBus;
         
@@ -49,6 +52,7 @@ public class ElementalsNeoForge {
         ENTITY_TYPES.register(eventBus);
         SOUND_EVENTS.register(eventBus);
         PARTICLE_TYPES.register(eventBus);
+        DATA_COMPONENT_TYPE.register(eventBus);
 
         Elementals.init();
     }

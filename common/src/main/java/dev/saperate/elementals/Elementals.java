@@ -21,6 +21,7 @@ import dev.saperate.elementals.enchantments.ElementalsEnchantments;
 import dev.saperate.elementals.entities.ElementalEntities;
 import dev.saperate.elementals.items.ElementalsItems;
 import dev.saperate.elementals.items.ElementalsDynamicRecipes;
+import dev.saperate.elementals.items.components.ElementalsComponents;
 import dev.saperate.elementals.items.foods.ElementalsFoods;
 import dev.saperate.elementals.misc.BlockRestoreManager;
 import dev.saperate.elementals.misc.ElementalsSounds;
@@ -29,10 +30,7 @@ import dev.saperate.elementals.mixin.SimpleParticleTypeAccessor;
 import dev.saperate.elementals.network.ElementalsNetworking;
 import dev.saperate.elementals.platform.Services;
 import dev.saperate.elementals.platform.services.IRegistryHelper.TriggerHolder;
-import net.minecraft.core.Registry;
 import net.minecraft.core.particles.SimpleParticleType;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.GameRules;
@@ -70,6 +68,7 @@ public class Elementals {
         ElementalsNetworking.register();
         ElementalsDynamicRecipes.register();
         ElementalsFoods.register();
+        ElementalsComponents.register();
         
         Services.REGISTRY.registerLootTables();
         Services.REGISTRY.registerCommands();

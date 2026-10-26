@@ -1,8 +1,7 @@
 package dev.saperate.elementals.platform;
 
 import com.mojang.datafixers.util.Pair;
-import dev.saperate.elementals.Constants;
-import dev.saperate.elementals.Elementals;
+import com.mojang.serialization.Codec;
 import dev.saperate.elementals.ElementalsNeoForge;
 import dev.saperate.elementals.blocks.ElementalsBlocks;
 import dev.saperate.elementals.client.particle.MetalShardParticle;
@@ -12,27 +11,24 @@ import dev.saperate.elementals.commands.ElementalsCommand;
 import dev.saperate.elementals.items.ElementalsItems;
 import dev.saperate.elementals.items.WaterPouchItem;
 import dev.saperate.elementals.items.foods.ElementalsFoods;
-import dev.saperate.elementals.items.foods.PieBlockItem;
 import dev.saperate.elementals.platform.services.IRegistryHelper;
 import net.minecraft.advancements.CriterionTrigger;
 import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
 import net.minecraft.client.KeyMapping;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.LayeredDraw;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.particle.FlameParticle;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.commands.synchronization.ArgumentTypeInfos;
 import net.minecraft.commands.synchronization.SingletonArgumentInfo;
 import net.minecraft.core.Holder;
-import net.minecraft.core.Registry;
+import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.dispenser.DispenseItemBehavior;
 import net.minecraft.core.particles.SimpleParticleType;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.core.registries.Registries;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.effect.MobEffect;
@@ -46,7 +42,6 @@ import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.GameRules;
-import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -92,6 +87,7 @@ public class NeoForgeRegistryHelper implements IRegistryHelper {
                     entries.accept(BOOMERANG_ITEM.get());
                     entries.accept(WATER_POUCH_ITEM.get());
                     entries.accept(GLIDER_ITEM.get());
+                    entries.accept(KETTLE_ITEM.get());
                     // We do it like this so that it groups cooked and uncooked together
                     for (int i = 0; i <= 1; i++) {
                         for (String type : ElementalsFoods.getPieTypes()) {
@@ -192,6 +188,15 @@ public class NeoForgeRegistryHelper implements IRegistryHelper {
         eventBus.addListener((EntityRenderersEvent.RegisterLayerDefinitions event) -> {
             event.registerLayerDefinition(modelMetalLanceLayer, provider::create);
         });
+    }
+
+    @Override
+    public Supplier<DataComponentType<?>> registerDataComponent(String name, Codec<?> codec, StreamCodec<RegistryFriendlyByteBuf, ?> streamCodec) {
+        DeferredHolder<DataComponentType<?>, DataComponentType<Object>> holder = ElementalsNeoForge.DATA_COMPONENT_TYPE.registerComponentType(
+                name, (builder) -> builder.persistent((Codec<Object>) codec)
+                        .networkSynchronized((StreamCodec<? super RegistryFriendlyByteBuf, Object>) streamCodec)
+        );
+        return holder::get;
     }
 
     @Override

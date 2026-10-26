@@ -10,8 +10,11 @@ import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
+import net.minecraft.core.HolderGetter;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentUtils;
 import net.minecraft.network.chat.MutableComponent;
@@ -19,6 +22,8 @@ import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientboundSetActionBarTextPacket;
 import net.minecraft.network.protocol.game.ClientboundSetSubtitleTextPacket;
 import net.minecraft.network.protocol.game.ClientboundSetTitleTextPacket;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -41,9 +46,17 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.StateHolder;
+import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.level.gameevent.GameEvent;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.*;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
@@ -665,6 +678,46 @@ public final class SapsUtils {
     public static void addOrDropItem(Player player, Level level, ItemStack stack){
         if(!player.getInventory().add(stack)){
             level.addFreshEntity(new ItemEntity(level, player.getX(), player.getY(), player.getZ(), stack));
+        }
+    }
+
+    /// Adapted from mojang code
+    public static FluidState readFluidState(HolderGetter<Fluid> fluidGetter, CompoundTag tag) {
+        if (!tag.contains("Name", 8)) {
+            return Fluids.EMPTY.defaultFluidState();
+        } else {
+            ResourceLocation resourcelocation = ResourceLocation.parse(tag.getString("Name"));
+            Optional<? extends Holder<Fluid>> optional = fluidGetter.get(ResourceKey.create(Registries.FLUID, resourcelocation));
+            if (optional.isEmpty()) {
+                return Fluids.EMPTY.defaultFluidState();
+            } else {
+                Fluid fluid = optional.get().value();
+                FluidState fluidState = fluid.defaultFluidState();
+                if (tag.contains("Properties", 10)) {
+                    CompoundTag compoundtag = tag.getCompound("Properties");
+                    StateDefinition<Fluid, FluidState> statedefinition = fluid.getStateDefinition();
+
+                    for(String s : compoundtag.getAllKeys()) {
+                        Property<?> property = statedefinition.getProperty(s);
+                        if (property != null) {
+                            fluidState = setValueHelper(fluidState, property, s, compoundtag, tag);
+                        }
+                    }
+                }
+
+                return fluidState;
+            }
+        }
+    }
+
+    /// Mojang code
+    private static <S extends StateHolder<?, S>, T extends Comparable<T>> S setValueHelper(S stateHolder, Property<T> property, String propertyName, CompoundTag propertiesTag, CompoundTag blockStateTag) {
+        Optional<T> optional = property.getValue(propertiesTag.getString(propertyName));
+        if (optional.isPresent()) {
+            return stateHolder.setValue(property, optional.get());
+        } else {
+            Elementals.LOGGER.warn("Unable to read property: {} with value: {} for state: {}", propertyName, propertiesTag.getString(propertyName), blockStateTag);
+            return stateHolder;
         }
     }
 }

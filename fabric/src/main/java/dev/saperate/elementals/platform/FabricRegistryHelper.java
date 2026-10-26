@@ -1,6 +1,7 @@
 package dev.saperate.elementals.platform;
 
 import com.mojang.datafixers.util.Pair;
+import com.mojang.serialization.Codec;
 import dev.saperate.elementals.Constants;
 import dev.saperate.elementals.Elementals;
 import dev.saperate.elementals.blocks.ElementalsBlocks;
@@ -39,10 +40,14 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.commands.synchronization.SingletonArgumentInfo;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
+import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.dispenser.DispenseItemBehavior;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.effect.MobEffect;
@@ -179,6 +184,17 @@ public class FabricRegistryHelper implements IRegistryHelper {
     @Override
     public void registerClientModelLayer(ModelLayerLocation modelMetalLanceLayer, TexturedModelDataProvider provider) {
         EntityModelLayerRegistry.registerModelLayer(modelMetalLanceLayer, provider::create);
+    }
+
+    @Override
+    public Supplier<DataComponentType<?>> registerDataComponent(String name, Codec<?> codec, StreamCodec<RegistryFriendlyByteBuf, ?> streamCodec) {
+        Holder<DataComponentType<?>> holder = Registry.registerForHolder(
+                BuiltInRegistries.DATA_COMPONENT_TYPE,
+                ResourceLocation.fromNamespaceAndPath(Constants.MODID, name),
+                DataComponentType.builder().persistent((Codec<Object>) codec)
+                        .networkSynchronized((StreamCodec<? super RegistryFriendlyByteBuf, Object>) streamCodec).build()
+        );
+        return holder::value;
     }
 
     @Override

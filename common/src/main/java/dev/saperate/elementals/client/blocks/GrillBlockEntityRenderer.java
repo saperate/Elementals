@@ -22,9 +22,9 @@ public class GrillBlockEntityRenderer implements BlockEntityRenderer<GrillBlockE
     public void render(GrillBlockEntity blockEntity, float v, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, int packedOverlay) {
         poseStack.pushPose();
 
-        // We this instead of toYRot() because west and east have to be reversed to be consistent
+        // We this instead of toYRot() because North and South have to be reversed to be consistent with block placement
         Direction dir = GrillBlock.getDirection(blockEntity);
-        if(dir.getAxis() == Direction.Axis.X){
+        if(dir.getAxis() == Direction.Axis.Z){
             dir = dir.getOpposite();
         }
         

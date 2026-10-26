@@ -180,9 +180,9 @@ public class GrillBlockEntity extends BlockEntity {
             tag.put("campfire_block", NbtUtils.writeBlockState(campfire));
         }
 
-        tag.putBoolean("has_contained_block", hasContainedStack());
+        tag.putBoolean("has_contained_stack", hasContainedStack());
         if(hasContainedStack()) {
-            tag.put("contained_block", containedStack.save(registries));
+            tag.put("contained_stack", containedStack.save(registries));
         }
         
         tag.putInt("cook_time", cookTime);
@@ -200,8 +200,8 @@ public class GrillBlockEntity extends BlockEntity {
         campfire = tag.getBoolean("has_campfire_block") 
                 ? NbtUtils.readBlockState(holdergetter, tag.getCompound("campfire_block"))
                 : null;
-        containedStack = tag.getBoolean("has_contained_block")
-                ? ItemStack.parse(registries, tag.getCompound("contained_block")).orElse(ItemStack.EMPTY)
+        containedStack = tag.getBoolean("has_contained_stack")
+                ? ItemStack.parse(registries, tag.getCompound("contained_stack")).orElse(ItemStack.EMPTY)
                 : null;
         cookTime = tag.getInt("cook_time");
         

@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "elementals:block/kettle_block"
+    },
+    "facing=east": {
+      "model": "elementals:block/kettle_block",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "elementals:block/kettle_block",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "elementals:block/kettle_block",
+      "y": 270
+    }
+  }
+}

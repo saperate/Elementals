@@ -115,6 +115,9 @@ public class ElementalsItems {
     public static final Supplier<BlockItem> GRILL_ITEM = registerItem(
             "grill",
             () -> new BlockItem(ElementalsBlocks.GRILL_BLOCK.get(), new Item.Properties()));
+    public static final Supplier<KettleBlockItem> KETTLE_ITEM = registerItem(
+            "kettle",
+            () -> new KettleBlockItem(new Item.Properties()));
     
     // FOODS 
     /// Relates the pie type (string) and cooked status (boolean) to its corresponding blockItem
