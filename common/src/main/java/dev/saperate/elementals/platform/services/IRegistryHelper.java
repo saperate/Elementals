@@ -37,6 +37,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Fluid;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
@@ -59,6 +60,8 @@ public interface IRegistryHelper {
     GameRules.Type<GameRules.IntegerValue> createGameruleIntegerType(int defaultValue);
     void registerClientModelLayer(ModelLayerLocation modelMetalLanceLayer, TexturedModelDataProvider provider);
     Supplier<DataComponentType<?>> registerDataComponent(String name, Codec<?> codec, StreamCodec<RegistryFriendlyByteBuf, ?> streamCodec);
+
+    <T extends Fluid> Supplier<T> registerFluid(String name, Supplier<T> fluid);
 
     @FunctionalInterface
     interface TexturedModelDataProvider {

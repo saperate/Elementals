@@ -19,6 +19,7 @@ import dev.saperate.elementals.elements.metal.MetalElement;
 import dev.saperate.elementals.elements.water.WaterElement;
 import dev.saperate.elementals.enchantments.ElementalsEnchantments;
 import dev.saperate.elementals.entities.ElementalEntities;
+import dev.saperate.elementals.fluids.ElementalsFluids;
 import dev.saperate.elementals.items.ElementalsItems;
 import dev.saperate.elementals.items.ElementalsDynamicRecipes;
 import dev.saperate.elementals.items.components.ElementalsComponents;
@@ -45,6 +46,7 @@ public class Elementals {
             = Services.REGISTRY.registerCriterion(UsedAbilityCriterion.getName(), new UsedAbilityCriterion());
     public static final SimpleParticleType LIGHTNING_PARTICLE_TYPE = SimpleParticleTypeAccessor.callConstructor(false);
     public static final SimpleParticleType METAL_SHARD_PARTICLE_TYPE = SimpleParticleTypeAccessor.callConstructor(false);
+    public static final SimpleParticleType KETTLE_STEAM_PARTICLE_TYPE = SimpleParticleTypeAccessor.callConstructor(false);
     public static IItemRenderProvider GLIDER_ITEM_RENDER_PROVIDER = () -> null;
     public static IItemRenderProvider METAL_ARMOR_RENDER_PROVIDER = () -> null;
     public static GameRules.Key<GameRules.BooleanValue> BENDING_GRIEFING = Services.REGISTRY.registerGameRule(
@@ -62,6 +64,7 @@ public class Elementals {
         ElementalsItems.register();
         ElementalsArmorMaterial.register();
         ElementalsBlocks.register();
+        ElementalsFluids.register();
         ElementalsEnchantments.register();
         ElementalEntities.register();
         ElementalsSounds.register();
@@ -74,6 +77,7 @@ public class Elementals {
         Services.REGISTRY.registerCommands();
         Services.REGISTRY.registerParticleType("lightning", LIGHTNING_PARTICLE_TYPE);
         Services.REGISTRY.registerParticleType("metal_shard", METAL_SHARD_PARTICLE_TYPE);
+        Services.REGISTRY.registerParticleType("kettle_steam", KETTLE_STEAM_PARTICLE_TYPE);
         registerElements();
 
         Services.EVENTS.onPlayerJoin(Elementals::onPlayerJoin);

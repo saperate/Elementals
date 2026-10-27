@@ -38,7 +38,7 @@ public class GrillBlockEntity extends BlockEntity {
         // When there is a hay block below, produce more smoke
         boolean hasHay = level.getBlockState(pos.below()).getBlock() == Blocks.HAY_BLOCK;
         
-        if(blockEntity.hasCampfire() && blockEntity.isCampfireLit()){
+        if(blockEntity.hasCampfire() && blockEntity.isCampfireLit() && !blockEntity.hasContainedStack()){
             RandomSource randomsource = level.random;
             if (randomsource.nextFloat() < (hasHay ? 0.11 : 0.05F)) {
                 for (int i = 0; i < (hasHay ? randomsource.nextInt(2) + 2 : 1); i++) {

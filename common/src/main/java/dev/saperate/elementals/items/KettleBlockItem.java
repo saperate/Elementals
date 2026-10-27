@@ -1,12 +1,16 @@
 package dev.saperate.elementals.items;
 
+import dev.saperate.elementals.Elementals;
 import dev.saperate.elementals.blocks.ElementalsBlocks;
+import dev.saperate.elementals.blocks.GrillBlock;
 import dev.saperate.elementals.blocks.blockEntities.GrillBlockEntity;
 import dev.saperate.elementals.blocks.blockEntities.KettleBlockEntity;
 import dev.saperate.elementals.utils.SapsUtils;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
@@ -26,6 +30,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -143,7 +148,24 @@ public class KettleBlockItem extends ItemNameBlockItem implements IGrillableItem
 
     @Override
     public void grillTick(ItemStack stack, int cookTime, Level level, BlockPos pos, BlockState state, GrillBlockEntity blockEntity) {
-        IGrillableItem.super.grillTick(stack, cookTime, level, pos, state, blockEntity);
+        Fluid fluid = getFluid(stack, level);
+        if (fluid.isSame(Fluids.WATER) && level.isClientSide) {
+            Direction dir = GrillBlock.getDirection(blockEntity);
+            double rot = Math.toRadians(dir.toYRot());
+
+            Vec3 spoutPos = pos.getBottomCenter().add(
+                    Math.sin(rot) * 0.5f,
+                    19 / 16d,
+                    Math.cos(rot) * 0.5f
+            );
+
+            level.addParticle(Elementals.KETTLE_STEAM_PARTICLE_TYPE,
+                    spoutPos.x, spoutPos.y, spoutPos.z,
+                    dir.getStepX() * 0.1, 
+                    0, 
+                    dir.getStepZ() * 0.1
+            );
+        }
     }
 
     public int getLastUsedSlot(List<ItemStack> slots) {
@@ -201,8 +223,8 @@ public class KettleBlockItem extends ItemNameBlockItem implements IGrillableItem
             return false;
         }
         setFluidLevel(kettleStack, Math.max(0, fluidLevel - amount));
-        if (fluidLevel == 0) {
-            setFluid(kettleStack, Fluids.WATER);
+        if (Math.max(0, fluidLevel - amount) == 0) {
+            setFluid(kettleStack, Fluids.EMPTY);
         }
         return kettleHasEnoughFluid;
     }

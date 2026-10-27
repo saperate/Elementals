@@ -225,7 +225,7 @@ public class GrillBlock extends BaseEntityBlock {
                 );
             }
 
-            if (random.nextInt(5) == 0) {
+            if (random.nextInt(5) == 0 && !blockEntity.hasContainedStack()) {
                 for (int i = 0; i < random.nextInt(1) + 1; i++) {
                     level.addParticle(
                             ParticleTypes.LAVA,

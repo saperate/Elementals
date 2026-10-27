@@ -239,17 +239,21 @@ public final class SapsUtils {
     }
 
 
-    public static void summonParticles(Entity entity, RandomSource rnd, ParticleOptions type, float velocity, int density, float rndYForce) {
-        summonParticles(entity.level(), entity.position(), rnd, type, velocity, density, rndYForce);
+    public static void summonParticles(Entity entity, RandomSource rnd, ParticleOptions type, float velocity, int density, float rndYOffset) {
+        summonParticles(entity.level(), entity.position(), rnd, type, velocity, density, rndYOffset);
     }
 
-    public static void summonParticles(Level level, Vec3 position, RandomSource rnd, ParticleOptions type, float velocity, int density, float rndYForce) {
+    public static void summonParticles(Level level, Vec3 position, RandomSource rnd, ParticleOptions type, float velocity, int density, float rndYOffset) {
+        summonParticles(level, position, rnd, type, new Vec3(velocity, velocity, velocity), density, new Vec3(1, rndYOffset, 1));
+    }
+
+    public static void summonParticles(Level level, Vec3 position, RandomSource rnd, ParticleOptions type, Vec3 velocity, int density, Vec3 randomOffset) {
         for (int i = 0; i < density; i++) {
             level.addParticle(type,
-                    position.x - 0.5f + rnd.nextDouble(),
-                    position.y + rnd.nextDouble() * rndYForce,
-                    position.z - 0.5f + rnd.nextDouble(),
-                    rnd.nextDouble() * velocity, rnd.nextDouble() * velocity, rnd.nextDouble() * velocity);
+                    position.x - (0.5f + rnd.nextDouble()) * randomOffset.x,
+                    position.y + rnd.nextDouble() * randomOffset.y,
+                    position.z - (0.5f + rnd.nextDouble()) * randomOffset.z,
+                    rnd.nextDouble() * velocity.x, rnd.nextDouble() * velocity.y, rnd.nextDouble() * velocity.z);
         }
     }
 

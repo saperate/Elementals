@@ -5,6 +5,7 @@ import com.mojang.serialization.Codec;
 import dev.saperate.elementals.Constants;
 import dev.saperate.elementals.Elementals;
 import dev.saperate.elementals.blocks.ElementalsBlocks;
+import dev.saperate.elementals.client.particle.KettleSteamParticle;
 import dev.saperate.elementals.client.particle.MetalShardParticle;
 import dev.saperate.elementals.commands.BendingCommand;
 import dev.saperate.elementals.commands.ElementArgumentType;
@@ -65,14 +66,14 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.storage.loot.BuiltInLootTables;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
 
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-import static dev.saperate.elementals.Elementals.LIGHTNING_PARTICLE_TYPE;
-import static dev.saperate.elementals.Elementals.METAL_SHARD_PARTICLE_TYPE;
+import static dev.saperate.elementals.Elementals.*;
 import static dev.saperate.elementals.items.ElementalsItems.*;
 
 public class FabricRegistryHelper implements IRegistryHelper {
@@ -136,6 +137,7 @@ public class FabricRegistryHelper implements IRegistryHelper {
     public void registerClientParticles() {
         ParticleFactoryRegistry.getInstance().register(LIGHTNING_PARTICLE_TYPE, FlameParticle.Provider::new);
         ParticleFactoryRegistry.getInstance().register(METAL_SHARD_PARTICLE_TYPE, MetalShardParticle.Provider::new);
+        ParticleFactoryRegistry.getInstance().register(KETTLE_STEAM_PARTICLE_TYPE, KettleSteamParticle.Provider::new);
     }
 
     @Override
@@ -195,6 +197,16 @@ public class FabricRegistryHelper implements IRegistryHelper {
                         .networkSynchronized((StreamCodec<? super RegistryFriendlyByteBuf, Object>) streamCodec).build()
         );
         return holder::value;
+    }
+
+    @Override
+    public <T extends Fluid> Supplier<T> registerFluid(String name, Supplier<T> fluid) {
+        Holder<Fluid> holder = Registry.registerForHolder(
+                BuiltInRegistries.FLUID,
+                ResourceLocation.fromNamespaceAndPath(Constants.MODID, name),
+                fluid.get()
+        );
+        return () -> (T) holder.value();
     }
 
     @Override

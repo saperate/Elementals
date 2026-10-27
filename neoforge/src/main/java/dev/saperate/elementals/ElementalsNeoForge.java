@@ -18,6 +18,7 @@ import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.material.Fluid;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -38,6 +39,7 @@ public class ElementalsNeoForge {
     public static final DeferredRegister<ArgumentTypeInfo<?,?>> COMMAND_ARGUMENT_TYPES = DeferredRegister.create(BuiltInRegistries.COMMAND_ARGUMENT_TYPE, MODID);
     public static final DeferredRegister<ParticleType<?>> PARTICLE_TYPES = DeferredRegister.create(BuiltInRegistries.PARTICLE_TYPE, MODID);
     public static final DeferredRegister.DataComponents DATA_COMPONENT_TYPE = DeferredRegister.createDataComponents(Registries.DATA_COMPONENT_TYPE, MODID);
+    public static final DeferredRegister<Fluid> FLUIDS = DeferredRegister.create(Registries.FLUID, MODID);
     public ElementalsNeoForge(IEventBus eventBus) {
         NeoForgeRegistryHelper.eventBus = eventBus;
         
@@ -53,6 +55,7 @@ public class ElementalsNeoForge {
         SOUND_EVENTS.register(eventBus);
         PARTICLE_TYPES.register(eventBus);
         DATA_COMPONENT_TYPE.register(eventBus);
+        FLUIDS.register(eventBus);
 
         Elementals.init();
     }

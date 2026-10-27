@@ -4,6 +4,7 @@ import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
 import dev.saperate.elementals.ElementalsNeoForge;
 import dev.saperate.elementals.blocks.ElementalsBlocks;
+import dev.saperate.elementals.client.particle.KettleSteamParticle;
 import dev.saperate.elementals.client.particle.MetalShardParticle;
 import dev.saperate.elementals.commands.BendingCommand;
 import dev.saperate.elementals.commands.ElementArgumentType;
@@ -46,6 +47,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.storage.loot.BuiltInLootTables;
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
@@ -61,8 +63,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Supplier;
 
-import static dev.saperate.elementals.Elementals.LIGHTNING_PARTICLE_TYPE;
-import static dev.saperate.elementals.Elementals.METAL_SHARD_PARTICLE_TYPE;
+import static dev.saperate.elementals.Elementals.*;
 import static dev.saperate.elementals.items.ElementalsItems.*;
 
 public class NeoForgeRegistryHelper implements IRegistryHelper {
@@ -132,6 +133,7 @@ public class NeoForgeRegistryHelper implements IRegistryHelper {
         eventBus.addListener((RegisterParticleProvidersEvent event) -> {
             event.registerSpriteSet(LIGHTNING_PARTICLE_TYPE, FlameParticle.Provider::new);
             event.registerSpriteSet(METAL_SHARD_PARTICLE_TYPE, MetalShardParticle.Provider::new);
+            event.registerSpriteSet(KETTLE_STEAM_PARTICLE_TYPE, KettleSteamParticle.Provider::new);
         });
     }
 
@@ -197,6 +199,11 @@ public class NeoForgeRegistryHelper implements IRegistryHelper {
                         .networkSynchronized((StreamCodec<? super RegistryFriendlyByteBuf, Object>) streamCodec)
         );
         return holder::get;
+    }
+
+    @Override
+    public <T extends Fluid> Supplier<T> registerFluid(String name, Supplier<T> fluid) {
+        return ElementalsNeoForge.FLUIDS.register(name, fluid);
     }
 
     @Override
