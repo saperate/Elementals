@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:blasting",
+  "experience": 0,
+  "cookingtime": 400,
+  "ingredient": {
+    "item": "elementals:unfired_tea_cup"
+  },
+  "result": {
+    "id": "elementals:tea_cup"
+  }
+}

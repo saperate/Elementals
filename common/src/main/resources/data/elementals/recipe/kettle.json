@@ -1,0 +1,21 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "category": "equipment",
+    "key": {
+        "I": {
+            "item": "minecraft:iron_ingot"
+        },
+        "N": {
+            "item": "minecraft:iron_nugget"
+        }
+    },
+    "pattern": [
+        " IN",
+        "I I",
+        "III"
+    ],
+    "result": {
+        "count": 1,
+        "id": "elementals:kettle"
+    }
+}

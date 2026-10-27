@@ -24,7 +24,8 @@ public class PieBlockItem extends ItemNameBlockItem implements IGrillableItem {
     public final String type;
     public final boolean isCooked;
     public PieBlockItem(String type, boolean isCooked) {
-        super(ElementalsBlocks.PIE_BLOCKS.get(new Pair<>(type, isCooked)).get(), properties.food(isCooked ? ElementalsFoods.COOKED_PIE_FOOD_COMPONENT : ElementalsFoods.UNCOOKED_PIE_FOOD_COMPONENT));
+        super(ElementalsBlocks.PIE_BLOCKS.get(new Pair<>(type, isCooked)).get(), 
+                properties.food(ElementalsFoods.getFoodPropertyForPieType(type, isCooked)).stacksTo(isCooked ? 1 : 16));
         this.type = type;
         this.isCooked = isCooked;
     }
@@ -45,7 +46,7 @@ public class PieBlockItem extends ItemNameBlockItem implements IGrillableItem {
     @Override
     public void grillTick(ItemStack stack, int cookTime, Level level, BlockPos pos, BlockState state, GrillBlockEntity blockEntity) {
         if(level.isClientSide && !isCooked){
-            SapsUtils.summonParticles(level, pos.getBottomCenter().add(0, 12/16f, 0), level.random, ParticleTypes.WHITE_SMOKE, 0, 1, 0);
+            SapsUtils.summonParticles(level, pos.getBottomCenter().add(1, 12/16f, 1), level.random, ParticleTypes.WHITE_SMOKE, 0, 1, 0);
         }
         
         if(cookTime >= 300 && !isCooked){

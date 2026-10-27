@@ -250,9 +250,9 @@ public final class SapsUtils {
     public static void summonParticles(Level level, Vec3 position, RandomSource rnd, ParticleOptions type, Vec3 velocity, int density, Vec3 randomOffset) {
         for (int i = 0; i < density; i++) {
             level.addParticle(type,
-                    position.x - (0.5f + rnd.nextDouble()) * randomOffset.x,
+                    position.x - (0.5f + rnd.nextDouble() * randomOffset.x),
                     position.y + rnd.nextDouble() * randomOffset.y,
-                    position.z - (0.5f + rnd.nextDouble()) * randomOffset.z,
+                    position.z - (0.5f + rnd.nextDouble() * randomOffset.z),
                     rnd.nextDouble() * velocity.x, rnd.nextDouble() * velocity.y, rnd.nextDouble() * velocity.z);
         }
     }

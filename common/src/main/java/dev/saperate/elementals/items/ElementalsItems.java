@@ -150,6 +150,14 @@ public class ElementalsItems {
             "starberry_tea",
             () -> new Item(new Item.Properties().stacksTo(1))
     );
+    public static final Supplier<Item> SWEETBERRY_JAM = registerItem(
+            "sweetberry_jam",
+            () -> new Item(new Item.Properties().stacksTo(4).food(ElementalsFoods.JAM_FOOD_COMPONENT)) // TODO add this to the automated stuff as well
+    );
+    public static final Supplier<Item> SWEETBERRY_PIE_SLICE = registerItem( // TODO make this automated as well so we can cut pies like cake
+            "sweetberry_pie_slice",
+            () -> new Item(new Item.Properties().stacksTo(16).food(ElementalsFoods.PIE_SLICE_FOOD_COMPONENT))
+    );
     
     public static final CreativeModeTab ELEMENTALS_TAB = Services.REGISTRY.createItemTab();
 

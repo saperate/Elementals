@@ -1,0 +1,21 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "category": "equipment",
+    "key": {
+        "I": {
+            "item": "minecraft:iron_ingot"
+        },
+        "B": {
+            "item": "minecraft:iron_bars"
+        }
+    },
+    "pattern": [
+        "   ",
+        "IBI",
+        "I I"
+    ],
+    "result": {
+        "count": 1,
+        "id": "elementals:grill"
+    }
+}

@@ -1,0 +1,21 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "category": "equipment",
+    "key": {
+        "W": {
+            "item": "minecraft:wheat"
+        },
+        "B": {
+            "item": "minecraft:water_bucket"
+        }
+    },
+    "pattern": [
+        "   ",
+        "WBW",
+        "WWW"
+    ],
+    "result": {
+        "count": 1,
+        "id": "elementals:uncooked_plain_pie"
+    }
+}

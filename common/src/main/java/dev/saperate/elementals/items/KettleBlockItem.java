@@ -154,7 +154,7 @@ public class KettleBlockItem extends ItemNameBlockItem implements IGrillableItem
             double rot = Math.toRadians(dir.toYRot());
 
             Vec3 spoutPos = pos.getBottomCenter().add(
-                    Math.sin(rot) * 0.5f,
+                    -Math.sin(rot) * 0.5f,
                     19 / 16d,
                     Math.cos(rot) * 0.5f
             );

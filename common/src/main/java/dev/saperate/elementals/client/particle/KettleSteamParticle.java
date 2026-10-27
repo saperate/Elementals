@@ -20,8 +20,8 @@ public class KettleSteamParticle extends RisingParticle {
     public void tick() {
         super.tick();
         yd = Math.max(0.001, yd - 0.005f);
-        xd = Math.signum(xd) * Math.max(0.001f, xd - 0.00001f);
-        zd = Math.signum(zd) * Math.max(0.001f, zd - 0.00001f);
+        xd = xd - 0.01f * Math.signum(xd);
+        zd = zd - 0.01f * Math.signum(zd);
         quadSize += 0.005f;
         
     }

@@ -96,6 +96,8 @@ public class NeoForgeRegistryHelper implements IRegistryHelper {
                     entries.accept(GREEN_TEA.get());
                     entries.accept(JASMINE_TEA.get());
                     entries.accept(STARBERRY_TEA.get());
+                    entries.accept(SWEETBERRY_PIE_SLICE.get());
+                    entries.accept(SWEETBERRY_JAM.get());
                     // We do it like this so that it groups cooked and uncooked together
                     for (int i = 0; i <= 1; i++) {
                         for (String type : ElementalsFoods.getPieTypes()) {
