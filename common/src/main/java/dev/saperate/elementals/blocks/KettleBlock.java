@@ -22,13 +22,18 @@ import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -77,10 +82,10 @@ public class KettleBlock extends BaseEntityBlock {
         if (!(level.getBlockEntity(pos) instanceof KettleBlockEntity blockEntity)) {
             return super.useItemOn(stack, state, level, pos, player, hand, hit);
         }
-        
+
         if (tryFillKettle(stack, blockEntity, player, level)) {
             return ItemInteractionResult.sidedSuccess(level.isClientSide);
-        } else if(!stack.isEmpty()) { // The item doesn't add any water to our kettle
+        } else if (!stack.isEmpty()) { // The item doesn't add any water to our kettle
             int firstUsableSlot = blockEntity.getFirstUsableSlot(stack);
             if (firstUsableSlot != -1) {
                 ItemStack slotStack = blockEntity.getSlot(firstUsableSlot);
@@ -89,14 +94,14 @@ public class KettleBlock extends BaseEntityBlock {
                     int totalCount = slotStack.getCount() + stack.getCount();
                     stack.setCount(Math.min(stack.getMaxStackSize(), totalCount));
                     blockEntity.putInSlot(firstUsableSlot, stack);
-                    
-                    if(totalCount > stack.getMaxStackSize()){
+
+                    if (totalCount > stack.getMaxStackSize()) {
                         stack.setCount(totalCount - stack.getMaxStackSize());
-                    }else{
+                    } else {
                         stack.setCount(0);
                     }
-                    
-                }else{ //The slot is empty, we just set it :)
+
+                } else { //The slot is empty, we just set it :)
                     blockEntity.putInSlot(firstUsableSlot, stack.copyAndClear());
                 }
             }
@@ -104,29 +109,29 @@ public class KettleBlock extends BaseEntityBlock {
         }
         return super.useItemOn(stack, state, level, pos, player, hand, hit);
     }
-    
-    public boolean tryFillKettle(ItemStack stack, KettleBlockEntity blockEntity, Player player, Level level){
+
+    public boolean tryFillKettle(ItemStack stack, KettleBlockEntity blockEntity, Player player, Level level) {
         if (blockEntity.getItemFluidValue(stack) != 0) {// It has a water value, try to add some to it
             if (blockEntity.putOrAddFluid(stack) && (!blockEntity.hasFluid() || blockEntity.hasWater())) {
                 if (!player.isCreative()) {
-                    stack.shrink(1);
                     SapsUtils.addOrDropItem(player, level, blockEntity.removeFluidFromStack(stack));
+                    stack.shrink(1);
+                }
+            }
+            return true;
+        } else { // Check if we could fill a container instead (ex: bucket)
+            if (stack.is(Items.BUCKET)) {
+                if (blockEntity.hasWater() && blockEntity.removeFluid(15, true) && !player.isCreative()) {
+                    SapsUtils.addOrDropItem(player, level, Items.WATER_BUCKET.getDefaultInstance());
+                    stack.shrink(1);
                 }
                 return true;
-            }
-        } else { // Check if we could fill a container instead (ex: bucket)
-            if(blockEntity.getFluid().isSame(Fluids.WATER)){
-                if(stack.is(Items.BUCKET)){
-                    stack.shrink(1);
-                    SapsUtils.addOrDropItem(player, level, Items.BUCKET.getDefaultInstance());
-                    return true;
-                } else if (stack.is(Items.GLASS_BOTTLE)) {
-                    stack.shrink(1);
+            } else if (stack.is(Items.GLASS_BOTTLE)) {
+                if (blockEntity.hasWater() && blockEntity.removeFluid(5) && !player.isCreative()) {
                     SapsUtils.addOrDropItem(player, level, Items.POTION.getDefaultInstance());
-                    return true;
+                    stack.shrink(1);
                 }
-            }else{
-                //TODO add tea and make it fill here
+                return true;
             }
         }
         return false;
@@ -158,7 +163,7 @@ public class KettleBlock extends BaseEntityBlock {
             return;
         }
         KettleBlockItem item = ElementalsItems.KETTLE_ITEM.get();
-        
+
         blockEntity.setFluid(item.getFluid(stack, level));
         blockEntity.setFluidLevel(item.getFluidLevel(stack));
 
@@ -166,6 +171,11 @@ public class KettleBlock extends BaseEntityBlock {
         for (int i = 0; i <= blockEntity.getMaxSlot(); i++) {
             blockEntity.putInSlot(i, ingredients.get(i));
         }
+    }
+
+    @Override
+    protected boolean canBeReplaced(BlockState state, Fluid fluid) {
+        return false;
     }
 
     @Nullable

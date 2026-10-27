@@ -2,6 +2,8 @@ package dev.saperate.elementals.blocks;
 
 import com.mojang.serialization.MapCodec;
 import dev.saperate.elementals.blocks.blockEntities.GrillBlockEntity;
+import dev.saperate.elementals.items.ElementalsItems;
+import dev.saperate.elementals.items.IGrillableItem;
 import dev.saperate.elementals.utils.SapsUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -64,17 +66,25 @@ public class GrillBlock extends BaseEntityBlock {
             return super.useWithoutItem(state, level, pos, player, hit);
         }
 
-        if (player.isCrouching()) { // We are looking to remove the campfire
+        if (player.isCrouching()) { // We are looking to remove blocks
+            if(blockEntity.hasContainedStack()){
+                if (blockEntity.hasContainedStack()) {
+                    ItemStack stack = blockEntity.removeContainedStack();
+                    SapsUtils.addOrDropItem(player, level, stack);
+                    return InteractionResult.sidedSuccess(level.isClientSide);
+                }
+            }
             if (blockEntity.hasCampfire()) {
                 ItemStack stack = blockEntity.removeCampfire().getBlock().asItem().getDefaultInstance();
                 SapsUtils.addOrDropItem(player, level, stack);
                 setLit(false, state, level, pos);
                 return InteractionResult.sidedSuccess(level.isClientSide);
             }
-        } else { // We are looking to remove the contained block
-            if (blockEntity.hasContainedStack()) {
-                ItemStack stack = blockEntity.removeContainedStack();
-                SapsUtils.addOrDropItem(player, level, stack);
+        } else if(blockEntity.hasContainedStack()) { // We are looking to interact with the block
+            if (((IGrillableItem) blockEntity.getContainedStack().getItem()).useWithoutItem(
+                    blockEntity.getContainedStack(),
+                    level, pos, player
+            )){ // True if successful
                 return InteractionResult.sidedSuccess(level.isClientSide);
             }
         }
@@ -117,6 +127,15 @@ public class GrillBlock extends BaseEntityBlock {
                 setLit(true, state, level, pos);
             }
             return ItemInteractionResult.SUCCESS;
+        }
+
+        if(blockEntity.hasContainedStack()) { // We are looking to interact with the block
+            if (((IGrillableItem) blockEntity.getContainedStack().getItem()).useItemOn(
+                    blockEntity.getContainedStack(),
+                    level, pos, player, stack
+            )){ // True if successful
+                return ItemInteractionResult.sidedSuccess(level.isClientSide);
+            }
         }
 
         return super.useItemOn(stack, state, level, pos, player, hand, hit);

@@ -33,6 +33,7 @@ public class KettleBlockEntity extends BlockEntity {
 
     public KettleBlockEntity(BlockPos pos, BlockState state) {
         super(ElementalsBlocks.KETTLE_BLOCK_ENTITY.get(), pos, state);
+        makeIngredientsNonNull();
     }
     
     public void putInSlot(int slot, ItemStack stack){
@@ -86,6 +87,14 @@ public class KettleBlockEntity extends BlockEntity {
         return ingredients;
     }
 
+    private void makeIngredientsNonNull() {
+        for (int i = 0; i < ingredients.length; i++) {
+            if(ingredients[i] == null){
+                ingredients[i] = ItemStack.EMPTY;
+            }
+        }
+    }
+
     /**
      * @return Whether there is a fluid in the kettle or not
      */
@@ -113,18 +122,21 @@ public class KettleBlockEntity extends BlockEntity {
      * @return Whether the item stack was placed or not
      */
     public boolean putOrAddFluid(ItemStack stack){
+        if(fluidLevel >= KettleBlockItem.MAX_FLUID_LEVEL){
+            return false;
+        }
         int itemValue = getItemFluidValue(stack);
         if(hasFluid()){
             if(!hasWater()){
                 throw new RuntimeException("Tried to add water to kettle containing other fluid!");
             }
-            fluidLevel += itemValue;
+            fluidLevel = Math.min(KettleBlockItem.MAX_FLUID_LEVEL, fluidLevel + itemValue);
             setChanged();
             return true;
         }
         
         fluid = Fluids.WATER;
-        fluidLevel = itemValue;
+        fluidLevel = Math.min(KettleBlockItem.MAX_FLUID_LEVEL, itemValue);
         setChanged();
         return true;
     }
@@ -133,16 +145,16 @@ public class KettleBlockEntity extends BlockEntity {
         this.fluid = fluid;
     }
 
-    public ItemStack removeFluidFromStack(ItemStack stack) {
+    public static ItemStack removeFluidFromStack(ItemStack stack) {
         if(stack.is(Items.WATER_BUCKET)){
             return Items.BUCKET.getDefaultInstance();
-        } else if (stack.is(Items.GLASS_BOTTLE)) {
+        } else if (stack.is(Items.POTION)) {
             return Items.GLASS_BOTTLE.getDefaultInstance();
         }
         return ItemStack.EMPTY;
     }
     
-    public int getItemFluidValue(ItemStack stack) {
+    public static int getItemFluidValue(ItemStack stack) {
         if(stack.is(Items.WATER_BUCKET)){
             return 15;
         } else if (stack.is(Items.POTION)) {
@@ -158,15 +170,25 @@ public class KettleBlockEntity extends BlockEntity {
      * Removes an amount of fluid from the kettle. returns false if empty or if it cannot
      */
     public boolean removeFluid(int amount){
-        if(!hasFluid() || amount > fluidLevel){
+        return removeFluid(amount, false);
+    }
+
+    /**
+     * Removes an amount of fluid from the kettle. returns false if empty or if it cannot
+     * if force is set to true, it will remove the fluid even if it doesnt have the full amount
+     * It will still return false to indicate it didnt have enough
+     */
+    public boolean removeFluid(int amount, boolean force){
+        boolean kettleHasEnoughFluid = amount <= fluidLevel;
+        if(!hasFluid() || (!kettleHasEnoughFluid && !force)){
             return false;
         }
-        fluidLevel -= amount;
+        fluidLevel = Math.max(0, fluidLevel - amount);
         if(fluidLevel == 0){
             fluid = Fluids.EMPTY;
         }
         setChanged();
-        return true;
+        return kettleHasEnoughFluid;
     }
 
     public int getFluidLevel(){
