@@ -22,7 +22,6 @@ import net.minecraft.world.level.material.FlowingFluid;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 
-import javax.annotation.Nullable;
 import java.util.Optional;
 
 public abstract class AbstractElementalsFluid extends FlowingFluid {
@@ -92,8 +91,7 @@ public abstract class AbstractElementalsFluid extends FlowingFluid {
     public Optional<SoundEvent> getPickupSound() {
         return Optional.of(SoundEvents.BUCKET_FILL);
     }
-
-    @Nullable
+    
     @Override
     public ParticleOptions getDripParticle() {
         return ParticleTypes.DRIPPING_WATER;

@@ -282,7 +282,6 @@ public class FabricRegistryHelper implements IRegistryHelper {
                 BuiltInRegistries.ENTITY_TYPE,
                 ResourceLocation.fromNamespaceAndPath(Constants.MODID, name),
                 EntityType.Builder.of(factory, MobCategory.MISC)
-                        .noSummon()
                         .sized(width, height).build(name));
         return () -> entityType;
     }

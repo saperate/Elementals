@@ -267,7 +267,6 @@ public class NeoForgeRegistryHelper implements IRegistryHelper {
     public <T extends Entity> Supplier<EntityType<T>> registerEntity(String name, EntityType.EntityFactory<T> factory, float width, float height) {
         return ElementalsNeoForge.ENTITY_TYPES.register(name, 
                 ()-> EntityType.Builder.of(factory, MobCategory.MISC)
-                .noSummon()
                 .sized(width, height).build(name));
     }
 

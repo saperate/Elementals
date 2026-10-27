@@ -23,17 +23,17 @@ public class ElementalsFoods {
             .build();
 
     public static final FoodProperties COOKED_PIE_FOOD_COMPONENT = new FoodProperties.Builder()
-            .saturationModifier(15)
-            .nutrition(8)
+            .saturationModifier(4.0f)
+            .nutrition(28)
             .build();
 
     public static final FoodProperties PIE_SLICE_FOOD_COMPONENT = new FoodProperties.Builder()
-            .saturationModifier(4)
-            .nutrition(2)
+            .saturationModifier(1.0f)
+            .nutrition(7)
             .build();
 
     public static final FoodProperties JAM_FOOD_COMPONENT = new FoodProperties.Builder()
-            .saturationModifier(3.75f)
+            .saturationModifier(0.7f)
             .nutrition(2)
             .build();
     
