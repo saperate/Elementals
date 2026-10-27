@@ -19,7 +19,7 @@ import dev.saperate.elementals.elements.metal.MetalElement;
 import dev.saperate.elementals.elements.water.WaterElement;
 import dev.saperate.elementals.enchantments.ElementalsEnchantments;
 import dev.saperate.elementals.entities.ElementalEntities;
-import dev.saperate.elementals.fluids.ElementalsFluids;
+import dev.saperate.elementals.misc.fluids.ElementalsFluids;
 import dev.saperate.elementals.items.ElementalsItems;
 import dev.saperate.elementals.items.ElementalsDynamicRecipes;
 import dev.saperate.elementals.items.components.ElementalsComponents;

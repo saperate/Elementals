@@ -1,8 +1,6 @@
-package dev.saperate.elementals.fluids;
+package dev.saperate.elementals.misc.fluids;
 
-import dev.saperate.elementals.Elementals;
 import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.material.FlowingFluid;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 

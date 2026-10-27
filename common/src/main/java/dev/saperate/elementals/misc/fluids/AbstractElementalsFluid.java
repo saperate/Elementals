@@ -1,4 +1,4 @@
-package dev.saperate.elementals.fluids;
+package dev.saperate.elementals.misc.fluids;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -7,6 +7,8 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
@@ -49,7 +51,7 @@ public abstract class AbstractElementalsFluid extends FlowingFluid {
 
     @Override
     public Item getBucket() {
-        return null;
+        return Items.AIR;
     }
 
     @Override

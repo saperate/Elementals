@@ -122,6 +122,34 @@ public class ElementalsItems {
     // FOODS 
     /// Relates the pie type (string) and cooked status (boolean) to its corresponding blockItem
     public static final HashMap<Pair<String, Boolean>, Supplier<PieBlockItem>> PIE_ITEMS = registerPieItems();
+    public static final Supplier<Item> UNFIRED_TEA_CUP = registerItem(
+            "unfired_tea_cup",
+            () -> new Item(new Item.Properties().stacksTo(1))
+    );
+    public static final Supplier<Item> TEA_CUP = registerItem(
+            "tea_cup",
+            () -> new Item(new Item.Properties().stacksTo(1))
+    );
+    public static final Supplier<Item> CUP_OF_WATER = registerItem(
+            "cup_of_water",
+            () -> new Item(new Item.Properties().stacksTo(1))
+    );
+    public static final Supplier<Item> BLACK_TEA = registerItem(
+            "black_tea",
+            () -> new Item(new Item.Properties().stacksTo(1))
+    );
+    public static final Supplier<Item> GREEN_TEA = registerItem(
+            "green_tea",
+            () -> new Item(new Item.Properties().stacksTo(1))
+    );
+    public static final Supplier<Item> JASMINE_TEA = registerItem(
+            "jasmine_tea",
+            () -> new Item(new Item.Properties().stacksTo(1))
+    );
+    public static final Supplier<Item> STARBERRY_TEA = registerItem(
+            "starberry_tea",
+            () -> new Item(new Item.Properties().stacksTo(1))
+    );
     
     public static final CreativeModeTab ELEMENTALS_TAB = Services.REGISTRY.createItemTab();
 
