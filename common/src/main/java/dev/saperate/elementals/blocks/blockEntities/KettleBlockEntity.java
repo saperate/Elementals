@@ -2,6 +2,7 @@ package dev.saperate.elementals.blocks.blockEntities;
 
 import dev.saperate.elementals.Elementals;
 import dev.saperate.elementals.blocks.ElementalsBlocks;
+import dev.saperate.elementals.items.KettleBlockItem;
 import dev.saperate.elementals.utils.SapsUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderGetter;
@@ -49,7 +50,7 @@ public class KettleBlockEntity extends BlockEntity {
     }
     
     public boolean hasItemInSlot(int slot){
-        return slot < getMaxSlot() && !ingredients[slot].isEmpty();
+        return slot <= getMaxSlot() && !ingredients[slot].isEmpty();
     }
     
     public int getMaxSlot(){
@@ -91,6 +92,10 @@ public class KettleBlockEntity extends BlockEntity {
     public boolean hasFluid(){
         return fluid != null && !fluid.isSame(Fluids.EMPTY);
     }
+    
+    public Fluid getFluid(){
+        return fluid == null ? Fluids.EMPTY : fluid;
+    }
 
     /**
      * @return Whether there is water in the kettle or not
@@ -123,6 +128,10 @@ public class KettleBlockEntity extends BlockEntity {
         setChanged();
         return true;
     }
+    
+    public void setFluid(Fluid fluid){
+        this.fluid = fluid;
+    }
 
     public ItemStack removeFluidFromStack(ItemStack stack) {
         if(stack.is(Items.WATER_BUCKET)){
@@ -136,7 +145,7 @@ public class KettleBlockEntity extends BlockEntity {
     public int getItemFluidValue(ItemStack stack) {
         if(stack.is(Items.WATER_BUCKET)){
             return 15;
-        } else if (stack.is(Items.GLASS_BOTTLE)) {
+        } else if (stack.is(Items.POTION)) {
             PotionContents contents = stack.get(DataComponents.POTION_CONTENTS);
             if(contents != null && !contents.hasEffects()){
                 return 5;
@@ -163,6 +172,10 @@ public class KettleBlockEntity extends BlockEntity {
     public int getFluidLevel(){
         return !hasFluid() ? 0 : fluidLevel;
     }
+    
+    public void setFluidLevel(int fluidLevel){
+        this.fluidLevel = fluidLevel;
+    }
 
     @Override
     protected void saveAdditional(CompoundTag tag, HolderLookup.@NotNull Provider registries) {
@@ -175,7 +188,7 @@ public class KettleBlockEntity extends BlockEntity {
         
         CompoundTag ingredientsTag = new CompoundTag();
         ingredientsTag.putInt("length", ingredients.length);
-        for (int i = 0; i < getMaxSlot(); i++) {
+        for (int i = 0; i <= getMaxSlot(); i++) {
             ItemStack ingredient = ingredients[i];
             if(ingredient == null || ingredient.isEmpty()){
                 continue;
@@ -226,5 +239,10 @@ public class KettleBlockEntity extends BlockEntity {
     @Override
     public @Nullable Packet<ClientGamePacketListener> getUpdatePacket() {
         return ClientboundBlockEntityDataPacket.create(this);
+    }
+
+    @Override
+    public void saveToItem(ItemStack stack, HolderLookup.Provider registries) {
+        KettleBlockItem.setComponentsFromBlockEntity(stack, this);
     }
 }

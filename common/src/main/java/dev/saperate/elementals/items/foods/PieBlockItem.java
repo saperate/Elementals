@@ -29,11 +29,6 @@ public class PieBlockItem extends ItemNameBlockItem implements IGrillableItem {
         this.isCooked = isCooked;
     }
 
-    @Override
-    protected @Nullable BlockState getPlacementState(BlockPlaceContext context) {
-        return super.getPlacementState(context);//.setValue(AbstractPieBlock.PIE_TYPE, type);
-    }
-
     public PieBlockItem getWithCooked(boolean isCooked){
         return ElementalsItems.PIE_ITEMS.get(new Pair<>(type, isCooked)).get();
     }

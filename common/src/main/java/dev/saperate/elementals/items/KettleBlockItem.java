@@ -4,22 +4,23 @@ import dev.saperate.elementals.blocks.ElementalsBlocks;
 import dev.saperate.elementals.blocks.blockEntities.KettleBlockEntity;
 import dev.saperate.elementals.utils.SapsUtils;
 import net.minecraft.core.NonNullList;
-import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
-import net.minecraft.world.inventory.ContainerData;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemNameBlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.item.component.ItemContainerContents;
+import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class KettleBlockItem extends ItemNameBlockItem implements IGrillableItem {
@@ -29,13 +30,40 @@ public class KettleBlockItem extends ItemNameBlockItem implements IGrillableItem
         super(ElementalsBlocks.KETTLE_BLOCK.get(), properties);
     }
 
+    @Override
+    protected @Nullable BlockState getPlacementState(BlockPlaceContext context) {
+        if(!context.getItemInHand().isEmpty()){
+            
+        }
+        return super.getPlacementState(context);
+    }
+
     public static ItemStack fromBlockEntity(KettleBlockEntity blockEntity) {
-        return ElementalsItems.KETTLE_ITEM.get().getDefaultInstance(); // TODO make it add the ingredients & fluid to the stack
+        ItemStack stack = ElementalsItems.KETTLE_ITEM.get().getDefaultInstance();
+        KettleBlockItem.setComponentsFromBlockEntity(stack, blockEntity);
+        return stack;
+    }
+    
+    public static void setComponentsFromBlockEntity(ItemStack stack, KettleBlockEntity blockEntity){
+        KettleBlockItem item = (KettleBlockItem) stack.getItem();
+        
+        item.setFluid(stack, blockEntity.getFluid());
+        item.setFluidLevel(stack, blockEntity.getFluidLevel());
+        item.setIngredients(stack, NonNullList.of(ItemStack.EMPTY, blockEntity.getIngredients()));
     }
 
     @Override
     public boolean canFitInsideContainerItems() {
         return false;
+    }
+
+    @Override
+    public @NotNull ItemStack getDefaultInstance() {
+        ItemStack stack = super.getDefaultInstance();
+        setFluid(stack, Fluids.EMPTY);
+        setFluidLevel(stack, 0);
+        setIngredients(stack, NonNullList.withSize(9, ItemStack.EMPTY));
+        return stack;
     }
 
     public void setFluidLevel(ItemStack stack, int level) {
@@ -90,14 +118,17 @@ public class KettleBlockItem extends ItemNameBlockItem implements IGrillableItem
         }
     }
 
-    public void setIngredients(ItemStack stack, List<ItemStack> items) {
+    public void setIngredients(ItemStack stack, NonNullList<ItemStack> items) {
         ItemContainerContents component = stack.get(DataComponents.CONTAINER);
         stack.set(DataComponents.CONTAINER, ItemContainerContents.fromItems(items));
     }
 
     public List<ItemStack> getIngredients(ItemStack stack) {
-        NonNullList<ItemStack> items = NonNullList.createWithCapacity(9);
+        NonNullList<ItemStack> items = NonNullList.withSize(9, ItemStack.EMPTY);
         ItemContainerContents component = stack.get(DataComponents.CONTAINER);
+        if (component == null) {
+            return items;
+        }
         component.copyInto(items);
         return items;
     }
