@@ -71,7 +71,7 @@ public class MetalArmorItem extends ArmorItem implements GeoItem {
 
         Holder<Enchantment> bindingEnchant = world.holderLookup(Registries.ENCHANTMENT).get(Enchantments.BINDING_CURSE).get();
         Holder<Enchantment> protectionEnchant = world.holderLookup(Registries.ENCHANTMENT).get(Enchantments.PROTECTION).get();
-        item.enchant(bindingEnchant,0);
+        item.enchant(bindingEnchant,1);
         item.enchant(protectionEnchant,3);
         //FIXME
         //item.addHideFlag(ItemStack.TooltipSection.ENCHANTMENTS);

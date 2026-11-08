@@ -78,6 +78,7 @@ public class Bender {
     public void tick() {
         
         plrData.chi = Math.min(ElementalConfig.get().MAX_CHI, plrData.chi + getChiRegen());
+        System.out.println(plrData.chi);
 
         backgroundAbilities.forEach((Ability ability, Object data) -> ability.onBackgroundTick(this, data));
 
